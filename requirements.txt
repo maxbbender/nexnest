@@ -1,0 +1,14 @@
+# Flask
+flask
+Flask-Assets
+Flask-WTF
+Flask-Login
+flask-admin
+
+# Database
+Flask-SQLAlchemy
+sqlalchemy-migrate
+psycopg2
+
+# documentation
+eralchemy

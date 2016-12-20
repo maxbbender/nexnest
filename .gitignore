@@ -1,0 +1,6 @@
+venv
+*.pyc
+*.swp
+*.sublime-workspace
+*.sublime*
+.vagrant/
