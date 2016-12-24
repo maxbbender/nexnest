@@ -12,3 +12,6 @@ psycopg2
 
 # documentation
 eralchemy
+
+# misc
+python-dotenv
