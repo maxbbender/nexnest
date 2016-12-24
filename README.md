@@ -11,13 +11,13 @@ While developing we will only need 2 users, the test and development. Don't both
 
 [Postgres Create User](https://www.postgresql.org/docs/current/static/app-createuser.html)
 
-1. nextnest_development
+**nextnest_development**
 
 `createuser -U postgres -h localhost -E -p 5432 -d -w nextnest_development`
 
 `sudo -u postgres psql -U postgres -c "alter user nextnest_development with password 'domislove';"`
 
-2. nextnest_test
+**nextnest_test**
 
 `createuser -U postgres -h localhost -E -p 5432 -d -w nextnest_test`
 
@@ -25,11 +25,11 @@ While developing we will only need 2 users, the test and development. Don't both
 
 ## Database Setup
 
-1. nextnest_development
+**nextnest_development**
 
 `createdb -U nextnest_development -O nextnest_development -h localhost -p 5432 nextnest_development`
 
-2. nextnest_test
+**nextnest_test**
 
 `createdb -U nextnest_test -O nextnest_test -h localhost -p 5432 nextnest_test`
 
