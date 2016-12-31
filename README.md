@@ -33,5 +33,23 @@ While developing we will only need 2 users, the test and development. Don't both
 
 `createdb -U nextnest_test -O nextnest_test -h localhost -p 5432 nextnest_test`
 
+Vagrant
+=======
+Vagrant allows us to develop in the same environment as well as giving Kyle the ability to influence our environment with whatever he has set up for produciton.
+
+1. First install [VirtualBox](https://www.virtualbox.org/wiki/Downloads)!
+2. Then install [Vagrant](https://www.vagrantup.com/downloads.html) :)
+
+Make sure you have CPU virtualization turned on in your BIOS. Usually it is turned off by default.
+
+***THIS IS IMPORTANT!!!*** You must use a bash cli with SSH capabilities. The easiest way to do this is just use [GitBash](https://git-scm.com/downloads)
+
+## Vagrant Initialization
+1. `cd` into the project directory on your computer
+2. type `vagrant up`, this will boot a virtual machine
+3. Once that is done running ssh into the machine by typing `vagrant ssh`
+4. cd to our mounted project directory at `/vagrant` so ... `cd /vagrant`
+5. Type `make install` to install all the python packages and initialize our database!
+
 
 
