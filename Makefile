@@ -1,8 +1,4 @@
 install:
-	pyenv install 3.6.0
-	pyenv global 3.6.0
-	source /home/vagrant/.bashrc
-	
 	pip install --upgrade pip
 	pip install -r requirements.txt
 
@@ -24,10 +20,8 @@ sync:
 	NEXNEST_ENV=test python db/manage.py upgrade
 
 user_setup:
-	sudo su postgres
-	createuser -U postgres -E -p 5432 -d -w nexnest_development
-	psql -U postgres -c "alter user nexnest_development with password 'domislove';"
+	sudo -u postgres createuser -U postgres -p 5432 -d -w nexnest_development
+	sudo -u postgres psql -U postgres -c "alter user nexnest_development with password 'domislove';"
 
-	createuser -U postgres -E -p 5432 -d -w nexnest_test
-	psql -U postgres -c "alter user nexnest_test with password 'domislove';"
-	exit
+	sudo -u postgres createuser -U postgres -p 5432 -d -w nexnest_test
+	sudo -u postgres psql -U postgres -c "alter user nexnest_test with password 'domislove';"
