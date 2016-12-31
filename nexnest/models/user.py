@@ -27,15 +27,42 @@ class User(Base):
                  email,
                  password,
                  name,
-                 bio,
-                 website,
-                 location,
-                 phone,
-                 dob,
-                 profile_image,
-                 role):
+                 bio=None,
+                 website=None,
+                 location=None,
+                 phone=None,
+                 dob=None,
+                 profile_image=None,
+                 role=None
+                 ):
 
-    self.username = username
-    self.email = email
+        self.username = username
+        self.email = email
 
-    self.
+        self.set_password(password)
+
+        self.name = name
+
+        if role is not None:
+            self.role = role
+        else:
+            self.role = "user"
+
+        self.bio = bio
+        self.website = website
+        self.location = location
+        self.phone = phone
+        self.dob = dob
+
+        if profile_image is None:
+            image_num = format(randrange(1, 11), '03')
+
+            self.profile_image = '/static/img/default{0}.jpg'.format(image_num)
+        else:
+            self.profile_image = profile_image
+
+        # Default Values
+        now = dt.now().isoformat()  # Current Time to Insert into Datamodels
+        self.date_created = now
+        self.date_modified = now
+        self.active = True
