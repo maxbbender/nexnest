@@ -2,6 +2,11 @@ from .base import Base
 
 from nexnest import db, session
 
+from datetime import datetime as dt
+from random import randrange
+
+from nexnest.utils.password import hash_password
+
 
 class User(Base):
     __tablename__ = 'users'
@@ -54,15 +59,33 @@ class User(Base):
         self.phone = phone
         self.dob = dob
 
-        if profile_image is None:
-            image_num = format(randrange(1, 11), '03')
+        # if profile_image is None:
+        #     image_num = format(randrange(1, 11), '03')
 
-            self.profile_image = '/static/img/default{0}.jpg'.format(image_num)
-        else:
-            self.profile_image = profile_image
+        #     self.profile_image = '/static/img/default{0}.jpg'.format(image_num)
+        # else:
+        #     self.profile_image = profile_image
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
         self.date_created = now
         self.date_modified = now
         self.active = True
+
+    def __repr__(self):
+        return '<User %r>' % self.username
+
+    def set_password(self, __password__):
+        if __password__ == "":
+            return self
+
+        # Hash the password. SHA256
+        hashedPassword = hash_password(__password__)
+
+        # Split the password and the salt
+        splitPassword = hashedPassword.split(":")
+
+        self.password = splitPassword[0]  # Password
+        self.salt = splitPassword[1]     # Salt
+
+        return self
