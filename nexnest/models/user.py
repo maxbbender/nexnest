@@ -1,6 +1,6 @@
 from .base import Base
 
-from nexnest import db, session
+from nexnest.application import db
 
 from datetime import datetime as dt
 from random import randrange
