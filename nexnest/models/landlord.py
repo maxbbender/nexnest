@@ -16,14 +16,14 @@ class Landlord(Base):
     zip_code = db.Column(db.String(5))
 
     def __init__(self,
-                 user_id,
+                 user,
                  online_pay,
                  check_pay,
                  street,
                  city,
                  state,
                  zip_code):
-        self.user_id = user_id
+        self.user = user
         self.online_pay = online_pay
         self.check_pay = check_pay
         self.street = street
