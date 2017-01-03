@@ -6,11 +6,12 @@ from .base import Base
 class LandlordListing(Base):
     __tablename__ = 'landlord_listings'
     landlord_id = db.Column(db.Integer,
-                            primary_key=True,
-                            db.ForeignKey('landlords.user_id'))
+                            db.ForeignKey('landlords.user_id'),
+                            primary_key=True)
+
     listing_id = db.Column(db.Integer,
-                           primary_key=True,
-                           db.ForeignKey('listings.id'))
+                           db.ForeignKey('listings.id'),
+                           primary_key=True)
 
     def __init__(
             self,
