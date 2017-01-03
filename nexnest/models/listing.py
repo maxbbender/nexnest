@@ -1,6 +1,6 @@
 from datetime import datetime as dt
 
-from nexnest import db
+from nexnest.application import db
 
 from .base import Base
 
@@ -16,7 +16,7 @@ class Listing(Base):
     state = db.Column(db.String(2))
     zip_code = db.Column(db.String(5))
     start_date = db.Column(db.Date)
-    end_date = db.Colun(db.Date)
+    end_date = db.Column(db.Date)
     unit_type = db.Column(db.String(10))
     num_bedrooms = db.Column(db.Integer)
     price = db.Column(db.Integer)

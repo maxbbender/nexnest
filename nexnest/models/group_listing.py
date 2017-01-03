@@ -1,21 +1,17 @@
-from datetime import datetime as dt
-
-from nexnest import db
+from nexnest.application import db
 
 from .base import Base
-
-from sqlalchemy import event
 
 
 # class PostReport(Base):
 class GroupListing(Base):
-    __tablename__ = 'group_users'
+    __tablename__ = 'group_listings'
     group_id = db.Column(db.Integer,
-                         primary_key=True,
-                         db.ForiegnKey('groups.id'))
+                         db.ForeignKey('groups.id'),
+                         primary_key=True)
     listing_id = db.Column(db.Integer,
-                           primary_key=True,
-                           db.ForiegnKey('listings.id'))
+                           db.ForeignKey('listings.id'),
+                           primary_key=True)
 
     def __init__(
             self,

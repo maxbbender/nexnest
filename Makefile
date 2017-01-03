@@ -32,3 +32,6 @@ script:
 
 upgrade:
 	python db/manage.py upgrade
+
+erd:
+	eralchemy -i postgres://nexnest_development:domislove@localhost:5432/nexnest_development -o docs/erd.pdf

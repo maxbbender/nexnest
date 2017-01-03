@@ -1,13 +1,13 @@
 from .base import Base
 
-from nexnest import db
+from nexnest.application import db
 
 
 class Landlord(Base):
     __tablename__ = 'landlords'
     user_id = db.Column(db.Integer,
-                        primary_key=True,
-                        db.ForeignKey('users.id'))
+                        db.ForeignKey('users.id'),
+                        primary_key=True)
     online_pay = db.Column(db.Boolean)
     check_pay = db.Column(db.Boolean)
     street = db.Column(db.Text)
@@ -23,6 +23,7 @@ class Landlord(Base):
                  city,
                  state,
                  zip_code):
+
         self.user = user
         self.online_pay = online_pay
         self.check_pay = check_pay
@@ -32,4 +33,4 @@ class Landlord(Base):
         self.zip_code = zip_code
 
     def __repr__(self):
-    	return '<Landlord %r>' % user_id
+        return '<Landlord %r>' % user_id
