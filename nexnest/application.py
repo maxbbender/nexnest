@@ -31,6 +31,11 @@ app = Flask(__name__)
 app.config.from_envvar('NEXNEST_%s_SETTINGS' % env.upper())
 app.secret_key = 'domislove'
 
+# Blueprints
+from nexnest.blueprints.test import tests
+
+app.register_blueprint(tests)
+
 # DB setup
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 session = scoped_session(sessionmaker(bind=engine))
