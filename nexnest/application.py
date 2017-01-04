@@ -33,8 +33,10 @@ app.secret_key = 'domislove'
 
 # Blueprints
 from nexnest.blueprints.test import tests
+from nexnest.blueprints.index import indexs
 
 app.register_blueprint(tests)
+app.register_blueprint(indexs)
 
 # DB setup
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])

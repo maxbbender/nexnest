@@ -1,0 +1,4 @@
+/* To remove Caret from dropdown menus */
+.dropdown-toggle::after {
+    display:none
+}
