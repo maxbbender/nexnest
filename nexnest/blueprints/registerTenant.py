@@ -15,4 +15,4 @@ def registerTenant():
         #db_session.add(user)
         flash('Thanks for registering')
         return redirect(url_for('indexs.index'))
-    return render_template('registerTenant.html', form=form)
+    return render_template('registerTenant.html', form=form, title='Sign-Up')
