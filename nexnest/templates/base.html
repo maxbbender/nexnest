@@ -16,11 +16,11 @@
 	</head>
 	<body>
 		<nav class="navbar navbar-light bg-faded">
-			<a class="navbar-brand" href="#">NexNest</a>
+			<a class="navbar-brand" href="{{ url_for('indexs.index') }}">NexNest</a>
 		    <ul class="nav navbar-nav">
 			  	<div class="float-lg-right">
 			  		<li class="nav-item">
-			      		<a class="nav-link" href="#">Sign Up</a>
+			      		<a class="nav-link" href="#" data-toggle="modal" data-target="#registerModal">Sign Up</a>
 			    	</li>
 			    	<li class="nav-item">
 			      		<a class="nav-link" href="#">Sign In</a>
@@ -47,4 +47,41 @@
 		  {% endif %}
 		{% endwith %}
 		{% block content %}{% endblock %}
+
+		<!-- Register Modal -->
+		<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="register" aria-hidden="true">
+		  	<div class="modal-dialog" role="document">
+		    	<div class="modal-content">
+		      		<div class="modal-header">
+		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          			<span aria-hidden="true">&times;</span>
+		        		</button>
+		        		<h4 class="modal-title" id="register"></h4>
+		      		</div>
+		      		<div class="modal-body">
+		      			<div class="row">
+		      				<div class="col-xs-2"></div>
+		      				<div class="col-xs-4">
+		      					<a href="{{ url_for('registerTenants.registerTenant') }}" class="btn btn-info btn-block" role="button">Tenant</a>
+		      				</div>
+		      				<div class="col-xs-4">
+		      					<a href="{{ url_for('registerLandlords.registerLandlord') }}" class="btn btn-info btn-block" role="button">Landlord</a>
+		      				</div>
+		      			</div>
+		      		</div>
+			      	<div class="modal-footer">
+			        	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			      	</div>
+		    	</div>
+		  	</div>
+		</div>
+		<script>
+			//Register Account Modal
+			$('#registerModal').on('show.bs.modal', function (event) {
+			  var button = $(event.relatedTarget)
+			  var modal = $(this)
+			  modal.find('.modal-title').text('Register as tenant or landlord?')
+			})
+		</script>
 	</body>
+</html>
