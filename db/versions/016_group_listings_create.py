@@ -2,12 +2,22 @@ from sqlalchemy import *
 from migrate import *
 
 
+meta = MetaData()
+# Column('XXXX', String(120)),
+group_listings = Table('group_listings', meta,
+                       Column('group_id', Integer(),
+                              primary_key=True,
+                              nullable=False),
+                       Column('listing_id', Integer(),
+                              primary_key=True,
+                              nullable=False))
+
+
 def upgrade(migrate_engine):
-    # Upgrade operations go here. Don't create your own engine; bind
-    # migrate_engine to your metadata
-    pass
+    meta.bind = migrate_engine
+    group_listings.create()
 
 
 def downgrade(migrate_engine):
-    # Operations to reverse the above upgrade go here.
-    pass
+    meta.bind = migrate_engine
+    group_listings.drop()

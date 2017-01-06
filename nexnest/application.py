@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from flask_wtf.csrf import CsrfProtect
+from flask_wtf.csrf import CSRFProtect
 
 # Session|Engine(SQLAlchemy)
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -37,7 +37,7 @@ session = scoped_session(sessionmaker(bind=engine))
 db = SQLAlchemy(app)
 
 # CSRF setup
-csrf = CsrfProtect(app)
+csrf = CSRFProtect(app)
 
 # Login Manager
 login_manager = LoginManager()
