@@ -6,9 +6,11 @@ from .base import Base
 
 from sqlalchemy import event
 
+from flask.ext.security import RoleMixin
+
 
 # class PostReport(Base):
-class Role(Base):
+class Role(Base, RoleMixin):
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))

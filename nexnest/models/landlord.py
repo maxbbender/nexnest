@@ -33,4 +33,4 @@ class Landlord(Base):
         self.zip_code = zip_code
 
     def __repr__(self):
-        return '<Landlord %r>' % user_id
+        return '<Landlord %r>' % self.user_id

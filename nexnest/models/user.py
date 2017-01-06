@@ -8,10 +8,12 @@ from nexnest.utils.password import hash_password
 
 # from sqlalchemy.orm import relationship
 
+from flask.ext.security import UserMixin
+
 from .role import Role
 
 
-class User(Base):
+class User(Base, UserMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True)
