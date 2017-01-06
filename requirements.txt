@@ -2,9 +2,8 @@
 flask
 Flask-Assets
 Flask-WTF
-Flask-Login>=0.3.0,<0.4
+Flask-Login
 flask-admin
-flask-security==1.7.5
 
 # Database
 Flask-SQLAlchemy

@@ -52,15 +52,6 @@ db = SQLAlchemy(app)
 csrf = CSRFProtect(app)
 
 # Login Manager
-# login_manager = LoginManager()
-# login_manager.init_app(app)
-# login_manager.login_view = '/login'
-# login_manager.anonymous_user = AnonymousUser
-
-# Flask Secuirty Setup
-from nexnest.models.role import Role
-from nexnest.models.user import User
-from nexnest.models.user_role import UserRole
-
-user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-security = Security(app, user_datastore)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = '/login'
