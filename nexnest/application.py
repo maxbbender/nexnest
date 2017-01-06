@@ -13,6 +13,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
 
+# Flask Security
+from flask.ext.secuirty import Security, SQLAlchemyUserDatastore, \
+    UserMixin, RoleMixin, login_required
+
 # Session|Engine(SQLAlchemy)
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy import create_engine
@@ -43,3 +47,11 @@ csrf = CSRFProtect(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = '/login'
+
+# Flask Secuirty Setup
+from nexnest.models.role import Role
+from nexnest.models.user import User
+from nexnest.models.user_role import UserRole
+
+user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+security = Security(app, user_datastore)

@@ -8,6 +8,8 @@ from nexnest.utils.password import hash_password
 
 # from sqlalchemy.orm import relationship
 
+from .role import Role
+
 
 class User(Base):
     __tablename__ = 'users'
@@ -17,7 +19,6 @@ class User(Base):
     password = db.Column(db.String(128), nullable=False)
     salt = db.Column(db.String(128), nullable=False)
     name = db.Column(db.String(128))
-    role = db.Column(db.String(10))
     bio = db.Column(db.Text)
     website = db.Column(db.String(128))
     location = db.Column(db.String(128))
@@ -27,6 +28,9 @@ class User(Base):
     date_created = db.Column(db.String(128), nullable=False)
     date_modified = db.Column(db.String(128), nullable=False)
     active = db.Column(db.Boolean)
+    roles = db.relationship(Role,
+                            secondary='user_roles',
+                            backref=db.backref('user', lazy='dynamic'))
     # added_friends = relationship
 
     def __init__(self,
