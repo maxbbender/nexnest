@@ -35,6 +35,15 @@ app = Flask(__name__)
 app.config.from_envvar('NEXNEST_%s_SETTINGS' % env.upper())
 app.secret_key = 'domislove'
 
+# Blueprints
+from nexnest.blueprints.index import indexs
+from nexnest.blueprints.registerTenant import registerTenants
+from nexnest.blueprints.registerLandlord import registerLandlords
+
+app.register_blueprint(indexs)
+app.register_blueprint(registerTenants)
+app.register_blueprint(registerLandlords)
+
 # DB setup
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 session = scoped_session(sessionmaker(bind=engine))
