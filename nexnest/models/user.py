@@ -3,9 +3,10 @@ from .base import Base
 from nexnest.application import db
 
 from datetime import datetime as dt
-from random import randrange
 
 from nexnest.utils.password import hash_password
+
+# from sqlalchemy.orm import relationship
 
 
 class User(Base):
@@ -26,6 +27,7 @@ class User(Base):
     date_created = db.Column(db.String(128), nullable=False)
     date_modified = db.Column(db.String(128), nullable=False)
     active = db.Column(db.Boolean)
+    # added_friends = relationship
 
     def __init__(self,
                  username,
