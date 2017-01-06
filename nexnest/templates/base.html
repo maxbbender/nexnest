@@ -20,7 +20,7 @@
 		    <ul class="nav navbar-nav">
 			  	<div class="float-lg-right">
 			  		<li class="nav-item">
-			      		<a class="nav-link" href="#" data-toggle="modal" data-target="#registerModal">Sign Up</a>
+			      		<a class="nav-link" href="{{url_for('users.register')}}">Sign Up</a>
 			    	</li>
 			    	<li class="nav-item">
 			      		<a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal">Sign In</a>
@@ -93,8 +93,8 @@
 		      					{% from "_formhelpers.html" import render_field %}
   								<form method=post>
   								  	<dl>
-  									    {{ render_field(form.email, class="form-control", type="email") }}
-  									    {{ render_field(form.password, class="form-control", type="password") }}
+  									    {{ render_field(login_form.email, class="form-control", type="email") }}
+  									    {{ render_field(login_form.password, class="form-control", type="password") }}
   								  	</dl>
   								  	<p>
   								  		<input type='submit' value='Login' class="btn btn-info">

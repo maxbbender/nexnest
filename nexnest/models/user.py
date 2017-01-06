@@ -6,14 +6,11 @@ from datetime import datetime as dt
 
 from nexnest.utils.password import hash_password
 
-# from sqlalchemy.orm import relationship
-
-from flask.ext.security import UserMixin
-
 from .role import Role
+from .user_role import UserRole
 
 
-class User(Base, UserMixin):
+class User(Base):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True)
@@ -30,13 +27,12 @@ class User(Base, UserMixin):
     date_created = db.Column(db.String(128), nullable=False)
     date_modified = db.Column(db.String(128), nullable=False)
     active = db.Column(db.Boolean)
-    roles = db.relationship(Role,
-                            secondary='user_roles',
-                            backref=db.backref('user', lazy='dynamic'))
+    # roles = db.relationship(Role,
+    #                         secondary=UserRole,
+    #                         backref=db.backref('user', lazy='dynamic'))
     # added_friends = relationship
 
     def __init__(self,
-                 username,
                  email,
                  password,
                  name,
@@ -46,20 +42,14 @@ class User(Base, UserMixin):
                  phone=None,
                  dob=None,
                  profile_image=None,
-                 role=None
                  ):
 
-        self.username = username
+        self.username = email.split("@")[0]
         self.email = email
 
         self.set_password(password)
 
         self.name = name
-
-        if role is not None:
-            self.role = role
-        else:
-            self.role = "user"
 
         self.bio = bio
         self.website = website
