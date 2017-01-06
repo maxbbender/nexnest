@@ -25,3 +25,13 @@ user_setup:
 
 	sudo -u postgres createuser -U postgres -p 5432 -d -w nexnest_test
 	sudo -u postgres psql -U postgres -c "alter user nexnest_test with password 'domislove';"
+
+script:
+	@read -p "What is the name of the migration :" script_name; \
+	python db/manage.py script $$script_name;
+
+upgrade:
+	python db/manage.py upgrade
+
+erd:
+	eralchemy -i postgres://nexnest_development:domislove@localhost:5432/nexnest_development -o docs/erd.pdf
