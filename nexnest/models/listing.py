@@ -36,6 +36,20 @@ class Listing(Base):
     snow_plowing = db.Column(db.Boolean)
     garbage_service = db.Column(db.Boolean)
     security_service = db.Column(db.Boolean)
+    description = db.Column(db.Text)
+    num_full_baths = db.Column(db.Integer)
+    num_half_baths = db.Column(db.Integer)
+
+    # This is for whether or not the landlord has deleted
+    # the listing. This comes into play for checking dates
+    # when a landlord creates a new listing at the same
+    # address
+    active = db.Column(db.Boolean)
+
+    # This is set to False once a group has been accepted,
+    # and completed for the house
+    show = db.Column(db.Boolean)
+
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
 
@@ -65,8 +79,11 @@ class Listing(Base):
             emergency_maintenance,
             snow_plowing,
             garbage_service,
-            security_service):
-    
+            security_service,
+            description,
+            num_half_baths,
+            num_full_baths):
+
         self.street = street
         self.city = city
         self.state = state
@@ -90,6 +107,12 @@ class Listing(Base):
         self.snow_plowing = snow_plowing
         self.garbage_service = garbage_service
         self.security_service = security_service
+        self.description = description
+        self.num_full_baths = num_full_baths
+        self.num_half_baths = num_half_baths
+
+        self.active = True
+        self.show = True
 
         valid_parking_types = ['onstreet', 'offstreet', 'none']
         valid_unit_types = ['room', 'house', 'complex', 'apartment']
