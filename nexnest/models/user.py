@@ -17,7 +17,8 @@ class User(Base):
     email = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(128), nullable=False)
     salt = db.Column(db.String(128), nullable=False)
-    name = db.Column(db.String(128))
+    fname = db.Column(db.String(128))
+    lname = db.Column(db.String(128))
     bio = db.Column(db.Text)
     website = db.Column(db.String(128))
     location = db.Column(db.String(128))
@@ -35,7 +36,8 @@ class User(Base):
     def __init__(self,
                  email,
                  password,
-                 name,
+                 fname,
+                 lname,
                  bio=None,
                  website=None,
                  location=None,
@@ -49,7 +51,8 @@ class User(Base):
 
         self.set_password(password)
 
-        self.name = name
+        self.fname = fname
+        self.lname = lname
 
         self.bio = bio
         self.website = website
@@ -87,3 +90,21 @@ class User(Base):
         self.salt = splitPassword[1]     # Salt
 
         return self
+
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_active(self):
+        return True
+
+    @property
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        try:
+            return unicode(self.id)  # python 2
+        except NameError:
+            return str(self.id)  # python 3

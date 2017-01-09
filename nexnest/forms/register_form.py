@@ -13,5 +13,6 @@ class RegistrationForm(FlaskForm):
                                       message="Passwords must match")])
     confirm = PasswordField('Confirm Password', [InputRequired()])
 
-    name = StringField('Name', [InputRequired()])
+    fname = StringField('First Name', [InputRequired()])
+    lname = StringField('Last Name', [InputRequired()])
     submit = SubmitField('Register')

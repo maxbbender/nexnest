@@ -35,3 +35,6 @@ upgrade:
 
 erd:
 	eralchemy -i postgres://nexnest_development:domislove@localhost:5432/nexnest_development -o docs/erd.pdf
+
+server:
+	python server.py

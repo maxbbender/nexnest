@@ -1,5 +1,7 @@
 from flask import Blueprint
-from flask import render_template, request
+from flask import render_template, request, redirect, url_for
+
+from flask_login import login_user
 
 from nexnest.application import session
 
@@ -23,10 +25,14 @@ def create():
     if registerForm.validate():
         newUser = User(registerForm.email.data,
                        registerForm.password.data,
-                       registerForm.name.data)
+                       registerForm.fname.data,
+                       registerForm.lname.data)
 
         session.add(newUser)
         session.commit()
-        return 'ye'
+
+        login_user(newUser)
+
+        return redirect(url_for('indexs.index'))
     else:
         return render_template('register.html', registration_form=registerForm)

@@ -45,6 +45,13 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = '/login'
 
+from nexnest.models.user import User
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return session.query(User).filter_by(id=user_id).first()
+
 # Blueprints
 from nexnest.blueprints.index import indexs
 from nexnest.blueprints.registerTenant import registerTenants
