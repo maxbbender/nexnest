@@ -6,9 +6,6 @@ from datetime import datetime as dt
 
 from nexnest.utils.password import hash_password
 
-from .role import Role
-from .user_role import UserRole
-
 
 class User(Base):
     __tablename__ = 'users'
@@ -20,6 +17,7 @@ class User(Base):
     fname = db.Column(db.String(128))
     lname = db.Column(db.String(128))
     bio = db.Column(db.Text)
+    role = db.Column(db.String(10))
     website = db.Column(db.String(128))
     location = db.Column(db.String(128))
     phone = db.Column(db.String(10))
@@ -28,16 +26,13 @@ class User(Base):
     date_created = db.Column(db.String(128), nullable=False)
     date_modified = db.Column(db.String(128), nullable=False)
     active = db.Column(db.Boolean)
-    # roles = db.relationship(Role,
-    #                         secondary=UserRole,
-    #                         backref=db.backref('user', lazy='dynamic'))
-    # added_friends = relationship
 
     def __init__(self,
                  email,
                  password,
                  fname,
                  lname,
+                 role=None,
                  bio=None,
                  website=None,
                  location=None,
@@ -60,6 +55,9 @@ class User(Base):
         self.phone = phone
         self.dob = dob
 
+        if role is None:
+            role = 'user'
+            
         # if profile_image is None:
         #     image_num = format(randrange(1, 11), '03')
 

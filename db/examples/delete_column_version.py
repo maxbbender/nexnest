@@ -24,6 +24,6 @@ def downgrade(migrate_engine):
     CCCC = Column("XXXX", String(128), nullable=False)
 
     # password.create(users)
-    AAAA.create(BBBB)
-    AAAA.create(CCCC)
+    BBBB.create(AAAA)
+    CCCC.create(AAAA)
     pass
