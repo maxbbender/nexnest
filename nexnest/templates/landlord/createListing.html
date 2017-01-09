@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+	<br>
+	<div class="row m-x-auto">
+		<div class="col-xs-0 col-lg-3"></div>
+		<div class="col-xs-12 col-lg-6">
+			{% from "_formhelpers.html" import render_field %}
+			<form method=post>
+			{{form.csrf_token}}
+			  	<dl>
+				    {{ render_field(form.street, class="form-control", type="text") }}
+				    <div class="row justify-content-center">
+				    	<div class="col-xs-12 col-lg-4 justify-content-center">
+				    		{{ render_field(form.city, class="form-control", type="text") }}
+				    	</div>
+				    	<div class="col-xs-12 col-lg-4 justify-content-center">
+				    		{{ render_field(form.state, class="form-control", type="text") }}
+				    	</div>
+				    	<div class="col-xs-12 col-lg-4 justify-content-center">
+				    		{{ render_field(form.zip_code, class="form-control", type="text") }}
+				    	</div>
+				    </div>
+				    <div class="row">
+				    	<div class="col-xs-12 col-lg-4 justify-content-center">
+				    		{{ render_field(form.start_date, class="form-control", type="date") }}
+				    	</div>
+				    	<div class="col-xs-12 col-lg-4 justify-content-center">
+				    		{{ render_field(form.end_date, class="form-control", type="date") }}
+				    	</div>
+				    	<div class="col-xs-12 col-lg-4 justify-content-center">
+				    		{{ render_field(form.unit_type, class="form-control", type="text") }}
+				    	</div>
+				    </div>
+				    <div class="row">
+				    	<div class="col-xs-12 col-lg-4 justify-content-center">
+				    		{{ render_field(form.num_bedrooms, class="form-control", type="number") }}
+				    	</div>
+				    	<div class="col-xs-12 col-lg-4 justify-content-center">
+				    		{{ render_field(form.num_full_baths, class="form-control", type="number") }}
+				    	</div>
+				    	<div class="col-xs-12 col-lg-4 justify-content-center">
+				    		{{ render_field(form.num_half_baths, class="form-control", type="number") }}
+				    	</div>
+				    </div>				    
+				    {{ render_field(form.price, class="form-control", type="number") }}
+				    {{ render_field(form.square_footage, class="form-control", type="number") }}
+				    {{ render_field(form.parking, class="form-control", type="text") }}
+				    {{ render_field(form.cats, class="form-control") }}
+				    {{ render_field(form.dogs, class="form-control") }}
+				    {{ render_field(form.other_pets, class="form-control") }}
+				    {{ render_field(form.washer, class="form-control") }}
+				    {{ render_field(form.dryer, class="form-control") }}
+				    {{ render_field(form.dishwasher, class="form-control") }}
+				    {{ render_field(form.air_conditioning, class="form-control") }}
+				    {{ render_field(form.handicap, class="form-control") }}
+				    {{ render_field(form.furnished, class="form-control") }}
+				    {{ render_field(form.utilities_included, class="form-control") }}
+				    {{ render_field(form.emergency_maintenance, class="form-control") }}
+				    {{ render_field(form.snow_plowing, class="form-control") }}
+				    {{ render_field(form.garbage_service, class="form-control") }}
+				    {{ render_field(form.security_service, class="form-control") }}
+				    {{ render_field(form.description, class="form-control", type="text", rows=10) }}
+			  	</dl>
+			  	<p>
+			  		<input type='submit' value='Create Listing' class="btn btn-info">
+			  	</p>
+			</form>
+		</div>
+	</div>
+{% endblock %}

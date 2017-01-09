@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block content %}
+	<div class="row">
+		<div class="col-xs-1 col-md-3 col-lg-3"></div>
+		<div class="col-xs-10 col-md-6 col-lg-6">
+			<div class="gallery" align="center">
+				<div class="preview" align="center">
+					<img name="preview" src="static/img/testHouse.jpg" style="height: 300px; width: 100%;" alt=""/>
+				</div>
+				<br>
+				<div class="thumbnails">
+					<img onmouseover="preview.src=img1.src" name="img1" src="/static/img/testHouse.jpg" style="width: 100px; height: 100px;" alt=""/>
+					<img onmouseover="preview.src=img2.src" name="img2" src="/static/img/testLivingRoom.jpg" style="width: 100px; height: 100px;" alt=""/>
+					<img onmouseover="preview.src=img3.src" name="img3" src="/static/img/testKitchen.jpg" style="width: 100px; height: 100px;" alt=""/>
+					<img onmouseover="preview.src=img4.src" name="img4" src="/static/img/testBathroom.jpg" style="width: 100px; height: 100px;" alt=""/>
+					<img onmouseover="preview.src=img5.src" name="img5" src="/static/img/testBedroom.jpg" style="width: 100px; height: 100px;" alt=""/>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-1 col-md-3 col-lg-3"></div>
+		<div class="col-xs-10 col-md-6 col-lg-6">
+			<div class="row">
+				<div class="col-xs-7">
+					<h4>{{ listing.Street }},</h4>
+					<h5>{{ listing.City }}, {{ listing.State }}, {{ listing.ZipCode }}</h5>
+				</div>
+				<div class="col-xs-5" style="text-align: right">
+					<h2>${{ listing.Price }}</h2>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-7">
+					<i class="fa fa-bed" aria-hidden="true"></i> {{ listing.NumBedrooms }} Bedrooms - {{listing.num_full_baths}} Bathrooms - {{ listing.square_footage }} sqft
+				</div>
+				<div class="col-xs-5" style="text-align: right">
+					<strong>Landlord: </strong>Pablo Revis
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<div class="col-lg-4" style="text-align:left">
+					<a href="{{ url_for('indexs.index') }}" class="btn btn-info">Contact Landlord</a>
+				</div>
+				<div class="col-lg-4 col-centered">
+					<a href="{{ url_for('indexs.index') }}" class="btn btn-info">Request Tour</a>
+				</div>
+				<div class="col-lg-4" style="text-align:right">
+					<a href="{{ url_for('indexs.index') }}" class="btn btn-info">Suggest To Group</a>
+				</div>
+			</div>
+			<hr>
+			<div class="row">
+				{{ listing.description }}
+			</div>
+			<br>
+			<div class="row">
+				<h4><u>Details:</u></h4>
+				<br>	
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+					<strong>Lease Start:</strong> {{ listing.start_date }}
+				</div>
+				<div class="col-lg-4">
+					<strong>Lease End:</strong> {{ listing.end_date }}
+				</div>
+				<div class="col-lg-4">
+					<strong>Unit Type:</strong> {{ listing.unit_type }}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+					<strong>Furnished:</strong> {{ listing.furnished }}
+				</div>
+				<div class="col-lg-4">
+					<strong>Utilities Included:</strong> {{ listing.utilities_included }}
+				</div>
+				<div class="col-lg-4">
+					<strong>Emergency Maintenance:</strong> {{ listing.emergency_maintenance }}
+				</div>
+			</div>			
+			<div class="row">
+				<div class="col-lg-4">
+					<strong>Cats:</strong> {{ listing.cats }}
+				</div>
+				<div class="col-lg-4">
+					<strong>Dogs:</strong> {{ listing.dogs }}
+				</div>
+				<div class="col-lg-4">
+					<strong>Other Pets:</strong> {{ listing.other_pets }}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+					<strong>Washer:</strong> {{ listing.washer }}
+				</div>
+				<div class="col-lg-4">
+					<strong>Dryer:</strong> {{ listing.dryer }}
+				</div>
+				<div class="col-lg-4">
+					<strong>DishWasher:</strong> {{ listing.dishwasher }}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+					<strong>A/C:</strong> {{ listing.air_conditioning }}
+				</div>
+				<div class="col-lg-4">
+					<strong>Parking:</strong> {{ listing.parking }}
+				</div>
+				<div class="col-lg-4">
+					<strong>Handicap Accessible:</strong> {{ listing.handicap }}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+					<strong>Snow Plowing:</strong> {{ listing.snow_plowing }}
+				</div>
+				<div class="col-lg-4">
+					<strong>Garbage Service:</strong> {{ listing.garbage_service }}
+				</div>
+				<div class="col-lg-4">
+					<strong>Security Service:</strong> {{ listing.security_service }}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

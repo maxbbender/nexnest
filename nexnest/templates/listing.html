@@ -1,0 +1,14 @@
+<div class="row m-x-auto">
+	{% for listing in listings %}
+		<div class="col-md-4" style="padding-left: 30px; padding-right: 30px; padding-bottom: 30px">
+			<a href="{{ url_for('listings.listing') }}">
+				<img src="{{ listing.img }}" class="listingImg">
+				<div class="listingDescription d-flex align-items-end">
+					{{ listing.NumBedrooms }}<i class="fa fa-bed" aria-hidden="true"></i> ${{ listing.Price }}
+					<br>
+					{{ listing.Street }}, {{ listing.City }}, {{ listing.State }}
+				</div>
+			</a>
+		</div>		
+	{% endfor %}
+</div>

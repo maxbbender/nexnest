@@ -2,3 +2,53 @@
 .dropdown-toggle::after {
     display:none
 }
+
+.listingImg {
+    height:250px;
+    width: 100%;
+    background-size: 99%; 
+    background-repeat: no-repeat; 
+    background-position: center;
+}
+
+.listingDescription {
+	color: black;
+    position:absolute;
+    width:91%;
+    top:72%;
+    background-color:rgba(255, 255, 255, 0.5);
+}
+
+a {
+	color: #FFF;
+}
+a:hover {
+	color: yellow;
+	text-decoration: underline;
+}
+.thumbnails img {
+	height: 80px;
+	border: 4px solid #555;
+	padding: 1px;
+	margin: 0 10px 10px 0;
+}
+
+.thumbnails img:hover {
+	border: 4px solid #00ccff;
+	cursor:pointer;
+}
+
+.preview img {
+	border: 4px solid #444;
+	padding: 1px;
+	width: 800px;
+}
+
+.col-centered {
+    display:inline-block;
+    float:none;
+    /* reset the text-align */
+    text-align:center;
+    /* inline-block space fix */
+    margin-right:-4px;
+}
