@@ -12,6 +12,16 @@ class GroupUser(Base):
                         db.ForeignKey('users.id'),
                         primary_key=True)
 
+    # This is for if they have accepted to be a part of the group
+    accepted = db.Column(db.Boolean)
+
+    # A user might be invited to multiple groups, but he/she can only
+    # be a part of one group at a time. On joining a group all other
+    # records will have show set to False. However if a user is a part
+    # of a group, then recieves a different group invite, show will be
+    # True, so we know to display the notification
+    show = db.Column(db.Boolean)
+
     def __init__(
             self,
             group,
@@ -19,6 +29,9 @@ class GroupUser(Base):
     ):
         self.group = group
         self.user = user
+
+        self.accepted = False
+        self.show = True
 
     def __repr__(self):
         return '<GroupUser ~ Group %r | User %r>' % \

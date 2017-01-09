@@ -2,7 +2,7 @@ from sqlalchemy import *
 from migrate import *
 
 
-def upgrade(migrate_engine):
+def downgrade(migrate_engine):
     meta = MetaData(bind=migrate_engine)
 
     # users = Table('users', meta, autoload=True)
@@ -13,7 +13,7 @@ def upgrade(migrate_engine):
     pass
 
 
-def downgrade(migrate_engine):
+def upgrade(migrate_engine):
     meta = MetaData(bind=migrate_engine)
 
     # users = Table('users', meta, autoload=True)
