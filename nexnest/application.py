@@ -13,9 +13,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
 
-# Flask Security
-from flask.ext.security import Security, SQLAlchemyUserDatastore, AnonymousUser
-
 # Session|Engine(SQLAlchemy)
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy import create_engine
@@ -34,14 +31,6 @@ app = Flask(__name__)
 app.config.from_envvar('NEXNEST_%s_SETTINGS' % env.upper())
 app.secret_key = 'domislove'
 
-# Blueprints
-from nexnest.blueprints.index import indexs
-from nexnest.blueprints.registerTenant import registerTenants
-from nexnest.blueprints.registerLandlord import registerLandlords
-
-app.register_blueprint(indexs)
-app.register_blueprint(registerTenants)
-app.register_blueprint(registerLandlords)
 
 # DB setup
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
@@ -55,3 +44,29 @@ csrf = CSRFProtect(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = '/login'
+
+from nexnest.models.user import User
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return session.query(User).filter_by(id=user_id).first()
+
+# Blueprints
+from nexnest.blueprints.index import indexs
+from nexnest.blueprints.registerTenant import registerTenants
+from nexnest.blueprints.registerLandlord import registerLandlords
+from nexnest.blueprints.users import users
+
+app.register_blueprint(indexs)
+app.register_blueprint(registerTenants)
+app.register_blueprint(registerLandlords)
+app.register_blueprint(users)
+
+from nexnest.forms.loginForm import LoginForm
+
+
+@app.context_processor
+def insert_login_form():
+    login_form = LoginForm()
+    return dict(login_form=login_form)
