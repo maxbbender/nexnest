@@ -53,34 +53,6 @@
 		{% endwith %}
 		{% block content %}{% endblock %}
 
-		<!-- Register Modal -->
-		<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="register" aria-hidden="true">
-		  	<div class="modal-dialog" role="document">
-		    	<div class="modal-content">
-		      		<div class="modal-header">
-		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		          			<span aria-hidden="true">&times;</span>
-		        		</button>
-		        		<h4 class="modal-title" id="register"></h4>
-		      		</div>
-		      		<div class="modal-body">
-		      			<div class="row">
-		      				<div class="col-xs-2"></div>
-		      				<div class="col-xs-4">
-		      					<a href="{{ url_for('registerTenants.registerTenant') }}" class="btn btn-info btn-block" role="button">Tenant</a>
-		      				</div>
-		      				<div class="col-xs-4">
-		      					<a href="{{ url_for('registerLandlords.registerLandlord') }}" class="btn btn-info btn-block" role="button">Landlord</a>
-		      				</div>
-		      			</div>
-		      		</div>
-			      	<div class="modal-footer">
-			        	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-			      	</div>
-		    	</div>
-		  	</div>
-		</div>
-
 		<!-- Login Modal -->
 		<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="login" aria-hidden="true">
 		  	<div class="modal-dialog" role="document">

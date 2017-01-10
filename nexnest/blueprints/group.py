@@ -10,9 +10,9 @@ from nexnest.models.group import Group
 
 from nexnest.utils.flash import flash_errors
 
-createGroups = Blueprint('createGroups', __name__, template_folder='../templates')
+groups = Blueprint('groups', __name__, template_folder='../templates')
 
-@createGroups.route('/createGroup', methods=['GET', 'POST'])
+@groups.route('/createGroup', methods=['GET', 'POST'])
 def createGroup():
     form = CreateGroupForm(request.form)
     if request.method == 'POST' and form.validate():
@@ -23,3 +23,9 @@ def createGroup():
         flash('Group Created')
         return redirect(url_for('viewGroups.viewGroup', groupID=newGroup.id))
     return render_template('createGroup.html', form=form, title='Create Group')
+
+@groups.route('/viewGroup/<groupID>', methods=['GET', 'POST'])
+def viewGroup(groupID):
+	#fake lisiting for testing
+	viewGroup = session.query(Group).filter_by(id=groupID).first()
+	return render_template('group.html', group=viewGroup, title='Group')

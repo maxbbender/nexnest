@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+	<br>
+	<div class="row m-x-auto">
+		<div class="col-xs-0 col-lg-3"></div>
+		<div class="col-xs-12 col-lg-6">
+			{% from "_formhelpers.html" import render_field %}
+			<form method=post>
+			{{form.csrf_token}}
+			  	<dl>
+				    {{ render_field(form.fname, class="form-control", type="text") }}
+				    {{ render_field(form.lname, class="form-control", type="text") }}				    				    
+				    {{ render_field(form.school, class="form-control") }}
+				    {{ render_field(form.phone, class="form-control", type="tel") }}
+				    {{ render_field(form.dob, class="form-control", type="date") }}
+				    {{ render_field(form.email, class="form-control", type="email") }}				    
+				    {{ render_field(form.website, class="form-control", type="url") }}
+				    {{ render_field(form.bio, class="form-control", type="text", rows=5) }}	
+				    {{ render_field(form.password, class="form-control", type="password") }}
+				    {{ render_field(form.confirm, class="form-control", type="password") }}			    
+			  	</dl>
+			  	<p>
+			  		<input type='submit' value='Edit Information' class="btn btn-info">
+			  	</p>
+			</form>
+		</div>
+	</div>
+{% endblock %}

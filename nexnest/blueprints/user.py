@@ -1,7 +1,6 @@
 from flask import Blueprint
 from flask import render_template, request, redirect, url_for, flash
-
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, current_user
 
 from nexnest.application import session
 
@@ -9,6 +8,7 @@ from nexnest.models.user import User
 
 from nexnest.forms.register_form import RegistrationForm
 from nexnest.forms.loginForm import LoginForm
+from nexnest.forms.editAccountForm import EditAccountForm
 
 from nexnest.utils.password import check_password
 from nexnest.utils.flash import flash_errors
@@ -73,6 +73,39 @@ def process_login():
         flash_errors(login_form)
 
     return redirect(url_for('users.login'))
+
+@users.route('/viewUser/<userID>', methods=['GET', 'POST'])
+def viewUser(userID):
+    #fake lisiting for testing
+    user = session.query(User).filter_by(id=userID).first()
+    return render_template('userAccount.html', user=user, title=user.fname)
+
+@users.route('/editAccount', methods=['GET', 'POST'])
+def editAccount():
+    form = EditAccountForm(request.form)
+    currentUser = session.query(User).filter_by(id=current_user.id).first()
+    if request.method == 'GET':
+        form.fname.data = current_user.fname
+        form.lname.data = current_user.lname
+        form.email.data = current_user.email
+        form.website.data = current_user.website
+        form.bio.data = current_user.bio
+        form.phone.data = current_user.phone
+        #form.school.data = current_user.school
+    if  form.validate_on_submit():
+        current_user.fname = form.fname.data
+        current_user.lname = form.lname.data
+        current_user.email = form.email.data
+        current_user.website = form.website.data
+        current_user.bio = form.bio.data
+        current_user.phone = form.phone.data
+        #current_user.school = form.school.data
+        if not form.password.data == '':
+            current_user.set_password(form.password.data)
+        session.commit()
+        flash('Account Updated', 'info')
+        return redirect(url_for('viewUsers.viewUser', userID=current_user.id))
+    return render_template('/editAccount.html', form=form, title='Edit Account')
 
 
 @users.route('/logout')
