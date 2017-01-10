@@ -59,6 +59,8 @@ from nexnest.blueprints.registerLandlord import registerLandlords
 from nexnest.blueprints.listing import viewListings
 from nexnest.blueprints.users import users
 from nexnest.blueprints.createListing import createListings
+from nexnest.blueprints.createGroup import createGroups
+from nexnest.blueprints.viewGroup import viewGroups
 
 app.register_blueprint(indexs)
 app.register_blueprint(registerTenants)
@@ -66,6 +68,8 @@ app.register_blueprint(registerLandlords)
 app.register_blueprint(viewListings)
 app.register_blueprint(users)
 app.register_blueprint(createListings)
+app.register_blueprint(createGroups)
+app.register_blueprint(viewGroups)
 
 from nexnest.forms.loginForm import LoginForm
 

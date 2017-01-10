@@ -85,7 +85,7 @@ class CreateListingForm(FlaskForm):
 	num_full_baths = IntegerField('Number of Full Bathrooms', [InputRequired()])
 	num_half_baths = IntegerField('Number of Half Bathrooms', [InputRequired()])
 	price = IntegerField('Price per Bedroom per Semester', [InputRequired()])
-	square_footage = IntegerField('Square Footage', [InputRequired()])
+	square_footage = IntegerField('Square Footage of House', [InputRequired()])
 	parking = SelectField('What Parking is Available', choices=valid_parking_types)
 	cats = SelectField('Are Cats Allowed?', choices=yesNo)
 	dogs = SelectField('Are Dogs Allowed?', choices=yesNo)
