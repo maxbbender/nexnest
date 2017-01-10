@@ -56,14 +56,14 @@ def load_user(user_id):
 from nexnest.blueprints.index import indexs
 from nexnest.blueprints.registerTenant import registerTenants
 from nexnest.blueprints.registerLandlord import registerLandlords
-from nexnest.blueprints.listing import listings
+from nexnest.blueprints.listing import viewListings
 from nexnest.blueprints.users import users
 from nexnest.blueprints.createListing import createListings
 
 app.register_blueprint(indexs)
 app.register_blueprint(registerTenants)
 app.register_blueprint(registerLandlords)
-app.register_blueprint(listings)
+app.register_blueprint(viewListings)
 app.register_blueprint(users)
 app.register_blueprint(createListings)
 

@@ -3,7 +3,11 @@ from flask import render_template, abort, request, redirect, url_for, flash, jso
 from ..forms.loginForm import LoginForm
 
 from flask_login import login_required
-# from nexnest.application import session
+from nexnest.application import session
+
+from nexnest.models.listing import Listing
+
+from nexnest.utils.flash import flash_errors
 
 indexs = Blueprint('indexs', __name__, template_folder='../templates')
 
@@ -11,6 +15,7 @@ indexs = Blueprint('indexs', __name__, template_folder='../templates')
 @indexs.route('/index')
 def index():
 	form = LoginForm(request.form)
+	allListings = session.query(Listing).all()
 	listings = [  # fake array of listings
 	        { 
 	            'Street': '25 Myrtle Lane', 
@@ -189,7 +194,7 @@ def index():
 		return redirect(url_for('indexs.index'))
 	return render_template('index.html', 
 							form=form,
-							listings = listings,
+							listings = allListings,
 							title='NexNest')
 @indexs.route('/test')
 @login_required

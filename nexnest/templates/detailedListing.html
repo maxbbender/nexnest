@@ -5,7 +5,7 @@
 		<div class="col-xs-10 col-md-6 col-lg-6">
 			<div class="gallery" align="center">
 				<div class="preview" align="center">
-					<img name="preview" src="static/img/testHouse.jpg" style="height: 300px; width: 100%;" alt=""/>
+					<img name="preview" src="../static/img/testHouse.jpg" style="height: 300px; width: 100%;" alt=""/>
 				</div>
 				<br>
 				<div class="thumbnails">
@@ -23,22 +23,22 @@
 		<div class="col-xs-10 col-md-6 col-lg-6">
 			<div class="row">
 				<div class="col-xs-7">
-					<h4>{{ listing.Street }},</h4>
-					<h5>{{ listing.City }}, {{ listing.State }}, {{ listing.ZipCode }}</h5>
+					<h4>{{ listing.street }},</h4>
+					<h5>{{ listing.city }}, {{ listing.state }}, {{ listing.zip_code }}</h5>
 				</div>
 				<div class="col-xs-5" style="text-align: right">
-					<h2>${{ listing.Price }}</h2>
+					<h2>${{ listing.price }}</h2>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-xs-7">
-					<i class="fa fa-bed" aria-hidden="true"></i> {{ listing.NumBedrooms }} Bedrooms - {{listing.num_full_baths}} Bathrooms - {{ listing.square_footage }} sqft
+					<i class="fa fa-bed" aria-hidden="true"></i> {{ listing.num_bedrooms }} Bedrooms - 3 Bathrooms - {{ listing.square_footage }} sqft
 				</div>
 				<div class="col-xs-5" style="text-align: right">
 					<strong>Landlord: </strong>Pablo Revis
 				</div>
 			</div>
-			<div class="row justify-content-center">
+			<div class="row">
 				<div class="col-lg-4" style="text-align:left">
 					<a href="{{ url_for('indexs.index') }}" class="btn btn-info">Contact Landlord</a>
 				</div>
@@ -71,57 +71,57 @@
 			</div>
 			<div class="row">
 				<div class="col-lg-4">
-					<strong>Furnished:</strong> {{ listing.furnished }}
+					<strong>Furnished:</strong> {% if listing.furnished %} Yes {% else %} No {% endif %}
 				</div>
 				<div class="col-lg-4">
-					<strong>Utilities Included:</strong> {{ listing.utilities_included }}
+					<strong>Utilities Included:</strong> {% if listing.utilities_included %} Yes {% else %} No {% endif %}
 				</div>
 				<div class="col-lg-4">
-					<strong>Emergency Maintenance:</strong> {{ listing.emergency_maintenance }}
+					<strong>Emergency Maintenance:</strong> {% if listing.emergency_maintenance %} Yes {% else %} No {% endif %}
 				</div>
 			</div>			
 			<div class="row">
 				<div class="col-lg-4">
-					<strong>Cats:</strong> {{ listing.cats }}
+					<strong>Cats:</strong> {% if listing.cats %} Yes {% else %} No {% endif %}
 				</div>
 				<div class="col-lg-4">
-					<strong>Dogs:</strong> {{ listing.dogs }}
+					<strong>Dogs:</strong> {% if listing.dogs %} Yes {% else %} No {% endif %}
 				</div>
 				<div class="col-lg-4">
-					<strong>Other Pets:</strong> {{ listing.other_pets }}
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-lg-4">
-					<strong>Washer:</strong> {{ listing.washer }}
-				</div>
-				<div class="col-lg-4">
-					<strong>Dryer:</strong> {{ listing.dryer }}
-				</div>
-				<div class="col-lg-4">
-					<strong>DishWasher:</strong> {{ listing.dishwasher }}
+					<strong>Other Pets:</strong> {% if listing.other_pets %} Yes {% else %} No {% endif %}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-lg-4">
-					<strong>A/C:</strong> {{ listing.air_conditioning }}
+					<strong>Washer:</strong> {% if listing.washer %} Yes {% else %} No {% endif %}
+				</div>
+				<div class="col-lg-4">
+					<strong>Dryer:</strong> {% if listing.dryer %} Yes {% else %} No {% endif %}
+				</div>
+				<div class="col-lg-4">
+					<strong>DishWasher:</strong> {% if listing.dishwasher %} Yes {% else %} No {% endif %}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+					<strong>A/C:</strong> {% if listing.air_conditioning %} Yes {% else %} No {% endif %}
 				</div>
 				<div class="col-lg-4">
 					<strong>Parking:</strong> {{ listing.parking }}
 				</div>
 				<div class="col-lg-4">
-					<strong>Handicap Accessible:</strong> {{ listing.handicap }}
+					<strong>Handicap Accessible:</strong> {% if listing.handicap %} Yes {% else %} No {% endif %}
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-lg-4">
-					<strong>Snow Plowing:</strong> {{ listing.snow_plowing }}
+					<strong>Snow Plowing:</strong> {% if listing.snow_plowing %} Yes {% else %} No {% endif %}
 				</div>
 				<div class="col-lg-4">
-					<strong>Garbage Service:</strong> {{ listing.garbage_service }}
+					<strong>Garbage Service:</strong> {% if listing.garbage_service %} Yes {% else %} No {% endif %}
 				</div>
 				<div class="col-lg-4">
-					<strong>Security Service:</strong> {{ listing.security_service }}
+					<strong>Security Service:</strong> {% if listing.security_service %} Yes {% else %} No {% endif %}
 				</div>
 			</div>
 		</div>
