@@ -22,12 +22,12 @@ class School(Base):
 
     def __init__(self,
                  name,
-                 street,
-                 city,
-                 state,
-                 zip_code,
-                 phone,
-                 website):
+                 street=None,
+                 city=None,
+                 state=None,
+                 zip_code=None,
+                 phone=None,
+                 website=None):
 
         self.name = name
         self.street = street
