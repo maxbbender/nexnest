@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+{% if login_form.errors %}
+          <ul class="errors">
+            {% for field_name, field_errors in login_form.errors|dictsort if field_errors %}
+              {% for error in field_errors %}
+                <li>{{ login_form[field_name].label.text }}: {{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+          </ul>
+{% endif %}
+<form action="{{url_for('users.process_login')}}" method="POST">
+{{login_form.csrf_token}}
+{% for field in login_form %}
+<li>
+{{field.label}} {{field}}
+</li>
+{% endfor %}
+<input type="submit" value="Login">
+</form>
+{% endblock %}

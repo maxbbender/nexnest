@@ -6,22 +6,18 @@ from datetime import datetime as dt
 
 from nexnest.utils.password import hash_password
 
-# from sqlalchemy.orm import relationship
 
-from flask.ext.security import UserMixin
-
-from .role import Role
-
-
-class User(Base, UserMixin):
+class User(Base):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True)
     email = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(128), nullable=False)
     salt = db.Column(db.String(128), nullable=False)
-    name = db.Column(db.String(128))
+    fname = db.Column(db.String(128))
+    lname = db.Column(db.String(128))
     bio = db.Column(db.Text)
+    role = db.Column(db.String(10))
     website = db.Column(db.String(128))
     location = db.Column(db.String(128))
     phone = db.Column(db.String(10))
@@ -30,36 +26,28 @@ class User(Base, UserMixin):
     date_created = db.Column(db.String(128), nullable=False)
     date_modified = db.Column(db.String(128), nullable=False)
     active = db.Column(db.Boolean)
-    roles = db.relationship(Role,
-                            secondary='user_roles',
-                            backref=db.backref('user', lazy='dynamic'))
-    # added_friends = relationship
 
     def __init__(self,
-                 username,
                  email,
                  password,
-                 name,
+                 fname,
+                 lname,
+                 role=None,
                  bio=None,
                  website=None,
                  location=None,
                  phone=None,
                  dob=None,
                  profile_image=None,
-                 role=None
                  ):
 
-        self.username = username
+        self.username = email.split("@")[0]
         self.email = email
 
         self.set_password(password)
 
-        self.name = name
-
-        if role is not None:
-            self.role = role
-        else:
-            self.role = "user"
+        self.fname = fname
+        self.lname = lname
 
         self.bio = bio
         self.website = website
@@ -67,6 +55,9 @@ class User(Base, UserMixin):
         self.phone = phone
         self.dob = dob
 
+        if role is None:
+            role = 'user'
+            
         # if profile_image is None:
         #     image_num = format(randrange(1, 11), '03')
 
@@ -97,3 +88,21 @@ class User(Base, UserMixin):
         self.salt = splitPassword[1]     # Salt
 
         return self
+
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_active(self):
+        return True
+
+    @property
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        try:
+            return unicode(self.id)  # python 2
+        except NameError:
+            return str(self.id)  # python 3

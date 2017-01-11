@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+{% if registration_form.errors %}
+          <ul class="errors">
+            {% for field_name, field_errors in registration_form.errors|dictsort if field_errors %}
+              {% for error in field_errors %}
+                <li>{{ registration_form[field_name].label.text }}: {{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+          </ul>
+{% endif %}
+<form action="{{url_for('users.create')}}" method="POST">
+{{registration_form.csrf_token}}
+{% for field in registration_form %}
+<li>
+{{field.label}} {{field}}
+</li>
+{% endfor %}
+</form>
+{% endblock %}
