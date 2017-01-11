@@ -11,7 +11,7 @@ def upgrade(migrate_engine):
     # users.c.password.drop()
     users.c.dob.drop()
 
-    dob = Column("dob", Date(), nullable=False)
+    dob = Column("dob", Date())
 
     dob.create(users)
 
@@ -27,7 +27,7 @@ def downgrade(migrate_engine):
     users.c.dob.drop()
 
     # password = Column("password", String(128), nullable=False)
-    dob = Column("dob", DateTime(), nullable=False)
+    dob = Column("dob", DateTime())
 
     # password.create(users)
     dob.create(users)

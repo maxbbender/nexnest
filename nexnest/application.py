@@ -71,5 +71,5 @@ def insert_login_form():
     login_form = LoginForm()
     return dict(login_form=login_form)
 
-# Make sure schools is populated
-from nexnest.data import school_gen
+# # Make sure schools is populated
+# from nexnest.data import school_gen

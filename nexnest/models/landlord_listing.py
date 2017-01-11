@@ -21,6 +21,9 @@ class LandlordListing(Base):
         self.landlord = landlord
         self.listing = listing
 
+        self.landlord_id = landlord.user_id
+        self.listing_id = listing.id
+
     def __repr__(self):
         return '<LandlordListing ~ Landlord %r | Listing %r>' % \
             (self.landlord_id, self.listing_id)
