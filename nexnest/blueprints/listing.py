@@ -10,51 +10,54 @@ from nexnest.utils.flash import flash_errors
 
 listings = Blueprint('listings', __name__, template_folder='../templates')
 
+
 @listings.route('/viewListing/<listingID>', methods=['GET', 'POST'])
 def viewListing(listingID):
-	#fake lisiting for testing
-	viewListing = session.query(Listing).filter_by(id=listingID).first()
-	return render_template('detailedListing.html', listing=viewListing, title='Listing')
+    # fake lisiting for testing
+    viewListing = session.query(Listing).filter_by(id=listingID).first()
+    return render_template('detailedListing.html', listing=viewListing, title='Listing')
+
 
 @listings.route('/landlord/createListing', methods=['GET', 'POST'])
 def createListing():
     form = ListingForm(request.form)
     if request.method == 'POST' and form.validate():
         newListing = Listing(street=form.street.data,
-        					apartment_number=form.apartment_number.data, 
-                            city=form.city.data, 
-                            state=form.state.data,
-                            zip_code=form.zip_code.data,
-                            start_date=form.start_date.data,
-                            end_date=form.end_date.data,
-                            time_period=form.time_period.data,
-                            unit_type=form.unit_type.data,
-                            num_bedrooms=form.num_bedrooms.data,
-                            num_full_baths=form.num_full_baths.data,
-                            num_half_baths=form.num_half_baths.data,
-                            price=form.price.data,
-                            square_footage=form.square_footage.data,
-                            parking=form.parking.data,
-                            cats=form.cats.data,                     
-                            dogs=form.dogs.data,
-                            other_pets=form.other_pets.data,
-                            washer=form.washer.data,
-                            dryer=form.dryer.data,
-                            dishwasher=form.dishwasher.data,
-                            air_conditioning=form.air_conditioning.data,
-                            handicap=form.handicap.data,
-                            furnished=form.furnished.data,
-                            utilities_included=form.utilities_included.data,
-                            emergency_maintenance=form.emergency_maintenance.data,
-                            snow_plowing=form.snow_plowing.data,
-                            garbage_service=form.garbage_service.data,
-                            security_service=form.security_service.data,
-                            description=form.description.data)
+                             apartment_number=form.apartment_number.data,
+                             city=form.city.data,
+                             state=form.state.data,
+                             zip_code=form.zip_code.data,
+                             start_date=form.start_date.data,
+                             end_date=form.end_date.data,
+                             time_period=form.time_period.data,
+                             unit_type=form.unit_type.data,
+                             num_bedrooms=form.num_bedrooms.data,
+                             num_full_baths=form.num_full_baths.data,
+                             num_half_baths=form.num_half_baths.data,
+                             price=form.price.data,
+                             square_footage=form.square_footage.data,
+                             parking=form.parking.data,
+                             cats=form.cats.data,
+                             dogs=form.dogs.data,
+                             other_pets=form.other_pets.data,
+                             washer=form.washer.data,
+                             dryer=form.dryer.data,
+                             dishwasher=form.dishwasher.data,
+                             air_conditioning=form.air_conditioning.data,
+                             handicap=form.handicap.data,
+                             furnished=form.furnished.data,
+                             utilities_included=form.utilities_included.data,
+                             emergency_maintenance=form.emergency_maintenance.data,
+                             snow_plowing=form.snow_plowing.data,
+                             garbage_service=form.garbage_service.data,
+                             security_service=form.security_service.data,
+                             description=form.description.data)
         session.add(newListing)
         session.commit()
         flash('Listing Created')
         return redirect(url_for('indexs.index'))
     return render_template('/landlord/createListing.html', form=form, title='Create Listing')
+
 
 @listings.route('/landlord/editListing/<listingID>', methods=['GET', 'POST'])
 def editListing(listingID):

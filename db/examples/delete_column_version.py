@@ -20,8 +20,8 @@ def downgrade(migrate_engine):
     AAAA = Table('XXXX', meta, autoload=True)
 
     # password = Column("password", String(128), nullable=False)
-    BBBB = Column("XXXX", String(128), nullable=False)
-    CCCC = Column("XXXX", String(128), nullable=False)
+    BBBB = Column("XXXX", String(128))
+    CCCC = Column("XXXX", String(128))
 
     # password.create(users)
     BBBB.create(AAAA)
