@@ -4,6 +4,9 @@ from nexnest.models.user import User
 from nexnest.models.listing import Listing
 from nexnest.models.landlord import Landlord
 from nexnest.models.landlord_listing import LandlordListing
+from nexnest.models.group import Group
+from nexnest.models.group_user import GroupUser
+from nexnest.models.group_listing import GroupListing
 
 import factory
 from faker import Faker
@@ -82,7 +85,28 @@ class LandlordListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     listing = factory.SubFactory(ListingFactory)
 
 
-class LandlordListingFactory(factory.alchemy.SQLAlchemyModelFactory):
+class GroupFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
-        model = LandlordListing
+        model = Group
         sqlalchemy_session = session
+
+    name = factory.LazyAttribute(lambda x: fake.company())
+    leader = factory.SubFactory(UserFactory)
+
+
+class GroupUserFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = GroupUser
+        sqlalchemy_session = session
+
+    group = factory.SubFactory(GroupFactory)
+    user = factory.SubFactory(UserFactory)
+
+
+class GroupListingFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = GroupListing
+        sqlalchemy_session = session
+
+    group = factory.SubFactory(GroupFactory)
+    listing = factory.SubFactory(ListingFactory)

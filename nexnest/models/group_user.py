@@ -27,6 +27,8 @@ class GroupUser(Base):
             group,
             user
     ):
+        self.group_id = group.id
+        self.user_id = user.id
         self.group = group
         self.user = user
 

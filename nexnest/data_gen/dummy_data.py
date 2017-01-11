@@ -1,6 +1,6 @@
 from nexnest.application import session
 
-from nexnest.data_gen.factories import UserFactory, ListingFactory, LandlordFactory, LandlordListingFactory
+from nexnest.data_gen.factories import UserFactory, ListingFactory, LandlordFactory, LandlordListingFactory, GroupFactory, GroupUserFactory, GroupListingFactory
 
 # USERS
 user1 = UserFactory()
@@ -44,4 +44,27 @@ session.add(landlordListing1)
 session.add(landlordListing2)
 session.add(landlordListing3)
 session.add(landlordListing4)
+session.commit()
+
+# GROUP
+group1 = GroupFactory(leader=user2)
+
+session.add(group1)
+session.commit()
+
+# GROUP USERS
+groupuser1 = GroupUserFactory(group=group1, user=user2)
+groupuser2 = GroupUserFactory(group=group1, user=user3)
+groupuser3 = GroupUserFactory(group=group1, user=user4)
+groupuser4 = GroupUserFactory(group=group1, user=user5)
+
+session.add(groupuser1)
+session.add(groupuser2)
+session.add(groupuser3)
+session.add(groupuser4)
+session.commit()
+
+# GROUP LISTING
+groupListing = GroupListingFactory(group=group1, listing=listing1)
+session.add(groupListing)
 session.commit()
