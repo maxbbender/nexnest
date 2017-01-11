@@ -20,6 +20,13 @@ valid_unit_types = [
 	('3', 'apartment')
 ]
 
+valid_time_periods = [
+	('0', 'Month'),
+	('1', 'Semester'),
+	('2', 'Year'),
+	('3', 'Summer')
+]
+
 states = [
 	('0', 'AL'),
 	('1', 'AK'),
@@ -75,11 +82,13 @@ states = [
 
 class ListingForm(FlaskForm):
 	street = StringField('Street Address', [Length(min=2, max=50), InputRequired()])
+	apartment_number = IntegerField('Apartment Number', [InputRequired()])
 	city = StringField('City', [Length(min=2, max=50), InputRequired()])
 	state = SelectField('State', choices=states)
 	zip_code = StringField('Zipcode', [Length(min=5, max=5), InputRequired()])
 	start_date = StringField('Start Date', [Length(min=5, max=15), InputRequired()])
 	end_date = StringField('End Date', [Length(min=5, max=15), InputRequired()])
+	time_period = SelectField('Length of Lease', choices=valid_time_periods)
 	unit_type = SelectField('Unit Type', choices=valid_unit_types)
 	num_bedrooms = IntegerField('Number of Bedrooms', [InputRequired()])
 	num_full_baths = IntegerField('Number of Full Bathrooms', [InputRequired()])

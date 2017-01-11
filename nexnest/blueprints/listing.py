@@ -20,16 +20,18 @@ def viewListing(listingID):
 def createListing():
     form = ListingForm(request.form)
     if request.method == 'POST' and form.validate():
-        newListing = Listing(street=form.street.data, 
+        newListing = Listing(street=form.street.data,
+        					apartment_number=form.apartment_number.data, 
                             city=form.city.data, 
                             state=form.state.data,
                             zip_code=form.zip_code.data,
                             start_date=form.start_date.data,
                             end_date=form.end_date.data,
+                            time_period=form.time_period.data,
                             unit_type=form.unit_type.data,
                             num_bedrooms=form.num_bedrooms.data,
-                            #num_full_baths=form.start_date.data,
-                            #num_half_baths=form.start_date.data,
+                            num_full_baths=form.num_full_baths.data,
+                            num_half_baths=form.num_half_baths.data,
                             price=form.price.data,
                             square_footage=form.square_footage.data,
                             parking=form.parking.data,
@@ -46,8 +48,8 @@ def createListing():
                             emergency_maintenance=form.emergency_maintenance.data,
                             snow_plowing=form.snow_plowing.data,
                             garbage_service=form.garbage_service.data,
-                            security_service=form.security_service.data)
-                            #description=form.start_date.data
+                            security_service=form.security_service.data,
+                            description=form.description.data)
         session.add(newListing)
         session.commit()
         flash('Listing Created')
@@ -65,10 +67,12 @@ def editListing(listingID):
         form.zip_code.data = currentListing.zip_code
         form.start_date.data = currentListing.start_date
         form.end_date.data = currentListing.end_date
+        form.time_period.data = currentListing.time_period
         form.unit_type.data = currentListing.unit_type
+        form.apartment_number.data = currentListing.apartment_number
         form.num_bedrooms.data = currentListing.num_bedrooms
-        #form.num_full_baths.data = currentListing.num_full_baths
-        #form.num_half_baths.data = currentListing.num_half_baths
+        form.num_full_baths.data = currentListing.num_full_baths
+        form.num_half_baths.data = currentListing.num_half_baths
         form.price.data = currentListing.price
         form.square_footage.data = currentListing.square_footage
         form.parking.data = currentListing.parking
@@ -86,17 +90,19 @@ def editListing(listingID):
         form.snow_plowing.data = currentListing.snow_plowing
         form.garbage_service.data = currentListing.garbage_service
         form.security_service.data = currentListing.security_service
-        #form.description.data = currentListing.description
+        form.description.data = currentListing.description
     if  form.validate_on_submit():
         currentListing.street = form.street.data
         currentListing.city = form.city.data
         currentListing.zip_code = form.zip_code.data
         currentListing.start_date = form.start_date.data
         currentListing.end_date = form.end_date.data
+        currentListing.time_period = form.time_period.data
         currentListing.unit_type = form.unit_type.data
+        currentListing.apartment_number = form.apartment_number.data
         currentListing.num_bedrooms = form.num_bedrooms.data
-        #currentListing.num_full_baths.data = form.num_full_baths.data
-        #currentListing.num_half_baths.data = form.num_half_baths.data
+        currentListing.num_full_baths = form.num_full_baths.data
+        currentListing.num_half_baths = form.num_half_baths.data
         currentListing.price = form.price.data
         currentListing.square_footage = form.square_footage.data
         currentListing.parking = form.parking.data
@@ -114,7 +120,7 @@ def editListing(listingID):
         currentListing.snow_plowing = form.snow_plowing.data
         currentListing.garbage_service = form.garbage_service.data
         currentListing.security_service = form.security_service.data
-        #currentListing.description = form.description.data
+        currentListing.description = form.description.data
         session.commit()
         flash('Listing Updated', 'info')
         return redirect(url_for('listing.viewListing', listingID=listingID))
