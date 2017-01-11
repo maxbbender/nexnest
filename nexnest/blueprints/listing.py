@@ -58,39 +58,8 @@ def createListing():
 
 @listings.route('/landlord/editListing/<listingID>', methods=['GET', 'POST'])
 def editListing(listingID):
-    form = ListingForm(request.form)
     currentListing = session.query(Listing).filter_by(id=listingID).first()
-    if request.method == 'GET':
-        print(currentListing.cats)
-        form.street.data = currentListing.street
-        form.city.data = currentListing.city
-        form.zip_code.data = currentListing.zip_code
-        form.start_date.data = currentListing.start_date
-        form.end_date.data = currentListing.end_date
-        form.time_period.data = currentListing.time_period
-        form.unit_type.data = currentListing.unit_type
-        form.apartment_number.data = currentListing.apartment_number
-        form.num_bedrooms.data = currentListing.num_bedrooms
-        form.num_full_baths.data = currentListing.num_full_baths
-        form.num_half_baths.data = currentListing.num_half_baths
-        form.price.data = currentListing.price
-        form.square_footage.data = currentListing.square_footage
-        form.parking.data = currentListing.parking
-        form.cats.select = currentListing.cats
-        form.dogs.select = currentListing.dogs
-        form.other_pets.data = currentListing.other_pets
-        form.washer.data = currentListing.washer
-        form.dryer.data = currentListing.dryer
-        form.dishwasher.data = currentListing.dishwasher
-        form.air_conditioning.data = currentListing.air_conditioning
-        form.handicap.data = currentListing.handicap
-        form.furnished.data = currentListing.furnished
-        form.utilities_included.data = currentListing.utilities_included
-        form.emergency_maintenance.data = currentListing.emergency_maintenance
-        form.snow_plowing.data = currentListing.snow_plowing
-        form.garbage_service.data = currentListing.garbage_service
-        form.security_service.data = currentListing.security_service
-        form.description.data = currentListing.description
+    form = ListingForm(obj = currentListing)    
     if  form.validate_on_submit():
         currentListing.street = form.street.data
         currentListing.city = form.city.data

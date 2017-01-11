@@ -82,15 +82,15 @@ def viewUser(userID):
 
 @users.route('/editAccount', methods=['GET', 'POST'])
 def editAccount():
-    form = EditAccountForm(request.form)
     currentUser = session.query(User).filter_by(id=current_user.id).first()
-    if request.method == 'GET':
-        form.fname.data = current_user.fname
-        form.lname.data = current_user.lname
-        form.email.data = current_user.email
-        form.website.data = current_user.website
-        form.bio.data = current_user.bio
-        form.phone.data = current_user.phone
+    form = EditAccountForm(obj = currentUser)    
+    # if request.method == 'GET':
+    #     form.fname.data = current_user.fname
+    #     form.lname.data = current_user.lname
+    #     form.email.data = current_user.email
+    #     form.website.data = current_user.website
+    #     form.bio.data = current_user.bio
+    #     form.phone.data = current_user.phone
         #form.school.data = current_user.school
     if  form.validate_on_submit():
         current_user.fname = form.fname.data
