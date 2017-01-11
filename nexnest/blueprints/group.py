@@ -21,11 +21,10 @@ def createGroup():
         session.add(newGroup)
         session.commit()
         flash('Group Created')
-        return redirect(url_for('viewGroups.viewGroup', groupID=newGroup.id))
+        return redirect(url_for('indexs.index', groupID=newGroup.id))
     return render_template('createGroup.html', form=form, title='Create Group')
 
-@groups.route('/viewGroup/<groupID>', methods=['GET', 'POST'])
-def viewGroup(groupID):
-	#fake lisiting for testing
-	viewGroup = session.query(Group).filter_by(id=groupID).first()
-	return render_template('group.html', group=viewGroup, title='Group')
+#@groups.route('/myGroup', methods=['GET', 'POST'])
+#def viewGroup(groupID):
+	#currentUser.myGroup
+#	return render_template('group.html', group=viewGroup, title='Group')

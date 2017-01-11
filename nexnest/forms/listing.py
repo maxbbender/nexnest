@@ -73,7 +73,7 @@ states = [
 	('49', 'WY')
 ]
 
-class CreateListingForm(FlaskForm):
+class ListingForm(FlaskForm):
 	street = StringField('Street Address', [Length(min=2, max=50), InputRequired()])
 	city = StringField('City', [Length(min=2, max=50), InputRequired()])
 	state = SelectField('State', choices=states)
@@ -102,3 +102,4 @@ class CreateListingForm(FlaskForm):
 	garbage_service  = SelectField('Is garbage service included?', choices=yesNo)
 	security_service  = SelectField('Is there a security service provided?', choices=yesNo)
 	description  = TextAreaField('Please provide a detailed description of the property', [Length(min=1, max=1500), InputRequired()])
+
