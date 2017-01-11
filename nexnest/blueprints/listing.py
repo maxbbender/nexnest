@@ -62,7 +62,10 @@ def createListing():
 @listings.route('/landlord/editListing/<listingID>', methods=['GET', 'POST'])
 def editListing(listingID):
     currentListing = session.query(Listing).filter_by(id=listingID).first()
-    form = ListingForm(obj = currentListing)    
+    form = ListingForm(obj = currentListing, 
+                      unit_type = currentListing.unit_type,
+                      time_period = currentListing.time_period,
+                      parking = currentListing.parking)
     if  form.validate_on_submit():
         currentListing.street = form.street.data
         currentListing.city = form.city.data
@@ -95,5 +98,5 @@ def editListing(listingID):
         currentListing.description = form.description.data
         session.commit()
         flash('Listing Updated', 'info')
-        return redirect(url_for('listing.viewListing', listingID=listingID))
+        return redirect(url_for('listings.viewListing', listingID=listingID))
     return render_template('/landlord/createListing.html', form=form, title='Edit Listing')
