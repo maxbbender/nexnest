@@ -17,8 +17,10 @@ XXXX = Table(
 def upgrade(migrate_engine):
     meta.bind = migrate_engine
     XXXX.create()
+    pass
 
 
 def downgrade(migrate_engine):
     meta.bind = migrate_engine
     XXXX.drop()
+    pass

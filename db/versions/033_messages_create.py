@@ -17,8 +17,10 @@ messages = Table('messages', meta,
 def upgrade(migrate_engine):
     meta.bind = migrate_engine
     messages.create()
+    pass
 
 
 def downgrade(migrate_engine):
     meta.bind = migrate_engine
     messages.drop()
+    pass

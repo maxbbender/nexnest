@@ -39,9 +39,9 @@ def downgrade(migrate_engine):
 
     ForeignKeyConstraint(
         columns=[maintenance_message.c.message_id],
-        refcolumns=[messages.c.id]).create()
+        refcolumns=[messages.c.id]).drop()
     ForeignKeyConstraint(
         columns=[maintenance_message.c.maintenance_id],
-        refcolumns=[maintenances.c.id]).create()
+        refcolumns=[maintenances.c.id]).drop()
 
     maintenance_messages.drop()
