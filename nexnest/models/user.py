@@ -21,7 +21,7 @@ class User(Base):
     website = db.Column(db.String(128))
     location = db.Column(db.String(128))
     phone = db.Column(db.String(10))
-    dob = db.Column(db.DateTime)
+    dob = db.Column(db.Date)
     profile_image = db.Column(db.String(128))
     date_created = db.Column(db.String(128), nullable=False)
     date_modified = db.Column(db.String(128), nullable=False)

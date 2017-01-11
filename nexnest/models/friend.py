@@ -13,6 +13,7 @@ class Friend(Base):
     target_user_id = db.Column(db.Integer,
                                db.ForeignKey('users.id'),
                                primary_key=True)
+    accepted = db.Column(db.Boolean)
 
     def __init__(
             self,
@@ -22,6 +23,7 @@ class Friend(Base):
 
         self.source_user = source_user
         self.target_user = target_user
+        self.accepted = False
 
     def __repr__(self):
         return '<Friend ~ Source User %r | Target User %r>' % \
