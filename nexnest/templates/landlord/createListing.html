@@ -5,6 +5,7 @@
 		<div class="col-xs-0 col-lg-3"></div>
 		<div class="col-xs-12 col-lg-6">
 			{% from "_formhelpers.html" import render_field %}
+            {% from "_checkboxhelpers.html" import render_checkbox %}
 			<form method=post>
 			{{form.csrf_token}}
 			  	<dl>
@@ -49,28 +50,39 @@
 				    	<div class="col-xs-12 col-lg-4 justify-content-center">
 				    		{{ render_field(form.num_half_baths, class="form-control", type="number") }}
 				    	</div>
-				    </div>				    
+				    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-lg-4 justify-content-center">
+                            {{ render_checkbox(form.cats, class="form-control") }}
+                        </div>
+                        <div class="col-xs-12 col-lg-4 justify-content-center">
+                            {{ render_checkbox(form.dogs, class="form-control") }}
+                        </div>
+                        <div class="col-xs-12 col-lg-4 justify-content-center">
+                            {{ render_checkbox(form.other_pets, class="form-control") }}
+                        </div>
+                    </div>				    
 				    {{ render_field(form.price, class="form-control", type="number") }}
 				    {{ render_field(form.square_footage, class="form-control", type="number") }}
 				    {{ render_field(form.parking, class="form-control", type="text") }}
-				    {{ render_field(form.cats, class="form-control") }}
-				    {{ render_field(form.dogs, class="form-control") }}
-				    {{ render_field(form.other_pets, class="form-control") }}
-				    {{ render_field(form.washer, class="form-control") }}
-				    {{ render_field(form.dryer, class="form-control") }}
-				    {{ render_field(form.dishwasher, class="form-control") }}
-				    {{ render_field(form.air_conditioning, class="form-control") }}
-				    {{ render_field(form.handicap, class="form-control") }}
-				    {{ render_field(form.furnished, class="form-control") }}
-				    {{ render_field(form.utilities_included, class="form-control") }}
-				    {{ render_field(form.emergency_maintenance, class="form-control") }}
-				    {{ render_field(form.snow_plowing, class="form-control") }}
-				    {{ render_field(form.garbage_service, class="form-control") }}
-				    {{ render_field(form.security_service, class="form-control") }}
+                    
+                    
+				    
+				    {{ render_checkbox(form.washer, class="form-control") }}
+				    {{ render_checkbox(form.dryer, class="form-control") }}
+				    {{ render_checkbox(form.dishwasher, class="form-control") }}
+				    {{ render_checkbox(form.air_conditioning, class="form-control") }}
+				    {{ render_checkbox(form.handicap, class="form-control") }}
+				    {{ render_checkbox(form.furnished, class="form-control") }}
+				    {{ render_checkbox(form.utilities_included, class="form-control") }}
+				    {{ render_checkbox(form.emergency_maintenance, class="form-control") }}
+				    {{ render_checkbox(form.snow_plowing, class="form-control") }}
+				    {{ render_checkbox(form.garbage_service, class="form-control") }}
+				    {{ render_checkbox(form.security_service, class="form-control") }}
 				    {{ render_field(form.description, class="form-control", type="text", rows=10) }}
 			  	</dl>
 			  	<p>
-			  		<input type='submit' value='Create Listing' class="btn btn-info">
+			  		<input type='submit' value='{{ title }}' class="btn btn-info">
 			  	</p>
 			</form>
 		</div>

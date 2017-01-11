@@ -1,0 +1,14 @@
+{% macro render_checkbox(field) %}
+    <div class="row">
+        <div class="col-xs-9" style="align-self: center;">
+            <strong>{{ field.label }}</strong>
+        </div>
+        <div class="col-xs-1" style="padding-top: 10px;">
+            <div class="checkbox">
+                <label style="font-size: 1.5em">
+                    {{ field(**kwargs)|safe }}<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+                </label>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
