@@ -9,4 +9,11 @@ sudo cp /vagrant/vagrant_config/pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
 sudo chmod 644 /etc/postgresql/9.3/main/pg_hba.conf
 sudo chown postgres /etc/postgresql/9.3/main/pg_hba.conf
 sudo chgrp postgres /etc/postgresql/9.3/main/pg_hba.conf
+
+sudo rm /etc/postgresql/9.3/main/postgresql.conf
+sudo cp /vagrant/vagrant_config/postgresql.conf /etc/postgresql/9.3/main/postgresql.conf
+sudo chmod 644 /etc/postgresql/9.3/main/postgresql.conf
+sudo chown postgres /etc/postgresql/9.3/main/postgresql.conf
+sudo chgrp postgres /etc/postgresql/9.3/main/postgresql.conf
+
 sudo /etc/init.d/postgresql restart
