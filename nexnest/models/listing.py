@@ -39,6 +39,9 @@ class Listing(Base):
     description = db.Column(db.Text)
     num_full_baths = db.Column(db.Integer)
     num_half_baths = db.Column(db.Integer)
+    time_period = db.Column(db.String(8))
+    apartment_number = db.Column(db.Integer)
+    disabled = db.Column(db.Boolean)
 
     # This is for whether or not the landlord has deleted
     # the listing. This comes into play for checking dates
@@ -82,7 +85,9 @@ class Listing(Base):
             security_service,
             description,
             num_half_baths,
-            num_full_baths):
+            num_full_baths,
+            time_period,
+            apartment_number):
 
         self.street = street
         self.city = city
@@ -110,12 +115,19 @@ class Listing(Base):
         self.description = description
         self.num_full_baths = num_full_baths
         self.num_half_baths = num_half_baths
-
-        self.active = True
-        self.show = True
+        self.apartment_number = apartment_number
+        self.disabled = False
+        self.active = False  # Landlords have to activate listing
+        self.show = False  # Landlord have to activate listing
 
         valid_parking_types = ['onstreet', 'offstreet', 'none']
         valid_unit_types = ['room', 'house', 'complex', 'apartment']
+        valid_time_periods = ['month', 'semester', 'year', 'summer']
+
+        if time_period in valid_time_periods:
+            self.time_period = time_period
+        else:
+            self.time_period = 'month'
 
         if unit_type in valid_unit_types:
             self.unit_type = unit_type

@@ -17,8 +17,10 @@ roles = Table('roles', meta,
 def upgrade(migrate_engine):
     meta.bind = migrate_engine
     roles.create()
+    pass
 
 
 def downgrade(migrate_engine):
     meta.bind = migrate_engine
     roles.drop()
+    pass

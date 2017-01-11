@@ -1,13 +1,16 @@
 from datetime import datetime as dt
 
-from nexnest.application import db
+from nexnest.application import db, session
+
+from flask import flash
 
 from .base import Base
 
 from sqlalchemy import event
 
+from .group_user import GroupUser
 
-# class PostReport(Base):
+
 class Group(Base):
     __tablename__ = 'groups'
     id = db.Column(db.Integer, primary_key=True)
@@ -31,6 +34,19 @@ class Group(Base):
 
     def __repr__(self):
         return '<Group %r>' % self.name
+
+    def addUserToGroup(self, user):
+        # First we want to check how many users are a part
+        # of the group already. Max users 6
+        num_users = session.query(GroupUser).filter_by(
+            group_id=self.id).count()
+
+        if num_users < 6:
+            newGroupUser = GroupUser(self, user)
+            session.add(newGroupUser)
+            session.commit()
+        else:
+            flash("Group Size Limit Reached")
 
 
 def update_date_modified(mapper, connection, target):
