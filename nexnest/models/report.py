@@ -7,7 +7,6 @@ from .base import Base
 from sqlalchemy import event
 
 
-# class PostReport(Base):
 class Report(Base):
     __tablename__ = 'reports'
     id = db.Column(db.Integer, primary_key=True)
