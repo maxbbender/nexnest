@@ -1,10 +1,55 @@
 {% extends "base.html" %}
 {% block content %}
     Group Name : {{group.name}}
-    <br>Group Users
+    <br>Accepted Group Users
     <ul>
         {% for user in group.acceptedUsers %}
         <li>User : {{user.username}}</li>
         {% endfor %}
     </ul>
+    <br>Invited Group Users
+    <ul>
+        {% for user in group.unAcceptedUsers %}
+        <li>User : {{user.username}}</li>
+        {% endfor %}
+    </ul>
+
+    <br><br>
+
+    Add User to Group (search by username (first part of email))
+    <input id="userSearch" type="text">
+    <form id="invite_user" action="{{url_for('groups.invite')}}" method="POST">
+        {{invite_form.csrf_token}}
+        {{invite_form.group_id(value=group.id)}}
+        {{invite_form.user_id}}
+    </form>
+
+    <ul class="invite" id="userSearchUL">
+    </ul>
+{% endblock %}
+{% block scripts %}
+<script>
+    $(".invite").on("click", "li", function() {
+        var user_id = $(this).attr('id');
+        $("#user_id").val(user_id);
+        $("#invite_user").submit()
+    });
+
+    $("#userSearch").keyup(function() {
+        var keyToSearch = $("#userSearch").val();
+        // alert($("#userSearch").val())
+        $("#userSearchUL").empty();
+        $.getJSON("/user/search/" + keyToSearch + "/" + {{group.id}}, function(data) {
+            // alert(data.users)
+            $.each(data.users, function(key, user) {
+                // alert(key)
+                // alert(val.username)
+                $("#userSearchUL").append('<li id="' + user.id + '" class="invite">' + user.username + ' (' + user.fname + ' ' + user.lname + ')<span class="invite btn" id="' + user.id + '">Invite</span></li>');
+            });
+            
+        });
+    });
+
+
+</script>
 {% endblock %}

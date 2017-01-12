@@ -8,12 +8,16 @@ user2 = UserFactory()
 user3 = UserFactory()
 user4 = UserFactory()
 user5 = UserFactory()
+user6 = UserFactory()
+user7 = UserFactory()
 
 session.add(user1)
 session.add(user2)
 session.add(user3)
 session.add(user4)
 session.add(user5)
+session.add(user6)
+session.add(user7)
 session.commit()
 
 # LANDLORDS

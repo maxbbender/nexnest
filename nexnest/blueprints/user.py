@@ -5,6 +5,7 @@ from flask_login import login_user, logout_user, current_user
 from nexnest.application import session
 
 from nexnest.models.user import User
+from nexnest.models.group import Group
 
 from nexnest.forms.register_form import RegistrationForm
 from nexnest.forms.loginForm import LoginForm
@@ -118,9 +119,34 @@ def logout():
     return redirect("/")
 
 
-@users.route('/search/<username>')
+@users.route('/user/search/<username>')
 def searchForUser(username):
     usersToReturn = session.query(User).filter(func.lower(
         User.username).like(func.lower(username + "%"))).all()
 
-    return jsonify(usersToReturn)
+    return jsonify(users=[i.serialize for i in usersToReturn])
+
+
+@users.route('/user/search/<username>/<group_id>')
+def searchForGroupUser(username, group_id):
+    usersToReturn = session.query(User).filter(func.lower(
+        User.username).like(func.lower(username + "%"))).all()
+
+    group = session.query(Group).filter_by(id=group_id).first()
+
+    users = []
+    apartOfGroup = False
+    for user in usersToReturn:
+        if user.isLandlord:
+            continue
+
+        for groupUser in user.groups:
+            if groupUser.group == group:
+                apartOfGroup = True
+                break
+        if not apartOfGroup:
+            users.append(user.serialize)
+        else:
+            apartOfGroup = False
+
+    return jsonify(users=users)
