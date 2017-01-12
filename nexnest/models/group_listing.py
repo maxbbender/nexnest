@@ -36,6 +36,8 @@ class GroupListing(Base):
             group,
             listing
     ):
+        self.group_id = group.id
+        self.listing_id = listing.id
         self.group = group
         self.listing = listing
 

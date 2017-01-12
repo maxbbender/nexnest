@@ -15,3 +15,7 @@ eralchemy
 
 # misc
 python-dotenv
+
+# Data Generation
+factory_boy
+Faker

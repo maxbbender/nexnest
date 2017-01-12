@@ -1,10 +1,17 @@
+
+from nexnest.application import db, session
+from nexnest.utils.password import hash_password
+
+from nexnest.models.direct_message import DirectMessage
+from nexnest.models.group import Group
+from nexnest.models.group_user import GroupUser
+
 from .base import Base
 
-from nexnest.application import db
 
 from datetime import datetime as dt
 
-from nexnest.utils.password import hash_password
+from sqlalchemy.orm import relationship
 
 
 class User(Base):
@@ -26,6 +33,14 @@ class User(Base):
     date_created = db.Column(db.String(128), nullable=False)
     date_modified = db.Column(db.String(128), nullable=False)
     active = db.Column(db.Boolean)
+    sent_direct_messages = relationship(DirectMessage,
+                                        backref='source_user',
+                                        foreign_keys='[DirectMessage.source_user_id]')
+    recieved_direct_messages = relationship(DirectMessage,
+                                        backref='target_user',
+                                        foreign_keys='[DirectMessage.target_user_id]')
+    group = relationship(Group, secondary=GroupUser, backref='user')
+
 
     def __init__(self,
                  email,
@@ -57,7 +72,7 @@ class User(Base):
 
         if role is None:
             role = 'user'
-            
+
         # if profile_image is None:
         #     image_num = format(randrange(1, 11), '03')
 
@@ -106,3 +121,6 @@ class User(Base):
             return unicode(self.id)  # python 2
         except NameError:
             return str(self.id)  # python 3
+
+    def accept_group(group_id):
+        session.query()

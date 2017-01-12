@@ -25,6 +25,7 @@ class Landlord(Base):
                  zip_code):
 
         self.user = user
+        self.user_id = user.id
         self.online_pay = online_pay
         self.check_pay = check_pay
         self.street = street
