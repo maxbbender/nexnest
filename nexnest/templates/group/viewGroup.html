@@ -1,4 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
     Group Name : {{group.name}}
+    <br>Group Users
+    <ul>
+        {% for user in group.acceptedUsers %}
+        <li>User : {{user.username}}</li>
+        {% endfor %}
+    </ul>
 {% endblock %}

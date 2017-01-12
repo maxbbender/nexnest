@@ -43,6 +43,8 @@ class User(Base):
                                             foreign_keys='[DirectMessage.target_user_id]')
     groups = relationship("GroupUser", back_populates='user')
 
+    groupLeader = relationship("Group", backref='leader')
+
     def __init__(self,
                  email,
                  password,
