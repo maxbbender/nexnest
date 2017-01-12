@@ -13,6 +13,8 @@ from datetime import datetime as dt
 
 from sqlalchemy.orm import relationship
 
+from flask import flash
+
 
 class User(Base):
     __tablename__ = 'users'
@@ -37,10 +39,10 @@ class User(Base):
                                         backref='source_user',
                                         foreign_keys='[DirectMessage.source_user_id]')
     recieved_direct_messages = relationship(DirectMessage,
-                                        backref='target_user',
-                                        foreign_keys='[DirectMessage.target_user_id]')
-    groups = relationship("Group", secondary=GroupUser.__table__, backref='users')
-
+                                            backref='target_user',
+                                            foreign_keys='[DirectMessage.target_user_id]')
+    groups = relationship(
+        "Group", secondary=GroupUser.__table__, backref='users')
 
     def __init__(self,
                  email,
@@ -121,3 +123,30 @@ class User(Base):
             return unicode(self.id)  # python 2
         except NameError:
             return str(self.id)  # python 3
+
+    @property
+    def accepted_groups(self):
+        acceptedGroups = []
+
+        accepted_group_users = session.query(GroupUser).filter_by(
+            accepted=True,
+            user_id=self.id).all()
+
+        for group_user in accepted_group_users:
+            acceptedGroups.append(session.query(
+                Group).filter_by(id=group_user.group_id)).first()
+
+        return acceptedGroups
+
+    def accept_group_invite(self, group):
+        group_user = session.query(GroupUser.filter_by(
+            accepted=False,
+            group_id=group.id,
+            user_id=self.id)).first()
+
+        if group_user is not None:
+            group_user.accepted = True
+            session.commit()
+        else:
+            flash("Unable to find record to accept")
+        

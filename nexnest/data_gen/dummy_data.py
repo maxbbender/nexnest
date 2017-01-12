@@ -58,6 +58,11 @@ groupuser2 = GroupUserFactory(group=group1, user=user3)
 groupuser3 = GroupUserFactory(group=group1, user=user4)
 groupuser4 = GroupUserFactory(group=group1, user=user5)
 
+groupuser1.accepted = True
+groupuser2.accepted = True
+groupuser3.accepted = True
+groupuser4.accepted = True
+
 session.add(groupuser1)
 session.add(groupuser2)
 session.add(groupuser3)

@@ -24,36 +24,49 @@ def createGroup():
 
         groupHasConflict = None
         conflict = False
-        for group in current_user.groups:
+        for group in current_user.accepted_groups:
             if form.start_date.data < group.start_date and form.end_date.data > group.start_date:
-                # If I start before the group start, but end anywhere after group start, this conflicts with current group
+                # If I start before the group start, but end anywhere after
+                # group start, this conflicts with current group
                 groupHasConflict = group
                 conflict = True
                 break
             elif form.start_date.data >= group.start_date and form.start_date.data <= group.end_date:
-                # If I start after the group starts, but not after group ends, also conflict with current group
+                # If I start after the group starts, but not after group ends,
+                # also conflict with current group
                 groupHasConflict = group
                 conflict = True
                 break
 
         if not conflict:
             newGroup = Group(name=form.name.data,
-                         leader=current_user,
-                         start_date=form.start_date.data,
-                         end_date=form.end_date.data)
+                             leader=current_user,
+                             start_date=form.start_date.data,
+                             end_date=form.end_date.data)
 
             session.add(newGroup)
             session.commit()
+            flash('Group Created')
+            return redirect(url_for('groups.viewGroup', group_id=newGroup.id))
         else:
-            flash("Conflict with Group %s. Cannot create group in same time period as %s. Start(%s) End(%s)" % (groupHasConflict.name, groupHasConflict.name, groupHasConflict.start_date, groupHasConflict.end_date))
+            flash("Conflict with Group %s. Cannot create group in same time period as %s. Start(%s) End(%s)" % (
+                groupHasConflict.name, groupHasConflict.name, groupHasConflict.start_date, groupHasConflict.end_date))
             return redirect(url_for('groups.createGroup'))
 
-        flash('Group Created')
-        return redirect(url_for('indexs.index', groupID=newGroup.id))
-    return render_template('createGroup.html', form=form, title='Create Group')
+
+@groups.route('/viewGroup/<group_id>')
+def viewGroup(group_id):
+    # First lets check that the current user is apart of the group
+    group = session.query(Group).filter_by(id=group_id).first()
+
+    if group in current_user.accepted_groups:
+        return render_template('group/viewGroup.html', group=group)
+    else:
+        flash("You are not able to view a group you are not a part of")
+        return redirect(url_for('indexs.index'))
 
 
-#@groups.route('/myGroup', methods=['GET', 'POST'])
+# @groups.route('/myGroups', methods=['GET', 'POST'])
 # def viewGroup(groupID):
-    # currentUser.myGroup
+#     currentUser.myGroup
 #   return render_template('group.html', group=viewGroup, title='Group')
