@@ -61,6 +61,7 @@ groupuser3 = GroupUserFactory(group=group1, user=user4)
 groupuser4 = GroupUserFactory(group=group1, user=user5)
 
 groupuser5 = GroupUserFactory(group=group2, user=user3)
+groupuser6 = GroupUserFactory(group=group2, user=user2)
 
 groupuser1.accepted = True
 groupuser2.accepted = True

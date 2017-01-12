@@ -7,6 +7,7 @@ from flask import flash
 from .base import Base
 
 from sqlalchemy import event
+from sqlalchemy.orm import relationship
 
 from .group_user import GroupUser
 # from nexnest.models.user import User
@@ -21,6 +22,7 @@ class Group(Base):
     end_date = db.Column(db.Date)
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
+    users = relationship("GroupUser", back_populates='group')
 
     def __init__(
             self,
@@ -32,6 +34,8 @@ class Group(Base):
         self.start_date = start_date
         self.end_date = end_date
         self.name = name
+
+        self.leader = leader
         self.leader_id = leader.id
 
         # Default Values
@@ -54,6 +58,24 @@ class Group(Base):
             session.commit()
         else:
             flash("Group Size Limit Reached")
+
+    @property
+    def unAcceptedUsers(self):
+        unAcceptedUsers = []
+        for groupUser in self.users:
+            if groupUser.accepted == False and groupUser.show == True:
+                unAcceptedUsers.append(groupUser.user)
+
+        return unAcceptedUsers
+
+    @property
+    def acceptedUsers(self):
+        acceptedUsers = []
+        for groupUser in self.users:
+            if groupUser.accepted == True:
+                acceptedUsers.append(groupUser.user)
+
+        return acceptedUsers
 
 
 def update_date_modified(mapper, connection, target):

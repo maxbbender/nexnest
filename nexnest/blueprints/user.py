@@ -1,5 +1,5 @@
 from flask import Blueprint
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_user, logout_user, current_user
 
 from nexnest.application import session
@@ -12,6 +12,8 @@ from nexnest.forms.editAccountForm import EditAccountForm
 
 from nexnest.utils.password import check_password
 from nexnest.utils.flash import flash_errors
+
+from sqlalchemy import func
 
 users = Blueprint('users', __name__, template_folder='../templates/user')
 
@@ -114,3 +116,11 @@ def editAccount():
 def logout():
     logout_user()
     return redirect("/")
+
+
+@users.route('/search/<username>')
+def searchForUser(username):
+    usersToReturn = session.query(User).filter(func.lower(
+        User.username).like(func.lower(username + "%"))).all()
+
+    return jsonify(usersToReturn)
