@@ -11,6 +11,8 @@ from nexnest.models.group_listing import GroupListing
 import factory
 from faker import Faker
 
+from datetime import date
+
 fake = Faker()
 
 
@@ -92,6 +94,10 @@ class GroupFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     name = factory.LazyAttribute(lambda x: fake.company())
     leader = factory.SubFactory(UserFactory)
+    start_date = date.today()
+    end_date = date(date.today().year + 1,
+                    date.today().month,
+                    date.today().day)
 
 
 class GroupUserFactory(factory.alchemy.SQLAlchemyModelFactory):

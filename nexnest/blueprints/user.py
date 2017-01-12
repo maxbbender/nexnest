@@ -74,16 +74,18 @@ def process_login():
 
     return redirect(url_for('users.login'))
 
+
 @users.route('/viewUser/<userID>', methods=['GET', 'POST'])
 def viewUser(userID):
-    #fake lisiting for testing
+    # fake lisiting for testing
     user = session.query(User).filter_by(id=userID).first()
     return render_template('userAccount.html', user=user, title=user.fname)
+
 
 @users.route('/editAccount', methods=['GET', 'POST'])
 def editAccount():
     currentUser = session.query(User).filter_by(id=current_user.id).first()
-    form = EditAccountForm(obj = currentUser)    
+    form = EditAccountForm(obj=currentUser)
     # if request.method == 'GET':
     #     form.fname.data = current_user.fname
     #     form.lname.data = current_user.lname
@@ -91,8 +93,8 @@ def editAccount():
     #     form.website.data = current_user.website
     #     form.bio.data = current_user.bio
     #     form.phone.data = current_user.phone
-        #form.school.data = current_user.school
-    if  form.validate_on_submit():
+    #form.school.data = current_user.school
+    if form.validate_on_submit():
         current_user.fname = form.fname.data
         current_user.lname = form.lname.data
         current_user.email = form.email.data
