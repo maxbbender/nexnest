@@ -52,6 +52,8 @@ def createGroup():
             flash("Conflict with Group %s. Cannot create group in same time period as %s. Start(%s) End(%s)" % (
                 groupHasConflict.name, groupHasConflict.name, groupHasConflict.start_date, groupHasConflict.end_date))
             return redirect(url_for('groups.createGroup'))
+    else:
+        return render_template('createGroup.html', form=form)
 
 
 @groups.route('/viewGroup/<group_id>')

@@ -48,8 +48,10 @@ session.commit()
 
 # GROUP
 group1 = GroupFactory(leader=user2)
+group2 = GroupFactory(leader=user3)
 
 session.add(group1)
+session.add(group2)
 session.commit()
 
 # GROUP USERS
@@ -58,15 +60,19 @@ groupuser2 = GroupUserFactory(group=group1, user=user3)
 groupuser3 = GroupUserFactory(group=group1, user=user4)
 groupuser4 = GroupUserFactory(group=group1, user=user5)
 
+groupuser5 = GroupUserFactory(group=group2, user=user3)
+
 groupuser1.accepted = True
 groupuser2.accepted = True
 groupuser3.accepted = True
 groupuser4.accepted = True
+groupuser5.accepted = True
 
 session.add(groupuser1)
 session.add(groupuser2)
 session.add(groupuser3)
 session.add(groupuser4)
+session.add(groupuser5)
 session.commit()
 
 # GROUP LISTING

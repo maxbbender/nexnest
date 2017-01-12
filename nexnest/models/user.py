@@ -128,13 +128,10 @@ class User(Base):
     def accepted_groups(self):
         acceptedGroups = []
 
-        accepted_group_users = session.query(GroupUser).filter_by(
-            accepted=True,
-            user_id=self.id).all()
+        accepted_group_users = session.query(GroupUser).filter_by(accepted=True, user_id=self.id).all()
 
         for group_user in accepted_group_users:
-            acceptedGroups.append(session.query(
-                Group).filter_by(id=group_user.group_id)).first()
+            acceptedGroups.append(session.query(Group).filter_by(id=group_user.group_id).first())
 
         return acceptedGroups
 
