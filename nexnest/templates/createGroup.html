@@ -4,7 +4,7 @@
 	<div class="row m-x-auto">
 		<div class="col-xs-0 col-lg-3"></div>
 		<div class="col-xs-12 col-lg-6">
-			Create a group where you can add members
+			PLACEHOLDER TEXT: Create a group to begin adding members to live with
 			<br>
 			{% from "_formhelpers.html" import render_field %}
 			<form method=post>
@@ -26,6 +26,8 @@
     $( function() {
         $("#start_date").datepicker();
         $("#end_date").datepicker();
+        $("#start_date").datepicker("option", "dateFormat", 'yy-mm-dd' );
+        $("#end_date").datepicker("option", "dateFormat", 'yy-mm-dd' );
     });
 </script>
 {% endblock %}

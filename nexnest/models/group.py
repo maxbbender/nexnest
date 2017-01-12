@@ -9,6 +9,7 @@ from .base import Base
 from sqlalchemy import event
 
 from .group_user import GroupUser
+# from nexnest.models.user import User
 
 
 class Group(Base):

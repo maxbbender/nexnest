@@ -39,7 +39,7 @@ class User(Base):
     recieved_direct_messages = relationship(DirectMessage,
                                         backref='target_user',
                                         foreign_keys='[DirectMessage.target_user_id]')
-    group = relationship(Group, secondary=GroupUser.__table__, backref='user')
+    groups = relationship("Group", secondary=GroupUser.__table__, backref='users')
 
 
     def __init__(self,
