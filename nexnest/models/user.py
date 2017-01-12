@@ -39,7 +39,7 @@ class User(Base):
     recieved_direct_messages = relationship(DirectMessage,
                                         backref='target_user',
                                         foreign_keys='[DirectMessage.target_user_id]')
-    group = relationship(Group, secondary=GroupUser, backref='user')
+    group = relationship(Group, secondary=GroupUser.__table__, backref='user')
 
 
     def __init__(self,
@@ -121,6 +121,3 @@ class User(Base):
             return unicode(self.id)  # python 2
         except NameError:
             return str(self.id)  # python 3
-
-    def accept_group(group_id):
-        session.query()
