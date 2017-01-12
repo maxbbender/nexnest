@@ -6,6 +6,7 @@
 	    {% else %}
 	    <title>NexNest</title>
 	    {% endif %}
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 	    <link href="/static/css/bootstrap-flex.css" rel="stylesheet">
 	    <link href="/static/css/customStyling.css" rel="stylesheet">
 	    <link rel="stylesheet" href="/static/font-awesome-4.6.3/css/font-awesome.min.css">
@@ -91,7 +92,9 @@
 		    	</div>
 		  	</div>
 		</div>
-
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        {% block scripts %}
+        {% endblock %}
 		<script>
 			//Register Account Modal
 			$('#registerModal').on('show.bs.modal', function (event) {

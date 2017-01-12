@@ -12,12 +12,13 @@ from nexnest.utils.flash import flash_errors
 
 groups = Blueprint('groups', __name__, template_folder='../templates')
 
+
 @groups.route('/createGroup', methods=['GET', 'POST'])
 def createGroup():
     form = CreateGroupForm(request.form)
     if request.method == 'POST' and form.validate():
         newGroup = Group(name=form.name.data,
-                        leader=current_user)
+                         leader=current_user)
         session.add(newGroup)
         session.commit()
         flash('Group Created')
@@ -25,6 +26,6 @@ def createGroup():
     return render_template('createGroup.html', form=form, title='Create Group')
 
 #@groups.route('/myGroup', methods=['GET', 'POST'])
-#def viewGroup(groupID):
-	#currentUser.myGroup
-#	return render_template('group.html', group=viewGroup, title='Group')
+# def viewGroup(groupID):
+    # currentUser.myGroup
+#   return render_template('group.html', group=viewGroup, title='Group')
