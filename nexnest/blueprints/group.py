@@ -46,6 +46,8 @@ def createGroup():
 
             session.add(newGroup)
             session.commit()
+
+            groupUser()
             flash('Group Created')
             return redirect(url_for('groups.viewGroup', group_id=newGroup.id))
         else:

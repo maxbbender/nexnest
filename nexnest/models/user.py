@@ -41,8 +41,7 @@ class User(Base):
     recieved_direct_messages = relationship(DirectMessage,
                                             backref='target_user',
                                             foreign_keys='[DirectMessage.target_user_id]')
-    groups = relationship(
-        "Group", secondary=GroupUser.__table__, backref='users')
+    groups = relationship("GroupUser", back_populates='user')
 
     def __init__(self,
                  email,
@@ -127,13 +126,20 @@ class User(Base):
     @property
     def accepted_groups(self):
         acceptedGroups = []
-
-        accepted_group_users = session.query(GroupUser).filter_by(accepted=True, user_id=self.id).all()
-
-        for group_user in accepted_group_users:
-            acceptedGroups.append(session.query(Group).filter_by(id=group_user.group_id).first())
+        for groupUser in self.groups:
+            if groupUser.accepted:
+                acceptedGroups.append(groupUser.group)
 
         return acceptedGroups
+
+    @property
+    def un_accepted_groups(self):
+        unAcceptedGroups = []
+        for groupUser in self.groups:
+            if not groupUser.accepted:
+                unAcceptedGroups.append(groupUser.group)
+                
+        return unAcceptedGroups
 
     def accept_group_invite(self, group):
         group_user = session.query(GroupUser.filter_by(

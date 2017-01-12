@@ -2,6 +2,8 @@ from nexnest.application import db
 
 from .base import Base
 
+from sqlalchemy.orm import relationship
+
 
 class GroupUser(Base):
     __tablename__ = 'group_users'
@@ -21,6 +23,9 @@ class GroupUser(Base):
     # of a group, then recieves a different group invite, show will be
     # True, so we know to display the notification
     show = db.Column(db.Boolean)
+
+    group = relationship("Group", back_populates="users")
+    user = relationship("User", back_populates='groups')
 
     def __init__(
             self,
