@@ -68,6 +68,11 @@ def viewGroup(group_id):
         return redirect(url_for('indexs.index'))
 
 
+@groups.route('/myGroups', methods=['GET', 'POST'])
+def myGroups()
+	groupsImIn = current_user.accepted_groups
+	return render_template('group/myGroups.html', groups=groupsImIn, title='My Groups')
+
 # @groups.route('/myGroups', methods=['GET', 'POST'])
 # def viewGroup(groupID):
 #     currentUser.myGroup
