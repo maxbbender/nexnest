@@ -5,6 +5,7 @@ from flask_login import login_user, logout_user, current_user
 from nexnest.application import session
 
 from nexnest.models.user import User
+from nexnest.models.group import Group
 
 from nexnest.forms.register_form import RegistrationForm
 from nexnest.forms.loginForm import LoginForm
@@ -124,3 +125,16 @@ def searchForUser(username):
         User.username).like(func.lower(username + "%"))).all()
 
     return jsonify(usersToReturn)
+
+@users.route('/acceptGroupInvite/<groupID>')
+def acceptGroupInvite(groupID):
+    group = session.query(Group).filter_by(id=groupID).first()
+    current_user.accept_group_invite(group)
+    return redirect(url_for('groups.viewGroup', group_id=group.id))
+
+@users.route('/declineGroupInvite/<groupID>')
+def declineGroupInvite(groupID):
+    group = session.query(Group).filter_by(id=groupID).first()
+    current_user.decline_group_invite(group)
+    return redirect(url_for('groups.myGroups'))
+

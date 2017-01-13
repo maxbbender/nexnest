@@ -138,20 +138,33 @@ class User(Base):
     def un_accepted_groups(self):
         unAcceptedGroups = []
         for groupUser in self.groups:
-            if not groupUser.accepted:
+            if groupUser.accepted == False and groupUser.show == True:
                 unAcceptedGroups.append(groupUser.group)
                 
         return unAcceptedGroups
 
     def accept_group_invite(self, group):
-        group_user = session.query(GroupUser.filter_by(
+        group_user = session.query(GroupUser).filter_by(
             accepted=False,
             group_id=group.id,
-            user_id=self.id)).first()
+            user_id=self.id).first()
 
         if group_user is not None:
             group_user.accepted = True
             session.commit()
+            flash("Group invite accepted", 'info')
         else:
             flash("Unable to find record to accept")
+
+    def decline_group_invite(self, group):
+        group_user = session.query(GroupUser).filter_by(
+            accepted=False,
+            group_id=group.id,
+            user_id=self.id).first()
+
+        if group_user is not None:
+            group_user.show = False
+            session.commit()
+        else:
+            flash("Unable to find record to decline")
         

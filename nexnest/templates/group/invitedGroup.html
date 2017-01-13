@@ -1,0 +1,72 @@
+<div class="card" style="width:100%;">
+    <h3 class="card-header">{{ group.name }}</h3>
+    <div class="card-block">	        
+        <p class="card-text">
+        	<strong>Group Leader:</strong> <a href="{{ url_for('users.viewUser', userID=group.leader.id) }}">{{ group.leader.fname }} {{ group.leader.lname }}</a>
+        </p>
+    	<p class="card-text">
+    		Intended Lease Period: {{ group.start_date }} - {{ group.end_date }}
+    	</p>
+    	<strong>Current Group Members:</strong>
+    	{% for user in group.acceptedUsers %}
+        	<li><a href="{{ url_for('users.viewUser', userID=user.id) }}">{{ user.fname }} {{ user.lname }}</a></li>
+        {% endfor %}
+        <br>
+    	<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#AcceptInviteModal{{group.id}}">Join Group</a>
+    	<a href='#' class="btn btn-danger" data-toggle="modal" data-target="#DeclineInviteModal{{group.id}}">Decline</a>
+    </div>
+</div>
+
+
+<!-- Accept Invite Modal -->
+<div class="modal fade" id="AcceptInviteModal{{group.id}}" tabindex="-1" role="dialog" aria-labelledby="acceptInvite" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="acceptInvite"></h4>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+				<a href="{{ url_for('users.acceptGroupInvite', groupID=group.id) }}" type="button" class="btn btn-primary">Join Group</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Decline Invite Modal -->
+<div class="modal fade" id="DeclineInviteModal{{group.id}}" tabindex="-1" role="dialog" aria-labelledby="declineInvite" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="declineInvite"></h4>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+				<a href="{{ url_for('users.declineGroupInvite', groupID=group.id) }}" type="button" class="btn btn-danger">Decline Invite</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+
+	//Accept Invite jquery
+	$('#AcceptInviteModal{{group.id}}').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget)
+		var modal = $(this)
+		modal.find('.modal-title').text('Join {{ group.name }}?')
+	})
+
+	//Decline Invite jquery
+	$('#DeclineInviteModal{{group.id}}').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget)
+		var modal = $(this)
+		modal.find('.modal-title').text('Decline invite from {{ group.name }}?')
+	})
+</script>

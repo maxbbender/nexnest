@@ -31,18 +31,18 @@
                         {% else %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{{url_for('users.logout')}}">Logout</a>
-                            </li>
-                        {% endif %}
-                    {% endif %}
-			  		<li class="nav-item">
-		                <div class="dropdown">
-			                <i class="fa fa-bars fa-2x dropdown-toggle" style="padding-top: 4px;" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
-			                <div class="dropdown-menu dropdown-menu-right" style="overflow:hidden;" aria-labelledby="dropdownMenuButton">
-				                <a class="dropdown-item" href="{{ url_for('indexs.index') }}">My Groups</a>
-				                <a class="dropdown-item" href="{{ url_for('indexs.index') }}">My Account</a>
-		                	</div>
-		               </div>
-	               </li>
+                            </li>                                            
+				  		<li class="nav-item">
+			                <div class="dropdown">
+				                <i class="fa fa-bars fa-2x dropdown-toggle" style="padding-top: 4px;" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
+				                <div class="dropdown-menu dropdown-menu-right" style="overflow:hidden;" aria-labelledby="dropdownMenuButton">
+					                <a class="dropdown-item" href="{{ url_for('groups.myGroups') }}">My Groups</a>
+					                <a class="dropdown-item" href="{{ url_for('users.viewUser', userID=current_user.id) }}">My Account</a>
+			                	</div>
+			               </div>
+		               </li>
+		               {% endif %}
+	               {% endif %}
 			  	</div>
 			</ul>
 		</nav>

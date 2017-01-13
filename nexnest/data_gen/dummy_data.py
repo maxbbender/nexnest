@@ -49,9 +49,11 @@ session.commit()
 # GROUP
 group1 = GroupFactory(leader=user2)
 group2 = GroupFactory(leader=user3)
+group3 = GroupFactory(leader=user4)
 
 session.add(group1)
 session.add(group2)
+session.add(group3)
 session.commit()
 
 # GROUP USERS
@@ -63,17 +65,35 @@ groupuser4 = GroupUserFactory(group=group1, user=user5)
 groupuser5 = GroupUserFactory(group=group2, user=user3)
 groupuser6 = GroupUserFactory(group=group2, user=user2)
 
+groupuser7 = GroupUserFactory(group=group3, user=user1)
+groupuser8 = GroupUserFactory(group=group3, user=user2)
+groupuser9 = GroupUserFactory(group=group3, user=user3)
+groupuser10 = GroupUserFactory(group=group3, user=user4)
+groupuser11 = GroupUserFactory(group=group3, user=user5)
+
 groupuser1.accepted = True
 groupuser2.accepted = True
 groupuser3.accepted = True
 groupuser4.accepted = True
-groupuser5.accepted = True
+
+groupuser6.accepted = True
+groupuser7.accepted = True
+groupuser8.accepted = True
+
+groupuser10.accepted = True
+groupuser11.accepted = True
 
 session.add(groupuser1)
 session.add(groupuser2)
 session.add(groupuser3)
 session.add(groupuser4)
 session.add(groupuser5)
+session.add(groupuser6)
+session.add(groupuser7)
+session.add(groupuser8)
+session.add(groupuser9)
+session.add(groupuser10)
+session.add(groupuser11)
 session.commit()
 
 # GROUP LISTING

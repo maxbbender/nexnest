@@ -71,11 +71,10 @@ def viewGroup(group_id):
 
 
 @groups.route('/myGroups', methods=['GET', 'POST'])
-def myGroups()
+def myGroups():
 	groupsImIn = current_user.accepted_groups
-	return render_template('group/myGroups.html', groups=groupsImIn, title='My Groups')
-
-# @groups.route('/myGroups', methods=['GET', 'POST'])
-# def viewGroup(groupID):
-#     currentUser.myGroup
-#   return render_template('group.html', group=viewGroup, title='Group')
+	groupsImInvitedTo = current_user.un_accepted_groups
+	return render_template('group/myGroups.html', 
+							acceptedGroups=groupsImIn, 
+							invitedGroups=groupsImInvitedTo, 
+							title='My Groups')

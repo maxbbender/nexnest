@@ -1,16 +1,35 @@
-//include dialog for invited groups
 {% extends "base.html" %}
 {% block content %}
-	<div class="row">
+	<br>
+	<div class="row m-x-auto">
 		<div class="col-xs-0 col-lg-4">
 		</div>
 		<div class="col-xs-12 col-lg-4">
-			{% for group in groups %}
-				<a href="{{ url_for('groups.viewGroup', group_id=group.id) }}">
-					{{ group.name }}
-					{{ group.start_date }}
-				</a>
-			{% endfor %}
+			{% if acceptedGroups %}
+			<div class="row">
+				<h1>My Groups:</h1>
+			</div>
+			<div class="row">
+				{% for group in acceptedGroups %}
+					{% include "group/acceptedGroup.html" %}
+				{% endfor %}
+			</div>
+			<br>
+			{% endif %}
+			<div class="row">
+				<a href="{{ url_for('groups.createGroup') }}" class="btn btn-primary">Create New Group!</a>
+			</div>
+			{% if invitedGroups %}
+				<hr>
+				<div class="row">
+					<h1>Group Invites:</h1>
+				</div>
+				<div class="row">
+					{% for group in invitedGroups %}
+						{% include "group/invitedGroup.html" %}
+					{% endfor %}
+				</div>
+			{% endif %}
 		</div>
 	</div>
 {% endblock %}

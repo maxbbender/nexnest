@@ -1,0 +1,8 @@
+<div class="card" style="width:100%;">
+    <h3 class="card-header">{{ group.name }}</h3>
+    <div class="card-block">	        
+        <p class="card-text"><strong>Group Leader:</strong> <a href="{{ url_for('users.viewUser', userID=group.leader.id) }}">{{ group.leader.fname }} {{ group.leader.lname }}</a></p>
+    	<p class="card-text">Intended Lease Period: {{ group.start_date }} - {{ group.end_date }}</p>
+    	<a href="{{ url_for('groups.viewGroup', group_id=group.id) }}" class="btn btn-primary">View Group</a>
+    </div>
+</div>
