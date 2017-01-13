@@ -119,12 +119,12 @@ def logout():
     return redirect("/")
 
 
-@users.route('/search/<username>')
+@users.route('/user/search/<username>')
 def searchForUser(username):
     usersToReturn = session.query(User).filter(func.lower(
         User.username).like(func.lower(username + "%"))).all()
 
-    return jsonify(usersToReturn)
+    return jsonify(users=[i.serialize for i in usersToReturn])
 
 @users.route('/acceptGroupInvite/<groupID>')
 def acceptGroupInvite(groupID):
@@ -138,3 +138,26 @@ def declineGroupInvite(groupID):
     current_user.decline_group_invite(group)
     return redirect(url_for('groups.myGroups'))
 
+@users.route('/user/search/<username>/<group_id>')
+def searchForGroupUser(username, group_id):
+    usersToReturn = session.query(User).filter(func.lower(
+        User.username).like(func.lower(username + "%"))).all()
+
+    group = session.query(Group).filter_by(id=group_id).first()
+
+    users = []
+    apartOfGroup = False
+    for user in usersToReturn:
+        if user.isLandlord:
+            continue
+
+        for groupUser in user.groups:
+            if groupUser.group == group:
+                apartOfGroup = True
+                break
+        if not apartOfGroup:
+            users.append(user.serialize)
+        else:
+            apartOfGroup = False
+
+    return jsonify(users=users)

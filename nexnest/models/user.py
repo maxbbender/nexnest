@@ -7,6 +7,7 @@ from nexnest.models.group import Group
 from nexnest.models.group_user import GroupUser
 
 from .base import Base
+from .landlord import Landlord
 
 
 from datetime import datetime as dt
@@ -108,6 +109,15 @@ class User(Base):
         return self
 
     @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'fname': self.fname,
+            'lname': self.lname
+        }
+
+    @property
     def is_authenticated(self):
         return True
 
@@ -140,7 +150,7 @@ class User(Base):
         for groupUser in self.groups:
             if groupUser.accepted == False and groupUser.show == True:
                 unAcceptedGroups.append(groupUser.group)
-                
+
         return unAcceptedGroups
 
     def accept_group_invite(self, group):
@@ -168,3 +178,8 @@ class User(Base):
         else:
             flash("Unable to find record to decline")
         
+    @property
+    def isLandlord(self):
+        landlordCount = session.query(Landlord).filter_by(user_id=self.id).count()
+
+        return landlordCount == 1

@@ -3,10 +3,13 @@ from flask import render_template, abort, request, redirect, url_for, flash, jso
 from flask_login import current_user
 
 from ..forms.createGroup import CreateGroupForm
+from ..forms.inviteGroup import InviteGroupForm
 
 from nexnest.application import session
 
 from nexnest.models.group import Group
+from nexnest.models.group_user import GroupUser
+from nexnest.models.user import User
 
 from nexnest.utils.flash import flash_errors
 
@@ -63,8 +66,10 @@ def viewGroup(group_id):
     # First lets check that the current user is apart of the group
     group = session.query(Group).filter_by(id=group_id).first()
 
+    form = InviteGroupForm()
+
     if group in current_user.accepted_groups:
-        return render_template('group/viewGroup.html', group=group)
+        return render_template('group/viewGroup.html', group=group, invite_form=form)
     else:
         flash("You are not able to view a group you are not a part of")
         return redirect(url_for('indexs.index'))
@@ -78,3 +83,22 @@ def myGroups():
 							acceptedGroups=groupsImIn, 
 							invitedGroups=groupsImInvitedTo, 
 							title='My Groups')
+
+@groups.route('/group/invite', methods=['POST'])
+def invite():
+
+    if request.method == 'POST':
+        form = InviteGroupForm(request.form)
+        print("@groups.invite() form.group_id.data : %s" % form.group_id.data)
+        if form.validate():
+            group = session.query(Group).filter_by(id=int(form.group_id.data)).first()
+            user = session.query(User).filter_by(id=int(form.user_id.data)).first()
+            newGroupUser = GroupUser(group, user)
+
+            session.add(newGroupUser)
+            session.commit()
+        else:
+            flash("Errors validating Group Invite form")
+
+    return redirect(url_for('groups.viewGroup', group_id=form.group_id.data))
+
