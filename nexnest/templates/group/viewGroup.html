@@ -1,6 +1,53 @@
 {% extends "base.html" %}
 {% block content %}
-    Group Name : {{group.name}}
+    <br>
+    <div class="row m-x-auto">
+        <div class="col-xs-1 col-sm-2 col-md-2 col-lg-2 col-xl-4">
+        </div>
+        <div class="col-xs-10 col-sm-8 col-md-8 col-lg-8 col-xl-4">
+            <div class="row">
+                <div class="card" style="width:100%;">
+                    <h3 class="card-header">{{ group.name }}</h3>
+                    <div class="card-block">            
+                        <p class="card-text">
+                            <strong>Group Leader:</strong> <a href="{{ url_for('users.viewUser', userID=group.leader.id) }}">{{ group.leader.fname }} {{ group.leader.lname }}</a>
+                        </p>
+                        <p class="card-text">
+                            Intended Lease Period: {{ group.start_date }} - {{ group.end_date }}
+                        </p>
+                        <strong>Current Group Members:</strong>
+                        {% for user in group.acceptedUsers %}
+                            <li><a href="{{ url_for('users.viewUser', userID=user.id) }}">{{ user.fname }} {{ user.lname }}</a></li>
+                        {% endfor %}                        
+                        {% if group. unAcceptedUsers %}
+                            <br>
+                            <strong>Invited Members:</strong>
+                            {% for user in group.unAcceptedUsers %}
+                                <li><a href="{{ url_for('users.viewUser', userID=user.id) }}">{{ user.fname }} {{ user.lname }}</a></li>
+                            {% endfor %}
+                        {% endif %}
+                        <br>
+                        <strong>Invite User to Group:</strong>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-10 col-md-8 col-lg-8 col-xl-6">                        
+                                <input id="userSearch" type="text" class="form-control" aria-describedby="searchHelpBlock" style="width:100%;">
+                            </div>
+                        </div>
+                        <p id="searchHelpBlock" class="form-text text-muted">
+                            Search by Username (first part of email)
+                        </p>                        
+                        <form id="invite_user" action="{{url_for('groups.invite')}}" method="POST">
+                            {{invite_form.csrf_token}}
+                            {{invite_form.group_id(value=group.id)}}
+                            {{invite_form.user_id}}
+                        </form>
+                        <span class="invite" id="userSearchUL"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Group Name : {{group.name}}
     <br>Accepted Group Users
     <ul>
         {% for user in group.acceptedUsers %}
@@ -14,9 +61,9 @@
         {% endfor %}
     </ul>
 
-    <br><br>
+    <br><br> -->
 
-    Add User to Group (search by username (first part of email))
+   <!--  Add User to Group (search by username (first part of email))
     <input id="userSearch" type="text">
     <form id="invite_user" action="{{url_for('groups.invite')}}" method="POST">
         {{invite_form.csrf_token}}
@@ -25,11 +72,11 @@
     </form>
 
     <ul class="invite" id="userSearchUL">
-    </ul>
+    </ul> -->
 {% endblock %}
 {% block scripts %}
 <script>
-    $(".invite").on("click", "li", function() {
+    $(".invite").on("click", "div", function() {
         var user_id = $(this).attr('id');
         $("#user_id").val(user_id);
         $("#invite_user").submit()
@@ -40,11 +87,13 @@
         // alert($("#userSearch").val())
         $("#userSearchUL").empty();
         $.getJSON("/user/search/" + keyToSearch + "/" + {{group.id}}, function(data) {
-            // alert(data.users)
+            //clear div to prevent case of users typing to fast resulting in duplicate results
+            $("#userSearchUL").html('<strong>Results:</strong');
             $.each(data.users, function(key, user) {
-                // alert(key)
-                // alert(val.username)
-                $("#userSearchUL").append('<li id="' + user.id + '" class="invite">' + user.username + ' (' + user.fname + ' ' + user.lname + ')<span class="invite btn" id="' + user.id + '">Invite</span></li>');
+                $("#userSearchUL").append('<hr>'+
+                                        '<div id="' + user.id + '" class="invite row">'+
+                                        '<div class=col-xs-10><a href="{{ url_for('users.viewUser', userID="'+ user.id +'") }}">' + user.username + ' (' + user.fname + ' ' + user.lname + ')</a></div>'+
+                                        '<div class="col-xs-1"><span class="invite btn btn-primary" id="' + user.id + '">Invite</span></div></div><br>');
             });
             
         });
