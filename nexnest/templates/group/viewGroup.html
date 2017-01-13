@@ -41,47 +41,20 @@
                             {{invite_form.group_id(value=group.id)}}
                             {{invite_form.user_id}}
                         </form>
-                        <span class="invite" id="userSearchUL"></span>
+                        <span class="" id="userSearchUL"></span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Group Name : {{group.name}}
-    <br>Accepted Group Users
-    <ul>
-        {% for user in group.acceptedUsers %}
-        <li>User : {{user.username}}</li>
-        {% endfor %}
-    </ul>
-    <br>Invited Group Users
-    <ul>
-        {% for user in group.unAcceptedUsers %}
-        <li>User : {{user.username}}</li>
-        {% endfor %}
-    </ul>
-
-    <br><br> -->
-
-   <!--  Add User to Group (search by username (first part of email))
-    <input id="userSearch" type="text">
-    <form id="invite_user" action="{{url_for('groups.invite')}}" method="POST">
-        {{invite_form.csrf_token}}
-        {{invite_form.group_id(value=group.id)}}
-        {{invite_form.user_id}}
-    </form>
-
-    <ul class="invite" id="userSearchUL">
-    </ul> -->
 {% endblock %}
 {% block scripts %}
 <script>
-    $(".invite").on("click", "div", function() {
-        var user_id = $(this).attr('id');
-        $("#user_id").val(user_id);
+    function submitForm(id) {
+        $("#user_id").val(id);
         $("#invite_user").submit()
-    });
-
+    }
+    
     $("#userSearch").keyup(function() {
         var keyToSearch = $("#userSearch").val();
         // alert($("#userSearch").val())
@@ -90,15 +63,22 @@
             //clear div to prevent case of users typing to fast resulting in duplicate results
             $("#userSearchUL").html('<strong>Results:</strong');
             $.each(data.users, function(key, user) {
-                $("#userSearchUL").append('<hr>'+
-                                        '<div id="' + user.id + '" class="invite row">'+
-                                        '<div class=col-xs-10><a href="{{ url_for('users.viewUser', userID="'+ user.id +'") }}">' + user.username + ' (' + user.fname + ' ' + user.lname + ')</a></div>'+
-                                        '<div class="col-xs-1"><span class="invite btn btn-primary" id="' + user.id + '">Invite</span></div></div><br>');
+                userString = '<hr>'+
+                            '<div id="' + user.id + '" class="row">'+
+                                '<div class=col-xs-10>' +
+                                    '<a href="/viewUser/' + user.id + '">' + 
+                                        user.username + ' (' + user.fname + ' ' + user.lname + ')' +
+                                    '</a>' +
+                                '</div>'+
+                                '<div class="col-xs-1">' +
+                                    '<span onClick="submitForm(this.id)" class="invite btn btn-primary" id="' + user.id + '">Invite</span>'+
+                                '</div>' +
+                            '</div><br>';
+
+                $("#userSearchUL").append(userString);
             });
             
         });
     });
-
-
 </script>
 {% endblock %}
