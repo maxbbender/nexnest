@@ -24,9 +24,8 @@ class GroupMessage(Base):
             group,
             message
     ):
-
-        self.group = group
-        self.message = message
+        self.group_id = group.id
+        self.message_id = message.id
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
