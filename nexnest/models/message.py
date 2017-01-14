@@ -22,7 +22,7 @@ class Message(Base):
             user
     ):
         self.content = content
-        self.user = user
+        self.user_id = user.id
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
