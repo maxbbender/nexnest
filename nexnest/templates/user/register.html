@@ -1,20 +1,31 @@
 {% extends "base.html" %}
 {% block content %}
-{% if registration_form.errors %}
-          <ul class="errors">
-            {% for field_name, field_errors in registration_form.errors|dictsort if field_errors %}
-              {% for error in field_errors %}
-                <li>{{ registration_form[field_name].label.text }}: {{ error }}</li>
-              {% endfor %}
-            {% endfor %}
-          </ul>
-{% endif %}
-<form action="{{url_for('users.create')}}" method="POST">
-{{registration_form.csrf_token}}
-{% for field in registration_form %}
-<li>
-{{field.label}} {{field}}
-</li>
-{% endfor %}
-</form>
+    <br>
+    <div class="row m-x-auto">
+        <div class="col-xs-1 col-sm-2 col-md-2 col-lg-2 col-xl-4">
+        </div>
+        <div class="col-xs-10 col-sm-8 col-md-8 col-lg-8 col-xl-4">
+            <div class="row">
+                <div class="card" style="width:100%;">
+                    <h3 class="card-header">Register for NexNest</h3>
+                    <div class="card-block">
+        				{% from "_formhelpers.html" import render_field %}
+        				<form action="{{url_for('users.create')}}" method="POST">
+        					{{registration_form.csrf_token}}
+							  	<dl>
+								    {{ render_field(registration_form.email, class="form-control", type="email") }}
+								    {{ render_field(registration_form.fname, class="form-control", type="text") }}
+				                    {{ render_field(registration_form.lname, class="form-control", type="text") }}
+				                    {{ render_field(registration_form.password, class="form-control", type="password") }}
+				                    {{ render_field(registration_form.confirm, class="form-control", type="password") }}
+							  	</dl>
+							  	<p>
+							  		<input type='submit' value='Register' class="btn btn-info">
+							  	</p>
+        				</form>            
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
