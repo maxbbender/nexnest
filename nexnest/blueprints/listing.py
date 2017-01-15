@@ -1,6 +1,8 @@
 from flask import Blueprint
 from flask import render_template, abort, request, redirect, url_for, flash, jsonify
+from flask_login import login_user, logout_user, current_user
 from ..forms.listing import ListingForm
+from ..forms.suggestListingForm import SuggestListingForm
 
 from nexnest.application import session
 
@@ -13,9 +15,14 @@ listings = Blueprint('listings', __name__, template_folder='../templates')
 
 @listings.route('/viewListing/<listingID>', methods=['GET', 'POST'])
 def viewListing(listingID):
-    # fake lisiting for testing
+    form = SuggestListingForm()
     viewListing = session.query(Listing).filter_by(id=listingID).first()
-    return render_template('detailedListing.html', listing=viewListing, title='Listing')
+    myGroups = current_user.accepted_groups
+    return render_template('detailedListing.html',
+                            suggest_listing_form = form,
+                            listing=viewListing,
+                            groups=myGroups,
+                            title='Listing')
 
 
 @listings.route('/landlord/createListing', methods=['GET', 'POST'])

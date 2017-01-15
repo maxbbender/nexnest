@@ -4,12 +4,15 @@ from flask_login import current_user
 
 from ..forms.createGroup import CreateGroupForm
 from ..forms.inviteGroup import InviteGroupForm
+from ..forms.suggestListingForm import SuggestListingForm
 
 from nexnest.application import session
 
 from nexnest.models.group import Group
 from nexnest.models.group_user import GroupUser
+from nexnest.models.group_listing import GroupListing
 from nexnest.models.user import User
+from nexnest.models.listing import Listing
 
 from nexnest.utils.flash import flash_errors
 
@@ -65,11 +68,12 @@ def createGroup():
 def viewGroup(group_id):
     # First lets check that the current user is apart of the group
     group = session.query(Group).filter_by(id=group_id).first()
+    groupListings = group.suggestedListings
 
     form = InviteGroupForm()
 
     if group in current_user.accepted_groups:
-        return render_template('group/viewGroup.html', group=group, invite_form=form)
+        return render_template('group/viewGroup.html', group=group, suggestedListings=groupListings, invite_form=form)
     else:
         flash("You are not able to view a group you are not a part of")
         return redirect(url_for('indexs.index'))
@@ -98,7 +102,29 @@ def invite():
             session.add(newGroupUser)
             session.commit()
         else:
-            flash("Errors validating Group Invite form")
+            flash("Errors validating Group Invite form", 'danger')
 
     return redirect(url_for('groups.viewGroup', group_id=form.group_id.data))
+
+@groups.route('/suggestListing', methods=['POST'])
+def suggestListing():
+    if request.method == 'POST':
+        form = SuggestListingForm(request.form)
+        if form.validate():
+            group = session.query(Group).filter_by(id=int(form.group_id.data)).first()
+            listing = session.query(Listing).filter_by(id=int(form.listing_id.data)).first()
+            groupListing = session.query(GroupListing).filter_by(group_id=group.id, listing_id=listing.id).first()
+            if not groupListing:
+                newGroupListing = GroupListing(group, listing)
+                session.add(newGroupListing)
+                session.commit()
+                flash("This listing has been suggested to " + group.name, 'info')
+            else:
+                flash("This listing has already been suggested to " + group.name + " by someone", 'info')
+        else:
+            flash("Errors validating Suggest Listing Invite form", 'danger')
+
+    return redirect(url_for('listings.viewListing', listingID=form.listing_id.data))
+
+
 

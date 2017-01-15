@@ -46,7 +46,7 @@
 					<a href="{{ url_for('indexs.index') }}" class="btn btn-info">Request Tour</a>
 				</div>
 				<div class="col-lg-4" style="text-align:right">
-					<a href="{{ url_for('indexs.index') }}" class="btn btn-info">Suggest To Group</a>
+					<a href='#' class="btn btn-info" data-toggle="modal" data-target="#suggestListingModal">Suggest To Group</a>
 				</div>
 			</div>
 			<hr>
@@ -126,4 +126,74 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Suggest Listing Modal -->
+		<div class="modal fade" id="suggestListingModal" tabindex="-1" role="dialog" aria-labelledby="login" aria-hidden="true">
+		  	<div class="modal-dialog" role="document">
+		    	<div class="modal-content">
+		      		<div class="modal-header">
+		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          			<span aria-hidden="true">&times;</span>
+		        		</button>
+		        		<h4 class="modal-title" id="login"></h4>
+		      		</div>
+		      		<div class="modal-body">
+		      			<div class="row">
+		      				<div class="col-xs-1"></div>
+		      				<div class="col-xs-10">
+		      					{% for group in groups %}
+			      					<div class="card" style="width:100%;">
+			      					    <h3 class="card-header">{{ group.name }}</h3>
+			      					    <div class="card-block">	        
+			      					        <p class="card-text">
+			      					        	<strong>Group Leader:</strong>{{ group.leader.fname }} {{ group.leader.lname }}
+			      					        </p>
+			      					    	<p class="card-text">
+			      					    		<strong>Intended Lease Period:</strong> {{ group.start_date }} - {{ group.end_date }}
+			      					    	</p>
+			      					    	<p class="card-text">
+			      					    		<strong><a href=# id="allMembersToggle{{group.id}}">See all members</a></strong>
+			      					    		<div id="allMembers{{group.id}}" style="display: none;">
+		      					    				{% for user in group.acceptedUsers %}
+		      					    			    	<li>{{ user.fname }} {{ user.lname }}</li>
+		      					    			    {% endfor %}
+			      					    		</div>
+			      					    	</p>
+			      					    	<form id="suggest_listing" action="{{url_for('groups.suggestListing')}}" method="POST">
+			      					    	    {{ suggest_listing_form.csrf_token }}
+			      					    	    {{ suggest_listing_form.group_id }}
+			      					    	    {{ suggest_listing_form.listing_id(value=listing.id) }}
+			      					    	</form>  
+					      					<a href='#' onClick="submitForm({{group.id}})" class="btn btn-primary" id="group.id">Suggest Listing</a>	
+			      					    </div>
+			      					</div>
+			      					<script>
+			      						function submitForm(id) {
+			      							$("#group_id").val(id);
+			      						    $("#suggest_listing").submit()
+			      						}
+			      						//Suggest Listing Modal
+			      						$('#suggestListingModal').on('show.bs.modal', function (event) {
+			      						  var button = $(event.relatedTarget)
+			      						  var modal = $(this)
+			      						  modal.find('.modal-title').text('Suggest to Which Group?')
+			      						})
+
+			      						//Show/hide all members of group
+			      						$("#allMembersToggle{{group.id}}").click(function(){
+			      						    $("#allMembers{{group.id}}").toggle();
+			      						});
+			      					</script>
+		      					{% endfor %}
+		      				</div>
+		      			</div>
+		      		</div>
+			      	<div class="modal-footer">
+			        	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			      	</div>
+		    	</div>
+		  	</div>
+		</div>		
+	</body>
+</html>
 {% endblock %}

@@ -23,6 +23,7 @@ class Group(Base):
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
     users = relationship("GroupUser", back_populates='group')
+    listings = relationship("GroupListing", back_populates='group')
 
     def __init__(
             self,
@@ -76,6 +77,14 @@ class Group(Base):
                 acceptedUsers.append(groupUser.user)
 
         return acceptedUsers
+
+    @property
+    def suggestedListings(self):
+        suggestedListings = []
+        for groupListing in self.listings:
+            if groupListing.show == True and groupListing.accepted == False:
+                suggestedListings.append(groupListing.listing)
+        return suggestedListings
 
 
 def update_date_modified(mapper, connection, target):

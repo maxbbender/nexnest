@@ -4,6 +4,8 @@ from .base import Base
 
 from datetime import datetime as dt
 
+from sqlalchemy.orm import relationship
+
 
 # class PostReport(Base):
 class GroupListing(Base):
@@ -25,9 +27,12 @@ class GroupListing(Base):
     # house.
     completed = db.Column(db.Boolean)
 
-    # Whether or not to show the group_listing for the Landlord
+    # Whether or not to show the group_listing for the User suggested listings
     # page
     show = db.Column(db.Boolean)
+
+    group = relationship("Group", back_populates="listings")
+    listing = relationship("Listing", back_populates='groups')
 
     date_created = db.Column(db.DateTime)
 

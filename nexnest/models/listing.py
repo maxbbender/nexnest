@@ -6,6 +6,8 @@ from .base import Base
 
 from sqlalchemy import event
 
+from sqlalchemy.orm import relationship
+
 
 # class PostReport(Base):
 class Listing(Base):
@@ -55,6 +57,8 @@ class Listing(Base):
 
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
+
+    groups = relationship("GroupListing", back_populates='listing')
 
     def __init__(
             self,

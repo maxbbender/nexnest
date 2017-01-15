@@ -3,46 +3,81 @@
     <br>
     <div class="row m-x-auto">
         <div class="col-xs-1 col-sm-2 col-md-2 col-lg-2 col-xl-4">
-            Messages
         </div>
         <div class="col-xs-10 col-sm-8 col-md-8 col-lg-8 col-xl-4">
             <div class="row">
                 <div class="card" style="width:100%;">
                     <h3 class="card-header">{{ group.name }}</h3>
-                    <div class="card-block">            
-                        <p class="card-text">
-                            <strong>Group Leader:</strong> <a href="{{ url_for('users.viewUser', userID=group.leader.id) }}">{{ group.leader.fname }} {{ group.leader.lname }}</a>
-                        </p>
-                        <p class="card-text">
-                            Intended Lease Period: {{ group.start_date }} - {{ group.end_date }}
-                        </p>
-                        <strong>Current Group Members:</strong>
-                        {% for user in group.acceptedUsers %}
-                            <li><a href="{{ url_for('users.viewUser', userID=user.id) }}">{{ user.fname }} {{ user.lname }}</a></li>
-                        {% endfor %}                        
-                        {% if group. unAcceptedUsers %}
-                            <br>
-                            <strong>Invited Members:</strong>
-                            {% for user in group.unAcceptedUsers %}
-                                <li><a href="{{ url_for('users.viewUser', userID=user.id) }}">{{ user.fname }} {{ user.lname }}</a></li>
-                            {% endfor %}
-                        {% endif %}
+                    <div class="card-block">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#memberInfo" role="tab">Members</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#suggestedListings" role="tab">Suggested Listings</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tours" role="tab">Tours</a>
+                            </li>
+                        </ul>
                         <br>
-                        <strong>Invite User to Group:</strong>
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-10 col-md-8 col-lg-8 col-xl-6">                        
-                                <input id="userSearch" type="text" class="form-control" aria-describedby="searchHelpBlock" style="width:100%;">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="memberInfo" role="tabpanel">            
+                                <p class="card-text">
+                                    <strong>Group Leader:</strong> <a href="{{ url_for('users.viewUser', userID=group.leader.id) }}">{{ group.leader.fname }} {{ group.leader.lname }}</a>
+                                </p>
+                                <p class="card-text">
+                                    Intended Lease Period: {{ group.start_date }} - {{ group.end_date }}
+                                </p>
+                                <strong>Current Group Members:</strong>
+                                {% for user in group.acceptedUsers %}
+                                    <li><a href="{{ url_for('users.viewUser', userID=user.id) }}">{{ user.fname }} {{ user.lname }}</a></li>
+                                {% endfor %}                        
+                                {% if group. unAcceptedUsers %}
+                                    <br>
+                                    <strong>Invited Members:</strong>
+                                    {% for user in group.unAcceptedUsers %}
+                                        <li><a href="{{ url_for('users.viewUser', userID=user.id) }}">{{ user.fname }} {{ user.lname }}</a></li>
+                                    {% endfor %}
+                                {% endif %}
+                                <br>
+                                <strong>Invite User to Group:</strong>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-8 col-xl-6">                        
+                                        <input id="userSearch" type="text" class="form-control" aria-describedby="searchHelpBlock" style="width:100%;">
+                                    </div>
+                                </div>
+                                <p id="searchHelpBlock" class="form-text text-muted">
+                                    Search by Username (first part of email)
+                                </p>                        
+                                <form id="invite_user" action="{{url_for('groups.invite')}}" method="POST">
+                                    {{invite_form.csrf_token}}
+                                    {{invite_form.group_id(value=group.id)}}
+                                    {{invite_form.user_id}}
+                                </form>
+                                <span class="" id="userSearchUL"></span>
+                            </div>
+                            <div class="tab-pane" id="suggestedListings" role="tabpanel">
+                                {% for listing in suggestedListings %}
+                                    <div class="row m-x-auto">
+                                        <div class="col-md-12" style="padding-left: 30px; padding-right: 30px; padding-bottom: 30px">
+                                            <a href="{{ url_for('listings.viewListing', listingID=listing.id) }}">
+                                                <img src="../static/img/testHouse.jpg" class="listingImg">
+                                                <div class="listingDescription d-flex align-items-end">
+                                                    {{ listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i> ${{ listing.price }}
+                                                    <br>
+                                                    {{ listing.street }}, {{ listing.city }}, {{ listing.state }}
+                                                </div>
+                                            </a>
+                                        </div>     
+                                    </div>
+                                    <hr>
+                                {% endfor %}
+                            </div>
+                            <div class="tab-pane" id="tours" role="tabpanel">
+                                Tours
                             </div>
                         </div>
-                        <p id="searchHelpBlock" class="form-text text-muted">
-                            Search by Username (first part of email)
-                        </p>                        
-                        <form id="invite_user" action="{{url_for('groups.invite')}}" method="POST">
-                            {{invite_form.csrf_token}}
-                            {{invite_form.group_id(value=group.id)}}
-                            {{invite_form.user_id}}
-                        </form>
-                        <span class="" id="userSearchUL"></span>
                     </div>
                 </div>
             </div>
@@ -80,6 +115,12 @@
             });
             
         });
+    });
+
+    //Show/hide each div
+
+    $("#allMembersToggle{{group.id}}").click(function(){
+        $("#allMembers{{group.id}}").toggle();
     });
 </script>
 {% endblock %}
