@@ -1,14 +1,11 @@
 from flask import Blueprint
-from flask import render_template, abort, request, redirect, url_for, flash, jsonify
+from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
 
 from ..forms.createGroup import CreateGroupForm
 from ..forms.inviteGroup import InviteGroupForm
-<< << << < HEAD
 from ..forms.suggestListingForm import SuggestListingForm
-== == == =
 from ..forms.createGroupMessageForm import GroupMessageForm
->>>>>> > group_messages
 
 from nexnest.application import session
 
@@ -16,11 +13,8 @@ from nexnest.models.group import Group
 from nexnest.models.group_user import GroupUser
 from nexnest.models.group_listing import GroupListing
 from nexnest.models.user import User
-<< << << < HEAD
 from nexnest.models.listing import Listing
-== == == =
 from nexnest.models.group_message import GroupMessage
->>>>>> > group_messages
 
 from nexnest.utils.flash import flash_errors
 
@@ -63,8 +57,11 @@ def createGroup():
             session.add(newGroup)
             session.commit()
 
-            groupUser()
-            flash('Group Created')
+            newGroupUser = GroupUser(newGroup, current_user)
+
+            session.add(newGroupUser)
+            session.commit()
+
             return redirect(url_for('groups.viewGroup', group_id=newGroup.id))
         else:
             flash("Conflict with Group %s. Cannot create group in same time period as %s. Start(%s) End(%s)" % (
