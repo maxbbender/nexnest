@@ -19,6 +19,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#tours" role="tab">Tours</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#messages" role="tab">Messages</a>
+                            </li>
                         </ul>
                         <br>
                         <div class="tab-content">
@@ -60,7 +63,7 @@
                             <div class="tab-pane" id="suggestedListings" role="tabpanel">
                                 {% for listing in suggestedListings %}
                                     <div class="row m-x-auto">
-                                        <div class="col-md-12" style="padding-left: 30px; padding-right: 30px; padding-bottom: 30px">
+                                        <div class="col-md-12" style="padding-left: 30px; padding-right: 30px;">
                                             <a href="{{ url_for('listings.viewListing', listingID=listing.id) }}">
                                                 <img src="../static/img/testHouse.jpg" class="listingImg">
                                                 <div class="listingDescription d-flex align-items-end">
@@ -76,6 +79,23 @@
                             </div>
                             <div class="tab-pane" id="tours" role="tabpanel">
                                 Tours
+                            </div>
+                            <div class="tab-pane" id="messages" role="tabpanel" style="height: 600px; overflow: auto;">
+                                {% for message in messages %}
+                                    <div class="card">
+                                        <div class="card-block">
+                                            <h4 class="card-title">{{ message.user.fname }} {{ message.user.lname }}</h4>
+                                            <h6 class="card-subtitle mb-2 text-muted">{{ message.date_created }}</h6>
+                                            <p class="card-text">{{ message.content }}</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                <div class="form-group">
+                                    <strong><label for="addComment">Type your message:</label></strong>
+                                    <textarea class="form-control" id="addComment" rows="3"></textarea>
+                                    <br>
+                                    <input class="btn btn-primary" type="submit" value="Respond">
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -69,11 +69,50 @@ def viewGroup(group_id):
     # First lets check that the current user is apart of the group
     group = session.query(Group).filter_by(id=group_id).first()
     groupListings = group.suggestedListings
+    #fake array of messages
+    messages= [
+        {
+            'id': 0,
+            'user': {'fname': 'Max', 'lname': 'Bender'},
+            'content': 'Hey Mike we need a good way to test out messages',
+            'date_created': '2017-01-14 23:09:41.536781'
+        },
+        {
+            'id': 1,
+            'user': {'fname': 'Mike', 'lname': 'McGinnis'},
+            'content': 'Let me throw something together, any ideas?',
+            'date_created': '2017-01-14 23:10:41.536781'
+        },
+        {
+            'id': 2,
+            'user': {'fname': 'Max', 'lname': 'Bender'},
+            'content': 'Whatever you think',
+            'date_created': '2017-01-14 23:11:41.536781'
+        },
+        {
+            'id': 3,
+            'user': {'fname': 'Mike', 'lname': 'McGinnis'},
+            'content': 'Ill play around with it see what looks best. Ill try a new tab',
+            'date_created': '2017-01-14 23:12:41.536781'
+        },
+        {
+            'id': 4,
+            'user': {'fname': 'Max', 'lname': 'Bender'},
+            'content': 'Great cant wait to see!',
+            'date_created': '2017-01-14 23:13:41.536781'
+        },
+        {
+            'id': 5,
+            'user': {'fname': 'Kyle', 'lname': 'Gavalchin'},
+            'content': 'This looks amazing, youre so talented mike!',
+            'date_created': '2017-01-14 23:14:41.536781'
+        }
+    ]
 
     form = InviteGroupForm()
 
     if group in current_user.accepted_groups:
-        return render_template('group/viewGroup.html', group=group, suggestedListings=groupListings, invite_form=form)
+        return render_template('group/viewGroup.html', group=group, suggestedListings=groupListings, messages=messages, invite_form=form)
     else:
         flash("You are not able to view a group you are not a part of")
         return redirect(url_for('indexs.index'))
