@@ -6,6 +6,8 @@ from nexnest.application import session
 
 from nexnest.models.user import User
 from nexnest.models.group import Group
+from nexnest.models.school import School
+from nexnest.models.school_user import SchoolUser
 
 from nexnest.forms.register_form import RegistrationForm
 from nexnest.forms.loginForm import LoginForm
@@ -21,8 +23,10 @@ users = Blueprint('users', __name__, template_folder='../templates/user')
 
 @users.route('/register', methods=['GET'])
 def register():
+    schools = [r for r, in session.query(School.name).all()]
     return render_template('register.html',
-                           registration_form=RegistrationForm())
+                           registration_form=RegistrationForm(),
+                           schools=schools)
 
 
 @users.route('/process_registration', methods=['POST'])
@@ -30,19 +34,33 @@ def create():
     registerForm = RegistrationForm(request.form)
 
     if registerForm.validate():
-        newUser = User(registerForm.email.data,
-                       registerForm.password.data,
-                       registerForm.fname.data,
-                       registerForm.lname.data)
+        # First make sure that the school is valid
+        school = session.query(School).filter(func.lower(
+            School.name) == registerForm.school.data.lower()).first()
 
-        session.add(newUser)
-        session.commit()
+        if school is not None:
+            # School Exists
+            newUser = User(registerForm.email.data,
+                           registerForm.password.data,
+                           registerForm.fname.data,
+                           registerForm.lname.data)
 
-        login_user(newUser)
+            session.add(newUser)
+            session.commit()
 
-        return redirect(url_for('indexs.index'))
-    else:
-        return render_template('register.html', registration_form=registerForm)
+            # Now lets link the user to his school
+            schoolUser = SchoolUser(newUser, school)
+
+            session.add(schoolUser)
+            session.commit()
+
+            login_user(newUser)
+
+            return redirect(url_for('indexs.index'))
+        else:
+            flash("School you selected doesn't exist", 'warning')
+
+    return render_template('register.html', registration_form=registerForm)
 
 
 @users.route('/login', methods=['GET'])
@@ -126,17 +144,20 @@ def searchForUser(username):
 
     return jsonify(users=[i.serialize for i in usersToReturn])
 
+
 @users.route('/acceptGroupInvite/<groupID>')
 def acceptGroupInvite(groupID):
     group = session.query(Group).filter_by(id=groupID).first()
     current_user.accept_group_invite(group)
     return redirect(url_for('groups.viewGroup', group_id=group.id))
 
+
 @users.route('/declineGroupInvite/<groupID>')
 def declineGroupInvite(groupID):
     group = session.query(Group).filter_by(id=groupID).first()
     current_user.decline_group_invite(group)
     return redirect(url_for('groups.myGroups'))
+
 
 @users.route('/user/search/<username>/<group_id>')
 def searchForGroupUser(username, group_id):

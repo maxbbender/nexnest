@@ -1,12 +1,6 @@
 from nexnest.application import session
 
-from nexnest.data_gen.factories import UserFactory, ListingFactory, LandlordFactory, LandlordListingFactory, GroupFactory, GroupUserFactory, GroupListingFactory, MessageFactory, GroupMessageFactory
-
-
-def commit(*args):
-    for arg in args:
-        session.add(arg)
-    session.commit()
+from nexnest.data_gen.factories import UserFactory, ListingFactory, LandlordFactory, LandlordListingFactory, GroupFactory, GroupUserFactory, GroupListingFactory, MessageFactory, GroupMessageFactory, SchoolFactory, SchoolUserFactory
 
 
 # USERS
@@ -18,6 +12,19 @@ user5 = UserFactory()
 user6 = UserFactory()
 user7 = UserFactory()
 user8 = UserFactory()
+
+# Schools
+s = SchoolFactory()
+session.commit()
+
+# SCHOOL USERS
+su1 = SchoolUserFactory(school=s, user=user2)
+su2 = SchoolUserFactory(school=s, user=user3)
+su3 = SchoolUserFactory(school=s, user=user4)
+su4 = SchoolUserFactory(school=s, user=user5)
+su5 = SchoolUserFactory(school=s, user=user6)
+su6 = SchoolUserFactory(school=s, user=user7)
+su7 = SchoolUserFactory(school=s, user=user8)
 
 session.commit()
 
@@ -87,16 +94,6 @@ groupListing = GroupListingFactory(group=group1, listing=listing1)
 
 session.commit()
 
-# # MESSAGES
-# msg1 = MessageFactory(user=user2)
-# msg2 = MessageFactory(user=user3)
-# msg3 = MessageFactory(user=user2)
-# msg4 = MessageFactory(user=user4)
-# msg5 = MessageFactory(user=user2)
-# msg6 = MessageFactory(user=user5)
-
-# session.commit()
-
 # GROUP MESSAGES
 gmsg1 = GroupMessageFactory(group=group1, user=user2)
 gmsg2 = GroupMessageFactory(group=group1, user=user3)
@@ -106,3 +103,4 @@ gmsg5 = GroupMessageFactory(group=group1, user=user2)
 gmsg6 = GroupMessageFactory(group=group1, user=user5)
 
 session.commit()
+

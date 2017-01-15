@@ -15,4 +15,5 @@ class RegistrationForm(FlaskForm):
 
     fname = StringField('First Name', [InputRequired()])
     lname = StringField('Last Name', [InputRequired()])
+    school = StringField('School', [InputRequired()])
     submit = SubmitField('Register')

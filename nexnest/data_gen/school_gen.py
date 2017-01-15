@@ -11,9 +11,16 @@ fredonia = School('Fredonia',
                   '7166733111',
                   'http://home.fredonia.edu/')
 
-# First check to see that school doesn't exist
-count = session.query(School).filter_by(name='Fredonia').count()
+marist = School('Marist',
+                '3399 North Road',
+                'Poughkeepsie',
+                'NY',
+                '12601',
+                '8455753000',
+                'http://www.marist.edu/')
 
-if count == 0:
-    session.add(fredonia)
-    session.commit()
+
+session.add(fredonia)
+session.add(marist)
+
+session.commit()

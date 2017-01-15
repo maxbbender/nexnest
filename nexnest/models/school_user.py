@@ -19,8 +19,8 @@ class SchoolUser(Base):
             user,
             school,
     ):
-        self.user = user
-        self.school = school
+        self.user_id = user.id
+        self.school_id = school.id
 
     def __repr__(self):
         return '<SchoolUser ~ School %r | User %r>' % \

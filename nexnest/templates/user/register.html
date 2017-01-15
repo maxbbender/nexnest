@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+    <meta id="schools" data-name="schools" data-other="{{schools}}">
     <br>
     <div class="row m-x-auto">
         <div class="col-xs-1 col-sm-2 col-md-2 col-lg-2 col-xl-4">
@@ -16,6 +17,7 @@
 								    {{ render_field(registration_form.email, class="form-control", type="email") }}
 								    {{ render_field(registration_form.fname, class="form-control", type="text") }}
 				                    {{ render_field(registration_form.lname, class="form-control", type="text") }}
+                                    {{ render_field(registration_form.school, class="form-control", type="text") }}
 				                    {{ render_field(registration_form.password, class="form-control", type="password") }}
 				                    {{ render_field(registration_form.confirm, class="form-control", type="password") }}
 							  	</dl>
@@ -28,4 +30,16 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block scripts %}
+<script>
+var schools = [
+    {% for school in schools %}
+    '{{school}}',
+    {% endfor %}
+]
+$('#school').autocomplete({
+    source : schools
+});
+</script>
 {% endblock %}
