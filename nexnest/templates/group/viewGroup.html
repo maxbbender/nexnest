@@ -10,6 +10,17 @@
                 Date {{message.date_created}}<br>
                 <hr>
             {% endfor %}
+            {% from "_formhelpers.html" import render_field %}
+            <form action="{{url_for('groups.createMessage')}}" method=post>
+            {{invite_form.csrf_token}}
+                <dl>
+                    {{ render_field(message_form.content, class="form-control", type="text") }}
+                    {{message_form.group_id}}
+                </dl>
+                <p>
+                    <input type='submit' value='Send Message' class="btn btn-info">
+                </p>
+            </form>
         </div>
         <div class="col-xs-10 col-sm-8 col-md-8 col-lg-8 col-xl-4">
             <div class="row">

@@ -1,9 +1,10 @@
 from flask import Blueprint
 from flask import render_template, abort, request, redirect, url_for, flash, jsonify
-from flask_login import current_user
+from flask_login import current_user, login_required
 
 from ..forms.createGroup import CreateGroupForm
 from ..forms.inviteGroup import InviteGroupForm
+from ..forms.createGroupMessageForm import GroupMessageForm
 
 from nexnest.application import session
 
@@ -69,7 +70,8 @@ def viewGroup(group_id):
     # First lets check that the current user is apart of the group
     group = session.query(Group).filter_by(id=group_id).first()
 
-    form = InviteGroupForm()
+    invite_form = InviteGroupForm()
+    message_form = GroupMessageForm(group_id=group_id)
 
     # Lets get the group's messages
     messages = session.query(GroupMessage). \
@@ -77,7 +79,7 @@ def viewGroup(group_id):
         order_by(desc(GroupMessage.date_created)).all()
 
     if group in current_user.accepted_groups:
-        return render_template('group/viewGroup.html', group=group, invite_form=form, messages=messages)
+        return render_template('group/viewGroup.html', group=group, invite_form=invite_form, messages=messages, message_form=message_form)
     else:
         flash("You are not able to view a group you are not a part of")
         return redirect(url_for('indexs.index'))
@@ -94,8 +96,8 @@ def myGroups():
 
 
 @groups.route('/group/invite', methods=['POST'])
+@login_required
 def invite():
-
     if request.method == 'POST':
         form = InviteGroupForm(request.form)
         print("@groups.invite() form.group_id.data : %s" % form.group_id.data)
@@ -109,6 +111,29 @@ def invite():
             session.add(newGroupUser)
             session.commit()
         else:
-            flash("Errors validating Group Invite form")
+            flash_errors(form)
 
     return redirect(url_for('groups.viewGroup', group_id=form.group_id.data))
+
+
+@groups.route('/group/message/create', methods=['POST'])
+@login_required
+def createMessage():
+    message_form = GroupMessageForm(request.form)
+
+    if message_form.validate():
+        group = session.query(Group). \
+            filter_by(id=message_form.group_id.data). \
+            first()
+
+        newMessage = GroupMessage(group=group,
+                                  user=current_user,
+                                  content=message_form.content.data)
+
+        session.add(newMessage)
+        session.commit()
+    else:
+        flash_errors(message_form)
+
+    return redirect(url_for('groups.viewGroup',
+                            group_id=message_form.group_id.data))
