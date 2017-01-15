@@ -1,6 +1,6 @@
 from nexnest.application import session
 
-from nexnest.data_gen.factories import UserFactory, ListingFactory, LandlordFactory, LandlordListingFactory, GroupFactory, GroupUserFactory, GroupListingFactory, MessageFactory, GroupMessageFactory, SchoolFactory, SchoolUserFactory
+from nexnest.data_gen.factories import UserFactory, ListingFactory, LandlordFactory, LandlordListingFactory, GroupFactory, GroupUserFactory, GroupListingFactory, MessageFactory, GroupMessageFactory, SchoolFactory, SchoolUserFactory, DirectMessageFactory
 
 
 # USERS
@@ -104,3 +104,13 @@ gmsg6 = GroupMessageFactory(group=group1, user=user5)
 
 session.commit()
 
+# DIRECT MESSAGES
+dm1 = DirectMessageFactory(source_user=user2, target_user=user3)
+dm2 = DirectMessageFactory(source_user=user3, target_user=user2)
+dm3 = DirectMessageFactory(source_user=user2, target_user=user3)
+dm4 = DirectMessageFactory(source_user=user3, target_user=user4)
+dm5 = DirectMessageFactory(source_user=user4, target_user=user3)
+dm6 = DirectMessageFactory(source_user=user2, target_user=user3)
+dm6 = DirectMessageFactory(source_user=user2, target_user=user4)
+
+session.commit()

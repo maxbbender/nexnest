@@ -11,6 +11,7 @@ from nexnest.models.message import Message
 from nexnest.models.group_message import GroupMessage
 from nexnest.models.school import School
 from nexnest.models.school_user import SchoolUser
+from nexnest.models.direct_message import DirectMessage
 
 import factory
 from faker import Faker
@@ -161,3 +162,13 @@ class SchoolUserFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     school = factory.SubFactory(SchoolFactory)
     user = factory.SubFactory(UserFactory)
+
+
+class DirectMessageFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = DirectMessage
+        sqlalchemy_session = session
+
+    source_user = factory.SubFactory(UserFactory)
+    target_user = factory.SubFactory(UserFactory)
+    content = factory.LazyAttribute(lambda x: fake.paragraph(3))

@@ -2,7 +2,6 @@
 from nexnest.application import db, session
 from nexnest.utils.password import hash_password
 
-from nexnest.models.direct_message import DirectMessage
 from nexnest.models.group import Group
 from nexnest.models.group_user import GroupUser
 
@@ -36,12 +35,12 @@ class User(Base):
     date_created = db.Column(db.String(128), nullable=False)
     date_modified = db.Column(db.String(128), nullable=False)
     active = db.Column(db.Boolean)
-    sent_direct_messages = relationship(DirectMessage,
-                                        backref='source_user',
-                                        foreign_keys='[DirectMessage.source_user_id]')
-    recieved_direct_messages = relationship(DirectMessage,
-                                            backref='target_user',
-                                            foreign_keys='[DirectMessage.target_user_id]')
+    sentDM = relationship('DirectMessage',
+                          backref='source_user',
+                          foreign_keys='[DirectMessage.source_user_id]')
+    recievedDM = relationship('DirectMessage',
+                              backref='target_user',
+                              foreign_keys='[DirectMessage.target_user_id]')
     groups = relationship("GroupUser", back_populates='user')
 
     groupLeader = relationship("Group", backref='leader')
@@ -178,9 +177,10 @@ class User(Base):
             session.commit()
         else:
             flash("Unable to find record to decline")
-        
+
     @property
     def isLandlord(self):
-        landlordCount = session.query(Landlord).filter_by(user_id=self.id).count()
+        landlordCount = session.query(
+            Landlord).filter_by(user_id=self.id).count()
 
         return landlordCount == 1

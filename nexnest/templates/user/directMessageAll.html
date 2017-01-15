@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Direct Messages</h1>
+
+<h3>Users</h3><hr>
+{% for user in users %}
+    {{user.fname}} {{user.lname}} - <a href="/user/directMessages/{{user.id}}">View Messages</a>
+    <br>
+{% endfor %}
+{% endblock %}

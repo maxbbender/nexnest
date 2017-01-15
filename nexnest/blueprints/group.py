@@ -155,6 +155,7 @@ def createMessage():
 
 @groups.route('/suggestListing', methods=['POST'])
 def suggestListing():
+
     if request.method == 'POST':
         form = SuggestListingForm(request.form)
         if form.validate():

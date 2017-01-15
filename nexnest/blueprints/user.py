@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask import render_template, request, redirect, url_for, flash, jsonify
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 
 from nexnest.application import session
 
@@ -8,15 +8,17 @@ from nexnest.models.user import User
 from nexnest.models.group import Group
 from nexnest.models.school import School
 from nexnest.models.school_user import SchoolUser
+from nexnest.models.direct_message import DirectMessage
 
 from nexnest.forms.register_form import RegistrationForm
 from nexnest.forms.loginForm import LoginForm
 from nexnest.forms.editAccountForm import EditAccountForm
+from nexnest.forms.directMessageForm import DirectMessageForm
 
 from nexnest.utils.password import check_password
 from nexnest.utils.flash import flash_errors
 
-from sqlalchemy import func
+from sqlalchemy import func, asc, or_, and_
 
 users = Blueprint('users', __name__, template_folder='../templates/user')
 
@@ -114,7 +116,7 @@ def editAccount():
     #     form.website.data = current_user.website
     #     form.bio.data = current_user.bio
     #     form.phone.data = current_user.phone
-    #form.school.data = current_user.school
+    # form.school.data = current_user.school
     if form.validate_on_submit():
         current_user.fname = form.fname.data
         current_user.lname = form.lname.data
@@ -122,7 +124,7 @@ def editAccount():
         current_user.website = form.website.data
         current_user.bio = form.bio.data
         current_user.phone = form.phone.data
-        #current_user.school = form.school.data
+        # current_user.school = form.school.data
         if not form.password.data == '':
             current_user.set_password(form.password.data)
         session.commit()
@@ -182,3 +184,64 @@ def searchForGroupUser(username, group_id):
             apartOfGroup = False
 
     return jsonify(users=users)
+
+
+@users.route('/user/directMessages')
+@login_required
+def directMessagesAll():
+    users = []
+    direct_messages = session.query(DirectMessage.target_user_id) \
+        .filter_by(source_user_id=current_user.id) \
+        .group_by(DirectMessage.target_user_id) \
+        .all()
+
+    for dm in direct_messages:
+        user = session.query(User).filter_by(id=dm).first()
+        users.append(user)
+
+    return render_template('directMessageAll.html',
+                           users=users)
+
+
+@users.route('/user/directMessages/<user_id>')
+@login_required
+def directMessagesIndividual(user_id):
+    target_user = session.query(User) \
+        .filter_by(id=user_id) \
+        .first()
+
+    dm = session.query(DirectMessage) \
+        .filter(or_(
+            (and_(DirectMessage.source_user_id == current_user.id,
+                  DirectMessage.target_user_id == user_id)),
+            (and_(DirectMessage.target_user_id == current_user.id,
+                  DirectMessage.source_user_id == user_id)))) \
+        .order_by(asc(DirectMessage.date_created)) \
+        .all()
+
+    msgForm = DirectMessageForm(target_user_id=user_id)
+
+    return render_template('directMessageIndividual.html',
+                           target_user=target_user,
+                           dm=dm,
+                           msgForm=msgForm)
+
+
+@users.route('/user/directMessages/create', methods=['POST'])
+@login_required
+def createDirectMessage():
+    dmForm = DirectMessageForm(request.form)
+
+    if dmForm.validate():
+        target_user = session.query(User) \
+            .filter_by(id=dmForm.target_user_id.data) \
+            .first()
+
+        newDM = DirectMessage(current_user, target_user, dmForm.content.data)
+        session.add(newDM)
+        session.commit()
+    else:
+        flash_errors(dmForm)
+
+    return redirect(url_for('users.directMessagesIndividual',
+                            user_id=dmForm.target_user_id.data))

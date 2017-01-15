@@ -54,6 +54,7 @@ from nexnest.models.group import Group
 from nexnest.models.group_listing import GroupListing
 from nexnest.models.message import Message
 from nexnest.models.group_message import GroupMessage
+from nexnest.models.direct_message import DirectMessage
 
 
 @login_manager.user_loader
