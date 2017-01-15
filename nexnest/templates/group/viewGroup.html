@@ -4,6 +4,12 @@
     <div class="row m-x-auto">
         <div class="col-xs-1 col-sm-2 col-md-2 col-lg-2 col-xl-4">
             Messages
+            {% for message in messages %}
+                Message {{message.id}}<br>
+                Content {{message.content}}<br>
+                Date {{message.date_created}}<br>
+                <hr>
+            {% endfor %}
         </div>
         <div class="col-xs-10 col-sm-8 col-md-8 col-lg-8 col-xl-4">
             <div class="row">

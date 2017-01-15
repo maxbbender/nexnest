@@ -24,9 +24,12 @@ class GroupMessage(Message):
             user,
 
     ):
-        super(GroupMessage, self).__init__(content, user, 'group')
+        super().__init__(
+            content=content,
+            user=user
+        )
+
         self.group_id = group.id
-        self.message_id = message.id
 
     def __repr__(self):
         return '<GroupMessage ~ Group %r | Message %r>' % \

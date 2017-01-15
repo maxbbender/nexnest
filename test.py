@@ -6,24 +6,9 @@ from nexnest.models.group_message import GroupMessage
 
 from nexnest.data_gen.factories import GroupFactory, UserFactory
 
-g = GroupFactory()
-u = UserFactory()
+g = session.query(Group).filter_by(id=1).first()
 
-session.add(g)
-session.add(u)
+print(g.messages)
 
-session.commit()
-
-message = Message('hey', u, 'group')
-
-session.add(message)
-
-session.commit()
-
-gm = GroupMessage(g, message)
-
-session.add(gm)
-
-session.commit()
-
-print(gm)
+for gMessage in g.messages:
+    print ("Message %i | Content %s" % (gMessage.id, gMessage.content))

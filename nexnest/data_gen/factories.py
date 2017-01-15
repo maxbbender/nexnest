@@ -125,9 +125,8 @@ class MessageFactory(factory.alchemy.SQLAlchemyModelFactory):
         model = Message
         sqlalchemy_session = session
 
-    content = factory.LazyAttribute(lambda x: fake.sentences(3))
+    content = factory.LazyAttribute(lambda x: fake.paragraph())
     user = factory.SubFactory(UserFactory)
-    type = 'messages'
 
 
 class GroupMessageFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -136,4 +135,5 @@ class GroupMessageFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session = session
 
     group = factory.SubFactory(GroupFactory)
-    message = factory.SubFactory(MessageFactory)
+    content = factory.LazyAttribute(lambda x: fake.paragraph(3))
+    user = factory.SubFactory(UserFactory)

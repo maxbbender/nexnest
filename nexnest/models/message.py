@@ -25,12 +25,10 @@ class Message(Base):
     def __init__(
             self,
             content,
-            user,
-            type
+            user
     ):
         self.content = content
         self.user_id = user.id
-        self.type = type
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels

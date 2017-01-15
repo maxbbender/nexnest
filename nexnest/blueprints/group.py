@@ -10,8 +10,11 @@ from nexnest.application import session
 from nexnest.models.group import Group
 from nexnest.models.group_user import GroupUser
 from nexnest.models.user import User
+from nexnest.models.group_message import GroupMessage
 
 from nexnest.utils.flash import flash_errors
+
+from sqlalchemy import desc
 
 groups = Blueprint('groups', __name__, template_folder='../templates')
 
@@ -68,8 +71,13 @@ def viewGroup(group_id):
 
     form = InviteGroupForm()
 
+    # Lets get the group's messages
+    messages = session.query(GroupMessage). \
+        filter_by(group_id=group.id). \
+        order_by(desc(GroupMessage.date_created)).all()
+
     if group in current_user.accepted_groups:
-        return render_template('group/viewGroup.html', group=group, invite_form=form)
+        return render_template('group/viewGroup.html', group=group, invite_form=form, messages=messages)
     else:
         flash("You are not able to view a group you are not a part of")
         return redirect(url_for('indexs.index'))
