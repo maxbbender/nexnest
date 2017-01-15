@@ -96,8 +96,7 @@
                                         {{message_form.group_id}}
                                         {{message_form.csrf_token}}
                                         <strong><label for="addComment">Type your message:</label></strong>
-                                        <textarea class="form-control" id="content" rows="3"></textarea>
-                                        <br>
+                                        {{message_form.content(class_="form-control")}}
                                         <input class="btn btn-primary" type="submit" value="Respond">
                                     </form>
                                 </div>

@@ -18,7 +18,7 @@ from nexnest.models.group_message import GroupMessage
 
 from nexnest.utils.flash import flash_errors
 
-from sqlalchemy import desc
+from sqlalchemy import asc
 
 groups = Blueprint('groups', __name__, template_folder='../templates')
 
@@ -83,7 +83,7 @@ def viewGroup(group_id):
     # Lets get the group's messages
     messages = session.query(GroupMessage). \
         filter_by(group_id=group.id). \
-        order_by(desc(GroupMessage.date_created)).all()
+        order_by(asc(GroupMessage.date_created)).all()
 
     if group in current_user.accepted_groups:
 

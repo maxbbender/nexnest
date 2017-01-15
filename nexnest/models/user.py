@@ -45,6 +45,7 @@ class User(Base):
     groups = relationship("GroupUser", back_populates='user')
 
     groupLeader = relationship("Group", backref='leader')
+    groupMessages = relationship("GroupMessage", backref='user')
 
     def __init__(self,
                  email,
