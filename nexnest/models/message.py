@@ -15,6 +15,12 @@ class Message(Base):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
+    type = db.Column(db.String(50))
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'messages',
+        'polymorphic_on': type
+    }
 
     def __init__(
             self,

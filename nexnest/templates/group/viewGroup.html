@@ -3,6 +3,7 @@
     <br>
     <div class="row m-x-auto">
         <div class="col-xs-1 col-sm-2 col-md-2 col-lg-2 col-xl-4">
+
         </div>
         <div class="col-xs-10 col-sm-8 col-md-8 col-lg-8 col-xl-4">
             <div class="row">
@@ -91,10 +92,14 @@
                                     </div>
                                 {% endfor %}
                                 <div class="form-group">
-                                    <strong><label for="addComment">Type your message:</label></strong>
-                                    <textarea class="form-control" id="addComment" rows="3"></textarea>
-                                    <br>
-                                    <input class="btn btn-primary" type="submit" value="Respond">
+                                    <form action="{{url_for('groups.createMessage')}}" method=post>
+                                        {{message_form.group_id}}
+                                        {{message_form.csrf_token}}
+                                        <strong><label for="addComment">Type your message:</label></strong>
+                                        <textarea class="form-control" id="content" rows="3"></textarea>
+                                        <br>
+                                        <input class="btn btn-primary" type="submit" value="Respond">
+                                    </form>
                                 </div>
                             </div>
                         </div>

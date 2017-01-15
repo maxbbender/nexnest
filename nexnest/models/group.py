@@ -10,6 +10,7 @@ from sqlalchemy import event
 from sqlalchemy.orm import relationship
 
 from .group_user import GroupUser
+# from .group_message import GroupMessage
 # from nexnest.models.user import User
 
 
@@ -24,6 +25,7 @@ class Group(Base):
     date_modified = db.Column(db.DateTime)
     users = relationship("GroupUser", back_populates='group')
     listings = relationship("GroupListing", back_populates='group')
+    messages = relationship("GroupMessage", backref='group')
 
     def __init__(
             self,

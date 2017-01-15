@@ -1,10 +1,14 @@
 from flask import Blueprint
 from flask import render_template, abort, request, redirect, url_for, flash, jsonify
-from flask_login import current_user
+from flask_login import current_user, login_required
 
 from ..forms.createGroup import CreateGroupForm
 from ..forms.inviteGroup import InviteGroupForm
+<< << << < HEAD
 from ..forms.suggestListingForm import SuggestListingForm
+== == == =
+from ..forms.createGroupMessageForm import GroupMessageForm
+>>>>>> > group_messages
 
 from nexnest.application import session
 
@@ -12,9 +16,15 @@ from nexnest.models.group import Group
 from nexnest.models.group_user import GroupUser
 from nexnest.models.group_listing import GroupListing
 from nexnest.models.user import User
+<< << << < HEAD
 from nexnest.models.listing import Listing
+== == == =
+from nexnest.models.group_message import GroupMessage
+>>>>>> > group_messages
 
 from nexnest.utils.flash import flash_errors
+
+from sqlalchemy import desc
 
 groups = Blueprint('groups', __name__, template_folder='../templates')
 
@@ -69,50 +79,24 @@ def viewGroup(group_id):
     # First lets check that the current user is apart of the group
     group = session.query(Group).filter_by(id=group_id).first()
     groupListings = group.suggestedListings
-    #fake array of messages
-    messages= [
-        {
-            'id': 0,
-            'user': {'fname': 'Max', 'lname': 'Bender'},
-            'content': 'Hey Mike we need a good way to test out messages',
-            'date_created': '2017-01-14 23:09:41.536781'
-        },
-        {
-            'id': 1,
-            'user': {'fname': 'Mike', 'lname': 'McGinnis'},
-            'content': 'Let me throw something together, any ideas?',
-            'date_created': '2017-01-14 23:10:41.536781'
-        },
-        {
-            'id': 2,
-            'user': {'fname': 'Max', 'lname': 'Bender'},
-            'content': 'Whatever you think',
-            'date_created': '2017-01-14 23:11:41.536781'
-        },
-        {
-            'id': 3,
-            'user': {'fname': 'Mike', 'lname': 'McGinnis'},
-            'content': 'Ill play around with it see what looks best. Ill try a new tab',
-            'date_created': '2017-01-14 23:12:41.536781'
-        },
-        {
-            'id': 4,
-            'user': {'fname': 'Max', 'lname': 'Bender'},
-            'content': 'Great cant wait to see!',
-            'date_created': '2017-01-14 23:13:41.536781'
-        },
-        {
-            'id': 5,
-            'user': {'fname': 'Kyle', 'lname': 'Gavalchin'},
-            'content': 'This looks amazing, youre so talented mike!',
-            'date_created': '2017-01-14 23:14:41.536781'
-        }
-    ]
 
-    form = InviteGroupForm()
+    invite_form = InviteGroupForm()
+    message_form = GroupMessageForm(group_id=group_id)
+
+    # Lets get the group's messages
+    messages = session.query(GroupMessage). \
+        filter_by(group_id=group.id). \
+        order_by(desc(GroupMessage.date_created)).all()
 
     if group in current_user.accepted_groups:
-        return render_template('group/viewGroup.html', group=group, suggestedListings=groupListings, messages=messages, invite_form=form)
+
+        return render_template('group/viewGroup.html',
+                               group=group,
+                               suggestedListings=groupListings,
+                               invite_form=invite_form,
+                               messages=messages,
+                               message_form=message_form)
+
     else:
         flash("You are not able to view a group you are not a part of")
         return redirect(url_for('indexs.index'))
@@ -120,50 +104,83 @@ def viewGroup(group_id):
 
 @groups.route('/myGroups', methods=['GET', 'POST'])
 def myGroups():
-	groupsImIn = current_user.accepted_groups
-	groupsImInvitedTo = current_user.un_accepted_groups
-	return render_template('group/myGroups.html', 
-							acceptedGroups=groupsImIn, 
-							invitedGroups=groupsImInvitedTo, 
-							title='My Groups')
+    groupsImIn = current_user.accepted_groups
+    groupsImInvitedTo = current_user.un_accepted_groups
+    return render_template('group/myGroups.html',
+                           acceptedGroups=groupsImIn,
+                           invitedGroups=groupsImInvitedTo,
+                           title='My Groups')
+
 
 @groups.route('/group/invite', methods=['POST'])
+@login_required
 def invite():
-
     if request.method == 'POST':
         form = InviteGroupForm(request.form)
         print("@groups.invite() form.group_id.data : %s" % form.group_id.data)
         if form.validate():
-            group = session.query(Group).filter_by(id=int(form.group_id.data)).first()
-            user = session.query(User).filter_by(id=int(form.user_id.data)).first()
+            group = session.query(Group).filter_by(
+                id=int(form.group_id.data)).first()
+            user = session.query(User).filter_by(
+                id=int(form.user_id.data)).first()
             newGroupUser = GroupUser(group, user)
 
             session.add(newGroupUser)
             session.commit()
         else:
-            flash("Errors validating Group Invite form", 'danger')
+            flash_errors(form)
+            return redirect(url_for('groups.viewGroup',
+                                    group_id=form.group_id.data))
 
-    return redirect(url_for('groups.viewGroup', group_id=form.group_id.data))
+
+@groups.route('/group/message/create', methods=['POST'])
+@login_required
+def createMessage():
+    message_form = GroupMessageForm(request.form)
+
+    if message_form.validate():
+        group = session.query(Group). \
+            filter_by(id=message_form.group_id.data). \
+            first()
+
+        newMessage = GroupMessage(group=group,
+                                  user=current_user,
+                                  content=message_form.content.data)
+
+        session.add(newMessage)
+        session.commit()
+    else:
+        flash_errors(message_form)
+
+    return redirect(url_for('groups.viewGroup',
+                            group_id=message_form.group_id.data))
+
 
 @groups.route('/suggestListing', methods=['POST'])
 def suggestListing():
     if request.method == 'POST':
         form = SuggestListingForm(request.form)
         if form.validate():
-            group = session.query(Group).filter_by(id=int(form.group_id.data)).first()
-            listing = session.query(Listing).filter_by(id=int(form.listing_id.data)).first()
-            groupListing = session.query(GroupListing).filter_by(group_id=group.id, listing_id=listing.id).first()
+            group = session.query(Group).filter_by(
+                id=int(form.group_id.data)).first()
+
+            listing = session.query(Listing).filter_by(
+                id=int(form.listing_id.data)).first()
+
+            groupListing = session.query(GroupListing).filter_by(
+                group_id=group.id, listing_id=listing.id).first()
+
             if not groupListing:
                 newGroupListing = GroupListing(group, listing)
                 session.add(newGroupListing)
                 session.commit()
-                flash("This listing has been suggested to " + group.name, 'info')
+                flash("This listing has been suggested to %s" %
+                      group.name, 'info')
             else:
-                flash("This listing has already been suggested to " + group.name + " by someone", 'info')
+                flash("This listing has already been suggested to " +
+                      group.name + " by someone", 'info')
         else:
             flash("Errors validating Suggest Listing Invite form", 'danger')
 
-    return redirect(url_for('listings.viewListing', listingID=form.listing_id.data))
-
-
-
+    return redirect(url_for('listings.viewListing',
+                            listingID=form.listing_id.data))

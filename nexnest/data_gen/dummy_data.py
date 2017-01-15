@@ -87,22 +87,22 @@ groupListing = GroupListingFactory(group=group1, listing=listing1)
 
 session.commit()
 
-# MESSAGES
-msg1 = MessageFactory(user=user2)
-msg2 = MessageFactory(user=user3)
-msg3 = MessageFactory(user=user2)
-msg4 = MessageFactory(user=user4)
-msg5 = MessageFactory(user=user2)
-msg6 = MessageFactory(user=user5)
+# # MESSAGES
+# msg1 = MessageFactory(user=user2)
+# msg2 = MessageFactory(user=user3)
+# msg3 = MessageFactory(user=user2)
+# msg4 = MessageFactory(user=user4)
+# msg5 = MessageFactory(user=user2)
+# msg6 = MessageFactory(user=user5)
 
-session.commit()
+# session.commit()
 
 # GROUP MESSAGES
-gmsg1 = GroupMessageFactory(message=msg1, group=group1)
-gmsg2 = GroupMessageFactory(message=msg2, group=group1)
-gmsg3 = GroupMessageFactory(message=msg3, group=group1)
-gmsg4 = GroupMessageFactory(message=msg4, group=group1)
-gmsg5 = GroupMessageFactory(message=msg5, group=group1)
-gmsg6 = GroupMessageFactory(message=msg6, group=group1)
+gmsg1 = GroupMessageFactory(group=group1, user=user2)
+gmsg2 = GroupMessageFactory(group=group1, user=user3)
+gmsg3 = GroupMessageFactory(group=group1, user=user2)
+gmsg4 = GroupMessageFactory(group=group1, user=user4)
+gmsg5 = GroupMessageFactory(group=group1, user=user2)
+gmsg6 = GroupMessageFactory(group=group1, user=user5)
 
 session.commit()
