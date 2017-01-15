@@ -126,24 +126,6 @@ class Listing(Base):
         self.time_period = time_period
         self.unit_type = unit_type
         self.parking = parking
-        # valid_parking_types = ['onstreet', 'offstreet', 'none']
-        # valid_unit_types = ['room', 'house', 'complex', 'apartment']
-        # valid_time_periods = ['month', 'semester', 'year', 'summer']
-
-        # if time_period in valid_time_periods:
-        #     self.time_period = time_period
-        # else:
-        #     self.time_period = 'month'
-
-        # if unit_type in valid_unit_types:
-        #     self.unit_type = unit_type
-        # else:
-        #     self.unit_type = 'apartment'
-
-        # if parking in valid_parking_types:
-        #     self.parking = parking
-        # else:
-        #     self.parking = 'none'
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
