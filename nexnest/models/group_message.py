@@ -20,8 +20,11 @@ class GroupMessage(Message):
     def __init__(
             self,
             group,
-            message
+            content,
+            user,
+
     ):
+        super(GroupMessage, self).__init__(content, user, 'group')
         self.group_id = group.id
         self.message_id = message.id
 

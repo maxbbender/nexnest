@@ -77,12 +77,13 @@ def viewGroup(group_id):
 
 @groups.route('/myGroups', methods=['GET', 'POST'])
 def myGroups():
-	groupsImIn = current_user.accepted_groups
-	groupsImInvitedTo = current_user.un_accepted_groups
-	return render_template('group/myGroups.html', 
-							acceptedGroups=groupsImIn, 
-							invitedGroups=groupsImInvitedTo, 
-							title='My Groups')
+    groupsImIn = current_user.accepted_groups
+    groupsImInvitedTo = current_user.un_accepted_groups
+    return render_template('group/myGroups.html',
+                           acceptedGroups=groupsImIn,
+                           invitedGroups=groupsImInvitedTo,
+                           title='My Groups')
+
 
 @groups.route('/group/invite', methods=['POST'])
 def invite():
@@ -91,8 +92,10 @@ def invite():
         form = InviteGroupForm(request.form)
         print("@groups.invite() form.group_id.data : %s" % form.group_id.data)
         if form.validate():
-            group = session.query(Group).filter_by(id=int(form.group_id.data)).first()
-            user = session.query(User).filter_by(id=int(form.user_id.data)).first()
+            group = session.query(Group).filter_by(
+                id=int(form.group_id.data)).first()
+            user = session.query(User).filter_by(
+                id=int(form.user_id.data)).first()
             newGroupUser = GroupUser(group, user)
 
             session.add(newGroupUser)
@@ -101,4 +104,3 @@ def invite():
             flash("Errors validating Group Invite form")
 
     return redirect(url_for('groups.viewGroup', group_id=form.group_id.data))
-
