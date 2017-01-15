@@ -40,3 +40,6 @@ erd:
 
 server:
 	python server.py
+
+psql:
+	psql -U nexnest_development

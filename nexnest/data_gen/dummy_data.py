@@ -88,14 +88,14 @@ groupListing = GroupListingFactory(group=group1, listing=listing1)
 session.commit()
 
 # MESSAGES
-msg1 = MessageFactory(user=user2)
-msg2 = MessageFactory(user=user3)
-msg3 = MessageFactory(user=user2)
-msg4 = MessageFactory(user=user4)
-msg5 = MessageFactory(user=user2)
-msg6 = MessageFactory(user=user5)
+msg1 = MessageFactory(user=user2, type='group')
+msg2 = MessageFactory(user=user3, type='group')
+msg3 = MessageFactory(user=user2, type='group')
+msg4 = MessageFactory(user=user4, type='group')
+msg5 = MessageFactory(user=user2, type='group')
+msg6 = MessageFactory(user=user5, type='group')
 
-session.commit()
+# session.commit()
 
 # GROUP MESSAGES
 gmsg1 = GroupMessageFactory(message=msg1, group=group1)

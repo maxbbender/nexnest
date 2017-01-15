@@ -1,14 +1,13 @@
 from nexnest.application import session
-from nexnest.models.user import User
+
 from nexnest.models.group import Group
 
-# u = session.query(Group).filter_by(id=1).first()
+# g = session.query(Group).filter_by(id=1).first()
 
-u = session.query(User).filter_by(id=2).first()
+# print(g)
+# print(g.messages)
 
-# print(u)
-# print(u.groups)
-# print(u.accepted_groups)
-# print(u.un_accepted_groups)
+# for message in g.messages:
+#     print (message.id)
 
-print(u.groups[0].group)
+from nexnest.models.group_message import GroupMessage
