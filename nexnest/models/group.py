@@ -10,8 +10,6 @@ from sqlalchemy import event
 from sqlalchemy.orm import relationship
 
 from .group_user import GroupUser
-# from .group_message import GroupMessage
-# from nexnest.models.user import User
 
 
 class Group(Base):

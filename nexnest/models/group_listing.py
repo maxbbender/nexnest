@@ -57,3 +57,12 @@ class GroupListing(Base):
     def __repr__(self):
         return '<GroupListing ~ Group %r | Listing %r>' % \
             (self.group_id, self.listing_id)
+
+    @property
+    def status(self):
+        if self.completed:
+            return 'Completed'
+        elif self.accepted:
+            return 'Accepted'
+        else:
+            return 'Not Accepted'
