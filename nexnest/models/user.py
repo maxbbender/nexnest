@@ -4,10 +4,10 @@ from nexnest.utils.password import hash_password
 
 from nexnest.models.group import Group
 from nexnest.models.group_user import GroupUser
+from nexnest.models.group_listing import GroupListing
 
 from .base import Base
 from .landlord import Landlord
-
 
 from datetime import datetime as dt
 
@@ -148,7 +148,7 @@ class User(Base):
     def un_accepted_groups(self):
         unAcceptedGroups = []
         for groupUser in self.groups:
-            if groupUser.accepted == False and groupUser.show == True:
+            if not groupUser.accepted and groupUser.show:
                 unAcceptedGroups.append(groupUser.group)
 
         return unAcceptedGroups
@@ -184,3 +184,30 @@ class User(Base):
             Landlord).filter_by(user_id=self.id).count()
 
         return landlordCount == 1
+
+    def leaveGroup(self, group):
+        # Me must check that this group doesn't have any group listings
+        # that are accepted.
+
+        if group.leader_id == self.id:
+            flash(
+                "You are the leader of this group, assign a new leader before you can leave")
+        else:
+            groupListings = session.query(GroupListing) \
+                .filter_by(group_id=group.id,
+                           show=True,
+                           completed=True) \
+                .count()
+
+            if groupListings == 0:
+                groupUser = session.query(GroupUser) \
+                    .filter_by(group_id=group.id,
+                               user_id=self.id)
+
+                groupUser.accepted = False
+                groupUser.show = False
+
+                session.commit()
+            else:
+                flash(
+                    "Unable to leave group, Group is a part of a current listing that is accepted")
