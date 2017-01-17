@@ -192,6 +192,7 @@ class User(Base):
         if group.leader_id == self.id:
             flash(
                 "You are the leader of this group, assign a new leader before you can leave")
+            return False
         else:
             groupListings = session.query(GroupListing) \
                 .filter_by(group_id=group.id,
@@ -208,6 +209,8 @@ class User(Base):
                 groupUser.show = False
 
                 session.commit()
+                return True
             else:
                 flash(
                     "Unable to leave group, Group is a part of a current listing that is accepted")
+                return False
