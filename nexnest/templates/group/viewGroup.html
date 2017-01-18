@@ -35,9 +35,13 @@
                                 </p>
                                 <strong>Current Group Members:</strong>
                                 {% for user in group.acceptedUsers %}
-                                    <li><a href="{{ url_for('users.viewUser', userID=user.id) }}">{{ user.fname }} {{ user.lname }}</a></li>
+                                    <li><a href="{{ url_for('users.viewUser', userID=user.id) }}">{{ user.fname }} {{ user.lname }}</a>
+                                    {% if group.leader_id == current_user.id %}
+                                     - <a class="button" href="/group/{{group.id}}/assignLeader/{{user.id}}">Make Group Leader</a>
+                                    {% endif %}
+                                    </li>
                                 {% endfor %}                        
-                                {% if group. unAcceptedUsers %}
+                                {% if group.unAcceptedUsers %}
                                     <br>
                                     <strong>Invited Members:</strong>
                                     {% for user in group.unAcceptedUsers %}

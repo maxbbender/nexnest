@@ -7,7 +7,6 @@ from nexnest.application import session
 from nexnest.models.user import User
 from nexnest.models.group import Group
 from nexnest.models.school import School
-from nexnest.models.school_user import SchoolUser
 from nexnest.models.direct_message import DirectMessage
 
 from nexnest.forms.register_form import RegistrationForm
@@ -42,18 +41,13 @@ def create():
 
         if school is not None:
             # School Exists
-            newUser = User(registerForm.email.data,
-                           registerForm.password.data,
-                           registerForm.fname.data,
-                           registerForm.lname.data)
+            newUser = User(email=registerForm.email.data,
+                           password=registerForm.password.data,
+                           fname=registerForm.fname.data,
+                           lname=registerForm.lname.data,
+                           school=school)
 
             session.add(newUser)
-            session.commit()
-
-            # Now lets link the user to his school
-            schoolUser = SchoolUser(newUser, school)
-
-            session.add(schoolUser)
             session.commit()
 
             login_user(newUser)

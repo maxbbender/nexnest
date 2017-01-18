@@ -34,6 +34,7 @@ class User(Base):
     profile_image = db.Column(db.String(128))
     date_created = db.Column(db.String(128), nullable=False)
     date_modified = db.Column(db.String(128), nullable=False)
+    school_id = db.Column(db.Integer(), db.ForeignKey('schools.id'))
     active = db.Column(db.Boolean)
     sentDM = relationship('DirectMessage',
                           backref='source_user',
@@ -51,6 +52,7 @@ class User(Base):
                  password,
                  fname,
                  lname,
+                 school,
                  role=None,
                  bio=None,
                  website=None,
@@ -60,6 +62,7 @@ class User(Base):
                  profile_image=None,
                  ):
 
+        self.school_id = school.id
         self.username = email.split("@")[0]
         self.email = email
 
@@ -191,7 +194,7 @@ class User(Base):
 
         if group.leader_id == self.id:
             flash(
-                "You are the leader of this group, assign a new leader before you can leave")
+                "You are the leader of this group, assign a new leader before you can leave", 'warning')
             return False
         else:
             groupListings = session.query(GroupListing) \
@@ -203,7 +206,8 @@ class User(Base):
             if groupListings == 0:
                 groupUser = session.query(GroupUser) \
                     .filter_by(group_id=group.id,
-                               user_id=self.id)
+                               user_id=self.id) \
+                    .first()
 
                 groupUser.accepted = False
                 groupUser.show = False
@@ -212,5 +216,5 @@ class User(Base):
                 return True
             else:
                 flash(
-                    "Unable to leave group, Group is a part of a current listing that is accepted")
+                    "Unable to leave group, Group is a part of a current listing that is accepted", 'warning')
                 return False

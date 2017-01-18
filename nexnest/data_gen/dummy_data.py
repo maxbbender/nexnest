@@ -1,32 +1,20 @@
 from nexnest.application import session
 
-from nexnest.data_gen.factories import UserFactory, ListingFactory, LandlordFactory, LandlordListingFactory, GroupFactory, GroupUserFactory, GroupListingFactory, MessageFactory, GroupMessageFactory, SchoolFactory, SchoolUserFactory, DirectMessageFactory
-
-
-# USERS
-landlord = UserFactory()
-user2 = UserFactory()
-user3 = UserFactory()
-user4 = UserFactory()
-user5 = UserFactory()
-user6 = UserFactory()
-user7 = UserFactory()
-user8 = UserFactory()
+from nexnest.data_gen.factories import UserFactory, ListingFactory, LandlordFactory, LandlordListingFactory, GroupFactory, GroupUserFactory, GroupListingFactory, MessageFactory, GroupMessageFactory, SchoolFactory, DirectMessageFactory
 
 # Schools
 s = SchoolFactory()
 session.commit()
 
-# SCHOOL USERS
-su1 = SchoolUserFactory(school=s, user=user2)
-su2 = SchoolUserFactory(school=s, user=user3)
-su3 = SchoolUserFactory(school=s, user=user4)
-su4 = SchoolUserFactory(school=s, user=user5)
-su5 = SchoolUserFactory(school=s, user=user6)
-su6 = SchoolUserFactory(school=s, user=user7)
-su7 = SchoolUserFactory(school=s, user=user8)
-
-session.commit()
+# USERS
+landlord = UserFactory(school=s)
+user2 = UserFactory(school=s)
+user3 = UserFactory(school=s)
+user4 = UserFactory(school=s)
+user5 = UserFactory(school=s)
+user6 = UserFactory(school=s)
+user7 = UserFactory(school=s)
+user8 = UserFactory(school=s)
 
 # LANDLORDS
 landlord1 = LandlordFactory(user=landlord)

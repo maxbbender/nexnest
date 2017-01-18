@@ -5,6 +5,7 @@ from nexnest.application import db
 from .base import Base
 
 from sqlalchemy import event
+from sqlalchemy.orm import relationship
 
 
 class School(Base):
@@ -19,6 +20,7 @@ class School(Base):
     website = db.Column(db.Text)
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
+    users = relationship("User", backref='school')
 
     def __init__(self,
                  name,

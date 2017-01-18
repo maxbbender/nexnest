@@ -226,15 +226,32 @@ def leaveGroup(groupID):
     # Does the group exist?
     if groupToLeave is not None:
         # Is the user a part of the group?
-        if groupUserCount == 0:
-            if current_user.leaveGroup():
+        if groupUserCount == 1:
+            if current_user.leaveGroup(groupToLeave):
                 flash("You have left %s" % groupToLeave.name, 'success')
                 return redirect(url_for('indexs.index'))
             else:
-                return redirect(url_for('groups.viewGroup', groupToLeave.id))
+                return redirect(url_for('groups.viewGroup',
+                                        group_id=groupToLeave.id))
         else:
             flash("You are not apart of %s" % groupToLeave.name, 'danger')
             return redirect(url_for('indexs.index'))
     else:
         flash("Group you are trying to leave doesn't exist", 'danger')
         return redirect(url_for('indexs.index'))
+
+
+@groups.route('/group/<group_id>/assignLeader/<user_id>')
+@login_required
+def assignNewLeader(group_id, user_id):
+    group = session.query(Group).filter_by(id=group_id).first()
+
+    # Is the current user the leader of this group
+    if group.leader_id == current_user.id:
+        group.leader_id = user_id
+        session.commit()
+    else:
+        flash("Only group leader can re-assign the leader", 'danger')
+
+    return redirect(url_for('groups.viewGroup',
+                            group_id=group.id))
