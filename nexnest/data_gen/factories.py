@@ -75,7 +75,7 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     snow_plowing = True
     garbage_service = True
     security_service = True
-    description = factory.LazyAttribute(lambda x: fake.sentences(nb=3))
+    description = factory.LazyAttribute(lambda x: fake.paragraph())
     num_half_baths = 4
     num_full_baths = 3
     time_period = 'semester'
@@ -134,6 +134,7 @@ class GroupListingFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     group = factory.SubFactory(GroupFactory)
     listing = factory.SubFactory(ListingFactory)
+    req_description = factory.LazyAttribute(lambda x: fake.paragraph())
 
 
 class MessageFactory(factory.alchemy.SQLAlchemyModelFactory):

@@ -82,7 +82,7 @@ class Group(Base):
     def suggestedListings(self):
         suggestedListings = []
         for groupListing in self.listings:
-            if groupListing.show == True and groupListing.accepted == False:
+            if groupListing.group_show == True and groupListing.accepted == False:
                 suggestedListings.append(groupListing.listing)
         return suggestedListings
 
