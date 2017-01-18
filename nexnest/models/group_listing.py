@@ -16,6 +16,7 @@ class GroupListing(Base):
     listing_id = db.Column(db.Integer,
                            db.ForeignKey('listings.id'),
                            primary_key=True)
+    req_description = db.Column(db.Text)
 
     # This is for when a group has been accepted and the process
     # of putting in the down payment and signing the lease is
@@ -29,7 +30,8 @@ class GroupListing(Base):
 
     # Whether or not to show the group_listing for the User suggested listings
     # page
-    show = db.Column(db.Boolean)
+    group_show = db.Column(db.Boolean)
+    landlord_show = db.Column(db.Boolean)
 
     group = relationship("Group", back_populates="listings")
     listing = relationship("Listing", back_populates='groups')
@@ -39,16 +41,19 @@ class GroupListing(Base):
     def __init__(
             self,
             group,
-            listing
+            listing,
+            req_description
     ):
         self.group_id = group.id
         self.listing_id = listing.id
         self.group = group
         self.listing = listing
+        self.req_description = req_description
 
         self.accepted = False
         self.completed = False
-        self.show = True
+        self.group_show = True
+        self.landlord_show = True
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels

@@ -16,6 +16,8 @@ user6 = UserFactory(school=s)
 user7 = UserFactory(school=s)
 user8 = UserFactory(school=s)
 
+session.commit()
+
 # LANDLORDS
 landlord1 = LandlordFactory(user=landlord)
 
