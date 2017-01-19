@@ -141,14 +141,14 @@ def searchForUser(username):
     return jsonify(users=[i.serialize for i in usersToReturn])
 
 
-@users.route('/acceptGroupInvite/<groupID>')
+@users.route('/user/acceptGroupInvite/<groupID>')
 def acceptGroupInvite(groupID):
     group = session.query(Group).filter_by(id=groupID).first()
     current_user.accept_group_invite(group)
     return redirect(url_for('groups.viewGroup', group_id=group.id))
 
 
-@users.route('/declineGroupInvite/<groupID>')
+@users.route('/user/declineGroupInvite/<groupID>')
 def declineGroupInvite(groupID):
     group = session.query(Group).filter_by(id=groupID).first()
     current_user.decline_group_invite(group)
@@ -239,3 +239,14 @@ def createDirectMessage():
 
     return redirect(url_for('users.directMessagesIndividual',
                             user_id=dmForm.target_user_id.data))
+
+
+@users.route('/user/groups', methods=['GET', 'POST'])
+@login_required
+def myGroups():
+    groupsImIn = current_user.accepted_groups
+    groupsImInvitedTo = current_user.un_accepted_groups
+    return render_template('group/myGroups.html',
+                           acceptedGroups=groupsImIn,
+                           invitedGroups=groupsImInvitedTo,
+                           title='My Groups')

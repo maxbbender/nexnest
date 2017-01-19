@@ -23,7 +23,7 @@ from sqlalchemy import asc
 groups = Blueprint('groups', __name__, template_folder='../templates')
 
 
-@groups.route('/createGroup', methods=['GET', 'POST'])
+@groups.route('/group/create', methods=['GET', 'POST'])
 def createGroup():
     form = CreateGroupForm(request.form)
 
@@ -75,7 +75,7 @@ def createGroup():
         return render_template('createGroup.html', form=form)
 
 
-@groups.route('/viewGroup/<group_id>')
+@groups.route('/group/view/<group_id>')
 @login_required
 def viewGroup(group_id):
     # First lets check that the current user is apart of the group
@@ -102,17 +102,6 @@ def viewGroup(group_id):
     else:
         flash("You are not a part of %s" % group.name, 'warning')
         return redirect(url_for('indexs.index'))
-
-
-@groups.route('/myGroups', methods=['GET', 'POST'])
-@login_required
-def myGroups():
-    groupsImIn = current_user.accepted_groups
-    groupsImInvitedTo = current_user.un_accepted_groups
-    return render_template('group/myGroups.html',
-                           acceptedGroups=groupsImIn,
-                           invitedGroups=groupsImInvitedTo,
-                           title='My Groups')
 
 
 @groups.route('/group/invite', methods=['POST'])
@@ -173,7 +162,7 @@ def createMessage():
                             group_id=message_form.group_id.data))
 
 
-@groups.route('/suggestListing', methods=['POST'])
+@groups.route('/group/suggestListing', methods=['POST'])
 def suggestListing():
 
     if request.method == 'POST':
