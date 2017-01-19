@@ -27,7 +27,7 @@ if env is None:
     env = 'development'
 
 # App setup
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static")
 app.config.from_envvar('NEXNEST_%s_SETTINGS' % env.upper())
 app.secret_key = 'domislove'
 

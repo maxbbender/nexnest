@@ -20,7 +20,7 @@
     <br>
     <div class="text-xs-center" style="width: 200px;display:block; margin-left: auto; margin-right: auto;">
         <div class="card card-outline-primary" style="display:block; margin-left: auto; margin-right: auto;">
-            <img class="card-img" src="{{url_for('static', filename='img/testAvssatar.jpg')}}" style="height: 150px;">
+            <img class="card-img" src="{{url_for('static', filename='img/testAvatar.jpg')}}" style="height: 150px;">
             <div class="card-img-overlay"> 
             {% if user.id == current_user.id %}
                 <a href="{{ url_for('indexs.index') }}" style="position: absolute; bottom:0px;right:0px;color:#0275d8;"><i class="fa fa-pencil-square fa-2x" aria-hidden="true"></i></a>

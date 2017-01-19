@@ -7,12 +7,12 @@
 	    <title>NexNest</title>
 	    {% endif %}
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-	    <link href="/static/css/bootstrap-flex.css" rel="stylesheet">
-	    <link href="/static/css/customStyling.css" rel="stylesheet">
-	    <link rel="stylesheet" href="/static/font-awesome-4.6.3/css/font-awesome.min.css">
-	    <script src="/static/js/jquery-latest.js"></script>
+	    <link href="{{url_for('static', filename='css/bootstrap-flex.css')}}" rel="stylesheet">
+	    <link href="{{url_for('static', filename='css/customStyling.css')}}" rel="stylesheet">
+	    <link rel="stylesheet" href="{{url_for('static', filename='font-awesome-4.6.3/css/font-awesome.min.css')}}">
+	    <script src="{{url_for('static', filename='js/jquery-latest.js')}}"></script>
 	    <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
-	    <script src="/static/js/bootstrap.min.js"></script>
+	    <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 	<body>

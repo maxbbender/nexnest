@@ -99,14 +99,13 @@ def logout():
 def viewUser(userID):
     # fake lisiting for testing
     user = session.query(User).filter_by(id=userID).first()
-    return render_template('userAccount.html', user=user, title=user.fname)
+    return render_template('/user/account.html', user=user, title=user.fname)
 
 
 @users.route('/user/edit', methods=['GET', 'POST'])
 @login_required
 def editAccount():
-    currentUser = session.query(User).filter_by(id=current_user.id).first()
-    form = EditAccountForm(obj=currentUser)
+    form = EditAccountForm(obj=current_user)
     # if request.method == 'GET':
     #     form.fname.data = current_user.fname
     #     form.lname.data = current_user.lname
@@ -128,7 +127,7 @@ def editAccount():
         session.commit()
         flash('Account Updated', 'info')
         return redirect(url_for('viewUsers.viewUser', userID=current_user.id))
-    return render_template('/editAccount.html', form=form, title='Edit Account')
+    return render_template('editAccount.html', form=form, title='Edit Account')
 
 
 @users.route('/user/search/<username>')
