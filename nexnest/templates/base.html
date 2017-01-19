@@ -61,57 +61,29 @@
 		{% block content %}{% endblock %}
 
 		<!-- Login Modal -->
-		<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="login" aria-hidden="true">
-		  	<div class="modal-dialog" role="document">
-		    	<div class="modal-content">
-		      		<div class="modal-header">
-		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		          			<span aria-hidden="true">&times;</span>
-		        		</button>
-		        		<h4 class="modal-title" id="login"></h4>
-		      		</div>
-		      		<div class="modal-body">
-		      			<div class="row">
-		      				<div class="col-xs-2"></div>
-		      				<div class="col-xs-8">
-		      					{% from "_formhelpers.html" import render_field %}
-  								<form action="{{url_for('users.process_login')}}" method='POST'>
-  								  	<dl>
-                                        {{login_form.csrf_token}}
-  									    {{ render_field(login_form.email, class="form-control", type="email") }}
-  									    {{ render_field(login_form.password, class="form-control", type="password") }}
-  								  	</dl>
-  								  	<p>
-  								  		<input type='submit' value='Login' class="btn btn-info">
-  								  	</p>
-  								</form>
-		      				</div>
-		      			</div>
-		      		</div>
-			      	<div class="modal-footer">
-			      		<a href="#registerModal" data-toggle="modal" data-dismiss="modal">Need to register?</a>
-			        	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-			      	</div>
-		    	</div>
-		  	</div>
-		</div>
+        {% if current_user %}
+            {% if not current_user.is_authenticated %}
+		      {% include loginModel.html %}
+            {% endif %}
+        {% else %}
+            {% include loginModel.html %}
+        {% endif %}
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
         {% block scripts %}
         {% endblock %}
 		<script>
-			//Register Account Modal
-			$('#registerModal').on('show.bs.modal', function (event) {
-			  var button = $(event.relatedTarget)
-			  var modal = $(this)
-			  modal.find('.modal-title').text('Register as tenant or landlord?')
-			})
-
 			//Login Modal
-			$('#loginModal').on('show.bs.modal', function (event) {
-			  var button = $(event.relatedTarget)
-			  var modal = $(this)
-			  modal.find('.modal-title').text('Login to NexNest')
-			})
+            $('#loginModal').on('show.bs.modal', function (event) {
+              var button = $(event.relatedTarget)
+              var modal = $(this)
+              modal.find('.modal-title').text('Login to NexNest')
+            });
+            //Register Account Modal
+            // $('#registerModal').on('show.bs.modal', function (event) {
+            //   var button = $(event.relatedTarget)
+            //   var modal = $(this)
+            //   modal.find('.modal-title').text('Register as tenant or landlord?')
+            // })
 		</script>
 	</body>
 </html>

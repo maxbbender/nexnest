@@ -24,6 +24,7 @@ groups = Blueprint('groups', __name__, template_folder='../templates')
 
 
 @groups.route('/group/create', methods=['GET', 'POST'])
+@login_required
 def createGroup():
     form = CreateGroupForm(request.form)
 
@@ -163,6 +164,7 @@ def createMessage():
 
 
 @groups.route('/group/suggestListing', methods=['POST'])
+@login_required
 def suggestListing():
 
     if request.method == 'POST':

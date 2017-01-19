@@ -1,6 +1,6 @@
 from flask import Blueprint
-from flask import render_template, request, redirect, url_for, flash,
-from flask_login import login_user, logout_user, current_user
+from flask import render_template, request, redirect, url_for, flash
+from flask_login import current_user, login_required
 from ..forms.listing import ListingForm
 from ..forms.suggestListingForm import SuggestListingForm
 
@@ -15,6 +15,7 @@ listings = Blueprint('listings', __name__, template_folder='../templates')
 
 
 @listings.route('/listing/view/<listingID>', methods=['GET', 'POST'])
+@login_required
 def viewListing(listingID):
     form = SuggestListingForm()
     viewListing = session.query(Listing).filter_by(id=listingID).first()
@@ -27,6 +28,7 @@ def viewListing(listingID):
 
 
 @listings.route('/listing/create', methods=['GET', 'POST'])
+@login_required
 def createListing():
     # User can only create listing if landlord
     if current_user.isLandlord:
@@ -83,6 +85,7 @@ def createListing():
 
 
 @listings.route('/listing/edit/<listingID>', methods=['GET', 'POST'])
+@login_required
 def editListing(listingID):
     listingLandlords = session.query(LandlordListing) \
         .filter_by(listing_id=listingID,
