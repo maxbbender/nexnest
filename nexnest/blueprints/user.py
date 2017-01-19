@@ -239,3 +239,20 @@ def createDirectMessage():
 
     return redirect(url_for('users.directMessagesIndividual',
                             user_id=dmForm.target_user_id.data))
+
+
+@users.route('/user/groups', methods=['GET', 'POST'])
+@login_required
+def myGroups():
+    groupsImIn = current_user.accepted_groups
+    groupsImInvitedTo = current_user.un_accepted_groups
+    return render_template('group/myGroups.html',
+                           acceptedGroups=groupsImIn,
+                           invitedGroups=groupsImInvitedTo,
+                           title='My Groups')
+
+
+@users.route('/user/updateAvatar', methods=['GET', 'POST'])
+@login_required
+def updateAvatar():
+    return 'hey'
