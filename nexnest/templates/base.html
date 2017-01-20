@@ -19,6 +19,46 @@
 		<nav class="navbar navbar-light bg-faded">
 			<a class="navbar-brand" href="{{ url_for('indexs.index') }}">NexNest</a>
 		    <ul class="nav navbar-nav">
+                <!-- <div class="float-lg-right">
+                    <li class="nav-item dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account
+                            <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <div class="navbar-content">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <img src="http://placehold.it/120x120"
+                                                alt="Alternate Text" class="img-responsive" />
+                                            <p class="text-center small">
+                                                <a href="#">Change Photo</a></p>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <span>Bhaumik Patel</span>
+                                            <p class="text-muted small">
+                                                mail@gmail.com</p>
+                                            <div class="divider">
+                                            </div>
+                                            <a href="#" class="btn btn-primary btn-sm active">View Profile</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="navbar-footer">
+                                    <div class="navbar-footer-content">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <a href="#" class="btn btn-default btn-sm">Change Passowrd</a>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <a href="http://www.jquery2dotnet.com" class="btn btn-default btn-sm pull-right">Sign Out</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </div> -->
 			  	<div class="float-lg-right">
                     {% if current_user %}
                         {% if not current_user.is_authenticated %}
@@ -34,7 +74,10 @@
                             </li>
                             <li class="nav-item">
                                 {{current_user.fname}} {{current_user.lname}} - {{current_user.id}}
-                            </li>                                      
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn nav-link dropdown-toggle" data-toggle="dropdown" href="#">Account<span class="caret"></span></a>
+                            </li>                                   
 				  		<li class="nav-item">
 			                <div class="dropdown">
 				                <i class="fa fa-bars fa-2x dropdown-toggle" style="padding-top: 4px;" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>

@@ -254,16 +254,16 @@ def myGroups():
                            title='My Groups')
 
 
-@users.route('/user/updateProfilePicture', methods=['GET', 'POST'])
-@login_required
-def updateProfilePicture():
-    picForm = ProfilePictureForm()
-    if request.method == 'GET':
-        return render_template('changeProfilePicture.html',
-                               picForm=picForm)
-    else:
-        if 'profilePicture' not in request.files:
-            flash('No file part', 'warning')
-            return redirect(request.url)
+# @users.route('/user/updateProfilePicture', methods=['GET', 'POST'])
+# @login_required
+# def updateProfilePicture():
+#     picForm = ProfilePictureForm()
+#     if request.method == 'GET':
+#         return render_template('changeProfilePicture.html',
+#                                picForm=picForm)
+#     else:
+#         if 'profilePicture' not in request.files:
+#             flash('No file part', 'warning')
+#             return redirect(request.url)
 
-        file = request.files['profilePicture']
+#         file = request.files['profilePicture']
