@@ -13,6 +13,7 @@ from nexnest.forms.register_form import RegistrationForm
 from nexnest.forms.loginForm import LoginForm
 from nexnest.forms.editAccountForm import EditAccountForm
 from nexnest.forms.directMessageForm import DirectMessageForm
+from nexnest.forms.profilePictureForm import ProfilePictureForm
 
 from nexnest.utils.password import check_password
 from nexnest.utils.flash import flash_errors
@@ -252,7 +253,16 @@ def myGroups():
                            title='My Groups')
 
 
-@users.route('/user/updateAvatar', methods=['GET', 'POST'])
+@users.route('/user/updateProfilePicture', methods=['GET', 'POST'])
 @login_required
-def updateAvatar():
-    return 'hey'
+def updateProfilePicture():
+    picForm = ProfilePictureForm()
+    if request.method == 'GET':
+        return render_template('changeProfilePicture.html',
+                               picForm=picForm)
+    else:
+        if 'profilePicture' not in request.files:
+            flash('No file part', 'warning')
+            return redirect(request.url)
+
+        file = request.files['profilePicture']
