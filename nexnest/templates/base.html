@@ -7,12 +7,12 @@
 	    <title>NexNest</title>
 	    {% endif %}
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-	    <link href="/static/css/bootstrap-flex.css" rel="stylesheet">
-	    <link href="/static/css/customStyling.css" rel="stylesheet">
-	    <link rel="stylesheet" href="/static/font-awesome-4.6.3/css/font-awesome.min.css">
-	    <script src="/static/js/jquery-latest.js"></script>
+	    <link href="{{url_for('static', filename='css/bootstrap-flex.css')}}" rel="stylesheet">
+	    <link href="{{url_for('static', filename='css/customStyling.css')}}" rel="stylesheet">
+	    <link rel="stylesheet" href="{{url_for('static', filename='font-awesome-4.6.3/css/font-awesome.min.css')}}">
+	    <script src="{{url_for('static', filename='js/jquery-latest.js')}}"></script>
 	    <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
-	    <script src="/static/js/bootstrap.min.js"></script>
+	    <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 	<body>
@@ -39,7 +39,7 @@
 			                <div class="dropdown">
 				                <i class="fa fa-bars fa-2x dropdown-toggle" style="padding-top: 4px;" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
 				                <div class="dropdown-menu dropdown-menu-right" style="overflow:hidden;" aria-labelledby="dropdownMenuButton">
-					                <a class="dropdown-item" href="{{ url_for('groups.myGroups') }}">My Groups</a>
+					                <a class="dropdown-item" href="{{ url_for('users.myGroups') }}">My Groups</a>
 					                <a class="dropdown-item" href="{{ url_for('users.viewUser', userID=current_user.id) }}">My Account</a>
 			                	</div>
 			               </div>
@@ -61,57 +61,29 @@
 		{% block content %}{% endblock %}
 
 		<!-- Login Modal -->
-		<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="login" aria-hidden="true">
-		  	<div class="modal-dialog" role="document">
-		    	<div class="modal-content">
-		      		<div class="modal-header">
-		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		          			<span aria-hidden="true">&times;</span>
-		        		</button>
-		        		<h4 class="modal-title" id="login"></h4>
-		      		</div>
-		      		<div class="modal-body">
-		      			<div class="row">
-		      				<div class="col-xs-2"></div>
-		      				<div class="col-xs-8">
-		      					{% from "_formhelpers.html" import render_field %}
-  								<form action="{{url_for('users.process_login')}}" method='POST'>
-  								  	<dl>
-                                        {{login_form.csrf_token}}
-  									    {{ render_field(login_form.email, class="form-control", type="email") }}
-  									    {{ render_field(login_form.password, class="form-control", type="password") }}
-  								  	</dl>
-  								  	<p>
-  								  		<input type='submit' value='Login' class="btn btn-info">
-  								  	</p>
-  								</form>
-		      				</div>
-		      			</div>
-		      		</div>
-			      	<div class="modal-footer">
-			      		<a href="#registerModal" data-toggle="modal" data-dismiss="modal">Need to register?</a>
-			        	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-			      	</div>
-		    	</div>
-		  	</div>
-		</div>
+        {% if current_user %}
+            {% if not current_user.is_authenticated %}
+		      {% include loginModel.html %}
+            {% endif %}
+        {% else %}
+            {% include loginModel.html %}
+        {% endif %}
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
         {% block scripts %}
         {% endblock %}
 		<script>
-			//Register Account Modal
-			$('#registerModal').on('show.bs.modal', function (event) {
-			  var button = $(event.relatedTarget)
-			  var modal = $(this)
-			  modal.find('.modal-title').text('Register as tenant or landlord?')
-			})
-
 			//Login Modal
-			$('#loginModal').on('show.bs.modal', function (event) {
-			  var button = $(event.relatedTarget)
-			  var modal = $(this)
-			  modal.find('.modal-title').text('Login to NexNest')
-			})
+            $('#loginModal').on('show.bs.modal', function (event) {
+              var button = $(event.relatedTarget)
+              var modal = $(this)
+              modal.find('.modal-title').text('Login to NexNest')
+            });
+            //Register Account Modal
+            // $('#registerModal').on('show.bs.modal', function (event) {
+            //   var button = $(event.relatedTarget)
+            //   var modal = $(this)
+            //   modal.find('.modal-title').text('Register as tenant or landlord?')
+            // })
 		</script>
 	</body>
 </html>

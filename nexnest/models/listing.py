@@ -59,6 +59,7 @@ class Listing(Base):
     date_modified = db.Column(db.DateTime)
 
     groups = relationship("GroupListing", back_populates='listing')
+    landlords = relationship("LandlordListing", back_populates='listing')
 
     def __init__(
             self,

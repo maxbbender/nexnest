@@ -31,7 +31,7 @@ UPLOAD_FOLDER = dirname(__file__) + '/uploads'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 # App setup
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static")
 app.config.from_envvar('NEXNEST_%s_SETTINGS' % env.upper())
 app.secret_key = 'domislove'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
