@@ -49,6 +49,9 @@
                                     {% endfor %}
                                 {% endif %}
                                 <br>
+
+                                <!-- Group Leader Actions -->
+                                {% if group.leader_id == current_user.id %}
                                 <strong>Invite User to Group:</strong>
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-10 col-md-8 col-lg-8 col-xl-6">                        
@@ -64,13 +67,14 @@
                                     {{invite_form.user_id}}
                                 </form>
                                 <span class="" id="userSearchUL"></span>
+                                {% endif %}
                             </div>
                             <div class="tab-pane" id="suggestedListings" role="tabpanel">
                                 {% for listing in suggestedListings %}
                                     <div class="row m-x-auto">
                                         <div class="col-md-12" style="padding-left: 30px; padding-right: 30px;">
                                             <a href="{{ url_for('listings.viewListing', listingID=listing.id) }}">
-                                                <img src="../static/img/testHouse.jpg" class="listingImg">
+                                                <img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
                                                 <div class="listingDescription d-flex align-items-end">
                                                     {{ listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i> ${{ listing.price }}
                                                     <br>
