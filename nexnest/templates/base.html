@@ -38,10 +38,10 @@
                             <div class="navbar-content">
                                <div class="row">
                                    <div class="col-md-5">
-                                        <img src="http://placehold.it/120x120"
+                                        <img src="{{current_user.profile_image}}"
                                             alt="Alternate Text" class="img-responsive" />
                                         <p class="text-center small">
-                                            <a href="#">Change Photo</a></p>
+                                            <a href="{{url_for('users.updateProfilePicture')}}">Change Photo</a></p>
                                     </div>
                                     <div class="col-md-7">
                                         <span>{{current_user.fname}} {{current_user.lname}}</span>

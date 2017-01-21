@@ -67,11 +67,13 @@ def load_user(user_id):
     return session.query(User).filter_by(id=user_id).first()
 
 # Blueprints
+from nexnest.blueprints.base import base
 from nexnest.blueprints.index import indexs
 from nexnest.blueprints.listing import listings
 from nexnest.blueprints.user import users
 from nexnest.blueprints.group import groups
 
+app.register_blueprint(base)
 app.register_blueprint(indexs)
 app.register_blueprint(listings)
 app.register_blueprint(users)

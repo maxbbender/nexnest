@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
 
-from nexnest.application import session
+from nexnest.application import session, app
 
 from nexnest.models.user import User
 from nexnest.models.group import Group
@@ -17,8 +17,13 @@ from nexnest.forms.profilePictureForm import ProfilePictureForm
 
 from nexnest.utils.password import check_password
 from nexnest.utils.flash import flash_errors
+from nexnest.utils.file import allowed_file
 
 from sqlalchemy import func, asc, or_, and_
+
+from werkzeug.utils import secure_filename
+
+import os
 
 users = Blueprint('users', __name__, template_folder='../templates/user')
 
@@ -254,16 +259,39 @@ def myGroups():
                            title='My Groups')
 
 
-# @users.route('/user/updateProfilePicture', methods=['GET', 'POST'])
-# @login_required
-# def updateProfilePicture():
-#     picForm = ProfilePictureForm()
-#     if request.method == 'GET':
-#         return render_template('changeProfilePicture.html',
-#                                picForm=picForm)
-#     else:
-#         if 'profilePicture' not in request.files:
-#             flash('No file part', 'warning')
-#             return redirect(request.url)
+@users.route('/user/updateProfilePicture', methods=['GET', 'POST'])
+@login_required
+def updateProfilePicture():
+    picForm = ProfilePictureForm()
+    if request.method == 'GET':
+        return render_template('changeProfilePicture.html',
+                               picForm=picForm)
+    else:
+        if 'profilePicture' not in request.files:
+            flash('No file part', 'warning')
+            return redirect(request.url)
 
-#         file = request.files['profilePicture']
+        file = request.files['profilePicture']
+
+        if file.filename == '':
+            flash('No selected file', 'warning')
+            return redirect(request.url)
+
+        filename = secure_filename(request.files['profilePicture'].filename)
+
+        if file and allowed_file(filename):
+            # /uploads/users/1 .. ect
+            userFilePath = "./nexnest/uploads/users/" + str(current_user.id)
+
+            if not os.path.exists(userFilePath):
+                os.makedirs(userFilePath)
+
+            request.files['profilePicture'].save(userFilePath + '/' + filename)
+
+            current_user.profile_image = '/uploads/users/' + str(current_user.id) + '/' + filename
+
+            session.commit()
+            return redirect(url_for('users.viewUser', userID=current_user.id))
+        else:
+            flash("File doesn't exist or file extension is not allowed", 'danger')
+            return redirect(request.url)

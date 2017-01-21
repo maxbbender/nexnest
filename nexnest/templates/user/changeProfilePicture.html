@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
     <form action="{{url_for('users.updateProfilePicture')}}" method="POST", enctype="multipart/form-data">
+        {{picForm.csrf_token}}
         {{picForm.profilePicture.label}}
         {{picForm.profilePicture}}
         <input type="submit" value="Upload">

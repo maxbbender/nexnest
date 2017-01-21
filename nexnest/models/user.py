@@ -81,12 +81,10 @@ class User(Base):
         if role is None:
             role = 'user'
 
-        # if profile_image is None:
-        #     image_num = format(randrange(1, 11), '03')
-
-        #     self.profile_image = '/static/img/default{0}.jpg'.format(image_num)
-        # else:
-        #     self.profile_image = profile_image
+        if profile_image is None:
+            self.profile_image = "https://api.adorable.io/avatars/120/" + self.username
+        else:
+            self.profile_image = profile_image
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
