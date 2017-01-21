@@ -11,7 +11,7 @@
                     <h3 class="card-header">Register for NexNest</h3>
                     <div class="card-block">
         				{% from "_formhelpers.html" import render_field %}
-        				<form action="{{url_for('users.create')}}" method="POST">
+        				<form action="{{url_for('users.register')}}" method="POST">
         					{{registration_form.csrf_token}}
 							  	<dl>
 								    {{ render_field(registration_form.email, class="form-control", type="email") }}

@@ -10,7 +10,6 @@ from nexnest.models.group_listing import GroupListing
 from nexnest.models.message import Message
 from nexnest.models.group_message import GroupMessage
 from nexnest.models.school import School
-from nexnest.models.school_user import SchoolUser
 from nexnest.models.direct_message import DirectMessage
 
 import factory
@@ -19,6 +18,19 @@ from faker import Faker
 from datetime import date
 
 fake = Faker()
+
+
+class SchoolFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = School
+        sqlalchemy_session = session
+
+    name = factory.LazyAttribute(lambda x: fake.company())
+    street = factory.LazyAttribute(lambda x: fake.street_address())
+    city = factory.LazyAttribute(lambda x: fake.city())
+    state = factory.LazyAttribute(lambda x: fake.state_abbr())
+    zip_code = factory.LazyAttribute(lambda x: fake.zipcode())
+    phone = '1234567890'
 
 
 class UserFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -30,6 +42,7 @@ class UserFactory(factory.alchemy.SQLAlchemyModelFactory):
     password = 'domislove'
     fname = factory.LazyAttribute(lambda x: fake.first_name())
     lname = factory.LazyAttribute(lambda x: fake.last_name())
+    school = factory.SubFactory(SchoolFactory)
 
 
 class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -62,7 +75,7 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     snow_plowing = True
     garbage_service = True
     security_service = True
-    description = factory.LazyAttribute(lambda x: fake.sentences(nb=3))
+    description = factory.LazyAttribute(lambda x: fake.paragraph())
     num_half_baths = 4
     num_full_baths = 3
     time_period = 'semester'
@@ -121,6 +134,7 @@ class GroupListingFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     group = factory.SubFactory(GroupFactory)
     listing = factory.SubFactory(ListingFactory)
+    req_description = factory.LazyAttribute(lambda x: fake.paragraph())
 
 
 class MessageFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -139,28 +153,6 @@ class GroupMessageFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     group = factory.SubFactory(GroupFactory)
     content = factory.LazyAttribute(lambda x: fake.paragraph(3))
-    user = factory.SubFactory(UserFactory)
-
-
-class SchoolFactory(factory.alchemy.SQLAlchemyModelFactory):
-    class Meta:
-        model = School
-        sqlalchemy_session = session
-
-    name = factory.LazyAttribute(lambda x: fake.company())
-    street = factory.LazyAttribute(lambda x: fake.street_address())
-    city = factory.LazyAttribute(lambda x: fake.city())
-    state = factory.LazyAttribute(lambda x: fake.state_abbr())
-    zip_code = factory.LazyAttribute(lambda x: fake.zipcode())
-    phone = '1234567890'
-
-
-class SchoolUserFactory(factory.alchemy.SQLAlchemyModelFactory):
-    class Meta:
-        model = SchoolUser
-        sqlalchemy_session = session
-
-    school = factory.SubFactory(SchoolFactory)
     user = factory.SubFactory(UserFactory)
 
 

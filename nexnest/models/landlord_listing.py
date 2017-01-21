@@ -2,6 +2,8 @@ from nexnest.application import db
 
 from .base import Base
 
+from sqlalchemy.orm import relationship
+
 
 class LandlordListing(Base):
     __tablename__ = 'landlord_listings'
@@ -12,6 +14,8 @@ class LandlordListing(Base):
     listing_id = db.Column(db.Integer,
                            db.ForeignKey('listings.id'),
                            primary_key=True)
+    landlord = relationship('Landlord', back_populates='listings')
+    listing = relationship('Listing', back_populates='landlords')
 
     def __init__(
             self,

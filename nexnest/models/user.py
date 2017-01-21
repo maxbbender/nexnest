@@ -4,10 +4,10 @@ from nexnest.utils.password import hash_password
 
 from nexnest.models.group import Group
 from nexnest.models.group_user import GroupUser
+from nexnest.models.group_listing import GroupListing
 
 from .base import Base
 from .landlord import Landlord
-
 
 from datetime import datetime as dt
 
@@ -34,6 +34,7 @@ class User(Base):
     profile_image = db.Column(db.String(128))
     date_created = db.Column(db.String(128), nullable=False)
     date_modified = db.Column(db.String(128), nullable=False)
+    school_id = db.Column(db.Integer(), db.ForeignKey('schools.id'))
     active = db.Column(db.Boolean)
     sentDM = relationship('DirectMessage',
                           backref='source_user',
@@ -45,12 +46,14 @@ class User(Base):
 
     groupLeader = relationship("Group", backref='leader')
     groupMessages = relationship("GroupMessage", backref='user')
+    landlord = relationship('Landlord', backref='user')
 
     def __init__(self,
                  email,
                  password,
                  fname,
                  lname,
+                 school,
                  role=None,
                  bio=None,
                  website=None,
@@ -60,6 +63,7 @@ class User(Base):
                  profile_image=None,
                  ):
 
+        self.school_id = school.id
         self.username = email.split("@")[0]
         self.email = email
 
@@ -77,12 +81,10 @@ class User(Base):
         if role is None:
             role = 'user'
 
-        # if profile_image is None:
-        #     image_num = format(randrange(1, 11), '03')
-
-        #     self.profile_image = '/static/img/default{0}.jpg'.format(image_num)
-        # else:
-        #     self.profile_image = profile_image
+        if profile_image is None:
+            self.profile_image = "https://api.adorable.io/avatars/120/" + self.username
+        else:
+            self.profile_image = profile_image
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
@@ -148,7 +150,7 @@ class User(Base):
     def un_accepted_groups(self):
         unAcceptedGroups = []
         for groupUser in self.groups:
-            if groupUser.accepted == False and groupUser.show == True:
+            if not groupUser.accepted and groupUser.show:
                 unAcceptedGroups.append(groupUser.group)
 
         return unAcceptedGroups
@@ -184,3 +186,34 @@ class User(Base):
             Landlord).filter_by(user_id=self.id).count()
 
         return landlordCount == 1
+
+    def leaveGroup(self, group):
+        # Me must check that this group doesn't have any group listings
+        # that are accepted.
+
+        if group.leader_id == self.id:
+            flash(
+                "You are the leader of this group, assign a new leader before you can leave", 'warning')
+            return False
+        else:
+            groupListings = session.query(GroupListing) \
+                .filter_by(group_id=group.id,
+                           show=True,
+                           completed=True) \
+                .count()
+
+            if groupListings == 0:
+                groupUser = session.query(GroupUser) \
+                    .filter_by(group_id=group.id,
+                               user_id=self.id) \
+                    .first()
+
+                groupUser.accepted = False
+                groupUser.show = False
+
+                session.commit()
+                return True
+            else:
+                flash(
+                    "Unable to leave group, Group is a part of a current listing that is accepted", 'warning')
+                return False

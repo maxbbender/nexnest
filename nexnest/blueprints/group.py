@@ -23,7 +23,8 @@ from sqlalchemy import asc
 groups = Blueprint('groups', __name__, template_folder='../templates')
 
 
-@groups.route('/createGroup', methods=['GET', 'POST'])
+@groups.route('/group/create', methods=['GET', 'POST'])
+@login_required
 def createGroup():
     form = CreateGroupForm(request.form)
 
@@ -64,14 +65,19 @@ def createGroup():
 
             return redirect(url_for('groups.viewGroup', group_id=newGroup.id))
         else:
-            flash("Conflict with Group %s. Cannot create group in same time period as %s. Start(%s) End(%s)" % (
-                groupHasConflict.name, groupHasConflict.name, groupHasConflict.start_date, groupHasConflict.end_date))
+            flash("Conflict with Group %s. Cannot create group in same time period as %s. Start(%s) End(%s)" %
+                  (groupHasConflict.name,
+                   groupHasConflict.name,
+                   groupHasConflict.start_date,
+                   groupHasConflict.end_date))
+
             return redirect(url_for('groups.createGroup'))
     else:
         return render_template('createGroup.html', form=form)
 
 
-@groups.route('/viewGroup/<group_id>')
+@groups.route('/group/view/<group_id>')
+@login_required
 def viewGroup(group_id):
     # First lets check that the current user is apart of the group
     group = session.query(Group).filter_by(id=group_id).first()
@@ -95,18 +101,8 @@ def viewGroup(group_id):
                                message_form=message_form)
 
     else:
-        flash("You are not able to view a group you are not a part of")
+        flash("You are not a part of %s" % group.name, 'warning')
         return redirect(url_for('indexs.index'))
-
-
-@groups.route('/myGroups', methods=['GET', 'POST'])
-def myGroups():
-    groupsImIn = current_user.accepted_groups
-    groupsImInvitedTo = current_user.un_accepted_groups
-    return render_template('group/myGroups.html',
-                           acceptedGroups=groupsImIn,
-                           invitedGroups=groupsImInvitedTo,
-                           title='My Groups')
 
 
 @groups.route('/group/invite', methods=['POST'])
@@ -118,12 +114,21 @@ def invite():
         if form.validate():
             group = session.query(Group).filter_by(
                 id=int(form.group_id.data)).first()
-            user = session.query(User).filter_by(
-                id=int(form.user_id.data)).first()
-            newGroupUser = GroupUser(group, user)
 
-            session.add(newGroupUser)
-            session.commit()
+            # Is the current user apart of the group
+            if group in current_user.accepted_groups:
+                user = session.query(User) \
+                    .filter_by(id=int(form.user_id.data)) \
+                    .first()
+
+                newGroupUser = GroupUser(group, user)
+
+                session.add(newGroupUser)
+                session.commit()
+            else:
+                flash("Unable to invite a user to a group you are not apart of",
+                      'warning')
+            return redirect(url_for('indexs.index'))
         else:
             flash_errors(form)
             return redirect(url_for('groups.viewGroup',
@@ -139,13 +144,18 @@ def createMessage():
         group = session.query(Group). \
             filter_by(id=message_form.group_id.data). \
             first()
+        if group in current_user.accepted_groups:
 
-        newMessage = GroupMessage(group=group,
-                                  user=current_user,
-                                  content=message_form.content.data)
+            newMessage = GroupMessage(group=group,
+                                      user=current_user,
+                                      content=message_form.content.data)
 
-        session.add(newMessage)
-        session.commit()
+            session.add(newMessage)
+            session.commit()
+        else:
+            flash("Unable to post a message to a group you are not apart of",
+                  'warning')
+            return redirect(url_for('indexs.index'))
     else:
         flash_errors(message_form)
 
@@ -153,7 +163,8 @@ def createMessage():
                             group_id=message_form.group_id.data))
 
 
-@groups.route('/suggestListing', methods=['POST'])
+@groups.route('/group/suggestListing', methods=['POST'])
+@login_required
 def suggestListing():
 
     if request.method == 'POST':
@@ -162,23 +173,76 @@ def suggestListing():
             group = session.query(Group).filter_by(
                 id=int(form.group_id.data)).first()
 
-            listing = session.query(Listing).filter_by(
-                id=int(form.listing_id.data)).first()
+            # Is the current user apart of the group?
+            if group in current_user.accepted_groups:
+                listing = session.query(Listing).filter_by(
+                    id=int(form.listing_id.data)).first()
 
-            groupListing = session.query(GroupListing).filter_by(
-                group_id=group.id, listing_id=listing.id).first()
+                groupListing = session.query(GroupListing).filter_by(
+                    group_id=group.id, listing_id=listing.id).first()
 
-            if not groupListing:
-                newGroupListing = GroupListing(group, listing)
-                session.add(newGroupListing)
-                session.commit()
-                flash("This listing has been suggested to %s" %
-                      group.name, 'info')
+                if not groupListing:
+                    newGroupListing = GroupListing(group, listing)
+                    session.add(newGroupListing)
+                    session.commit()
+                    flash("This listing has been suggested to %s" %
+                          group.name, 'info')
+                else:
+                    flash("This listing has already been suggested to " +
+                          group.name + " by someone", 'info')
             else:
-                flash("This listing has already been suggested to " +
-                      group.name + " by someone", 'info')
+                flash("Unable to suggest a listing to a group you are not apart of",
+                      'warning')
+                return redirect(url_for('indexs.index'))
         else:
             flash("Errors validating Suggest Listing Invite form", 'danger')
 
     return redirect(url_for('listings.viewListing',
                             listingID=form.listing_id.data))
+
+
+@groups.route('/group/leave/<groupID>')
+@login_required
+def leaveGroup(groupID):
+    groupToLeave = session.query(Group) \
+        .filter_by(id=groupID) \
+        .first()
+
+    groupUserCount = session.query(GroupUser) \
+        .filter_by(group_id=groupToLeave.id,
+                   user_id=current_user.id,
+                   accepted=True) \
+        .count()
+
+    # Does the group exist?
+    if groupToLeave is not None:
+        # Is the user a part of the group?
+        if groupUserCount == 1:
+            if current_user.leaveGroup(groupToLeave):
+                flash("You have left %s" % groupToLeave.name, 'success')
+                return redirect(url_for('indexs.index'))
+            else:
+                return redirect(url_for('groups.viewGroup',
+                                        group_id=groupToLeave.id))
+        else:
+            flash("You are not apart of %s" % groupToLeave.name, 'danger')
+            return redirect(url_for('indexs.index'))
+    else:
+        flash("Group you are trying to leave doesn't exist", 'danger')
+        return redirect(url_for('indexs.index'))
+
+
+@groups.route('/group/<group_id>/assignLeader/<user_id>')
+@login_required
+def assignNewLeader(group_id, user_id):
+    group = session.query(Group).filter_by(id=group_id).first()
+
+    # Is the current user the leader of this group
+    if group.leader_id == current_user.id:
+        group.leader_id = user_id
+        session.commit()
+    else:
+        flash("Only group leader can re-assign the leader", 'danger')
+
+    return redirect(url_for('groups.viewGroup',
+                            group_id=group.id))

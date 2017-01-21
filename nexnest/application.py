@@ -26,10 +26,15 @@ env = environ.get('NEXNEST_ENV')
 if env is None:
     env = 'development'
 
+# File Uploads
+UPLOAD_FOLDER = dirname(__file__) + '/uploads'
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+
 # App setup
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static")
 app.config.from_envvar('NEXNEST_%s_SETTINGS' % env.upper())
 app.secret_key = 'domislove'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 # DB setup
@@ -62,11 +67,13 @@ def load_user(user_id):
     return session.query(User).filter_by(id=user_id).first()
 
 # Blueprints
+from nexnest.blueprints.base import base
 from nexnest.blueprints.index import indexs
 from nexnest.blueprints.listing import listings
 from nexnest.blueprints.user import users
 from nexnest.blueprints.group import groups
 
+app.register_blueprint(base)
 app.register_blueprint(indexs)
 app.register_blueprint(listings)
 app.register_blueprint(users)
