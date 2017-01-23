@@ -14,7 +14,6 @@ class Tour(Base):
     listing_id = db.Column(db.Integer, db.ForeignKey('listings.id'))
     group_id = db.Column(db.Integer, db.ForeignKey('groups.id'))
     time_requested = db.Column(db.DateTime)
-    description = db.Column(db.Text)
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
 
@@ -22,14 +21,12 @@ class Tour(Base):
             self,
             listing,
             group,
-            time_requested,
-            description
+            time_requested
     ):
         self.listing = listing
         self.group = group
 
         self.time_requested = time_requested
-        self.description = description
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
