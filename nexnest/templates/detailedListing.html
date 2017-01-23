@@ -42,8 +42,11 @@
 				<div class="col-lg-3" style="text-align:left">
 					<a href="{{ url_for('indexs.index') }}" class="btn btn-info">Contact Landlord</a>
 				</div>
+				<div class="col-lg-3 col-centered">					
+		            <a href='#' class="btn btn-info" data-toggle="modal" data-target="#requestTourModal">Request Tour</a>
+				</div>
 				<div class="col-lg-3 col-centered">
-					<a href="{{ url_for('indexs.index') }}" class="btn btn-info">Request Tour</a>
+					<a href="{{ url_for('indexs.index') }}" class="btn btn-info">Request House</a>
 				</div>
 				<div class="col-lg-3" style="text-align:right">
 					<a href='#' class="btn btn-info" data-toggle="modal" data-target="#suggestListingModal">Suggest To Group</a>
@@ -128,7 +131,7 @@
 	</div>
 
 	<!-- Suggest Listing Modal -->
-		<div class="modal fade" id="suggestListingModal" tabindex="-1" role="dialog" aria-labelledby="login" aria-hidden="true">
+		<div class="modal fade" id="suggestListingModal" tabindex="-1" role="dialog" aria-labelledby="suggestListingModal" aria-hidden="true">
 		  	<div class="modal-dialog" role="document">
 		    	<div class="modal-content">
 		      		<div class="modal-header">
@@ -193,7 +196,63 @@
 			      	</div>
 		    	</div>
 		  	</div>
-		</div>		
+		</div>
+		<!--Request Tour Modal-->
+		<div class="modal fade" id="requestTourModal" tabindex="-1" role="dialog" aria-labelledby="requestTour" aria-hidden="true">
+		  	<div class="modal-dialog" role="document">
+		    	<div class="modal-content">
+		      		<div class="modal-header">
+		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          			<span aria-hidden="true">&times;</span>
+		        		</button>
+		        		<h4 class="modal-title" id="login"></h4>
+		      		</div>
+		      		<div class="modal-body">
+		      			<div class="row">
+		      				<div class="col-xs-1"></div>
+		      				<div class="col-xs-10">
+		      					<form id="request_tour" action="{{url_for('groups.suggestListing')}}" method="POST">
+		      					    {{ request_tour_form.csrf_token }}
+		      					    {{ request_tour_form.group_id }}
+		      					    {{ request_tour_form.listing_id(value=listing.id) }}
+		      					    {{ request_tour_form.requested_dateTime(value='2018-03-12') }}		      					
+			      					<p class="flatpickr input-group" data-wrap="true" data-clickOpens="false">
+			      						<input id="tourRequestTime" placeholder="Pick date" data-input style="background-color: inherit;">
+			      						<a class="btn input-btn" style="border-color: #ddd;" data-toggle><i class="fa fa-calendar" aria-hidden="true"></i></a>
+			      						<a class="btn input-btn" style="border-color: #ddd;"data-clear><i class="fa fa-times" aria-hidden="true"></i></a>
+			      					</p>
+			      					{% from "_formhelpers.html" import render_field %}
+			      					{{ render_field(request_tour_form.description, class="form-control", type="text") }}
+		      					</form>  
+		      				</div>
+		      			</div>
+		      		</div>
+			      	<div class="modal-footer">
+			        	<button type="button" class="btn btn-primary" data-dismiss="modal">Request Tour</button>
+			      	</div>
+		    	</div>
+		  	</div>
+		</div>
 	</body>
 </html>
+{% endblock %}
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        flatpickr(".flatpickr", {
+        	enableTime: true,
+        	altInput: true,
+        	altFormat: "F j, Y h:i K",
+        	minuteIncrement: 15,
+        	disable: [{from: "0001-01-01",
+        			  to: "today"}]
+        });
+    });
+    //Suggest Listing Modal
+    $('#requestTourModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget)
+      var modal = $(this)
+      modal.find('.modal-title').text('Request a Tour')
+    })
+</script>
 {% endblock %}

@@ -50,7 +50,12 @@
                                     </div>
                                     <div class="col-xs-10">
                                         <div class="row">
-                                            <h4 class="card-title">{{ message.user.fname }} {{ message.user.lname }}</h4>
+                                            <h4 class="card-title">
+                                                {{ message.user.fname }} {{ message.user.lname }}
+                                                {% if group.leader_id == message.user.id %}
+                                                    <h6 style="padding-top: 10px;"><span class="tag tag-primary">Group Leader</span></h6>
+                                                {% endif %}
+                                            </h4>
                                         </div>
                                         <div class="row">
                                             <h6 class="card-subtitle mb-2 text-muted">{{ message.date_created }}</h6>
