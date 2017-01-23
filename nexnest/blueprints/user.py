@@ -163,7 +163,6 @@ def editAccountInfo():
     #         return redirect(url_for('viewUsers.viewUser', userID=current_user.id))
     #
 
-
 @users.route('/user/search/<username>')
 @login_required
 def searchForUser(username):

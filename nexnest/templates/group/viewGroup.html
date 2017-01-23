@@ -2,13 +2,75 @@
 {% block content %}
     <br>
     <div class="row m-x-auto">
-        <div class="col-xs-1 col-sm-2 col-md-2 col-lg-2 col-xl-4">
-
+        <div class="col-xs-1">
         </div>
-        <div class="col-xs-10 col-sm-8 col-md-8 col-lg-8 col-xl-4">
+        <div class="col-xs-10">
+            <div class="callout-block text-center fade-in-b">
+                <h1>
+                    <b>{{ group.name }}</b>
+                    <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#leaveGroupModal{{group.id}}" style="float: right;">Leave</a>
+                </h1>
+                <p><small>Intended Lease Period: {{ group.start_date }} - {{ group.end_date }}</small></p>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row m-x-auto">
+        <div class="col-xs-1">
+        </div>
+        <div class="col-md-6 col-lg-6 col-xl-6">
             <div class="row">
                 <div class="card" style="width:100%;">
-                    <h3 class="card-header">{{ group.name }}<button id="{{group.id}}" onClick="leaveGroup({{group.id}})" type="button" class="btn btn-danger leaveGroup">Leave Group</button></h3>
+                    <h3 class="card-header">Type your message:</h3>
+                    <div class="card-block">
+                        <!-- Add new message -->
+                        <div class="form-group">
+                            <form action="{{url_for('groups.createMessage')}}" method='POST'>
+                                {{message_form.group_id}}
+                                {{message_form.csrf_token}}
+                                <div class="row">
+                                    {{message_form.content(class="form-control", rows=5)}}
+                                </div>
+                                <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
+                                    <div class="col-xs-12">
+                                        <input class="btn btn-primary" type="submit" value="Respond">
+                                    </div>                                    
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                    <!-- Messages -->
+                    {% for message in messages %}
+                        <div class="card" style="width: 100%;">
+                            <div class="card-block">
+                                <div class="row">
+                                    <div class="col-xs-2 col-xl-1" style="height: 50px;">
+                                        <img src="{{message.user.profile_image}}" alt="Profile Image" class="img-responsive" style="height: 100%" />
+                                    </div>
+                                    <div class="col-xs-10">
+                                        <div class="row">
+                                            <h4 class="card-title">{{ message.user.fname }} {{ message.user.lname }}</h4>
+                                        </div>
+                                        <div class="row">
+                                            <h6 class="card-subtitle mb-2 text-muted">{{ message.date_created }}</h6>
+                                        </div>
+                                    </div>
+                                </div>                                   
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <p class="card-text">{{ message.content }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+            </div>
+        </div>
+        <!--Info Pane-->
+        <div class="col-md-4 col-lg-4 col-xl-4" style="padding-left: 5%;">
+            <div class="row">
+                <div class="card" style="width:100%;">
                     <div class="card-block">
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
@@ -20,32 +82,26 @@
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#tours" role="tab">Tours</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#messages" role="tab">Messages</a>
-                            </li>
                         </ul>
                         <br>
                         <div class="tab-content">
                             <div class="tab-pane active" id="memberInfo" role="tabpanel">            
                                 <p class="card-text">
-                                    <strong>Group Leader:</strong> <a href="{{ url_for('users.viewUser', userID=group.leader.id) }}">{{ group.leader.fname }} {{ group.leader.lname }}</a>
-                                </p>
-                                <p class="card-text">
-                                    Intended Lease Period: {{ group.start_date }} - {{ group.end_date }}
+                                    <strong>Group Leader:</strong> 
+                                    <a href="{{ url_for('users.viewUser', userID=group.leader.id) }}">{{ group.leader.fname }} {{ group.leader.lname }}</a>
+                                    {% if group.leader_id == current_user.id %} -
+                                        <a href='#' data-toggle="modal" data-target="#changeGroupLeaderModal">Change Group Leader</a>
+                                    {% endif %}
                                 </p>
                                 <strong>Current Group Members:</strong>
-                                {% for user in group.acceptedUsers %}
-                                    <li><a href="{{ url_for('users.viewUser', userID=user.id) }}">{{ user.fname }} {{ user.lname }}</a>
-                                    {% if group.leader_id == current_user.id %}
-                                     - <a class="button" href="/group/{{group.id}}/assignLeader/{{user.id}}">Make Group Leader</a>
-                                    {% endif %}
-                                    </li>
+                                {% for user in group.acceptedUsers %}                                    
+                                    {% include 'group/member.html' %}
                                 {% endfor %}                        
                                 {% if group.unAcceptedUsers %}
                                     <br>
                                     <strong>Invited Members:</strong>
                                     {% for user in group.unAcceptedUsers %}
-                                        <li><a href="{{ url_for('users.viewUser', userID=user.id) }}">{{ user.fname }} {{ user.lname }}</a></li>
+                                        {% include 'group/member.html' %}
                                     {% endfor %}
                                 {% endif %}
                                 <br>
@@ -89,27 +145,77 @@
                             <div class="tab-pane" id="tours" role="tabpanel">
                                 Tours
                             </div>
-                            <div class="tab-pane" id="messages" role="tabpanel" style="height: 600px; overflow: auto;">
-                                {% for message in messages %}
-                                    <div class="card">
-                                        <div class="card-block">
-                                            <h4 class="card-title">{{ message.user.fname }} {{ message.user.lname }}</h4>
-                                            <h6 class="card-subtitle mb-2 text-muted">{{ message.date_created }}</h6>
-                                            <p class="card-text">{{ message.content }}</p>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                                <div class="form-group">
-                                    <form action="{{url_for('groups.createMessage')}}" method='POST'>
-                                        {{message_form.group_id}}
-                                        {{message_form.csrf_token}}
-                                        <strong><label for="addComment">Type your message:</label></strong>
-                                        {{message_form.content(class_="form-control")}}
-                                        <input class="btn btn-primary" type="submit" value="Respond">
-                                    </form>
-                                </div>
-                            </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leave Group Modal -->
+    <div class="modal fade" id="leaveGroupModal{{group.id}}" tabindex="-1" role="dialog" aria-labelledby="leaveGroup" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="leaveGroup"></h4>
+                </div>
+                {% if group.leader_id == current_user.id %}
+                <div class="modal-body">
+                    You are the group leader, you can't leave without choosing a new group leader
+                </div>
+                {% endif %}
+                <div class="modal-footer">
+                    <div class="btn-group">
+                    {% if group.leader_id == current_user.id %}
+                        <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#changeGroupLeaderModal" data-dismiss="modal">Change Group Leader</a>
+                    {% else %}
+                        <button class="btn btn-danger" onClick="leaveGroup({{group.id}})">Leave Group</button>
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Group Leader Modal -->
+    <div class="modal fade" id="changeGroupLeaderModal" tabindex="-1" role="dialog" aria-labelledby="changeLeader" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="changeLeader"></h4>
+                </div>
+                <div class="modal-body">
+                    <h4>Which user would you like to promote to group leader?</h4>
+                    {% for user in group.acceptedUsers %}                                    
+                        {% include 'group/promoteMember.html' %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remove User From Group Modal -->
+    <div class="modal fade" id="removeUser" tabindex="-1" role="dialog" aria-labelledby="removeUser" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="removeUser"></h4>
+                </div>
+                <div class="modal-body">
+                    <h4>Are you sure you wish to remove</h4>
+                </div>
+                <div class="modal-footer">
+                    <div class="btn-group">
+                        <button class="btn btn-danger" onClick="">Remove</button>
                     </div>
                 </div>
             </div>
@@ -154,9 +260,29 @@
     });
 
     //Show/hide each div
-
     $("#allMembersToggle{{group.id}}").click(function(){
         $("#allMembers{{group.id}}").toggle();
     });
+
+    //Leave Group jquery
+    $('#leaveGroupModal{{group.id}}').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget)
+        var modal = $(this)
+        modal.find('.modal-title').text('Leave {{ group.name }}?')
+    })
+
+    //Change Leader jquery
+    $('#changeGroupLeaderModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget)
+        var modal = $(this)
+        modal.find('.modal-title').text('Change Group Leader')
+    })
+
+    //Remove User jquery
+    $('#removeUser').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget)
+        var modal = $(this)
+        modal.find('.modal-title').text('Remove From Group')
+    })
 </script>
 {% endblock %}
