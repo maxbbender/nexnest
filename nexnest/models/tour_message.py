@@ -2,13 +2,15 @@ from datetime import datetime as dt
 
 from nexnest.application import db
 
+from .message import Message
+
 from .base import Base
 
 from sqlalchemy import event
 
 
 # class PostReport(Base):
-class TourMessage(Base):
+class TourMessage(Message):
     __tablename__ = 'tour_messages'
     tour_id = db.Column(db.Integer,
                         db.ForeignKey('tours.id'),
@@ -18,6 +20,10 @@ class TourMessage(Base):
                            primary_key=True)
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'tour',
+    }
 
     def __init__(
             self,
