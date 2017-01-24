@@ -16,6 +16,8 @@ class Tour(Base):
     time_requested = db.Column(db.DateTime)
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
+    tour_confirmed = db.Column(db.Boolean)
+    last_requested = db.Column(db.String(8))
 
     def __init__(
             self,
@@ -27,6 +29,9 @@ class Tour(Base):
         self.group = group
 
         self.time_requested = time_requested
+
+        self.last_requested = 'group'
+        self.tour_confirmed = False
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels

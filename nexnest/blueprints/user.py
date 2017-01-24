@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
 
-from nexnest.application import session, app
+from nexnest.application import session
 
 from nexnest.models.user import User
 from nexnest.models.group import Group
@@ -158,6 +158,7 @@ def editAccountInfo():
     #         flash('Account Updated', 'info')
     #         return redirect(url_for('viewUsers.viewUser', userID=current_user.id))
     #
+
 
 @users.route('/user/search/<username>')
 @login_required
