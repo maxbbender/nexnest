@@ -6,17 +6,23 @@
             </div>
             <div class="col-xs-10">
                 <div class="row">
-                    <div class="col-xs-12">
-                        <a href="{{ url_for('users.viewUser', userID=user.id) }}">
-                            <h4>
-                                {{ user.fname }} {{ user.lname }}
-                                {% if group.leader_id == current_user.id %}
-                                    {% if current_user.id != user.id %}
-                                        <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#removeUser" style="float: right;">Remove</a>
-                                    {% endif %}
-                                {% endif %}
-                            </h4>
-                        </a>
+                    <div class="col-xs-8">                           
+                            <a href="{{ url_for('users.viewUser', userID=user.id) }}">
+                                <h4>{{ user.fname }} {{ user.lname }}</h4>
+                            </a>
+                            {% if group.leader_id == user.id %}
+                                <h6><span class="tag tag-primary">Group Leader</span></h6>
+                            {% endif %}
+                    </div>
+                    <div class="col-xs-4">                            
+                        {% if group.leader_id == current_user.id %}
+                            {% if current_user.id != user.id %}
+                                <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#removeUser" style="float: right;">Remove</a>
+                            {% endif %}
+                        {% endif %}
+                        {% if current_user.id == user.id %}
+                            <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#leaveGroupModal{{group.id}}" style="float: right;">Leave Group</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
