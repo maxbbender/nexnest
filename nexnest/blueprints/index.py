@@ -1,6 +1,8 @@
 from flask import Blueprint
 from flask import render_template, abort, request, redirect, url_for, flash, jsonify
-from ..forms.loginForm import LoginForm
+
+from nexnest.forms import LoginForm
+
 
 from flask_login import login_required
 from nexnest.application import session

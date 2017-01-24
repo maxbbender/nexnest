@@ -79,7 +79,7 @@ app.register_blueprint(listings)
 app.register_blueprint(users)
 app.register_blueprint(groups)
 
-from nexnest.forms.loginForm import LoginForm
+from nexnest.forms import LoginForm
 
 
 @app.context_processor

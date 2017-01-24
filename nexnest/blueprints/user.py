@@ -9,11 +9,7 @@ from nexnest.models.group import Group
 from nexnest.models.school import School
 from nexnest.models.direct_message import DirectMessage
 
-from nexnest.forms.register_form import RegistrationForm
-from nexnest.forms.loginForm import LoginForm
-from nexnest.forms.editAccountForm import EditAccountForm
-from nexnest.forms.directMessageForm import DirectMessageForm
-from nexnest.forms.profilePictureForm import ProfilePictureForm
+from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm
 
 from nexnest.utils.password import check_password
 from nexnest.utils.flash import flash_errors
