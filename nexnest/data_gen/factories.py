@@ -11,6 +11,8 @@ from nexnest.models.message import Message
 from nexnest.models.group_message import GroupMessage
 from nexnest.models.school import School
 from nexnest.models.direct_message import DirectMessage
+from nexnest.models.tour import Tour
+from nexnest.models.tour_message import TourMessage
 
 import factory
 from faker import Faker
@@ -164,3 +166,23 @@ class DirectMessageFactory(factory.alchemy.SQLAlchemyModelFactory):
     source_user = factory.SubFactory(UserFactory)
     target_user = factory.SubFactory(UserFactory)
     content = factory.LazyAttribute(lambda x: fake.paragraph(3))
+
+
+class TourFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = Tour
+        sqlalchemy_session = session
+
+    listing = factory.SubFactory(ListingFactory)
+    group = factory.SubFactory(GroupFactory)
+    time_requested = factory.LazyAttribute(lambda x: fake.date_time())
+
+
+class TourMessageFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = TourMessage
+        sqlalchemy_session = session
+
+    tour = factory.SubFactory(TourFactory)
+    content = factory.LazyAttribute(lambda x: fake.paragraph(3))
+    user = factory.SubFactory(UserFactory)
