@@ -47,6 +47,7 @@ class User(Base):
     groupLeader = relationship("Group", backref='leader')
     groupMessages = relationship("GroupMessage", backref='user')
     landlord = relationship('Landlord', backref='user')
+    tourMessages = relationship("TourMessage", backref='user')
 
     def __init__(self,
                  email,

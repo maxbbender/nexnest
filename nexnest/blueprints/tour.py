@@ -82,7 +82,7 @@ def viewTour(tourID):
     messageForm = TourMessageForm()
     dateChangeForm = TourDateChangeForm()
 
-    if tour.group in current_user.accepted_groups or current_user in tour.listing.landLordsAsUsers():
+    if tour.isViewableBy(current_user):
 
         # Tour Messages
         messages = session.query(TourMessage) \
@@ -110,11 +110,13 @@ def confirmTour(tourID):
         .first()
 
     if tour is not None:
-
-        # Only the group leader and landlord can confirm
-        if tour.group.leader == current_user or current_user in tour.listing.landLordsAsUsers():
-
+        if tour.isEditableBy(current_user):
             tour.tour_confirmed = True
             session.commit()
             flash("Tour Confirmed", 'success')
             return redirect(url_for('tours.viewTour', tourID=tourID))
+        else:
+            flash("You are not allowed to confirm this tour", 'warning')
+            return redirect(request.url)
+    else:
+        

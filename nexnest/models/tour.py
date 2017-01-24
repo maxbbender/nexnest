@@ -41,6 +41,18 @@ class Tour(Base):
     def __repr__(self):
         return '<Tour %r>' % self.id
 
+    def isViewableBy(self, user):
+        if user in self.group.users() or user in self.listing.landLordsAsUsers():
+            return True
+
+        return False
+
+    def isEditableBy(self, user):
+        if user == self.group.leader or user in self.listing.landLordsAsUsers():
+            return True
+
+        return False
+
 
 def update_date_modified(mapper, connection, target):
     # 'target' is the inserted object
