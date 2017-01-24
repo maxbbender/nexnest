@@ -9,9 +9,9 @@ from nexnest.forms import TourForm, TourMessageForm, TourDateChangeForm
 from nexnest.models.tour import Tour
 from nexnest.models.listing import Listing
 from nexnest.models.group import Group
-from nexnest.models.tour_messages import TourMessage
+from nexnest.models.tour_message import TourMessage
 
-from flask.utils.flash import flash_errors
+from nexnest.utils.flash import flash_errors
 
 from sqlalchemy import asc
 
@@ -98,7 +98,7 @@ def viewTour(tourID):
             .order_by(asc(TourMessage.date_created)) \
             .all()
 
-        return render_template('viewTour.html',
+        return render_template('tourView.html',
                                tour=tour,
                                landlords=tour.listing.landLordsAsUsers(),
                                messages=messages,

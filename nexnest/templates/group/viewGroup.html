@@ -8,7 +8,6 @@
             <div class="callout-block text-center fade-in-b">
                 <h1>
                     <b>{{ group.name }}</b>
-                    <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#leaveGroupModal{{group.id}}" style="float: right;">Leave</a>
                 </h1>
                 <p><small>Intended Lease Period: {{ group.start_date }} - {{ group.end_date }}</small></p>
             </div>
@@ -90,29 +89,25 @@
                         </ul>
                         <br>
                         <div class="tab-content">
-                            <div class="tab-pane active" id="memberInfo" role="tabpanel">            
-                                <p class="card-text">
-                                    <strong>Group Leader:</strong> 
-                                    <a href="{{ url_for('users.viewUser', userID=group.leader.id) }}">{{ group.leader.fname }} {{ group.leader.lname }}</a>
-                                    {% if group.leader_id == current_user.id %} -
-                                        <a href='#' data-toggle="modal" data-target="#changeGroupLeaderModal">Change Group Leader</a>
-                                    {% endif %}
-                                </p>
+                            <div class="tab-pane active" id="memberInfo" role="tabpanel">
                                 <strong>Current Group Members:</strong>
                                 {% for user in group.acceptedUsers %}                                    
                                     {% include 'group/member.html' %}
                                 {% endfor %}                        
                                 {% if group.unAcceptedUsers %}
-                                    <br>
-                                    <strong>Invited Members:</strong>
-                                    {% for user in group.unAcceptedUsers %}
-                                        {% include 'group/member.html' %}
-                                    {% endfor %}
+                                {% if group.leader_id == current_user.id %}
+                                    <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#changeGroupLeaderModal">Change Group Leader</a>
+                                    <br><br>
                                 {% endif %}
-                                <br>
+                                <strong>Invited Members:</strong>
+                                {% for user in group.unAcceptedUsers %}
+                                    {% include 'group/member.html' %}
+                                {% endfor %}
+                                {% endif %}
 
                                 <!-- Group Leader Actions -->
                                 {% if group.leader_id == current_user.id %}
+                                <br>
                                 <strong>Invite User to Group:</strong>
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-10 col-md-8 col-lg-8 col-xl-6">                        
@@ -229,6 +224,9 @@
 {% endblock %}
 {% block scripts %}
 <script>
+    function setID(id){
+        $("#group_id").val(id);
+    }
     function submitForm(id) {
         $("#user_id").val(id);
         $("#invite_user").submit()
@@ -249,7 +247,7 @@
                 userString = '<hr>'+
                             '<div id="' + user.id + '" class="row">'+
                                 '<div class=col-xs-10>' +
-                                    '<a href="/viewUser/' + user.id + '">' + 
+                                    '<a href="/user/view/' + user.id + '">' + 
                                         user.username + ' (' + user.fname + ' ' + user.lname + ')' +
                                     '</a>' +
                                 '</div>'+
