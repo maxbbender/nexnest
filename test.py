@@ -13,8 +13,12 @@ from nexnest.data_gen.factories import GroupFactory, UserFactory
 
 from sqlalchemy import asc, or_, and_
 
-l = session.query(Listing).filter_by(id=1).first()
-print(l.landlords)
+listing = session.query(Listing).filter_by(id=1).first()
 
-for landlord in l.landlords:
-    print(landlord.landlord.user.fname)
+print(listing.landlords)
+
+landlordListingArray = listing.landlords
+
+for landlordListing in landlordListingArray:
+    print (landlordListing.landlord.user.fname)
+    print (landlordListing.listing.street)
