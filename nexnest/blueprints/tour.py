@@ -119,4 +119,5 @@ def confirmTour(tourID):
             flash("You are not allowed to confirm this tour", 'warning')
             return redirect(request.url)
     else:
-        
+        flash("Tour Does not exist", 'warning')
+        return redirect(request.url)

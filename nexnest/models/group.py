@@ -87,13 +87,13 @@ class Group(Base):
                 suggestedListings.append(groupListing.listing)
         return suggestedListings
 
-    def users(self):
-        users = []
+    # def users(self):
+        # users = []
+        # for groupUser in self.users:
+        #     print(groupUser)
+        #     users.append(groupUser.user)
 
-        for groupUser in self.users:
-            users.append(groupUser.user)
-
-        return users
+        # return users
 
 
 def update_date_modified(mapper, connection, target):

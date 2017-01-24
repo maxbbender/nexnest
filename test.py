@@ -8,12 +8,12 @@ from nexnest.models.direct_message import DirectMessage
 from nexnest.models.landlord import Landlord
 from nexnest.models.landlord_listing import LandlordListing
 from nexnest.models.listing import Listing
+from nexnest.models.tour_message import TourMessage
 
 from nexnest.data_gen.factories import GroupFactory, UserFactory
 
 from sqlalchemy import asc, or_, and_
 
-group = session.query(Group).filter_by(id=1).first()
+tm = session.query(TourMessage).filter_by(tour_id=1).first()
 
-
-print(group.users)
+print(tm.user)
