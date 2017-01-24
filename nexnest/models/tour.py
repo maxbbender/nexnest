@@ -42,7 +42,7 @@ class Tour(Base):
         return '<Tour %r>' % self.id
 
     def isViewableBy(self, user):
-        if user in self.group.users() or user in self.listing.landLordsAsUsers():
+        if user in self.group.getUsers() or user in self.listing.landLordsAsUsers():
             return True
 
         return False
