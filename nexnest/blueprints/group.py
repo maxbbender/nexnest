@@ -125,10 +125,12 @@ def invite():
 
                 session.add(newGroupUser)
                 session.commit()
+                return redirect(url_for('groups.viewGroup',
+                                    group_id=form.group_id.data))
             else:
                 flash("Unable to invite a user to a group you are not apart of",
                       'warning')
-            return redirect(url_for('indexs.index'))
+                return redirect(url_for('indexs.index'))
         else:
             flash_errors(form)
             return redirect(url_for('groups.viewGroup',

@@ -3,6 +3,7 @@ from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
 from ..forms.listing import ListingForm
 from ..forms.suggestListingForm import SuggestListingForm
+from ..forms.tourForm import TourForm
 
 from nexnest.application import session
 
@@ -18,10 +19,12 @@ listings = Blueprint('listings', __name__, template_folder='../templates')
 @login_required
 def viewListing(listingID):
     form = SuggestListingForm()
+    requestTourForm = TourForm()
     viewListing = session.query(Listing).filter_by(id=listingID).first()
     myGroups = current_user.accepted_groups
     return render_template('detailedListing.html',
                            suggest_listing_form=form,
+                           request_tour_form=requestTourForm,
                            listing=viewListing,
                            groups=myGroups,
                            title='Listing')

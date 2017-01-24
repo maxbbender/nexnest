@@ -1,13 +1,12 @@
 from flask_wtf import FlaskForm
 
-from wtforms.fields import TextAreaField, HiddenField, DateTimeField
+from wtforms.fields import HiddenField, StringField, TextAreaField
 
-from wtforms.validators import InputRequired
+from wtforms.validators import InputRequired, Length
 
 
 class TourForm(FlaskForm):
-    listing_id = HiddenField('Listing ID', validators=[InputRequired()])
-    group_id = HiddenField('Group ID', validators=[InputRequired()])
-    time_requested = DateTimeField(
-        'Requested Tour Time', validators=[InputRequired()])
-    description = TextAreaField('Tour Request Message')
+    group_id = HiddenField('group_id', [InputRequired()])
+    listing_id = HiddenField('listing_id', [InputRequired()])
+    description = TextAreaField('Message to Landlord', [Length(min=1, max=1500), InputRequired()])
+    requested_dateTime = HiddenField('Date and time you would like to tour the house')

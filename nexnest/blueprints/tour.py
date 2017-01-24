@@ -24,31 +24,41 @@ def createTour():
     if tourForm.validate():
         # Lets find the listing
         listing = session.query(Listing) \
-        .filter_by(id=tourForm.listing_id.data) \
-        .first()
+            .filter_by(id=tourForm.listing_id.data) \
+            .first()
 
         if listing is not None:  # Listing exists
 
             # Lets find the group
             group = session.query(Group) \
-            .filter_by(id=tourForm.group_id.data) \
-            .first()
+                .filter_by(id=tourForm.group_id.data) \
+                .first()
 
-            if group is not None: # Group Exists
-            	if group.leader == current_user:
-            		# At this point we have a valid group and listing
-	                # to create the tour request
-	                newTour = Tour(listing=listing,
-	                               group=group,
-	                               time_requested=tourForm.time_requested.data)
+            if group is not None:  # Group Exists
+                if group.leader == current_user:
+                    # At this point we have a valid group and listing
+                    # to create the tour request
+                    newTour = Tour(listing=listing,
+                                   group=group,
+                                   time_requested=tourForm.time_requested.data)
 
-	                session.add(newTour)
-	                session.commit()
-	            else:
-	            	flash("Unable to request a tour if you are not the group leader", 'warning')
-	            	redirect(request.url)
+                    session.add(newTour)
+                    session.commit()
 
-                
+                    # Create the first tour message
+                    newTourMessage = TourMessage(tour=newTour,
+                                                 content=tourForm.description.data,
+                                                 user=current_user)
+
+                    session.add(newTourMessage)
+                    session.commit()
+
+                    flash('Tour Request Created', 'info')
+                    return redirect(url_for('tours.viewTour', tourID=newTour.id))
+                else:
+                    flash("Unable to request a tour if you are not the group leader", 'warning')
+                    redirect(request.url)
+
             else:
                 flash("Group does not exist", 'warning')
                 return redirect(request.url)
@@ -60,3 +70,9 @@ def createTour():
     else:
         flash_errors(tourForm)
         return redirect(request.url)
+
+
+@tours.route('/tour/view/<tourID>')
+@login_required
+def viewTour(tourID):
+    return 'hey'
