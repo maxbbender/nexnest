@@ -1,10 +1,12 @@
-from flask import Blueprint, request, redirect, flash
+from flask import Blueprint, request, redirect, flash, render_template, url_for
 
 from flask_login import current_user, login_required
 
 from nexnest.application import session
 
 from nexnest.forms.tourForm import TourForm
+from nexnest.forms.tourMessageForm import TourMessageForm
+from nexnest.forms.tourDateChangeForm import TourDateChangeForm
 
 from nexnest.models.tour import Tour
 from nexnest.models.listing import Listing
@@ -12,6 +14,8 @@ from nexnest.models.group import Group
 from nexnest.models.tour_messages import TourMessage
 
 from flask.utils.flash import flash_errors
+
+from sqlalchemy import asc
 
 tours = Blueprint('tours', __name__, template_folder='../templates/tour')
 
@@ -72,7 +76,47 @@ def createTour():
         return redirect(request.url)
 
 
+# What mike needs
+# tour, landlords=[Landlords(As users)], messages, tourMessageForm, changeTourDateForm,
 @tours.route('/tour/view/<tourID>')
 @login_required
 def viewTour(tourID):
-    return 'hey'
+    tour = session.query(Tour).filter_by(id=tourID).first()
+
+    messageForm = TourMessageForm()
+    dateChangeForm = TourDateChangeForm()
+
+    isLandlord = False
+
+    # First lets check the current user is the landlord of
+    # the listing that this tour is for
+    for landlord in tour.listing.landlord:
+        if current_user == landlord.user:
+            isLandlord = True
+
+    if tour.group in current_user.accepted_groups or isLandlord:
+
+        # landlords=[Landlords(As users)]
+        landlordListingArray = tour.listing.landlords
+
+        landlords = []
+
+        for landlordListing in landlordListingArray:
+            landlords.append(landlordListing.landlord.user)
+
+        # Tour Messages
+        messages = session.query(TourMessage) \
+            .filter_by(tour_id=tour.id) \
+            .order_by(asc(TourMessage.date_created)) \
+            .all()
+
+        return render_template('viewTour.html',
+                               tour=tour,
+                               landlords=landlords,
+                               messages=messages,
+                               messageForm=messageForm,
+                               dateChangeForm=dateChangeForm
+                               )
+    else:
+        flash("You are not a part of this tour", 'info')
+        return redirect(request.url)

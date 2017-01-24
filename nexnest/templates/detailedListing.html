@@ -211,11 +211,11 @@
 		      			<div class="row">
 		      				<div class="col-xs-1"></div>
 		      				<div class="col-xs-10">
-		      					<form id="request_tour" action="{{url_for('groups.suggestListing')}}" method="POST">
+		      					<form id="request_tour" action="{{url_for('tours.createTour')}}" method="POST">
 		      					    {{ request_tour_form.csrf_token }}
 		      					    {{ request_tour_form.group_id }}
 		      					    {{ request_tour_form.listing_id(value=listing.id) }}
-		      					    {{ request_tour_form.requested_dateTime(value='2018-03-12') }}		      					
+		      					    {{ request_tour_form.requestedDateTime(value='2018-03-12') }}		      					
 			      					<p class="flatpickr input-group" data-wrap="true" data-clickOpens="false">
 			      						<input id="tourRequestTime" placeholder="Pick date" data-input style="background-color: inherit;">
 			      						<a class="btn input-btn" style="border-color: #ddd;" data-toggle><i class="fa fa-calendar" aria-hidden="true"></i></a>
