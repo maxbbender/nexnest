@@ -82,15 +82,7 @@ def viewTour(tourID):
     messageForm = TourMessageForm()
     dateChangeForm = TourDateChangeForm()
 
-    isLandlord = False
-
-    # First lets check the current user is the landlord of
-    # the listing that this tour is for
-    for landlord in tour.listing.landlord:
-        if current_user == landlord.user:
-            isLandlord = True
-
-    if tour.group in current_user.accepted_groups or isLandlord:
+    if tour.group in current_user.accepted_groups or current_user in tour.listing.landLordsAsUsers():
 
         # Tour Messages
         messages = session.query(TourMessage) \
