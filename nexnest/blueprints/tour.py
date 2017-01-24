@@ -74,8 +74,6 @@ def createTour():
         return redirect(request.url)
 
 
-# What mike needs
-# tour, landlords=[Landlords(As users)], messages, tourMessageForm, changeTourDateForm,
 @tours.route('/tour/view/<tourID>')
 @login_required
 def viewTour(tourID):
@@ -84,23 +82,7 @@ def viewTour(tourID):
     messageForm = TourMessageForm()
     dateChangeForm = TourDateChangeForm()
 
-    isLandlord = False
-
-    # First lets check the current user is the landlord of
-    # the listing that this tour is for
-    for landlord in tour.listing.landlord:
-        if current_user == landlord.user:
-            isLandlord = True
-
-    if tour.group in current_user.accepted_groups or isLandlord:
-
-        # landlords=[Landlords(As users)]
-        landlordListingArray = tour.listing.landlords
-
-        landlords = []
-
-        for landlordListing in landlordListingArray:
-            landlords.append(landlordListing.landlord.user)
+    if tour.group in current_user.accepted_groups or current_user in tour.listing.landLordsAsUsers():
 
         # Tour Messages
         messages = session.query(TourMessage) \
@@ -110,7 +92,7 @@ def viewTour(tourID):
 
         return render_template('tourView.html',
                                tour=tour,
-                               landlords=landlords,
+                               landlords=tour.listing.landLordsAsUsers(),
                                messages=messages,
                                messageForm=messageForm,
                                dateChangeForm=dateChangeForm
@@ -118,3 +100,21 @@ def viewTour(tourID):
     else:
         flash("You are not a part of this tour", 'info')
         return redirect(request.url)
+
+
+@tours.route('/tour/<tourID>/confirm')
+@login_required
+def confirmTour(tourID):
+    tour = session.query(Tour) \
+        .filter_by(id=tourID) \
+        .first()
+
+    if tour is not None:
+
+        # Only the group leader and landlord can confirm
+        if tour.group.leader == current_user or current_user in tour.listing.landLordsAsUsers():
+
+            tour.tour_confirmed = True
+            session.commit()
+            flash("Tour Confirmed", 'success')
+            return redirect(url_for('tours.viewTour', tourID=tourID))

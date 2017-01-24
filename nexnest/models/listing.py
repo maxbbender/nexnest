@@ -137,6 +137,22 @@ class Listing(Base):
     def __repr__(self):
         return '<Listing %r>' % self.id
 
+    def landLords(self):
+        landlords = []
+
+        for landlordListing in self.landlords:
+            landlords.append(landlordListing.landlord)
+
+        return landlords
+
+    def landLordsAsUsers(self):
+        landlords = []
+
+        for landlordListing in self.landlords:
+            landlords.append(landlordListing.landlord.user)
+
+        return landlords
+
 
 def update_date_modified(mapper, connection, target):
     # 'target' is the inserted object
