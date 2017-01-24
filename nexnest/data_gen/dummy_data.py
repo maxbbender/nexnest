@@ -1,6 +1,6 @@
 from nexnest.application import session
 
-from nexnest.data_gen.factories import UserFactory, ListingFactory, LandlordFactory, LandlordListingFactory, GroupFactory, GroupUserFactory, GroupListingFactory, MessageFactory, GroupMessageFactory, SchoolFactory, DirectMessageFactory
+from nexnest.data_gen.factories import UserFactory, ListingFactory, LandlordFactory, LandlordListingFactory, GroupFactory, GroupUserFactory, GroupListingFactory, TourFactory, GroupMessageFactory, SchoolFactory, DirectMessageFactory, TourMessageFactory
 
 # Schools
 s = SchoolFactory()
@@ -102,5 +102,20 @@ dm4 = DirectMessageFactory(source_user=user3, target_user=user4)
 dm5 = DirectMessageFactory(source_user=user4, target_user=user3)
 dm6 = DirectMessageFactory(source_user=user2, target_user=user3)
 dm6 = DirectMessageFactory(source_user=user2, target_user=user4)
+
+session.commit()
+
+# TOURS
+t1 = TourFactory(listing=listing1, group=group1)
+t2 = TourFactory(listing=listing1, group=group2)
+t3 = TourFactory(listing=listing1, group=group3)
+
+session.commit()
+
+# TOUR MESSAGES
+
+tm1 = TourMessageFactory(tour=t1, user=user2)
+tm2 = TourMessageFactory(tour=t2, user=user3)
+tm3 = TourMessageFactory(tour=t3, user=user4)
 
 session.commit()

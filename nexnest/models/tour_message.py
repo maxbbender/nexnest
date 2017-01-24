@@ -24,7 +24,6 @@ class TourMessage(Message):
     def __init__(
             self,
             tour,
-            message,
             content,
             user
     ):
