@@ -4,9 +4,7 @@ from flask_login import current_user, login_required
 
 from nexnest.application import session
 
-from nexnest.forms.tourForm import TourForm
-from nexnest.forms.tourMessageForm import TourMessageForm
-from nexnest.forms.tourDateChangeForm import TourDateChangeForm
+from nexnest.forms import TourForm, TourMessageForm, TourDateChangeForm
 
 from nexnest.models.tour import Tour
 from nexnest.models.listing import Listing

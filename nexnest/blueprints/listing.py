@@ -1,11 +1,10 @@
 from flask import Blueprint
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
-from ..forms.listing import ListingForm
-from ..forms.suggestListingForm import SuggestListingForm
-from ..forms.tourForm import TourForm
 
 from nexnest.application import session
+
+from nexnest.forms import ListingForm, SuggestListingForm, TourForm
 
 from nexnest.models.listing import Listing
 from nexnest.models.landlord_listing import LandlordListing

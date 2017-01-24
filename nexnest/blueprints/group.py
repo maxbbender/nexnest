@@ -2,10 +2,7 @@ from flask import Blueprint
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
 
-from ..forms.createGroup import CreateGroupForm
-from ..forms.inviteGroup import InviteGroupForm
-from ..forms.suggestListingForm import SuggestListingForm
-from ..forms.createGroupMessageForm import GroupMessageForm
+from nexnest.forms import CreateGroupForm, InviteGroupForm, SuggestListingForm, GroupMessageForm
 
 from nexnest.application import session
 
@@ -126,7 +123,7 @@ def invite():
                 session.add(newGroupUser)
                 session.commit()
                 return redirect(url_for('groups.viewGroup',
-                                    group_id=form.group_id.data))
+                                        group_id=form.group_id.data))
             else:
                 flash("Unable to invite a user to a group you are not apart of",
                       'warning')
