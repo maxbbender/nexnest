@@ -33,7 +33,7 @@ def createTour():
 
             # Lets find the group
             group = session.query(Group) \
-                .filter_by(id=tourForm.group_id.data) \
+                .filter_by(id=tourForm.group_tour_id.data) \
                 .first()
 
             if group is not None:  # Group Exists
@@ -42,7 +42,7 @@ def createTour():
                     # to create the tour request
                     newTour = Tour(listing=listing,
                                    group=group,
-                                   time_requested=tourForm.time_requested.data)
+                                   time_requested=tourForm.requestedDateTime.data)
 
                     session.add(newTour)
                     session.commit()
@@ -59,19 +59,19 @@ def createTour():
                     return redirect(url_for('tours.viewTour', tourID=newTour.id))
                 else:
                     flash("Unable to request a tour if you are not the group leader", 'warning')
-                    redirect(request.url)
+                    return redirect(url_for('listings.viewListing', listingID=listing.id))
 
             else:
                 flash("Group does not exist", 'warning')
-                return redirect(request.url)
+                return redirect(url_for('listings.viewListing', listingID=listing.id))
 
         else:
             flash("Listing does not exist", 'warning')
-            return redirect(request.url)
+            return redirect(url_for('listings.viewListing', listingID=listing.id))
 
     else:
         flash_errors(tourForm)
-        return redirect(request.url)
+        return redirect(url_for('indexs.index'))
 
 
 @tours.route('/tour/view/<tourID>')
