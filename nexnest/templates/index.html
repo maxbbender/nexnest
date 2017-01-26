@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 	{% if listings is not none %}
-		{% include 'listing.html' %}
+		<div class="row m-x-auto">
+			{% for listing in listings %}
+				<div class="col-md-4" style="padding-left: 30px; padding-right: 30px; padding-bottom: 30px">
+					{% include 'listing.html' %}
+				</div>
+			{% endfor %}
+		</div>
 	{% endif %}
 {% endblock %}

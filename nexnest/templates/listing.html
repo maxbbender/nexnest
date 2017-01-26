@@ -1,14 +1,8 @@
-<div class="row m-x-auto">
-	{% for listing in listings %}
-		<div class="col-md-4" style="padding-left: 30px; padding-right: 30px; padding-bottom: 30px">
-			<a href="{{ url_for('listings.viewListing', listingID=listing.id) }}">
-				<img src="./static/img/testHouse.jpg" class="listingImg">
-				<div class="listingDescription d-flex align-items-end">
-					{{ listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i> ${{ listing.price }}
-					<br>
-					{{ listing.street }}, {{ listing.city }}, {{ listing.state }}
-				</div>
-			</a>
-		</div>		
-	{% endfor %}
-</div>
+<a href="{{ url_for('listings.viewListing', listingID=listing.id) }}">
+	<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
+	<div class="listingDescription d-flex align-items-end">
+		{{ listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i> ${{ listing.price }}
+		<br>
+		{{ listing.street }}, {{ listing.city }}, {{ listing.state }}
+	</div>
+</a>
