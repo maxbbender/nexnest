@@ -73,7 +73,7 @@
                                                     <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the you to confrim the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                     <br><br>
                                                     <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#confirmTourModal">Confirm Time</a>
-                                                    <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#changeGroupLeaderModal">Suggest Different Time</a>
+                                                    <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestTimeTourModal">Suggest Different Time</a>
                                                 {% endif %}
                                             {% else %}
                                                 <p class="card-text">
@@ -94,7 +94,7 @@
                                                     <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the you to confrim the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                     <br><br>
                                                     <a href='#' class="btn btn-success" data-toggle="modal" data-target="#confirmTourModal">Confirm Time</a>
-                                                    <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#changeGroupLeaderModal">Suggest Different Time</a>
+                                                    <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestTimeTourModal">Suggest Different Time</a>
                                                 {% endif %}
                                             {% else %}
                                                 <strong>Tour Status:</strong>
@@ -166,7 +166,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title" id="login"></h4>
+                    <h4 class="modal-title"></h4>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -182,9 +182,53 @@
         </div>
     </div>
 
+    <!--Suggest Different Time Tour Modal-->
+    <div class="modal fade" id="suggestTimeTourModal" tabindex="-1" role="dialog" aria-labelledby="suggestTimeTour" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-1"></div>
+                        <div class="col-xs-10">
+                            <form id="request_tour_time_change" action="{{url_for('tours.createTour')}}" method="POST">
+                                {{ dateChangeForm.csrf_token }}
+                                {{ dateChangeForm.input_id }}
+                                {{ dateChangeForm.requestedDateTime() }}                             
+                                <p class="flatpickr input-group" data-wrap="true" data-clickOpens="false">
+                                    <input id="tourRequestTime" placeholder="Pick date" data-input style="background-color: inherit;">
+                                    <a class="btn input-btn" style="border-color: #ddd;" data-toggle><i class="fa fa-calendar" aria-hidden="true"></i></a>
+                                    <a class="btn input-btn" style="border-color: #ddd;" data-clear><i class="fa fa-times" aria-hidden="true"></i></a>
+                                </p>
+                            </form>  
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-primary">Request Time</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 {% block scripts %}
 <script>
+    $(document).ready(function() {
+        flatpickr(".flatpickr", {
+            enableTime: true,
+            altInput: true,
+            altFormat: "F j, Y h:i K",
+            minuteIncrement: 15,
+            disable: [{from: "0001-01-01",
+                      to: "today"}]
+        });
+    });
     $(document).ready(function(){
         $('#confirmed').popover({
             html: true,
@@ -204,6 +248,13 @@
       var button = $(event.relatedTarget);
       var modal = $(this);
       modal.find('.modal-title').text('Confirm Tour');
+    })
+
+    //Suggest Tour Time Modal
+    $('#suggestTimeTourModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      var modal = $(this);
+      modal.find('.modal-title').text('Request Different Time For Tour');
     })
 
 </script>

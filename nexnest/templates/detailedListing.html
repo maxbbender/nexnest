@@ -224,7 +224,6 @@
 			      					    	<p class="card-text">
 			      					    		<strong><a href=# id="allTourMembersToggle{{group.id}}">See all members</a></strong>
 			      					    		<div id="allTourMembers{{group.id}}" style="display: none;">
-			      					    			dsfsdfsd
 		      					    				{% for user in group.acceptedUsers %}
 		      					    			    	<li>{{ user.fname }} {{ user.lname }}</li>
 		      					    			    {% endfor %}
@@ -283,7 +282,7 @@
 			      					<p class="flatpickr input-group" data-wrap="true" data-clickOpens="false">
 			      						<input id="tourRequestTime" placeholder="Pick date" data-input style="background-color: inherit;">
 			      						<a class="btn input-btn" style="border-color: #ddd;" data-toggle><i class="fa fa-calendar" aria-hidden="true"></i></a>
-			      						<a class="btn input-btn" style="border-color: #ddd;"data-clear><i class="fa fa-times" aria-hidden="true"></i></a>
+			      						<a class="btn input-btn" style="border-color: #ddd;" data-clear><i class="fa fa-times" aria-hidden="true"></i></a>
 			      					</p>
 			      					{% from "_formhelpers.html" import render_field %}
 			      					{{ render_field(request_tour_form.description, class="form-control", type="text") }}
