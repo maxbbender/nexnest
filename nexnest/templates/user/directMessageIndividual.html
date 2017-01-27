@@ -1,21 +1,49 @@
 {% extends "base.html" %}
 {% block content %}
-<h1> Direct Messages to {{target_user.fname}} {{target_user.lname}}</h1>
-{% for message in dm %}
-    <div class="card">
-        <div class="card-block">
-            <h4 class="card-title">{{ message.source_user.fname }} {{ message.source_user.lname }}</h4>
-            <h6 class="card-subtitle mb-2 text-muted">{{ message.date_created }}</h6>
-            <p class="card-text">{{ message.content }}</p>
+<br>
+<div class="row m-x-auto">
+    <div class="col-xs-1">
+    </div>
+    <div class="col-xs-10">
+        <div class="callout-block text-center fade-in-b">
+            <h1>
+                <b>Direct Messages to {{target_user.fname}} {{target_user.lname}}</b>
+            </h1>
         </div>
     </div>
-{% endfor %}
-<form action="{{url_for('users.createDirectMessage')}}" method='POST'>
-    {{msgForm.source_user_id}}
-    {{msgForm.target_user_id}}
-    {{msgForm.csrf_token}}
-    <strong><label for="addComment">Type your message:</label></strong>
-    {{msgForm.content(class_="form-control")}}
-    <input class="btn btn-primary" type="submit" value="Respond">
-</form>
+</div>
+<br>
+<div class="row m-x-auto">
+    <div class="col-xs-3">
+    </div>
+    <div class="col-md-6 col-lg-6 col-xl-6">
+        <div class="row">
+            <div class="card" style="width:100%;">
+                <h3 class="card-header">Type your message:</h3>
+                <div class="card-block">
+                    <!-- Add new message -->
+                    <div class="form-group">
+                        <form action="{{url_for('users.createDirectMessage')}}" method='POST'>
+                            {{msgForm.source_user_id}}
+                            {{msgForm.target_user_id}}
+                            {{msgForm.csrf_token}}
+                            <div class="row">
+                                {{msgForm.content(class="form-control", rows=5)}}
+                            </div>
+                            <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
+                                <div class="col-xs-12">
+                                    <input class="btn btn-primary" type="submit" value="Respond">
+                                </div>                                    
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Messages -->
+            {% for message in dm %}
+                {% include 'user/message.html' %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}

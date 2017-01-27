@@ -1,0 +1,8 @@
+<div class="card" style="width:100%;">
+    <h3 class="card-header">{{ user.fname }} {{ user.lname }}</h3>
+    <div class="card-block">
+    	"Most recent message here"
+    	<br>	        
+    	<a href="{{ url_for('users.directMessagesIndividual', user_id=user.id) }}" class="btn btn-primary">View All Messages</a>
+    </div>
+</div>
