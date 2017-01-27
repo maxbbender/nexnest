@@ -61,6 +61,9 @@ class Group(Base):
         else:
             flash("Group Size Limit Reached")
 
+    def removeUser(self, user):
+        session.query(GroupUser).filter_by()
+
     @property
     def unAcceptedUsers(self):
         unAcceptedUsers = []

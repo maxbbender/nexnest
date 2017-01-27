@@ -99,7 +99,7 @@ def viewTour(tourID):
                                )
     else:
         flash("You are not a part of this tour", 'info')
-        return redirect(request.url)
+        return redirect(url_for('indexs.index'))
 
 
 @tours.route('/tour/<tourID>/confirm')
@@ -119,5 +119,34 @@ def confirmTour(tourID):
             flash("You are not allowed to confirm this tour", 'warning')
             return redirect(request.url)
     else:
-        flash("Tour Does not exist", 'warning')
+        flash("Tour does not exist", 'warning')
         return redirect(request.url)
+
+
+@tours.route('/tour/<tourID>/updateDate', methods=['POST'])
+@login_required
+def updateTime(tourID):
+    tour = session.query(Tour) \
+        .filter_by(id=tourID) \
+        .first()
+
+    if tour is not None:
+        form = TourDateChangeForm(request.form)
+
+        if form.validate():
+
+            if tour.isEditableBy(current_user):
+                tour.time_requested = form.requestedDateTime.data
+
+                if tour.last_requested == 'group':
+                    tour.last_requested = 'landlord'
+                else:
+                    tour.last_requested = 'group'
+
+                session.commit()
+            else:
+                flash("Only Group Leader and Landlord can change time", 'warning')
+        else:
+            flash_errors(form)
+    else:
+        flash("Tour does not exist", 'warning')
