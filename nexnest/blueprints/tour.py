@@ -152,4 +152,4 @@ def updateTime(tourID):
         flash("Tour does not exist", 'warning')
         return redirect(url_for('indexs.index'))
 
-    return redirect(url_for('tours.viewTour', tourID=tourID)
+    return redirect(url_for('tours.viewTour', tourID=tourID))

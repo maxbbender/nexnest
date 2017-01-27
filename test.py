@@ -15,11 +15,9 @@ from nexnest.data_gen.factories import GroupFactory, UserFactory
 from sqlalchemy import asc, or_, and_
 
 # tm = session.query(TourMessage).filter_by(tour_id=1).first()
+# g = session.query(Group).filter_by(id=1).first()
 
-# print(tm.user)
 
-g = session.query(Group).filter_by(id=1).first()
+u = session.query(User).filter_by(id=2).first()
 
-print(g)
-print(g.users)
-print(g.getUsers())
+print(u.isGroupLeader)
