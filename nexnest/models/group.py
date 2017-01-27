@@ -61,6 +61,9 @@ class Group(Base):
         else:
             flash("Group Size Limit Reached")
 
+    def removeUser(self, user):
+        session.query(GroupUser).filter_by()
+
     @property
     def unAcceptedUsers(self):
         unAcceptedUsers = []
@@ -94,6 +97,20 @@ class Group(Base):
             users.append(groupUser.user)
 
         return users
+
+    def isEditableBy(self, user):
+        if user.id == self.leader_id:
+            return True
+        else:
+            flash("You do not permissions to modify this group", 'warning')
+            return False
+
+    def hasTourForListing(self, listing):
+        for tour in self.tours:
+            if tour.listing.id == listing.id:
+                return True
+
+        return False
 
 
 def update_date_modified(mapper, connection, target):

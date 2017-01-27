@@ -218,3 +218,7 @@ class User(Base):
                 flash(
                     "Unable to leave group, Group is a part of a current listing that is accepted", 'warning')
                 return False
+
+    @property
+    def isGroupLeader(self):
+        return len(self.groupLeader) > 0

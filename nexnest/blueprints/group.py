@@ -250,3 +250,29 @@ def assignNewLeader(group_id, user_id):
 
     return redirect(url_for('groups.viewGroup',
                             group_id=group.id))
+
+
+@groups.route('/group/<groupID>/removeMember/<userID>')
+@login_required
+def removeMember(groupID, userID):
+    group = session.query(Group) \
+        .filter_by(id=groupID) \
+        .first()
+
+    if group is not None:
+        if group.isEditableBy(current_user):
+            groupUser = session.query(GroupUser) \
+                .filter_by(group_id=groupID, user_id=userID) \
+                .first()
+
+            if groupUser is not None:
+                groupUser.accepted = False
+                groupUser.show = False
+                session.commit()
+            else:
+                flash("User is not a part of the group", 'info')
+    else:
+        flash("Group does not exist", 'error')
+        return redirect(url_for('indexs.index'))
+
+    return redirect(url_for('groups.viewGroup'), groupID=groupID)
