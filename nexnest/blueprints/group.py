@@ -12,6 +12,7 @@ from nexnest.models.group_listing import GroupListing
 from nexnest.models.user import User
 from nexnest.models.listing import Listing
 from nexnest.models.group_message import GroupMessage
+from nexnest.models.tour import Tour
 
 from nexnest.utils.flash import flash_errors
 
@@ -88,6 +89,9 @@ def viewGroup(group_id):
         filter_by(group_id=group.id). \
         order_by(asc(GroupMessage.date_created)).all()
 
+    #Let's get the group's tours
+    tours = session.query(Tour).filter_by(group_id=group.id).order_by(asc(Tour.last_requested)).all()
+
     if group in current_user.accepted_groups:
 
         return render_template('group/viewGroup.html',
@@ -95,6 +99,7 @@ def viewGroup(group_id):
                                suggestedListings=groupListings,
                                invite_form=invite_form,
                                messages=messages,
+                               tours=tours,
                                message_form=message_form)
 
     else:
