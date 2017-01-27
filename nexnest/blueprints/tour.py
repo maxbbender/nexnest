@@ -150,3 +150,6 @@ def updateTime(tourID):
             flash_errors(form)
     else:
         flash("Tour does not exist", 'warning')
+        return redirect(url_for('indexs.index'))
+
+    return redirect(url_for('tours.viewTour', tourID=tourID)

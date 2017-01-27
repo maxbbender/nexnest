@@ -98,6 +98,20 @@ class Group(Base):
 
         return users
 
+    def isEditableBy(self, user):
+        if user.id == self.leader_id:
+            return True
+        else:
+            flash("You do not permissions to modify this group", 'warning')
+            return False
+
+    def hasTourForListing(self, listing):
+        for tour in self.tours:
+            if tour.listing.id == listing.id:
+                return True
+
+        return False
+
 
 def update_date_modified(mapper, connection, target):
     # 'target' is the inserted object
