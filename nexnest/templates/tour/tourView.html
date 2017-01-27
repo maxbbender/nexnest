@@ -71,7 +71,7 @@
                                                 {% else %}
                                                     <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the you to confrim the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                     <br><br>
-                                                    <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#confirmTourModal">Confirm Time</a>
+                                                    <a href='#' class="btn btn-success" data-toggle="modal" data-target="#confirmTourModal">Confirm Time</a>
                                                     <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestTimeTourModal">Suggest Different Time</a>
                                                 {% endif %}
                                             {% else %}
@@ -195,7 +195,7 @@
                     <div class="row">
                         <div class="col-xs-1"></div>
                         <div class="col-xs-10">
-                            <form id="request_tour_time_change" action="{{url_for('tours.createTour')}}" method="POST">
+                            <form id="request_tour_time_change" action="{{url_for('tours.updateTime', tourID=tour.id)}}" method="POST">
                                 {{ dateChangeForm.csrf_token }}
                                 {{ dateChangeForm.input_id }}
                                 {{ dateChangeForm.requestedDateTime() }}                             
@@ -209,7 +209,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="#" class="btn btn-primary">Request Time</a>
+                    <a href="#" class="btn btn-primary" onclick="submitTimeChangeForm({{tour.group.id}})">Request Time</a>
                 </div>
             </div>
         </div>
@@ -227,6 +227,7 @@
             disable: [{from: "0001-01-01",
                       to: "today"}]
         });
+        $('.flatpickr-calendar').css('z-index', 99999999999999);
     });
     $(document).ready(function(){
         $('#confirmed').popover({
@@ -255,6 +256,12 @@
       var modal = $(this);
       modal.find('.modal-title').text('Request Different Time For Tour');
     })
+
+    function submitTimeChangeForm(id) {
+        $("#input_id").val(id);
+        $("#requestedDateTime").val($("#tourRequestTime").val());
+        $("#request_tour_time_change").submit()
+    }
 
 </script>
 {% endblock %}
