@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 
 from nexnest.application import session
 
-from nexnest.forms import ListingForm, SuggestListingForm, TourForm, RequestHouseForm
+from nexnest.forms import ListingForm, SuggestListingForm, TourForm, RequestListingForm
 
 from nexnest.models.listing import Listing
 from nexnest.models.landlord_listing import LandlordListing
@@ -22,7 +22,7 @@ def viewListing(listingID):
     return render_template('detailedListing.html',
                            suggestListingForm=SuggestListingForm(),
                            requestTourForm=TourForm(),
-                           requestHouseForm=RequestHouseForm(),
+                           requestListingForm=RequestListingForm(),
                            listing=viewListing,
                            groups=myGroups,
                            title='Listing')

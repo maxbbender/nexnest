@@ -27,6 +27,7 @@
                             <form action="{{url_for('groups.createMessage')}}" method='POST'>
                                 {{message_form.group_id}}
                                 {{message_form.csrf_token}}
+                                {{message_form.next}}
                                 <div class="row">
                                     {{message_form.content(class="form-control", rows=5)}}
                                 </div>

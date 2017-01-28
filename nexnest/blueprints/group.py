@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
 
-from nexnest.forms import CreateGroupForm, InviteGroupForm, SuggestListingForm, GroupMessageForm
+from nexnest.forms import CreateGroupForm, InviteGroupForm, SuggestListingForm, GroupMessageForm, RequestListingForm
 
 from nexnest.application import session
 
@@ -89,7 +89,7 @@ def viewGroup(group_id):
         filter_by(group_id=group.id). \
         order_by(asc(GroupMessage.date_created)).all()
 
-    #Let's get the group's tours
+    # Let's get the group's tours
     tours = session.query(Tour).filter_by(group_id=group.id).order_by(asc(Tour.last_requested)).all()
 
     if group in current_user.accepted_groups:
@@ -163,8 +163,9 @@ def createMessage():
     else:
         flash_errors(message_form)
 
-    return redirect(url_for('groups.viewGroup',
-                            group_id=message_form.group_id.data))
+    return message_form.redirect()
+    # return redirect(url_for('groups.viewGroup',
+    #                         group_id=message_form.group_id.data))
 
 
 @groups.route('/group/suggestListing', methods=['POST'])
@@ -276,3 +277,16 @@ def removeMember(groupID, userID):
         return redirect(url_for('indexs.index'))
 
     return redirect(url_for('groups.viewGroup', group_id=groupID))
+
+
+# @groups.route('/group/requestListing', methods=['POST'])
+# @login_required
+# def requestListing():
+#     rLForm = RequestListingForm(request.form)
+
+
+#     if rLForm.validate():
+
+#     else:
+#         flash_errors(rLForm)
+#         return redirect(url_for('index'))
