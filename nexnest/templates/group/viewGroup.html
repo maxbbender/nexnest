@@ -117,7 +117,58 @@
                                 {% endfor %}
                             </div>
                             <div class="tab-pane" id="tours" role="tabpanel">
-                                Tours
+                                {% for tour in tours %}
+                                    <div class="row">
+                                        <div class="col-xs-5">
+                                        <strong>Tour For:</strong>
+                                        <br>
+                                        {{ tour.listing.street }}
+                                        <br><br>
+                                        {% if tour.group.leader_id == current_user.id %}
+                                            {% if tour.last_requested == 'landlord' %}
+                                                <strong>Tour Status:</strong>
+                                                {% if tour.tour_confirmed %}
+                                                    <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                                {% else %}
+                                                    <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the you to confrim the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                {% endif %}
+                                            {% else %}
+                                                <p class="card-text">
+                                                    <strong>Tour Status:</strong>
+                                                    {% if tour.tour_confirmed %}
+                                                        <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                                    {% else %}
+                                                        <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the landlord to confrim your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                    {% endif %}
+                                                </p>
+                                            {% endif %}                                        
+                                        {% else %}
+                                            <strong>Tour Status:</strong>
+                                            {% if tour.tour_confirmed %}
+                                                <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                            {% else %}
+                                                {% if tour.last_requested == 'group' %}
+                                                    <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Request Pending</b>" data-placement="top" data-content="Waiting for the landlord to confirm your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                {% else %}
+                                                    <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Request Pending</b>" data-placement="top" data-content="The landlord has proposed a different time. Waiting for your group leader to make a decision"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endif %}                                            
+                                        {% if tour.tour_confirmed %}
+                                            <p class="card-text"><strong>Tour is scheduled for:</strong><br> {{ tour.time_requested }}</p>
+                                        {% else %}
+                                            <p class="card-text"><strong>Tour requested for:</strong><br> {{ tour.time_requested }}</p>
+                                        {% endif %}
+                                        <a href="{{ url_for('tours.viewTour', tourID=tour.id) }}" class="btn btn-primary">View Tour</a>
+                                        </div>
+                                        <div class="col-xs-7">
+                                            <a href="{{ url_for('tours.viewTour', tourID=tour.id) }}">
+                                                <img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>

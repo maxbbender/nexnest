@@ -1,10 +1,30 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Direct Messages</h1>
-
-<h3>Users</h3><hr>
-{% for user in users %}
-    {{user.fname}} {{user.lname}} - <a href="/user/directMessages/{{user.id}}">View Messages</a>
-    <br>
-{% endfor %}
+	<br>
+	<div class="row justify-content-md-center">
+		<div class="col-xs-12 ">
+			{% if users|length == 0 %}
+				<div class="alert alert-info" role="alert" style="text-align: center;">
+				  <strong>You do not have any direct messages yet!</strong> You can message users from their profile page
+				</div>
+			{% endif %}
+		</div>
+	</div>
+	<div class="row m-x-auto">
+		<div class="col-xs-0 col-lg-4">
+		</div>
+		<div class="col-xs-12 col-lg-4">
+			{% if users %}
+			<div class="row">
+				<h1>My Conversations:</h1>
+			</div>
+			<div class="row">
+				{% for user in users %}
+					{% include "user/directMessageUser.html" %}
+				{% endfor %}
+			</div>
+			<br>
+			{% endif %}
+		</div>
+	</div>
 {% endblock %}
