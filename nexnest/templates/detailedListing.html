@@ -46,7 +46,7 @@
 		            <a href='#' class="btn btn-info" data-toggle="modal" data-target="#selectGroupForTourModal">Request Tour</a>
 				</div>
 				<div class="col-lg-3 col-centered">
-					<a href="{{ url_for('indexs.index') }}" class="btn btn-info">Request House</a>
+					<a href='#' class="btn btn-info" data-toggle="modal" data-target="#selectGroupForHouseModal">Request House</a>
 				</div>
 				<div class="col-lg-3" style="text-align:right">
 					<a href='#' class="btn btn-info" data-toggle="modal" data-target="#suggestListingModal">Suggest To Group</a>
@@ -163,9 +163,9 @@
 			      					    		</div>
 			      					    	</p>
 			      					    	<form id="suggest_listing" action="{{url_for('groups.suggestListing')}}" method="POST">
-			      					    	    {{ suggest_listing_form.csrf_token }}
-			      					    	    {{ suggest_listing_form.group_id }}
-			      					    	    {{ suggest_listing_form.listing_id(value=listing.id) }}
+			      					    	    {{ suggestListingForm.csrf_token }}
+			      					    	    {{ suggestListingForm.group_id }}
+			      					    	    {{ suggestListingForm.listing_id(value=listing.id) }}
 			      					    	</form>  
 					      					<a href='#' onClick="submitForm({{group.id}})" class="btn btn-primary" id="group.id">Suggest Listing</a>	
 			      					    </div>
@@ -234,16 +234,6 @@
 			      					    </div>
 			      					</div>
 			      					<script>
-			      						function submitForm(id) {
-			      							$("#group_id").val(id);
-			      						    $("#suggest_listing").submit()
-			      						}
-			      						//Suggest Listing Modal
-			      						$('#selectGroupForTourModal').on('show.bs.modal', function (event) {
-			      						  var button = $(event.relatedTarget)
-			      						  var modal = $(this)
-			      						  modal.find('.modal-title').text('Request Tour for Which Group?')
-			      						})
 			      						//Show/hide all members of group
 			      						$("#allTourMembersToggle{{group.id}}").click(function(){
 			      						    $("#allTourMembers{{group.id}}").toggle();
@@ -268,24 +258,24 @@
 		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		          			<span aria-hidden="true">&times;</span>
 		        		</button>
-		        		<h4 class="modal-title" id="login"></h4>
+		        		<h4 class="modal-title" id="requestTour"></h4>
 		      		</div>
 		      		<div class="modal-body">
 		      			<div class="row">
 		      				<div class="col-xs-1"></div>
 		      				<div class="col-xs-10">
 		      					<form id="request_tour" action="{{url_for('tours.createTour')}}" method="POST">
-		      					    {{ request_tour_form.csrf_token }}
-		      					    {{ request_tour_form.group_tour_id }}
-		      					    {{ request_tour_form.listing_id(value=listing.id) }}
-		      					    {{ request_tour_form.requestedDateTime() }}		      					
+		      					    {{ requestTourForm.csrf_token }}
+		      					    {{ requestTourForm.group_tour_id }}
+		      					    {{ requestTourForm.listing_id(value=listing.id) }}
+		      					    {{ requestTourForm.requestedDateTime() }}		      					
 			      					<p class="flatpickr input-group" data-wrap="true" data-clickOpens="false">
 			      						<input id="tourRequestTime" placeholder="Pick date" data-input style="background-color: inherit;">
 			      						<a class="btn input-btn" style="border-color: #ddd;" data-toggle><i class="fa fa-calendar" aria-hidden="true"></i></a>
 			      						<a class="btn input-btn" style="border-color: #ddd;" data-clear><i class="fa fa-times" aria-hidden="true"></i></a>
 			      					</p>
 			      					{% from "_formhelpers.html" import render_field %}
-			      					{{ render_field(request_tour_form.description, class="form-control", type="text") }}
+			      					{{ render_field(requestTourForm.description, class="form-control", type="text") }}
 		      					</form>  
 		      				</div>
 		      			</div>
@@ -293,6 +283,91 @@
 		      		</div>
 			      	<div class="modal-footer">
 			        	<button type="button" class="btn btn-primary" onClick="submitTourForm()" data-dismiss="modal">Request Tour</button>
+			      	</div>
+		    	</div>
+		  	</div>
+		</div>
+
+		<!-- House Request Select Group Modal -->
+		<div class="modal fade" id="selectGroupForHouseModal" tabindex="-1" role="dialog" aria-labelledby="selectGroupForHouseModal" aria-hidden="true">
+		  	<div class="modal-dialog" role="document">
+		    	<div class="modal-content">
+		      		<div class="modal-header">
+		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          			<span aria-hidden="true">&times;</span>
+		        		</button>
+		        		<h4 class="modal-title" id="requestHouseGroup"></h4>
+		      		</div>
+		      		<div class="modal-body">
+		      			<div class="row">
+		      				<div class="col-xs-1"></div>
+		      				<div class="col-xs-10">
+		      					{% for group in groups %}
+			      					<div class="card" style="width:100%;">
+			      					    <h3 class="card-header">{{ group.name }}</h3>
+			      					    <div class="card-block">	        
+			      					        <p class="card-text">
+			      					        	<strong>Group Leader:</strong>{{ group.leader.fname }} {{ group.leader.lname }}
+			      					        </p>
+			      					    	<p class="card-text">
+			      					    		<strong>Intended Lease Period:</strong> {{ group.start_date }} - {{ group.end_date }}
+			      					    	</p>
+			      					    	<p class="card-text">
+			      					    		<strong><a href=# id="allTourMembersToggle{{group.id}}">See all members</a></strong>
+			      					    		<div id="allTourMembers{{group.id}}" style="display: none;">
+		      					    				{% for user in group.acceptedUsers %}
+		      					    			    	<li>{{ user.fname }} {{ user.lname }}</li>
+		      					    			    {% endfor %}
+			      					    		</div>
+			      					    	</p>
+			      					    	<!-- If group.hasTourForLisiting -->
+					      					<button class="btn btn-primary" data-toggle="modal" data-target="#requestHouseModal" data-group="{{group.id}}" data-dismiss="modal">Select Group</button>
+			      					    </div>
+			      					</div>
+			      					<script>
+			      						//Show/hide all members of group
+			      						$("#allTourMembersToggle{{group.id}}").click(function(){
+			      						    $("#allTourMembers{{group.id}}").toggle();
+			      						});
+			      					</script>
+		      					{% endfor %}
+		      				</div>
+		      			</div>
+		      		</div>
+			      	<div class="modal-footer">
+			        	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			      	</div>
+		    	</div>
+		  	</div>
+		</div>
+
+		<!--Request House Modal-->
+		<div class="modal fade" id="requestHouseModal" tabindex="-1" role="dialog" aria-labelledby="requestHouse" aria-hidden="true">
+		  	<div class="modal-dialog" role="document">
+		    	<div class="modal-content">
+		      		<div class="modal-header">
+		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          			<span aria-hidden="true">&times;</span>
+		        		</button>
+		        		<h4 class="modal-title" id="requestHouse"></h4>
+		      		</div>
+		      		<div class="modal-body">
+		      			<div class="row">
+		      				<div class="col-xs-1"></div>
+		      				<div class="col-xs-10">
+		      					<form id="request_house" action="{{url_for('tours.createTour')}}" method="POST">
+		      					    {{ requestHouseForm.csrf_token }}
+		      					    {{ requestHouseForm.groupID }}
+		      					    {{ requestHouseForm.listingID(value=listing.id) }}		      					
+			      					{% from "_formhelpers.html" import render_field %}
+			      					{{ render_field(requestHouseForm.reqDescription, class="form-control", type="text") }}
+		      					</form>  
+		      				</div>
+		      			</div>
+		      			<div id="groupNumber" style="display: none;"></div>
+		      		</div>
+			      	<div class="modal-footer">
+			        	<button type="button" class="btn btn-primary" onClick="submitTourForm()" data-dismiss="modal">Request House</button>
 			      	</div>
 		    	</div>
 		  	</div>
@@ -313,8 +388,18 @@
         });
         $('.flatpickr-calendar').css('z-index', 99999999999999);
     });
-    //Suggest Listing Modal
+
+    //Request Tour Modal
     $('#requestTourModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      var modal = $(this);
+      var group = $(event.relatedTarget).data('group');
+      modal.find('.modal-title').text('Request This House');
+      modal.find('#groupNumber').text(group);
+    })
+
+    //Request House Modal
+    $('#requestHouseModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget);
       var modal = $(this);
       var group = $(event.relatedTarget).data('group');
