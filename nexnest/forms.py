@@ -1,3 +1,4 @@
+from flask import request, url_for, redirect
 from flask_wtf import FlaskForm
 from wtforms.fields import StringField, PasswordField, SubmitField, BooleanField, IntegerField, TextAreaField, SelectField, DateField, HiddenField
 
@@ -7,32 +8,64 @@ from wtforms.validators import InputRequired, Length, Email, EqualTo
 
 from nexnest.static.dataSets import valid_time_periods, valid_parking_types, valid_unit_types, states
 
+from urllib.parse import urlparse, urljoin
 
-class TourMessageForm(FlaskForm):
+
+def is_safe_url(target):
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ('http', 'https') and \
+        ref_url.netloc == test_url.netloc
+
+
+def get_redirect_target():
+    for target in request.args.get('next'), request.referrer:
+        if not target:
+            continue
+        if is_safe_url(target):
+            return target
+
+
+class RedirectForm(FlaskForm):
+    next = HiddenField()
+
+    def __init__(self, *args, **kwargs):
+        FlaskForm.__init__(self, *args, **kwargs)
+        if not self.next.data:
+            self.next.data = get_redirect_target() or ''
+
+    def redirect(self, endpoint='index', **values):
+        if is_safe_url(self.next.data):
+            return redirect(self.next.data)
+        target = get_redirect_target()
+        return redirect(target or url_for(endpoint, **values))
+
+
+class TourMessageForm(RedirectForm):
     tour_id = HiddenField('Tour ID',
                           [InputRequired("Group ID Field Required")])
     content = TextAreaField('Message',
                             [InputRequired("You must put in a message")])
 
 
-class TourForm(FlaskForm):
+class TourForm(RedirectForm):
     group_tour_id = HiddenField('group_id', [InputRequired()])
     listing_id = HiddenField('listing_id', [InputRequired()])
     description = TextAreaField('Message to Landlord', [Length(min=1, max=1500), InputRequired()])
     requestedDateTime = HiddenField('Date and time you would like to tour the house')
 
 
-class TourDateChangeForm(FlaskForm):
+class TourDateChangeForm(RedirectForm):
     input_id = HiddenField('group_id', [InputRequired()])
     requestedDateTime = HiddenField('Date and time you would like to tour the house')
 
 
-class SuggestListingForm(FlaskForm):
+class SuggestListingForm(RedirectForm):
     group_id = HiddenField('group_id', [InputRequired()])
     listing_id = HiddenField('listing_id', [InputRequired()])
 
 
-class RegistrationForm(FlaskForm):
+class RegistrationForm(RedirectForm):
     email = StringField('Email',
                         [InputRequired("You must enter an email address"),
                          Email("Email must be valid format")])
@@ -48,16 +81,16 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Register')
 
 
-class ProfilePictureForm(FlaskForm):
+class ProfilePictureForm(RedirectForm):
     profilePicture = FileField('Profile Picture', validators=[FileRequired()])
 
 
-class LoginForm(FlaskForm):
+class LoginForm(RedirectForm):
     email = StringField('Email Address', [Length(min=6, max=35)])
     password = PasswordField('Password', [InputRequired()])
 
 
-class ListingForm(FlaskForm):
+class ListingForm(RedirectForm):
     street = StringField('Street Address', [Length(min=2, max=50), InputRequired()])
     apartment_number = IntegerField('Apartment Number', [InputRequired()])
     city = StringField('City', [Length(min=2, max=50), InputRequired()])
@@ -90,7 +123,7 @@ class ListingForm(FlaskForm):
     description = TextAreaField('Please provide a detailed description of the property', [Length(min=1, max=1500), InputRequired()])
 
 
-class CreateGroupForm(FlaskForm):
+class CreateGroupForm(RedirectForm):
     name = StringField('Group Name:', [Length(min=2, max=50), InputRequired()])
     # time_frame = SelectField(
     #     'When are you looking for a house?', choices=valid_time_frames)
@@ -98,19 +131,19 @@ class CreateGroupForm(FlaskForm):
     end_date = DateField('End Date', format='%Y-%m-%d')
 
 
-class GroupMessageForm(FlaskForm):
+class GroupMessageForm(RedirectForm):
     group_id = HiddenField(
         'groupID', [InputRequired("Group ID Field Required")])
     content = TextAreaField(
         'Message', [InputRequired("You must put in a message")])
 
 
-class DirectMessageForm(FlaskForm):
+class DirectMessageForm(RedirectForm):
     target_user_id = HiddenField('Target User', [InputRequired()])
     content = TextAreaField('Message', [InputRequired("Message is required")])
 
 
-class EditAccountForm(FlaskForm):
+class EditAccountForm(RedirectForm):
     fname = StringField('First Name', [InputRequired()])
     lname = StringField('Last Name', [InputRequired()])
     school = StringField('School Attending')
@@ -123,12 +156,12 @@ class EditAccountForm(FlaskForm):
                          Email("Email must be valid format")])
 
 
-class InviteGroupForm(FlaskForm):
+class InviteGroupForm(RedirectForm):
     group_id = HiddenField('group_id', [InputRequired()])
     user_id = HiddenField('user_id', [InputRequired()])
 
 
-class PasswordChangeForm(FlaskForm):
+class PasswordChangeForm(RedirectForm):
     oldPassword = PasswordField('Old Password', [InputRequired()])
 
     newPassword = PasswordField('Password',
@@ -138,7 +171,7 @@ class PasswordChangeForm(FlaskForm):
     newPasswordConfirm = PasswordField('Confirm Password', [InputRequired()])
 
 
-class RequestHouseForm(FlaskForm):
+class RequestListingForm(RedirectForm):
     groupID = HiddenField('groupID', [InputRequired()])
     listingID = HiddenField('listingID', [InputRequired()])
     reqDescription = TextAreaField('Aything you would like to say to the landlord to go along with your request', [InputRequired()])
