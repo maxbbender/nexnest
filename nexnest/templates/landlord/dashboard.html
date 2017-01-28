@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Landlord Dashboard</h1>
+
+{% for listing in listings %}
+    {{listing.street}}<br>
+    <span>--Tours</span><br>
+    {% for tour in listing.tours %}
+        <span>----{{tour.group.name}}</span><br>
+    {% endfor %}
+{% endfor %}
+{% endblock %}

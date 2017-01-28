@@ -38,3 +38,10 @@ class Landlord(Base):
 
     def __repr__(self):
         return '<Landlord %r>' % self.user_id
+
+    def getListings(self):
+        listings = []
+        for landlordListing in self.listings:
+            listings.append(landlordListing.listing)
+
+        return listings
