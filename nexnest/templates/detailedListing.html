@@ -355,7 +355,7 @@
 		      			<div class="row">
 		      				<div class="col-xs-1"></div>
 		      				<div class="col-xs-10">
-		      					<form id="request_house" action="{{url_for('tours.createTour')}}" method="POST">
+		      					<form id="request_house" action="{{url_for('groups.requestListing')}}" method="POST">
 		      					    {{ requestHouseForm.csrf_token }}
 		      					    {{ requestHouseForm.groupID }}
 		      					    {{ requestHouseForm.listingID(value=listing.id) }}		      					
@@ -364,7 +364,7 @@
 		      					</form>  
 		      				</div>
 		      			</div>
-		      			<div id="groupNumber" style="display: none;"></div>
+		      			<div id="groupNumberHouse" style="display: none;"></div>
 		      		</div>
 			      	<div class="modal-footer">
 			        	<button type="button" class="btn btn-primary" onClick="submitTourForm()" data-dismiss="modal">Request House</button>
@@ -404,13 +404,18 @@
       var modal = $(this);
       var group = $(event.relatedTarget).data('group');
       modal.find('.modal-title').text('Request a Tour');
-      modal.find('#groupNumber').text(group);
+      modal.find('#groupNumberHouse').text(group);
     })
 
     function submitTourForm() {
     	$("#group_tour_id").val($("#groupNumber").text());
     	$("#requestedDateTime").val($("#tourRequestTime").val());
         $("#request_tour").submit();
+    }
+
+    function submitHouseForm() {
+    	$("#groupID").val($("#groupNumberHouse").text());
+        $("#request_house").submit();
     }
 </script>
 {% endblock %}
