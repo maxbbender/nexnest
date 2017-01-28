@@ -73,6 +73,7 @@ from nexnest.blueprints.listing import listings
 from nexnest.blueprints.user import users
 from nexnest.blueprints.group import groups
 from nexnest.blueprints.tour import tours
+from nexnest.blueprints.landlord import landlords
 
 app.register_blueprint(base)
 app.register_blueprint(indexs)
@@ -80,6 +81,7 @@ app.register_blueprint(listings)
 app.register_blueprint(users)
 app.register_blueprint(groups)
 app.register_blueprint(tours)
+app.register_blueprint(landlords)
 
 from nexnest.forms import LoginForm
 
