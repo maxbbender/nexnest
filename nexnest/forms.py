@@ -126,3 +126,13 @@ class EditAccountForm(FlaskForm):
 class InviteGroupForm(FlaskForm):
     group_id = HiddenField('group_id', [InputRequired()])
     user_id = HiddenField('user_id', [InputRequired()])
+
+
+class PasswordChangeForm(FlaskForm):
+    oldPassword = PasswordField('Old Password', [InputRequired()])
+
+    newPassword = PasswordField('Password',
+                                [InputRequired(),
+                                 EqualTo('newPasswordConfirm',
+                                         message="Passwords must match")])
+    newPasswordConfirm = PasswordField('Confirm Password', [InputRequired()])

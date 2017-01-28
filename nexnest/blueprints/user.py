@@ -9,7 +9,7 @@ from nexnest.models.group import Group
 from nexnest.models.school import School
 from nexnest.models.direct_message import DirectMessage
 
-from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm
+from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm
 
 from nexnest.utils.password import check_password
 from nexnest.utils.flash import flash_errors
@@ -319,3 +319,17 @@ def updateProfilePicture():
         else:
             flash("File doesn't exist or file extension is not allowed", 'danger')
             return redirect(request.url)
+
+
+@users.route('/user/changePassword', methods=['GET'])
+@login_required
+def changePassword():
+    passForm = PasswordChangeForm(request.form)
+
+    if passForm.validate():
+        current_user.set_password(passForm.newPassword.data)
+        session.commit()
+    else:
+        flash_errors(passForm)
+
+    return redirect(url_for('users.viewUser', userID=current_user.id))
