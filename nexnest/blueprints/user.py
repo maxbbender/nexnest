@@ -321,7 +321,7 @@ def updateProfilePicture():
             return redirect(request.url)
 
 
-@users.route('/user/changePassword', methods=['GET'])
+@users.route('/user/changePassword', methods=['GET', 'POST'])
 @login_required
 def changePassword():
     passForm = PasswordChangeForm(request.form)

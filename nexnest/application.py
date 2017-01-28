@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 # Flask
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from flask_wtf.csrf import CSRFProtect
 
 # Session|Engine(SQLAlchemy)
@@ -83,13 +83,16 @@ app.register_blueprint(groups)
 app.register_blueprint(tours)
 app.register_blueprint(landlords)
 
-from nexnest.forms import LoginForm
-
+from nexnest.forms import LoginForm, PasswordChangeForm
 
 @app.context_processor
 def insert_login_form():
-    login_form = LoginForm()
-    return dict(login_form=login_form)
+	if current_user.is_authenticated:
+		passwordChangeForm = PasswordChangeForm()
+		return dict(passwordChangeForm=passwordChangeForm)
+	else:
+		login_form = LoginForm()
+		return dict(login_form=login_form)
 
 # # Make sure schools is populated
 # from nexnest.data import school_gen

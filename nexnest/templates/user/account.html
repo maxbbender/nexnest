@@ -12,6 +12,7 @@
     <div class="text-xs-center">
         {% if user.id == current_user.id %}
             <a href="{{ url_for('users.editAccountInfo') }}" class="btn btn-outline-info">Edit your profile</a>
+            <a href="#" data-toggle="modal" data-target="#passwordChangeModal" class="btn btn-outline-info">Change Password</a>
         {% elif not user.id == current_user.id %}
             <a href="{{ url_for('indexs.index') }}" class="btn btn-outline-info">Invite to group</a>
             <a href="{{ url_for('users.directMessagesIndividual', user_id=user.id) }}" class="btn btn-outline-info">Message</a>
@@ -44,4 +45,5 @@
             </div>
         </div>
     </div>
+    {% include 'changePasswordModal.html' %}
 {% endblock %}

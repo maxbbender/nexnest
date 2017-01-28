@@ -59,7 +59,7 @@
                                 <div class="navbar-footer-content">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <a href="#" class="btn btn-default btn-sm">Change Password</a>
+                                            <a class="btn btn-default btn-sm pull-right" href="#" data-toggle="modal" data-target="#passwordChangeModal">Change Password</a>
                                         </div>
                                         <div class="col-md-6">
                                             <a href="{{url_for('users.logout')}}" class="btn btn-default btn-sm pull-right">Sign Out</a>
@@ -98,6 +98,8 @@
         {% if current_user %}
             {% if not current_user.is_authenticated %}
 		      {% include 'loginModel.html' %}
+            {% else %}
+              {% include 'changePasswordModal.html' %}
             {% endif %}
         {% else %}
             {% include 'loginModel.html' %}
@@ -112,12 +114,11 @@
               var modal = $(this)
               modal.find('.modal-title').text('Login to NexNest')
             });
-            //Register Account Modal
-            // $('#registerModal').on('show.bs.modal', function (event) {
-            //   var button = $(event.relatedTarget)
-            //   var modal = $(this)
-            //   modal.find('.modal-title').text('Register as tenant or landlord?')
-            // })
+            $('#passwordChangeModal').on('show.bs.modal', function (event) {
+              var button = $(event.relatedTarget)
+              var modal = $(this)
+              modal.find('.modal-title').text('Change Password')
+            });
 		</script>
 	</body>
 </html>
