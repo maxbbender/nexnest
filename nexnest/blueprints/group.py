@@ -303,6 +303,7 @@ def requestListing():
                     session.add(newGL)
                     session.commit()
                     # TODO REDIRECT TO GROUPLISTING PAGE
+                    flash("You have requested to live at this listing!", 'success')
                 else:
                     flash("Listing does not exist", 'warning')
         else:
