@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 
 from nexnest.application import session
 
-from nexnest.forms import ListingForm, SuggestListingForm, TourForm
+from nexnest.forms import ListingForm, SuggestListingForm, TourForm, RequestHouseForm
 
 from nexnest.models.listing import Listing
 from nexnest.models.landlord_listing import LandlordListing
@@ -17,13 +17,12 @@ listings = Blueprint('listings', __name__, template_folder='../templates')
 @listings.route('/listing/view/<listingID>', methods=['GET', 'POST'])
 @login_required
 def viewListing(listingID):
-    form = SuggestListingForm()
-    requestTourForm = TourForm()
     viewListing = session.query(Listing).filter_by(id=listingID).first()
     myGroups = current_user.accepted_groups
     return render_template('detailedListing.html',
-                           suggest_listing_form=form,
-                           request_tour_form=requestTourForm,
+                           suggestListingForm=SuggestListingForm(),
+                           requestTourForm=TourForm(),
+                           requestHouseForm=RequestHouseForm(),
                            listing=viewListing,
                            groups=myGroups,
                            title='Listing')

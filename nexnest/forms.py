@@ -136,3 +136,9 @@ class PasswordChangeForm(FlaskForm):
                                  EqualTo('newPasswordConfirm',
                                          message="Passwords must match")])
     newPasswordConfirm = PasswordField('Confirm Password', [InputRequired()])
+
+
+class RequestHouseForm(FlaskForm):
+    groupID = HiddenField('groupID', [InputRequired()])
+    listingID = HiddenField('listingID', [InputRequired()])
+    reqDescription = TextAreaField('Request Description', [InputRequired()])
