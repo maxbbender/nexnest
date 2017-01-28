@@ -279,14 +279,36 @@ def removeMember(groupID, userID):
     return redirect(url_for('groups.viewGroup', group_id=groupID))
 
 
-# @groups.route('/group/requestListing', methods=['POST'])
-# @login_required
-# def requestListing():
-#     rLForm = RequestListingForm(request.form)
+@groups.route('/group/requestListing', methods=['POST'])
+@login_required
+def requestListing():
+    rLForm = RequestListingForm(request.form)
+    if rLForm.validate():
+        group = session.query(Group) \
+            .filter_by(id=rLForm.groupID.data) \
+            .first()
 
+        if group is not None:
 
-#     if rLForm.validate():
+            # Can the current user take actions on the group?
+            if group.isEditableBy(current_user):
+                listing = session.query(Listing) \
+                    .filter_by(id=rLForm.listingID.data) \
+                    .first()
 
-#     else:
-#         flash_errors(rLForm)
-#         return redirect(url_for('index'))
+                if listing is not None:
+                    newGL = GroupListing(group=group,
+                                         listing=listing,
+                                         req_description=rLForm.reqDescription.data)
+                    session.add(newGL)
+                    session.commit()
+                    # TODO REDIRECT TO GROUPLISTING PAGE
+                else:
+                    flash("Listing does not exist", 'warning')
+        else:
+            flash("Group does not exist", 'warning')
+
+    else:
+        flash_errors(rLForm)
+
+    return rLForm.redirect()
