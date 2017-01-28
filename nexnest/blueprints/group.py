@@ -275,4 +275,4 @@ def removeMember(groupID, userID):
         flash("Group does not exist", 'error')
         return redirect(url_for('indexs.index'))
 
-    return redirect(url_for('groups.viewGroup'), groupID=groupID)
+    return redirect(url_for('groups.viewGroup', group_id=groupID))

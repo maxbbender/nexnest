@@ -240,7 +240,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="btn-group">
-                        <button class="btn btn-danger" onClick="">Remove</button>
+                        <a href="{{ url_for('groups.removeMember', groupID=group.id, userID=1) }}" id="removeUserLink" class="btn btn-danger">Remove</a>
                     </div>
                 </div>
             </div>
@@ -310,6 +310,8 @@
     $('#removeUser').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget)
         var modal = $(this)
+        var user = $(event.relatedTarget).data('user');
+        $("#removeUserLink").attr('href', "/group/{{group.id}}/removeMember/"+user);
         modal.find('.modal-title').text('Remove From Group')
     })
 </script>
