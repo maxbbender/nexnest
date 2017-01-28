@@ -90,7 +90,7 @@
                                                 {% if tour.tour_confirmed %}
                                                     <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
                                                 {% else %}
-                                                    <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the you to confrim the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                    <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the you to confirm the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                     <br><br>
                                                     <a href='#' class="btn btn-success" data-toggle="modal" data-target="#confirmTourModal">Confirm Time</a>
                                                     <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestTimeTourModal">Suggest Different Time</a>
