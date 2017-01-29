@@ -1,12 +1,319 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Landlord Dashboard</h1>
 
-{% for listing in listings %}
-    {{listing.street}}<br>
-    <span>--Tours</span><br>
-    {% for tour in listing.tours %}
-        <span>----{{tour.group.name}}</span><br>
-    {% endfor %}
-{% endfor %}
+<link href="{{url_for('static', filename='css/landlord/dashboardStyling.css')}}" rel="stylesheet">
+<div class="row">
+    <div class="col-md-2 col-sm-1 hidden-xs display-table-cell v-align box" id="navigation" style="height: inherit;">
+        <div class="navi navbar">
+        	<ul>
+        		<li class="nav-item">
+        	        <a class="nav-link active" data-toggle="tab" href="#occupiedListingsTab" role="tab">
+        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Occupied Listings</span>
+        	        </a>
+        	    </li>
+        	    <li class="nav-item">
+        	        <a class="nav-link" data-toggle="tab" href="#unbookedListingsTab" role="tab">
+        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Unbooked Listings</span>
+        	        </a>
+        	    </li>
+        	    <li class="nav-item">
+        	        <a class="nav-link" data-toggle="tab" href="#toursTab" role="tab">
+        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Tours</span>
+        	        </a>
+        	    </li>
+        	    <li class="nav-item">
+        	        <a class="nav-link" data-toggle="tab" href="#requestsTab" role="tab">
+        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Housing Requests</span>
+        	        </a>
+        	    </li>
+        	    <li class="nav-item">
+        	        <a class="nav-link" data-toggle="tab" href="#paymentTab" role="tab">
+        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Payment Portal</span>
+        	        </a>
+        	    </li>
+        	</ul>
+        </div>
+    </div>
+    <div class="col-sm-11 col-md-10">
+	    <div class="tab-content">
+		    <div class="tab-pane active" id="occupiedListingsTab" role="tabpanel" style="padding: 0px;">
+		    </div>
+	        <div class="tab-pane" id="unbookedListingsTab" role="tabpanel" style="padding: 0px;">
+	        	<div class="row">
+			    	<div class="col-xs-1"></div>
+			    	<div class="col-xs-10">
+				    	<div class="callout-block text-center fade-in-b">
+				    		<h1>Listings</h1>
+				    	</div>
+			    	</div>
+			    </div>
+		    	<br>
+	            {% for listing in listings %}
+	            	<div class="row">
+	            		<div class="col-xs-1"></div>
+	            		<div class="col-xs-10" style="width: 100%">
+			                <div class="card">
+			                    <div class="card-header">
+				                    <div class="row">
+				                    	<div class="col-xs-10">
+				                    		<h3><strong>{{ listing.street }}, {{ listing.city }} {{ listing.state }}</strong></h3>
+				                    		<small>Lease Period: {{ listing.start_date }} - {{ listing.end_date }}</small>
+				                    	</div>
+				                    	<div class="col-xs-2" style="text-align: right;">
+				                    		<a href="#" class="btn btn-primary">Edit Listing</a>
+				                    	</div>
+				                    </div>			                    
+			                    </div>
+			                    <div class="card-block">
+				                    <div class="row">
+				                    	<div class="col-xs-4">
+				                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
+				                    	</div>
+				                    	<div class="col-xs-4">
+				                    		<h3><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ listing.price }}</strong> per bedroom per semester</h3>
+				                    		<h3><strong>{{ listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
+				                    		&nbsp;
+				                    		{{ listing.num_full_baths }}<i class="fa fa-bath" aria-hidden="true"></i></strong></h3>
+				                    	</div>
+				                    </div>
+			                    </div>
+			                </div>
+		                </div>
+	                </div>
+	            {% endfor %}
+	        </div>
+	        <div class="tab-pane" id="toursTab" role="tabpanel" style="padding: 0px;">
+	        	<div class="row">
+			    	<div class="col-xs-1"></div>
+			    	<div class="col-xs-10">
+				    	<div class="callout-block text-center fade-in-b">
+				    		<h1>Tours</h1>
+				    	</div>
+			    	</div>
+			    </div>
+		    	<br>
+	        	<div class="col-xs-1"></div>
+	        	<div class="col-md-10 col-lg-10 col-xl-10" style="padding-left: 5%;">
+	        	    <div class="row">
+	        	        <div class="card" style="width:100%; border: none;">
+	        	            <div class="card-block">
+	        	                <ul class="nav nav-tabs">
+	        	                    <li class="nav-item">
+	        	                        <a class="nav-link active" data-toggle="tab" href="#requestedToursTab" role="tab">Requested Tours</a>
+	        	                    </li>
+	        	                    <li class="nav-item">
+	        	                        <a class="nav-link" data-toggle="tab" href="#scheduledToursTab" role="tab">Scheduled Tours</a>
+	        	                    </li>
+	        	                    <li class="nav-item">
+	        	                        <a class="nav-link" data-toggle="tab" href="#completedToursTab" role="tab">Completed Tours</a>
+	        	                    </li>
+	        	                </ul>
+	        	                <br>
+	        	                <div class="tab-content">
+	        	                    <div class="tab-pane active" id="requestedToursTab" role="tabpanel" style="padding: 0px;">
+	        	                        {% for listing in listings %}
+		            						{% for tour in listing.tours %}
+		            							{% if not tour.tour_confirmed %}
+            							                <div class="card">
+            							                    <div class="card-header">
+            								                    <div class="row">
+            								                    	<div class="col-xs-7">
+            								                    		<a href="{{ url_for('tours.viewTour', tourID=tour.id) }}"><h3><strong>Tour Requested on: {{ tour.time_requested }}</strong></h3></a>
+            								                    	</div>
+            								                    	<div class="col-xs-5" style="text-align: right;">
+            								                    		{% if tour.last_requested == 'landlord' %}
+            								                    			<button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the the group's leader to confrim the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+            								                    		{% else %}
+	            								                    		<a href='#' class="btn btn-success" data-tourID="{{tour.id}}" data-tourtime="{{tour.time_requested}}" data-toggle="modal" data-target="#confirmTourModal">Accept Tour</a>
+	            								                    		<a href='#' class="btn btn-primary" data-tourID="{{tour.id}}" data-groupID="{{tour.group.id}}"  data-toggle="modal" data-target="#suggestTimeTourModal">Suggest Different Time</a>
+            								                    		{% endif %}
+            								                    	</div>
+            								                    </div>			                    
+            							                    </div>
+            							                    <div class="card-block">
+            								                    <div class="row">
+            								                    	<div class="col-xs-4">
+            								                    		<h3><strong>Tour requsted for:</strong>
+            								                    		<br> {{ listing.street }}, {{ listing.city }} {{ listing.state }}</h3>
+            								                    		<small>Lease Period: {{ listing.start_date }} - {{ listing.end_date }}</small>
+            								                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
+            								                    	</div>
+            								                    	<div class="col-xs-8">
+            								                    		<h3><strong>Group requesting the tour: {{tour.group.name}}</strong></h3>
+            								                    		<strong>Group's intended lease period:</strong> {{ tour.group.start_date }} - {{ tour.group.end_date }}
+            								                    		<br><br>
+            								                    		<strong>Members in group:</strong>
+            								                    		{% for user in tour.group.acceptedUsers %}
+            								                    			{% with group=tour.group %}                                    
+            								                    		    	{% include 'group/member.html' %}
+            								                    		    {% endwith %}
+            								                    		{% endfor %}
+            								                    		<br>
+            								                    		<a href="{{ url_for('tours.viewTour', tourID=tour.id) }}" class="btn btn-primary">View Tour Request</a>
+            								                    	</div>
+            								                    </div>
+            							                    </div>
+            							                </div>
+		            							{% endif %}
+		            							<br>
+		            						{% endfor %}
+	            						{% endfor %}
+	        	                    </div>
+	        	                    <div class="tab-pane" id="scheduledToursTab" role="tabpanel">
+	        	                        {% for listing in listings %}
+		            						{% for tour in listing.tours %}
+		            							{% if tour.tour_confirmed %}
+		                							{{ tour.group.name }}
+		                							<br>
+		            							{% endif %}
+		            						{% endfor %}
+	            						{% endfor %}
+	        	                    </div>
+	        	                    <div class="tab-pane" id="completedToursTab" role="tabpanel">
+	        	                        {% for listing in listings %}
+		            						{% for tour in listing.tours %}
+		            							{% if tour.tour_confirmed %}
+		            								
+		            							{% endif %}
+		            						{% endfor %}
+	            						{% endfor %}
+	        	                    </div>
+	        	                </div>
+	        	            </div>
+	        	        </div>
+	        	    </div>
+	        	</div>
+	        </div>
+	        <div class="tab-pane" id="requestsTab" role="tabpanel">
+	            Housing Requests
+	        </div>
+	        <div class="tab-pane" id="paymentTab" role="tabpanel">
+	            Payment Portal
+	        </div>
+		</div>
+	</div>
+</div>
+
+<!--Confirm Tour Modal-->
+    <div class="modal fade" id="confirmTourModal" tabindex="-1" role="dialog" aria-labelledby="confirmTour" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <p id="tourTimeBody" class="card-text"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" id="acceptTourLink" class="btn btn-primary">Confirm Tour</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Suggest Different Time Tour Modal-->
+    <div class="modal fade" id="suggestTimeTourModal" tabindex="-1" role="dialog" aria-labelledby="suggestTimeTour" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-1"></div>
+                        <div class="col-xs-10">
+                            <form id="request_tour_time_change" action="#" method="POST">
+                                {{ dateChangeForm.csrf_token }}
+                                {{ dateChangeForm.input_id }}
+                                {{ dateChangeForm.requestedDateTime() }}                             
+                                <p class="flatpickr input-group" data-wrap="true" data-clickOpens="false">
+                                    <input id="tourRequestTime" placeholder="Pick date" data-input style="background-color: inherit;">
+                                    <a class="btn input-btn" style="border-color: #ddd;" data-toggle><i class="fa fa-calendar" aria-hidden="true"></i></a>
+                                    <a class="btn input-btn" style="border-color: #ddd;" data-clear><i class="fa fa-times" aria-hidden="true"></i></a>
+                                </p>
+                            </form>  
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" id="requestTimeLink" class="btn btn-primary" onclick="#">Request Time</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+<script>
+	$(document).ready(function() {
+	    flatpickr(".flatpickr", {
+	        enableTime: true,
+	        altInput: true,
+	        altFormat: "F j, Y h:i K",
+	        minuteIncrement: 15,
+	        disable: [{from: "0001-01-01",
+	                  to: "today"}]
+	    });
+	    $('.flatpickr-calendar').css('z-index', 99999999999999);
+	});
+
+	$(document).ready(function(){
+	   $('[data-toggle="offcanvas"]').click(function(){
+	       $("#navigation").toggleClass("hidden-xs");
+	   });
+	});
+
+	$(document).ready(function(){
+	    $('#confirmed').popover({
+	        html: true,
+	        trigger: 'focus',
+	        template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title" style="background-color: #449d44; text-align: center; color: #ffffff;"></h3><div class="popover-content"></div></div>'
+	    });
+
+	    $('#pending').popover({
+	        html: true,
+	        trigger: 'focus',
+	        template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title" style="background-color: #ec971f; text-align: center; color: #ffffff;"></h3><div class="popover-content"></div></div>'
+	    });
+	});
+
+	//Request Tour Modal
+    $('#confirmTourModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      var modal = $(this);
+      var tour = $(event.relatedTarget).data('tourid');
+      alert(tour);
+      var tourTimeRequested = $(event.relatedTarget).data('tourtime');
+      $("#acceptTourLink").attr('href', "/tour/"+tour+"/confirm");
+      $("#tourTimeBody").text("Are you sure you want to schedule a tour for " + tourTimeRequested);
+      modal.find('.modal-title').text('Accept This Tour?');
+    });
+
+    //Suggest Tour Time Modal
+    $('#suggestTimeTourModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      var modal = $(this);
+      var tour = $(event.relatedTarget).data('tourid');
+      var group = $(event.relatedTarget).data('groupid');
+      $("#request_tour_time_change").attr('action', "/tour/"+tour+"/updateDate");
+      $("#requestTimeLink").attr('onClick', "submitTimeChangeForm("+group+")");      
+      modal.find('.modal-title').text('Request Different Time For Tour');
+    })
+
+    function submitTimeChangeForm(id) {
+        $("#input_id").val(id);
+        $("#requestedDateTime").val($("#tourRequestTime").val());
+        $("#request_tour_time_change").submit()
+    }
+
+</script>
 {% endblock %}

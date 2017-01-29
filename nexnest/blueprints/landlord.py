@@ -8,6 +8,8 @@ from nexnest.models.listing import Listing
 from nexnest.models.landlord import Landlord
 from nexnest.models.landlord_listing import LandlordListing
 
+from nexnest.forms import TourDateChangeForm
+
 landlords = Blueprint('landlords',
                       __name__,
                       template_folder='../templates/landlord')
@@ -16,6 +18,7 @@ landlords = Blueprint('landlords',
 @landlords.route('/landlord/dashboard')
 @login_required
 def landlordDashboard():
+    dateChangeForm = TourDateChangeForm()
     if current_user.isLandlord:
         landlord = session.query(Landlord) \
             .filter_by(user_id=current_user.id) \
@@ -23,6 +26,7 @@ def landlordDashboard():
 
         return render_template('dashboard.html',
                                landlord=landlord,
+                               dateChangeForm=dateChangeForm,
                                listings=landlord.getListings())
     else:
         flash("You are not a landlord", 'warning')
