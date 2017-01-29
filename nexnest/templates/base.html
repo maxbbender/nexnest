@@ -79,6 +79,7 @@
 				                    <a class="dropdown-item" href="{{ url_for('users.myGroups') }}">My Groups</a>
                                 {% endif %}
 				                <a class="dropdown-item" href="{{ url_for('users.viewUser', userID=current_user.id) }}">My Account</a>
+                                <a class="dropdown-item" href="{{ url_for('users.directMessagesAll') }}">My Messages</a>
 		                	</div>
 		               </div>
 	               </li>
