@@ -21,3 +21,6 @@ factory_boy
 Faker
 
 readline
+
+# Admin
+flask-admin

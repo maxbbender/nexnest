@@ -8,7 +8,7 @@ from os.path import dirname
 from dotenv import load_dotenv
 
 # Flask
-from flask import Flask
+from flask import Flask, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user
 from flask_wtf.csrf import CSRFProtect
@@ -60,6 +60,9 @@ from nexnest.models.group_listing import GroupListing
 from nexnest.models.message import Message
 from nexnest.models.group_message import GroupMessage
 from nexnest.models.direct_message import DirectMessage
+from nexnest.models.tour import Tour
+from nexnest.models.tour_message import TourMessage
+from nexnest.models.landlord import Landlord
 
 
 @login_manager.user_loader
@@ -85,14 +88,46 @@ app.register_blueprint(landlords)
 
 from nexnest.forms import LoginForm, PasswordChangeForm
 
+
 @app.context_processor
 def insert_login_form():
-	if current_user.is_authenticated:
-		passwordChangeForm = PasswordChangeForm()
-		return dict(passwordChangeForm=passwordChangeForm)
-	else:
-		login_form = LoginForm()
-		return dict(login_form=login_form)
+    if current_user.is_authenticated:
+        passwordChangeForm = PasswordChangeForm()
+        return dict(passwordChangeForm=passwordChangeForm)
+    else:
+        login_form = LoginForm()
+        return dict(login_form=login_form)
 
 # # Make sure schools is populated
 # from nexnest.data import school_gen
+
+
+# Flask Admin Setup
+from flask_admin import Admin
+
+admin = Admin(app, name='Nexnest', template_mode='bootstrap3')
+
+# Flask Admin Model Views
+from flask_admin.contrib.sqla import ModelView
+
+
+class AdminModelView(ModelView):
+    def is_accessible(self):
+        return True
+        # return current_user.isAdmin # TURN ON FOR PRODUCTION
+
+    def inaccessible_callback(self, name, **kwargs):
+        # redirect to login page if user doesn't have access
+        return redirect(url_for('indexs.index'))
+
+
+admin.add_view(AdminModelView(User, session))
+admin.add_view(AdminModelView(Group, session))
+admin.add_view(AdminModelView(Listing, session))
+admin.add_view(AdminModelView(Message, session))
+admin.add_view(AdminModelView(Landlord, session))
+admin.add_view(AdminModelView(School, session))
+admin.add_view(AdminModelView(Tour, session))
+admin.add_view(AdminModelView(TourMessage, session))
+admin.add_view(AdminModelView(GroupMessage, session))
+admin.add_view(AdminModelView(DirectMessage, session))

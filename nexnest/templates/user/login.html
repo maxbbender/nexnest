@@ -10,7 +10,7 @@
                     <h3 class="card-header">Login to NexNest</h3>
                     <div class="card-block">
         				{% from "_formhelpers.html" import render_field %}
-        				<form action="{{url_for('users.process_login')}}" method="POST">
+        				<form action="{{url_for('users.login')}}" method="POST">
         					{{login_form.csrf_token}}
 							  	<dl>
 								    {{ render_field(login_form.email, class="form-control", type="email") }}

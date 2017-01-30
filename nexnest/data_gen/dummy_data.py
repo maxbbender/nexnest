@@ -15,6 +15,7 @@ user5 = UserFactory(school=s)
 user6 = UserFactory(school=s)
 user7 = UserFactory(school=s)
 user8 = UserFactory(school=s)
+admin = UserFactory(role='admin', email='admin@admin.com')
 
 session.commit()
 

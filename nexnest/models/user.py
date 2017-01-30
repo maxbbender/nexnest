@@ -222,3 +222,7 @@ class User(Base):
     @property
     def isGroupLeader(self):
         return len(self.groupLeader) > 0
+
+    @property
+    def isAdmin(self):
+        return self.role == 'admin'

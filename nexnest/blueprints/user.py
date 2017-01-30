@@ -68,8 +68,9 @@ def login():
 
         if login_form.validate():
 
-            user = session.query(User).filter_by(
-                email=login_form.email.data).first()
+            user = session.query(User) \
+                .filter_by(email=login_form.email.data) \
+                .first()
 
             # Does the user exist
             if user is not None:
@@ -77,17 +78,16 @@ def login():
 
                     if check_password(user, login_form.password.data):
                         login_user(user)
-                        return redirect('/')
                     else:
-                        flash("Error validating login credentials")
+                        flash("Error validating login credentials", 'danger')
                 else:
-                    flash("User account has been deleted")
+                    flash("User account has been deleted", 'warning')
             else:
-                flash("User not found")
+                flash("User not found", 'warning')
         else:
             flash_errors(login_form)
 
-        return redirect(url_for('users.login'))
+        return login_form.redirect()
 
 
 @users.route('/logout')
@@ -327,9 +327,15 @@ def changePassword():
     passForm = PasswordChangeForm(request.form)
 
     if passForm.validate():
-        current_user.set_password(passForm.newPassword.data)
-        session.commit()
+
+        # Is the old password the same?
+        if check_password(current_user, passForm.oldPassword.data):
+            flash("Password Changed", 'success')
+            current_user.set_password(passForm.newPassword.data)
+            session.commit()
+        else:
+            flash("Password Change Failed, Old Password does not match", 'danger')
     else:
         flash_errors(passForm)
 
-    return redirect(url_for('users.viewUser', userID=current_user.id))
+    return passForm.redirect()
