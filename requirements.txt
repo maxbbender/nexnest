@@ -15,12 +15,12 @@ eralchemy
 
 # misc
 python-dotenv
+authomatic
+readline
 
 # Data Generation
 factory_boy
 Faker
 
-readline
 
-# Admin
-flask-admin
+

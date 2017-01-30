@@ -131,3 +131,7 @@ admin.add_view(AdminModelView(Tour, session))
 admin.add_view(AdminModelView(TourMessage, session))
 admin.add_view(AdminModelView(GroupMessage, session))
 admin.add_view(AdminModelView(DirectMessage, session))
+
+
+# OAUTH
+from nexnest.config import CONFIG

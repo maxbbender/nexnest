@@ -1,5 +1,4 @@
-from flask import Blueprint
-from flask import render_template, request, redirect, url_for, flash, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, make_response
 from flask_login import login_user, logout_user, current_user, login_required
 
 from nexnest.application import session
@@ -17,7 +16,11 @@ from nexnest.utils.file import allowed_file
 
 from sqlalchemy import func, asc, or_, and_
 
+from nexnest.config import CONFIG
+
 from werkzeug.utils import secure_filename
+
+from authomatic.adapters import WerkzeugAdapter
 
 import os
 
@@ -89,6 +92,11 @@ def login():
 
         return login_form.redirect()
 
+
+@users.route('/login/oauth/<providerName>')
+def loginOA(providerName):
+    response = make_response()
+    result = authomatic.login(WerkzeugAdapter(request, response), provider_name)
 
 @users.route('/logout')
 def logout():
