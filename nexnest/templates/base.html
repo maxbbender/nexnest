@@ -43,7 +43,7 @@
                                         <img src="{{current_user.profile_image}}"
                                             alt="Profile Image" class="img-responsive" />
                                         <p class="text-center small">
-                                            <a href="{{url_for('users.updateProfilePicture')}}">Change Photo</a></p>
+                                            <a href="#" data-toggle="modal" data-target="#changeAvatarModal">Change Avatar</a>
                                     </div>
                                     <div class="col-md-7">
                                         <span>{{current_user.fname}} {{current_user.lname}}</span>
@@ -105,6 +105,7 @@
 		      {% include 'loginModel.html' %}
             {% else %}
               {% include 'changePasswordModal.html' %}
+              {% include 'changeAvatarModal.html' %}
             {% endif %}
         {% else %}
             {% include 'loginModel.html' %}
@@ -123,6 +124,11 @@
               var button = $(event.relatedTarget)
               var modal = $(this)
               modal.find('.modal-title').text('Change Password')
+            });
+            $('#changeAvatarModal').on('show.bs.modal', function (event) {
+              var button = $(event.relatedTarget)
+              var modal = $(this)
+              modal.find('.modal-title').text('Change Profile Picture')
             });
 		</script>
 	</body>

@@ -132,7 +132,7 @@
 	        								                    	</div>
 	        								                    	<div class="col-xs-5" style="text-align: right;">
 	        								                    		{% if tour.last_requested == 'landlord' %}
-	        								                    			<button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the the group's leader to confrim the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+	        								                    			<button type="button" id="pending{{tour.group.id}}" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the the group's leader to confirm the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
 	        								                    		{% else %}
 	            								                    		<a href='#' class="btn btn-success" data-tourID="{{tour.id}}" data-tourtime="{{tour.time_requested}}" data-toggle="modal" data-target="#confirmTourModal">Accept Tour</a>
 	            								                    		<a href='#' class="btn btn-primary" data-tourID="{{tour.id}}" data-groupID="{{tour.group.id}}"  data-toggle="modal" data-target="#suggestTimeTourModal">Suggest Different Time</a>
@@ -147,19 +147,66 @@
 	        								                    		<br> {{ listing.street }}, {{ listing.city }} {{ listing.state }}</h3>
 	        								                    		<small>Lease Period: {{ listing.start_date }} - {{ listing.end_date }}</small>
 	        								                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
+	        								                    		<br><br>
+	        								                    		<a href="{{ url_for('tours.viewTour', tourID=tour.id) }}" class="btn btn-primary">View Tour Request</a>
 	        								                    	</div>
 	        								                    	<div class="col-xs-8">
-	        								                    		<h3><strong>Group requesting the tour: {{tour.group.name}}</strong></h3>
+	        								                    		<h3><strong>Group requesting the tour: {{tour.group.name}}</strong>({{tour.group.users|count}} Members)</h3>
 	        								                    		<strong>Group's intended lease period:</strong> {{ tour.group.start_date }} - {{ tour.group.end_date }}
 	        								                    		<br><br>
-	        								                    		<strong>Members in group:</strong>
+	        								                    		<strong>Group Leader:</strong>
 	        								                    		{% for user in tour.group.acceptedUsers %}
-	        								                    			{% with group=tour.group %}                                    
-	        								                    		    	{% include 'group/member.html' %}
+	        								                    			{% with group=tour.group %}         
+	        								                    				<div class="row">
+	        								                    					<div class="col-xs-8">
+	        								                    						{% if group.leader_id == user.id %}
+	        								                    		    				{% include 'group/member.html' %}
+	        								                    						{% endif %}
+	        								                    		    		</div>
+	        								                    		    	</div>
 	        								                    		    {% endwith %}
 	        								                    		{% endfor %}
+	                    			      					    		<div id="allMembers{{tour.group.id}}" style="display: none;">
+	                    		      					    				{% for user in tour.group.acceptedUsers %}
+	                    		      					    					{% with group=tour.group %}         
+	                    		      					    						<div class="row">
+	                    		      					    							<div class="col-xs-8">
+	                    		      					    								{% if not group.leader_id == user.id %}
+	                    		      					    				    				{% include 'group/member.html' %}
+	                    		      					    				    			{% endif %}
+	                    		      					    				    		</div>
+	                    		      					    				    	</div>
+	                    		      					    				    {% endwith %}
+	                    		      					    				{% endfor %}
+	                    			      					    		</div>
+	                    			      					    		<button class="btn btn-info" id="allMembersToggle{{tour.group.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{tour.group.users|count-1}} members</button>
+	                    			      					    		<script type="text/javascript">
+	                    			      					    			//Show/hide all members of group
+	                    			      					    			$("#allMembersToggle{{tour.group.id}}").click(function(){
+	                    			      					    			    $("#allMembers{{tour.group.id}}").toggle();
+	                    			      					    			    if($("#allMembersToggle{{tour.group.id}}").text()==" See other {{tour.group.users|count-1}} members")
+	                    			      					    			    	$("#allMembersToggle{{tour.group.id}}").text("Hide other members");
+	                    			      					    			    else
+	                    			      					    			    	$("#allMembersToggle{{tour.group.id}}").text(" See other {{tour.group.users|count-1}} members");	
+	                    			      					    			});
+
+	                    			      					    			$(document).ready(function(){
+	                    			      					    			    $('#confirmed{{tour.group.id}}').popover({
+	                    			      					    			        html: true,
+	                    			      					    			        trigger: 'focus',
+	                    			      					    			        template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title" style="background-color: #449d44; text-align: center; color: #ffffff;"></h3><div class="popover-content"></div></div>'
+	                    			      					    			    });
+
+	                    			      					    			    $('#pending{{tour.group.id}}').popover({
+	                    			      					    			        html: true,
+	                    			      					    			        trigger: 'focus',
+	                    			      					    			        template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title" style="background-color: #ec971f; text-align: center; color: #ffffff;"></h3><div class="popover-content"></div></div>'
+	                    			      					    			    });
+	                    			      					    			});
+	                    			      					    		</script>
 	        								                    		<br>
-	        								                    		<a href="{{ url_for('tours.viewTour', tourID=tour.id) }}" class="btn btn-primary">View Tour Request</a>
+	        								                    		<br>
+	        								                    		
 	        								                    	</div>
 	        								                    </div>
 	        							                    </div>
@@ -188,19 +235,63 @@
 	        								                    		<br> {{ listing.street }}, {{ listing.city }} {{ listing.state }}</h3>
 	        								                    		<small>Lease Period: {{ listing.start_date }} - {{ listing.end_date }}</small>
 	        								                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
+	        								                    		<br><br>
+	        								                    		<a href="{{ url_for('tours.viewTour', tourID=tour.id) }}" class="btn btn-primary">View Tour Request</a>
 	        								                    	</div>
 	        								                    	<div class="col-xs-8">
 	        								                    		<h3><strong>Group going on tour: {{tour.group.name}}</strong></h3>
 	        								                    		<strong>Group's intended lease period:</strong> {{ tour.group.start_date }} - {{ tour.group.end_date }}
 	        								                    		<br><br>
-	        								                    		<strong>Members in group:</strong>
+	        								                    		<strong>Group Leader:</strong>
 	        								                    		{% for user in tour.group.acceptedUsers %}
-	        								                    			{% with group=tour.group %}                                    
-	        								                    		    	{% include 'group/member.html' %}
+	        								                    			{% with group=tour.group %}         
+	        								                    				<div class="row">
+	        								                    					<div class="col-xs-8">
+	        								                    						{% if group.leader_id == user.id %}
+	        								                    		    				{% include 'group/member.html' %}
+	        								                    						{% endif %}
+	        								                    		    		</div>
+	        								                    		    	</div>
 	        								                    		    {% endwith %}
 	        								                    		{% endfor %}
-	        								                    		<br>
-	        								                    		<a href="{{ url_for('tours.viewTour', tourID=tour.id) }}" class="btn btn-primary">View Tour</a>
+	                    			      					    		<div id="allMembers{{tour.group.id}}" style="display: none;">
+	                    		      					    				{% for user in tour.group.acceptedUsers %}
+	                    		      					    					{% with group=tour.group %}         
+	                    		      					    						<div class="row">
+	                    		      					    							<div class="col-xs-8">
+	                    		      					    								{% if not group.leader_id == user.id %}
+	                    		      					    				    				{% include 'group/member.html' %}
+	                    		      					    				    			{% endif %}
+	                    		      					    				    		</div>
+	                    		      					    				    	</div>
+	                    		      					    				    {% endwith %}
+	                    		      					    				{% endfor %}
+	                    			      					    		</div>
+	                    			      					    		<button class="btn btn-info" id="allMembersToggle{{tour.group.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{tour.group.users|count-1}} members</button>
+	                    			      					    		<script type="text/javascript">
+	                    			      					    			//Show/hide all members of group
+	                    			      					    			$("#allMembersToggle{{tour.group.id}}").click(function(){
+	                    			      					    			    $("#allMembers{{tour.group.id}}").toggle();
+	                    			      					    			    if($("#allMembersToggle{{tour.group.id}}").text()==" See other {{tour.group.users|count-1}} members")
+	                    			      					    			    	$("#allMembersToggle{{tour.group.id}}").text("Hide other members");
+	                    			      					    			    else
+	                    			      					    			    	$("#allMembersToggle{{tour.group.id}}").text(" See other {{tour.group.users|count-1}} members");	
+	                    			      					    			});
+
+	                    			      					    			$(document).ready(function(){
+	                    			      					    			    $('#confirmed{{tour.group.id}}').popover({
+	                    			      					    			        html: true,
+	                    			      					    			        trigger: 'focus',
+	                    			      					    			        template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title" style="background-color: #449d44; text-align: center; color: #ffffff;"></h3><div class="popover-content"></div></div>'
+	                    			      					    			    });
+
+	                    			      					    			    $('#pending{{tour.group.id}}').popover({
+	                    			      					    			        html: true,
+	                    			      					    			        trigger: 'focus',
+	                    			      					    			        template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title" style="background-color: #ec971f; text-align: center; color: #ffffff;"></h3><div class="popover-content"></div></div>'
+	                    			      					    			    });
+	                    			      					    			});
+	                    			      					    		</script>
 	        								                    	</div>
 	        								                    </div>
 	        							                    </div>
@@ -311,20 +402,6 @@
 	   $('[data-toggle="offcanvas"]').click(function(){
 	       $("#navigation").toggleClass("hidden-xs");
 	   });
-	});
-
-	$(document).ready(function(){
-	    $('#confirmed').popover({
-	        html: true,
-	        trigger: 'focus',
-	        template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title" style="background-color: #449d44; text-align: center; color: #ffffff;"></h3><div class="popover-content"></div></div>'
-	    });
-
-	    $('#pending').popover({
-	        html: true,
-	        trigger: 'focus',
-	        template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title" style="background-color: #ec971f; text-align: center; color: #ffffff;"></h3><div class="popover-content"></div></div>'
-	    });
 	});
 
 	//Request Tour Modal
