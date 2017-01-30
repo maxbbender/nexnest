@@ -45,6 +45,7 @@ class UserFactory(factory.alchemy.SQLAlchemyModelFactory):
     fname = factory.LazyAttribute(lambda x: fake.first_name())
     lname = factory.LazyAttribute(lambda x: fake.last_name())
     school = factory.SubFactory(SchoolFactory)
+    role = 'user'
 
 
 class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
