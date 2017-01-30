@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 	    <link href="{{url_for('static', filename='css/bootstrap-flex.css')}}" rel="stylesheet">
 	    <link href="{{url_for('static', filename='css/customStyling.css')}}" rel="stylesheet">
-	    <link rel="stylesheet" href="{{url_for('static', filename='font-awesome-4.6.3/css/font-awesome.min.css')}}">
+	    <link rel="stylesheet" href="{{url_for('static', filename='font-awesome-4.7.0/css/font-awesome.min.css')}}">
         <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
         <script src="https://unpkg.com/flatpickr"></script>
 	    <script src="{{url_for('static', filename='js/jquery-latest.js')}}"></script>
@@ -73,8 +73,13 @@
 		                <div class="dropdown">
 			                <i class="fa fa-bars fa-2x dropdown-toggle" style="padding-top: 4px;" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
 			                <div class="dropdown-menu dropdown-menu-right" style="overflow:hidden;" aria-labelledby="dropdownMenuButton">
-				                <a class="dropdown-item" href="{{ url_for('users.myGroups') }}">My Groups</a>
+                                {% if current_user.isLandlord %}
+                                    <a class="dropdown-item" href="{{ url_for('landlords.landlordDashboard') }}">My Dashboard</a>
+                                {% else %}
+				                    <a class="dropdown-item" href="{{ url_for('users.myGroups') }}">My Groups</a>
+                                {% endif %}
 				                <a class="dropdown-item" href="{{ url_for('users.viewUser', userID=current_user.id) }}">My Account</a>
+                                <a class="dropdown-item" href="{{ url_for('users.directMessagesAll') }}">My Messages</a>
 		                	</div>
 		               </div>
 	               </li>
