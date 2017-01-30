@@ -94,134 +94,136 @@
 	        <div class="tab-pane" id="toursTab" role="tabpanel" style="padding: 0px;">
 	        	<div class="row">
 			    	<div class="col-xs-1"></div>
-			    	<div class="col-xs-10">
+			    	<div class="col-xs-10" style="width: 100%">
 				    	<div class="callout-block text-center fade-in-b">
 				    		<h1>Tours</h1>
 				    	</div>
 			    	</div>
 			    </div>
 		    	<br>
-	        	<div class="col-xs-1"></div>
-	        	<div class="col-md-10 col-lg-10 col-xl-10" style="padding-left: 5%;">
-	        	    <div class="row">
-	        	        <div class="card" style="width:100%; border: none;">
-	        	            <div class="card-block">
-	        	                <ul class="nav nav-tabs">
-	        	                    <li class="nav-item">
-	        	                        <a class="nav-link active" data-toggle="tab" href="#requestedToursTab" role="tab">Requested Tours</a>
-	        	                    </li>
-	        	                    <li class="nav-item">
-	        	                        <a class="nav-link" data-toggle="tab" href="#scheduledToursTab" role="tab">Scheduled Tours</a>
-	        	                    </li>
-	        	                    <li class="nav-item">
-	        	                        <a class="nav-link" data-toggle="tab" href="#completedToursTab" role="tab">Completed Tours</a>
-	        	                    </li>
-	        	                </ul>
-	        	                <br>
-	        	                <div class="tab-content">
-	        	                    <div class="tab-pane active" id="requestedToursTab" role="tabpanel" style="padding: 0px;">
-	        	                        {% for listing in listings %}
-		            						{% for tour in listing.tours %}
-		            							{% if not tour.tour_confirmed %}
-        							                <div class="card">
-        							                    <div class="card-header">
-        								                    <div class="row">
-        								                    	<div class="col-xs-7">
-        								                    		<a href="{{ url_for('tours.viewTour', tourID=tour.id) }}"><h3><strong>Tour Requested on: {{ tour.time_requested }}</strong></h3></a>
-        								                    	</div>
-        								                    	<div class="col-xs-5" style="text-align: right;">
-        								                    		{% if tour.last_requested == 'landlord' %}
-        								                    			<button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the the group's leader to confrim the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
-        								                    		{% else %}
-            								                    		<a href='#' class="btn btn-success" data-tourID="{{tour.id}}" data-tourtime="{{tour.time_requested}}" data-toggle="modal" data-target="#confirmTourModal">Accept Tour</a>
-            								                    		<a href='#' class="btn btn-primary" data-tourID="{{tour.id}}" data-groupID="{{tour.group.id}}"  data-toggle="modal" data-target="#suggestTimeTourModal">Suggest Different Time</a>
-        								                    		{% endif %}
-        								                    	</div>
-        								                    </div>			                    
-        							                    </div>
-        							                    <div class="card-block">
-        								                    <div class="row">
-        								                    	<div class="col-xs-4">
-        								                    		<h3><strong>Tour requsted for:</strong>
-        								                    		<br> {{ listing.street }}, {{ listing.city }} {{ listing.state }}</h3>
-        								                    		<small>Lease Period: {{ listing.start_date }} - {{ listing.end_date }}</small>
-        								                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
-        								                    	</div>
-        								                    	<div class="col-xs-8">
-        								                    		<h3><strong>Group requesting the tour: {{tour.group.name}}</strong></h3>
-        								                    		<strong>Group's intended lease period:</strong> {{ tour.group.start_date }} - {{ tour.group.end_date }}
-        								                    		<br><br>
-        								                    		<strong>Members in group:</strong>
-        								                    		{% for user in tour.group.acceptedUsers %}
-        								                    			{% with group=tour.group %}                                    
-        								                    		    	{% include 'group/member.html' %}
-        								                    		    {% endwith %}
-        								                    		{% endfor %}
-        								                    		<br>
-        								                    		<a href="{{ url_for('tours.viewTour', tourID=tour.id) }}" class="btn btn-primary">View Tour Request</a>
-        								                    	</div>
-        								                    </div>
-        							                    </div>
-        							                </div>
-		            							{% endif %}
-		            							<br>
+		    	<div class="row">
+		        	<div class="col-xs-1"></div>
+		        	<div class="col-md-10 col-lg-10 col-xl-10">
+		        	    <div class="row">
+		        	        <div class="card" style="width:100%; border: none;">
+		        	            <div class="card-block">
+		        	                <ul class="nav nav-tabs">
+		        	                    <li class="nav-item">
+		        	                        <a class="nav-link active" data-toggle="tab" href="#requestedToursTab" role="tab">Requested Tours</a>
+		        	                    </li>
+		        	                    <li class="nav-item">
+		        	                        <a class="nav-link" data-toggle="tab" href="#scheduledToursTab" role="tab">Scheduled Tours</a>
+		        	                    </li>
+		        	                    <li class="nav-item">
+		        	                        <a class="nav-link" data-toggle="tab" href="#completedToursTab" role="tab">Completed Tours</a>
+		        	                    </li>
+		        	                </ul>
+		        	                <br>
+		        	                <div class="tab-content">
+		        	                    <div class="tab-pane active" id="requestedToursTab" role="tabpanel" style="padding: 0px;">
+		        	                        {% for listing in listings %}
+			            						{% for tour in listing.tours %}
+			            							{% if not tour.tour_confirmed %}
+	        							                <div class="card">
+	        							                    <div class="card-header">
+	        								                    <div class="row">
+	        								                    	<div class="col-xs-7">
+	        								                    		<a href="{{ url_for('tours.viewTour', tourID=tour.id) }}"><h3><strong>Tour Requested on: {{ tour.time_requested }}</strong></h3></a>
+	        								                    	</div>
+	        								                    	<div class="col-xs-5" style="text-align: right;">
+	        								                    		{% if tour.last_requested == 'landlord' %}
+	        								                    			<button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the the group's leader to confrim the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+	        								                    		{% else %}
+	            								                    		<a href='#' class="btn btn-success" data-tourID="{{tour.id}}" data-tourtime="{{tour.time_requested}}" data-toggle="modal" data-target="#confirmTourModal">Accept Tour</a>
+	            								                    		<a href='#' class="btn btn-primary" data-tourID="{{tour.id}}" data-groupID="{{tour.group.id}}"  data-toggle="modal" data-target="#suggestTimeTourModal">Suggest Different Time</a>
+	        								                    		{% endif %}
+	        								                    	</div>
+	        								                    </div>			                    
+	        							                    </div>
+	        							                    <div class="card-block">
+	        								                    <div class="row">
+	        								                    	<div class="col-xs-4">
+	        								                    		<h3><strong>Tour requsted for:</strong>
+	        								                    		<br> {{ listing.street }}, {{ listing.city }} {{ listing.state }}</h3>
+	        								                    		<small>Lease Period: {{ listing.start_date }} - {{ listing.end_date }}</small>
+	        								                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
+	        								                    	</div>
+	        								                    	<div class="col-xs-8">
+	        								                    		<h3><strong>Group requesting the tour: {{tour.group.name}}</strong></h3>
+	        								                    		<strong>Group's intended lease period:</strong> {{ tour.group.start_date }} - {{ tour.group.end_date }}
+	        								                    		<br><br>
+	        								                    		<strong>Members in group:</strong>
+	        								                    		{% for user in tour.group.acceptedUsers %}
+	        								                    			{% with group=tour.group %}                                    
+	        								                    		    	{% include 'group/member.html' %}
+	        								                    		    {% endwith %}
+	        								                    		{% endfor %}
+	        								                    		<br>
+	        								                    		<a href="{{ url_for('tours.viewTour', tourID=tour.id) }}" class="btn btn-primary">View Tour Request</a>
+	        								                    	</div>
+	        								                    </div>
+	        							                    </div>
+	        							                </div>
+			            							{% endif %}
+			            							<br>
+			            						{% endfor %}
 		            						{% endfor %}
-	            						{% endfor %}
-	        	                    </div>
-	        	                    <div class="tab-pane" id="scheduledToursTab" role="tabpanel" style="padding: 0px;">
-	        	                        {% for listing in listings %}
-		            						{% for tour in listing.tours %}
-		            							{% if tour.tour_confirmed %}
-		                							<div class="card">
-        							                    <div class="card-header">
-        								                    <div class="row">
-        								                    	<div class="col-xs-7">
-        								                    		<a href="{{ url_for('tours.viewTour', tourID=tour.id) }}"><h3><strong>Tour Scheduled for: {{ tour.time_requested }}</strong></h3></a>
-        								                    	</div>
-        								                    </div>			                    
-        							                    </div>
-        							                    <div class="card-block">
-        								                    <div class="row">
-        								                    	<div class="col-xs-4">
-        								                    		<h3><strong>Tour of:</strong>
-        								                    		<br> {{ listing.street }}, {{ listing.city }} {{ listing.state }}</h3>
-        								                    		<small>Lease Period: {{ listing.start_date }} - {{ listing.end_date }}</small>
-        								                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
-        								                    	</div>
-        								                    	<div class="col-xs-8">
-        								                    		<h3><strong>Group going on tour: {{tour.group.name}}</strong></h3>
-        								                    		<strong>Group's intended lease period:</strong> {{ tour.group.start_date }} - {{ tour.group.end_date }}
-        								                    		<br><br>
-        								                    		<strong>Members in group:</strong>
-        								                    		{% for user in tour.group.acceptedUsers %}
-        								                    			{% with group=tour.group %}                                    
-        								                    		    	{% include 'group/member.html' %}
-        								                    		    {% endwith %}
-        								                    		{% endfor %}
-        								                    		<br>
-        								                    		<a href="{{ url_for('tours.viewTour', tourID=tour.id) }}" class="btn btn-primary">View Tour</a>
-        								                    	</div>
-        								                    </div>
-        							                    </div>
-        							                </div>
-		            							{% endif %}
+		        	                    </div>
+		        	                    <div class="tab-pane" id="scheduledToursTab" role="tabpanel" style="padding: 0px;">
+		        	                        {% for listing in listings %}
+			            						{% for tour in listing.tours %}
+			            							{% if tour.tour_confirmed %}
+			                							<div class="card">
+	        							                    <div class="card-header">
+	        								                    <div class="row">
+	        								                    	<div class="col-xs-7">
+	        								                    		<a href="{{ url_for('tours.viewTour', tourID=tour.id) }}"><h3><strong>Tour Scheduled for: {{ tour.time_requested }}</strong></h3></a>
+	        								                    	</div>
+	        								                    </div>			                    
+	        							                    </div>
+	        							                    <div class="card-block">
+	        								                    <div class="row">
+	        								                    	<div class="col-xs-4">
+	        								                    		<h3><strong>Tour of:</strong>
+	        								                    		<br> {{ listing.street }}, {{ listing.city }} {{ listing.state }}</h3>
+	        								                    		<small>Lease Period: {{ listing.start_date }} - {{ listing.end_date }}</small>
+	        								                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
+	        								                    	</div>
+	        								                    	<div class="col-xs-8">
+	        								                    		<h3><strong>Group going on tour: {{tour.group.name}}</strong></h3>
+	        								                    		<strong>Group's intended lease period:</strong> {{ tour.group.start_date }} - {{ tour.group.end_date }}
+	        								                    		<br><br>
+	        								                    		<strong>Members in group:</strong>
+	        								                    		{% for user in tour.group.acceptedUsers %}
+	        								                    			{% with group=tour.group %}                                    
+	        								                    		    	{% include 'group/member.html' %}
+	        								                    		    {% endwith %}
+	        								                    		{% endfor %}
+	        								                    		<br>
+	        								                    		<a href="{{ url_for('tours.viewTour', tourID=tour.id) }}" class="btn btn-primary">View Tour</a>
+	        								                    	</div>
+	        								                    </div>
+	        							                    </div>
+	        							                </div>
+			            							{% endif %}
+			            						{% endfor %}
 		            						{% endfor %}
-	            						{% endfor %}
-	        	                    </div>
-	        	                    <div class="tab-pane" id="completedToursTab" role="tabpanel" style="padding: 0px;">
-	        	                        {% for listing in listings %}
-		            						{% for tour in listing.tours %}
-		            							{% if tour.tour_confirmed %}
-		            								
-		            							{% endif %}
+		        	                    </div>
+		        	                    <div class="tab-pane" id="completedToursTab" role="tabpanel" style="padding: 0px;">
+		        	                        {% for listing in listings %}
+			            						{% for tour in listing.tours %}
+			            							{% if tour.tour_confirmed %}
+			            								
+			            							{% endif %}
+			            						{% endfor %}
 		            						{% endfor %}
-	            						{% endfor %}
-	        	                    </div>
-	        	                </div>
-	        	            </div>
-	        	        </div>
-	        	    </div>
-	        	</div>
+		        	                    </div>
+		        	                </div>
+		        	            </div>
+		        	        </div>
+		        	    </div>
+		        	</div>
+		        </div>
 	        </div>
 	        <div class="tab-pane" id="requestsTab" role="tabpanel">
 	            Housing Requests
