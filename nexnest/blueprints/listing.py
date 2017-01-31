@@ -4,8 +4,7 @@ from flask_login import current_user, login_required
 
 from nexnest.application import session
 
-from nexnest.forms import ListingForm, SuggestListingForm, TourForm, RequestListingForm
-
+from nexnest.forms import ListingForm, SuggestListingForm, TourForm, GroupListingForm
 from nexnest.models.listing import Listing
 from nexnest.models.landlord_listing import LandlordListing
 

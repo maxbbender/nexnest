@@ -171,7 +171,13 @@ class PasswordChangeForm(RedirectForm):
     newPasswordConfirm = PasswordField('Confirm Password', [InputRequired()])
 
 
-class RequestListingForm(RedirectForm):
+class GroupListingForm(RedirectForm):
     groupID = HiddenField('groupID', [InputRequired()])
     listingID = HiddenField('listingID', [InputRequired()])
     reqDescription = TextAreaField('Aything you would like to say to the landlord to go along with your request', [InputRequired()])
+
+
+class GroupListingMessageForm(RedirectForm):
+    groupListingID = HiddenField('groupID', [InputRequired()])
+    content = TextAreaField('Message',
+                            [InputRequired("You must put in a message")])

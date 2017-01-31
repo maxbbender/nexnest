@@ -7,6 +7,7 @@ from nexnest.models.landlord_listing import LandlordListing
 from nexnest.models.group import Group
 from nexnest.models.group_user import GroupUser
 from nexnest.models.group_listing import GroupListing
+from nexnest.models.group_listing_message import GroupListingMessage
 from nexnest.models.message import Message
 from nexnest.models.group_message import GroupMessage
 from nexnest.models.school import School
@@ -137,7 +138,6 @@ class GroupListingFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     group = factory.SubFactory(GroupFactory)
     listing = factory.SubFactory(ListingFactory)
-    req_description = factory.LazyAttribute(lambda x: fake.paragraph())
 
 
 class MessageFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -185,5 +185,15 @@ class TourMessageFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session = session
 
     tour = factory.SubFactory(TourFactory)
+    content = factory.LazyAttribute(lambda x: fake.paragraph(3))
+    user = factory.SubFactory(UserFactory)
+
+
+class GroupListingMessageFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = GroupListingMessage
+        sqlalchemy_session = session
+
+    groupListing = factory.SubFactory(GroupListingFactory)
     content = factory.LazyAttribute(lambda x: fake.paragraph(3))
     user = factory.SubFactory(UserFactory)
