@@ -8,6 +8,8 @@ from sqlalchemy.orm import relationship
 
 from sqlalchemy.schema import UniqueConstraint
 
+from flask import flash
+
 
 # class PostReport(Base):
 class GroupListing(Base):
@@ -72,3 +74,12 @@ class GroupListing(Base):
             return 'Accepted'
         else:
             return 'Not Accepted'
+
+    def isViewableBy(self, user):
+        if user in self.group.getUsers():
+            return True
+        elif user in self.listing.landLordsAsUsers():
+            return True
+        else:
+            flash("You do not have permissions to view this housing request", 'danger')
+            return False

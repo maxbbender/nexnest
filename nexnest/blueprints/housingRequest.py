@@ -4,8 +4,7 @@ from flask_login import login_required, current_user
 
 from nexnest.application import session
 
-from nexnest.forms import RequestListingForm
-
+from nexnest.forms import GroupListingForm, GroupListingMessageForm
 from nexnest.models.group import Group
 from nexnest.models.group_listing import GroupListing
 from nexnest.models.group_listing_message import GroupListingMessage
@@ -18,7 +17,7 @@ housingRequests = Blueprint('housingRequests', __name__, template_folder='../tem
 @housingRequests.route('/houseRequest/create', methods=['POST'])
 @login_required
 def create():
-    form = RequestListingForm(request.form)
+    form = GroupListingForm(request.form)
 
     if form.validate():
 
@@ -38,10 +37,16 @@ def create():
 
                     # Lets create a new group listing!
                     newGL = GroupListing(group,
-                                         listing,
-                                         form.reqDescription.data)
+                                         listing)
 
                     session.add(newGL)
+                    session.commit()
+
+                    newGLM = GroupListingMessage(groupListing=newGL,
+                                                 content=form.reqDescription.data,
+                                                 user=current_user)
+
+                    session.add(newGLM)
                     session.commit()
 
                     return redirect(url_for('housingRequests.view', id=newGL.id))
@@ -55,7 +60,7 @@ def create():
     return form.redirect()
 
 
-@housingRequests.route('/houseRequest/view/<id>')
+@housingRequests.route('/houseRequest/view/<id>', methods=['GET'])
 @login_required
 def view(id):
     housingRequest = session.query(GroupListing) \
@@ -66,15 +71,43 @@ def view(id):
         .filter_by(groupListingID=housingRequest.id) \
         .first()
 
+    messageForm = GroupListingMessageForm()
+
     if housingRequest is not None:
 
-        if current_user in housingRequest.group.getUsers():
+        if housingRequest.isViewableBy(current_user):
             return render_template('housingRequestView.html',
                                    housingRequest=housingRequest,
-                                   messages=messages)
-        else:
-            flash("You are not allowed to view this page")
+                                   messages=messages,
+                                   messageForm=messageForm)
     else:
         flash("Housing Request does not exist")
 
     return redirect(url_for('indexs.index'))
+
+
+@housingRequests.route('/houseRequest/message', methods=['POST'])
+@login_required
+def messageCreate():
+    form = GroupListingMessageForm(request.form)
+
+    if form.validate():
+
+        # Group Listing
+        gl = session.query(GroupListing).filter_by(id=form.groupListingID.data).first()
+
+        if gl is not None:
+
+            if gl.isViewableBy(current_user):
+                newGLM = GroupListingMessage(groupListing=gl,
+                                             content=form.content.data,
+                                             user=current_user)
+                session.add(newGLM)
+                session.commit()
+
+        else:
+            ("House Request does not exist", 'info')
+    else:
+        flash_errors(form)
+
+    return form.redirect()
