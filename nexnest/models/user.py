@@ -15,6 +15,10 @@ from sqlalchemy.orm import relationship
 
 from flask import flash
 
+from faker import Faker
+
+fake = Faker()
+
 
 class User(Base):
     __tablename__ = 'users'
@@ -36,6 +40,8 @@ class User(Base):
     date_modified = db.Column(db.String(128), nullable=False)
     school_id = db.Column(db.Integer(), db.ForeignKey('schools.id'))
     active = db.Column(db.Boolean)
+    twitter_token = db.Column(db.Text)
+    twitter_secret = db.Column(db.Text)
     sentDM = relationship('DirectMessage',
                           backref='source_user',
                           foreign_keys='[DirectMessage.source_user_id]')
@@ -50,11 +56,11 @@ class User(Base):
     tourMessages = relationship("TourMessage", backref='user')
 
     def __init__(self,
-                 email,
-                 password,
-                 fname,
-                 lname,
-                 school,
+                 email=None,
+                 password=None,
+                 fname=None,
+                 lname=None,
+                 school=None,
                  role=None,
                  bio=None,
                  website=None,
@@ -62,17 +68,26 @@ class User(Base):
                  phone=None,
                  dob=None,
                  profile_image=None,
+                 twitter_token=None,
+                 twitter_secret=None,
+                 registerType='nexnest'
                  ):
 
-        self.school_id = school.id
-        self.username = email.split("@")[0]
-        self.email = email
+        if registerType == 'nexnest':
+            self.school_id = school.id
+            self.username = email.split("@")[0]
+            self.email = email
+            self.set_password(password)
 
-        self.set_password(password)
+        elif registerType == 'twitter':
+            # SET RANDOM PASSWORD
+            self.set_password(fake.password(length=20, special_chars=True, digits=True, upper_case=True, lower_case=True))
+
+            self.twitter_token = twitter_token
+            self.twitter_secret = twitter_secret
 
         self.fname = fname
         self.lname = lname
-
         self.bio = bio
         self.website = website
         self.location = location
@@ -83,7 +98,11 @@ class User(Base):
             role = 'user'
 
         if profile_image is None:
-            self.profile_image = "https://api.adorable.io/avatars/120/" + self.username
+            if self.username is not None:
+                self.profile_image = "https://api.adorable.io/avatars/120/" + self.username
+            else:
+                self.profile_image = "https://api.adorable.io/avatars/120/tmp"
+
         else:
             self.profile_image = profile_image
 

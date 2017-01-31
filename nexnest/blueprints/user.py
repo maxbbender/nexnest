@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, make_response
 from flask_login import login_user, logout_user, current_user, login_required
 
-from nexnest.application import session
+from nexnest.application import session, twitter
 
 from nexnest.models.user import User
 from nexnest.models.group import Group
@@ -89,28 +89,29 @@ def login():
         return login_form.redirect()
 
 
-# @users.route('/login/oauth/<providerName>')
-# def loginOA(providerName):
-#     response = make_response()
-#     result = authomatic.login(
-#         WerkzeugAdapter(request, response),
-#         providerName,
-#         session=session,
-#         session_saver=lambda: app.save_session(session, response)
-#     )
+@users.route('/login/twitter')
+def loginTwitter():
+    return twitter.authorize(callback=url_for('users.authorizeTwitter'))
 
-#     if result:
-#         if result.user:
-#             result.user.update()
-#             print (result.user.name)
-#             print (result.user.id)
-#             return 'yo'
-#         else:
-#             print('nah')
-#             return 'nah'
-#     else:
-#         print('nsssah')
-#         return 'naahshs'
+
+@users.route('/login/twitter/authorized')
+def authorizeTwitter():
+    resp = twitter.authorized_response()
+
+    if resp is None:
+        print("req denied")
+        return 'fuck'
+
+    # Create the new user
+    newUser = User(registerType='twitter',
+                   twitter_token=str(resp['oauth_token']),
+                   twitter_secret=str(resp['oauth_token_secret']))
+    session.add(newUser)
+    session.commit()
+
+    login_user(newUser)
+
+    return redirect(url_for('indexs.index'))
 
 
 @users.route('/logout')

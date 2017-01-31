@@ -13,16 +13,16 @@ def downgrade(migrate_engine):
     pass
 
 
-def downgrade(migrate_engine):
+def upgrade(migrate_engine):
     meta = MetaData(bind=migrate_engine)
 
     users = Table('users', meta, autoload=True)
 
     # password = Column("password", String(128), nullable=False)
     twitter_token = Column("twitter_token", Text())
-    CCCC = Column("XXXX", String(128))
+    twitter_secret = Column("twitter_secret", Text())
 
     # password.create(users)
-    BBBB.create(AAAA)
-    CCCC.create(AAAA)
+    twitter_secret.create(users)
+    twitter_token.create(users)
     pass
