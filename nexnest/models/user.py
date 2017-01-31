@@ -36,6 +36,8 @@ class User(Base):
     date_modified = db.Column(db.String(128), nullable=False)
     school_id = db.Column(db.Integer(), db.ForeignKey('schools.id'))
     active = db.Column(db.Boolean)
+    # twitter_token = db.Column(db.Text)
+    # twitter_secret = db.Column(db.Text)
     sentDM = relationship('DirectMessage',
                           backref='source_user',
                           foreign_keys='[DirectMessage.source_user_id]')
@@ -48,6 +50,7 @@ class User(Base):
     groupMessages = relationship("GroupMessage", backref='user')
     landlord = relationship('Landlord', backref='user')
     tourMessages = relationship("TourMessage", backref='user')
+    groupListingMessages = relationship("GroupListingMessage", backref='user')
 
     def __init__(self,
                  email,
