@@ -16,11 +16,7 @@ from nexnest.utils.file import allowed_file
 
 from sqlalchemy import func, asc, or_, and_
 
-from nexnest.config import CONFIG
-
 from werkzeug.utils import secure_filename
-
-from authomatic.adapters import WerkzeugAdapter
 
 import os
 
@@ -93,10 +89,29 @@ def login():
         return login_form.redirect()
 
 
-@users.route('/login/oauth/<providerName>')
-def loginOA(providerName):
-    response = make_response()
-    result = authomatic.login(WerkzeugAdapter(request, response), provider_name)
+# @users.route('/login/oauth/<providerName>')
+# def loginOA(providerName):
+#     response = make_response()
+#     result = authomatic.login(
+#         WerkzeugAdapter(request, response),
+#         providerName,
+#         session=session,
+#         session_saver=lambda: app.save_session(session, response)
+#     )
+
+#     if result:
+#         if result.user:
+#             result.user.update()
+#             print (result.user.name)
+#             print (result.user.id)
+#             return 'yo'
+#         else:
+#             print('nah')
+#             return 'nah'
+#     else:
+#         print('nsssah')
+#         return 'naahshs'
+
 
 @users.route('/logout')
 def logout():

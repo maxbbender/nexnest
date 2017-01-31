@@ -50,7 +50,22 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = '/login'
 
-# Our Models
+# OAUTH
+from flask_oauthlib.client import OAuth
+
+oauth = OAuth()
+
+from nexnest.oauthProviders import twitter
+
+
+@twitter.tokengetter
+def get_twitter_token(token=None):
+    if current_user.is_authenticated:
+        return (current_user.twitter_token, current_user.twitter_secret)
+    else:
+        return None
+
+# MODELS
 
 from nexnest.models.user import User
 from nexnest.models.school import School
@@ -131,7 +146,3 @@ admin.add_view(AdminModelView(Tour, session))
 admin.add_view(AdminModelView(TourMessage, session))
 admin.add_view(AdminModelView(GroupMessage, session))
 admin.add_view(AdminModelView(DirectMessage, session))
-
-
-# OAUTH
-from nexnest.config import CONFIG

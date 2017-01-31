@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
 
-from nexnest.forms import CreateGroupForm, InviteGroupForm, SuggestListingForm, GroupMessageForm, RequestListingForm
+from nexnest.forms import CreateGroupForm, InviteGroupForm, SuggestListingForm, GroupMessageForm, GroupListingForm
 
 from nexnest.application import session
 
@@ -282,7 +282,7 @@ def removeMember(groupID, userID):
 @groups.route('/group/requestListing', methods=['POST'])
 @login_required
 def requestListing():
-    rLForm = RequestListingForm(request.form)
+    rLForm = GroupListingForm(request.form)
     if rLForm.validate():
         group = session.query(Group) \
             .filter_by(id=rLForm.groupID.data) \

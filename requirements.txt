@@ -4,6 +4,7 @@ Flask-Assets
 Flask-WTF
 Flask-Login
 flask-admin
+Flask-OAuthlib
 
 # Database
 Flask-SQLAlchemy
@@ -15,7 +16,6 @@ eralchemy
 
 # misc
 python-dotenv
-authomatic
 readline
 
 # Data Generation
