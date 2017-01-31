@@ -69,7 +69,7 @@ def view(id):
 
     messages = session.query(GroupListingMessage) \
         .filter_by(groupListingID=housingRequest.id) \
-        .first()
+        .all()
 
     messageForm = GroupListingMessageForm()
 
@@ -78,6 +78,7 @@ def view(id):
         if housingRequest.isViewableBy(current_user):
             return render_template('housingRequestView.html',
                                    housingRequest=housingRequest,
+                                   landlords=housingRequest.listing.landLordsAsUsers(),
                                    messages=messages,
                                    messageForm=messageForm)
     else:
