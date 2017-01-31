@@ -153,3 +153,28 @@ def updateTime(tourID):
         return redirect(url_for('indexs.index'))
 
     return redirect(url_for('tours.viewTour', tourID=tourID))
+
+
+@tours.route('/tour/createMessage', methods=['POST'])
+@login_required
+def createMessage():
+    form = TourMessageForm(request.form)
+
+    if form.validate():
+        tour = session.query(Tour).filter_by(id=form.tour_id.data).first()
+
+        if tour is not None:
+            if tour.isViewableBy(current_user):
+                newTM = TourMessage(tour=tour,
+                                    content=form.content.data,
+                                    user=current_user)
+                session.add(newTM)
+                session.commit()
+
+                return redirect(url_for('tours.viewTour', tourID=tour.id))
+        else:
+            flash("Tour does not exist", 'warning')
+    else:
+        flash_errors(form)
+
+    return form.redirect()
