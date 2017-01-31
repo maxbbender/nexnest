@@ -1,6 +1,6 @@
 from nexnest.application import session
 
-from nexnest.data_gen.factories import UserFactory, ListingFactory, LandlordFactory, LandlordListingFactory, GroupFactory, GroupUserFactory, GroupListingFactory, TourFactory, GroupMessageFactory, SchoolFactory, DirectMessageFactory, TourMessageFactory
+from nexnest.data_gen.factories import *
 
 # Schools
 s = SchoolFactory()
@@ -80,11 +80,6 @@ groupuser11.accepted = True
 
 session.commit()
 
-# GROUP LISTING
-groupListing = GroupListingFactory(group=group1, listing=listing1)
-
-session.commit()
-
 # GROUP MESSAGES
 gmsg1 = GroupMessageFactory(group=group1, user=user2)
 gmsg2 = GroupMessageFactory(group=group1, user=user3)
@@ -122,5 +117,33 @@ tm4 = TourMessageFactory(tour=t1, user=landlord1.user)
 tm1 = TourMessageFactory(tour=t1, user=user3)
 tm1 = TourMessageFactory(tour=t1, user=user4)
 tm1 = TourMessageFactory(tour=t1, user=landlord1.user)
+
+session.commit()
+
+# GROUP LISTING
+gl1 = GroupListingFactory(group=group1, listing=listing1)
+gl2 = GroupListingFactory(group=group1, listing=listing2)
+
+gl2.accepted = True
+gl2.completed = True
+
+session.commit()
+
+# GROUP LISTING MESSAGES
+glm1 = GroupListingMessageFactory(groupListing=gl1, user=user2)
+glm2 = GroupListingMessageFactory(groupListing=gl1, user=user3)
+glm3 = GroupListingMessageFactory(groupListing=gl1, user=user2)
+glm4 = GroupListingMessageFactory(groupListing=gl1, user=user5)
+glm5 = GroupListingMessageFactory(groupListing=gl1, user=user4)
+glm6 = GroupListingMessageFactory(groupListing=gl1, user=user3)
+glm7 = GroupListingMessageFactory(groupListing=gl1, user=user2)
+
+glm8 = GroupListingMessageFactory(groupListing=gl2, user=user2)
+glm9 = GroupListingMessageFactory(groupListing=gl2, user=user3)
+glm10 = GroupListingMessageFactory(groupListing=gl2, user=user2)
+glm11 = GroupListingMessageFactory(groupListing=gl2, user=user5)
+glm12 = GroupListingMessageFactory(groupListing=gl2, user=user4)
+glm13 = GroupListingMessageFactory(groupListing=gl2, user=user3)
+glm14 = GroupListingMessageFactory(groupListing=gl2, user=user2)
 
 session.commit()
