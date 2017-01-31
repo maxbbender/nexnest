@@ -137,6 +137,7 @@ glm4 = GroupListingMessageFactory(groupListing=gl1, user=user5)
 glm5 = GroupListingMessageFactory(groupListing=gl1, user=user4)
 glm6 = GroupListingMessageFactory(groupListing=gl1, user=user3)
 glm7 = GroupListingMessageFactory(groupListing=gl1, user=user2)
+glm15 = GroupListingMessageFactory(groupListing=gl1, user=landlord1.user)
 
 glm8 = GroupListingMessageFactory(groupListing=gl2, user=user2)
 glm9 = GroupListingMessageFactory(groupListing=gl2, user=user3)
