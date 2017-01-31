@@ -8,6 +8,7 @@ from nexnest.forms import RequestListingForm
 
 from nexnest.models.group import Group
 from nexnest.models.group_listing import GroupListing
+from nexnest.models.group_listing_message import GroupListingMessage
 from nexnest.models.listing import Listing
 
 from nexnest.utils.flash import flash_errors
@@ -42,6 +43,8 @@ def create():
 
                     session.add(newGL)
                     session.commit()
+
+                    return redirect(url_for('housingRequests.view', id=newGL.id))
                 else:
                     flash("Listing does not exist")
         else:
@@ -55,10 +58,23 @@ def create():
 @housingRequests.route('/houseRequest/view/<id>')
 @login_required
 def view(id):
-    housingRequest = session.query(GroupListing).filter_by(id=id).first()
+    housingRequest = session.query(GroupListing) \
+        .filter_by(id=id) \
+        .first()
+
+    messages = session.query(GroupListingMessage) \
+        .filter_by(groupListingID=housingRequest.id) \
+        .first()
 
     if housingRequest is not None:
 
         if current_user in housingRequest.group.getUsers():
             return render_template('housingRequestView.html',
-                                   housingRequest=housingRequest)
+                                   housingRequest=housingRequest,
+                                   messages=messages)
+        else:
+            flash("You are not allowed to view this page")
+    else:
+        flash("Housing Request does not exist")
+
+    return redirect(url_for('indexs.index'))
