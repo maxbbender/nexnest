@@ -6,17 +6,17 @@ from datetime import datetime as dt
 
 from sqlalchemy.orm import relationship
 
+from sqlalchemy.schema import UniqueConstraint
+
 
 # class PostReport(Base):
 class GroupListing(Base):
     __tablename__ = 'group_listings'
+    id = db.Column(db.Integer, primary_key=True)
     group_id = db.Column(db.Integer,
-                         db.ForeignKey('groups.id'),
-                         primary_key=True)
+                         db.ForeignKey('groups.id'))
     listing_id = db.Column(db.Integer,
-                           db.ForeignKey('listings.id'),
-                           primary_key=True)
-    req_description = db.Column(db.Text)
+                           db.ForeignKey('listings.id'))
 
     # This is for when a group has been accepted and the process
     # of putting in the down payment and signing the lease is
@@ -38,17 +38,18 @@ class GroupListing(Base):
 
     date_created = db.Column(db.DateTime)
 
+    __table_args__ = (UniqueConstraint('group_id', 'listing_id', name='groupListing_constraint'),
+                      )
+
     def __init__(
             self,
             group,
             listing,
-            req_description
     ):
         self.group_id = group.id
         self.listing_id = listing.id
         self.group = group
         self.listing = listing
-        self.req_description = req_description
 
         self.accepted = False
         self.completed = False

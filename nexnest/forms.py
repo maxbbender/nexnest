@@ -175,5 +175,3 @@ class RequestListingForm(RedirectForm):
     groupID = HiddenField('groupID', [InputRequired()])
     listingID = HiddenField('listingID', [InputRequired()])
     reqDescription = TextAreaField('Aything you would like to say to the landlord to go along with your request', [InputRequired()])
-
-class GroupListingForm
