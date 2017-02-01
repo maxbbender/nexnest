@@ -21,7 +21,7 @@ def viewListing(listingID):
     return render_template('detailedListing.html',
                            suggestListingForm=SuggestListingForm(),
                            requestTourForm=TourForm(),
-                           requestListingForm=RequestListingForm(),
+                           requestListingForm=GroupListingForm(),
                            listing=viewListing,
                            groups=myGroups,
                            title='Listing')

@@ -299,7 +299,7 @@ def requestListing():
                 if listing is not None:
                     newGL = GroupListing(group=group,
                                          listing=listing,
-                                         req_description=rLForm.reqDescription.data)
+                                         reqDescription=rLForm.reqDescription.data)
                     session.add(newGL)
                     session.commit()
                     # TODO REDIRECT TO GROUPLISTING PAGE

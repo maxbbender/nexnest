@@ -355,19 +355,19 @@
 		      			<div class="row">
 		      				<div class="col-xs-1"></div>
 		      				<div class="col-xs-10">
-		      					<form id="request_house" action="{{url_for('groups.requestListing')}}" method="POST">
-		      					    {{ requestHouseForm.csrf_token }}
-		      					    {{ requestHouseForm.groupID }}
-		      					    {{ requestHouseForm.listingID(value=listing.id) }}		      					
+		      					<form id="request_house" action="{{url_for('housingRequests.create')}}" method="POST">
+		      					    {{ requestListingForm.csrf_token }}
+		      					    {{ requestListingForm.groupID }}
+		      					    {{ requestListingForm.listingID(value=listing.id) }}		      					
 			      					{% from "_formhelpers.html" import render_field %}
-			      					{{ render_field(requestHouseForm.reqDescription, class="form-control", type="text") }}
+			      					{{ render_field(requestListingForm.reqDescription, class="form-control", type="text") }}
 		      					</form>  
 		      				</div>
 		      			</div>
 		      			<div id="groupNumberHouse" style="display: none;"></div>
 		      		</div>
 			      	<div class="modal-footer">
-			        	<button type="button" class="btn btn-primary" onClick="submitTourForm()" data-dismiss="modal">Request House</button>
+			        	<button type="button" class="btn btn-primary" onClick="submitHouseForm()" data-dismiss="modal">Request House</button>
 			      	</div>
 		    	</div>
 		  	</div>
