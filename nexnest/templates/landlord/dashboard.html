@@ -23,7 +23,7 @@
         	    </li>
         	    <li class="nav-item">
         	        <a class="nav-link" data-toggle="tab" href="#requestsTab" role="tab">
-        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Housing Requests</span>
+        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Listing Requests</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
@@ -315,13 +315,182 @@
 		        	</div>
 		        </div>
 	        </div>
-	        <div class="tab-pane" id="requestsTab" role="tabpanel">
-	        	{% for listing in listings %}
-	            	{% for groupListing in listing.groups %}
-	            		{{ groupListing.listing.street }}
-	            		<br>
-	            	{% endfor %}
-	            {% endfor %}
+	        <div class="tab-pane" id="requestsTab" role="tabpanel" style="padding: 0px;">
+	        	<div class="row">
+			    	<div class="col-xs-1"></div>
+			    	<div class="col-xs-10" style="width: 100%">
+				    	<div class="callout-block text-center fade-in-b">
+				    		<h1>Listing Requests</h1>
+				    	</div>
+			    	</div>
+			    </div>
+		    	<br>
+		    	<div class="row">
+		        	<div class="col-xs-1"></div>
+		        	<div class="col-md-10 col-lg-10 col-xl-10">
+		        	    <div class="row">
+		        	        <div class="card" style="width:100%; border: none;">
+		        	            <div class="card-block">
+		        	                <ul class="nav nav-tabs">
+		        	                    <li class="nav-item">
+		        	                        <a class="nav-link active" data-toggle="tab" href="#pendingAcceptenceTab" role="tab">Pending Acceptence</a>
+		        	                    </li>
+		        	                    <li class="nav-item">
+		        	                        <a class="nav-link" data-toggle="tab" href="#pendingCompletionTab" role="tab">Pending Completion</a>
+		        	                    </li>
+		        	                </ul>
+		        	                <br>
+		        	                <div class="tab-content">
+		        	                    <div class="tab-pane active" id="pendingAcceptenceTab" role="tabpanel" style="padding: 0px;">
+		        	                        {% for listing in listings %}
+			            						{% for groupListing in listing.groups %}
+			            							{% if not groupListing.accepted %}
+	        							                <div class="card">
+	        							                    <div class="card-header">
+	        								                    <div class="row">
+	        								                    	<div class="col-xs-7">
+	        								                    		<a href="{{ url_for('housingRequests.view', id=groupListing.id) }}"><h3><strong>{{ groupListing.listing.street }} requested by: {{ groupListing.group.name }}</strong></h3></a>
+	        								                    	</div>
+	        								                    </div>			                    
+	        							                    </div>
+	        							                    <div class="card-block">
+	        								                    <div class="row">
+	        								                    	<div class="col-xs-4">
+	        								                    		<h3><strong>Tour requsted for:</strong>
+	        								                    		<br> {{ listing.street }}, {{ listing.city }} {{ listing.state }}</h3>
+	        								                    		<small>Lease Period: {{ listing.start_date }} - {{ listing.end_date }}</small>
+	        								                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
+	        								                    		<br><br>
+	        								                    		<a href="{{ url_for('housingRequests.view', id=groupListing.id) }}" class="btn btn-primary">View Request</a>
+	        								                    	</div>
+	        								                    	<div class="col-xs-8">
+	        								                    		<h3><strong>Group requesting the listing: {{groupListing.group.name}}</strong>({{groupListing.group.users|count}} Members)</h3>
+	        								                    		<strong>Group Leader:</strong>
+	        								                    		{% for user in groupListing.group.acceptedUsers %}
+	        								                    			{% with group=groupListing.group %}         
+	        								                    				<div class="row">
+	        								                    					<div class="col-xs-8">
+	        								                    						{% if group.leader_id == user.id %}
+	        								                    		    				{% include 'group/member.html' %}
+	        								                    						{% endif %}
+	        								                    		    		</div>
+	        								                    		    	</div>
+	        								                    		    {% endwith %}
+	        								                    		{% endfor %}
+	                    			      					    		<div id="allGroupMembers{{groupListing.group.id}}" style="display: none;">
+	                    		      					    				{% for user in groupListing.group.acceptedUsers %}
+	                    		      					    					{% with group=groupListing.group %}         
+	                    		      					    						<div class="row">
+	                    		      					    							<div class="col-xs-8">
+	                    		      					    								{% if not group.leader_id == user.id %}
+	                    		      					    				    				{% include 'group/member.html' %}
+	                    		      					    				    			{% endif %}
+	                    		      					    				    		</div>
+	                    		      					    				    	</div>
+	                    		      					    				    {% endwith %}
+	                    		      					    				{% endfor %}
+	                    			      					    		</div>
+	                    			      					    		<button class="btn btn-info" id="allGroupMembersToggle{{groupListing.group.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{groupListing.group.users|count-1}} members</button>
+
+	                    			      					    		<script type="text/javascript">
+	                    			      					    			//Show/hide all members of group
+	                    			      					    			$("#allGroupMembersToggle{{groupListing.group.id}}").click(function(){
+	                    			      					    			    $("#allGroupMembers{{groupListing.group.id}}").toggle();
+	                    			      					    			    if($("#allGroupMembersToggle{{groupListing.group.id}}").text()==" See other {{groupListing.group.users|count-1}} members")
+	                    			      					    			    	$("#allGroupMembersToggle{{groupListing.group.id}}").text("Hide other members");
+	                    			      					    			    else
+	                    			      					    			    	$("#allGroupMembersToggle{{groupListing.group.id}}").text(" See other {{groupListing.group.users|count-1}} members");	
+	                    			      					    			});
+	                    			      					    		</script>
+	        								                    		<br>
+	        								                    		<br>	        								                    		
+	        								                    	</div>
+	        								                    </div>
+	        							                    </div>
+	        							                </div>
+			            							{% endif %}
+			            							<br>
+			            						{% endfor %}
+		            						{% endfor %}
+		        	                    </div>
+		        	                    <div class="tab-pane" id="pendingCompletionTab" role="tabpanel" style="padding: 0px;">
+		        	                        {% for listing in listings %}
+			            						{% for groupListing in listing.groups %}
+			            							{% if groupListing.accepted %}
+	        							                <div class="card">
+	        							                    <div class="card-header">
+	        								                    <div class="row">
+	        								                    	<div class="col-xs-7">
+	        								                    		<a href="{{ url_for('housingRequests.view', id=groupListing.id) }}"><h3><strong>{{ groupListing.listing.street }} requested by: {{ groupListing.group.name }}</strong></h3></a>
+	        								                    	</div>
+	        								                    </div>			                    
+	        							                    </div>
+	        							                    <div class="card-block">
+	        								                    <div class="row">
+	        								                    	<div class="col-xs-4">
+	        								                    		<h3><strong>Tour requsted for:</strong>
+	        								                    		<br> {{ listing.street }}, {{ listing.city }} {{ listing.state }}</h3>
+	        								                    		<small>Lease Period: {{ listing.start_date }} - {{ listing.end_date }}</small>
+	        								                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
+	        								                    		<br><br>
+	        								                    		<a href="{{ url_for('housingRequests.view', id=groupListing.id) }}" class="btn btn-primary">View Request</a>
+	        								                    	</div>
+	        								                    	<div class="col-xs-8">
+	        								                    		<h3><strong>Group requesting the listing: {{groupListing.group.name}}</strong>({{groupListing.group.users|count}} Members)</h3>
+	        								                    		<strong>Group Leader:</strong>
+	        								                    		{% for user in groupListing.group.acceptedUsers %}
+	        								                    			{% with group=groupListing.group %}         
+	        								                    				<div class="row">
+	        								                    					<div class="col-xs-8">
+	        								                    						{% if group.leader_id == user.id %}
+	        								                    		    				{% include 'group/member.html' %}
+	        								                    						{% endif %}
+	        								                    		    		</div>
+	        								                    		    	</div>
+	        								                    		    {% endwith %}
+	        								                    		{% endfor %}
+	                    			      					    		<div id="allGroupMembers{{groupListing.group.id}}" style="display: none;">
+	                    		      					    				{% for user in groupListing.group.acceptedUsers %}
+	                    		      					    					{% with group=groupListing.group %}         
+	                    		      					    						<div class="row">
+	                    		      					    							<div class="col-xs-8">
+	                    		      					    								{% if not group.leader_id == user.id %}
+	                    		      					    				    				{% include 'group/member.html' %}
+	                    		      					    				    			{% endif %}
+	                    		      					    				    		</div>
+	                    		      					    				    	</div>
+	                    		      					    				    {% endwith %}
+	                    		      					    				{% endfor %}
+	                    			      					    		</div>
+	                    			      					    		<button class="btn btn-info" id="allGroupMembersToggle{{groupListing.group.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{groupListing.group.users|count-1}} members</button>
+
+	                    			      					    		<script type="text/javascript">
+	                    			      					    			//Show/hide all members of group
+	                    			      					    			$("#allGroupMembersToggle{{groupListing.group.id}}").click(function(){
+	                    			      					    			    $("#allGroupMembers{{groupListing.group.id}}").toggle();
+	                    			      					    			    if($("#allGroupMembersToggle{{groupListing.group.id}}").text()==" See other {{groupListing.group.users|count-1}} members")
+	                    			      					    			    	$("#allGroupMembersToggle{{groupListing.group.id}}").text("Hide other members");
+	                    			      					    			    else
+	                    			      					    			    	$("#allGroupMembersToggle{{groupListing.group.id}}").text(" See other {{groupListing.group.users|count-1}} members");	
+	                    			      					    			});
+	                    			      					    		</script>
+	        								                    		<br>
+	        								                    		<br>	        								                    		
+	        								                    	</div>
+	        								                    </div>
+	        							                    </div>
+	        							                </div>
+			            							{% endif %}
+			            							<br>
+			            						{% endfor %}
+		            						{% endfor %}
+		        	                    </div>
+		        	                </div>
+		        	            </div>
+		        	        </div>
+		        	    </div>
+		        	</div>
+		        </div>
 	        </div>
 	        <div class="tab-pane" id="paymentTab" role="tabpanel">
 	            Payment Portal
