@@ -13,7 +13,7 @@ from nexnest.models.tour_message import TourMessage
 
 from nexnest.utils.flash import flash_errors
 
-from sqlalchemy import asc
+from sqlalchemy import asc, desc
 
 tours = Blueprint('tours', __name__, template_folder='../templates/tour')
 
@@ -87,7 +87,7 @@ def viewTour(tourID):
         # Tour Messages
         messages = session.query(TourMessage) \
             .filter_by(tour_id=tour.id) \
-            .order_by(asc(TourMessage.date_created)) \
+            .order_by(desc(TourMessage.date_created)) \
             .all()
 
         return render_template('tourView.html',

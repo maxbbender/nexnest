@@ -11,6 +11,9 @@ from nexnest.models.group_listing_message import GroupListingMessage
 from nexnest.models.listing import Listing
 
 from nexnest.utils.flash import flash_errors
+
+from sqlalchemy import asc, desc
+
 housingRequests = Blueprint('housingRequests', __name__, template_folder='../templates/housingRequest')
 
 
@@ -68,7 +71,7 @@ def view(id):
         .first()
 
     messages = session.query(GroupListingMessage) \
-        .filter_by(groupListingID=housingRequest.id) \
+        .filter_by(groupListingID=housingRequest.id).order_by(desc(GroupListingMessage.date_created)) \
         .all()
 
     messageForm = GroupListingMessageForm()

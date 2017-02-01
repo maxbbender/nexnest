@@ -16,7 +16,7 @@ from nexnest.models.tour import Tour
 
 from nexnest.utils.flash import flash_errors
 
-from sqlalchemy import asc
+from sqlalchemy import asc, desc
 
 groups = Blueprint('groups', __name__, template_folder='../templates')
 
@@ -87,7 +87,7 @@ def viewGroup(group_id):
     # Lets get the group's messages
     messages = session.query(GroupMessage). \
         filter_by(group_id=group.id). \
-        order_by(asc(GroupMessage.date_created)).all()
+        order_by(desc(GroupMessage.date_created)).all()
 
     # Let's get the group's tours
     tours = session.query(Tour).filter_by(group_id=group.id).order_by(asc(Tour.last_requested)).all()
