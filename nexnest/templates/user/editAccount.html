@@ -9,8 +9,8 @@
 			{{form.csrf_token}}
 			  	<dl>
 				    {{ render_field(form.fname, class="form-control", type="text") }}
-				    {{ render_field(form.lname, class="form-control", type="text") }}				    				    
-				    {{ render_field(form.school, class="form-control") }}
+				    {{ render_field(form.lname, class="form-control", type="text") }}
+                    {{ render_field(form.schoolName, class="form-control", type="text") }}
 				    {{ render_field(form.phone, class="form-control", type="tel") }}
 				    {{ render_field(form.dob, class="form-control", type="date") }}
 				    {{ render_field(form.email, class="form-control", type="email") }}				    
@@ -31,7 +31,7 @@ var schools = [
     '{{school}}',
     {% endfor %}
 ]
-$('#school').autocomplete({
+$('#schoolName').autocomplete({
     source : schools
 });
 </script>

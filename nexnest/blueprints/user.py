@@ -8,7 +8,7 @@ from nexnest.models.group import Group
 from nexnest.models.school import School
 from nexnest.models.direct_message import DirectMessage
 
-from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm
+from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm, UserInformationForm
 
 from nexnest.utils.password import check_password
 from nexnest.utils.flash import flash_errors
@@ -19,6 +19,8 @@ from sqlalchemy import func, asc, or_, and_
 from werkzeug.utils import secure_filename
 
 import os
+
+import json
 
 users = Blueprint('users', __name__, template_folder='../templates/user')
 
@@ -105,13 +107,34 @@ def authorizeTwitter():
     # Create the new user
     newUser = User(registerType='twitter',
                    twitter_token=str(resp['oauth_token']),
-                   twitter_secret=str(resp['oauth_token_secret']))
+                   twitter_secret=str(resp['oauth_token_secret']),
+                   fname='unset',
+                   lname='unset')
     session.add(newUser)
     session.commit()
 
     login_user(newUser)
 
-    return redirect(url_for('indexs.index'))
+    return redirect(url_for('users.editAccountInfo'))
+
+
+# @users.route('/login/moreInformation/<userID>')
+# def moreInformation(userID):
+#     schools = [r for r, in session.query(School.name).all()]
+#     user = session.query(User).filter_by(id=userID).first()
+
+#     form = UserInformationForm(request.form, obj=user)
+
+#     if request.method == 'GET':
+#         return render_template('moreInformation.html',
+#                                form=form,
+#                                user=user,
+#                                schools=schools)
+#     else:
+#         form.populate_obj(user)
+#         session.commit()
+#         login_user(user)
+#         return redirect(url_for('indexs.index'))
 
 
 @users.route('/logout')
@@ -131,57 +154,50 @@ def viewUser(userID):
 @users.route('/user/edit/info', methods=['GET', 'POST'])
 @login_required
 def editAccountInfo():
-    editForm = EditAccountForm(request.data, obj=current_user)
-    editForm.school.data = current_user.school.name
-
-    if request.method == 'POST' and editForm.validate():
-        editForm.populate_obj(current_user)
-        session.commit()
-        return redirect(url_for('users.viewUser', current_user.id))
-
+    editForm = EditAccountForm(request.form, obj=current_user)
     schools = [r for r, in session.query(School.name).all()]
-    return render_template('editAccount.html',
-                           form=editForm,
-                           title='Edit Account',
-                           schools=schools)
 
-    # @users.route('/user/edit', methods=['GET', 'POST'])
-    # @login_required
-    # def editAccount():
-    #     editForm = EditAccountForm(request.data, obj=current_user)
+    if request.method == 'GET':
+        if current_user.fname == 'unset':
+            editForm.fname.data = ''
+            editForm.lname.data = ''
 
-    #     if request.method == 'POST' and editForm.validate():
+        # Set the school name
+        if current_user.school is not None:
+            editForm.schoolName.data = current_user.school.name
 
-    #     if request == 'GET':
-    #         schools = [r for r, in session.query(School.name).all()]
-    #         form = EditAccountForm(obj=current_user)
-    #         return render_template('editAccount.html', form=form, title='Edit Account', schools=schools)
-    #     else:
-    #         form = EditAccountForm
+        return render_template('editAccount.html',
+                               form=editForm,
+                               title='Edit Account',
+                               schools=schools)
+    else:
+        if editForm.validate():
+            editForm.populate_obj(current_user)
 
-    #     form = EditAccountForm(obj=current_user)
-    #     # if request.method == 'GET':
-    #     #     form.fname.data = current_user.fname
-    #     #     form.lname.data = current_user.lname
-    #     #     form.email.data = current_user.email
-    #     #     form.website.data = current_user.website
-    #     #     form.bio.data = current_user.bio
-    #     #     form.phone.data = current_user.phone
-    #     # form.school.data = current_user.school
-    #     if form.validate_on_submit():
-    #         current_user.fname = form.fname.data
-    #         current_user.lname = form.lname.data
-    #         current_user.email = form.email.data
-    #         current_user.website = form.website.data
-    #         current_user.bio = form.bio.data
-    #         current_user.phone = form.phone.data
-    #         # current_user.school = form.school.data
-    #         if not form.password.data == '':
-    #             current_user.set_password(form.password.data)
-    #         session.commit()
-    #         flash('Account Updated', 'info')
-    #         return redirect(url_for('viewUsers.viewUser', userID=current_user.id))
-    #
+            # Is the school that the user passed through different than the
+            # users current school?
+            if current_user.school is not None:
+
+                if editForm.schoolName.data != current_user.school.name:
+                    school = session.query(School).filter_by(name=editForm.schoolName.data).first()
+
+                    if school is not None:
+                        current_user.school_id = school.id
+            else:
+                school = session.query(School).filter_by(name=editForm.schoolName.data).first()
+
+                if school is not None:
+                    current_user.school_id = school.id
+
+            session.commit()
+            flash('User Account Updated', 'success')
+            return redirect(url_for('indexs.index'))
+        else:
+            schools = [r for r, in session.query(School.name).all()]
+            return render_template('editAccount.html',
+                                   form=editForm,
+                                   title='Edit Account',
+                                   schools=schools)
 
 
 @users.route('/user/search/<username>')

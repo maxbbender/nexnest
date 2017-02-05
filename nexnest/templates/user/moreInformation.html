@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+{% from "_formhelpers.html" import render_field %}
+<form action="{{url_for('users.moreInformation', userID=user.id)}}" method="POST">
+    {{form.csrf_token}}
+        <dl>
+            {{ render_field(form.email, class="form-control", type="email") }}
+            {{ render_field(form.fname, class="form-control", type="text") }}
+            {{ render_field(form.lname, class="form-control", type="text") }}
+            <input type="text" class="form-control" id="schoolName">
+        </dl>
+        <input type="submit" value="Submit">
+</form>
+{% endblock %}
+{% block scripts %}
+<script>
+var schools = [
+    {% for school in schools %}
+    '{{school}}',
+    {% endfor %}
+]
+$('#schoolName').autocomplete({
+    source : schools
+    select : function (event,ui) {
+        alert(ui);
+    }
+});
+
+
+</script>
+{% endblock %}

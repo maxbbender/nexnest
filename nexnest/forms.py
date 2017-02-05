@@ -4,7 +4,7 @@ from wtforms.fields import StringField, PasswordField, SubmitField, BooleanField
 
 from flask_wtf.file import FileField, FileRequired
 
-from wtforms.validators import InputRequired, Length, Email, EqualTo
+from wtforms.validators import InputRequired, Length, Email, EqualTo, Optional
 
 from nexnest.static.dataSets import valid_time_periods, valid_parking_types, valid_unit_types, states
 
@@ -146,10 +146,10 @@ class DirectMessageForm(RedirectForm):
 class EditAccountForm(RedirectForm):
     fname = StringField('First Name', [InputRequired()])
     lname = StringField('Last Name', [InputRequired()])
-    school = StringField('School Attending')
-    dob = StringField('Date of Birth')
+    schoolName = StringField('School Attending', [InputRequired()])
+    dob = DateField('Date of Birth', [Optional()])
     bio = TextAreaField('If you wish provide a short personal bio')
-    phone = StringField('Phone Number', [Length(min=10, max=10)])
+    phone = StringField('Phone Number', [Length(min=10, max=10), Optional()])
     website = StringField('Your personal website url')
     email = StringField('Email',
                         [InputRequired("You must enter an email address"),
@@ -181,3 +181,12 @@ class GroupListingMessageForm(RedirectForm):
     groupListingID = HiddenField('groupID', [InputRequired()])
     content = TextAreaField('Message',
                             [InputRequired("You must put in a message")])
+
+
+class UserInformationForm(RedirectForm):
+    fname = StringField('First Name', [InputRequired()])
+    lname = StringField('Last Name', [InputRequired()])
+    school = StringField('School', [InputRequired()])
+    email = StringField('Email',
+                        [InputRequired("You must enter an email address"),
+                         Email("Email must be valid format")])
