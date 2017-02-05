@@ -36,6 +36,17 @@ app.config.from_envvar('NEXNEST_%s_SETTINGS' % env.upper())
 app.secret_key = 'domislove'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+app.config['OAUTH_CREDENTIALS'] = {
+    'facebook': {
+        'id': '470154729788964',
+        'secret': '010cc08bd4f51e34f3f3e684fbdea8a7'
+    },
+    'twitter': {
+        'id': 'P6XBK2DKSdwUV7eWloQklXVUU',
+        'secret': 'jCmQctecPPXrT4DWLCPkhU5Ixoouy42T0FJmsJRocI311uCvFA'
+    }
+}
+
 
 # DB setup
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
@@ -50,20 +61,20 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = '/login'
 
-# OAUTH
-from flask_oauthlib.client import OAuth
+# # OAUTH
+# from flask_oauthlib.client import OAuth
 
-oauth = OAuth()
+# oauth = OAuth()
 
-from nexnest.oauthProviders import twitter
+# from nexnest.oauthProviders import twitter
 
 
-@twitter.tokengetter
-def get_twitter_token(token=None):
-    if current_user.is_authenticated:
-        return (current_user.twitter_token, current_user.twitter_secret)
-    else:
-        return None
+# @twitter.tokengetter
+# def get_twitter_token(token=None):
+#     if current_user.is_authenticated:
+#         return (current_user.twitter_token, current_user.twitter_secret)
+#     else:
+#         return None
 
 # MODELS
 

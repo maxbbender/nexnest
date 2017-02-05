@@ -8,8 +8,7 @@ def downgrade(migrate_engine):
     users = Table('users', meta, autoload=True)
 
     # users.c.password.drop()
-    users.c.twitter_token.drop()
-    users.c.twitter_secret.drop()
+    users.c.social_id.drop()
     pass
 
 
@@ -19,10 +18,8 @@ def upgrade(migrate_engine):
     users = Table('users', meta, autoload=True)
 
     # password = Column("password", String(128), nullable=False)
-    twitter_token = Column("twitter_token", Text())
-    twitter_secret = Column("twitter_secret", Text())
+    social_id = Column("social_id", Text())
 
     # password.create(users)
-    twitter_secret.create(users)
-    twitter_token.create(users)
+    social_id.create(users)
     pass

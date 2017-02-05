@@ -4,7 +4,7 @@ Flask-Assets
 Flask-WTF
 Flask-Login
 flask-admin
-Flask-OAuthlib
+rauth
 
 # Database
 Flask-SQLAlchemy

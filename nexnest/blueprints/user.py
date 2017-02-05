@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, make_response
 from flask_login import login_user, logout_user, current_user, login_required
 
-from nexnest.application import session, twitter
+from nexnest.application import session
 
 from nexnest.models.user import User
 from nexnest.models.group import Group
@@ -21,6 +21,8 @@ from werkzeug.utils import secure_filename
 import os
 
 import json
+
+from nexnest.oauth import OAuthSignIn
 
 users = Blueprint('users', __name__, template_folder='../templates/user')
 
@@ -91,31 +93,74 @@ def login():
         return login_form.redirect()
 
 
-@users.route('/login/twitter')
-def loginTwitter():
-    return twitter.authorize(callback=url_for('users.authorizeTwitter'))
+@users.route('/authorize/<provider>')
+def oauthAuthorize(provider):
+    if not current_user.is_anonymous:
+        return redirect(url_for('indexs.index'))
+    oauth = OAuthSignIn.get_provider(provider)
+
+    return oauth.authorize()
 
 
-@users.route('/login/twitter/authorized')
-def authorizeTwitter():
-    resp = twitter.authorized_response()
+@users.route('/callback/<provider>')
+def oauth_callback(provider):
+    if not current_user.is_anonymous:
+        return redirect(url_for('index'))
+    oauth = OAuthSignIn.get_provider(provider)
+    social_id, username, email, profile_image = oauth.callback()
+    if social_id is None:
+        flash('Authentication failed.')
+        return redirect(url_for('index'))
+    user = session.query(User).filter_by(social_id=social_id).first()
+    if not user:
+        user = User(registerType=provider,
+                    social_id=social_id,
+                    nickname=username,
+                    email=email,
+                    profile_image=profile_image)
+        session.add(user)
+        session.commit()
+    login_user(user, True)
+    return redirect(url_for('index'))
 
-    if resp is None:
-        print("req denied")
-        return 'fuck'
+# @users.route('/login/twitter')
+# def loginTwitter():
+#     return twitter.authorize(callback=url_for('users.authorizeTwitter'))
 
-    # Create the new user
-    newUser = User(registerType='twitter',
-                   twitter_token=str(resp['oauth_token']),
-                   twitter_secret=str(resp['oauth_token_secret']),
-                   fname='unset',
-                   lname='unset')
-    session.add(newUser)
-    session.commit()
 
-    login_user(newUser)
+# @users.route('/twitterdata')
+# def t():
+#     response = twitter.get('account/verify_credentials.json?include_email=true')
 
-    return redirect(url_for('users.editAccountInfo'))
+#     print(response.status)
+#     print(response.data)
+
+#     return 'hey'
+
+
+# @users.route('/login/twitter/authorized')
+# def authorizeTwitter():
+#     resp = twitter.authorized_response()
+
+#     if resp is None:
+#         print("req denied")
+#         return 'fuck'
+
+#     # Create the new user
+#     newUser = User(registerType='twitter',
+#                    twitter_token=str(resp['oauth_token']),
+#                    twitter_secret=str(resp['oauth_token_secret']),
+#                    fname='unset',
+#                    lname='unset')
+#     session.add(newUser)
+#     session.commit()
+
+#     login_user(newUser)
+
+#     # What data can we get get from the user. muahahaha
+
+
+#     return redirect(url_for('users.editAccountInfo'))
 
 
 # @users.route('/login/moreInformation/<userID>')

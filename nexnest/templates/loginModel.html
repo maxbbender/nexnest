@@ -24,6 +24,11 @@
                         </form>
                     </div>
                 </div>
+                <div class="row">
+                    <a href="{{url_for('users.oauthAuthorize', provider='twitter')}}" class="btn btn-block btn-social btn-twitter">
+                        <span class="fa fa-twitter"></span> Sign in with Twitter
+                    </a>
+                </div>
             </div>
             <div class="modal-footer">
                 <a href="#registerModal" data-toggle="modal" data-dismiss="modal">Need to register?</a>

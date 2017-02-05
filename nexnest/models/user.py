@@ -40,8 +40,7 @@ class User(Base):
     date_modified = db.Column(db.String(128), nullable=False)
     school_id = db.Column(db.Integer(), db.ForeignKey('schools.id'))
     active = db.Column(db.Boolean)
-    twitter_token = db.Column(db.Text)
-    twitter_secret = db.Column(db.Text)
+    social_id = db.Column(db.Text)
     sentDM = relationship('DirectMessage',
                           backref='source_user',
                           foreign_keys='[DirectMessage.source_user_id]')
@@ -57,6 +56,7 @@ class User(Base):
 
     def __init__(self,
                  email=None,
+                 username=None,
                  password=None,
                  fname=None,
                  lname=None,
@@ -68,8 +68,7 @@ class User(Base):
                  phone=None,
                  dob=None,
                  profile_image=None,
-                 twitter_token=None,
-                 twitter_secret=None,
+                 social_id=None,
                  registerType='nexnest'
                  ):
 
@@ -78,13 +77,10 @@ class User(Base):
             self.username = email.split("@")[0]
             self.email = email
             self.set_password(password)
-
         elif registerType == 'twitter':
-            # SET RANDOM PASSWORD
-            self.set_password(fake.password(length=20, special_chars=True, digits=True, upper_case=True, lower_case=True))
-
-            self.twitter_token = twitter_token
-            self.twitter_secret = twitter_secret
+            self.username = username
+            self.email = email
+            self.social_id = social_id
 
         self.fname = fname
         self.lname = lname
@@ -104,7 +100,10 @@ class User(Base):
                 self.profile_image = "https://api.adorable.io/avatars/120/tmp"
 
         else:
-            self.profile_image = profile_image
+            if registerType == 'twitter':
+                self.profile_image = profile_image.replace("_normal", "")
+            else:
+                self.profile_image = profile_image
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
