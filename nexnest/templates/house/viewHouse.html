@@ -6,8 +6,8 @@
         <div class="navi navbar">
         	<ul>
         		<li class="nav-item">
-        	        <a class="nav-link active" data-toggle="tab" href="#statusTab" role="tab">
-        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Maintence Requests</span>
+        	        <a class="nav-link active" data-toggle="tab" href="#maintenanceTab" role="tab">
+        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Maintenance Requests</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
@@ -25,6 +25,18 @@
         	    <li class="nav-item">
         	        <a class="nav-link" data-toggle="tab" href="#propertyTab" role="tab">
         	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Property</span>
+        	        </a>
+        	    </li>
+        	    <li class="nav-item">
+        	        <a class="nav-link" data-toggle="tab" href="#rentTab" role="tab">
+        	        	<i class="fa fa-tasks" aria-hidden="true"></i>
+        	        	<span class="hidden-xs hidden-sm">
+        	        		{% if current_user in landlords %}
+        	        			Rent Collected
+        	        		{% else %}
+        	        			Pay Rent
+        	        		{% endif %}
+        	        	</span>
         	        </a>
         	    </li>
         	</ul>
@@ -73,10 +85,21 @@
     		</div>
     		<div class="col-xs-4">
 			    <div class="tab-content">
-				    <div class="tab-pane active" id="statusTab" role="tabpanel" style="padding: 0px;">
+				    <div class="tab-pane active" id="maintenanceTab" role="tabpanel" style="padding: 0px;">
 				    	<div class="row">
 				    	    <div class="card" style="width:100%;">
-				    	        <h3 class="card-header">Request Status</h3>
+				    	        <div class="card-header">
+				    	        	<div class="row">
+				    	        		<div class="col-xs-7">
+				    	        			<h3>Maintence Requests</h3>
+				    	        		</div>
+				    	        		<div class="col-xs-5" style="text-align: right;">
+				    	        			{% if not current_user in landlords %}
+				    	        				<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#maintenanceRequestModal">Request</a>
+				    	        			{% endif %}
+				    	        		</div>
+				    	        	</div>
+				    	        </div>				    	        
 				    	        <div class="card-block">
 				    	            <div class="row">
 				    	            	
@@ -129,15 +152,56 @@
 				    	    </div>
 				    	</div>
 				    </div>
+				    <div class="tab-pane" id="rentTab" role="tabpanel" style="padding: 0px;">
+				    	<div class="row">
+				    	    <div class="card" style="width:100%;">
+				    	        <h3 class="card-header">Rent</h3>
+				    	        <div class="card-block">
+				    	            <div class="row">
+				    	                Info about rent due date and link to pay rent here
+				    	            </div>
+				    	        </div>
+				    	    </div>
+				    	</div>
+				    </div>
 				</div>
     		</div>
     	</div>
     </div>
 </div>
 
+<!--Maintenance Modal-->
+<div class="modal fade" id="maintenanceRequestModal" tabindex="-1" role="dialog" aria-labelledby="Maintenance" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <p class="card-text"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-primary">Submit Request</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 {% block scripts %}
 <script>  
-
+	//Maintenance Modal
+    $('#maintenanceRequestModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var modal = $(this);
+        modal.find('.modal-title').text('Maintenance Request');
+    })
 </script>
 {% endblock %}
