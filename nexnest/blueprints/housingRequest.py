@@ -81,7 +81,7 @@ def view(id):
                                    messages=messages,
                                    messageForm=messageForm)
     else:
-        flash("Housing Request does not exist")
+        flash("Housing Request does not exist", "warning")
 
     return redirect(url_for('indexs.index'))
 
