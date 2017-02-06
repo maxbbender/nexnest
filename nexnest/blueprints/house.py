@@ -11,6 +11,9 @@ from nexnest.models.group_listing_message import GroupListingMessage
 from nexnest.models.listing import Listing
 
 from nexnest.utils.flash import flash_errors
+
+from sqlalchemy import asc, desc
+
 houses = Blueprint('houses', __name__, template_folder='../templates/house')
 
 @houses.route('/house/view/<id>', methods=['GET'])
@@ -21,8 +24,8 @@ def view(id):
 		.first()
 
 	messages = session.query(GroupListingMessage) \
-		.filter_by(groupListingID=house.id) \
-		.first()
+        .filter_by(groupListingID=house.id).order_by(desc(GroupListingMessage.date_created)) \
+        .all()
 
 	messageForm = GroupListingMessageForm()
 
@@ -33,6 +36,7 @@ def view(id):
 			if house.isViewableBy(current_user):
 				return render_template('viewHouse.html',
 									   house=house,
+									   landlords=house.listing.landLordsAsUsers(),
 									   messages=messages,
 									   messageForm=messageForm)
 		else:
@@ -42,3 +46,29 @@ def view(id):
 
 	return redirect(url_for('indexs.index'))
 
+
+@houses.route('/house/message', methods=['POST'])
+@login_required
+def messageCreate():
+    form = GroupListingMessageForm(request.form)
+
+    if form.validate():
+
+        # Group Listing
+        gl = session.query(GroupListing).filter_by(id=form.groupListingID.data).first()
+
+        if gl is not None:
+
+            if gl.isViewableBy(current_user):
+                newGLM = GroupListingMessage(groupListing=gl,
+                                             content=form.content.data,
+                                             user=current_user)
+                session.add(newGLM)
+                session.commit()
+
+        else:
+            ("House does not exist", 'info')
+    else:
+        flash_errors(form)
+
+    return form.redirect()
