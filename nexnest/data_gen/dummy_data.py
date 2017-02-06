@@ -125,7 +125,7 @@ gl1 = GroupListingFactory(group=group1, listing=listing1)
 gl2 = GroupListingFactory(group=group1, listing=listing2)
 
 gl2.accepted = True
-gl2.completed = False
+gl2.completed = True
 
 session.commit()
 
