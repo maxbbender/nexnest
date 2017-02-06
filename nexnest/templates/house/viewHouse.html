@@ -95,7 +95,7 @@
 			        	                    <div class="row">
 			        	                        <div class="col-xs-12">
 			        	                            {% if current_user in landlords %}
-			        	                                <p class="card-text"><strong>The group requesting the property: </strong>{{ house.group.name }}</p>
+			        	                                <p class="card-text"><strong>The group at this property: </strong>{{ house.group.name }}</p>
 			        	                                {% with group=house.group %}
 			        	                                    {% for user in group.acceptedUsers %}                                    
 			        	                                        {% include 'tour/member.html' %}
