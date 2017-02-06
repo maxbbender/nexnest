@@ -244,7 +244,7 @@
 	        								                    		    	</div>
 	        								                    		    {% endwith %}
 	        								                    		{% endfor %}
-	                    			      					    		<div id="allMembers{{tour.group.id}}" style="display: none;">
+	                    			      					    		<div id="allMembersRequestedTour{{tour.group.id}}" style="display: none;">
 	                    		      					    				{% for user in tour.group.acceptedUsers %}
 	                    		      					    					{% with group=tour.group %}         
 	                    		      					    						<div class="row">
@@ -257,15 +257,15 @@
 	                    		      					    				    {% endwith %}
 	                    		      					    				{% endfor %}
 	                    			      					    		</div>
-	                    			      					    		<button class="btn btn-info" id="allMembersToggle{{tour.group.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{tour.group.users|count-1}} members</button>
+	                    			      					    		<button class="btn btn-info" id="allMembersRequestedTourToggle{{tour.group.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{tour.group.users|count-1}} members</button>
 	                    			      					    		<script type="text/javascript">
 	                    			      					    			//Show/hide all members of group
-	                    			      					    			$("#allMembersToggle{{tour.group.id}}").click(function(){
-	                    			      					    			    $("#allMembers{{tour.group.id}}").toggle();
-	                    			      					    			    if($("#allMembersToggle{{tour.group.id}}").text()==" See other {{tour.group.users|count-1}} members")
-	                    			      					    			    	$("#allMembersToggle{{tour.group.id}}").text("Hide other members");
+	                    			      					    			$("#allMembersRequestedTourToggle{{tour.group.id}}").click(function(){
+	                    			      					    			    $("#allMembersRequestedTour{{tour.group.id}}").toggle();
+	                    			      					    			    if($("#allMembersRequestedTourToggle{{tour.group.id}}").text()==" See other {{tour.group.users|count-1}} members")
+	                    			      					    			    	$("#allMembersRequestedTourToggle{{tour.group.id}}").text("Hide other members");
 	                    			      					    			    else
-	                    			      					    			    	$("#allMembersToggle{{tour.group.id}}").text(" See other {{tour.group.users|count-1}} members");	
+	                    			      					    			    	$("#allMembersRequestedTourToggle{{tour.group.id}}").text(" See other {{tour.group.users|count-1}} members");	
 	                    			      					    			});
 
 	                    			      					    			$(document).ready(function(){
@@ -331,7 +331,7 @@
 	        								                    		    	</div>
 	        								                    		    {% endwith %}
 	        								                    		{% endfor %}
-	                    			      					    		<div id="allMembers{{tour.group.id}}" style="display: none;">
+	                    			      					    		<div id="allMembersScheduledTour{{tour.group.id}}" style="display: none;">
 	                    		      					    				{% for user in tour.group.acceptedUsers %}
 	                    		      					    					{% with group=tour.group %}         
 	                    		      					    						<div class="row">
@@ -344,15 +344,15 @@
 	                    		      					    				    {% endwith %}
 	                    		      					    				{% endfor %}
 	                    			      					    		</div>
-	                    			      					    		<button class="btn btn-info" id="allMembersToggle{{tour.group.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{tour.group.users|count-1}} members</button>
+	                    			      					    		<button class="btn btn-info" id="allMembersScheduledTourToggle{{tour.group.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{tour.group.users|count-1}} members</button>
 	                    			      					    		<script type="text/javascript">
 	                    			      					    			//Show/hide all members of group
-	                    			      					    			$("#allMembersToggle{{tour.group.id}}").click(function(){
-	                    			      					    			    $("#allMembers{{tour.group.id}}").toggle();
-	                    			      					    			    if($("#allMembersToggle{{tour.group.id}}").text()==" See other {{tour.group.users|count-1}} members")
-	                    			      					    			    	$("#allMembersToggle{{tour.group.id}}").text("Hide other members");
+	                    			      					    			$("#allMembersScheduledTourToggle{{tour.group.id}}").click(function(){
+	                    			      					    			    $("#allMembersScheduledTour{{tour.group.id}}").toggle();
+	                    			      					    			    if($("#allMembersScheduledTourToggle{{tour.group.id}}").text()==" See other {{tour.group.users|count-1}} members")
+	                    			      					    			    	$("#allMembersScheduledTourToggle{{tour.group.id}}").text("Hide other members");
 	                    			      					    			    else
-	                    			      					    			    	$("#allMembersToggle{{tour.group.id}}").text(" See other {{tour.group.users|count-1}} members");	
+	                    			      					    			    	$("#allMembersScheduledTourToggle{{tour.group.id}}").text(" See other {{tour.group.users|count-1}} members");	
 	                    			      					    			});
 
 	                    			      					    			$(document).ready(function(){
@@ -455,7 +455,7 @@
 	        								                    		    	</div>
 	        								                    		    {% endwith %}
 	        								                    		{% endfor %}
-	                    			      					    		<div id="allGroupMembers{{groupListing.group.id}}" style="display: none;">
+	                    			      					    		<div id="allGroupMembersListingPending{{groupListing.group.id}}" style="display: none;">
 	                    		      					    				{% for user in groupListing.group.acceptedUsers %}
 	                    		      					    					{% with group=groupListing.group %}         
 	                    		      					    						<div class="row">
@@ -468,16 +468,16 @@
 	                    		      					    				    {% endwith %}
 	                    		      					    				{% endfor %}
 	                    			      					    		</div>
-	                    			      					    		<button class="btn btn-info" id="allGroupMembersToggle{{groupListing.group.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{groupListing.group.users|count-1}} members</button>
+	                    			      					    		<button class="btn btn-info" id="allGroupMembersListingPendingToggle{{groupListing.group.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{groupListing.group.users|count-1}} members</button>
 
 	                    			      					    		<script type="text/javascript">
 	                    			      					    			//Show/hide all members of group
-	                    			      					    			$("#allGroupMembersToggle{{groupListing.group.id}}").click(function(){
-	                    			      					    			    $("#allGroupMembers{{groupListing.group.id}}").toggle();
-	                    			      					    			    if($("#allGroupMembersToggle{{groupListing.group.id}}").text()==" See other {{groupListing.group.users|count-1}} members")
-	                    			      					    			    	$("#allGroupMembersToggle{{groupListing.group.id}}").text("Hide other members");
+	                    			      					    			$("#allGroupMembersListingPendingToggle{{groupListing.group.id}}").click(function(){
+	                    			      					    			    $("#allGroupMembersListingPending{{groupListing.group.id}}").toggle();
+	                    			      					    			    if($("#allGroupMembersListingPendingToggle{{groupListing.group.id}}").text()==" See other {{groupListing.group.users|count-1}} members")
+	                    			      					    			    	$("#allGroupMembersListingPendingToggle{{groupListing.group.id}}").text("Hide other members");
 	                    			      					    			    else
-	                    			      					    			    	$("#allGroupMembersToggle{{groupListing.group.id}}").text(" See other {{groupListing.group.users|count-1}} members");	
+	                    			      					    			    	$("#allGroupMembersListingPendingToggle{{groupListing.group.id}}").text(" See other {{groupListing.group.users|count-1}} members");	
 	                    			      					    			});
 	                    			      					    		</script>
 	        								                    		<br>
@@ -527,7 +527,7 @@
 	        								                    		    	</div>
 	        								                    		    {% endwith %}
 	        								                    		{% endfor %}
-	                    			      					    		<div id="allGroupMembers{{groupListing.group.id}}" style="display: none;">
+	                    			      					    		<div id="allGroupMembersListingCompleted{{groupListing.group.id}}" style="display: none;">
 	                    		      					    				{% for user in groupListing.group.acceptedUsers %}
 	                    		      					    					{% with group=groupListing.group %}         
 	                    		      					    						<div class="row">
@@ -540,16 +540,16 @@
 	                    		      					    				    {% endwith %}
 	                    		      					    				{% endfor %}
 	                    			      					    		</div>
-	                    			      					    		<button class="btn btn-info" id="allGroupMembersToggle{{groupListing.group.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{groupListing.group.users|count-1}} members</button>
+	                    			      					    		<button class="btn btn-info" id="allGroupMembersListingCompletedToggle{{groupListing.group.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{groupListing.group.users|count-1}} members</button>
 
 	                    			      					    		<script type="text/javascript">
 	                    			      					    			//Show/hide all members of group
-	                    			      					    			$("#allGroupMembersToggle{{groupListing.group.id}}").click(function(){
-	                    			      					    			    $("#allGroupMembers{{groupListing.group.id}}").toggle();
-	                    			      					    			    if($("#allGroupMembersToggle{{groupListing.group.id}}").text()==" See other {{groupListing.group.users|count-1}} members")
-	                    			      					    			    	$("#allGroupMembersToggle{{groupListing.group.id}}").text("Hide other members");
+	                    			      					    			$("#allGroupMembersListingCompletedToggle{{groupListing.group.id}}").click(function(){
+	                    			      					    			    $("#allGroupMembersListingCompleted{{groupListing.group.id}}").toggle();
+	                    			      					    			    if($("#allGroupMembersListingCompletedToggle{{groupListing.group.id}}").text()==" See other {{groupListing.group.users|count-1}} members")
+	                    			      					    			    	$("#allGroupMembersListingCompletedToggle{{groupListing.group.id}}").text("Hide other members");
 	                    			      					    			    else
-	                    			      					    			    	$("#allGroupMembersToggle{{groupListing.group.id}}").text(" See other {{groupListing.group.users|count-1}} members");	
+	                    			      					    			    	$("#allGroupMembersListingCompletedToggle{{groupListing.group.id}}").text(" See other {{groupListing.group.users|count-1}} members");	
 	                    			      					    			});
 	                    			      					    		</script>
 	        								                    		<br>
