@@ -46,6 +46,82 @@
 			    	</div>
 			    </div>
 		    	<br>
+		    	{% for listing in listings %}
+		    		{% for groupListing in listing.groups %}
+			            {% if groupListing.completed %}
+			            	<div class="row">
+			            		<div class="col-xs-1"></div>
+			            		<div class="col-xs-10" style="width: 100%">
+					                <div class="card">
+					                    <div class="card-header">
+						                    <div class="row">
+						                    	<div class="col-xs-10">
+						                    		<a href="{{ url_for('houses.view', id=listing.id) }}">
+						                    			<h3><strong>{{ listing.street }}, {{ listing.city }} {{ listing.state }}</strong></h3>
+						                    			<small>Lease Period: {{ listing.start_date }} - {{ listing.end_date }}</small>
+						                    		</a>
+						                    	</div>
+						                    </div>			                    
+					                    </div>
+					                    <div class="card-block">
+						                    <div class="row">
+						                    	<div class="col-xs-4">
+						                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
+						                    	</div>
+						                    	<div class="col-xs-8">
+						                    		<h3><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ listing.price }}</strong> per bedroom per semester</h3>
+						                    		<h3><strong>{{ listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
+						                    		&nbsp;
+						                    		{{ listing.num_full_baths }}<i class="fa fa-bath" aria-hidden="true"></i></strong></h3>
+						                    		<br>
+						                    		<h3><strong>Group: {{groupListing.group.name}}</strong>({{groupListing.group.users|count}} Members)</h3>
+						                    		<strong>Group Leader:</strong>
+						                    		{% for user in groupListing.group.acceptedUsers %}
+						                    			{% with group=groupListing.group %}         
+						                    				<div class="row">
+						                    					<div class="col-xs-8">
+						                    						{% if group.leader_id == user.id %}
+						                    		    				{% include 'group/member.html' %}
+						                    						{% endif %}
+						                    		    		</div>
+						                    		    	</div>
+						                    		    {% endwith %}
+						                    		{% endfor %}
+    			      					    		<div id="allGroupMembers{{groupListing.group.id}}" style="display: none;">
+    		      					    				{% for user in groupListing.group.acceptedUsers %}
+    		      					    					{% with group=groupListing.group %}         
+    		      					    						<div class="row">
+    		      					    							<div class="col-xs-8">
+    		      					    								{% if not group.leader_id == user.id %}
+    		      					    				    				{% include 'group/member.html' %}
+    		      					    				    			{% endif %}
+    		      					    				    		</div>
+    		      					    				    	</div>
+    		      					    				    {% endwith %}
+    		      					    				{% endfor %}
+    			      					    		</div>
+    			      					    		<button class="btn btn-info" id="allGroupMembersToggle{{groupListing.group.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{groupListing.group.users|count-1}} members</button>
+
+    			      					    		<script type="text/javascript">
+    			      					    			//Show/hide all members of group
+    			      					    			$("#allGroupMembersToggle{{groupListing.group.id}}").click(function(){
+    			      					    			    $("#allGroupMembers{{groupListing.group.id}}").toggle();
+    			      					    			    if($("#allGroupMembersToggle{{groupListing.group.id}}").text()==" See other {{groupListing.group.users|count-1}} members")
+    			      					    			    	$("#allGroupMembersToggle{{groupListing.group.id}}").text("Hide other members");
+    			      					    			    else
+    			      					    			    	$("#allGroupMembersToggle{{groupListing.group.id}}").text(" See other {{groupListing.group.users|count-1}} members");	
+    			      					    			});
+    			      					    		</script>
+						                    		<br>
+						                    	</div>
+						                    </div>
+					                    </div>
+					                </div>
+				                </div>
+			                </div>
+	                	{% endif %}
+	                {% endfor %}
+	            {% endfor %}
 		    </div>
 	        <div class="tab-pane" id="unbookedListingsTab" role="tabpanel" style="padding: 0px;">
 	        	<div class="row">
@@ -65,8 +141,10 @@
 			                    <div class="card-header">
 				                    <div class="row">
 				                    	<div class="col-xs-10">
-				                    		<h3><strong>{{ listing.street }}, {{ listing.city }} {{ listing.state }}</strong></h3>
-				                    		<small>Lease Period: {{ listing.start_date }} - {{ listing.end_date }}</small>
+				                    		<a href="{{ url_for('listings.viewListing', listingID=listing.id) }}">
+				                    			<h3><strong>{{ listing.street }}, {{ listing.city }} {{ listing.state }}</strong></h3>
+				                    			<small>Lease Period: {{ listing.start_date }} - {{ listing.end_date }}</small>
+				                    		</a>
 				                    	</div>
 				                    	<div class="col-xs-2" style="text-align: right;">
 				                    		<a href="#" class="btn btn-primary">Edit Listing</a>
