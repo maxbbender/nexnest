@@ -77,6 +77,7 @@ from nexnest.blueprints.user import users
 from nexnest.blueprints.group import groups
 from nexnest.blueprints.tour import tours
 from nexnest.blueprints.landlord import landlords
+from nexnest.blueprints.housingRequest import housingRequests
 
 app.register_blueprint(base)
 app.register_blueprint(indexs)
@@ -85,15 +86,17 @@ app.register_blueprint(users)
 app.register_blueprint(groups)
 app.register_blueprint(tours)
 app.register_blueprint(landlords)
+app.register_blueprint(housingRequests)
 
-from nexnest.forms import LoginForm, PasswordChangeForm
+from nexnest.forms import LoginForm, PasswordChangeForm, ProfilePictureForm
 
 
 @app.context_processor
 def insert_login_form():
     if current_user.is_authenticated:
         passwordChangeForm = PasswordChangeForm()
-        return dict(passwordChangeForm=passwordChangeForm)
+        avatarChangeForm = ProfilePictureForm()
+        return dict(passwordChangeForm=passwordChangeForm, avatarChangeForm=avatarChangeForm)
     else:
         login_form = LoginForm()
         return dict(login_form=login_form)

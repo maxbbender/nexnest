@@ -27,8 +27,8 @@
                     <div class="card-block">
                         <!-- Add new message -->
                         <div class="form-group">
-                            <form action="{{url_for('groups.createMessage')}}" method='POST'>
-                                {{messageForm.group_id}}
+                            <form action="{{url_for('tours.createMessage')}}" method='POST'>
+                                {{messageForm.tour_id(value=tour.id)}}
                                 {{messageForm.csrf_token}}
                                 <div class="row">
                                     {{messageForm.content(class="form-control", rows=5)}}

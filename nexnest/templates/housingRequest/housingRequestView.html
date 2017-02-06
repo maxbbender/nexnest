@@ -1,4 +1,306 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block content %}
-hey
+<link href="{{url_for('static', filename='css/landlord/dashboardStyling.css')}}" rel="stylesheet">
+<div class="row">
+    <div class="col-md-2 col-sm-1 hidden-xs display-table-cell v-align box" id="navigation" style="height: inherit;">
+        <div class="navi navbar">
+        	<ul>
+        		<li class="nav-item">
+        	        <a class="nav-link active" data-toggle="tab" href="#statusTab" role="tab">
+        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Status</span>
+        	        </a>
+        	    </li>
+        	    <li class="nav-item">
+        	        <a class="nav-link" data-toggle="tab" href="#membersTab" role="tab">
+        	        	<i class="fa fa-tasks" aria-hidden="true"></i>
+        	        	<span class="hidden-xs hidden-sm">
+        	        		{% if current_user in landlords %}
+        	        			Group Members
+        	        		{% else %}
+        	        			The Landlord
+        	        		{% endif %}
+        	        	</span>
+        	        </a>
+        	    </li>
+        	    <li class="nav-item">
+        	        <a class="nav-link" data-toggle="tab" href="#propertyTab" role="tab">
+        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Property</span>
+        	        </a>
+        	    </li>
+        	    {% if housingRequest.accepted %}
+	        	    <li class="nav-item">
+	        	        <a class="nav-link" data-toggle="tab" href="#leaseTab" role="tab">
+	        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Lease</span>
+	        	        </a>
+	        	    </li>
+        	    {% endif %}
+        	</ul>
+        </div>
+    </div>
+    <div class="col-sm-10 col-md-9">
+    	<div class="row m-x-auto">
+	        <div class="col-xs-12">
+	            <div class="callout-block text-center fade-in-b">
+	                <h1>
+	                    <strong>{{ housingRequest.group.name }}</strong> Have requested to live at:
+	                    <br>
+	                    {{ housingRequest.listing.street }}
+	                </h1>
+	            </div>
+	        </div>
+    	</div>
+    	<br>
+    	<div class="row">
+    		<div class="col-xs-8">
+			    <div class="card" style="width:100%;">
+			        <h3 class="card-header">Type your message:</h3>
+			        <div class="card-block">
+			            <!-- Add new message -->
+			            <div class="form-group">
+			                <form action="{{url_for('housingRequests.messageCreate')}}" method='POST'>
+			                    {{messageForm.groupListingID(value=housingRequest.id)}}
+			                    {{messageForm.csrf_token}}
+			                    <div class="row">
+			                        {{messageForm.content(class="form-control", rows=5)}}
+			                    </div>
+			                    <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
+			                        <div class="col-xs-12">
+			                            <input class="btn btn-primary" type="submit" value="Respond">
+			                        </div>                                    
+			                    </div>
+			                </form>
+			            </div>
+			        </div>
+			    </div>
+			    <!-- Messages -->
+			    {% for message in messages %}
+			        {% include 'housingRequest/message.html' %}
+			    {% endfor %}
+    		</div>
+    		<div class="col-xs-4">
+			    <div class="tab-content">
+				    <div class="tab-pane active" id="statusTab" role="tabpanel" style="padding: 0px;">
+				    	<div class="row">
+				    	    <div class="card" style="width:100%;">
+				    	        <h3 class="card-header">Request Status</h3>
+				    	        <div class="card-block">
+				    	            <div class="row">
+				    	            	<div class="col-xs-12">
+					    	                <strong style="padding-right: 5px;">Application: </strong>
+					    	                {% if housingRequest.accepted %}
+					    	                	<button type="button" id="confirmed" class="btn btn-success btn-circle"><i class="fa fa-check" aria-hidden="true"></i></button>
+					    	                	<br>
+					    	                	<strong style="padding-right: 5px;">Confirmed: </strong>
+					    	                	<button type="button" id="pending" class="btn btn-warning btn-circle pending"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+					    	                	<br>
+					    	                	{% if current_user in landlords %}
+					    	                		<span>You have accepted <strong>{{ housingRequest.group.name }}</strong> to live at this property. Now you must arrange to collect signed leases from all tenants and security deposits if you require them. To make it easier for you, you can upload the blank lease here for the tenants to print out and get back to you in the method you agree upon. After everything has been collected click the "process completed button" to confirm the group for this property.</span>
+					    	                		<br><br>
+					    	                		<a href="#">Upload Lease</a>
+					    	                		<br><br>
+					    	                		<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#confirmGroupModal">Confirm Group</a>
+                                                    <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#somethingHappenedModal">Something Happened</a>
+					    	                	{% else %}
+					    	                		<span>You and the landlord must make arrangements to sign leases and pay your security deposits if they are required. After that has happened the landlord will confirm the listing and you will have this listing for {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}. </span>
+					    	                	{% endif %}
+					    	                {% else %}
+					    	                	<button type="button" id="pending" class="btn btn-warning btn-circle pending"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+					    	                	<br>
+					    	                	{% if current_user in landlords %}
+					    	                		<span>If you have decided you want this group to live in this listing for {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}, please click the accept this listing button. The next step will be having the tenants sign leases and pay thier security deposits.</span>
+					    	                		<br><br>
+					    	                		<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#acceptGroupModal">Accept Group</a>
+                                                    <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#declineGroupModal">Decline</a>
+					    	                	{% else %}
+					    	                		<span>Waiting for the landlord to either accept or decline your request. If he accepts the next step will have all members of your group signing leases and paying your security deposits.</span>
+					    	                	{% endif %}
+					    	                {% endif %}
+				    	                </div>
+				    	            </div>
+				    	        </div>
+				    	    </div>
+				    	</div>
+				    </div>
+			        <div class="tab-pane" id="membersTab" role="tabpanel" style="padding: 0px;">
+			        	<div class="row">
+			        	    <div class="card" style="width:100%;">
+			        	        <h3 class="card-header">Members</h3>
+			        	        <div class="card-block">
+			        	            <div class="row">
+			        	                <div class="col-xs-12">
+			        	                    <div class="row">
+			        	                        <div class="col-xs-12">
+			        	                            {% if current_user in landlords %}
+			        	                                <p class="card-text"><strong>The group requesting the property: </strong>{{ housingRequest.group.name }}</p>
+			        	                                {% with group=housingRequest.group %}
+			        	                                    {% for user in group.acceptedUsers %}                                    
+			        	                                        {% include 'tour/member.html' %}
+			        	                                    {% endfor %}
+			        	                                {% endwith %}
+			        	                            {% else %}
+			        	                                <p class="card-text"><strong>The property owner:</strong></p>
+			        	                                {% for user in landlords %}
+			        	                                    {% include 'tour/member.html' %}
+			        	                                {% endfor %}
+			        	                            {% endif %}
+			        	                        </div>
+			        	                    </div>
+			        	                </div>
+			        	            </div>
+			        	        </div>
+			        	    </div>
+			        	</div>	            
+			        </div>
+			        <div class="tab-pane" id="propertyTab" role="tabpanel" style="padding: 0px;">
+				    	<div class="row">
+				    	    <div class="card" style="width:100%;">
+				    	        <h3 class="card-header">The Property</h3>
+				    	        <div class="card-block">
+				    	            <div class="row">
+				    	                {% with listing=housingRequest.listing %}
+				    	                    {% include 'listing.html' %}
+				    	                {% endwith %}
+				    	            </div>
+				    	        </div>
+				    	    </div>
+				    	</div>
+				    </div>
+			        <div class="tab-pane" id="leaseTab" role="tabpanel">
+			        	Lease
+			        </div>
+				</div>
+    		</div>
+    	</div>
+    </div>
+</div>
+
+<!--Accept Group Modal-->
+<div class="modal fade" id="acceptGroupModal" tabindex="-1" role="dialog" aria-labelledby="acceptGroup" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <p class="card-text">Are you sure you want to accept <strong>{{ housingRequest.group.name }}</strong> to live at this property? Next step will be to collect leases and security deposits</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-primary">Accept Group</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Decline Group Modal-->
+<div class="modal fade" id="declineGroupModal" tabindex="-1" role="dialog" aria-labelledby="declineGroup" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <p class="card-text">Are you sure you want to decline <strong>{{ housingRequest.group.name }}</strong> to live at this property? You will not be able to undo this
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-danger">Decline Group</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Confirm Group Modal-->
+<div class="modal fade" id="confirmGroupModal" tabindex="-1" role="dialog" aria-labelledby="confirmGroup" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <p class="card-text">Have you recieved all leases and security deposits from <strong>{{ housingRequest.group.name }}</strong>? If so, this is the last step, once you click confirm neither party can back out from the terms of the signed leases.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-primary">Confirm Group</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Decline Group Modal-->
+<div class="modal fade" id="somethingHappenedModal" tabindex="-1" role="dialog" aria-labelledby="somethingHappened" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <p class="card-text">You have already agreed to allow <strong>{{ housingRequest.group.name }}</strong>. Has something happened to cause you to back out of renting to them? This cannot be undone.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-danger">Back Out</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
+{% block scripts %}
+<script>  
+	//Accept Group Modal
+    $('#acceptGroupModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      var modal = $(this);
+      modal.find('.modal-title').text('Accept Group');
+    })
+
+    //Decline Group Modal
+    $('#declineGroupModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      var modal = $(this);
+      modal.find('.modal-title').text('Decline Group');
+    })
+
+    //Confirm Group Modal
+    $('#confirmGroupModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      var modal = $(this);
+      modal.find('.modal-title').text('Confirm Group');
+    })
+
+    //Something Happened Modal
+    $('#somethingHappenedModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      var modal = $(this);
+      modal.find('.modal-title').text('Back Out');
+    })
+</script>
 {% endblock %}

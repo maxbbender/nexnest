@@ -9,6 +9,7 @@ from nexnest.models.landlord import Landlord
 from nexnest.models.landlord_listing import LandlordListing
 from nexnest.models.listing import Listing
 from nexnest.models.tour_message import TourMessage
+from nexnest.models.group_listing_message import GroupListingMessage
 
 from nexnest.data_gen.factories import GroupFactory, UserFactory
 
@@ -18,6 +19,6 @@ from sqlalchemy import asc, or_, and_
 # g = session.query(Group).filter_by(id=1).first()
 
 
-u = session.query(User).filter_by(id=2).first()
+u = session.query(GroupListingMessage).first()
 
-print(u.isGroupLeader)
+print(u.user)
