@@ -168,7 +168,7 @@
                                                         {% if tour.tour_confirmed %}
                                                             <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
                                                         {% else %}
-                                                            <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the you to confrim the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                            <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the you to confirm the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                         {% endif %}
                                                     {% else %}
                                                         <p class="card-text">
@@ -176,7 +176,7 @@
                                                             {% if tour.tour_confirmed %}
                                                                 <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
                                                             {% else %}
-                                                                <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the landlord to confrim your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                                <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the landlord to confirm your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                             {% endif %}
                                                         </p>
                                                     {% endif %}                                        
@@ -357,6 +357,20 @@
         $("#removeUserLink").attr('href', "/group/{{group.id}}/removeMember/"+user);
         modal.find('.modal-title').text('Remove From Group')
     })
+
+    $(document).ready(function(){
+        $('#confirmed').popover({
+            html: true,
+            trigger: 'focus',
+            template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title" style="background-color: #449d44; text-align: center; color: #ffffff;"></h3><div class="popover-content"></div></div>'
+        });
+
+        $('#pending').popover({
+            html: true,
+            trigger: 'focus',
+            template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title" style="background-color: #ec971f; text-align: center; color: #ffffff;"></h3><div class="popover-content"></div></div>'
+        });
+    });
 </script>
 {% endblock %}
 
