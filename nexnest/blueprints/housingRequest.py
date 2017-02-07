@@ -10,6 +10,7 @@ from nexnest.models.group_listing import GroupListing
 from nexnest.models.group_listing_message import GroupListingMessage
 from nexnest.models.listing import Listing
 from nexnest.models.house import House
+from nexnest.models.security_deposit import SecurityDeposit
 
 from nexnest.utils.flash import flash_errors
 
@@ -129,6 +130,14 @@ def acceptRequest(id):
             # At this point the house request is accepted and security deposits must be paid.
             groupListing.accepted = True
             session.commit()
+
+            # Create Security Deposit records
+            for user in groupListing.group.acceptedUsers:
+                newSecurityDeposit = SecurityDeposit(user=user,
+                                                     groupListing=groupListing)
+
+                session.add(newSecurityDeposit)
+                session.commit()
 
             flash("Group Accepted", 'success')
             return redirect(url_for('houseRequest.view', id=groupListing.id))
