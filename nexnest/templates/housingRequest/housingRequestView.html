@@ -52,26 +52,32 @@
     	<br>
     	<div class="row">
     		<div class="col-xs-8">
-			    <div class="card" style="width:100%;">
-			        <h3 class="card-header">Type your message:</h3>
-			        <div class="card-block">
-			            <!-- Add new message -->
-			            <div class="form-group">
-			                <form action="{{url_for('housingRequests.messageCreate')}}" method='POST'>
-			                    {{messageForm.groupListingID(value=housingRequest.id)}}
-			                    {{messageForm.csrf_token}}
-			                    <div class="row">
-			                        {{messageForm.content(class="form-control", rows=5)}}
-			                    </div>
-			                    <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
-			                        <div class="col-xs-12">
-			                            <input class="btn btn-primary" type="submit" value="Respond">
-			                        </div>                                    
-			                    </div>
-			                </form>
-			            </div>
-			        </div>
-			    </div>
+    			{% if housingRequest.landlord_show %}
+				    <div class="card" style="width:100%;">
+				        <h3 class="card-header">Type your message:</h3>
+				        <div class="card-block">
+				            <!-- Add new message -->
+				            <div class="form-group">
+				                <form action="{{url_for('housingRequests.messageCreate')}}" method='POST'>
+				                    {{messageForm.groupListingID(value=housingRequest.id)}}
+				                    {{messageForm.csrf_token}}
+				                    <div class="row">
+				                        {{messageForm.content(class="form-control", rows=5)}}
+				                    </div>
+				                    <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
+				                        <div class="col-xs-12">
+				                            <input class="btn btn-primary" type="submit" value="Respond">
+				                        </div>                                    
+				                    </div>
+				                </form>
+				            </div>
+				        </div>
+				    </div>
+			    {% else %}
+			    	<div class="callout-block text-center fade-in-b">
+			    		<h1>Messages</h1>
+			    	</div>
+			    {% endif %}
 			    <!-- Messages -->
 			    {% for message in messages %}
 			        {% include 'housingRequest/message.html' %}
@@ -86,35 +92,40 @@
 				    	        <div class="card-block">
 				    	            <div class="row">
 				    	            	<div class="col-xs-12">
-					    	                <strong style="padding-right: 5px;">Application: </strong>
-					    	                {% if housingRequest.accepted %}
-					    	                	<button type="button" id="confirmed" class="btn btn-success btn-circle"><i class="fa fa-check" aria-hidden="true"></i></button>
-					    	                	<br>
-					    	                	<strong style="padding-right: 5px;">Confirmed: </strong>
-					    	                	<button type="button" id="pending" class="btn btn-warning btn-circle pending"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
-					    	                	<br>
-					    	                	{% if current_user in landlords %}
-					    	                		<span>You have accepted <strong>{{ housingRequest.group.name }}</strong> to live at this property. Now you must arrange to collect signed leases from all tenants and security deposits if you require them. To make it easier for you, you can upload the blank lease here for the tenants to print out and get back to you in the method you agree upon. After everything has been collected click the "process completed button" to confirm the group for this property.</span>
-					    	                		<br><br>
-					    	                		<a href="#">Upload Lease</a>
-					    	                		<br><br>
-					    	                		<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#confirmGroupModal">Confirm Group</a>
-                                                    <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#somethingHappenedModal">Something Happened</a>
-					    	                	{% else %}
-					    	                		<span>You and the landlord must make arrangements to sign leases and pay your security deposits if they are required. After that has happened the landlord will confirm the listing and you will have this listing for {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}. </span>
-					    	                	{% endif %}
-					    	                {% else %}
-					    	                	<button type="button" id="pending" class="btn btn-warning btn-circle pending"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
-					    	                	<br>
-					    	                	{% if current_user in landlords %}
-					    	                		<span>If you have decided you want this group to live in this listing for {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}, please click the accept this listing button. The next step will be having the tenants sign leases and pay thier security deposits.</span>
-					    	                		<br><br>
-					    	                		<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#acceptGroupModal">Accept Group</a>
-                                                    <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#declineGroupModal">Decline</a>
-					    	                	{% else %}
-					    	                		<span>Waiting for the landlord to either accept or decline your request. If he accepts the next step will have all members of your group signing leases and paying your security deposits.</span>
-					    	                	{% endif %}
-					    	                {% endif %}
+				    	            		{% if not housingRequest.landlord_show %}
+				    	            			<h1 style="color: red"><i class="fa fa-times-circle" aria-hidden="true"></i>Request Declined</h1>
+				    	            			The landlord has declined your group's request to live at this property
+				    	            		{% else %}
+						    	                <strong style="padding-right: 5px;">Application: </strong>
+						    	                {% if housingRequest.accepted %}
+						    	                	<button type="button" id="confirmed" class="btn btn-success btn-circle"><i class="fa fa-check" aria-hidden="true"></i></button>
+						    	                	<br>
+						    	                	<strong style="padding-right: 5px;">Confirmed: </strong>
+						    	                	<button type="button" id="pending" class="btn btn-warning btn-circle pending"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+						    	                	<br>
+						    	                	{% if current_user in landlords %}
+						    	                		<span>You have accepted <strong>{{ housingRequest.group.name }}</strong> to live at this property. Now you must arrange to collect signed leases from all tenants and security deposits if you require them. To make it easier for you, you can upload the blank lease here for the tenants to print out and get back to you in the method you agree upon. After everything has been collected click the "process completed button" to confirm the group for this property.</span>
+						    	                		<br><br>
+						    	                		<a href="#">Upload Lease</a>
+						    	                		<br><br>
+						    	                		<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#confirmGroupModal">Confirm Group</a>
+	                                                    <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#somethingHappenedModal">Something Happened</a>
+						    	                	{% else %}
+						    	                		<span>You and the landlord must make arrangements to sign leases and pay your security deposits if they are required. After that has happened the landlord will confirm the listing and you will have this listing for {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}. </span>
+						    	                	{% endif %}
+						    	                {% else %}
+						    	                	<button type="button" id="pending" class="btn btn-warning btn-circle pending"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+						    	                	<br>
+						    	                	{% if current_user in landlords %}
+						    	                		<span>If you have decided you want this group to live in this listing for {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}, please click the accept this listing button. The next step will be having the tenants sign leases and pay thier security deposits.</span>
+						    	                		<br><br>
+						    	                		<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#acceptGroupModal">Accept Group</a>
+	                                                    <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#declineGroupModal">Decline</a>
+						    	                	{% else %}
+						    	                		<span>Waiting for the landlord to either accept or decline your request. If he accepts the next step will have all members of your group signing leases and paying your security deposits.</span>
+						    	                	{% endif %}
+						    	                {% endif %}
+						    	            {% endif %}
 				    	                </div>
 				    	            </div>
 				    	        </div>
