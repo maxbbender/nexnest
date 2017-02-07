@@ -51,18 +51,22 @@ login_manager.init_app(app)
 login_manager.login_view = '/login'
 
 # Our Models
+# import nexnest.models
 
 from nexnest.models.user import User
 from nexnest.models.school import School
 from nexnest.models.listing import Listing
+from nexnest.models.message import Message
+from nexnest.models.house import House
+from nexnest.models.house_message import HouseMessage
 from nexnest.models.group import Group
 from nexnest.models.group_listing import GroupListing
-from nexnest.models.message import Message
 from nexnest.models.group_message import GroupMessage
 from nexnest.models.direct_message import DirectMessage
 from nexnest.models.tour import Tour
 from nexnest.models.tour_message import TourMessage
 from nexnest.models.landlord import Landlord
+
 
 
 @login_manager.user_loader

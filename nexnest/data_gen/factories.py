@@ -14,6 +14,8 @@ from nexnest.models.school import School
 from nexnest.models.direct_message import DirectMessage
 from nexnest.models.tour import Tour
 from nexnest.models.tour_message import TourMessage
+from nexnest.models.house import House
+from nexnest.models.house_message import HouseMessage
 
 import factory
 from faker import Faker
@@ -195,5 +197,24 @@ class GroupListingMessageFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session = session
 
     groupListing = factory.SubFactory(GroupListingFactory)
+    content = factory.LazyAttribute(lambda x: fake.paragraph(3))
+    user = factory.SubFactory(UserFactory)
+
+
+class HouseFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = House
+        sqlalchemy_session = session
+
+    listing = factory.SubFactory(ListingFactory)
+    group = factory.SubFactory(Group)
+
+
+class HouseMessageFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = HouseMessage
+        sqlalchemy_session = session
+
+    house = factory.SubFactory(HouseFactory)
     content = factory.LazyAttribute(lambda x: fake.paragraph(3))
     user = factory.SubFactory(UserFactory)

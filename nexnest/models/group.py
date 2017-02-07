@@ -25,6 +25,7 @@ class Group(Base):
     listings = relationship("GroupListing", back_populates='group')
     messages = relationship("GroupMessage", backref='group')
     tours = relationship("Tour", backref='group')
+    house = relationship("House", backref='group')
 
     def __init__(
             self,

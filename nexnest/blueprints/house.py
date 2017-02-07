@@ -16,35 +16,37 @@ from sqlalchemy import asc, desc
 
 houses = Blueprint('houses', __name__, template_folder='../templates/house')
 
+
 @houses.route('/house/view/<id>', methods=['GET'])
 @login_required
 def view(id):
-	house = session.query(GroupListing) \
-		.filter_by(id=id) \
-		.first()
+    house = session.query(GroupListing) \
+        .filter_by(id=id) \
+        .first()
 
-	messages = session.query(GroupListingMessage) \
-        .filter_by(groupListingID=house.id).order_by(desc(GroupListingMessage.date_created)) \
-        .all()
+    # messages = session.query(GroupListingMessage) \
+    #     .filter_by(groupListingID=house.id).order_by(desc(GroupListingMessage.date_created)) \
+    #     .all()
 
-	messageForm = GroupListingMessageForm()
+    # messageForm = GroupListingMessageForm()
 
-	if house is not None:
+    if house is not None:
 
-		if house.completed == True:
+        if house.isViewableBy(current_user):
 
-			if house.isViewableBy(current_user):
-				return render_template('viewHouse.html',
-									   house=house,
-									   landlords=house.listing.landLordsAsUsers(),
-									   messages=messages,
-									   messageForm=messageForm)
-		else:
-			flash("This house is not occupied", "warning")
-	else:
-		flash("House does not exist", "warning")
+            if house.completed:
 
-	return redirect(url_for('indexs.index'))
+                return render_template('viewHouse.html',
+                                       house=house,
+                                       landlords=house.listing.landLordsAsUsers(),
+                                       messages=messages,
+                                       messageForm=messageForm)
+        else:
+            flash("This house is not occupied", "warning")
+    else:
+        flash("House does not exist", "warning")
+
+    return redirect(url_for('indexs.index'))
 
 
 @houses.route('/house/message', methods=['POST'])

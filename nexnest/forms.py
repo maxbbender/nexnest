@@ -181,3 +181,9 @@ class GroupListingMessageForm(RedirectForm):
     groupListingID = HiddenField('groupID', [InputRequired()])
     content = TextAreaField('Message',
                             [InputRequired("You must put in a message")])
+
+
+class HouseMessageForm(RedirectForm):
+    houseID = HiddenField('groupID', [InputRequired()])
+    content = TextAreaField('Message',
+                            [InputRequired("You must put in a message")])
