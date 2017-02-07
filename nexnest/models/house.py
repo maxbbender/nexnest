@@ -37,6 +37,8 @@ class House(Base):
     def isViewableBy(self, user):
         if user in self.group.acceptedUsers:
             return True
+        elif user in self.listing.landLordsAsUsers():
+            return True
 
         return False
 

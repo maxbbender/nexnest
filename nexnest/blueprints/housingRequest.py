@@ -9,6 +9,7 @@ from nexnest.models.group import Group
 from nexnest.models.group_listing import GroupListing
 from nexnest.models.group_listing_message import GroupListingMessage
 from nexnest.models.listing import Listing
+from nexnest.models.house import House
 
 from nexnest.utils.flash import flash_errors
 
@@ -115,3 +116,67 @@ def messageCreate():
         flash_errors(form)
 
     return form.redirect()
+
+
+@housingRequests.route('/houseRequest/<id>/accept', methods=['GET'])
+@login_required
+def acceptRequest(id):
+    groupListing = session.query(GroupListing).filter_by(id=id).first()
+
+    if groupListing is not None:
+
+        if groupListing.isEditableBy(current_user):
+            # At this point the house request is accepted and security deposits must be paid.
+            groupListing.accepted = True
+            session.commit()
+
+            flash("Group Accepted", 'success')
+            return redirect(url_for('houseRequest.view', id=groupListing.id))
+    else:
+        flash("Invalid Request", 'warning')
+        return redirect(url_for('indexs.index'))
+
+
+@housingRequests.route('/houseRequest/<id>/deny', methods=['GET'])
+@login_required
+def denyRequest(id):
+    groupListing = session.query(GroupListing).filter_by(id=id).first()
+
+    if groupListing is not None:
+
+        if groupListing.isEditableBy(current_user):
+            groupListing.landlord_show = False
+            session.commit()
+
+            flash('Request Denied', 'success')
+            return redirect(url_for('landlords.landlordDashboard'))
+
+    else:
+        flash("Invalid Request", 'warning')
+        return redirect(url_for('indexs.index'))
+
+
+@housingRequests.route('/houseRequest/<id>/confirm', methods=['GET'])
+@login_required
+def confirmRequest(id):
+    groupListing = session.query(GroupListing).filter_by(id=id).first()
+
+    if groupListing is not None:
+
+        if groupListing.isEditableBy(current_user):
+            groupListing.completed = True
+            session.commit()
+
+            flash('House Confirmed ~ Congrats!', 'success')
+
+            # Create the House Object
+            house = House(listing=groupListing.listing,
+                          group=groupListing.group)
+
+            session.add(house)
+            session.commit()
+
+            return redirect(url_for('houses.view', houseID=house.id))
+    else:
+        flash("Invalid Request", 'warning')
+        return redirect(url_for('indexs.index'))

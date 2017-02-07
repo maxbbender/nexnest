@@ -61,6 +61,7 @@ class Listing(Base):
     groups = relationship("GroupListing", back_populates='listing')
     landlords = relationship("LandlordListing", back_populates='listing')
     tours = relationship("Tour", backref='listing')
+    house = relationship("House", backref='listing')
 
     def __init__(
             self,

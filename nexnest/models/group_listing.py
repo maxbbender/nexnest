@@ -83,3 +83,10 @@ class GroupListing(Base):
         else:
             flash("You do not have permissions to view this housing request", 'danger')
             return False
+
+    def isEditableBy(self, user):
+        if user in self.listing.landLordsAsUsers():
+            return True
+        else:
+            flash("You do not have permissions to make actions on this housing request", 'danger')
+            return False

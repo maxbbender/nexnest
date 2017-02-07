@@ -4,11 +4,10 @@ from flask_login import login_required, current_user
 
 from nexnest.application import session
 
-from nexnest.forms import GroupListingMessageForm
-from nexnest.models.group import Group
-from nexnest.models.group_listing import GroupListing
+from nexnest.forms import HouseMessageForm
 from nexnest.models.group_listing_message import GroupListingMessage
-from nexnest.models.listing import Listing
+from nexnest.models.house import House
+from nexnest.models.house_message import HouseMessage
 
 from nexnest.utils.flash import flash_errors
 
@@ -20,22 +19,21 @@ houses = Blueprint('houses', __name__, template_folder='../templates/house')
 @houses.route('/house/view/<id>', methods=['GET'])
 @login_required
 def view(id):
-    house = session.query(GroupListing) \
+    house = session.query(House) \
         .filter_by(id=id) \
         .first()
 
-    # messages = session.query(GroupListingMessage) \
-    #     .filter_by(groupListingID=house.id).order_by(desc(GroupListingMessage.date_created)) \
-    #     .all()
+    messages = session.query(HouseMessage) \
+        .filter_by(id=id).order_by(desc(GroupListingMessage.date_created)) \
+        .all()
 
-    # messageForm = GroupListingMessageForm()
+    messageForm = HouseMessageForm()
 
     if house is not None:
 
         if house.isViewableBy(current_user):
 
             if house.completed:
-
                 return render_template('viewHouse.html',
                                        house=house,
                                        landlords=house.listing.landLordsAsUsers(),
@@ -52,24 +50,24 @@ def view(id):
 @houses.route('/house/message', methods=['POST'])
 @login_required
 def messageCreate():
-    form = GroupListingMessageForm(request.form)
+    form = HouseMessageForm(request.form)
 
     if form.validate():
 
         # Group Listing
-        gl = session.query(GroupListing).filter_by(id=form.groupListingID.data).first()
+        house = session.query(House).filter_by(id=form.houseID.data).first()
 
-        if gl is not None:
+        if house is not None:
 
-            if gl.isViewableBy(current_user):
-                newGLM = GroupListingMessage(groupListing=gl,
-                                             content=form.content.data,
-                                             user=current_user)
-                session.add(newGLM)
+            if house.isViewableBy(current_user):
+                newHM = HouseMessage(house=house,
+                                     content=form.content.data,
+                                     user=current_user)
+                session.add(newHM)
                 session.commit()
 
         else:
-            ("House does not exist", 'info')
+            ("Invalid Request", 'warning')
     else:
         flash_errors(form)
 
