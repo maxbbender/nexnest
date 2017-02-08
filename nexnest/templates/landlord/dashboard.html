@@ -12,6 +12,11 @@
         	        </a>
         	    </li>
         	    <li class="nav-item">
+        	        <a class="nav-link" data-toggle="tab" href="#futureListingsTab" role="tab">
+        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Booked Future Listings</span>
+        	        </a>
+        	    </li>
+        	    <li class="nav-item">
         	        <a class="nav-link" data-toggle="tab" href="#unbookedListingsTab" role="tab">
         	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Unbooked Listings</span>
         	        </a>
@@ -411,15 +416,21 @@
 		        	            <div class="card-block">
 		        	                <ul class="nav nav-tabs">
 		        	                    <li class="nav-item">
-		        	                        <a class="nav-link active" data-toggle="tab" href="#pendingAcceptenceTab" role="tab">Pending Acceptence</a>
+		        	                        <a class="nav-link active" data-toggle="tab" href="#unacceptedTab" role="tab">Unaccepted</a>
 		        	                    </li>
 		        	                    <li class="nav-item">
-		        	                        <a class="nav-link" data-toggle="tab" href="#pendingCompletionTab" role="tab">Pending Completion</a>
+		        	                        <a class="nav-link" data-toggle="tab" href="#acceptedTab" role="tab">Accepted</a>
+		        	                    </li>
+		        	                    <li class="nav-item">
+		        	                        <a class="nav-link" data-toggle="tab" href="#completedTab" role="tab">Completed</a>
+		        	                    </li>
+		        	                    <li class="nav-item">
+		        	                        <a class="nav-link" data-toggle="tab" href="#deniedTab" role="tab">Denied</a>
 		        	                    </li>
 		        	                </ul>
 		        	                <br>
 		        	                <div class="tab-content">
-		        	                    <div class="tab-pane active" id="pendingAcceptenceTab" role="tabpanel" style="padding: 0px;">
+		        	                    <div class="tab-pane active" id="unacceptedTab" role="tabpanel" style="padding: 0px;">
 		        	                        {% for listing in listings %}
 			            						{% for groupListing in listing.groups %}
 			            							{% if not groupListing.accepted %}
@@ -434,7 +445,7 @@
 	        							                    <div class="card-block">
 	        								                    <div class="row">
 	        								                    	<div class="col-xs-4">
-	        								                    		<h3><strong>Tour requsted for:</strong>
+	        								                    		<h3><strong>Requested to live at:</strong>
 	        								                    		<br> {{ listing.street }}, {{ listing.city }} {{ listing.state }}</h3>
 	        								                    		<small>Lease Period: {{ listing.start_date }} - {{ listing.end_date }}</small>
 	        								                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
@@ -481,7 +492,7 @@
 	                    			      					    			});
 	                    			      					    		</script>
 	        								                    		<br>
-	        								                    		<br>	        								                    		
+	        								                    		<br>
 	        								                    	</div>
 	        								                    </div>
 	        							                    </div>
@@ -491,7 +502,7 @@
 			            						{% endfor %}
 		            						{% endfor %}
 		        	                    </div>
-		        	                    <div class="tab-pane" id="pendingCompletionTab" role="tabpanel" style="padding: 0px;">
+		        	                    <div class="tab-pane" id="acceptedTab" role="tabpanel" style="padding: 0px;">
 		        	                        {% for listing in listings %}
 			            						{% for groupListing in listing.groups %}
 			            							{% if groupListing.accepted %}
@@ -506,7 +517,7 @@
 	        							                    <div class="card-block">
 	        								                    <div class="row">
 	        								                    	<div class="col-xs-4">
-	        								                    		<h3><strong>Tour requsted for:</strong>
+	        								                    		<h3><strong>Requested to live at:</strong>
 	        								                    		<br> {{ listing.street }}, {{ listing.city }} {{ listing.state }}</h3>
 	        								                    		<small>Lease Period: {{ listing.start_date }} - {{ listing.end_date }}</small>
 	        								                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
@@ -553,7 +564,7 @@
 	                    			      					    			});
 	                    			      					    		</script>
 	        								                    		<br>
-	        								                    		<br>	        								                    		
+	        								                    		<br>
 	        								                    	</div>
 	        								                    </div>
 	        							                    </div>
