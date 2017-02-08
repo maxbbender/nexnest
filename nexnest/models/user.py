@@ -51,6 +51,8 @@ class User(Base):
     landlord = relationship('Landlord', backref='user')
     tourMessages = relationship("TourMessage", backref='user')
     groupListingMessages = relationship("GroupListingMessage", backref='user')
+    securityDeposits = relationship("SecurityDeposit", backref='user')
+
 
     def __init__(self,
                  email,

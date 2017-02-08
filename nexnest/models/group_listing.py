@@ -38,6 +38,8 @@ class GroupListing(Base):
     group = relationship("Group", back_populates="listings")
     listing = relationship("Listing", back_populates='groups')
 
+    securityDeposits = relationship('SecurityDeposit', backref='groupListing')
+
     date_created = db.Column(db.DateTime)
 
     __table_args__ = (UniqueConstraint('group_id', 'listing_id', name='groupListing_constraint'),

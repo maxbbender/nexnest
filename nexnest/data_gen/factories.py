@@ -16,6 +16,7 @@ from nexnest.models.tour import Tour
 from nexnest.models.tour_message import TourMessage
 from nexnest.models.house import House
 from nexnest.models.house_message import HouseMessage
+from nexnest.models.security_deposit import SecurityDeposit
 
 import factory
 from faker import Faker
@@ -217,4 +218,13 @@ class HouseMessageFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     house = factory.SubFactory(HouseFactory)
     content = factory.LazyAttribute(lambda x: fake.paragraph(3))
+    user = factory.SubFactory(UserFactory)
+
+
+class SecurityDepositFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = SecurityDeposit
+        sqlalchemy_session = session
+
+    groupListing = factory.SubFactory(GroupListingFactory)
     user = factory.SubFactory(UserFactory)

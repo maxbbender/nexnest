@@ -123,10 +123,13 @@ session.commit()
 # GROUP LISTING
 gl1 = GroupListingFactory(group=group1, listing=listing1)
 gl2 = GroupListingFactory(group=group1, listing=listing2)
+gl3 = GroupListingFactory(group=group1, listing=listing3)
 
 gl1.landlord_show = False
 gl2.accepted = True
 gl2.completed = True
+
+gl3.accepted = True
 
 session.commit()
 
@@ -149,3 +152,14 @@ glm13 = GroupListingMessageFactory(groupListing=gl2, user=user3)
 glm14 = GroupListingMessageFactory(groupListing=gl2, user=user2)
 
 session.commit()
+
+# SECURITY DEPOSITS FOR GL3
+sd1 = SecurityDepositFactory(user=user2, groupListing=gl3)
+sd2 = SecurityDepositFactory(user=user3, groupListing=gl3)
+sd3 = SecurityDepositFactory(user=user4, groupListing=gl3)
+sd4 = SecurityDepositFactory(user=user5, groupListing=gl3)
+
+sd2.completed = True
+
+session.commit()
+
