@@ -159,7 +159,14 @@ sd2 = SecurityDepositFactory(user=user3, groupListing=gl3)
 sd3 = SecurityDepositFactory(user=user4, groupListing=gl3)
 sd4 = SecurityDepositFactory(user=user5, groupListing=gl3)
 
+sd5 = SecurityDepositFactory(user=user2, groupListing=gl2)
+sd6 = SecurityDepositFactory(user=user3, groupListing=gl2)
+sd7 = SecurityDepositFactory(user=user4, groupListing=gl2)
+sd8 = SecurityDepositFactory(user=user5, groupListing=gl2)
+
 sd2.completed = True
+sd5.completed = True
+sd6.completed = True
 
 session.commit()
 
