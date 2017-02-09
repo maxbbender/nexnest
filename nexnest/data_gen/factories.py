@@ -17,11 +17,17 @@ from nexnest.models.tour_message import TourMessage
 from nexnest.models.house import House
 from nexnest.models.house_message import HouseMessage
 from nexnest.models.security_deposit import SecurityDeposit
+from nexnest.models.maintenance import Maintenance
+from nexnest.models.maintenance_message import MaintenanceMessage
 
 import factory
 from faker import Faker
 
 from datetime import date
+
+import random
+
+from nexnest.static.dataSets import maintenanceRequestTypes
 
 fake = Faker()
 
@@ -227,4 +233,24 @@ class SecurityDepositFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session = session
 
     groupListing = factory.SubFactory(GroupListingFactory)
+    user = factory.SubFactory(UserFactory)
+
+
+class MaintenanceFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = Maintenance
+        sqlalchemy_session = session
+
+    request_type = random.choice(maintenanceRequestTypes)[0]
+    details = factory.LazyAttribute(lambda x: fake.paragraph(3))
+    house = factory.SubFactory(HouseFactory)
+
+
+class MaintenanceMessageFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = MaintenanceMessage
+        sqlalchemy_session = session
+
+    maintenance = factory.SubFactory(MaintenanceFactory)
+    content = factory.LazyAttribute(lambda x: fake.paragraph(3))
     user = factory.SubFactory(UserFactory)

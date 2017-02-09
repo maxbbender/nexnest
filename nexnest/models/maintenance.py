@@ -16,7 +16,7 @@ class Maintenance(Base):
     status = db.Column(db.String(10))
     request_type = db.Column(db.String(20))
     details = db.Column(db.Text())
-    house_id = db.Column(db.Integer, db.ForeignKey('listings.id'))
+    house_id = db.Column(db.Integer, db.ForeignKey('houses.id'))
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
 

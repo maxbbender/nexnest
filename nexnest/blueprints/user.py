@@ -121,6 +121,7 @@ def editAccountInfo():
                            title='Edit Account',
                            schools=schools)
 
+
 @users.route('/user/search/<username>')
 @login_required
 def searchForUser(username):

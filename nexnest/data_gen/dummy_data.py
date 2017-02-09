@@ -170,3 +170,37 @@ sd6.completed = True
 
 session.commit()
 
+# House
+h1 = HouseFactory(listing=listing2, group=group1)
+
+session.commit()
+
+# Maintenance Requests
+m1 = MaintenanceFactory(house=h1)
+m2 = MaintenanceFactory(house=h1)
+m3 = MaintenanceFactory(house=h1)
+
+m2.status = 'inprogress'
+m3.status = 'completed'
+
+session.commit()
+
+# Maintenance Request Messages
+
+# m1
+mm1 = MaintenanceMessageFactory(maintenance=m1, user=user2)
+mm2 = MaintenanceMessageFactory(maintenance=m1, user=user3)
+mm3 = MaintenanceMessageFactory(maintenance=m1, user=user2)
+mm4 = MaintenanceMessageFactory(maintenance=m1, user=user4)
+
+# m2
+mm5 = MaintenanceMessageFactory(maintenance=m2, user=user5)
+mm6 = MaintenanceMessageFactory(maintenance=m2, user=user2)
+mm7 = MaintenanceMessageFactory(maintenance=m2, user=user3)
+
+# m3
+mm8 = MaintenanceMessageFactory(maintenance=m3, user=user2)
+mm9 = MaintenanceMessageFactory(maintenance=m3, user=user3)
+mm10 = MaintenanceMessageFactory(maintenance=m3, user=user4)
+
+session.commit()
