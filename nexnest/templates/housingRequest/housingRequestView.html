@@ -38,7 +38,7 @@
         </div>
     </div>
     <div class="col-sm-10 col-md-9">
-    	<div class="row m-x-auto">
+    	<div class="row">
 	        <div class="col-xs-12">
 	            <div class="callout-block text-center fade-in-b">
 	                <h1>
@@ -100,14 +100,54 @@
 						    	                {% if housingRequest.accepted %}
 						    	                	<button type="button" id="confirmed" class="btn btn-success btn-circle"><i class="fa fa-check" aria-hidden="true"></i></button>
 						    	                	<br>
-						    	                	<strong style="padding-right: 5px;">Confirmed: </strong>
-						    	                	<button type="button" id="pending" class="btn btn-warning btn-circle pending"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                    <strong style="padding-right: 5px;">Leases Signed: </strong>
+                                                    <button type="button" id="pending" class="btn btn-warning btn-circle pending"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                    <br>
+                                                    <strong style="padding-right: 5px;">Deposits Collected: </strong>
+                                                    <button type="button" id="pending" class="btn btn-warning btn-circle pending"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
 						    	                	<br>
 						    	                	{% if current_user in landlords %}
 						    	                		<span>You have accepted <strong>{{ housingRequest.group.name }}</strong> to live at this property. Now you must arrange to collect signed leases from all tenants and security deposits if you require them. To make it easier for you, you can upload the blank lease here for the tenants to print out and get back to you in the method you agree upon. After everything has been collected click the "process completed button" to confirm the group for this property.</span>
-						    	                		<br><br>
+						    	                		<br>
+                                                        <hr>
+                                                        <div class="row">
+                                                            <div class="col-xs-8">
+                                                                <h3><strong>Leases Collected:</strong></h3>
+                                                            </div>
+                                                            <div class="col-xs-4" style="text-align: right">
+                                                                <a href="#" class="btn btn-primary">Mark Collected</a>
+                                                            </div>
+                                                        </div>
 						    	                		<a href="#">Upload Lease</a>
-						    	                		<br><br>
+                                                        <br>
+						    	                		<hr>
+                                                        <h3><strong>Security Deposits:</strong></h3>
+                                                        <hr>
+                                                        {% for deposit in housingRequest.securityDeposits %}                                    
+                                                            <div class="row">
+                                                                <div class="col-xs-8">
+                                                                    <a href="{{ url_for('users.viewUser', userID=deposit.user.id) }}">
+                                                                        <h4>
+                                                                            <img src="{{deposit.user.profile_image}}" alt="Profile Image" class="img-responsive" style="height: 50px; width: 50px;" />
+                                                                            {{ deposit.user.fname }} {{ deposit.user.lname }}
+                                                                            {% if deposit.completed %}
+                                                                                <span style="color: green"><i class="fa fa-check-circle" aria-hidden="true"></i></span>
+                                                                            {% else %}
+                                                                                <span style="color: red"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                                                                            {% endif %}
+                                                                        </h4>
+                                                                    </a>
+                                                                </div>
+                                                                <div class="col-xs-4" style="text-align: right">
+                                                                    {% if not deposit.completed %}
+                                                                        <a href="#" class="btn btn-primary">Mark Paid</a>
+                                                                    {% else %}
+                                                                        
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                        {% endfor %}
 						    	                		<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#confirmGroupModal">Confirm Group</a>
 	                                                    <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#somethingHappenedModal">Something Happened</a>
 						    	                	{% else %}

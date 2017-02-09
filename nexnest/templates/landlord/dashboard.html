@@ -466,7 +466,7 @@
 	        								                    		    	</div>
 	        								                    		    {% endwith %}
 	        								                    		{% endfor %}
-	                    			      					    		<div id="allGroupMembersListingPending{{groupListing.group.id}}" style="display: none;">
+	                    			      					    		<div id="allGroupMembersListingPending{{groupListing.group.id}}+{{groupListing.listing.id}}" style="display: none;">
 	                    		      					    				{% for user in groupListing.group.acceptedUsers %}
 	                    		      					    					{% with group=groupListing.group %}         
 	                    		      					    						<div class="row">
@@ -479,16 +479,16 @@
 	                    		      					    				    {% endwith %}
 	                    		      					    				{% endfor %}
 	                    			      					    		</div>
-	                    			      					    		<button class="btn btn-info" id="allGroupMembersListingPendingToggle{{groupListing.group.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{groupListing.group.users|count-1}} members</button>
+	                    			      					    		<button class="btn btn-info" id="allGroupMembersListingPendingToggle{{groupListing.group.id}}+{{groupListing.listing.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{groupListing.group.users|count-1}} members</button>
 
 	                    			      					    		<script type="text/javascript">
 	                    			      					    			//Show/hide all members of group
-	                    			      					    			$("#allGroupMembersListingPendingToggle{{groupListing.group.id}}").click(function(){
-	                    			      					    			    $("#allGroupMembersListingPending{{groupListing.group.id}}").toggle();
-	                    			      					    			    if($("#allGroupMembersListingPendingToggle{{groupListing.group.id}}").text()==" See other {{groupListing.group.users|count-1}} members")
-	                    			      					    			    	$("#allGroupMembersListingPendingToggle{{groupListing.group.id}}").text("Hide other members");
+	                    			      					    			$("#allGroupMembersListingPendingToggle{{groupListing.group.id}}+{{groupListing.listing.id}}").click(function(){
+	                    			      					    			    $("#allGroupMembersListingPending{{groupListing.group.id}}+{{groupListing.listing.id}}").toggle();
+	                    			      					    			    if($("#allGroupMembersListingPendingToggle{{groupListing.group.id}}+{{groupListing.listing.id}}").text()==" See other {{groupListing.group.users|count-1}} members")
+	                    			      					    			    	$("#allGroupMembersListingPendingToggle{{groupListing.group.id}}+{{groupListing.listing.id}}").text("Hide other members");
 	                    			      					    			    else
-	                    			      					    			    	$("#allGroupMembersListingPendingToggle{{groupListing.group.id}}").text(" See other {{groupListing.group.users|count-1}} members");	
+	                    			      					    			    	$("#allGroupMembersListingPendingToggle{{groupListing.group.id}}+{{groupListing.listing.id}}").text(" See other {{groupListing.group.users|count-1}} members");	
 	                    			      					    			});
 	                    			      					    		</script>
 	        								                    		<br>
@@ -510,7 +510,9 @@
 	        							                    <div class="card-header">
 	        								                    <div class="row">
 	        								                    	<div class="col-xs-7">
-	        								                    		<a href="{{ url_for('housingRequests.view', id=groupListing.id) }}"><h3><strong>{{ groupListing.listing.street }} requested by: {{ groupListing.group.name }}</strong></h3></a>
+	        								                    		<a href="{{ url_for('housingRequests.view', id=groupListing.id) }}">
+	        								                    		<h3><strong>{{ groupListing.listing.street }} requested by: {{ groupListing.group.name }}</strong></h3>
+	        								                    		</a>
 	        								                    	</div>
 	        								                    </div>			                    
 	        							                    </div>
@@ -527,40 +529,40 @@
 	        								                    	<div class="col-xs-8">
 	        								                    		<h3><strong>Group requesting the listing: {{groupListing.group.name}}</strong>({{groupListing.group.users|count}} Members)</h3>
 	        								                    		<strong>Group Leader:</strong>
-	        								                    		{% for user in groupListing.group.acceptedUsers %}
+	        								                    		{% for deposit in groupListing.securityDeposits %}
 	        								                    			{% with group=groupListing.group %}         
 	        								                    				<div class="row">
 	        								                    					<div class="col-xs-8">
-	        								                    						{% if group.leader_id == user.id %}
-	        								                    		    				{% include 'landlord/member.html' %}
+	        								                    						{% if group.leader_id == deposit.user.id %}
+	        								                    		    				{% include 'landlord/acceptedMember.html' %}
 	        								                    						{% endif %}
 	        								                    		    		</div>
 	        								                    		    	</div>
 	        								                    		    {% endwith %}
 	        								                    		{% endfor %}
-	                    			      					    		<div id="allGroupMembersListingCompleted{{groupListing.group.id}}" style="display: none;">
-	                    		      					    				{% for user in groupListing.group.acceptedUsers %}
+	                    			      					    		<div id="allGroupMembersListingCompleted{{groupListing.group.id}}Z{{groupListing.listing.id}}" style="display: none;">
+	                    		      					    				{% for deposit in groupListing.securityDeposits %}
 	                    		      					    					{% with group=groupListing.group %}         
 	                    		      					    						<div class="row">
 	                    		      					    							<div class="col-xs-8">
-	                    		      					    								{% if not group.leader_id == user.id %}
-	                    		      					    				    				{% include 'landlord/member.html' %}
+	                    		      					    								{% if not group.leader_id == deposit.user.id %}
+	                    		      					    				    				{% include 'landlord/acceptedMember.html' %}
 	                    		      					    				    			{% endif %}
 	                    		      					    				    		</div>
 	                    		      					    				    	</div>
 	                    		      					    				    {% endwith %}
 	                    		      					    				{% endfor %}
 	                    			      					    		</div>
-	                    			      					    		<button class="btn btn-info" id="allGroupMembersListingCompletedToggle{{groupListing.group.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{groupListing.group.users|count-1}} members</button>
+	                    			      					    		<button class="btn btn-info" id="allGroupMembersListingCompletedToggle{{groupListing.group.id}}Z{{groupListing.listing.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{groupListing.group.users|count-1}} members</button>
 
 	                    			      					    		<script type="text/javascript">
 	                    			      					    			//Show/hide all members of group
-	                    			      					    			$("#allGroupMembersListingCompletedToggle{{groupListing.group.id}}").click(function(){
-	                    			      					    			    $("#allGroupMembersListingCompleted{{groupListing.group.id}}").toggle();
-	                    			      					    			    if($("#allGroupMembersListingCompletedToggle{{groupListing.group.id}}").text()==" See other {{groupListing.group.users|count-1}} members")
-	                    			      					    			    	$("#allGroupMembersListingCompletedToggle{{groupListing.group.id}}").text("Hide other members");
+	                    			      					    			$("#allGroupMembersListingCompletedToggle{{groupListing.group.id}}Z{{groupListing.listing.id}}").click(function(){
+	                    			      					    			    $("#allGroupMembersListingCompleted{{groupListing.group.id}}Z{{groupListing.listing.id}}").toggle();
+	                    			      					    			    if($("#allGroupMembersListingCompletedToggle{{groupListing.group.id}}Z{{groupListing.listing.id}}").text()==" See other {{groupListing.group.users|count-1}} members")
+	                    			      					    			    	$("#allGroupMembersListingCompletedToggle{{groupListing.group.id}}Z{{groupListing.listing.id}}").text("Hide other members");
 	                    			      					    			    else
-	                    			      					    			    	$("#allGroupMembersListingCompletedToggle{{groupListing.group.id}}").text(" See other {{groupListing.group.users|count-1}} members");	
+	                    			      					    			    	$("#allGroupMembersListingCompletedToggle{{groupListing.group.id}}Z{{groupListing.listing.id}}").text(" See other {{groupListing.group.users|count-1}} members");	
 	                    			      					    			});
 	                    			      					    		</script>
 	        								                    		<br>
