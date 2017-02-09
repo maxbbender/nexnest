@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 
 from nexnest.application import session
 
-from nexnest.forms import HouseMessageForm, MaintenanceRequestForm
+from nexnest.forms import HouseMessageForm, MaintenanceRequestForm, MaintenanceRequestMessageForm
 from nexnest.models.group_listing_message import GroupListingMessage
 from nexnest.models.house import House
 from nexnest.models.house_message import HouseMessage
@@ -76,7 +76,7 @@ def messageCreate():
     return form.redirect()
 
 
-@houses.route('/house/maintenanceRequest/request')
+@houses.route('/house/maintenanceRequest', methods=['POST'])
 @login_required
 def maintenanceRequestCreate():
     form = MaintenanceRequestForm(request.form)
@@ -88,7 +88,8 @@ def maintenanceRequestCreate():
 
             if current_user in house.tenants:
                 newMR = Maintenance(request_type=form.requestType.data,
-                                    details=form.details.data, house=house)
+                                    details=form.details.data,
+                                    house=house)
                 session.add(newMR)
                 session.commit()
 
@@ -105,5 +106,42 @@ def maintenanceRequestCreate():
     form.redirect()
 
 
-            
-            
+@houses.route('/house/maintenanceRequest/<id>/message', methods=['POST'])
+@login_required
+def maintenanceRequestMessage():
+    form = MaintenanceRequestMessageForm(request.form)
+
+    if form.validate():
+        maintenance = session.query(Maintenance).filter_by(id=form.maintenanceID.data).first()
+
+        if maintenance is not None:
+            if maintenance.house.isViewableBy(current_user):
+                newMRMsg = MaintenanceMessage(maintenance=maintenance,
+                                              content=form.content.data,
+                                              user=current_user)
+                session.add(newMRMsg)
+                session.commit()
+
+        else:
+            flash("Invalid Request", 'warning')
+
+
+@houses.route('/house/maintenanceRequest/<id>/view', methods=['GET'])
+@login_required
+def maintenanceRequestView(id):
+    maintenanceRequest = session.query(Maintenance).filter_by(id=id).first()
+
+    if maintenanceRequest is not None:
+        if maintenanceRequest.group.isViewableBy(current_user):
+            # Message Form
+            messageForm = MaintenanceRequestMessageForm()
+            messageForm.maintenanceID = id
+
+            # Messages
+            messages = session.query(MaintenanceMessage). \
+                filter_by(maintenance_id=id). \
+                order_by(desc(MaintenanceMessage.date_created)).all()
+
+            return render_template('maintenanceView.html',
+                                   messageForm=messageForm,
+                                   message=messages)

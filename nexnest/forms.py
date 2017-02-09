@@ -205,3 +205,9 @@ class MaintenanceRequestForm(RedirectForm):
     requestType = SelectField('Request Type', choices=maintenanceRequestTypes)
     details = TextAreaField('Details', [InputRequired()])
     houseID = HiddenField('houseID', [InputRequired()])
+
+
+class MaintenanceRequestMessageForm(RedirectForm):
+    maintenanceID = HiddenField('maintenanceID', [InputRequired()])
+    content = TextAreaField('Message',
+                            [InputRequired("You must put in a message")])

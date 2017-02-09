@@ -7,6 +7,8 @@ from .base import Base
 from sqlalchemy import event
 from sqlalchemy.orm import relationship
 
+from flask import flash
+
 
 # class PostReport(Base):
 class House(Base):
@@ -17,6 +19,7 @@ class House(Base):
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
     messages = relationship("HouseMessage", backref='house')
+    maintenanceRequests = relationship("Maintenance", backref='house')
 
     def __init__(
             self,
@@ -40,6 +43,7 @@ class House(Base):
         elif user in self.listing.landLordsAsUsers():
             return True
 
+        flash("Permissions Error", 'danger')
         return False
 
     @property
