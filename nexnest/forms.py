@@ -6,7 +6,7 @@ from flask_wtf.file import FileField, FileRequired
 
 from wtforms.validators import InputRequired, Length, Email, EqualTo
 
-from nexnest.static.dataSets import valid_time_periods, valid_parking_types, valid_unit_types, states
+from nexnest.static.dataSets import valid_time_periods, valid_parking_types, valid_unit_types, states, maintenanceRequestTypes
 
 from urllib.parse import urlparse, urljoin
 
@@ -51,13 +51,16 @@ class TourMessageForm(RedirectForm):
 class TourForm(RedirectForm):
     group_tour_id = HiddenField('group_id', [InputRequired()])
     listing_id = HiddenField('listing_id', [InputRequired()])
-    description = TextAreaField('Message to Landlord', [Length(min=1, max=1500), InputRequired()])
-    requestedDateTime = HiddenField('Date and time you would like to tour the house')
+    description = TextAreaField('Message to Landlord', [
+                                Length(min=1, max=1500), InputRequired()])
+    requestedDateTime = HiddenField(
+        'Date and time you would like to tour the house')
 
 
 class TourDateChangeForm(RedirectForm):
     input_id = HiddenField('group_id', [InputRequired()])
-    requestedDateTime = HiddenField('Date and time you would like to tour the house')
+    requestedDateTime = HiddenField(
+        'Date and time you would like to tour the house')
 
 
 class SuggestListingForm(RedirectForm):
@@ -91,21 +94,27 @@ class LoginForm(RedirectForm):
 
 
 class ListingForm(RedirectForm):
-    street = StringField('Street Address', [Length(min=2, max=50), InputRequired()])
+    street = StringField('Street Address', [
+                         Length(min=2, max=50), InputRequired()])
     apartment_number = IntegerField('Apartment Number', [InputRequired()])
     city = StringField('City', [Length(min=2, max=50), InputRequired()])
     state = SelectField('State', choices=states)
     zip_code = StringField('Zipcode', [Length(min=5, max=5), InputRequired()])
-    start_date = StringField('Start Date', [Length(min=5, max=15), InputRequired()])
-    end_date = StringField('End Date', [Length(min=5, max=15), InputRequired()])
+    start_date = StringField(
+        'Start Date', [Length(min=5, max=15), InputRequired()])
+    end_date = StringField(
+        'End Date', [Length(min=5, max=15), InputRequired()])
     time_period = SelectField('Length of Lease', choices=valid_time_periods)
     unit_type = SelectField('Unit Type', choices=valid_unit_types)
     num_bedrooms = IntegerField('Number of Bedrooms', [InputRequired()])
-    num_full_baths = IntegerField('Number of Full Bathrooms', [InputRequired()])
-    num_half_baths = IntegerField('Number of Half Bathrooms', [InputRequired()])
+    num_full_baths = IntegerField(
+        'Number of Full Bathrooms', [InputRequired()])
+    num_half_baths = IntegerField(
+        'Number of Half Bathrooms', [InputRequired()])
     price = IntegerField('Price per Bedroom per Semester', [InputRequired()])
     square_footage = IntegerField('Square Footage of House', [InputRequired()])
-    parking = SelectField('What Parking is Available', choices=valid_parking_types)
+    parking = SelectField('What Parking is Available',
+                          choices=valid_parking_types)
     cats = BooleanField('Are Cats Allowed?')
     dogs = BooleanField('Are Dogs Allowed?')
     other_pets = BooleanField('Are Other Pets Allowed?')
@@ -116,11 +125,13 @@ class ListingForm(RedirectForm):
     handicap = BooleanField('Is the property handicap accessible?')
     furnished = BooleanField('Is the property furnished?')
     utilities_included = BooleanField('Are utilities included in the price?')
-    emergency_maintenance = BooleanField('Do you provide emergency maintenance?')
+    emergency_maintenance = BooleanField(
+        'Do you provide emergency maintenance?')
     snow_plowing = BooleanField('Do you provide snow removal?')
     garbage_service = BooleanField('Is garbage service included?')
     security_service = BooleanField('Is there a security service provided?')
-    description = TextAreaField('Please provide a detailed description of the property', [Length(min=1, max=1500), InputRequired()])
+    description = TextAreaField('Please provide a detailed description of the property', [
+                                Length(min=1, max=1500), InputRequired()])
 
 
 class CreateGroupForm(RedirectForm):
@@ -174,7 +185,8 @@ class PasswordChangeForm(RedirectForm):
 class GroupListingForm(RedirectForm):
     groupID = HiddenField('groupID', [InputRequired()])
     listingID = HiddenField('listingID', [InputRequired()])
-    reqDescription = TextAreaField('Aything you would like to say to the landlord to go along with your request', [InputRequired()])
+    reqDescription = TextAreaField(
+        'Aything you would like to say to the landlord to go along with your request', [InputRequired()])
 
 
 class GroupListingMessageForm(RedirectForm):
@@ -187,3 +199,9 @@ class HouseMessageForm(RedirectForm):
     houseID = HiddenField('groupID', [InputRequired()])
     content = TextAreaField('Message',
                             [InputRequired("You must put in a message")])
+
+
+class MaintenanceRequestForm(RedirectForm):
+    requestType = SelectField('Request Type', choices=maintenanceRequestTypes)
+    details = TextAreaField('Details', [InputRequired()])
+    houseID = HiddenField('houseID', [InputRequired()])

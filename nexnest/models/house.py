@@ -42,6 +42,10 @@ class House(Base):
 
         return False
 
+    @property
+    def tenants(self):
+        return self.group.acceptedUsers
+
 
 def update_date_modified(mapper, connection, target):
     # 'target' is the inserted object

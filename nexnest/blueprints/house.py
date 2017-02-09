@@ -4,10 +4,12 @@ from flask_login import login_required, current_user
 
 from nexnest.application import session
 
-from nexnest.forms import HouseMessageForm
+from nexnest.forms import HouseMessageForm, MaintenanceRequestForm
 from nexnest.models.group_listing_message import GroupListingMessage
 from nexnest.models.house import House
 from nexnest.models.house_message import HouseMessage
+from nexnest.models.maintenance import Maintenance
+from nexnest.models.maintenance_message import MaintenanceMessage
 
 from nexnest.utils.flash import flash_errors
 
@@ -72,3 +74,36 @@ def messageCreate():
         flash_errors(form)
 
     return form.redirect()
+
+
+@houses.route('/house/maintenanceRequest/request')
+@login_required
+def maintenanceRequestCreate():
+    form = MaintenanceRequestForm(request.form)
+
+    if form.validate():
+        house = session.query(House).filter_by(id=form.houseID.data).first()
+
+        if house is not None:
+
+            if current_user in house.tenants:
+                newMR = Maintenance(request_type=form.requestType.data,
+                                    details=form.details.data, house=house)
+                session.add(newMR)
+                session.commit()
+
+                flash("Maintenance Request Created", 'success')
+                return redirect(url_for('houses.view', id=house.id))
+            else:
+                flash("You are not a part of this house", 'warning')
+
+        else:
+            flash('Invalid Request', 'warning')
+    else:
+        flash_errors(form)
+
+    form.redirect()
+
+
+            
+            

@@ -82,3 +82,14 @@ states = [
     ('48', 'WI'),
     ('49', 'WY')
 ]
+
+maintenanceRequestTypes = [
+    ('heatingCooling', 'Heating or Cooling'),
+    ('internet', 'Internet'),
+    ('yardDriveway', 'Yard or Driveway'),
+    ('appliance', 'Appliance'),
+    ('plumbing', 'Plumbing'),
+    ('electrical', 'Electrical'),
+    ('furnishing', 'Furnishing'),
+    ('other', 'Other')
+]
