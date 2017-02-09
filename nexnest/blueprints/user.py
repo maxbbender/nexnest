@@ -121,45 +121,6 @@ def editAccountInfo():
                            title='Edit Account',
                            schools=schools)
 
-    # @users.route('/user/edit', methods=['GET', 'POST'])
-    # @login_required
-    # def editAccount():
-    #     editForm = EditAccountForm(request.data, obj=current_user)
-
-    #     if request.method == 'POST' and editForm.validate():
-
-    #     if request == 'GET':
-    #         schools = [r for r, in session.query(School.name).all()]
-    #         form = EditAccountForm(obj=current_user)
-    #         return render_template('editAccount.html', form=form, title='Edit Account', schools=schools)
-    #     else:
-    #         form = EditAccountForm
-
-    #     form = EditAccountForm(obj=current_user)
-    #     # if request.method == 'GET':
-    #     #     form.fname.data = current_user.fname
-    #     #     form.lname.data = current_user.lname
-    #     #     form.email.data = current_user.email
-    #     #     form.website.data = current_user.website
-    #     #     form.bio.data = current_user.bio
-    #     #     form.phone.data = current_user.phone
-    #     # form.school.data = current_user.school
-    #     if form.validate_on_submit():
-    #         current_user.fname = form.fname.data
-    #         current_user.lname = form.lname.data
-    #         current_user.email = form.email.data
-    #         current_user.website = form.website.data
-    #         current_user.bio = form.bio.data
-    #         current_user.phone = form.phone.data
-    #         # current_user.school = form.school.data
-    #         if not form.password.data == '':
-    #             current_user.set_password(form.password.data)
-    #         session.commit()
-    #         flash('Account Updated', 'info')
-    #         return redirect(url_for('viewUsers.viewUser', userID=current_user.id))
-    #
-
-
 @users.route('/user/search/<username>')
 @login_required
 def searchForUser(username):

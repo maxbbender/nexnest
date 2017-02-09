@@ -1,6 +1,7 @@
 from flask import Blueprint
 from flask import render_template, abort, request, redirect, url_for, flash, jsonify
 
+
 from nexnest.forms import LoginForm
 
 
@@ -19,7 +20,7 @@ indexs = Blueprint('indexs', __name__, template_folder='../templates')
 def index():
     form = LoginForm(request.form)
     allListings = session.query(Listing).all()
-   
+
     if request.method == 'POST' and form.validate():
         # user = User(form.username.data, form.email.data,
         #            form.password.data)

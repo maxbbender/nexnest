@@ -9,16 +9,13 @@ from nexnest.models.landlord import Landlord
 from nexnest.models.landlord_listing import LandlordListing
 from nexnest.models.listing import Listing
 from nexnest.models.tour_message import TourMessage
+from nexnest.models.group_listing import GroupListing
 from nexnest.models.group_listing_message import GroupListingMessage
-
-from nexnest.data_gen.factories import GroupFactory, UserFactory
-
-from sqlalchemy import asc, or_, and_
-
+from nexnest.models.security_deposit import SecurityDeposit
 # tm = session.query(TourMessage).filter_by(tour_id=1).first()
 # g = session.query(Group).filter_by(id=1).first()
 
 
-u = session.query(GroupListingMessage).first()
+u = session.query(GroupListing).filter_by(id=3).first()
 
-print(u.user)
+print(u.securityDeposits)
