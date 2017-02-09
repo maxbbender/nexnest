@@ -165,7 +165,7 @@ def maintenanceRequestInProgress(id):
 
 @houses.route('/house/maintenanceRequest/<id>/completed', methods=['GET'])
 @login_required
-def maintenanceRequestInProgress(id):
+def maintenanceRequestCompleted(id):
     maintenanceRequest = session.query(Maintenance).filter_by(id=id).first()
 
     if maintenanceRequest is not None:
