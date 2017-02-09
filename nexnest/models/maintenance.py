@@ -6,6 +6,8 @@ from .base import Base
 
 from sqlalchemy import event
 
+from flask import flash
+
 
 # class PostReport(Base):
 class Maintenance(Base):
@@ -37,6 +39,13 @@ class Maintenance(Base):
 
     def __repr__(self):
         return '<Maintenance %r>' % self.id
+
+    def isEditableBy(self, user):
+        if user in self.house.listing.landLordsAsUsers():
+            return True
+
+        flash('Permissions Error', 'warning')
+        return False
 
 
 def update_date_modified(mapper, connection, target):

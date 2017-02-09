@@ -143,5 +143,36 @@ def maintenanceRequestView(id):
                 order_by(desc(MaintenanceMessage.date_created)).all()
 
             return render_template('maintenanceView.html',
+                                   maintenanceRequest=maintenanceRequest,
                                    messageForm=messageForm,
                                    message=messages)
+
+
+@houses.route('/house/maintenanceRequest/<id>/inProgress', methods=['GET'])
+@login_required
+def maintenanceRequestInProgress(id):
+    maintenanceRequest = session.query(Maintenance).filter_by(id=id).first()
+
+    if maintenanceRequest is not None:
+        if maintenanceRequest.isEditableBy(current_user):
+            maintenanceRequest.status = 'inprogress'
+            session.commit()
+    else:
+        flash('Invalid Request', 'warning')
+
+    return redirect(url_for('houses.maintenanceRequestView', id=id))
+
+
+@houses.route('/house/maintenanceRequest/<id>/completed', methods=['GET'])
+@login_required
+def maintenanceRequestInProgress(id):
+    maintenanceRequest = session.query(Maintenance).filter_by(id=id).first()
+
+    if maintenanceRequest is not None:
+        if maintenanceRequest.isEditableBy(current_user):
+            maintenanceRequest.status = 'completed'
+            session.commit()
+    else:
+        flash('Invalid Request', 'warning')
+
+    return redirect(url_for('houses.maintenanceRequestView', id=id))
