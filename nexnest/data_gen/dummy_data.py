@@ -153,12 +153,15 @@ glm14 = GroupListingMessageFactory(groupListing=gl2, user=user2)
 
 session.commit()
 
-# SECURITY DEPOSITS FOR GL3
+# SECURITY DEPOSITS
+
+# gl3
 sd1 = SecurityDepositFactory(user=user2, groupListing=gl3)
 sd2 = SecurityDepositFactory(user=user3, groupListing=gl3)
 sd3 = SecurityDepositFactory(user=user4, groupListing=gl3)
 sd4 = SecurityDepositFactory(user=user5, groupListing=gl3)
 
+# gl2
 sd5 = SecurityDepositFactory(user=user2, groupListing=gl2)
 sd6 = SecurityDepositFactory(user=user3, groupListing=gl2)
 sd7 = SecurityDepositFactory(user=user4, groupListing=gl2)
