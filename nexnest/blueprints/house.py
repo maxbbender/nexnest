@@ -25,14 +25,15 @@ def view(id):
         .first()
 
     messages = session.query(HouseMessage) \
-        .filter_by(id=id).order_by(asc(HouseMessage.date_created)) \
+        .filter_by(id=id).order_by(desc(HouseMessage.date_created)) \
         .all()
 
     maintenanceRequests = session.query(Maintenance) \
-        .filter_by(house_id=id).order_by(asc(Maintenance.date_created))\
+        .filter_by(house_id=id).order_by(desc(Maintenance.date_created))\
         .all()
 
     messageForm = HouseMessageForm()
+    maintenanceRequestForm = MaintenanceRequestForm()
 
     if house is not None:
 
@@ -43,7 +44,8 @@ def view(id):
                                    landlords=house.listing.landLordsAsUsers(),
                                    messages=messages,
                                    maintenanceRequests=maintenanceRequests,
-                                   messageForm=messageForm)
+                                   messageForm=messageForm,
+                                   maintenanceRequestForm=maintenanceRequestForm)
         else:
             flash("This house is not occupied", "warning")
     else:
@@ -155,6 +157,7 @@ def maintenanceRequestView(id):
             return render_template('maintenanceView.html',
                                    maintenanceRequest=maintenanceRequest,
                                    house=house,
+                                   landlords=house.listing.landLordsAsUsers(),
                                    messageForm=messageForm,
                                    messages=messages)
 

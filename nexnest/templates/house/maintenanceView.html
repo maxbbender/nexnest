@@ -51,10 +51,83 @@
                     <div class="card-block">
                         <div class="row">
                             <div class="col-xs-12">
-                                
+                                <p class="card-text"><strong>Issue Reported on:</strong> {{ maintenanceRequest.date_created }}</p>
+                                <br>
+                                <strong>Status: </strong>
+                                {% if maintenanceRequest.status == 'open' %}
+                                	<button class="btn btn-info">Open </button>
+                                {% elif maintenanceRequest.status == 'inprogress' %}
+                                	<button class="btn btn-warning"><i class="fa fa-ellipsis-h" aria-hidden="true"></i> In Progress</button>
+                                {% else %}
+                                	<button class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i> Completed</button>
+                                {% endif %}
+                                <br><br>
+                                <strong>Details:</strong>
+                                {{ maintenanceRequest.details }}
+                                <br><br>
+                                {% if not maintenanceRequest.status == 'completed' %}
+                                	<strong>Change status of maintenance request to:</strong>
+                                	<br><br>
+                                {% endif %}
+                                {% if current_user in landlords %}
+                                	{% if maintenanceRequest.status == 'open' %}
+                                		<button class="btn btn-warning" data-toggle="modal" data-target="#markInProgressModal"><i class="fa fa-ellipsis-h" aria-hidden="true"></i> Work In Progress</button>
+                                		<button class="btn btn-success" data-toggle="modal" data-target="#markCompletedModal"><i class="fa fa-check" aria-hidden="true"></i> Work Completed</button>
+                                	{% elif maintenanceRequest.status == 'inprogress' %}
+                                		<button class="btn btn-success" data-toggle="modal" data-target="#markCompletedModal"><i class="fa fa-check" aria-hidden="true"></i> Work Completed</button>
+                                	{% endif %}
+                                {% endif %}
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Mark In Progress Modal-->
+    <div class="modal fade" id="markInProgressModal" tabindex="-1" role="dialog" aria-labelledby="inprogress" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <p class="card-text">Has work begun on this maintenance request?</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="{{ url_for('houses.maintenanceRequestInProgress', id=maintenanceRequest.id) }}" class="btn btn-primary">Mark In Progress</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Mark Completed Modal-->
+    <div class="modal fade" id="markCompletedModal" tabindex="-1" role="dialog" aria-labelledby="completed" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <p class="card-text">Has work been completed on this maintenance request?</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="{{ url_for('houses.maintenanceRequestCompleted', id=maintenanceRequest.id) }}" class="btn btn-primary">Mark Completed</a>
                 </div>
             </div>
         </div>
@@ -64,32 +137,19 @@
 {% endblock %}
 {% block scripts %}
 <script>    
-    $(document).ready(function(){
-        $('#confirmed').popover({
-            html: true,
-            trigger: 'focus',
-            template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title" style="background-color: #449d44; text-align: center; color: #ffffff;"></h3><div class="popover-content"></div></div>'
-        });
-
-        $('#pending').popover({
-            html: true,
-            trigger: 'focus',
-            template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title" style="background-color: #ec971f; text-align: center; color: #ffffff;"></h3><div class="popover-content"></div></div>'
-        });
-    });
-
+    
     //Confirm Tour Modal
-    $('#confirmTourModal').on('show.bs.modal', function (event) {
+    $('#markInProgressModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget);
       var modal = $(this);
-      modal.find('.modal-title').text('Confirm Tour');
+      modal.find('.modal-title').text('Maintenance in Progress?');
     })
 
     //Suggest Tour Time Modal
-    $('#suggestTimeTourModal').on('show.bs.modal', function (event) {
+    $('#markCompletedModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget);
       var modal = $(this);
-      modal.find('.modal-title').text('Request Different Time For Tour');
+      modal.find('.modal-title').text('Maintenance Completed?');
     })
 
 </script>
