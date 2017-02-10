@@ -5,7 +5,6 @@ from flask_login import login_required, current_user
 from nexnest.application import session
 
 from nexnest.forms import HouseMessageForm, MaintenanceRequestForm, MaintenanceRequestMessageForm
-from nexnest.models.group_listing_message import GroupListingMessage
 from nexnest.models.house import House
 from nexnest.models.house_message import HouseMessage
 from nexnest.models.maintenance import Maintenance
@@ -26,7 +25,11 @@ def view(id):
         .first()
 
     messages = session.query(HouseMessage) \
-        .filter_by(id=id).order_by(desc(GroupListingMessage.date_created)) \
+        .filter_by(id=id).order_by(asc(HouseMessage.date_created)) \
+        .all()
+
+    maintenanceRequests = session.query(Maintenance) \
+        .filter_by(house_id=id).order_by(asc(Maintenance.date_created))\
         .all()
 
     messageForm = HouseMessageForm()
@@ -34,13 +37,13 @@ def view(id):
     if house is not None:
 
         if house.isViewableBy(current_user):
-
-            if house.completed:
-                return render_template('viewHouse.html',
-                                       house=house,
-                                       landlords=house.listing.landLordsAsUsers(),
-                                       messages=messages,
-                                       messageForm=messageForm)
+            
+            return render_template('viewHouse.html',
+                                   house=house,
+                                   landlords=house.listing.landLordsAsUsers(),
+                                   messages=messages,
+                                   maintenanceRequests=maintenanceRequests,
+                                   messageForm=messageForm)
         else:
             flash("This house is not occupied", "warning")
     else:
@@ -134,10 +137,15 @@ def maintenanceRequestView(id):
     maintenanceRequest = session.query(Maintenance).filter_by(id=id).first()
 
     if maintenanceRequest is not None:
-        if maintenanceRequest.group.isViewableBy(current_user):
+        if maintenanceRequest.house.isViewableBy(current_user):
             # Message Form
             messageForm = MaintenanceRequestMessageForm()
             messageForm.maintenanceID = id
+
+            #House
+            house = session.query(House) \
+                .filter_by(id=maintenanceRequest.house.id) \
+                .first()
 
             # Messages
             messages = session.query(MaintenanceMessage). \
@@ -146,8 +154,9 @@ def maintenanceRequestView(id):
 
             return render_template('maintenanceView.html',
                                    maintenanceRequest=maintenanceRequest,
+                                   house=house,
                                    messageForm=messageForm,
-                                   message=messages)
+                                   messages=messages)
 
 
 @houses.route('/house/maintenanceRequest/<id>/inProgress', methods=['GET'])
