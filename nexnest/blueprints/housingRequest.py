@@ -189,3 +189,51 @@ def confirmRequest(id):
     else:
         flash("Invalid Request", 'warning')
         return redirect(url_for('indexs.index'))
+
+
+@housingRequests.route('/houseRequest/<id>/securityDeposit/<userID>/paid')
+@login_required
+def paySecurityDeposit(id, userID):
+    groupListing = session.query(GroupListing).filter_by(id=id).first()
+
+    if groupListing is not None:
+
+        if groupListing.isEditableBy(current_user):
+            securityDeposit = session.query(SecurityDeposit).filter_by(group_listing_id=groupListing.id, user_id=userID).first()
+
+            if securityDeposit is not None:
+                if not securityDeposit.completed:
+                    securityDeposit.completed = True
+                    session.commit()
+                else:
+                    flash("Security Deposit already paid", 'warning')
+            else:
+                flash("Invalid Reqeust", 'warning')
+    else:
+        flash("Invalid Request", 'warning')
+
+    return redirect(url_for('houseRequests.view', id=groupListing.id))
+
+
+@housingRequests.route('/houseRequest/<id>/securityDeposit/<userID>/unPaid')
+@login_required
+def unPaySecurityDeposit(id, userID):
+    groupListing = session.query(GroupListing).filter_by(id=id).first()
+
+    if groupListing is not None:
+
+        if groupListing.isEditableBy(current_user):
+            securityDeposit = session.query(SecurityDeposit).filter_by(group_listing_id=groupListing.id, user_id=userID).first()
+
+            if securityDeposit is not None:
+                if securityDeposit.completed:
+                    securityDeposit.completed = False
+                    session.commit()
+                else:
+                    flash("Security Deposit was already not paid", 'warning')
+            else:
+                flash("Invalid Reqeust", 'warning')
+    else:
+        flash("Invalid Request", 'warning')
+
+    return redirect(url_for('houseRequests.view', id=groupListing.id))
