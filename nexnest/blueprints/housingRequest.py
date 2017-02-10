@@ -212,7 +212,7 @@ def paySecurityDeposit(id, userID):
     else:
         flash("Invalid Request", 'warning')
 
-    return redirect(url_for('houseRequests.view', id=groupListing.id))
+    return redirect(url_for('housingRequests.view', id=groupListing.id))
 
 
 @housingRequests.route('/houseRequest/<id>/securityDeposit/<userID>/unPaid')
@@ -236,4 +236,22 @@ def unPaySecurityDeposit(id, userID):
     else:
         flash("Invalid Request", 'warning')
 
-    return redirect(url_for('houseRequests.view', id=groupListing.id))
+    return redirect(url_for('housingRequests.view', id=groupListing.id))
+
+
+@housingRequests.route('/houseRequest/<id>/securityDeposit/allPaid', methods=['GET'])
+@login_required
+def allSecurityDepositPaid(id):
+    groupListing = session.query(GroupListing).filter_by(id=id).first()
+
+    if groupListing is not None:
+
+        if groupListing.isEditableBy(current_user):
+            allSecurityDeposits = session.query(SecurityDeposit).filter_by(group_listing_id=groupListing.id).first()
+            for securityDeposit in allSecurityDeposits:
+                securityDeposit.completed = True
+            session.commit()
+    else:
+        flash("Invalid Request", 'warning')
+
+    return redirect(url_for('housingRequests.view', id=groupListing.id))
