@@ -64,7 +64,7 @@
 			            <!-- Add new message -->
 			            <div class="form-group">
 			                <form action="{{url_for('houses.messageCreate')}}" method='POST'>
-			                    {{messageForm.groupListingID(value=house.id)}}
+			                    {{messageForm.houseID(value=house.id)}}
 			                    {{messageForm.csrf_token}}
 			                    <div class="row">
 			                        {{messageForm.content(class="form-control", rows=5)}}
@@ -95,14 +95,48 @@
 				    	        		</div>
 				    	        		<div class="col-xs-5" style="text-align: right;">
 				    	        			{% if not current_user in landlords %}
-				    	        				<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#maintenanceRequestModal">Request</a>
+				    	        				<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#maintenanceRequestModal">New Request</a>
 				    	        			{% endif %}
 				    	        		</div>
 				    	        	</div>
 				    	        </div>				    	        
 				    	        <div class="card-block">
 				    	            <div class="row">
-				    	            	
+				    	            	{% for request in maintenanceRequests %}
+			    	            			<div class="col-xs-12">
+			    	            				<div class="card">
+			    	            					<div class="card-block">
+					    	            				<div class="row">
+					    	            					<div class="col-xs-7">
+					    	            						<a href="{{url_for('houses.maintenanceRequestView', id=request.id)}}">
+					    	            							<h3>Request Type: {{ request.request_type }}</h3>
+					    	            						</a>
+					    	            					</div>
+					    	            					<div class="col-xs-5" style="text-align: right;">
+					    	            						Status: 
+					    	            						{% if request.status == 'open' %}
+					    	            							<button class="btn btn-info" style="width: 113px;">Open </button>
+					    	            						{% elif request.status == 'inprogress' %}
+					    	            							<button class="btn btn-warning" style="width: 113px;">In Progress</button>
+					    	            						{% else %}
+					    	            							<button class="btn btn-success" style="width: 113px;">Completed</button>
+					    	            						{% endif %}
+					    	            					</div>
+					    	            				</div> 
+					    	            				<div class="row">
+					    	            					<div class="col-xs-12">
+					    	            						<strong>Date Submitted:</strong> {{ request.date_created }}
+					    	            						<br><br>
+					    	            						{{ request.details }}
+					    	            						<br><br>
+					    	            						<a href="{{url_for('houses.maintenanceRequestView', id=request.id)}}" class="btn btn-primary">View Request</a>
+					    	            					</div>
+					    	            				</div>
+					    	            			</div>
+					    	            		</div>
+			    	            			</div>
+				    	            		<hr>
+				    	            	{% endfor %}
 				    	            </div>
 				    	        </div>
 				    	    </div>
@@ -183,12 +217,18 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-xs-12">
-                        <p class="card-text"></p>
+                        <form id="request_maintenance" action="{{url_for('houses.maintenanceRequestCreate')}}" method="POST">
+                        	{% from "_formhelpers.html" import render_field %}
+                            {{ maintenanceRequestForm.csrf_token }}
+                            {{ maintenanceRequestForm.houseID(value=house.id) }}
+                            {{ render_field(maintenanceRequestForm.requestType, class="form-control") }}
+                            {{ render_field(maintenanceRequestForm.details, class="form-control") }}
+                        </form>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="#" class="btn btn-primary">Submit Request</a>
+                <a href="#" class="btn btn-primary" onclick="submitMaintenanceForm()">Submit Request</a>
             </div>
         </div>
     </div>
@@ -203,5 +243,9 @@
         var modal = $(this);
         modal.find('.modal-title').text('Maintenance Request');
     })
+
+    function submitMaintenanceForm() {
+        $("#request_maintenance").submit();
+    }
 </script>
 {% endblock %}
