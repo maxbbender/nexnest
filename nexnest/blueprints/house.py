@@ -94,6 +94,7 @@ def maintenanceRequestCreate():
                 session.commit()
 
                 flash("Maintenance Request Created", 'success')
+                # TODO Redirect to ViewMaintenance Page
                 return redirect(url_for('houses.view', id=house.id))
             else:
                 flash("You are not a part of this house", 'warning')
@@ -106,13 +107,13 @@ def maintenanceRequestCreate():
     form.redirect()
 
 
-@houses.route('/house/maintenanceRequest/<id>/message', methods=['POST'])
+@houses.route('/house/maintenanceRequest/message', methods=['POST'])
 @login_required
 def maintenanceRequestMessage():
     form = MaintenanceRequestMessageForm(request.form)
 
     if form.validate():
-        maintenance = session.query(Maintenance).filter_by(id=form.maintenanceID.data).first()
+        maintenance = session.uery(Maintenance).filter_by(id=form.maintenanceID.data).first()
 
         if maintenance is not None:
             if maintenance.house.isViewableBy(current_user):
@@ -121,6 +122,7 @@ def maintenanceRequestMessage():
                                               user=current_user)
                 session.add(newMRMsg)
                 session.commit()
+                # RETURN BACKTO MAINTENNANCE VIEW
 
         else:
             flash("Invalid Request", 'warning')
