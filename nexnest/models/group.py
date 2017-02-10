@@ -69,7 +69,7 @@ class Group(Base):
     def unAcceptedUsers(self):
         unAcceptedUsers = []
         for groupUser in self.users:
-            if groupUser.accepted == False and groupUser.show == True:
+            if not groupUser.accepted and groupUser.show:
                 unAcceptedUsers.append(groupUser.user)
 
         return unAcceptedUsers
@@ -78,7 +78,7 @@ class Group(Base):
     def acceptedUsers(self):
         acceptedUsers = []
         for groupUser in self.users:
-            if groupUser.accepted == True:
+            if groupUser.accepted:
                 acceptedUsers.append(groupUser.user)
 
         return acceptedUsers
@@ -87,7 +87,7 @@ class Group(Base):
     def suggestedListings(self):
         suggestedListings = []
         for groupListing in self.listings:
-            if groupListing.group_show == True and groupListing.accepted == False:
+            if groupListing.group_show and not groupListing.accepted:
                 suggestedListings.append(groupListing.listing)
         return suggestedListings
 

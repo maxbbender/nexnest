@@ -25,6 +25,13 @@ def landlordDashboard():
             .filter_by(user_id=current_user.id) \
             .first()
 
+        unAcceptedListings = session.query(GroupListing) \
+            .filter_by(landlord_show=True,
+                       accepted=False,
+                       completed=False,
+                       group_show=True) \
+            .all()
+
         return render_template('dashboard.html',
                                landlord=landlord,
                                dateChangeForm=dateChangeForm,
