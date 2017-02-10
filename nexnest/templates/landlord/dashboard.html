@@ -241,7 +241,7 @@
 	        								                    		{% for user in tour.group.acceptedUsers %}
 	        								                    			{% with group=tour.group %}         
 	        								                    				<div class="row">
-	        								                    					<div class="col-xs-8">
+	        								                    					<div class="col-xs-10">
 	        								                    						{% if group.leader_id == user.id %}
 	        								                    		    				{% include 'landlord/member.html' %}
 	        								                    						{% endif %}
@@ -253,7 +253,7 @@
 	                    		      					    				{% for user in tour.group.acceptedUsers %}
 	                    		      					    					{% with group=tour.group %}         
 	                    		      					    						<div class="row">
-	                    		      					    							<div class="col-xs-8">
+	                    		      					    							<div class="col-xs-10">
 	                    		      					    								{% if not group.leader_id == user.id %}
 	                    		      					    				    				{% include 'landlord/member.html' %}
 	                    		      					    				    			{% endif %}
@@ -328,7 +328,7 @@
 	        								                    		{% for user in tour.group.acceptedUsers %}
 	        								                    			{% with group=tour.group %}         
 	        								                    				<div class="row">
-	        								                    					<div class="col-xs-8">
+	        								                    					<div class="col-xs-10">
 	        								                    						{% if group.leader_id == user.id %}
 	        								                    		    				{% include 'landlord/member.html' %}
 	        								                    						{% endif %}
@@ -340,7 +340,7 @@
 	                    		      					    				{% for user in tour.group.acceptedUsers %}
 	                    		      					    					{% with group=tour.group %}         
 	                    		      					    						<div class="row">
-	                    		      					    							<div class="col-xs-8">
+	                    		      					    							<div class="col-xs-10">
 	                    		      					    								{% if not group.leader_id == user.id %}
 	                    		      					    				    				{% include 'landlord/member.html' %}
 	                    		      					    				    			{% endif %}
@@ -458,7 +458,7 @@
 	        								                    		{% for user in groupListing.group.acceptedUsers %}
 	        								                    			{% with group=groupListing.group %}         
 	        								                    				<div class="row">
-	        								                    					<div class="col-xs-8">
+	        								                    					<div class="col-xs-10">
 	        								                    						{% if group.leader_id == user.id %}
 	        								                    		    				{% include 'landlord/member.html' %}
 	        								                    						{% endif %}
@@ -470,7 +470,7 @@
 	                    		      					    				{% for user in groupListing.group.acceptedUsers %}
 	                    		      					    					{% with group=groupListing.group %}         
 	                    		      					    						<div class="row">
-	                    		      					    							<div class="col-xs-8">
+	                    		      					    							<div class="col-xs-10">
 	                    		      					    								{% if not group.leader_id == user.id %}
 	                    		      					    				    				{% include 'landlord/member.html' %}
 	                    		      					    				    			{% endif %}
@@ -532,7 +532,7 @@
 	        								                    		{% for deposit in groupListing.securityDeposits %}
 	        								                    			{% with group=groupListing.group %}         
 	        								                    				<div class="row">
-	        								                    					<div class="col-xs-8">
+	        								                    					<div class="col-xs-10">
 	        								                    						{% if group.leader_id == deposit.user.id %}
 	        								                    		    				{% include 'landlord/acceptedMember.html' %}
 	        								                    						{% endif %}
@@ -544,7 +544,7 @@
 	                    		      					    				{% for deposit in groupListing.securityDeposits %}
 	                    		      					    					{% with group=groupListing.group %}         
 	                    		      					    						<div class="row">
-	                    		      					    							<div class="col-xs-8">
+	                    		      					    							<div class="col-xs-10">
 	                    		      					    								{% if not group.leader_id == deposit.user.id %}
 	                    		      					    				    				{% include 'landlord/acceptedMember.html' %}
 	                    		      					    				    			{% endif %}

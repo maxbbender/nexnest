@@ -125,7 +125,7 @@ gl1 = GroupListingFactory(group=group1, listing=listing1)
 gl2 = GroupListingFactory(group=group1, listing=listing2)
 gl3 = GroupListingFactory(group=group1, listing=listing3)
 
-gl1.landlord_show = False
+#gl1.landlord_show = False
 gl2.accepted = True
 gl2.completed = True
 

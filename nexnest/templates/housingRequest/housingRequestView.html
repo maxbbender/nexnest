@@ -250,7 +250,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="#" class="btn btn-primary">Accept Group</a>
+                <a href="{{url_for('housingRequests.acceptRequest', id=housingRequest.id)}}" class="btn btn-primary">Accept Group</a>
             </div>
         </div>
     </div>
@@ -274,7 +274,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="#" class="btn btn-danger">Decline Group</a>
+                <a href="{{url_for('housingRequests.denyRequest', id=housingRequest.id)}}" class="btn btn-danger">Decline Group</a>
             </div>
         </div>
     </div>
@@ -298,7 +298,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="#" class="btn btn-primary">Confirm Group</a>
+                <a href="{{url_for('housingRequests.confirmRequest', id=housingRequest.id)}}" class="btn btn-primary">Confirm Group</a>
             </div>
         </div>
     </div>
@@ -322,7 +322,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="#" class="btn btn-danger">Back Out</a>
+                <a href="{{url_for('housingRequests.denyRequest', id=housingRequest.id)}}" class="btn btn-danger">Back Out</a>
             </div>
         </div>
     </div>
