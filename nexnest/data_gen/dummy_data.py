@@ -91,15 +91,27 @@ gmsg6 = GroupMessageFactory(group=group1, user=user5)
 session.commit()
 
 # DIRECT MESSAGES
-dm1 = DirectMessageFactory(source_user=user2, target_user=user3)
-dm2 = DirectMessageFactory(source_user=user3, target_user=user2)
-dm3 = DirectMessageFactory(source_user=user2, target_user=user3)
-dm4 = DirectMessageFactory(source_user=user3, target_user=user4)
-dm5 = DirectMessageFactory(source_user=user4, target_user=user3)
-dm6 = DirectMessageFactory(source_user=user2, target_user=user3)
-dm6 = DirectMessageFactory(source_user=user2, target_user=user4)
+# We want MOAR then just these
+# dm1 = DirectMessageFactory(source_user=user2, target_user=user3)
+# dm2 = DirectMessageFactory(source_user=user3, target_user=user2)
+# dm3 = DirectMessageFactory(source_user=user2, target_user=user3)
+# dm4 = DirectMessageFactory(source_user=user3, target_user=user4)
+# dm5 = DirectMessageFactory(source_user=user4, target_user=user3)
+# dm6 = DirectMessageFactory(source_user=user2, target_user=user3)
+# dm6 = DirectMessageFactory(source_user=user2, target_user=user4)
 
-session.commit()
+userMessageList = [user2, user3, user4, user5, landlord, user7, user8]
+
+for i in range(50):
+    source_user = random.choice(userMessageList)
+    target_user = random.choice(userMessageList)
+
+    while source_user == target_user:
+        target_user = random.choice(userMessageList)
+
+    dm = DirectMessageFactory(source_user=source_user, target_user=target_user)
+    session.commit()
+
 
 # TOURS
 t1 = TourFactory(listing=listing1, group=group1)

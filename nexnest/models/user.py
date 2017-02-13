@@ -5,6 +5,7 @@ from nexnest.utils.password import hash_password
 from nexnest.models.group import Group
 from nexnest.models.group_user import GroupUser
 from nexnest.models.group_listing import GroupListing
+from nexnest.models.direct_message import DirectMessage
 
 from .base import Base
 from .landlord import Landlord
@@ -39,11 +40,15 @@ class User(Base):
     # twitter_token = db.Column(db.Text)
     # twitter_secret = db.Column(db.Text)
     sentDM = relationship('DirectMessage',
+                          lazy='dynamic',
                           backref='source_user',
-                          foreign_keys='[DirectMessage.source_user_id]')
+                          foreign_keys='[DirectMessage.source_user_id]',
+                          )
     recievedDM = relationship('DirectMessage',
+                              lazy='dynamic',
                               backref='target_user',
-                              foreign_keys='[DirectMessage.target_user_id]')
+                              foreign_keys='[DirectMessage.target_user_id]',
+                              )
     groups = relationship("GroupUser", back_populates='user')
 
     groupLeader = relationship("Group", backref='leader')
@@ -231,3 +236,8 @@ class User(Base):
     @property
     def isAdmin(self):
         return self.role == 'admin'
+
+    def hasDirectMessagesWith(self):
+        allUsers = []
+        mySentMessages = self.sentDM.group_by(DirectMessage.target_user_id)
+        return mySentMessages

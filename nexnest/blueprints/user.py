@@ -179,8 +179,9 @@ def directMessagesAll():
     users = []
     direct_messages = session.query(DirectMessage.target_user_id) \
         .filter_by(source_user_id=current_user.id) \
+        .order_by('date_created desc') \
         .group_by(DirectMessage.target_user_id) \
-        .all()
+        .limit(1)
 
     for dm in direct_messages:
         user = session.query(User).filter_by(id=dm).first()

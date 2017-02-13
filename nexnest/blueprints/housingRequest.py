@@ -247,7 +247,7 @@ def allSecurityDepositPaid(id):
     if groupListing is not None:
 
         if groupListing.isEditableBy(current_user):
-            allSecurityDeposits = session.query(SecurityDeposit).filter_by(group_listing_id=groupListing.id).first()
+            allSecurityDeposits = session.query(SecurityDeposit).filter_by(group_listing_id=groupListing.id).all()
             for securityDeposit in allSecurityDeposits:
                 securityDeposit.completed = True
             session.commit()

@@ -1,5 +1,6 @@
 from nexnest.application import session
 
+from sqlalchemy import desc
 from nexnest.models.group import Group
 from nexnest.models.user import User
 from nexnest.models.message import Message
@@ -16,6 +17,11 @@ from nexnest.models.security_deposit import SecurityDeposit
 # g = session.query(Group).filter_by(id=1).first()
 
 
-u = session.query(GroupListing).filter_by(id=3).first()
+u = session.query(User).filter_by(id=1).first()
 
-print(u.securityDeposits)
+print(u.hasDirectMessagesWith())
+# direct_messages = session.query(DirectMessage.target_user_id) \
+#     .filter_by(source_user_id=1) \
+#     .order_by(DirectMessage.date_created.desc()) \
+#     .all()
+# print(direct_messages)
