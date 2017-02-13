@@ -9,7 +9,7 @@ from nexnest.models.group import Group
 from nexnest.models.school import School
 from nexnest.models.direct_message import DirectMessage
 
-from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm
+from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm, CreateGroupForm
 
 from nexnest.utils.password import check_password
 from nexnest.utils.flash import flash_errors
@@ -237,11 +237,13 @@ def createDirectMessage():
 @users.route('/user/groups', methods=['GET', 'POST'])
 @login_required
 def myGroups():
+    createGroupForm = CreateGroupForm(request.form)
     groupsImIn = current_user.accepted_groups
     groupsImInvitedTo = current_user.un_accepted_groups
     return render_template('group/myGroups.html',
                            acceptedGroups=groupsImIn,
                            invitedGroups=groupsImInvitedTo,
+                           createGroupForm = CreateGroupForm(request.form),
                            title='My Groups')
 
 
