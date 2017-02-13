@@ -178,6 +178,13 @@ h1 = HouseFactory(listing=listing2, group=group1)
 
 session.commit()
 
+#House Messages
+hm1 = HouseMessageFactory(house=h1, user=user2)
+hm2 = HouseMessageFactory(house=h1, user=user3)
+hm3 = HouseMessageFactory(house=h1, user=user2)
+hm4 = HouseMessageFactory(house=h1, user=user5)
+hm5 = HouseMessageFactory(house=h1, user=landlord1.user)
+
 # Maintenance Requests
 m1 = MaintenanceFactory(house=h1)
 m2 = MaintenanceFactory(house=h1)
