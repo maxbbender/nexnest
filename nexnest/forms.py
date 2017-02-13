@@ -155,13 +155,13 @@ class DirectMessageForm(RedirectForm):
 
 
 class EditAccountForm(RedirectForm):
-    fname = StringField('First Name<span style="color: red;">(Required)</span>', [InputRequired()])
-    lname = StringField('Last Name<span style="color: red;">(Required)</span>', [InputRequired()])
-    school = StringField('School Attending<span style="color: red;">(Required)</span>', [InputRequired()])
+    fname = StringField('First Name<span style="color: red;"> (Required)</span>', [InputRequired()])
+    lname = StringField('Last Name<span style="color: red;"> (Required)</span>', [InputRequired()])
+    school = StringField('School Attending<span style="color: red;"> (Required)</span>', [InputRequired()])
     dob = StringField('Date of Birth')
     bio = TextAreaField('If you wish provide a short personal bio')
     phone = StringField('Phone Number')
-    email = StringField('Email<span style="color: red;">(Required)</span>',
+    email = StringField('Email<span style="color: red;"> (Required)</span>',
                         [InputRequired("You must enter an email address"),
                          Email("Email must be valid format")])
 
