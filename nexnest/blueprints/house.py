@@ -25,7 +25,7 @@ def view(id):
         .first()
 
     messages = session.query(HouseMessage) \
-        .filter_by(id=id).order_by(desc(HouseMessage.date_created)) \
+        .filter_by(house_id=id).order_by(desc(HouseMessage.date_created)) \
         .all()
 
     maintenanceRequests = session.query(Maintenance) \

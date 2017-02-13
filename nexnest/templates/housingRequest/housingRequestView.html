@@ -121,7 +121,14 @@
 						    	                		<a href="#">Upload Lease</a>
                                                         <br>
 						    	                		<hr>
-                                                        <h3><strong>Security Deposits:</strong></h3>
+                                                        <div class="row">
+                                                            <div class="col-xs-8">
+                                                                <h3><strong>Security Deposits:</strong></h3>
+                                                            </div>
+                                                            <div class="col-xs-4" style="text-align: right">
+                                                                <button class="btn btn-primary" onclick="markAllDepositsPaid()">All Collected</button>
+                                                            </div>
+                                                        </div>
                                                         <hr>
                                                         {% for deposit in housingRequest.securityDeposits %}                                    
                                                             <div class="row">
@@ -131,18 +138,18 @@
                                                                             <img src="{{deposit.user.profile_image}}" alt="Profile Image" class="img-responsive" style="height: 50px; width: 50px;" />
                                                                             {{ deposit.user.fname }} {{ deposit.user.lname }}
                                                                             {% if deposit.completed %}
-                                                                                <span style="color: green"><i class="fa fa-check-circle" aria-hidden="true"></i></span>
+                                                                                <span class="securityDeposit" id="markDepositPaid{{deposit.user.id}}" style="color: green"><i class="fa fa-check-circle" aria-hidden="true"></i></span>
                                                                             {% else %}
-                                                                                <span style="color: red"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                                                                                <span class="securityDeposit" id="markDepositPaid{{deposit.user.id}}" style="color: red"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
                                                                             {% endif %}
                                                                         </h4>
                                                                     </a>
                                                                 </div>
                                                                 <div class="col-xs-4" style="text-align: right">
                                                                     {% if not deposit.completed %}
-                                                                        <a href="#" class="btn btn-primary">Mark Paid</a>
+                                                                        <button id="markPaidButton{{deposit.user.id}}" class="btn btn-success securityDepositButton" onclick="markDepositPaid({{ deposit.user.id }})">Mark Paid</button>
                                                                     {% else %}
-                                                                        
+                                                                        <button id="markPaidButton{{deposit.user.id}}" class="btn btn-danger securityDepositButton" onclick="markDepositPaid({{ deposit.user.id }})">Mark Unpaid</button>
                                                                     {% endif %}
                                                                 </div>
                                                             </div>
@@ -243,7 +250,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="#" class="btn btn-primary">Accept Group</a>
+                <a href="{{url_for('housingRequests.acceptRequest', id=housingRequest.id)}}" class="btn btn-primary">Accept Group</a>
             </div>
         </div>
     </div>
@@ -267,7 +274,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="#" class="btn btn-danger">Decline Group</a>
+                <a href="{{url_for('housingRequests.denyRequest', id=housingRequest.id)}}" class="btn btn-danger">Decline Group</a>
             </div>
         </div>
     </div>
@@ -291,7 +298,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="#" class="btn btn-primary">Confirm Group</a>
+                <a href="{{url_for('housingRequests.confirmRequest', id=housingRequest.id)}}" class="btn btn-primary">Confirm Group</a>
             </div>
         </div>
     </div>
@@ -315,12 +322,11 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="#" class="btn btn-danger">Back Out</a>
+                <a href="{{url_for('housingRequests.denyRequest', id=housingRequest.id)}}" class="btn btn-danger">Back Out</a>
             </div>
         </div>
     </div>
 </div>
-
 
 
 {% endblock %}
@@ -353,5 +359,31 @@
       var modal = $(this);
       modal.find('.modal-title').text('Back Out');
     })
+
+	function markDepositPaid(userID) {
+		if($("#markPaidButton"+userID).text() == "Mark Paid"){
+			$("#markDepositPaid"+userID).html('<i class="fa fa-check-circle" aria-hidden="true"></i>');
+			$("#markDepositPaid"+userID).css("color", "green")
+			$("#markPaidButton"+userID).text("Mark Unpaid")
+			$('#markPaidButton'+userID).removeClass("btn-success")
+			$('#markPaidButton'+userID).addClass("btn-danger")
+		}
+		else if($("#markPaidButton"+userID).text() == "Mark Unpaid"){
+			$("#markDepositPaid"+userID).html('<i class="fa fa-times-circle" aria-hidden="true"></i>');
+			$("#markDepositPaid"+userID).css("color", "red")
+			$("#markPaidButton"+userID).text("Mark Paid")
+			$('#markPaidButton'+userID).removeClass("btn-danger")
+			$('#markPaidButton'+userID).addClass("btn-success")
+		}		
+	}
+	function markAllDepositsPaid() {
+		$('.securityDeposit').each(function(i, obj) {
+    		$('.securityDeposit').html('<i class="fa fa-check-circle" aria-hidden="true"></i>');
+    		$('.securityDeposit').css("color", "green")
+    		$('.securityDepositButton').text("Mark Unpaid")
+    		$('.securityDepositButton').removeClass("btn-success")
+    		$('.securityDepositButton').addClass("btn-danger")
+		});
+	}
 </script>
 {% endblock %}

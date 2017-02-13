@@ -53,6 +53,7 @@ class User(Base):
 
     groupLeader = relationship("Group", backref='leader')
     groupMessages = relationship("GroupMessage", backref='user')
+    houseMessages = relationship("HouseMessage", backref='user')
     landlord = relationship('Landlord', backref='user')
     tourMessages = relationship("TourMessage", backref='user')
     groupListingMessages = relationship("GroupListingMessage", backref='user')

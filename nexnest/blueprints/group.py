@@ -21,16 +21,15 @@ from sqlalchemy import asc, desc
 groups = Blueprint('groups', __name__, template_folder='../templates')
 
 
-@groups.route('/group/create', methods=['GET', 'POST'])
+@groups.route('/group/create', methods=['POST'])
 @login_required
 def createGroup():
     form = CreateGroupForm(request.form)
 
-    if request.method == 'POST' and form.validate():  # Insert new group
-        # First me must check to make sure that the current_user
+    if form.validate():
+        # First we must check to make sure that the current_user
         # isn't trying to create a group that conflicts with
         # other dates of groups user is a part of
-
         groupHasConflict = None
         conflict = False
         for group in current_user.accepted_groups:
@@ -60,6 +59,7 @@ def createGroup():
 
             session.add(newGroupUser)
             session.commit()
+            flash('Group Created', 'success')
 
             return redirect(url_for('groups.viewGroup', group_id=newGroup.id))
         else:
@@ -69,9 +69,7 @@ def createGroup():
                    groupHasConflict.start_date,
                    groupHasConflict.end_date))
 
-            return redirect(url_for('groups.createGroup'))
-    else:
-        return render_template('createGroup.html', form=form)
+    return form.redirect()
 
 
 @groups.route('/group/view/<group_id>')

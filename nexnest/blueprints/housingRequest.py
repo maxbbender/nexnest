@@ -140,7 +140,7 @@ def acceptRequest(id):
                 session.commit()
 
             flash("Group Accepted", 'success')
-            return redirect(url_for('houseRequest.view', id=groupListing.id))
+            return redirect(url_for('housingRequests.view', id=groupListing.id))
     else:
         flash("Invalid Request", 'warning')
         return redirect(url_for('indexs.index'))
@@ -185,7 +185,7 @@ def confirmRequest(id):
             session.add(house)
             session.commit()
 
-            return redirect(url_for('houses.view', houseID=house.id))
+            return redirect(url_for('houses.view', id=house.id))
     else:
         flash("Invalid Request", 'warning')
         return redirect(url_for('indexs.index'))

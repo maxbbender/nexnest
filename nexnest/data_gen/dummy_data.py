@@ -137,7 +137,7 @@ gl1 = GroupListingFactory(group=group1, listing=listing1)
 gl2 = GroupListingFactory(group=group1, listing=listing2)
 gl3 = GroupListingFactory(group=group1, listing=listing3)
 
-gl1.landlord_show = False
+#gl1.landlord_show = False
 gl2.accepted = True
 gl2.completed = True
 
@@ -189,6 +189,13 @@ session.commit()
 h1 = HouseFactory(listing=listing2, group=group1)
 
 session.commit()
+
+#House Messages
+hm1 = HouseMessageFactory(house=h1, user=user2)
+hm2 = HouseMessageFactory(house=h1, user=user3)
+hm3 = HouseMessageFactory(house=h1, user=user2)
+hm4 = HouseMessageFactory(house=h1, user=user5)
+hm5 = HouseMessageFactory(house=h1, user=landlord1.user)
 
 # Maintenance Requests
 m1 = MaintenanceFactory(house=h1)

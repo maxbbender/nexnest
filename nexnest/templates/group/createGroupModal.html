@@ -1,0 +1,31 @@
+<div class="modal fade" id="createGroupModal" tabindex="-1" role="dialog" aria-labelledby="createGroup" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="Create Group"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-2"></div>
+                    <div class="col-xs-8">
+                        {% from "_formhelpers.html" import render_field %}
+                        <form action="{{url_for('groups.createGroup')}}" method='POST'>
+                            <dl>
+                                {{ createGroupForm.csrf_token }}
+                                {{ render_field(createGroupForm.name, class="form-control", type="text") }}
+                                {{ render_field(createGroupForm.start_date, class="form-control") }}
+                                {{ render_field(createGroupForm.end_date, class="form-control") }}
+                            </dl>
+                            <p>
+                                <input type='submit' value='Create Group' class="btn btn-info">
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

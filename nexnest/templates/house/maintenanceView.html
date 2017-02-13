@@ -16,7 +16,7 @@
     <div class="row m-x-auto">
         <div class="col-xs-1">
         </div>
-        <div class="col-md-6 col-lg-6 col-xl-6">
+        <div class="col-md-5 col-lg-5 col-xl-5">
             <div class="row">
                 <div class="card" style="width:100%;">
                     <h3 class="card-header">Type your message:</h3>
@@ -37,14 +37,14 @@
                         </div>
                     </div>
                 </div>
-                    <!-- Messages -->
-                    {% for message in messages %}
-                        {% include 'house/message.html' %}
-                    {% endfor %}
+                <!-- Messages -->
+                {% for message in messages %}
+                    {% include 'house/message.html' %}
+                {% endfor %}
             </div>
         </div>
         <!--Info Pane-->
-        <div class="col-md-4 col-lg-4 col-xl-4" style="padding-left: 5%;">
+        <div class="col-md-5 col-lg-5 col-xl-5" style="padding-left: 5%;">
             <div class="row">
                 <div class="card" style="width:100%;">
                     <h3 class="card-header">Maintenance Request</h3>
@@ -52,7 +52,7 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <p class="card-text"><strong>Issue Reported on:</strong> {{ maintenanceRequest.date_created }}</p>
-                                <br>
+                                <p class="card-text"><strong>Reported by:</strong> [Insert fname lname here]</p>
                                 <strong>Status: </strong>
                                 {% if maintenanceRequest.status == 'open' %}
                                 	<button class="btn btn-info">Open </button>
@@ -65,11 +65,11 @@
                                 <strong>Details:</strong>
                                 {{ maintenanceRequest.details }}
                                 <br><br>
-                                {% if not maintenanceRequest.status == 'completed' %}
-                                	<strong>Change status of maintenance request to:</strong>
-                                	<br><br>
-                                {% endif %}
                                 {% if current_user in landlords %}
+                                    {% if not maintenanceRequest.status == 'completed' %}
+                                        <strong>Change status of maintenance request to:</strong>
+                                        <br><br>
+                                    {% endif %}
                                 	{% if maintenanceRequest.status == 'open' %}
                                 		<button class="btn btn-warning" data-toggle="modal" data-target="#markInProgressModal"><i class="fa fa-ellipsis-h" aria-hidden="true"></i> Work In Progress</button>
                                 		<button class="btn btn-success" data-toggle="modal" data-target="#markCompletedModal"><i class="fa fa-check" aria-hidden="true"></i> Work Completed</button>
