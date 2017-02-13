@@ -1,7 +1,7 @@
 from nexnest.application import db
 
-from .message import Message
 from .base import Base
+from .message import Message
 
 
 class DirectMessage(Message):

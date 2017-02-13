@@ -5,7 +5,7 @@ from nexnest.utils.password import hash_password
 from nexnest.models.group import Group
 from nexnest.models.group_user import GroupUser
 from nexnest.models.group_listing import GroupListing
-from nexnest.models.direct_message import DirectMessage
+# from nexnest.models.direct_message import DirectMessage
 
 from .base import Base
 from .landlord import Landlord
@@ -238,7 +238,7 @@ class User(Base):
     def isAdmin(self):
         return self.role == 'admin'
 
-    def hasDirectMessagesWith(self):
-        allUsers = []
-        mySentMessages = self.sentDM.group_by(DirectMessage.target_user_id)
-        return mySentMessages
+    # def hasDirectMessagesWith(self):
+    #     allUsers = []
+    #     mySentMessages = self.sentDM.group_by(DirectMessage.target_user_id)
+    #     return mySentMessages
