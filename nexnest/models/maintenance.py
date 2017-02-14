@@ -17,6 +17,7 @@ class Maintenance(Base):
     request_type = db.Column(db.String(20))
     details = db.Column(db.Text())
     house_id = db.Column(db.Integer, db.ForeignKey('houses.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
 
@@ -24,13 +25,15 @@ class Maintenance(Base):
             self,
             request_type,
             details,
-            house
+            house,
+            user
     ):
 
         self.house_id = house.id
         self.details = details
         self.status = 'open'
         self.request_type = request_type
+        self.user_id = user.id
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels

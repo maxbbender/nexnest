@@ -198,9 +198,9 @@ hm4 = HouseMessageFactory(house=h1, user=user5)
 hm5 = HouseMessageFactory(house=h1, user=landlord1.user)
 
 # Maintenance Requests
-m1 = MaintenanceFactory(house=h1)
-m2 = MaintenanceFactory(house=h1)
-m3 = MaintenanceFactory(house=h1)
+m1 = MaintenanceFactory(house=h1, user=user2)
+m2 = MaintenanceFactory(house=h1, user=user3)
+m3 = MaintenanceFactory(house=h1, user=user4)
 
 m2.status = 'inprogress'
 m3.status = 'completed'

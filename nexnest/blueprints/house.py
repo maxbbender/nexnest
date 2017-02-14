@@ -94,7 +94,8 @@ def maintenanceRequestCreate():
             if current_user in house.tenants:
                 newMR = Maintenance(request_type=form.requestType.data,
                                     details=form.details.data,
-                                    house=house)
+                                    house=house,
+                                    user=current_user)
                 session.add(newMR)
                 session.commit()
 

@@ -244,6 +244,7 @@ class MaintenanceFactory(factory.alchemy.SQLAlchemyModelFactory):
     request_type = random.choice(maintenanceRequestTypes)[0]
     details = factory.LazyAttribute(lambda x: fake.paragraph(3))
     house = factory.SubFactory(HouseFactory)
+    user = factory.SubFactory(UserFactory)
 
 
 class MaintenanceMessageFactory(factory.alchemy.SQLAlchemyModelFactory):

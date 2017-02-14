@@ -59,6 +59,7 @@ class User(Base):
     groupListingMessages = relationship("GroupListingMessage", backref='user')
     securityDeposits = relationship("SecurityDeposit", backref='user')
     maintenanceMessages = relationship("MaintenanceMessage", backref='user')
+    maintenanceRequests = relationship("Maintenance", backref='user')
 
     def __init__(self,
                  email,
