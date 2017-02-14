@@ -100,3 +100,10 @@ class GroupListing(Base):
             return True
 
         return False
+
+    def canChangeLease(self):
+        if len(self.securityDeposits) > 0:
+            flash('Cannot change lease, security deposits have already been submitted', 'danger')
+            return False
+
+        return True

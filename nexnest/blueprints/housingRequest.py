@@ -277,30 +277,31 @@ def uploadLease():
 
         if groupListing is not None:
             if groupListing.isEditableBy(current_user):
+                if groupListing.canChangeLease():
 
-                newLease = request.files['lease']
+                    newLease = request.files['lease']
 
-                if newLease.filename == '':
-                    flash("No selected file", 'warning')
-                    return form.redirect()
+                    if newLease.filename == '':
+                        flash("No selected file", 'warning')
+                        return form.redirect()
 
-                filename = secure_filename(newLease.filename)
+                    filename = secure_filename(newLease.filename)
 
-                if newLease and isPDF(filename):
-                    # We are going to save the lease as groupListingLease4
-                    # if the groupListing is 4
+                    if newLease and isPDF(filename):
+                        # We are going to save the lease as groupListingLease4
+                        # if the groupListing is 4
 
-                    fileSavePath = './nexnest/uploads/leases/groupListingLease%d.pdf' % groupListing.id
+                        fileSavePath = './nexnest/uploads/leases/groupListingLease%d.pdf' % groupListing.id
 
-                    if os.path.exists(fileSavePath):
-                        flash("Lease already exists for house. Overwriting", 'info')
-                        os.remove(fileSavePath)
+                        if os.path.exists(fileSavePath):
+                            flash("Lease already exists for house. Overwriting", 'info')
+                            os.remove(fileSavePath)
 
-                    flash('Lease Uploaded', 'success')
-                    newLease.save(fileSavePath)
-                    return redirect(url_for('housingRequests.view', id=groupListing.id))
-                else:
-                    flash('Lease must be a pdf', 'warning')
+                        flash('Lease Uploaded', 'success')
+                        newLease.save(fileSavePath)
+                        return redirect(url_for('housingRequests.view', id=groupListing.id))
+                    else:
+                        flash('Lease must be a pdf', 'warning')
         else:
             flash('Invalid Request', 'warning')
     else:
