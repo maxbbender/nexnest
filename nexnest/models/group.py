@@ -94,7 +94,6 @@ class Group(Base):
     def getUsers(self):
         users = []
         for groupUser in self.users:
-            print(groupUser)
             users.append(groupUser.user)
 
         return users

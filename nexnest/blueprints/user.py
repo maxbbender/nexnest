@@ -238,33 +238,32 @@ def createDirectMessage():
 @users.route('/user/groups', methods=['GET', 'POST'])
 @login_required
 def myGroups():
-    createGroupForm = CreateGroupForm(request.form)
     groupsImIn = current_user.accepted_groups
     groupsImInvitedTo = current_user.un_accepted_groups
     return render_template('group/myGroups.html',
                            acceptedGroups=groupsImIn,
                            invitedGroups=groupsImInvitedTo,
-                           createGroupForm = CreateGroupForm(request.form),
+                           createGroupForm=CreateGroupForm(request.form),
                            title='My Groups')
 
 
 @users.route('/user/updateProfilePicture', methods=['GET', 'POST'])
 @login_required
 def updateProfilePicture():
-    picForm = ProfilePictureForm()
+    picForm = ProfilePictureForm(request.form)
     if request.method == 'GET':
         return render_template('changeProfilePicture.html',
                                picForm=picForm)
     else:
         if 'profilePicture' not in request.files:
             flash('No file part', 'warning')
-            return redirect(request.url)
+            return picForm.redirect()
 
         file = request.files['profilePicture']
 
         if file.filename == '':
             flash('No selected file', 'warning')
-            return redirect(request.url)
+            return picForm.redirect()
 
         filename = secure_filename(request.files['profilePicture'].filename)
 
@@ -283,7 +282,7 @@ def updateProfilePicture():
             return redirect(url_for('users.viewUser', userID=current_user.id))
         else:
             flash("File doesn't exist or file extension is not allowed", 'danger')
-            return redirect(request.url)
+            return picForm.redirect()
 
 
 @users.route('/user/changePassword', methods=['GET', 'POST'])

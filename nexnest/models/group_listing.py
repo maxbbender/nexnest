@@ -10,6 +10,8 @@ from sqlalchemy.schema import UniqueConstraint
 
 from flask import flash
 
+import os
+
 
 # class PostReport(Base):
 class GroupListing(Base):
@@ -92,3 +94,9 @@ class GroupListing(Base):
         else:
             flash("Permissions Error", 'danger')
             return False
+
+    def hasLease(self):
+        if os.path.exists('./nexnest/uploads/leases/groupListingLease%d.pdf' % self.id):
+            return True
+
+        return False

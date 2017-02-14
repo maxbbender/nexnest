@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 
 from nexnest.application import session
 
-from nexnest.forms import GroupListingForm, GroupListingMessageForm
+from nexnest.forms import GroupListingForm, GroupListingMessageForm, LeaseUploadForm
 from nexnest.models.group import Group
 from nexnest.models.group_listing import GroupListing
 from nexnest.models.group_listing_message import GroupListingMessage
@@ -13,8 +13,13 @@ from nexnest.models.house import House
 from nexnest.models.security_deposit import SecurityDeposit
 
 from nexnest.utils.flash import flash_errors
+from nexnest.utils.file import isPDF
+
+from werkzeug.utils import secure_filename
 
 from sqlalchemy import asc, desc
+
+import os
 
 housingRequests = Blueprint('housingRequests', __name__, template_folder='../templates/housingRequest')
 
@@ -77,6 +82,9 @@ def view(id):
         .all()
 
     messageForm = GroupListingMessageForm()
+    leaseUploadForm = LeaseUploadForm()
+
+    leaseUploadForm.groupListingID.data = id
 
     if housingRequest is not None:
 
@@ -85,7 +93,9 @@ def view(id):
                                    housingRequest=housingRequest,
                                    landlords=housingRequest.listing.landLordsAsUsers(),
                                    messages=messages,
-                                   messageForm=messageForm)
+                                   messageForm=messageForm,
+                                   leaseUploadForm=leaseUploadForm,
+                                   hasLease=housingRequest.hasLease())
     else:
         flash("Housing Request does not exist", "warning")
 
@@ -255,3 +265,45 @@ def allSecurityDepositPaid(id):
         flash("Invalid Request", 'warning')
 
     return redirect(url_for('housingRequests.view', id=groupListing.id))
+
+
+@housingRequests.route('/houseRequest/leaseUpload', methods=['POST'])
+@login_required
+def uploadLease():
+    form = LeaseUploadForm(request.form)
+
+    if form.validate():
+        groupListing = session.query(GroupListing).filter_by(id=form.groupListingID.data).first()
+
+        if groupListing is not None:
+            if groupListing.isEditableBy(current_user):
+
+                newLease = request.files['lease']
+
+                if newLease.filename == '':
+                    flash("No selected file", 'warning')
+                    return form.redirect()
+
+                filename = secure_filename(newLease.filename)
+
+                if newLease and isPDF(filename):
+                    # We are going to save the lease as groupListingLease4
+                    # if the groupListing is 4
+
+                    fileSavePath = './nexnest/uploads/leases/groupListingLease%d.pdf' % groupListing.id
+
+                    if os.path.exists(fileSavePath):
+                        flash("Lease already exists for house. Overwriting", 'info')
+                        os.remove(fileSavePath)
+
+                    flash('Lease Uploaded', 'success')
+                    newLease.save(fileSavePath)
+                    return redirect(url_for('housingRequests.view', id=groupListing.id))
+                else:
+                    flash('Lease must be a pdf', 'warning')
+        else:
+            flash('Invalid Request', 'warning')
+    else:
+        flash_errors(form)
+
+    return form.redirect()

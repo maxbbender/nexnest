@@ -207,6 +207,15 @@ class MaintenanceRequestForm(RedirectForm):
 
 
 class MaintenanceRequestMessageForm(RedirectForm):
-    maintenanceID = HiddenField('maintenanceID', [InputRequired()])
+    maintenanceID = HiddenField('maintenanceID',
+                                validators=[InputRequired()])
+
     content = TextAreaField('Message',
-                            [InputRequired("You must put in a message")])
+                            validators=[InputRequired("You must put in a message")])
+
+
+class LeaseUploadForm(RedirectForm):
+    lease = FileField('Lease')
+
+    groupListingID = HiddenField('groupListingID',
+                                 validators=[InputRequired()])

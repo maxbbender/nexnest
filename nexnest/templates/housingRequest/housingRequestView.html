@@ -118,7 +118,16 @@
                                                                 <a href="#" class="btn btn-primary">Mark Collected</a>
                                                             </div>
                                                         </div>
-						    	                		<a href="#">Upload Lease</a>
+                                                        {% if not hasLease %}
+                                                            <form method='POST' action="{{url_for('housingRequests.uploadLease')}}" enctype="multipart/form-data">
+                                                                {{leaseUploadForm.csrf_token}}
+                                                                {{leaseUploadForm.lease}}
+                                                                {{leaseUploadForm.groupListingID}}
+                                                                <input type="submit">
+                                                            </form>
+                                                        {% else %}
+                                                            <a href="#">View Lease</a>
+                                                        {% endif %}
                                                         <br>
 						    	                		<hr>
                                                         <div class="row">
