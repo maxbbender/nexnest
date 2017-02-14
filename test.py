@@ -13,13 +13,14 @@ from nexnest.models.tour_message import TourMessage
 from nexnest.models.group_listing import GroupListing
 from nexnest.models.group_listing_message import GroupListingMessage
 from nexnest.models.security_deposit import SecurityDeposit
+from nexnest.models.maintenance import Maintenance
 # tm = session.query(TourMessage).filter_by(tour_id=1).first()
 # g = session.query(Group).filter_by(id=1).first()
 
 
-u = session.query(User).filter_by(id=1).first()
+u = session.query(Maintenance).filter_by(id=2).first()
 
-print(u.hasDirectMessagesWith())
+print(u.user)
 # direct_messages = session.query(DirectMessage.target_user_id) \
 #     .filter_by(source_user_id=1) \
 #     .order_by(DirectMessage.date_created.desc()) \

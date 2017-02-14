@@ -308,3 +308,20 @@ def uploadLease():
         flash_errors(form)
 
     return form.redirect()
+
+
+@housingRequests.route('/houseRequest/<id>/allLeasesSubmitted', methods=['GET'])
+@login_required
+def allLeasesSubmitted():
+    groupListing = session.query(GroupListing).filter_by(id=id).first()
+
+    if groupListing is not None:
+
+        if groupListing.isEditableBy(current_user):
+            groupListing.all_leases_submitted = True
+            session.commit()
+            return redirect(url_for('housingRequests.view', id=id))
+    else:
+        flash('Invalid Request', 'warning')
+
+    return redirect(url_for('indexs.index'))

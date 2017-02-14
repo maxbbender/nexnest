@@ -44,6 +44,8 @@ class GroupListing(Base):
 
     date_created = db.Column(db.DateTime)
 
+    all_leases_submitted = db.Column(db.Boolean)
+
     __table_args__ = (UniqueConstraint('group_id', 'listing_id', name='groupListing_constraint'),
                       )
 
@@ -61,6 +63,7 @@ class GroupListing(Base):
         self.completed = False
         self.group_show = True
         self.landlord_show = True
+        self.all_leases_submitted = False
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
