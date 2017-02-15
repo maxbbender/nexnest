@@ -125,7 +125,7 @@
 					    	            					<div class="col-xs-12">
 					    	            						<strong>Date Submitted:</strong> {{ request.date_created }}
 					    	            						<br>
-					    	            						<strong>Submitted By:</strong> [Fname Lname here]
+					    	            						<strong>Submitted By:</strong> {{ maintenanceRequest.user.fname }} {{ maintenanceRequest.user.lname }}
 					    	            						<br><br>
 					    	            						{{ request.details }}
 					    	            						<br><br>
