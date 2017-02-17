@@ -96,15 +96,36 @@
 				    	            			<h1 style="color: red"><i class="fa fa-times-circle" aria-hidden="true"></i>Request Declined</h1>
 				    	            			The landlord has declined your group's request to live at this property
 				    	            		{% else %}
-						    	                <strong style="padding-right: 5px;">Application: </strong>
 						    	                {% if housingRequest.accepted %}
-						    	                	<button type="button" id="confirmed" class="btn btn-success btn-circle"><i class="fa fa-check" aria-hidden="true"></i></button>
+						    	                	<div class="row">
+						    	                		<div class="col-xl-10">
+						    	                			<strong style="padding-right: 5px;">Application: </strong>
+						    	                		</div>
+						    	                		<div class="col-xl-1">
+						    	                			<button type="button" id="confirmed" class="btn btn-success btn-circle"><i class="fa fa-check" aria-hidden="true"></i></button>
+						    	                		</div>
+						    	                	</div>
+						    	                	<hr>
 						    	                	<br>
-                                                    <strong style="padding-right: 5px;">Leases Signed: </strong>
-                                                    <button type="button" id="pending" class="btn btn-warning btn-circle pending"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+						    	                	<div class="row">
+						    	                		<div class="col-xl-10">
+                                                    		<strong style="padding-right: 5px;">Leases Signed: </strong>
+                                                    	</div>
+                                                    	<div class="col-xl-1">
+                                                    		<button type="button" id="pending" class="btn btn-warning btn-circle pending"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                    	</div>
+                                                    </div>
+                                                    <hr>
                                                     <br>
-                                                    <strong style="padding-right: 5px;">Deposits Collected: </strong>
-                                                    <button type="button" id="pending" class="btn btn-warning btn-circle pending"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                    <div class="row">
+						    	                		<div class="col-xl-10">
+                                                    		<strong style="padding-right: 5px;">Deposits Collected: </strong>
+                                                    	</div>
+                                                    	<div class="col-xl-1">
+                                                    		<button type="button" id="pending" class="btn btn-warning btn-circle pending"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                    	</div>
+                                                    </div>
+                                                    <hr>
 						    	                	<br>
 						    	                	{% if current_user in landlords %}
 						    	                		<span>You have accepted <strong>{{ housingRequest.group.name }}</strong> to live at this property. Now you must arrange to collect signed leases from all tenants and security deposits if you require them. To make it easier for you, you can upload the blank lease here for the tenants to print out and get back to you in the method you agree upon. After everything has been collected click the "process completed button" to confirm the group for this property.</span>
@@ -170,6 +191,7 @@
 						    	                		<span>You and the landlord must make arrangements to sign leases and pay your security deposits if they are required. After that has happened the landlord will confirm the listing and you will have this listing for {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}. </span>
 						    	                	{% endif %}
 						    	                {% else %}
+						    	                	<strong style="padding-right: 5px;">Application: </strong>
 						    	                	<button type="button" id="pending" class="btn btn-warning btn-circle pending"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
 						    	                	<br>
 						    	                	{% if current_user in landlords %}

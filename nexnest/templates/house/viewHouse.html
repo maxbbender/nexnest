@@ -113,11 +113,11 @@
 					    	            					<div class="col-xs-5" style="text-align: right;">
 					    	            						Status: 
 					    	            						{% if request.status == 'open' %}
-					    	            							<button class="btn btn-info" style="width: 113px;">Open </button>
+					    	            							<button class="btn btn-info" style="width: 113px; pointer-events: none;">Open </button>
 					    	            						{% elif request.status == 'inprogress' %}
-					    	            							<button class="btn btn-warning" style="width: 113px;">In Progress</button>
+					    	            							<button class="btn btn-warning" style="width: 113px; pointer-events: none;">In Progress</button>
 					    	            						{% else %}
-					    	            							<button class="btn btn-success" style="width: 113px;">Completed</button>
+					    	            							<button class="btn btn-success" style="width: 113px; pointer-events: none;">Completed</button>
 					    	            						{% endif %}
 					    	            					</div>
 					    	            				</div> 
@@ -125,7 +125,7 @@
 					    	            					<div class="col-xs-12">
 					    	            						<strong>Date Submitted:</strong> {{ request.date_created }}
 					    	            						<br>
-					    	            						<strong>Submitted By:</strong> [Fname Lname here]
+					    	            						<strong>Submitted By:</strong> {{ request.user.fname }} {{ request.user.lname }}
 					    	            						<br><br>
 					    	            						{{ request.details }}
 					    	            						<br><br>
