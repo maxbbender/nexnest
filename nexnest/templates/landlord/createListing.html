@@ -119,7 +119,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <button class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
+                            <button id="zipCodeButton" class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
                         </div>
                     </div>
                 </div>
@@ -425,7 +425,8 @@ $(document).ready(function() {
     });
     var navListItems = $('div.setup-panel div a'),
         allWells = $('.setup-content'),
-        allNextBtn = $('.nextBtn');
+        allNextBtn = $('.nextBtn'),
+        zipCodeButton = $('#zipCodeButton');
 
     allWells.hide();
 
@@ -454,6 +455,7 @@ $(document).ready(function() {
         $(".form-group").removeClass("has-error");
         for (var i = 0; i < curInputs.length; i++) {
             if (!curInputs[i].validity.valid) {
+
                 isValid = false;
                 $(curInputs[i]).closest(".form-group").addClass("has-error");
                 $(curInputs[i]).closest(".form-group").addClass("has-danger");
@@ -461,7 +463,18 @@ $(document).ready(function() {
         }
 
         if (isValid) {
-            nextStepWizard.removeClass('disabled').trigger('click');
+            if ($(this).attr('id') == 'zipCodeButton') {
+                var zipCodeValue = $("#zipCode").val();
+                var isValidZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(zipCodeValue);
+                if (isValidZip) {
+                    nextStepWizard.removeClass('disabled').trigger('click');
+                } else {
+                    $("#zipCode").closest(".form-group").addClass("has-error");
+                    $("#zipCode").closest(".form-group").addClass("has-danger");
+
+                }
+            }
+
         }
     });
 
