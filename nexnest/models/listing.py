@@ -44,6 +44,8 @@ class Listing(Base):
     time_period = db.Column(db.String(8))
     apartment_number = db.Column(db.Integer)
     disabled = db.Column(db.Boolean)
+    # property_type = db.Column(db.Text) # NEW
+    # rent_due = db.Column(db.String(20)) # NEW
 
     # This is for whether or not the landlord has deleted
     # the listing. This comes into play for checking dates

@@ -6,7 +6,7 @@ from flask_wtf.file import FileField, FileRequired
 
 from wtforms.validators import InputRequired, Length, Email, EqualTo
 
-from nexnest.static.dataSets import valid_time_periods, valid_parking_types, valid_unit_types, states, maintenanceRequestTypes
+from nexnest.static.dataSets import *
 
 from urllib.parse import urlparse, urljoin
 
@@ -98,7 +98,7 @@ class ListingForm(RedirectForm):
                          Length(min=2, max=50), InputRequired()])
     apartment_number = IntegerField('Apartment Number', [InputRequired()])
     city = StringField('City', [Length(min=2, max=50), InputRequired()])
-    state = SelectField('State', choices=states)
+    state = SelectField('State', choices=statesLong)
     zip_code = StringField('Zipcode', [Length(min=5, max=5), InputRequired()])
     start_date = StringField(
         'Start Date', [Length(min=5, max=15), InputRequired()])
@@ -132,6 +132,9 @@ class ListingForm(RedirectForm):
     security_service = BooleanField('Is there a security service provided?')
     description = TextAreaField('Please provide a detailed description of the property', [
                                 Length(min=1, max=1500), InputRequired()])
+    pictures = FileField('Pictures for Listing', validators=[FileRequired()])
+    property_type = SelectField('Property Type', choices=propertyTypes)
+    rent_due = SelectField('How often is rent due?', choices=rentDue)
 
 
 class CreateGroupForm(RedirectForm):
