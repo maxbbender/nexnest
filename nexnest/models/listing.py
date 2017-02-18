@@ -44,8 +44,8 @@ class Listing(Base):
     time_period = db.Column(db.String(8))
     apartment_number = db.Column(db.Integer)
     disabled = db.Column(db.Boolean)
-    # property_type = db.Column(db.Text) # NEW
-    # rent_due = db.Column(db.String(20)) # NEW
+    property_type = db.Column(db.Text)
+    rent_due = db.Column(db.String(20))
 
     # This is for whether or not the landlord has deleted
     # the listing. This comes into play for checking dates
@@ -96,7 +96,9 @@ class Listing(Base):
             num_half_baths,
             num_full_baths,
             time_period,
-            apartment_number):
+            apartment_number,
+            property_type,
+            rent_due):
 
         self.street = street
         self.city = city
@@ -131,6 +133,8 @@ class Listing(Base):
         self.time_period = time_period
         self.unit_type = unit_type
         self.parking = parking
+        self.property_type = property_type
+        self.rent_due = rent_due
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels

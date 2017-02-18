@@ -93,6 +93,8 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     num_full_baths = 3
     time_period = 'semester'
     apartment_number = 2
+    property_type = 'apartment'
+    rent_due = 'semester'
 
 
 class LandlordFactory(factory.alchemy.SQLAlchemyModelFactory):
