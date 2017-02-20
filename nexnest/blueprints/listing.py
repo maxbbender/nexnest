@@ -75,13 +75,11 @@ def createListing():
                 session.commit()
 
                 if newListing.property_type == 'apartment':
-                    newListing.apartment_number = form.apartment.data
+                    newListing.apartment_number = form.apartment_number.data
 
                 if newListing.rent_due == 'semester':
                     newListing.first_semester_rent_due_date = form.first_semester_rent_due_date.data
                     newListing.second_semester_rent_due_date = form.second_semester_rent_due_date.data
-                else:
-                    newListing.monthly_rent_due_date = form.monthly_rent_due_date.data
 
                 session.commit()
 
@@ -92,13 +90,9 @@ def createListing():
                     os.makedirs(folderPath)
 
                 # Lets add the photos
-                print(request.files.getlist("pictures"))
-                print(request.files.getlist("pictures"))
                 uploadedFiles = request.files.getlist("pictures")
-                print(uploadedFiles)
                 filenames = []
                 for file in uploadedFiles:
-                    print ('hey')
                     if file and allowed_file(file.filename):
                         filename = secure_filename(file.filename)
 

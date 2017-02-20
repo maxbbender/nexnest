@@ -96,7 +96,7 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     rent_due = 'semester'
     first_semester_rent_due_date = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
     second_semester_rent_due_date = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
-    monthly_rent_due_date = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
+    # monthly_rent_due_date = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
 
 
 class LandlordFactory(factory.alchemy.SQLAlchemyModelFactory):

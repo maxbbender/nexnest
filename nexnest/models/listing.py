@@ -47,7 +47,7 @@ class Listing(Base):
     rent_due = db.Column(db.String(20))
     first_semester_rent_due_date = db.Column(db.Date)
     second_semester_rent_due_date = db.Column(db.Date)
-    monthly_rent_due_date = db.Column(db.Date)
+    # monthly_rent_due_date = db.Column(db.Date)
 
     # This is for whether or not the landlord has deleted
     # the listing. This comes into play for checking dates
@@ -101,8 +101,7 @@ class Listing(Base):
             rent_due,
             apartment_number=None,
             first_semester_rent_due_date=None,
-            second_semester_rent_due_date=None,
-            monthly_rent_due_date=None):
+            second_semester_rent_due_date=None):
 
         self.street = street
         self.city = city
@@ -140,7 +139,6 @@ class Listing(Base):
         self.rent_due = rent_due
         self.first_semester_rent_due_date = first_semester_rent_due_date
         self.second_semester_rent_due_date = second_semester_rent_due_date
-        self.monthly_rent_due_date = monthly_rent_due_date
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
