@@ -40,7 +40,7 @@ class Listing(Base):
     description = db.Column(db.Text)
     num_full_baths = db.Column(db.Integer)
     num_half_baths = db.Column(db.Integer)
-    time_period = db.Column(db.String(15))
+    time_period = db.Column(db.Text)
     apartment_number = db.Column(db.Integer)
     disabled = db.Column(db.Boolean)
     property_type = db.Column(db.Text)

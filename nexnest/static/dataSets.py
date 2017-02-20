@@ -17,8 +17,8 @@ valid_parking_types = [
 ]
 
 valid_time_periods = [
-    ('school_year', 'School Year'),
-    ('full_year', 'Full Year'),
+    ('school', 'School Year'),
+    ('year', 'Full Year'),
     ('summer', 'Summer')
 ]
 

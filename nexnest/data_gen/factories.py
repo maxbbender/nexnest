@@ -90,7 +90,7 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     description = factory.LazyAttribute(lambda x: fake.paragraph())
     num_half_baths = 4
     num_full_baths = 3
-    time_period = 'semester'
+    time_period = 'school'
     apartment_number = 2
     property_type = 'apartment'
     rent_due = 'semester'
