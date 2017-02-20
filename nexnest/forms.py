@@ -4,7 +4,7 @@ from wtforms.fields import StringField, PasswordField, SubmitField, BooleanField
 
 from flask_wtf.file import FileField, FileRequired
 
-from wtforms.validators import InputRequired, Length, Email, EqualTo
+from wtforms.validators import InputRequired, Length, Email, EqualTo, Optional
 
 from nexnest.static.dataSets import *
 
@@ -96,7 +96,7 @@ class LoginForm(RedirectForm):
 class ListingForm(RedirectForm):
     street = StringField('Street Address', [
                          Length(min=2, max=50), InputRequired()])
-    apartment_number = IntegerField('Apartment Number')
+    apartment_number = IntegerField('Apartment Number', [Optional()])
     city = StringField('City', [Length(min=2, max=50), InputRequired()])
     state = SelectField('State', choices=statesLong)
     zip_code = StringField('Zipcode', [Length(min=5, max=5), InputRequired()])
