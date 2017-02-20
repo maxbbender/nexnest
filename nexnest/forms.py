@@ -134,9 +134,9 @@ class ListingForm(RedirectForm):
     pictures = FileField('Pictures for Listing')
     property_type = SelectField('Property Type', choices=propertyTypes)
     rent_due = SelectField('How often is rent due?', choices=rentDue)
-    first_semester_rent_due_date = DateField('What date is rent due for the first semester?')
-    second_semester_rent_due_date = DateField('What date is rent due for the second semester?')
-    monthly_rent_due_date = DateField('What day of month is rent due?')
+    first_semester_rent_due_date = DateField('What date is rent due for the first semester?', [Optional()])
+    second_semester_rent_due_date = DateField('What date is rent due for the second semester?', [Optional()])
+    monthly_rent_due_date = DateField('What day of month is rent due?', [Optional()])
 
 
 class CreateGroupForm(RedirectForm):

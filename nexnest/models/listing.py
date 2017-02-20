@@ -97,9 +97,9 @@ class Listing(Base):
             num_half_baths,
             num_full_baths,
             time_period,
-            apartment_number,
             property_type,
             rent_due,
+            apartment_number=None,
             first_semester_rent_due_date=None,
             second_semester_rent_due_date=None,
             monthly_rent_due_date=None):

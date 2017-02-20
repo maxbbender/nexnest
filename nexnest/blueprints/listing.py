@@ -42,17 +42,12 @@ def createListing():
             print(form)
             if form.validate():
                 newListing = Listing(street=form.street.data,
-                                     apartment_number=form.apartment_number.data,
                                      city=form.city.data,
                                      state=form.state.data,
                                      zip_code=form.zip_code.data,
                                      start_date=form.start_date.data,
                                      end_date=form.end_date.data,
-                                     time_period=form.time_period.data,
-                                     property_type=form.property_type.data,
                                      num_bedrooms=form.num_bedrooms.data,
-                                     num_full_baths=form.num_full_baths.data,
-                                     num_half_baths=form.num_half_baths.data,
                                      price=form.price.data,
                                      square_footage=form.square_footage.data,
                                      parking=form.parking.data,
@@ -71,20 +66,39 @@ def createListing():
                                      garbage_service=form.garbage_service.data,
                                      security_service=form.security_service.data,
                                      description=form.description.data,
-                                     rent_due=form.rent_due.data)
+                                     num_full_baths=form.num_full_baths.data,
+                                     num_half_baths=form.num_half_baths.data,
+                                     time_period=form.time_period.data,
+                                     rent_due=form.rent_due.data,
+                                     property_type=form.property_type.data)
                 session.add(newListing)
+                session.commit()
+
+                if newListing.property_type == 'apartment':
+                    newListing.apartment_number = form.apartment.data
+
+                if newListing.rent_due == 'semester':
+                    newListing.first_semester_rent_due_date = form.first_semester_rent_due_date.data
+                    newListing.second_semester_rent_due_date = form.second_semester_rent_due_date.data
+                else:
+                    newListing.monthly_rent_due_date = form.monthly_rent_due_date.data
+
                 session.commit()
 
                 # Let's create the folder to upload the photos to.
                 folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(newListing.id))
 
-                if os.path.exists(folderPath):
+                if not os.path.exists(folderPath):
                     os.makedirs(folderPath)
 
                 # Lets add the photos
-                uploadedFiles = request.files.getlist("file[]")
+                print(request.files.getlist("pictures"))
+                print(request.files.getlist("pictures"))
+                uploadedFiles = request.files.getlist("pictures")
+                print(uploadedFiles)
                 filenames = []
                 for file in uploadedFiles:
+                    print ('hey')
                     if file and allowed_file(file.filename):
                         filename = secure_filename(file.filename)
 
