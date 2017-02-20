@@ -2,13 +2,18 @@ from flask import Blueprint
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
 
-from nexnest.application import session
+from nexnest.application import session, app
 
 from nexnest.forms import ListingForm, SuggestListingForm, TourForm, GroupListingForm
 from nexnest.models.listing import Listing
 from nexnest.models.landlord_listing import LandlordListing
 
 from nexnest.utils.flash import flash_errors
+from nexnest.utils.file import allowed_file
+
+import os
+
+from werkzeug import secure_filename
 
 listings = Blueprint('listings', __name__, template_folder='../templates')
 
@@ -34,6 +39,7 @@ def createListing():
     if current_user.isLandlord:
         if request.method == 'POST':
             form = ListingForm(request.form)
+            print(form)
             if form.validate():
                 newListing = Listing(street=form.street.data,
                                      apartment_number=form.apartment_number.data,
@@ -67,6 +73,25 @@ def createListing():
                                      description=form.description.data)
                 session.add(newListing)
                 session.commit()
+
+                # Let's create the folder to upload the photos to.
+                folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', newListing.id)
+
+                if os.path.exists(folderPath):
+                    os.makedirs(folderPath)
+
+                # Lets add the photos
+                uploadedFiles = request.files.getlist("file[]")
+                filenames = []
+                for file in uploadedFiles:
+                    if file and allowed_file(file.filename):
+                        filename = secure_filename(file.filename)
+
+                        file.save(os.path.join(folderPath, filename))
+                        filenames.append(filename)
+
+                print(filenames)
+
                 flash('Listing Created', 'success')
                 return redirect(url_for('indexs.index'))
             else:

@@ -123,8 +123,8 @@ class ListingForm(RedirectForm):
     dishwasher = BooleanField('Is there a Dishwasher?')
     air_conditioning = BooleanField('Is there Air Conditioning?')
     handicap = BooleanField('Is the property handicap accessible?')
-    furnished = BooleanField('Is the property furnished?')
-    utilities_included = BooleanField('Are utilities included in the price?')
+    furnished = HiddenField('Is the property furnished?')
+    utilities_included = HiddenField('Are utilities included in the price?')
     emergency_maintenance = BooleanField(
         'Do you provide emergency maintenance?')
     snow_plowing = BooleanField('Do you provide snow removal?')
