@@ -5,15 +5,26 @@
 		<div class="col-xs-10 col-md-6 col-lg-6">
 			<div class="gallery" align="center">
 				<div class="preview" align="center">
+                    {% if pictures|length > 0 %}
+                        <img name="preview" src="{{pictures[0]}}" style="height: 300px; width: 100%;" alt=""/>
+                    {% else %}
 					<img name="preview" src="/static/img/testHouse.jpg" style="height: 300px; width: 100%;" alt=""/>
+                    
+                    {% endif %}
 				</div>
 				<br>
 				<div class="thumbnails">
-					<img onmouseover="preview.src=img1.src" name="img1" src="/static/img/testHouse.jpg" style="width: 100px; height: 100px;" alt=""/>
-					<img onmouseover="preview.src=img2.src" name="img2" src="/static/img/testLivingRoom.jpg" style="width: 100px; height: 100px;" alt=""/>
-					<img onmouseover="preview.src=img3.src" name="img3" src="/static/img/testKitchen.jpg" style="width: 100px; height: 100px;" alt=""/>
-					<img onmouseover="preview.src=img4.src" name="img4" src="/static/img/testBathroom.jpg" style="width: 100px; height: 100px;" alt=""/>
-					<img onmouseover="preview.src=img5.src" name="img5" src="/static/img/testBedroom.jpg" style="width: 100px; height: 100px;" alt=""/>
+                    {% if pictures|length > 0 %}
+                        {% for picture in pictures %}
+                            <img onmouseover="preview.src=img{{loop.index}}.src" name="img{{loop.index}}" src="{{picture}}" style="width: 100px; height: 100px;" alt=""/>
+                        {% endfor %}
+                    {% else %}
+                        <img onmouseover="preview.src=img1.src" name="img1" src="/static/img/testHouse.jpg" style="width: 100px; height: 100px;" alt=""/>
+                        <img onmouseover="preview.src=img2.src" name="img2" src="/static/img/testLivingRoom.jpg" style="width: 100px; height: 100px;" alt=""/>
+                        <img onmouseover="preview.src=img3.src" name="img3" src="/static/img/testKitchen.jpg" style="width: 100px; height: 100px;" alt=""/>
+                        <img onmouseover="preview.src=img4.src" name="img4" src="/static/img/testBathroom.jpg" style="width: 100px; height: 100px;" alt=""/>
+                        <img onmouseover="preview.src=img5.src" name="img5" src="/static/img/testBedroom.jpg" style="width: 100px; height: 100px;" alt=""/>
+                    {% endif %}
 				</div>
 			</div>
 		</div>

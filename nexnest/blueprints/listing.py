@@ -29,7 +29,8 @@ def viewListing(listingID):
                            requestListingForm=GroupListingForm(),
                            listing=viewListing,
                            groups=myGroups,
-                           title='Listing')
+                           title='Listing',
+                           pictures=viewListing.getPhotoURLs())
 
 
 @listings.route('/listing/create', methods=['GET', 'POST'])
