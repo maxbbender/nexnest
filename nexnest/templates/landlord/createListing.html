@@ -135,20 +135,12 @@
                                     </div>
                                 </div>
                                 <div class="col-xs-6">
-                                    <div class="form-group">
-                                        <label class="control-label form-control-feedback">Square Footage of Property</label>
-                                        <div class="input-group">
-                                        	{{form.square_footage(class='form-control', required='required', type="number")}}
-                                        	<span class="input-group-addon">FT</span>
-                                        </div>
-                                        <!-- <input id="footage" maxlength="100" type="number" name="square_footage" required="required" class="form-control" /> -->
-                                    </div>
+                                	<div class="form-group" style="display: none;" id="apartmentNumberInput">
+                                	    <label class="control-label form-control-feedback" id="apartment_number_label">Apartment Number</label>
+                                	    {{form.apartment_number(class='form-control')}}
+                                	    <!-- <input id="apartment_number" name="apartment_number" maxlength="100" type="number" class="form-control" /> -->
+                                	</div>
                                 </div>
-                            </div>
-                            <div class="form-group" style="display: none;" id="apartmentNumberInput">
-                                <label class="control-label form-control-feedback" id="apartment_number_label">Apartment Number</label>
-                                {{form.apartment_number(class='form-control')}}
-                                <!-- <input id="apartment_number" name="apartment_number" maxlength="100" type="number" class="form-control" /> -->
                             </div>
                             <div class="row">
                                 <div class="col-xs-6">
@@ -248,6 +240,16 @@
 	                                    {{form.parking(class='form-control', required='required')}}
 	                                </div>
                             	</div>
+                            	<div class="col-xs-6">
+                                    <div class="form-group">
+                                        <label class="control-label form-control-feedback">Square Footage of Property</label>
+                                        <div class="input-group">
+                                        	{{form.square_footage(class='form-control', required='required', type="number")}}
+                                        	<span class="input-group-addon">FT</span>
+                                        </div>
+                                        <!-- <input id="footage" maxlength="100" type="number" name="square_footage" required="required" class="form-control" /> -->
+                                    </div>
+                                </div>
                             </div>
                             <div class="row">
                             	<div class="col-xs-12">
