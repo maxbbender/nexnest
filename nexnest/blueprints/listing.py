@@ -49,7 +49,7 @@ def createListing():
                                      start_date=form.start_date.data,
                                      end_date=form.end_date.data,
                                      time_period=form.time_period.data,
-                                     unit_type=form.unit_type.data,
+                                     property_type=form.property_type.data,
                                      num_bedrooms=form.num_bedrooms.data,
                                      num_full_baths=form.num_full_baths.data,
                                      num_half_baths=form.num_half_baths.data,
@@ -70,7 +70,8 @@ def createListing():
                                      snow_plowing=form.snow_plowing.data,
                                      garbage_service=form.garbage_service.data,
                                      security_service=form.security_service.data,
-                                     description=form.description.data)
+                                     description=form.description.data,
+                                     rent_due=form.rent_due.data)
                 session.add(newListing)
                 session.commit()
 

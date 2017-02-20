@@ -19,7 +19,6 @@ class Listing(Base):
     zip_code = db.Column(db.String(5))
     start_date = db.Column(db.Date)
     end_date = db.Column(db.Date)
-    unit_type = db.Column(db.String(10))
     num_bedrooms = db.Column(db.Integer)
     price = db.Column(db.Integer)
     square_footage = db.Column(db.Integer)
@@ -41,12 +40,11 @@ class Listing(Base):
     description = db.Column(db.Text)
     num_full_baths = db.Column(db.Integer)
     num_half_baths = db.Column(db.Integer)
-    time_period = db.Column(db.String(8))
+    time_period = db.Column(db.String(15))
     apartment_number = db.Column(db.Integer)
     disabled = db.Column(db.Boolean)
     property_type = db.Column(db.Text)
     rent_due = db.Column(db.String(20))
-    maintenance = db.Column(db.Boolean)
 
     # This is for whether or not the landlord has deleted
     # the listing. This comes into play for checking dates
@@ -74,7 +72,6 @@ class Listing(Base):
             zip_code,
             start_date,
             end_date,
-            unit_type,
             num_bedrooms,
             price,
             square_footage,
@@ -99,8 +96,7 @@ class Listing(Base):
             time_period,
             apartment_number,
             property_type,
-            rent_due,
-            maintenance):
+            rent_due):
 
         self.street = street
         self.city = city
@@ -133,11 +129,9 @@ class Listing(Base):
         self.active = False  # Landlords have to activate listing
         self.show = False  # Landlord have to activate listing
         self.time_period = time_period
-        self.unit_type = unit_type
         self.parking = parking
         self.property_type = property_type
         self.rent_due = rent_due
-        self.maintenance = maintenance
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels

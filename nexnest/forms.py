@@ -96,7 +96,7 @@ class LoginForm(RedirectForm):
 class ListingForm(RedirectForm):
     street = StringField('Street Address', [
                          Length(min=2, max=50), InputRequired()])
-    apartment_number = IntegerField('Apartment Number', [InputRequired()])
+    apartment_number = IntegerField('Apartment Number')
     city = StringField('City', [Length(min=2, max=50), InputRequired()])
     state = SelectField('State', choices=statesLong)
     zip_code = StringField('Zipcode', [Length(min=5, max=5), InputRequired()])
@@ -105,7 +105,6 @@ class ListingForm(RedirectForm):
     end_date = StringField(
         'End Date', [Length(min=5, max=15), InputRequired()])
     time_period = SelectField('Length of Lease', choices=valid_time_periods)
-    unit_type = SelectField('Unit Type', choices=valid_unit_types)
     num_bedrooms = IntegerField('Number of Bedrooms', [InputRequired()])
     num_full_baths = IntegerField(
         'Number of Full Bathrooms', [InputRequired()])
@@ -123,8 +122,8 @@ class ListingForm(RedirectForm):
     dishwasher = BooleanField('Is there a Dishwasher?')
     air_conditioning = BooleanField('Is there Air Conditioning?')
     handicap = BooleanField('Is the property handicap accessible?')
-    furnished = HiddenField('Is the property furnished?')
-    utilities_included = HiddenField('Are utilities included in the price?')
+    furnished = BooleanField('Is the property furnished?')
+    utilities_included = BooleanField('Are utilities included in the price?')
     emergency_maintenance = BooleanField(
         'Do you provide emergency maintenance?')
     snow_plowing = BooleanField('Do you provide snow removal?')
@@ -132,12 +131,12 @@ class ListingForm(RedirectForm):
     security_service = BooleanField('Is there a security service provided?')
     description = TextAreaField('Please provide a detailed description of the property', [
                                 Length(min=1, max=1500), InputRequired()])
-    pictures = FileField('Pictures for Listing', validators=[FileRequired()])
+    pictures = FileField('Pictures for Listing')
     property_type = SelectField('Property Type', choices=propertyTypes)
     rent_due = SelectField('How often is rent due?', choices=rentDue)
-    first_semester_rent_due_date = StringField('What date is rent due for the first semester?', [Length(min=5, max=15)])
-    second_semester_rent_due_date = StringField('What date is rent due for the second semester?', [Length(min=5, max=15)])
-    monthly_rent_due_date = StringField('How often is rent due?', [Length(min=5, max=15)])
+    first_semester_rent_due_date = StringField('What date is rent due for the first semester?')
+    second_semester_rent_due_date = StringField('What date is rent due for the second semester?')
+    monthly_rent_due_date = StringField('What day of month is rent due?')
 
 
 class CreateGroupForm(RedirectForm):

@@ -69,7 +69,6 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     zip_code = factory.LazyAttribute(lambda x: fake.zipcode())
     start_date = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
     end_date = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
-    unit_type = 'apartment'
     num_bedrooms = 3
     price = 6000
     square_footage = 3500
@@ -95,7 +94,6 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     apartment_number = 2
     property_type = 'apartment'
     rent_due = 'semester'
-    maintenance = True
 
 
 class LandlordFactory(factory.alchemy.SQLAlchemyModelFactory):

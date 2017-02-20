@@ -173,7 +173,7 @@
                             		<div class="form-group" style="display: none;" id="first_semester_rent_due">
                             		    <label class="control-label form-control-feedback" id="apartment_number_label">First Semester Rent Due Date</label>
                             		    <p id="end" class="flatpickr input-group" data-wrap="true" data-clickOpens="false">
-                            		    	{{form.first_semester_rent_due_date(id="endLeaseDateInput", class='form-control', data_input="true", required='required', maxlength='100', type="date", style="background-color: inherit;")}}
+                            		    	{{form.first_semester_rent_due_date(id="endLeaseDateInput", class='form-control', data_input="true",  maxlength='100', type="date", style="background-color: inherit;")}}
                             		    	<a class="btn input-btn" style="border-color: #ddd;" data-toggle><i class="fa fa-calendar" aria-hidden="true"></i></a>
                             		    	<a class="btn input-btn" style="border-color: #ddd;" data-clear><i class="fa fa-times" aria-hidden="true"></i></a>
                             		    </p>
@@ -184,7 +184,7 @@
                             		<div class="form-group" style="display: none;" id="second_semester_rent_due">
                             		    <label class="control-label form-control-feedback" id="apartment_number_label">Second Semester Rent Due Date</label>
                             		    <p id="end" class="flatpickr input-group" data-wrap="true" data-clickOpens="false">
-                            		    	{{form.second_semester_rent_due_date(id="endLeaseDateInput", class='form-control', data_input="true", required='required', maxlength='100', type="date", style="background-color: inherit;")}}
+                            		    	{{form.second_semester_rent_due_date(id="endLeaseDateInput", class='form-control', data_input="true", maxlength='100', type="date", style="background-color: inherit;")}}
                             		    	<a class="btn input-btn" style="border-color: #ddd;" data-toggle><i class="fa fa-calendar" aria-hidden="true"></i></a>
                             		    	<a class="btn input-btn" style="border-color: #ddd;" data-clear><i class="fa fa-times" aria-hidden="true"></i></a>
                             		    </p>
@@ -196,28 +196,25 @@
                                 <div class="col-xs-6">
                                     <div class="form-group">
                                         <label class="control-label form-control-feedback" id="utilities_label">Are Utilities Included in This price?</label>
-                                        <div class="input-group">
-                                            <div id="radioBtn" class="btn-group">
-                                                <a class="btn btn-primary btn-sm active" data-toggle="utilities" data-title="N">No</a>
-                                                <a class="btn btn-primary btn-sm notActive" data-toggle="utilities" data-title="Y">Yes</a>
-                                            </div>
-                                            {{form.utilities_included(class='form-control')}}
-                                            <!-- <input type="hidden" name="utilities_included" id="utilities_included"> -->
+                                        <div class="checkbox">
+                                            <label style="font-size: 1.5em">
+                                                {{form.utilities_included(class='form-control form-check-input')}}
+                                                <!-- <input id="washer" class="form-check-input" type="checkbox"> -->
+                                                <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-xs-6">
-                                    <div class="form-group">
-                                        <label class="control-label form-control-feedback" id="furnished_label">Is the property furnished?</label>
-                                        <div class="input-group">
-                                            <div id="radioBtn" class="btn-group">
-                                                <a class="btn btn-primary btn-sm active" data-toggle="furnished" data-title="N">No</a>
-                                                <a class="btn btn-primary btn-sm notActive" data-toggle="furnished" data-title="Y">Yes</a>
-                                            </div>
-                                            {{form.furnished(class='form-control')}}
-                                            <!-- <input type="hidden" name="furnished" id="furnished"> -->
-                                        </div>
-                                    </div>
+                                	<div class="form-group">
+                                	    <label class="control-label form-control-feedback" id="furnished_label">Is the property furnished?</label>
+                                	    <div class="checkbox">
+                                	        <label style="font-size: 1.5em">
+                                	            {{form.furnished(class='form-control form-check-input')}}
+                                	            <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                	        </label>
+                                	    </div>
+                                	</div>
                                 </div>
                             </div>
                             <div class="row">
@@ -225,23 +222,28 @@
                                     <div class="form-group">
                                         <label class="control-label form-control-feedback">Number of Bedrooms</label>
                                         {{form.num_bedrooms(class='form-control', required='required', maxlength='1')}}
-                                        <!-- <input id="num_bedrooms" maxlength="1" type="number" required="required" class="form-control" /> -->
                                     </div>
                                 </div>
                                 <div class="col-xs-4">
                                     <div class="form-group">
                                         <label class="control-label form-control-feedback">Number of Full Bathrooms</label>
                                         {{form.num_full_baths(class='form-control', required='required', maxlength='1')}}
-                                        <!-- <input id="num_full_baths" maxlength="1" type="number" required="required" class="form-control" /> -->
                                     </div>
                                 </div>
                                 <div class="col-xs-4">
                                     <div class="form-group">
                                         <label class="control-label form-control-feedback">Number of Half Bathrooms</label>
                                         {{form.num_half_baths(class='form-control', required='required', maxlength='1')}}
-                                        <!-- <input id="num_half_baths" maxlength="1" type="number" required="required" class="form-control" /> -->
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
+                            	<div class="col-xs-6">
+	                                <div class="form-group">
+	                                    <label class="control-label form-control-feedback">Type of Parking</label>
+	                                    {{form.parking(class='form-control', required='required')}}
+	                                </div>
+                            	</div>
                             </div>
                             <div class="row">
                             	<div class="col-xs-12">
@@ -267,7 +269,7 @@
                                         <label class="control-label form-control-feedback" id="ac_label">Air Conditioning</label>
                                         <div class="checkbox">
                                             <label style="font-size: 1.5em">
-                                                {{form.air_conditioning(class='form-control')}}
+                                                {{form.air_conditioning(class='form-control form-check-input')}}
                                                 <!-- <input id="air_conditioning" class="form-check-input" type="checkbox"> -->
                                                 <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
                                             </label>
@@ -279,7 +281,7 @@
                                         <label class="control-label form-control-feedback" id="washer_label">Washing Machine</label>
                                         <div class="checkbox">
                                             <label style="font-size: 1.5em">
-                                                {{form.washer(class='form-control')}}
+                                                {{form.washer(class='form-control form-check-input')}}
                                                 <!-- <input id="washer" class="form-check-input" type="checkbox"> -->
                                                 <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
                                             </label>
@@ -293,7 +295,7 @@
                                         <label class="control-label form-control-feedback" id="dryer_label">Dryer</label>
                                         <div class="checkbox">
                                             <label style="font-size: 1.5em">
-                                                {{form.dryer(class='form-check-input')}}
+                                                {{form.dryer(class='form-check-input form-check-input')}}
                                                 <!-- <input id="dryer" class="form-check-input" type="checkbox"> -->
                                                 <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
                                             </label>
@@ -305,7 +307,7 @@
                                         <label class="control-label form-control-feedback" id="dishwasher_label">Dishwasher</label>
                                         <div class="checkbox">
                                             <label style="font-size: 1.5em">
-                                                {{form.dishwasher(class='form-control')}}
+                                                {{form.dishwasher(class='form-control form-check-input')}}
                                                 <!-- <input id="dishwasher" class="form-check-input" type="checkbox"> -->
                                                 <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
                                             </label>
@@ -332,7 +334,7 @@
                                         <label class="control-label form-control-feedback" id="handicap_label">Is the Property Handicap Accessible?</label>
                                         <div class="checkbox">
                                             <label style="font-size: 1.5em">
-                                                {{form.handicap(class='form-control')}}
+                                                {{form.handicap(class='form-control form-check-input')}}
                                                 <!-- <input id="handicap" class="form-check-input" type="checkbox"> -->
                                                 <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
                                             </label>
@@ -344,7 +346,7 @@
                                         <label class="control-label form-control-feedback" id="snow_label">Do You Provide Snow Removal?</label>
                                         <div class="checkbox">
                                             <label style="font-size: 1.5em">
-                                                {{form.snow_plowing(class='form-control')}}
+                                                {{form.snow_plowing(class='form-control form-check-input')}}
                                                 <!-- <input id="snow_plowing" class="form-check-input" type="checkbox"> -->
                                                 <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
                                             </label>
@@ -358,7 +360,7 @@
                                         <label class="control-label form-control-feedback" id="garbage_label">Are Garbage Services Included?</label>
                                         <div class="checkbox">
                                             <label style="font-size: 1.5em">
-                                                {{form.garbage_service(class='form-control')}}
+                                                {{form.garbage_service(class='form-control form-check-input')}}
                                                 <!-- <input id="garbage_service" class="form-check-input" type="checkbox"> -->
                                                 <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
                                             </label>
@@ -366,11 +368,11 @@
                                     </div>
                                 </div>
                                 <div class="col-xs-6">
-                                    <div class="form-group">
-                                        <label class="control-label form-control-feedback" id="maintenance_label">Do You Offer Emergency Maintenance?</label>
+                                    <div class="form-check">
+                                        <label class="form-check-label form-control-feedback" id="maintenance_label">Do You Offer Emergency Maintenance?</label>
                                         <div class="checkbox">
                                             <label style="font-size: 1.5em">
-                                                {{form.emergency_maintenance(class='form-control')}}
+                                                {{form.emergency_maintenance(class='form-control form-check-input')}}
                                                 <!-- <input id="maintenance" class="form-check-input" type="checkbox"> -->
                                                 <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
                                             </label>
@@ -384,7 +386,7 @@
                                         <label class="control-label form-control-feedback" id="security_label">Do You Offer Security Services?</label>
                                         <div class="checkbox">
                                             <label style="font-size: 1.5em">
-                                                {{form.security_service(class='form-control')}}
+                                                {{form.security_service(class='form-control form-check-input')}}
                                                 <!-- <input id="security" class="form-check-input" type="checkbox"> -->
                                                 <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
                                             </label>
@@ -606,6 +608,8 @@ $('#price').change(function() {
 
 function submitListingForm() {
     alert('hey');
+    alert($("#garbage_service").val())
+    alert($("#snow_plowing").val())
     $("form#createListingForm").submit();
 }
 

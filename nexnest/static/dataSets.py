@@ -16,13 +16,6 @@ valid_parking_types = [
     ('2', 'none')
 ]
 
-valid_unit_types = [
-    ('0', 'room'),
-    ('1', 'house'),
-    ('2', 'complex'),
-    ('3', 'apartment')
-]
-
 valid_time_periods = [
     ('school_year', 'School Year'),
     ('full_year', 'Full Year'),
