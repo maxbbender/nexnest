@@ -76,7 +76,7 @@ def createListing():
                 session.commit()
 
                 # Let's create the folder to upload the photos to.
-                folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', newListing.id)
+                folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(newListing.id))
 
                 if os.path.exists(folderPath):
                     os.makedirs(folderPath)
