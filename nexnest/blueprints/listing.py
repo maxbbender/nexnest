@@ -98,11 +98,11 @@ def createListing():
 
                         file.save(os.path.join(folderPath, filename))
                         filenames.append(filename)
-
-                print(filenames)
+                    else:
+                        flash("Error saving file %s" % file.filename, 'error')
 
                 flash('Listing Created', 'success')
-                return redirect(url_for('indexs.index'))
+                return redirect(url_for('listings.viewListing', listingID=newListing.id))
             else:
                 flash_errors(form)
                 return render_template('/landlord/createListing.html',

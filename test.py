@@ -20,8 +20,8 @@ import os
 # g = session.query(Group).filter_by(id=1).first()
 
 
-# u = session.query(Maintenance).filter_by(id=2).first()
-
+u = session.query(Listing).filter_by(id=6).first()
+print(u.getPhotoURLs())
 # print(u.user)
 # direct_messages = session.query(DirectMessage.target_user_id) \
 #     .filter_by(source_user_id=1) \
@@ -29,5 +29,5 @@ import os
 #     .all()
 # print(direct_messages)
 
-folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', '1')
-print(folderPath)
+# folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', '1')
+# print(folderPath)

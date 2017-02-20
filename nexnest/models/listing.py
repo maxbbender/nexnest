@@ -1,12 +1,14 @@
 from datetime import datetime as dt
 
-from nexnest.application import db
+from nexnest.application import db, app
 
 from .base import Base
 
 from sqlalchemy import event
 
 from sqlalchemy.orm import relationship
+
+import os
 
 
 # class PostReport(Base):
@@ -163,6 +165,16 @@ class Listing(Base):
             landlords.append(landlordListing.landlord.user)
 
         return landlords
+
+    def getPhotoURLs(self):
+        photoURLs = []
+        folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(self.id))
+
+        if os.path.exists(folderPath):
+
+            for filename in os.listdir(folderPath):
+                photoURLs.append("/uploads/listings/%r/%s" % (self.id, filename.replace("\'", "")))
+        return photoURLs
 
 
 def update_date_modified(mapper, connection, target):
