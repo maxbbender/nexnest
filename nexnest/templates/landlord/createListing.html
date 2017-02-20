@@ -169,6 +169,30 @@
                                 </div>
                             </div>
                             <div class="row">
+                            	<div class="col-xs-6">
+                            		<div class="form-group" style="display: none;" id="first_semester_rent_due">
+                            		    <label class="control-label form-control-feedback" id="apartment_number_label">First Semester Rent Due Date</label>
+                            		    <p id="end" class="flatpickr input-group" data-wrap="true" data-clickOpens="false">
+                            		    	{{form.first_semester_rent_due_date(id="endLeaseDateInput", class='form-control', data_input="true", required='required', maxlength='100', type="date", style="background-color: inherit;")}}
+                            		    	<a class="btn input-btn" style="border-color: #ddd;" data-toggle><i class="fa fa-calendar" aria-hidden="true"></i></a>
+                            		    	<a class="btn input-btn" style="border-color: #ddd;" data-clear><i class="fa fa-times" aria-hidden="true"></i></a>
+                            		    </p>
+                            		    <!-- <input id="apartment_number" name="apartment_number" maxlength="100" type="number" class="form-control" /> -->
+                            		</div>
+                            	</div>
+                            	<div class="col-xs-6">
+                            		<div class="form-group" style="display: none;" id="second_semester_rent_due">
+                            		    <label class="control-label form-control-feedback" id="apartment_number_label">Second Semester Rent Due Date</label>
+                            		    <p id="end" class="flatpickr input-group" data-wrap="true" data-clickOpens="false">
+                            		    	{{form.second_semester_rent_due_date(id="endLeaseDateInput", class='form-control', data_input="true", required='required', maxlength='100', type="date", style="background-color: inherit;")}}
+                            		    	<a class="btn input-btn" style="border-color: #ddd;" data-toggle><i class="fa fa-calendar" aria-hidden="true"></i></a>
+                            		    	<a class="btn input-btn" style="border-color: #ddd;" data-clear><i class="fa fa-times" aria-hidden="true"></i></a>
+                            		    </p>
+                            		    <!-- <input id="apartment_number" name="apartment_number" maxlength="100" type="number" class="form-control" /> -->
+                            		</div>
+                            	</div>
+                            </div>
+                            <div class="row">
                                 <div class="col-xs-6">
                                     <div class="form-group">
                                         <label class="control-label form-control-feedback" id="utilities_label">Are Utilities Included in This price?</label>
@@ -213,6 +237,11 @@
                                         <input id="num_half_baths" maxlength="1" type="number" required="required" class="form-control" />
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
+                            	<div class="col-xs-12">
+                            		<span id="estimatedRevenue" style="color: green";></span>
+                            	</div>
                             </div>
                             <button class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
                         </div>
@@ -390,6 +419,10 @@ $(document).ready(function() {
             $("#price_label").text("Price Per Bedroom per Month");
         } else {
             $("#price_label").text("Price Per Bedroom per Semester");
+            $("#first_semester_rent_due").show();
+            $("#second_semester_rent_due").show();
+            $('#first_semester_rent_due').attr('required', 'required');
+            $('#second_semester_rent_due').attr('required', 'required');
         }
     });
 
@@ -434,7 +467,6 @@ $(document).ready(function() {
         $(".form-group").removeClass("has-error");
         for (var i = 0; i < curInputs.length; i++) {
             if (!curInputs[i].validity.valid) {
-            	alert(curInputs[i].id);
                 isValid = false;
                 $(curInputs[i]).closest(".form-group").addClass("has-error");
                 $(curInputs[i]).closest(".form-group").addClass("has-danger");
@@ -494,6 +526,51 @@ $(document).on("focusin", "#endLeaseDateInput", function() {
 $(document).on("focusout", "#endLeaseDateInput", function() {
    $(this).prop('readonly', false); 
 });
+
+$('#rent_due').change(function() {
+    if ($("#price").val().length > 0 && $("#num_bedrooms").val().length > 0) {
+    	var bedPrice = parseInt($("#price").val());
+    	var beds = parseInt($("#num_bedrooms").val());
+    	var frequency = $("#rent_due").val();
+
+    	if (frequency == "monthly"){
+    		$("#estimatedRevenue").html("Estimated Revenue: $" + bedPrice*beds + " per month");
+    	}
+    	else{
+    		$("#estimatedRevenue").html("Estimated Revenue: $" + bedPrice*beds + " per semester");
+    	}
+    }
+});
+
+$('#num_bedrooms').change(function() {
+    if ($("#price").val().length > 0 && $("#num_bedrooms").val().length > 0) {
+    	var bedPrice = parseInt($("#price").val());
+    	var beds = parseInt($("#num_bedrooms").val());
+    	var frequency = $("#rent_due").val();
+    	if (frequency == "monthly"){
+    		$("#estimatedRevenue").html("Estimated Revenue: $" + bedPrice*beds + " per month");
+    	}
+    	else{
+    		$("#estimatedRevenue").html("Estimated Revenue: $" + bedPrice*beds + " per semester");
+    	}
+    }
+});
+
+$('#price').change(function() {
+    if ($("#price").val().length > 0 && $("#num_bedrooms").val().length > 0) {
+    	var bedPrice = parseInt($("#price").val());
+    	var beds = parseInt($("#num_bedrooms").val());
+    	var frequency = $("#rent_due").val();
+
+    	if (frequency == "monthly"){
+    		$("#estimatedRevenue").html("Estimated Revenue: $" + bedPrice*beds + " per month");
+    	}
+    	else{
+    		$("#estimatedRevenue").html("Estimated Revenue: $" + bedPrice*beds + " per semester");
+    	}
+    }
+});
+
 
 
 </script>
