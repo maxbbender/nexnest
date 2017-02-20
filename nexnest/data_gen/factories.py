@@ -95,6 +95,7 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     apartment_number = 2
     property_type = 'apartment'
     rent_due = 'semester'
+    maintenance = True
 
 
 class LandlordFactory(factory.alchemy.SQLAlchemyModelFactory):
