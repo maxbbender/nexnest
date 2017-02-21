@@ -1,13 +1,16 @@
 from datetime import datetime as dt
 
-from nexnest.application import db
+from nexnest.application import db, session
 
 from .base import Base
 
 from sqlalchemy import event
 
+from nexnest.models import *
 
-# class PostReport(Base):
+from flask import url_for
+
+
 class Notification(Base):
     __tablename__ = 'notifications'
     id = db.Column(db.Integer, primary_key=True)
@@ -42,6 +45,68 @@ class Notification(Base):
 
     def __repr__(self):
         return '<Notification %r>' % self.id
+
+    def getNotification(self):
+        message = None
+        returnObject = None
+        redirectURL = None
+        if self.type == 'direct_message':
+            returnObject = session.query(DirectMessage) \
+                .filter_by(target_user_id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "You have recieved a new Direct Message from %s" %  \
+                    returnObject.source_user.fname
+                redirectURL = url_for('users.directMessagesIndividual', user_id=returnObject.target_user_id)
+
+                return message, returnObject, redirectURL
+            else:
+                return None, None, None
+        elif self.type == 'friend':
+            returnObject = session.query(Friend) \
+                .filter_by(target_user_id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "You have recieved a new Friend Request from %s" %  \
+                    returnObject.source_user.fname
+
+                ##########################
+                ######TODDDDDOOOOOOO######
+                ##########################
+                redirectURL = url_for('indexs.index')
+
+                return message, returnObject, redirectURL
+            else:
+                return None, None, None
+        elif self.type == 'group_user':
+            returnObject = session.query(Group) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "You have recieved a Group Invitation for %s from %s" %  \
+                    (returnObject.name, returnObject.leader.fname)
+
+                redirectURL = url_for('groups.view', group_id=returnObject.id)
+
+                return message, returnObject, redirectURL
+            else:
+                return None, None, None
+        elif self.type == 'group_listing':
+            returnObject = session.query(Group) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "A new listing has been suggested to your Group %s" % returnObject.name
+
+                redirectURL = url_for('indexs.index')
+
+                return message, returnObject, redirectURL
+            else:
+                return None, None, None
 
 
 def update_date_modified(mapper, connection, target):
