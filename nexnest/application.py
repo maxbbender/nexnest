@@ -87,7 +87,10 @@ def insert_login_form():
     if current_user.is_authenticated:
         passwordChangeForm = PasswordChangeForm()
         avatarChangeForm = ProfilePictureForm()
-        return dict(passwordChangeForm=passwordChangeForm, avatarChangeForm=avatarChangeForm)
+        notifications = session.query(Notification).filter_by(target_user_id=current_user.id, viewed=False).all()
+        return dict(passwordChangeForm=passwordChangeForm,
+                    avatarChangeForm=avatarChangeForm,
+                    notifications=notifications)
     else:
         login_form = LoginForm()
         return dict(login_form=login_form)
