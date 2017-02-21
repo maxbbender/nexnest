@@ -510,6 +510,10 @@ $(document).ready(function() {
     $('#rent_due').change(function() {
         if ($("#rent_due").val() == "monthly") {
             $("#price_label").text("Price Per Bedroom per Month");
+            $("#first_semester_rent_due").hide();
+            $("#second_semester_rent_due").hide();
+            $('#first_semester_rent_due').removeAttr('required');
+            $('#second_semester_rent_due').removeAttr('required');
         } else {
             $("#price_label").text("Price Per Bedroom per Semester");
             $("#first_semester_rent_due").show();
