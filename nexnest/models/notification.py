@@ -23,9 +23,9 @@ class Notification(Base):
     # Notification Type: Can be the following values
     # | direct_message        | friend        | group_user       | group_listing
     # | group_listing_message | group_message | house            | house_message
-    # | maintenance_message   | maintenance   | platform_report  | report_group
+    # | group_listing_favorite| maintenance   | platform_report  | report_group
     # | report_landlord       | report_listing| security_deposit | tour
-    # | tour_message          | rent_reminder | new_tour_time    |
+    # | maintenance_message   | rent_reminder | new_tour_time    | tour_message 
     type = db.Column(db.String(128))
 
     def __init__(
@@ -95,7 +95,7 @@ class Notification(Base):
                 return message, returnObject, redirectURL
             else:
                 return None, None, None
-        elif self.type == 'group_listing':
+        elif self.type == 'group_listing_favorite':
             returnObject = session.query(Group) \
                 .filter_by(id=self.target_model_id) \
                 .first()
@@ -108,6 +108,21 @@ class Notification(Base):
                 return message, returnObject, redirectURL
             else:
                 return None, None, None
+
+        elif self.type == 'group_listing_message':
+            returnObject = session.query(GroupListing) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "You have new messages in %s's House Request" % returnObject.group.name
+
+                redirectURL = url_for('housingRequests.view', id=returnObject.id)
+
+                return message, returnObject, redirectURL
+            else:
+                return None, None, None
+
 
 
 def update_date_modified(mapper, connection, target):

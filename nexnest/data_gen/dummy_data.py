@@ -94,6 +94,33 @@ groupuser7.accepted = True
 
 session.commit()
 
+# GROUP FAVORITE NOTIFICATIONS
+glfn1 = NotificationFactory(target_user=user3,
+                            type='group_listing_favorite',
+                            target_model_id=group1.id)
+glfn2 = NotificationFactory(target_user=user4,
+                            type='group_listing_favorite',
+                            target_model_id=group1.id)
+glfn3 = NotificationFactory(target_user=user5,
+                            type='group_listing_favorite',
+                            target_model_id=group1.id)
+glfn4 = NotificationFactory(target_user=user3,
+                            type='group_listing_favorite',
+                            target_model_id=group1.id)
+glfn5 = NotificationFactory(target_user=user6,
+                            type='group_listing_favorite',
+                            target_model_id=group2.id)
+glfn6 = NotificationFactory(target_user=user8,
+                            type='group_listing_favorite',
+                            target_model_id=group3.id)
+glfn7 = NotificationFactory(target_user=user9,
+                            type='group_listing_favorite',
+                            target_model_id=group3.id)
+glfn8 = NotificationFactory(target_user=user10,
+                            type='group_listing_favorite',
+                            target_model_id=group3.id)
+
+
 # GROUP USER NOTIFICATIONS
 gun1 = NotificationFactory(target_user=groupuser4.user,
                            type='group_user',
