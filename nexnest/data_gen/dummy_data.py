@@ -211,7 +211,7 @@ for i in range(10):
 
     for user in gl1Users:
         if user is not userTemp:
-            glmn = NotificationFactory(target_user=user.id,
+            glmn = NotificationFactory(target_user=user,
                                        type='group_listing_message',
                                        target_model_id=gl1.id)
             session.commit()
