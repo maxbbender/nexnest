@@ -1,6 +1,6 @@
 from datetime import datetime as dt
 
-from nexnest.application import db, session
+from nexnest.application import db, session, app
 
 from .base import Base
 
@@ -46,6 +46,23 @@ class Notification(Base):
 
     def __repr__(self):
         return '<Notification %r>' % self.id
+
+
+    @property
+    def message(self):
+        message, returnObject, redirectURL = self.getNotification()
+        return message
+
+    @property
+    def returnObject(self):
+        message, returnObject, redirectURL = self.getNotification()
+        return returnObject
+
+    @property
+    def redirectURL(self):
+        message, returnObject, redirectURL = self.getNotification()
+        return redirectURL
+
 
     def getNotification(self):
         message = None

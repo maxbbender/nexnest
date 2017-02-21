@@ -35,6 +35,7 @@ app = Flask(__name__, static_folder="static")
 app.config.from_envvar('NEXNEST_%s_SETTINGS' % env.upper())
 app.secret_key = 'domislove'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['SERVER_NAME'] = '127.0.0.1:8000'
 
 
 # DB setup
@@ -130,3 +131,4 @@ admin.add_view(AdminModelView(GroupMessage, session))
 admin.add_view(AdminModelView(DirectMessage, session))
 admin.add_view(AdminModelView(GroupListing, session))
 admin.add_view(AdminModelView(Notification, session))
+admin.add_view(AdminModelView(GroupListingFavorite, session))

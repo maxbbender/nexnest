@@ -1,5 +1,4 @@
-from nexnest.application import session, app
-
+from nexnest.application import app, session
 from sqlalchemy import desc
 
 from nexnest.models import *
@@ -7,6 +6,8 @@ from nexnest.models import *
 import os
 
 
-u = session.query(User).filter_by(id=2).first()
+u = session.query(Notification).filter_by(id=2).first()
 print(u)
-print(u.unreadNotifications())
+print(u.message)
+print(u.redirectURL)
+print(u.returnObject)
