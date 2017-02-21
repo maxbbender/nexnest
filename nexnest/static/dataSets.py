@@ -157,3 +157,11 @@ rentDue = [
     ('monthly', 'Per Month'),
     ('semester', 'Per Semester')
 ]
+
+
+notificationTypes = [
+    'direct_message',
+    'friend',
+    'group_user',
+    'group_listing'
+]

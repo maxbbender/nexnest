@@ -31,3 +31,5 @@ print(u.getPhotoURLs())
 
 # folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', '1')
 # print(folderPath)
+
+message, model, redirectURL = notification.getNotification()

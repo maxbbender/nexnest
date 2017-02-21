@@ -35,6 +35,7 @@ class Notification(Base):
             type
     ):
         self.target_user_id = target_user.id
+        self.target_model_id = target_model_id
         self.type = type
         self.viewed = False
 
@@ -102,7 +103,7 @@ class Notification(Base):
             if returnObject is not None:
                 message = "A new listing has been suggested to your Group %s" % returnObject.name
 
-                redirectURL = url_for('indexs.index')
+                redirectURL = url_for('groups.view', group_id=returnObject.id)
 
                 return message, returnObject, redirectURL
             else:

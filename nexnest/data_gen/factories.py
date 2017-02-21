@@ -1,24 +1,6 @@
 from nexnest.application import session
 
-from nexnest.models.user import User
-from nexnest.models.listing import Listing
-from nexnest.models.landlord import Landlord
-from nexnest.models.landlord_listing import LandlordListing
-from nexnest.models.group import Group
-from nexnest.models.group_user import GroupUser
-from nexnest.models.group_listing import GroupListing
-from nexnest.models.group_listing_message import GroupListingMessage
-from nexnest.models.message import Message
-from nexnest.models.group_message import GroupMessage
-from nexnest.models.school import School
-from nexnest.models.direct_message import DirectMessage
-from nexnest.models.tour import Tour
-from nexnest.models.tour_message import TourMessage
-from nexnest.models.house import House
-from nexnest.models.house_message import HouseMessage
-from nexnest.models.security_deposit import SecurityDeposit
-from nexnest.models.maintenance import Maintenance
-from nexnest.models.maintenance_message import MaintenanceMessage
+from nexnest.models import *
 
 import factory
 from faker import Faker
@@ -27,7 +9,7 @@ from datetime import date
 
 import random
 
-from nexnest.static.dataSets import maintenanceRequestTypes
+from nexnest.static.dataSets import maintenanceRequestTypes, notificationTypes
 
 fake = Faker()
 
@@ -259,3 +241,13 @@ class MaintenanceMessageFactory(factory.alchemy.SQLAlchemyModelFactory):
     maintenance = factory.SubFactory(MaintenanceFactory)
     content = factory.LazyAttribute(lambda x: fake.paragraph(3))
     user = factory.SubFactory(UserFactory)
+
+
+class NotificationFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = Notification
+        sqlalchemy_session = session
+
+    target_user = factory.SubFactory(UserFactory)
+    target_model_id = -1
+    type = random.choice(notificationTypes)

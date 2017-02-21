@@ -69,14 +69,31 @@ groupuser11 = GroupUserFactory(group=group3, user=user5)
 groupuser1.accepted = True
 groupuser2.accepted = True
 groupuser3.accepted = True
-groupuser4.accepted = True
-
 groupuser6.accepted = True
 groupuser7.accepted = True
-groupuser8.accepted = True
 
-groupuser10.accepted = True
-groupuser11.accepted = True
+
+session.commit()
+
+# GROUP USER NOTIFICATIONS
+gun1 = NotificationFactory(target_user=groupuser4.user,
+                           type='group_user',
+                           target_model_id=groupuser4.group.id)
+gun2 = NotificationFactory(target_user=groupuser5.user,
+                           type='group_user',
+                           target_model_id=groupuser5.group.id)
+gun3 = NotificationFactory(target_user=groupuser8.user,
+                           type='group_user',
+                           target_model_id=groupuser8.group.id)
+gun4 = NotificationFactory(target_user=groupuser9.user,
+                           type='group_user',
+                           target_model_id=groupuser9.group.id)
+gun5 = NotificationFactory(target_user=groupuser10.user,
+                           type='group_user',
+                           target_model_id=groupuser10.group.id)
+gun6 = NotificationFactory(target_user=groupuser11.user,
+                           type='group_user',
+                           target_model_id=groupuser11.group.id)
 
 session.commit()
 
@@ -110,6 +127,11 @@ for i in range(50):
         target_user = random.choice(userMessageList)
 
     dm = DirectMessageFactory(source_user=source_user, target_user=target_user)
+
+    #_Direct Messages Notifications
+    dmn = NotificationFactory(target_user=target_user,
+                              type='direct_message',
+                              target_model_id=source_user.id)
     session.commit()
 
 
@@ -190,7 +212,7 @@ h1 = HouseFactory(listing=listing2, group=group1)
 
 session.commit()
 
-#House Messages
+# House Messages
 hm1 = HouseMessageFactory(house=h1, user=user2)
 hm2 = HouseMessageFactory(house=h1, user=user3)
 hm3 = HouseMessageFactory(house=h1, user=user2)
@@ -226,3 +248,6 @@ mm9 = MaintenanceMessageFactory(maintenance=m3, user=user3)
 mm10 = MaintenanceMessageFactory(maintenance=m3, user=user4)
 
 session.commit()
+
+
+# Notifications
