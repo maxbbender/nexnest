@@ -76,7 +76,7 @@ class Notification(Base):
             if returnObject is not None:
                 message = "You have recieved a new Direct Message from %s" %  \
                     returnObject.source_user.fname
-                redirectURL = url_for('users.directMessagesIndividual', user_id=returnObject.target_user_id)
+                redirectURL = '/user/directMessages/%d' % returnObject.source_user.id
 
                 return message, returnObject, redirectURL
             else:
@@ -93,7 +93,7 @@ class Notification(Base):
                 ##########################
                 ######TODDDDDOOOOOOO######
                 ##########################
-                redirectURL = url_for('indexs.index')
+                redirectURL = '/index'
 
                 return message, returnObject, redirectURL
             else:
@@ -107,7 +107,8 @@ class Notification(Base):
                 message = "You have recieved a Group Invitation for %s from %s" %  \
                     (returnObject.name, returnObject.leader.fname)
 
-                redirectURL = url_for('groups.view', group_id=returnObject.id)
+                redirectURL = '/group/view/%d' % returnObject.id
+                # redirectURL = url_for('groups.view', group_id=returnObject.id)
 
                 return message, returnObject, redirectURL
             else:
@@ -120,7 +121,8 @@ class Notification(Base):
             if returnObject is not None:
                 message = "A new listing has been suggested to your Group %s" % returnObject.name
 
-                redirectURL = url_for('groups.view', group_id=returnObject.id)
+                redirectURL = '/group/view/%d' % returnObject.id
+                # redirectURL = url_for('groups.view', group_id=returnObject.id)
 
                 return message, returnObject, redirectURL
             else:
@@ -134,7 +136,8 @@ class Notification(Base):
             if returnObject is not None:
                 message = "You have new messages in %s's House Request" % returnObject.group.name
 
-                redirectURL = url_for('housingRequests.view', id=returnObject.id)
+                redirectURL = '/houseRequest/view/%d' % returnObject.id
+                # redirectURL = url_for('housingRequests.view', id=returnObject.id)
 
                 return message, returnObject, redirectURL
             else:
