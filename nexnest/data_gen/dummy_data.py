@@ -203,12 +203,18 @@ session.commit()
 # GROUP LISTING MESSAGES
 # GL1
 gl1Users = [user2, user3, user4, user5]
-for i in range(30):
+for i in range(10):
     userTemp = random.choice(gl1Users)
     glm = GroupListingMessageFactory(groupListing=gl1, user=userTemp)
-    glmn = NotificationFactory(target_user=target_user,
-                               type='direct_message',
-                               target_model_id=source_user.id)
+
+    session.commit()
+
+    for user in gl1Users:
+        if user is not userTemp:
+            glmn = NotificationFactory(target_user=user.id,
+                                       type='group_listing_message',
+                                       target_model_id=gl1.id)
+            session.commit()
 
 glm1 = GroupListingMessageFactory(groupListing=gl1, user=user2)
 glm2 = GroupListingMessageFactory(groupListing=gl1, user=user3)
