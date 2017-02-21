@@ -2,10 +2,7 @@
 from nexnest.application import db, session
 from nexnest.utils.password import hash_password
 
-from nexnest.models.group import Group
-from nexnest.models.group_user import GroupUser
-from nexnest.models.group_listing import GroupListing
-# from nexnest.models.direct_message import DirectMessage
+from nexnest.models import Group, GroupUser, GroupListing, Notification
 
 from .base import Base
 from .landlord import Landlord
@@ -244,3 +241,8 @@ class User(Base):
     #     allUsers = []
     #     mySentMessages = self.sentDM.group_by(DirectMessage.target_user_id)
     #     return mySentMessages
+
+    def unreadNotifications(self):
+        return session.query(Notification) \
+            .filter_by(target_user_id=self.id, viewed=False) \
+            .all()

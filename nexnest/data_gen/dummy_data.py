@@ -207,6 +207,12 @@ gl3.accepted = True
 session.commit()
 
 # GROUP LISTING MESSAGES
+# # GL1
+# gl1Users = [user2, user3, user4, user5]
+# for i in range(30):
+#     userTemp = random.choice(gl1Users)
+#     glm = GroupListingMessageFactory(groupListing=gl1, user=userTemp)
+
 glm1 = GroupListingMessageFactory(groupListing=gl1, user=user2)
 glm2 = GroupListingMessageFactory(groupListing=gl1, user=user3)
 glm3 = GroupListingMessageFactory(groupListing=gl1, user=user2)
