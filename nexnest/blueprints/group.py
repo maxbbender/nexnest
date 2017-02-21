@@ -177,9 +177,17 @@ def favoriteListing(groupID, listingID):
             if count == 0:
 
                 newGLF = GroupListingFavorite(group=group,
-                                              listing=listing)
+                                              listing=listing,
+                                              user=cuttner_user)
+                session.add(newGLF)
+                session.commit()
             else:
                 flash("Listing already favorited by the %s" % group.name)
+            return redirect(url_for('groups.viewGroup', group_id=group.id))
+    else:
+        flash("Invalid Request")
+        return redirect(url_for('indexs.index'))
+
 
 @groups.route('/group/suggestListing', methods=['POST'])
 @login_required
