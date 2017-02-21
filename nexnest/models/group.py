@@ -26,6 +26,7 @@ class Group(Base):
     messages = relationship("GroupMessage", backref='group')
     tours = relationship("Tour", backref='group')
     house = relationship("House", backref='group')
+    favorites = relationship("GroupListingFavorite", backref='group')
 
     def __init__(
             self,
@@ -97,6 +98,13 @@ class Group(Base):
             users.append(groupUser.user)
 
         return users
+
+    def isViewableBy(self, user):
+        if user in self.acceptedUsers:
+            return True
+        else:
+            flash("You do not have permissions to view this Group", 'warning')
+            return False
 
     def isEditableBy(self, user):
         if user.id == self.leader_id:

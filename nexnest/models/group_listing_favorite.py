@@ -9,15 +9,18 @@ class GroupListingFavorite(Base):
     __tablename__ = 'group_listing_favorites'
     group_id = db.Column(db.Integer, db.ForeignKey('groups.id'), primary_key=True)
     listing_id = db.Column(db.Integer, db.ForeignKey('listings.id'), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     date_created = db.Column(db.DateTime)
 
     def __init__(
             self,
             group,
-            listing
+            listing,
+            user
     ):
         self.group_id = group.id
         self.listing_id = listing.id
+        self.user_id = user.id
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels

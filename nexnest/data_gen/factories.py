@@ -251,3 +251,13 @@ class NotificationFactory(factory.alchemy.SQLAlchemyModelFactory):
     target_user = factory.SubFactory(UserFactory)
     target_model_id = -1
     type = random.choice(notificationTypes)
+
+
+class GroupListingFavoriteFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = GroupListingFavorite
+        sqlalchemy_session = session
+
+    group = factory.SubFactory(GroupFactory)
+    listing = factory.SubFactory(ListingFactory)
+    user = factory.SubFactory(UserFactory)

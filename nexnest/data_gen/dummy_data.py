@@ -47,6 +47,25 @@ group3 = GroupFactory(leader=user4)
 
 session.commit()
 
+# GROUP LISTING FAVORITES
+gf1 = GroupListingFavoriteFactory(group=group1,
+                                  listing=listing1,
+                                  user=user2)
+gf2 = GroupListingFavoriteFactory(group=group2,
+                                  listing=listing1,
+                                  user=user5)
+gf3 = GroupListingFavoriteFactory(group=group3,
+                                  listing=listing1,
+                                  user=user7)
+gf4 = GroupListingFavoriteFactory(group=group2,
+                                  listing=listing3,
+                                  user=user6)
+gf5 = GroupListingFavoriteFactory(group=group1,
+                                  listing=listing2,
+                                  user=user3)
+
+session.commit()
+
 # GROUP USERS
 
 # Group 1
@@ -108,14 +127,7 @@ gmsg6 = GroupMessageFactory(group=group1, user=user5)
 session.commit()
 
 # DIRECT MESSAGES
-# We want MOAR then just these
-# dm1 = DirectMessageFactory(source_user=user2, target_user=user3)
-# dm2 = DirectMessageFactory(source_user=user3, target_user=user2)
-# dm3 = DirectMessageFactory(source_user=user2, target_user=user3)
-# dm4 = DirectMessageFactory(source_user=user3, target_user=user4)
-# dm5 = DirectMessageFactory(source_user=user4, target_user=user3)
-# dm6 = DirectMessageFactory(source_user=user2, target_user=user3)
-# dm6 = DirectMessageFactory(source_user=user2, target_user=user4)
+# We want MOAR
 
 userMessageList = [user2, user3, user4, user5, landlord, user7, user8]
 

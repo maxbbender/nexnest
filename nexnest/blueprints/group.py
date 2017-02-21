@@ -6,13 +6,7 @@ from nexnest.forms import CreateGroupForm, InviteGroupForm, SuggestListingForm, 
 
 from nexnest.application import session
 
-from nexnest.models.group import Group
-from nexnest.models.group_user import GroupUser
-from nexnest.models.group_listing import GroupListing
-from nexnest.models.user import User
-from nexnest.models.listing import Listing
-from nexnest.models.group_message import GroupMessage
-from nexnest.models.tour import Tour
+from nexnest.models import Group, GroupUser, GroupListing, User, Listing, GroupMessage, Tour, GroupListingFavorite
 
 from nexnest.utils.flash import flash_errors
 
@@ -165,6 +159,27 @@ def createMessage():
     # return redirect(url_for('groups.viewGroup',
     #                         group_id=message_form.group_id.data))
 
+
+@groups.route('/group/<groupID>/favoriteListing/<listingID>', methods=['GET'])
+@login_required
+def favoriteListing(groupID, listingID):
+    group = session.query(Group).filter_by(id=groupID).first()
+
+    if group is not None:
+        if group.isViewableBy(current_user):
+            listing = session.query(Listing).filter_by(id=listingID).first()
+
+            # Has the listing already been suggested?
+            count = session.query(GroupListingFavorite) \
+                .filter_by(group_id=group.id, listing_id=listing.id)\
+                .count()
+
+            if count == 0:
+
+                newGLF = GroupListingFavorite(group=group,
+                                              listing=listing)
+            else:
+                flash("Listing already favorited by the %s" % group.name)
 
 @groups.route('/group/suggestListing', methods=['POST'])
 @login_required
