@@ -29,3 +29,4 @@ from .security_deposit import SecurityDeposit
 from .tour import Tour
 from .tour_message import TourMessage
 from .notification import Notification
+from .group_listing_favorite import GroupListingFavorite
