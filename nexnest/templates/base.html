@@ -21,9 +21,6 @@
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 	<body>
-        {% for notification in notifications %}
-            {{notification}}
-        {% endfor %}
 		<nav class="navbar navbar-light bg-faded">
 			<a class="navbar-brand" href="{{ url_for('indexs.index') }}">NexNest</a>
 		    <ul class="nav navbar-nav">
@@ -82,7 +79,7 @@
                     {% if current_user %}
                     <li class="nav-item">
                         <div class="dropdown dropdown-notifications dropdown-toggle">
-                            <i data-count="2" class="fa fa-bell fa-2x notification-icon" style="padding-top: 4px;" id="dropdownNotificationButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
+                            <i data-count="{{ notifications|length }}" class="fa fa-bell fa-2x notification-icon" style="padding-top: 4px;" id="dropdownNotificationButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
                             <div class="dropdown-menu dropdown-menu-right" style="overflow:hidden;" aria-labelledby="dropdownNotificationButton">
                                 <div class="dropdown-toolbar">
                                     <div class="dropdown-toolbar-actions">
@@ -91,38 +88,23 @@
                                     <h2 class="dropdown-toolbar-title"><strong>Notifications (2)</strong></h2>
                                 </div>
                                 <ul class="notifications">
-                                    <li class="notification">
-                                        <div class="media">
-                                            <div class="media-left">
-                                                <div class="media-object">
-                                                    <img src="{{current_user.profile_image}}" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle" alt="Name" />
+                                    {% for notification in notifications %}
+                                        <li class="notification">
+                                            <div class="media">
+                                                <div class="media-left">
+                                                    <div class="media-object">
+                                                        <img src="{{current_user.profile_image}}" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle" alt="Name" />
+                                                    </div>
+                                                </div>
+                                                <div class="media-body">
+                                                    <p class="notification-desc">I totally don't wanna do it. Rimmer can do it.</p>
+                                                    <div class="notification-meta">
+                                                        <small class="timestamp">27. 11. 2015, 15:00</small>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="media-body">
-                                                <strong class="notification-title"><a href="#">Dave Lister</a> commented on <a href="#">DWARF-13 - Maintenance</a></strong>
-                                                <p class="notification-desc">I totally don't wanna do it. Rimmer can do it.</p>
-                                                <div class="notification-meta">
-                                                    <small class="timestamp">27. 11. 2015, 15:00</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="notification">
-                                        <div class="media">
-                                            <div class="media-left">
-                                                <div class="media-object">
-                                                    <img src="{{current_user.profile_image}}" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle" alt="Name" />
-                                                </div>
-                                            </div>
-                                            <div class="media-body">
-                                                <strong class="notification-title"><a href="#">Dave Lister</a> commented on <a href="#">DWARF-13 - Maintenance</a></strong>
-                                                <p class="notification-desc">I totally don't wanna do it. Rimmer can do it.</p>
-                                                <div class="notification-meta">
-                                                    <small class="timestamp">27. 11. 2015, 15:00</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
+                                        </li>
+                                    {% endfor %}
                                 </ul>
                             </div>
                         </div>
