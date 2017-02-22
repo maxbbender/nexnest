@@ -29,5 +29,4 @@ from .report_listing import ReportListing
 from .security_deposit import SecurityDeposit
 from .tour import Tour
 from .tour_message import TourMessage
-
 from .group_listing_favorite import GroupListingFavorite

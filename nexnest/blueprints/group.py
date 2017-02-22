@@ -178,7 +178,7 @@ def favoriteListing(groupID, listingID):
 
                 newGLF = GroupListingFavorite(group=group,
                                               listing=listing,
-                                              user=cuttner_user)
+                                              user=current_user)
                 session.add(newGLF)
                 session.commit()
             else:
