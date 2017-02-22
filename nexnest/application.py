@@ -88,13 +88,13 @@ def insert_login_form():
     if current_user.is_authenticated:
         passwordChangeForm = PasswordChangeForm()
         avatarChangeForm = ProfilePictureForm()
-        notifications = current_user.unreadNotifications()
+        # notifications = current_user.unreadNotifications()
         return dict(passwordChangeForm=passwordChangeForm,
-                    avatarChangeForm=avatarChangeForm,
-                    notifications=notifications)
+                    avatarChangeForm=avatarChangeForm)
     else:
         login_form = LoginForm()
         return dict(login_form=login_form)
+
 
 # # Make sure schools is populated
 # from nexnest.data import school_gen
