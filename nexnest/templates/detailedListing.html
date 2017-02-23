@@ -3,7 +3,7 @@
 	<div class="row">
 		<div class="col-xs-1 col-md-3 col-lg-3"></div>
 		<div class="col-xs-10 col-md-6 col-lg-6">
-			<div class="gallery" align="center">
+			<!-- <div class="gallery" align="center">
 				<div class="preview" align="center">
                     {% if pictures|length > 0 %}
                         <img name="preview" src="{{pictures[0]}}" style="height: 300px; width: 100%;" alt=""/>
@@ -26,6 +26,30 @@
                         <img onmouseover="preview.src=img5.src" name="img5" src="/static/img/testBedroom.jpg" style="width: 100px; height: 100px;" alt=""/>
                     {% endif %}
 				</div>
+			</div> -->
+			<div class="row">
+				<a class="test-popup-link" href="/static/img/testHouse.jpg">
+					<img src="/static/img/testHouse.jpg" style="height: 300px; width: 100%;">
+				</a>
+			</div>
+			<br>
+			<div class="row">
+				<div class="col-xs-12" style="text-align: center;">
+					<div class="popup-gallery">
+						<a href="/static/img/testKitchen.jpg" data-group="1" class="galleryItem">
+							<img src="/static/img/testKitchen.jpg" width="150" height="150">
+						</a>
+						<a href="/static/img/testLivingRoom.jpg" data-group="1" class="galleryItem"">
+							<img src="/static/img/testLivingRoom.jpg" width="150" height="150">
+						</a>
+						<a href="/static/img/testBathroom.jpg" data-group="1" class="galleryItem"">
+							<img src="/static/img/testBathroom.jpg" width="150" height="150">
+						</a>
+						<a href="/static/img/testBedroom.jpg" data-group="1" class="galleryItem">
+							<img src="/static/img/testBedroom.jpg" width="150" height="150">
+						</a>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -34,19 +58,11 @@
 		<div class="col-xs-10 col-md-6 col-lg-6">
 			<div class="row">
 				<div class="col-xs-7">
-					<h4>{{ listing.street }},</h4>
-					<h5>{{ listing.city }}, {{ listing.state }}, {{ listing.zip_code }}</h5>
-				</div>
-				<div class="col-xs-5" style="text-align: right">
-					<h2>${{ listing.price }}</h2>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-7">
-					<i class="fa fa-bed" aria-hidden="true"></i> {{ listing.num_bedrooms }} Bedrooms - {{ listing.num_full_baths }} Full Bathrooms - {{ listing.num_half_baths }} Half Bathrooms - {{ listing.square_footage }} sqft
-				</div>
-				<div class="col-xs-5" style="text-align: right">
-					<strong>Landlord: </strong>Pablo Revis
+					<br>
+					<h4>{{ listing.street }},
+					<br>
+					{{ listing.city }}, {{ listing.state }}, {{ listing.zip_code }}</h4>
+					<h5>${{ listing.price }} Per Bedroom Per {{ listing.rent_due }}</h5>
 				</div>
 			</div>
 			<div class="row">
@@ -65,10 +81,99 @@
 			</div>
 			<hr>
 			<div class="row">
-				{{ listing.description }}
+				<strong>Property Description:</strong> {{ listing.description }}
 			</div>
-			<br>
 			<div class="row">
+				<div class="col-xl-4" style="padding-top: 25px;">
+					<h2><strong>Lease:</strong></h2>
+					<strong>Time Period:</strong> {{ listing.time_period }}
+					<br>
+					<strong>Start Date:</strong> {{ listing.start_date }}
+					<br>
+					<strong>End Date:</strong> {{ listing.end_date }}
+					<br>
+					{% if listing.rent_due == "semester" %}					
+						<strong>First Semester Rent Due:</strong> {{ listing.first_semester_rent_due_date }}
+						<strong>Second Semester Rent Due:</strong> {{ listing.second_semester_rent_due_date }}
+					{% elif listing.rent_due == "monthly" %}
+						<strong>Rent Due: </strong>1st of each month
+					{% endif %}
+
+				</div>
+				<div class="col-xl-4" style="padding-top: 25px;">
+					<h2><strong>Property:</strong></h2>
+					Property Type: {{ listing.property_type }}
+					<br>
+					<i class="fa fa-bed" aria-hidden="true"></i> {{ listing.num_bedrooms }} Beds
+					<br>
+					<i class="fa fa-bath" aria-hidden="true"></i>{{ listing.num_full_baths }} Full Baths
+					<br>
+					{% if listing.num_half_baths > 0 %}
+						<i class="fa fa-bath" aria-hidden="true"></i>{{ listing.num_half_baths }} Half Baths
+						<br>
+					{% endif %}
+					{{ listing.square_footage }} SQFT
+					<br>
+					{% if listing.utilities_included %}
+						Utilities Included
+						<br>
+					{% endif %}
+					{% if listing.furnished %}
+						Property Furnished
+						<br>
+					{% endif %}
+					{% if listing.handicap %}
+						Handicap Accessible
+						<br>
+					{% endif %}
+					Parking: {{ listing.parking }}
+				</div>
+				<div class="col-xl-4" style="padding-top: 25px;">
+					<h2><strong>Appliances:</strong></h2>
+					{% if listing.air_conditioning %}
+						<li>Air Conditioning</li>
+					{% endif %}
+					{% if listing.washer %}
+						<li>Washing Machine</li>
+					{% endif %}					
+					{% if listing.dryer %}
+						<li>Dryer</li>
+					{% endif %}
+					{% if listing.dishwasher %}
+						<li>Dishwasher</li>
+					{% endif %}
+				</div>
+				<div class="col-xl-4" style="padding-top: 25px;">
+					<h2><strong>Services Included:</strong></h2>
+					{% if listing.snow_plowing %}
+						<li>Snow Plowing</li>
+					{% endif %}
+					{% if listing.garbage_service %}
+						<li>Garbage Removal</li>
+					{% endif %}
+					{% if listing.security_service %}
+						<li>Security Services</li>
+					{% endif %}
+					{% if listing.emergency_maintenance %}
+						<li>Emergency Maintenance</li>
+					{% endif %}
+				</div>
+				<div class="col-xl-4" style="padding-top: 25px;">
+					<h2><strong>Pets Allowed:</strong></h2>
+					{% if listing.dogs %}
+						<li>Dogs</li>
+					{% endif %}
+					{% if listing.cats %}
+						<li>Cats</li>
+					{% endif %}
+					{% if listing.other_pets %}
+						<li>Other Pets</li>
+					{% endif %}
+				</div>
+			</div>
+			<br><br>
+
+			<!-- <div class="row">
 				<h4><u>Details:</u></h4>
 				<br>	
 			</div>
@@ -80,7 +185,7 @@
 					<strong>Lease End:</strong> {{ listing.end_date }}
 				</div>
 				<div class="col-lg-4">
-					<strong>Unit Type:</strong> {{ listing.unit_type }}
+					<strong>Unit Type:</strong> {{ listing.property_type }}
 				</div>
 			</div>
 			<div class="row">
@@ -137,7 +242,7 @@
 				<div class="col-lg-4">
 					<strong>Security Service:</strong> {% if listing.security_service %} Yes {% else %} No {% endif %}
 				</div>
-			</div>
+			</div> -->
 		</div>
 	</div>
 
@@ -428,5 +533,33 @@
     	$("#groupID").val($("#groupNumberHouse").text());
         $("#request_house").submit();
     }
+
+    var groups = {};
+    $('.galleryItem').each(function() {
+      var id = parseInt($(this).attr('data-group'), 10);
+      
+      if(!groups[id]) {
+        groups[id] = [];
+      } 
+      
+      groups[id].push( this );
+    });
+
+
+    $.each(groups, function() {
+      
+      $(this).magnificPopup({
+          type: 'image',
+          closeOnContentClick: true,
+          closeBtnInside: false,
+          gallery: { enabled:true }
+      })
+      
+    });
+
+    $('.test-popup-link').magnificPopup({
+      type: 'image'
+      // other options
+    });
 </script>
 {% endblock %}
