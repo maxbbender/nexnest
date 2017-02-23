@@ -35,7 +35,7 @@ app = Flask(__name__, static_folder="static")
 app.config.from_envvar('NEXNEST_%s_SETTINGS' % env.upper())
 app.secret_key = 'domislove'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['SERVER_NAME'] = '127.0.0.1:8000'
+# app.config['SERVER_NAME'] = '127.0.0.1:8000'
 
 
 # DB setup
