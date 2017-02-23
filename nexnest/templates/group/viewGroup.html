@@ -21,7 +21,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#listingsRequestTab" role="tab">
+                    <a class="nav-link" data-toggle="tab" href="#listingRequestsTab" role="tab">
                         <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Listing Requests</span>
                     </a>
                 </li>
@@ -41,34 +41,7 @@
         </div>
         <br>
         <div class="row">
-            <div class="col-xs-8">
-                <div class="card" style="width:100%;">
-                    <h3 class="card-header">Type your message:</h3>
-                    <div class="card-block">
-                        <!-- Add new message -->
-                        <div class="form-group">
-                            <form action="{{url_for('groups.createMessage')}}" method='POST'>
-                                {{message_form.group_id}}
-                                {{message_form.csrf_token}}
-                                {{message_form.next}}
-                                <div class="row">
-                                    {{message_form.content(class="form-control", rows=5)}}
-                                </div>
-                                <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
-                                    <div class="col-xs-12">
-                                        <input class="btn btn-primary" type="submit" value="Respond">
-                                    </div>                                    
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <!-- Messages -->
-                {% for message in messages %}
-                    {% include 'group/message.html' %}
-                {% endfor %}
-            </div>
-            <div class="col-xs-4">
+            <div class="col-xs-7" style="padding-left: 35px;">
                 <div class="tab-content">
                     <div class="tab-pane active" id="membersTab" role="tabpanel" style="padding: 0px;">
                         <div class="row">
@@ -119,27 +92,74 @@
                     </div>
                     <div class="tab-pane" id="suggestedListingsTab" role="tabpanel" style="padding: 0px;">
                         <div class="row">
-                            <div class="card" style="width:100%;">
-                                <h3 class="card-header">Suggested Listings</h3>
+                            <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">Suggested Listings</h3>
                                 <div class="card-block">
                                     <div class="row">
-                                        <div class="col-xs-12">
+                                        <div class="col-xs-12" style="padding-left: 15px;">
                                             <div class="row">
-                                                <div class="col-xs-12">
+                                                <div class="col-xs-12" style="padding-left: 15px;">
                                                     {% for listing in suggestedListings %}
                                                         <div class="row m-x-auto">
                                                             <div class="col-md-12" style="padding-left: 30px; padding-right: 30px;">
-                                                                <a href="{{ url_for('listings.viewListing', listingID=listing.id) }}">
-                                                                    <img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
-                                                                    <div class="listingDescription d-flex align-items-end">
-                                                                        {{ listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i> ${{ listing.price }}
+                                                                <div class="card" style="width: 100%;">
+                                                                    <a href="{{ url_for('listings.viewListing', listingID=listing.id) }}">
+                                                                        <img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg card-img-top">
+                                                                    </a>
+                                                                    <div class="card-block">
+                                                                        <div class="row">
+                                                                            <div class="col-xs-6">
+                                                                                {{ listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
+                                                                                &nbsp;
+                                                                                {{ listing.num_full_baths }}<i class="fa fa-bath" aria-hidden="true"></i>
+                                                                                <br>
+                                                                                ${{ listing.price }} per {{ listing.rent_due }}
+                                                                            </div>
+                                                                            <div class="col-xs-6" style="text-align: right;">
+                                                                                {{ listing.street }}
+                                                                                <br>
+                                                                                {{ listing.city }}, {{ listing.state }}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="col-xs-12 col-xl-12" style="padding-left: 15px;">
+                                                                                <br>
+                                                                                <strong> Property Description: </strong> {{ listing.description }}
+                                                                            </div>
+                                                                        </div>
                                                                         <br>
-                                                                        {{ listing.street }}, {{ listing.city }}, {{ listing.state }}
+                                                                        <div class="row">
+                                                                            <div class="col-xl-4">
+                                                                                <strong>Time Period of Rental:</strong> {{ listing.time_period }}
+                                                                            </div>
+                                                                        </div>
+                                                                        <br>
+                                                                        <div class="row">                                                         
+                                                                            <div class="col-xl-5">
+                                                                                <strong>Lease Start Date:</strong> {{ listing.start_date }}
+                                                                            </div>
+                                                                            <div class="col-xl-5">
+                                                                                <strong>Lease End Date:</strong> {{ listing.end_date }}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            {% if listing.rent_due == "semester" %}
+                                                                                <div class="col-xl-5">
+                                                                                    <strong>First Semester Rent Due:</strong> {{ listing.first_semester_rent_due_date }}
+                                                                                </div>
+                                                                                <div class="col-xl-5">
+                                                                                    <strong>Second Semester Rent Due:</strong> {{ listing.second_semester_rent_due_date }}
+                                                                                </div>                                                               
+                                                                            {% elif listing.rent_due == "monthly" %}
+                                                                                <div class="col-xl-5">
+                                                                                    <strong>Rent Due: </strong>1st of each month
+                                                                                </div>
+                                                                            {% endif %}
+                                                                        </div>
                                                                     </div>
-                                                                </a>
+                                                                </div>
                                                             </div>     
                                                         </div>
-                                                        <hr>
                                                     {% endfor %}
                                                 </div>
                                             </div>
@@ -151,62 +171,132 @@
                     </div>
                     <div class="tab-pane" id="toursTab" role="tabpanel" style="padding: 0px;">
                         <div class="row">
-                            <div class="card" style="width:100%;">
-                                <h3 class="card-header">The Property</h3>
+                            <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);"">
+                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">Tours</h3>
                                 <div class="card-block">
                                     <div class="row">
                                         {% for tour in tours %}
                                             <div class="row">
-                                                <div class="col-xs-5">
-                                                <strong>Tour For:</strong>
-                                                <br>
-                                                {{ tour.listing.street }}
-                                                <br><br>
-                                                {% if tour.group.leader_id == current_user.id %}
-                                                    {% if tour.last_requested == 'landlord' %}
-                                                        <strong>Tour Status:</strong>
-                                                        {% if tour.tour_confirmed %}
-                                                            <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
-                                                        {% else %}
-                                                            <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the you to confirm the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
-                                                        {% endif %}
-                                                    {% else %}
-                                                        <p class="card-text">
-                                                            <strong>Tour Status:</strong>
-                                                            {% if tour.tour_confirmed %}
-                                                                <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
-                                                            {% else %}
-                                                                <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the landlord to confirm your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
-                                                            {% endif %}
-                                                        </p>
-                                                    {% endif %}                                        
-                                                {% else %}
-                                                    <strong>Tour Status:</strong>
-                                                    {% if tour.tour_confirmed %}
-                                                        <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
-                                                    {% else %}
-                                                        {% if tour.last_requested == 'group' %}
-                                                            <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Request Pending</b>" data-placement="top" data-content="Waiting for the landlord to confirm your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
-                                                        {% else %}
-                                                            <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Request Pending</b>" data-placement="top" data-content="The landlord has proposed a different time. Waiting for your group leader to make a decision"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
-                                                        {% endif %}
-                                                    {% endif %}
-                                                {% endif %}                                            
-                                                {% if tour.tour_confirmed %}
-                                                    <p class="card-text"><strong>Tour is scheduled for:</strong><br> {{ tour.time_requested }}</p>
-                                                {% else %}
-                                                    <p class="card-text"><strong>Tour requested for:</strong><br> {{ tour.time_requested }}</p>
-                                                {% endif %}
-                                                <a href="{{ url_for('tours.viewTour', tourID=tour.id) }}" class="btn btn-primary">View Tour</a>
-                                                </div>
-                                                <div class="col-xs-7">
-                                                    <a href="{{ url_for('tours.viewTour', tourID=tour.id) }}">
-                                                        <img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
-                                                    </a>
+                                                <div class="card">
+                                                    <div class="card-block">
+                                                        <div class="row">
+                                                            <div class="col-xs-5">
+                                                                <strong>Tour For:</strong>
+                                                                <br>
+                                                                {{ tour.listing.street }}
+                                                                <br><br>
+                                                                {% if tour.group.leader_id == current_user.id %}
+                                                                    {% if tour.last_requested == 'landlord' %}
+                                                                        <strong>Tour Status:</strong>
+                                                                        {% if tour.tour_confirmed %}
+                                                                            <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                                                        {% else %}
+                                                                            <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the you to confirm the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                                        {% endif %}
+                                                                    {% else %}
+                                                                        <p class="card-text">
+                                                                            <strong>Tour Status:</strong>
+                                                                            {% if tour.tour_confirmed %}
+                                                                                <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                                                            {% else %}
+                                                                                <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the landlord to confirm your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                                            {% endif %}
+                                                                        </p>
+                                                                    {% endif %}                                        
+                                                                {% else %}
+                                                                    <strong>Tour Status:</strong>
+                                                                    {% if tour.tour_confirmed %}
+                                                                        <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                                                    {% else %}
+                                                                        {% if tour.last_requested == 'group' %}
+                                                                            <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Request Pending</b>" data-placement="top" data-content="Waiting for the landlord to confirm your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                                        {% else %}
+                                                                            <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Request Pending</b>" data-placement="top" data-content="The landlord has proposed a different time. Waiting for your group leader to make a decision"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                                        {% endif %}
+                                                                    {% endif %}
+                                                                {% endif %}                                            
+                                                                {% if tour.tour_confirmed %}
+                                                                    <p class="card-text"><strong>Tour is scheduled for:</strong><br> {{ tour.time_requested }}</p>
+                                                                {% else %}
+                                                                    <p class="card-text"><strong>Tour requested for:</strong><br> {{ tour.time_requested }}</p>
+                                                                {% endif %}
+                                                                <a href="{{ url_for('tours.viewTour', tourID=tour.id) }}" class="btn btn-primary">View Tour</a>
+                                                            </div>
+                                                            <div class="col-xs-7">
+                                                                <div class="card" style="width: 100%;">
+                                                                    <a href="{{ url_for('listings.viewListing', listingID=tour.listing.id) }}">
+                                                                        <img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg card-img-top">
+                                                                    </a>
+                                                                    <div class="card-block">
+                                                                        <div class="row">
+                                                                            <div class="col-xs-6">
+                                                                                {{ tour.listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
+                                                                                &nbsp;
+                                                                                {{ tour.listing.num_full_baths }}<i class="fa fa-bath" aria-hidden="true"></i>
+                                                                                <br>
+                                                                                ${{ tour.listing.price }} per {{ tour.listing.rent_due }}
+                                                                            </div>
+                                                                            <div class="col-xs-6" style="text-align: right;">
+                                                                                {{ tour.listing.street }}
+                                                                                <br>
+                                                                                {{ tour.listing.city }}, {{ tour.listing.state }}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <hr>
                                         {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane active" id="listingRequestsTab" role="tabpanel" style="padding: 0px;">
+                        <div class="row">
+                            <div class="card" style="width:100%;">
+                                <h3 class="card-header">Members</h3>
+                                <div class="card-block">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <strong>Current Group Members:</strong>
+                                            {% for user in group.acceptedUsers %}                                    
+                                                {% include 'group/member.html' %}
+                                            {% endfor %}                        
+                                            {% if group.unAcceptedUsers %}
+                                            {% if group.leader_id == current_user.id %}
+                                                <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#changeGroupLeaderModal">Change Group Leader</a>
+                                                <br><br>
+                                            {% endif %}
+                                            <strong>Invited Members:</strong>
+                                            {% for user in group.unAcceptedUsers %}
+                                                {% include 'group/member.html' %}
+                                            {% endfor %}
+                                            {% endif %}
+
+                                            <!-- Group Leader Actions -->
+                                            {% if group.leader_id == current_user.id %}
+                                            <br>
+                                            <strong>Invite User to Group:</strong>
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-10 col-md-8 col-lg-8 col-xl-6">                        
+                                                    <input id="userSearch" type="text" class="form-control" aria-describedby="searchHelpBlock" style="width:100%;">
+                                                </div>
+                                            </div>
+                                            <p id="searchHelpBlock" class="form-text text-muted">
+                                                Search by Username (first part of email)
+                                            </p>                        
+                                            <form id="invite_user" action="{{url_for('groups.invite')}}" method="POST">
+                                                {{invite_form.csrf_token}}
+                                                {{invite_form.group_id(value=group.id)}}
+                                                {{invite_form.user_id}}
+                                            </form>
+                                            <span class="" id="userSearchUL"></span>
+                                            {% endif %}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -216,6 +306,33 @@
                         Lease
                     </div>
                 </div>
+            </div>
+            <div class="col-xs-5">
+                <div class="card" style="width:100%;">
+                    <h3 class="card-header">Type your message:</h3>
+                    <div class="card-block">
+                        <!-- Add new message -->
+                        <div class="form-group">
+                            <form action="{{url_for('groups.createMessage')}}" method='POST'>
+                                {{message_form.group_id}}
+                                {{message_form.csrf_token}}
+                                {{message_form.next}}
+                                <div class="row">
+                                    {{message_form.content(class="form-control", rows=5)}}
+                                </div>
+                                <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
+                                    <div class="col-xs-12">
+                                        <input class="btn btn-primary" type="submit" value="Respond">
+                                    </div>                                    
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Messages -->
+                {% for message in messages %}
+                    {% include 'group/message.html' %}
+                {% endfor %}
             </div>
         </div>
     </div>
