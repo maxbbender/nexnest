@@ -162,7 +162,6 @@ for i in range(10):
             session.commit()
 
 
-
 # DIRECT MESSAGES
 # We want MOAR
 
@@ -177,7 +176,7 @@ for i in range(50):
 
     dm = DirectMessageFactory(source_user=source_user, target_user=target_user)
 
-    #_Direct Messages Notifications
+    # Direct Messages Notifications
     dmn = NotificationFactory(target_user=target_user,
                               type='direct_message',
                               target_model_id=source_user.id)

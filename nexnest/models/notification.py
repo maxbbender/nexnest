@@ -72,7 +72,6 @@ class Notification(Base):
         from nexnest.models.friend import Friend
         from nexnest.models.group import Group
         from nexnest.models.group_listing import GroupListing
-        from nexnest.models.group_listing_message import Group
         from nexnest.models.group_message import GroupMessage
         from nexnest.models.house import House
 

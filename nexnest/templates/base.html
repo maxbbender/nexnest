@@ -24,7 +24,10 @@
 	</head>
 	<body>
         {% for notification in notifications %}
-            {{notification}}
+            {{notification.type}}<br>
+            {{notification.message}}<br>
+            {{notification.returnObject}}<br>
+            {{notification.redirectURL}}<br>
         {% endfor %}
 		<nav class="navbar navbar-light bg-faded">
 			<a class="navbar-brand" href="{{ url_for('indexs.index') }}">NexNest</a>
