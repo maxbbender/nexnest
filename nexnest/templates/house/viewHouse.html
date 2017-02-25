@@ -56,39 +56,13 @@
 	        </div>
     	</div>
     	<br>
-    	<div class="row">
-    		<div class="col-xs-5">
-			    <div class="card" style="width:100%;">
-			        <h3 class="card-header">Type your message:</h3>
-			        <div class="card-block">
-			            <!-- Add new message -->
-			            <div class="form-group">
-			                <form action="{{url_for('houses.messageCreate')}}" method='POST'>
-			                    {{messageForm.houseID(value=house.id)}}
-			                    {{messageForm.csrf_token}}
-			                    <div class="row">
-			                        {{messageForm.content(class="form-control", rows=5)}}
-			                    </div>
-			                    <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
-			                        <div class="col-xs-12">
-			                            <input class="btn btn-primary" type="submit" value="Respond">
-			                        </div>                                    
-			                    </div>
-			                </form>
-			            </div>
-			        </div>
-			    </div>
-			    <!-- Messages -->
-			    {% for message in messages %}
-			        {% include 'house/message.html' %}
-			    {% endfor %}
-    		</div>
-    		<div class="col-xs-7">
+    	<div class="row">    		
+    		<div class="col-xs-7" style="padding-left: 35px;">
 			    <div class="tab-content">
 				    <div class="tab-pane active" id="maintenanceTab" role="tabpanel" style="padding: 0px;">
 				    	<div class="row">
-				    	    <div class="card" style="width:100%;">
-				    	        <div class="card-header">
+				    	    <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+				    	        <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
 				    	        	<div class="row">
 				    	        		<div class="col-xs-7">
 				    	        			<h3>Maintence Requests</h3>
@@ -144,8 +118,14 @@
 				    </div>
 			        <div class="tab-pane" id="membersTab" role="tabpanel" style="padding: 0px;">
 			        	<div class="row">
-			        	    <div class="card" style="width:100%;">
-			        	        <h3 class="card-header">Members</h3>
+			        	    <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+			        	        <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
+			        	        	{% if current_user in landlords %}
+			        	        		Members
+			        	        	{% else %}
+			        	        		The landlord
+			        	        	{% endif %}
+			        	        </h3>
 			        	        <div class="card-block">
 			        	            <div class="row">
 			        	                <div class="col-xs-12">
@@ -159,7 +139,6 @@
 			        	                                    {% endfor %}
 			        	                                {% endwith %}
 			        	                            {% else %}
-			        	                                <p class="card-text"><strong>The property owner:</strong></p>
 			        	                                {% for user in landlords %}
 			        	                                    {% include 'tour/member.html' %}
 			        	                                {% endfor %}
@@ -174,12 +153,12 @@
 			        </div>
 			        <div class="tab-pane" id="propertyTab" role="tabpanel" style="padding: 0px;">
 				    	<div class="row">
-				    	    <div class="card" style="width:100%;">
-				    	        <h3 class="card-header">The Property</h3>
+				    	    <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);"">
+				    	        <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">The Property</h3>
 				    	        <div class="card-block">
 				    	            <div class="row">
 				    	                {% with listing=house.listing %}
-				    	                    {% include 'listing.html' %}
+				    	                    {% include 'listingMoreInfo.html' %}
 				    	                {% endwith %}
 				    	            </div>
 				    	        </div>
@@ -199,6 +178,32 @@
 				    	</div>
 				    </div>
 				</div>
+    		</div>
+    		<div class="col-xs-5">
+			    <div class="card" style="width:100%;">
+			        <h3 class="card-header">Type your message:</h3>
+			        <div class="card-block">
+			            <!-- Add new message -->
+			            <div class="form-group">
+			                <form action="{{url_for('houses.messageCreate')}}" method='POST'>
+			                    {{messageForm.houseID(value=house.id)}}
+			                    {{messageForm.csrf_token}}
+			                    <div class="row">
+			                        {{messageForm.content(class="form-control", rows=5)}}
+			                    </div>
+			                    <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
+			                        <div class="col-xs-12">
+			                            <input class="btn btn-primary" type="submit" value="Respond">
+			                        </div>                                    
+			                    </div>
+			                </form>
+			            </div>
+			        </div>
+			    </div>
+			    <!-- Messages -->
+			    {% for message in messages %}
+			        {% include 'house/message.html' %}
+			    {% endfor %}
     		</div>
     	</div>
     </div>

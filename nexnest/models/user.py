@@ -252,7 +252,7 @@ class User(Base):
     #     return mySentMessages
 
     def unreadNotifications(self):
-        return self.notifications.filter_by(target_user_id=self.id, viewed=False)
+        return self.notifications.filter_by(viewed=False).all()
         # return session.query(Notification) \
         #     .filter_by(target_user_id=self.id, viewed=False) \
         #     .all()

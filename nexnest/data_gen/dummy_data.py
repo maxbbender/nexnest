@@ -188,6 +188,7 @@ for i in range(50):
 t1 = TourFactory(listing=listing1, group=group1)
 t2 = TourFactory(listing=listing1, group=group2)
 t3 = TourFactory(listing=listing1, group=group3)
+t3 = TourFactory(listing=listing2, group=group1)
 
 session.commit()
 
