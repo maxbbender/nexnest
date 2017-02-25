@@ -2,6 +2,7 @@ from nexnest import app
 from nexnest.models import *
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+from nexnest.application import session
 
 
 class AdminModelView(ModelView):

@@ -73,7 +73,9 @@ def insert_login_form():
         # notifications = current_user.notifications
         return dict(passwordChangeForm=passwordChangeForm,
                     avatarChangeForm=avatarChangeForm,
-                    notifications=current_user.notifications.all())
+                    notifications=current_user.unreadNotifications())
     else:
         login_form = LoginForm()
         return dict(login_form=login_form)
+
+import nexnest.admin
