@@ -167,7 +167,7 @@ for i in range(10):
 
 userMessageList = [user2, user3, user4, user5, landlord, user7, user8]
 
-for i in range(50):
+for i in range(10):
     source_user = random.choice(userMessageList)
     target_user = random.choice(userMessageList)
 
@@ -229,7 +229,7 @@ for i in range(10):
         if user is not userTemp:
             glmn = NotificationFactory(target_user=user,
                                        type='group_listing_message',
-                                       target_model_id=gl1.id)
+                                       target_model_id=glm.id)
             session.commit()
 
 glm1 = GroupListingMessageFactory(groupListing=gl1, user=user2)
