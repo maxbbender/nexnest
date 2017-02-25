@@ -1,4 +1,4 @@
-from nexnest.application import ALLOWED_EXTENSIONS
+from nexnest import ALLOWED_EXTENSIONS
 
 
 def allowed_file(filename):

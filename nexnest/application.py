@@ -1,14 +1,7 @@
-# Nexnest Application Startpoint
-
-# OS Functions
-from os import environ
-from os.path import join
-from os.path import dirname
-
-from dotenv import load_dotenv
+# Application Config
 
 # Flask
-from flask import Flask, redirect, url_for
+from flask import redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user
 from flask_wtf.csrf import CSRFProtect
@@ -17,26 +10,7 @@ from flask_wtf.csrf import CSRFProtect
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy import create_engine
 
-# DotEnv Setup
-load_dotenv(join(dirname(__file__), '..', '.env'))
-
-# Environment choice
-env = environ.get('NEXNEST_ENV')
-
-if env is None:
-    env = 'development'
-
-# File Uploads
-UPLOAD_FOLDER = dirname(__file__) + '/uploads'
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
-
-# App setup
-app = Flask(__name__, static_folder="static")
-app.config.from_envvar('NEXNEST_%s_SETTINGS' % env.upper())
-app.secret_key = 'domislove'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-# app.config['SERVER_NAME'] = '127.0.0.1:8000'
-
+from nexnest import app
 
 # DB setup
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
@@ -52,11 +26,19 @@ login_manager.init_app(app)
 login_manager.login_view = '/login'
 
 # Our Models
-from nexnest.models import *
+# from nexnest.models import *
+# from nexnest.models import base
+# # from nexnest.models import direct_message
+# from nexnest.models import notification
+# from nexnest.models import user
+
+# from nexnest.models import direct_message
+# from nexnest.models.direct_message import DirectMessage
 
 
 @login_manager.user_loader
 def load_user(user_id):
+    from nexnest.models.user import User
     return session.query(User).filter_by(id=user_id).first()
 
 # Blueprints
@@ -88,47 +70,10 @@ def insert_login_form():
     if current_user.is_authenticated:
         passwordChangeForm = PasswordChangeForm()
         avatarChangeForm = ProfilePictureForm()
-        # notifications = current_user.unreadNotifications()
+        # notifications = current_user.notifications
         return dict(passwordChangeForm=passwordChangeForm,
-                    avatarChangeForm=avatarChangeForm)
+                    avatarChangeForm=avatarChangeForm,
+                    notifications=current_user.notifications.all())
     else:
         login_form = LoginForm()
         return dict(login_form=login_form)
-
-
-# # Make sure schools is populated
-# from nexnest.data import school_gen
-
-
-# Flask Admin Setup
-from flask_admin import Admin
-
-admin = Admin(app, name='Nexnest', template_mode='bootstrap3')
-
-# Flask Admin Model Views
-from flask_admin.contrib.sqla import ModelView
-
-
-class AdminModelView(ModelView):
-    def is_accessible(self):
-        return True
-        # return current_user.isAdmin # TURN ON FOR PRODUCTION
-
-    def inaccessible_callback(self, name, **kwargs):
-        # redirect to login page if user doesn't have access
-        return redirect(url_for('indexs.index'))
-
-
-admin.add_view(AdminModelView(User, session))
-admin.add_view(AdminModelView(Group, session))
-admin.add_view(AdminModelView(Listing, session))
-admin.add_view(AdminModelView(Message, session))
-admin.add_view(AdminModelView(Landlord, session))
-admin.add_view(AdminModelView(School, session))
-admin.add_view(AdminModelView(Tour, session))
-admin.add_view(AdminModelView(TourMessage, session))
-admin.add_view(AdminModelView(GroupMessage, session))
-admin.add_view(AdminModelView(DirectMessage, session))
-admin.add_view(AdminModelView(GroupListing, session))
-admin.add_view(AdminModelView(Notification, session))
-admin.add_view(AdminModelView(GroupListingFavorite, session))

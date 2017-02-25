@@ -6,7 +6,11 @@ from .base import Base
 
 from sqlalchemy import event
 
-from nexnest.models import *
+
+# from nexnest.models import direct_message
+from nexnest.models.friend import Friend
+from nexnest.models.group import Group
+from nexnest.models.group_listing import GroupListing
 
 from flask import url_for
 
@@ -65,6 +69,7 @@ class Notification(Base):
 
 
     def getNotification(self):
+        from nexnest.models.direct_message import DirectMessage
         message = None
         returnObject = None
         redirectURL = None

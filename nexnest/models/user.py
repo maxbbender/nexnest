@@ -2,7 +2,13 @@
 from nexnest.application import db, session
 from nexnest.utils.password import hash_password
 
-from nexnest.models import Group, GroupUser, GroupListing, Notification
+# from nexnest.models import Group, GroupUser, GroupListing, Notification, DirectMessage
+# from nexnest.models.group import Group
+# from nexnest.models import direct_message
+from nexnest.models.group_user import GroupUser
+from nexnest.models.group_listing import GroupListing
+from nexnest.models.notification import Notification
+
 
 from .base import Base
 from .landlord import Landlord
@@ -36,18 +42,20 @@ class User(Base):
     active = db.Column(db.Boolean)
     # twitter_token = db.Column(db.Text)
     # twitter_secret = db.Column(db.Text)
-    sentDM = relationship('DirectMessage',
-                          lazy='dynamic',
-                          backref='source_user',
-                          foreign_keys='[DirectMessage.source_user_id]',
-                          )
+    # sentDM = relationship('DirectMessage',  # direct_message.DirectMessage
+    #                       lazy='dynamic',
+    #                       backref='source_user',
+    #                       foreign_keys=direct_message.DirectMessage.source_user_id
+    #                       # foreign_keys='[DirectMessage.source_user_id]',
+    #                       )
+    # sentMessages = relationship('Message', backref='user')
     recievedDM = relationship('DirectMessage',
                               lazy='dynamic',
                               backref='target_user',
-                              foreign_keys='[DirectMessage.target_user_id]',
+                              # foreign_keys=direct_message.DirectMessage.target_user_id
+                              foreign_keys='DirectMessage.target_user_id',
                               )
     groups = relationship("GroupUser", back_populates='user')
-
     groupLeader = relationship("Group", backref='leader')
     groupMessages = relationship("GroupMessage", backref='user')
     houseMessages = relationship("HouseMessage", backref='user')
@@ -57,7 +65,7 @@ class User(Base):
     securityDeposits = relationship("SecurityDeposit", backref='user')
     maintenanceMessages = relationship("MaintenanceMessage", backref='user')
     maintenanceRequests = relationship("Maintenance", backref='user')
-    notifications = relationship("Notification", backref='user')
+    notifications = relationship("Notification", backref='user', lazy="dynamic")
 
     def __init__(self,
                  email,
@@ -243,6 +251,7 @@ class User(Base):
     #     return mySentMessages
 
     def unreadNotifications(self):
-        return session.query(Notification) \
-            .filter_by(target_user_id=self.id, viewed=False) \
-            .all()
+        return self.notifications.filter_by(target_user_id=self.id, viewed=False)
+        # return session.query(Notification) \
+        #     .filter_by(target_user_id=self.id, viewed=False) \
+        #     .all()

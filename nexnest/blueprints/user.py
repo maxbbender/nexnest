@@ -4,7 +4,11 @@ from flask_login import login_user, logout_user, current_user, login_required
 
 from nexnest.application import session
 
-from nexnest.models import User, Group, School, DirectMessage
+# from nexnest.models import user.User, Group, School, DirectMessage
+from nexnest.models.user import User
+from nexnest.models.group import Group
+from nexnest.models.school import School
+from nexnest.models.direct_message import DirectMessage
 
 from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm, CreateGroupForm
 
