@@ -50,45 +50,13 @@
 	        </div>
     	</div>
     	<br>
-    	<div class="row">
-    		<div class="col-xs-8">
-    			{% if housingRequest.landlord_show %}
-				    <div class="card" style="width:100%;">
-				        <h3 class="card-header">Type your message:</h3>
-				        <div class="card-block">
-				            <!-- Add new message -->
-				            <div class="form-group">
-				                <form action="{{url_for('housingRequests.messageCreate')}}" method='POST'>
-				                    {{messageForm.groupListingID(value=housingRequest.id)}}
-				                    {{messageForm.csrf_token}}
-				                    <div class="row">
-				                        {{messageForm.content(class="form-control", rows=5)}}
-				                    </div>
-				                    <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
-				                        <div class="col-xs-12">
-				                            <input class="btn btn-primary" type="submit" value="Respond">
-				                        </div>                                    
-				                    </div>
-				                </form>
-				            </div>
-				        </div>
-				    </div>
-			    {% else %}
-			    	<div class="callout-block text-center fade-in-b">
-			    		<h1>Messages</h1>
-			    	</div>
-			    {% endif %}
-			    <!-- Messages -->
-			    {% for message in messages %}
-			        {% include 'housingRequest/message.html' %}
-			    {% endfor %}
-    		</div>
-    		<div class="col-xs-4">
+    	<div class="row">    		
+    		<div class="col-xs-7" style="padding-left: 35px;">
 			    <div class="tab-content">
 				    <div class="tab-pane active" id="statusTab" role="tabpanel" style="padding: 0px;">
 				    	<div class="row">
-				    	    <div class="card" style="width:100%;">
-				    	        <h3 class="card-header">Request Status</h3>
+				    	    <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+				    	        <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">Request Status</h3>
 				    	        <div class="card-block">
 				    	            <div class="row">
 				    	            	<div class="col-xs-12">
@@ -212,8 +180,14 @@
 				    </div>
 			        <div class="tab-pane" id="membersTab" role="tabpanel" style="padding: 0px;">
 			        	<div class="row">
-			        	    <div class="card" style="width:100%;">
-			        	        <h3 class="card-header">Members</h3>
+			        	    <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+			        	        <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
+			        	        {% if current_user in landlords %}
+			        	        	Members
+			        	        {% else %}
+			        	        	The Landlord
+			        	        {% endif %}
+			        	        </h3>
 			        	        <div class="card-block">
 			        	            <div class="row">
 			        	                <div class="col-xs-12">
@@ -223,13 +197,12 @@
 			        	                                <p class="card-text"><strong>The group requesting the property: </strong>{{ housingRequest.group.name }}</p>
 			        	                                {% with group=housingRequest.group %}
 			        	                                    {% for user in group.acceptedUsers %}                                    
-			        	                                        {% include 'tour/member.html' %}
+			        	                                        {% include 'house/member.html' %}
 			        	                                    {% endfor %}
 			        	                                {% endwith %}
 			        	                            {% else %}
-			        	                                <p class="card-text"><strong>The property owner:</strong></p>
 			        	                                {% for user in landlords %}
-			        	                                    {% include 'tour/member.html' %}
+			        	                                    {% include 'house/member.html' %}
 			        	                                {% endfor %}
 			        	                            {% endif %}
 			        	                        </div>
@@ -242,12 +215,12 @@
 			        </div>
 			        <div class="tab-pane" id="propertyTab" role="tabpanel" style="padding: 0px;">
 				    	<div class="row">
-				    	    <div class="card" style="width:100%;">
-				    	        <h3 class="card-header">The Property</h3>
+				    	    <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+				    	        <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">The Property</h3>
 				    	        <div class="card-block">
 				    	            <div class="row">
 				    	                {% with listing=housingRequest.listing %}
-				    	                    {% include 'listing.html' %}
+				    	                    {% include 'listingMoreInfo.html' %}
 				    	                {% endwith %}
 				    	            </div>
 				    	        </div>
@@ -257,7 +230,39 @@
 			        <div class="tab-pane" id="leaseTab" role="tabpanel">
 			        	Lease
 			        </div>
-				</div>
+				</div>				
+    		</div>
+    		<div class="col-xs-5">
+    			{% if housingRequest.landlord_show %}
+				    <div class="card" style="width:100%;">
+				        <h3 class="card-header">Type your message:</h3>
+				        <div class="card-block">
+				            <!-- Add new message -->
+				            <div class="form-group">
+				                <form action="{{url_for('housingRequests.messageCreate')}}" method='POST'>
+				                    {{messageForm.groupListingID(value=housingRequest.id)}}
+				                    {{messageForm.csrf_token}}
+				                    <div class="row">
+				                        {{messageForm.content(class="form-control", rows=5)}}
+				                    </div>
+				                    <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
+				                        <div class="col-xs-12">
+				                            <input class="btn btn-primary" type="submit" value="Respond">
+				                        </div>                                    
+				                    </div>
+				                </form>
+				            </div>
+				        </div>
+				    </div>
+			    {% else %}
+			    	<div class="callout-block text-center fade-in-b">
+			    		<h1>Messages</h1>
+			    	</div>
+			    {% endif %}
+			    <!-- Messages -->
+			    {% for message in messages %}
+			        {% include 'housingRequest/message.html' %}
+			    {% endfor %}
     		</div>
     	</div>
     </div>

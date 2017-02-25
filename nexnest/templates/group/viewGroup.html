@@ -45,8 +45,8 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="membersTab" role="tabpanel" style="padding: 0px;">
                         <div class="row">
-                            <div class="card" style="width:100%;">
-                                <h3 class="card-header">Members</h3>
+                            <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">Members</h3>
                                 <div class="card-block">
                                     <div class="row">
                                         <div class="col-xs-12">
@@ -171,7 +171,7 @@
                     </div>
                     <div class="tab-pane" id="toursTab" role="tabpanel" style="padding: 0px;">
                         <div class="row">
-                            <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);"">
+                            <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
                                 <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">Tours</h3>
                                 <div class="card-block">
                                     <div class="row">
@@ -255,47 +255,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane active" id="listingRequestsTab" role="tabpanel" style="padding: 0px;">
+                    <div class="tab-pane" id="listingRequestsTab" role="tabpanel" style="padding: 0px;">
                         <div class="row">
                             <div class="card" style="width:100%;">
                                 <h3 class="card-header">Members</h3>
                                 <div class="card-block">
                                     <div class="row">
                                         <div class="col-xs-12">
-                                            <strong>Current Group Members:</strong>
-                                            {% for user in group.acceptedUsers %}                                    
-                                                {% include 'group/member.html' %}
-                                            {% endfor %}                        
-                                            {% if group.unAcceptedUsers %}
-                                            {% if group.leader_id == current_user.id %}
-                                                <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#changeGroupLeaderModal">Change Group Leader</a>
-                                                <br><br>
-                                            {% endif %}
-                                            <strong>Invited Members:</strong>
-                                            {% for user in group.unAcceptedUsers %}
-                                                {% include 'group/member.html' %}
-                                            {% endfor %}
-                                            {% endif %}
-
-                                            <!-- Group Leader Actions -->
-                                            {% if group.leader_id == current_user.id %}
-                                            <br>
-                                            <strong>Invite User to Group:</strong>
-                                            <div class="row">
-                                                <div class="col-xs-12 col-sm-10 col-md-8 col-lg-8 col-xl-6">                        
-                                                    <input id="userSearch" type="text" class="form-control" aria-describedby="searchHelpBlock" style="width:100%;">
-                                                </div>
-                                            </div>
-                                            <p id="searchHelpBlock" class="form-text text-muted">
-                                                Search by Username (first part of email)
-                                            </p>                        
-                                            <form id="invite_user" action="{{url_for('groups.invite')}}" method="POST">
-                                                {{invite_form.csrf_token}}
-                                                {{invite_form.group_id(value=group.id)}}
-                                                {{invite_form.user_id}}
-                                            </form>
-                                            <span class="" id="userSearchUL"></span>
-                                            {% endif %}
+                                            
                                         </div>
                                     </div>
                                 </div>
