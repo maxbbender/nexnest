@@ -7,14 +7,14 @@ from nexnest.forms import CreateGroupForm, InviteGroupForm, SuggestListingForm, 
 from nexnest.application import session
 
 # from nexnest.models import Group, GroupUser, GroupListing, User, Listing, GroupMessage, Tour, GroupListingFavorite
-from nexnest.models import group
-from nexnest.models import group_user
-from nexnest.models import group_listing
-from nexnest.models import user
-from nexnest.models import listing
-from nexnest.models import group_message
-from nexnest.models import tour
-from nexnest.models import group_listing_favorite
+from nexnest.models.group import Group
+from nexnest.models.group_user import GroupUser
+from nexnest.models.group_listing import GroupListing
+from nexnest.models.user import User
+from nexnest.models.listing import Listing
+from nexnest.models.group_message import GroupMessage
+from nexnest.models.tour import Tour
+from nexnest.models.group_listing_favorite import GroupListingFavorite
 
 from nexnest.utils.flash import flash_errors
 
@@ -96,7 +96,8 @@ def viewGroup(group_id):
 
         return render_template('group/viewGroup.html',
                                group=group,
-                               suggestedListings=groupListings,
+                               housingRequests=groupListings,
+                               suggestedListings=group.favorites,
                                invite_form=invite_form,
                                messages=messages,
                                tours=tours,
