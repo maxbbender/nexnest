@@ -79,7 +79,7 @@ def createGroup():
 def viewGroup(group_id):
     # First lets check that the current user is apart of the group
     group = session.query(Group).filter_by(id=group_id).first()
-    groupListings = group.suggestedListings
+    housingRequests = group.housingRequests
 
     invite_form = InviteGroupForm()
     message_form = GroupMessageForm(group_id=group_id)
@@ -97,7 +97,7 @@ def viewGroup(group_id):
 
         return render_template('group/viewGroup.html',
                                group=group,
-                               housingRequests=groupListings,
+                               housingRequests=housingRequests,
                                favoritedListings=group.favorites,
                                invite_form=invite_form,
                                messages=messages,

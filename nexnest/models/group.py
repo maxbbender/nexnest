@@ -85,12 +85,12 @@ class Group(Base):
         return acceptedUsers
 
     @property
-    def suggestedListings(self):
-        suggestedListings = []
+    def housingRequests(self):
+        housingRequests = []
         for groupListing in self.listings:
             if groupListing.group_show:
-                suggestedListings.append(groupListing.listing)
-        return suggestedListings
+                housingRequests.append(groupListing)
+        return housingRequests
 
     def getUsers(self):
         users = []

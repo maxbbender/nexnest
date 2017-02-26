@@ -6,7 +6,7 @@ from nexnest.models import *
 import os
 
 
-u = session.query(user.User).filter_by(id=2).first()
+u = session.query(group.Group).filter_by(id=1).first()
 print(u)
-print(u.notifications.all())
+print(u.housingRequests)
 
