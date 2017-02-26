@@ -325,9 +325,9 @@ def favoriteListing(groupID, listingID):
     errorMessage = None
     favoriteCount = session.query(GroupListingFavorite) \
         .filter_by(group_id=groupID, listing_id=listingID)\
-        .count()
+        .first()
 
-    if favoriteCount == 0:
+    if favoriteCount is not None:
 
         group = session.query(Group).filter_by(id=groupID).first()
         listing = session.query(Listing).filter_by(id=listingID).first()
@@ -347,7 +347,11 @@ def favoriteListing(groupID, listingID):
         else:
             errorMessage = 'Invalid Request'
     else:
-        errorMessage = 'Listing has already been favorited by your group'
+        if not favoriteCount.show:
+            favoriteCount.show = True
+            return jsonify(results={'success': True})
+        else:
+            errorMessage = 'Listing has already been favorited by your group'
 
     return jsonify(results={'success': False, 'message': errorMessage})
 
