@@ -15,36 +15,9 @@
     <br>
     <div class="row m-x-auto">
         <div class="col-xs-1">
-        </div>
-        <div class="col-md-5 col-lg-5 col-xl-5">
-            <div class="row">
-                <div class="card" style="width:100%;">
-                    <h3 class="card-header">Type your message:</h3>
-                    <div class="card-block">
-                        <!-- Add new message -->
-                        <div class="form-group">
-                            <form action="{{url_for('houses.maintenanceRequestMessage')}}" method='POST'>
-                                {{messageForm.csrf_token}}
-                                <div class="row">
-                                    {{messageForm.content(class="form-control", rows=5)}}
-                                </div>
-                                <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
-                                    <div class="col-xs-12">
-                                        <input class="btn btn-primary" type="submit" value="Respond">
-                                    </div>                                    
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <!-- Messages -->
-                {% for message in messages %}
-                    {% include 'house/message.html' %}
-                {% endfor %}
-            </div>
-        </div>
+        </div>        
         <!--Info Pane-->
-        <div class="col-md-5 col-lg-5 col-xl-5" style="padding-left: 5%;">
+        <div class="col-md-5 col-lg-5 col-xl-5">
             <div class="row">
                 <div class="card" style="width:100%;">
                     <h3 class="card-header">Maintenance Request</h3>
@@ -81,6 +54,33 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="col-md-5 col-lg-5 col-xl-5" style="padding-left: 5%;">
+            <div class="row">
+                <div class="card" style="width:100%;">
+                    <h3 class="card-header">Type your message:</h3>
+                    <div class="card-block">
+                        <!-- Add new message -->
+                        <div class="form-group">
+                            <form action="{{url_for('houses.maintenanceRequestMessage')}}" method='POST'>
+                                {{messageForm.csrf_token}}
+                                <div class="row">
+                                    {{messageForm.content(class="form-control", rows=5)}}
+                                </div>
+                                <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
+                                    <div class="col-xs-12">
+                                        <input class="btn btn-primary" type="submit" value="Respond">
+                                    </div>                                    
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Messages -->
+                {% for message in messages %}
+                    {% include 'house/message.html' %}
+                {% endfor %}
             </div>
         </div>
     </div>

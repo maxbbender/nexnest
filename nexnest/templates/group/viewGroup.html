@@ -6,6 +6,11 @@
         <div class="navi navbar">
             <ul>
                 <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#maintenanceTab" role="tab" style="pointer-events: none;">
+                        </i><h4 class="hidden-xs hidden-sm"><strong>My Group</strong></h4>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link active" data-toggle="tab" href="#membersTab" role="tab">
                         <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Members</span>
                     </a>
@@ -33,7 +38,7 @@
             <div class="col-xs-12">
                 <div class="callout-block text-center fade-in-b">
                     <h1>
-                        <b>{{ group.name }}</b>
+                        <b>{{ group.name }}</b>({{ group.acceptedUsers|length }} Members)
                     </h1>
                     <p><small>Intended Lease Period: {{ group.start_date }} - {{ group.end_date }}</small></p>
                 </div>
@@ -102,11 +107,22 @@
                                                     {% for listing in suggestedListings %}
                                                         <div class="row m-x-auto">
                                                             <div class="col-md-12" style="padding-left: 30px; padding-right: 30px;">
-                                                                <div class="card" style="width: 100%;">
-                                                                    <a href="{{ url_for('listings.viewListing', listingID=listing.id) }}">
-                                                                        <img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg card-img-top">
-                                                                    </a>
-                                                                    <div class="card-block">
+                                                                <div class="card" style="width: 100%;">                       
+                                                                    <div class="card-block" style="padding-top: 0px; padding-left: 15px; padding-right: 15px;">
+                                                                        <div class="row">
+                                                                            <div class="imageContainer">
+                                                                                <div class="image">
+                                                                                    <a href="{{ url_for('listings.viewListing', listingID=listing.id) }}">
+                                                                                        <img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg card-img-top">
+                                                                                    </a>
+                                                                                </div>
+                                                                                {% if group.leader_id == current_user.id %}
+                                                                                    <div class="delete">
+                                                                                        <i class="fa fa-trash fa-3x" aria-hidden="true" onclick="deleteFavoritedListing({{ listing.id }})"></i>
+                                                                                    </div>
+                                                                                {% endif %}
+                                                                            </div>
+                                                                        </div>
                                                                         <div class="row">
                                                                             <div class="col-xs-6">
                                                                                 {{ listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
@@ -387,6 +403,10 @@
 
     function leaveGroup(id) {
         window.location.href="/group/leave/" + id;
+    }
+
+    function deleteFavoritedListing(id) {
+        alert("Deleted " + id);
     }
     
     $("#userSearch").keyup(function() {
