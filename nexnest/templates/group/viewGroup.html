@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
+{% if house %}
+yo
+{{house.group_id}}
+{% else %}
+poop
+{% endif %}
 <link href="{{url_for('static', filename='css/landlord/dashboardStyling.css')}}" rel="stylesheet">
 {% for test in housingRequests %}
     {{ test.listing_id }}

@@ -15,6 +15,7 @@ from nexnest.models.listing import Listing
 from nexnest.models.group_message import GroupMessage
 from nexnest.models.tour import Tour
 from nexnest.models.group_listing_favorite import GroupListingFavorite
+from nexnest.models.house import House
 
 from nexnest.utils.flash import flash_errors
 
@@ -90,8 +91,15 @@ def viewGroup(group_id):
         order_by(desc(GroupMessage.date_created)).all()
 
     # Let's get the group's tours
-    tours = session.query(Tour).filter_by(
-        group_id=group.id).order_by(asc(Tour.last_requested)).all()
+    tours = session.query(Tour)\
+        .filter_by(group_id=group.id)\
+        .order_by(asc(Tour.last_requested))\
+        .all()
+
+    house = session.query(House) \
+        .filter_by(group_id=group.id) \
+        .order_by(asc(House.date_created)) \
+        .first()
 
     if group in current_user.accepted_groups:
 
@@ -102,7 +110,8 @@ def viewGroup(group_id):
                                invite_form=invite_form,
                                messages=messages,
                                tours=tours,
-                               message_form=message_form)
+                               message_form=message_form,
+                               house=house)
 
     else:
         flash("You are not a part of %s" % group.name, 'warning')
