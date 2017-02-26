@@ -24,7 +24,7 @@
 	</head>
 	<body>
         {% for notification in notifications %}
-            {{notification.type}}<br>
+            <strong>{{notification.type}}</strong><br>
             {{notification.message}}<br>
             {{notification.returnObject}}<br>
             {{notification.redirectURL}}<br>

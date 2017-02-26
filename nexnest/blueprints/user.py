@@ -79,6 +79,9 @@ def login():
 
                     if check_password(user, login_form.password.data):
                         login_user(user)
+
+                        if user.isLandlord:
+                            return redirect(url_for('landlords.landlordDashboard'))
                     else:
                         flash("Error validating login credentials", 'danger')
                 else:
@@ -277,7 +280,8 @@ def updateProfilePicture():
 
             request.files['profilePicture'].save(userFilePath + '/' + filename)
 
-            current_user.profile_image = '/uploads/users/' + str(current_user.id) + '/' + filename
+            current_user.profile_image = '/uploads/users/' + \
+                str(current_user.id) + '/' + filename
 
             session.commit()
             return redirect(url_for('users.viewUser', userID=current_user.id))

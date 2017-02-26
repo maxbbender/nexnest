@@ -7,9 +7,11 @@ from .base import Base
 
 class GroupListingFavorite(Base):
     __tablename__ = 'group_listing_favorites'
-    group_id = db.Column(db.Integer, db.ForeignKey('groups.id'), primary_key=True)
-    listing_id = db.Column(db.Integer, db.ForeignKey('listings.id'), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    group_id = db.Column(db.Integer, db.ForeignKey('groups.id'))
+    listing_id = db.Column(db.Integer, db.ForeignKey('listings.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    show = db.Column(db.Boolean)
     date_created = db.Column(db.DateTime)
 
     def __init__(
@@ -21,6 +23,7 @@ class GroupListingFavorite(Base):
         self.group_id = group.id
         self.listing_id = listing.id
         self.user_id = user.id
+        self.show = True
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
