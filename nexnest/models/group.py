@@ -88,7 +88,7 @@ class Group(Base):
     def suggestedListings(self):
         suggestedListings = []
         for groupListing in self.listings:
-            if groupListing.group_show and not groupListing.accepted:
+            if groupListing.group_show:
                 suggestedListings.append(groupListing.listing)
         return suggestedListings
 
