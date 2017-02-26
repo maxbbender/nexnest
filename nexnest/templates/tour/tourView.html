@@ -19,37 +19,9 @@
     <br>
     <div class="row m-x-auto">
         <div class="col-xs-1">
-        </div>
-        <div class="col-md-6 col-lg-6 col-xl-6">
-            <div class="row">
-                <div class="card" style="width:100%;">
-                    <h3 class="card-header">Type your message:</h3>
-                    <div class="card-block">
-                        <!-- Add new message -->
-                        <div class="form-group">
-                            <form action="{{url_for('tours.createMessage')}}" method='POST'>
-                                {{messageForm.tour_id(value=tour.id)}}
-                                {{messageForm.csrf_token}}
-                                <div class="row">
-                                    {{messageForm.content(class="form-control", rows=5)}}
-                                </div>
-                                <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
-                                    <div class="col-xs-12">
-                                        <input class="btn btn-primary" type="submit" value="Respond">
-                                    </div>                                    
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                    <!-- Messages -->
-                    {% for message in messages %}
-                        {% include 'tour/message.html' %}
-                    {% endfor %}
-            </div>
-        </div>
+        </div>        
         <!--Info Pane-->
-        <div class="col-md-4 col-lg-4 col-xl-4" style="padding-left: 5%;">
+        <div class="col-md-6 col-lg-6 col-xl-6">
             <div class="row">
                 <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
                     <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">The Tour</h3>
@@ -153,6 +125,34 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xl-4" style="padding-left: 5%;">
+            <div class="row">
+                <div class="card" style="width:100%;">
+                    <h3 class="card-header">Type your message:</h3>
+                    <div class="card-block">
+                        <!-- Add new message -->
+                        <div class="form-group">
+                            <form action="{{url_for('tours.createMessage')}}" method='POST'>
+                                {{messageForm.tour_id(value=tour.id)}}
+                                {{messageForm.csrf_token}}
+                                <div class="row">
+                                    {{messageForm.content(class="form-control", rows=5)}}
+                                </div>
+                                <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
+                                    <div class="col-xs-12">
+                                        <input class="btn btn-primary" type="submit" value="Respond">
+                                    </div>                                    
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                    <!-- Messages -->
+                    {% for message in messages %}
+                        {% include 'tour/message.html' %}
+                    {% endfor %}
             </div>
         </div>
     </div>
