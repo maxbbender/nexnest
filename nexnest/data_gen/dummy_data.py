@@ -47,7 +47,17 @@ group3 = GroupFactory(leader=user4)
 
 session.commit()
 
+
+group1Users = [user2, user3, user4]
+listings = [listing1, listing2, listing3, listing4]
 # GROUP LISTING FAVORITES
+for listing in listings:
+    user = random.choice(group1Users)
+
+    gf = GroupListingFavorite(group=group1,
+                              listing=listing,
+                              user=user)
+
 gf1 = GroupListingFavoriteFactory(group=group1,
                                   listing=listing1,
                                   user=user2)
@@ -74,7 +84,6 @@ groupuser2 = GroupUserFactory(group=group1, user=user3)
 groupuser3 = GroupUserFactory(group=group1, user=user4)
 groupuser4 = GroupUserFactory(group=group1, user=user5)
 
-group1Users = [user2, user3, user4, user5]
 
 # Group 2
 groupuser5 = GroupUserFactory(group=group2, user=user3)
@@ -207,8 +216,6 @@ session.commit()
 gl1 = GroupListingFactory(group=group1, listing=listing1)
 gl2 = GroupListingFactory(group=group1, listing=listing2)
 gl3 = GroupListingFactory(group=group1, listing=listing3)
-
-
 
 
 session.commit()
