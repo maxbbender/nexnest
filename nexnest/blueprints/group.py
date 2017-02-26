@@ -366,11 +366,12 @@ def favoriteListingShow(favoriteListingID):
     if favoriteListing is not None:
         if favoriteListing.group.isEditableBy(user=current_user, flash=False):
 
-            favoriteListing.show = False
-            session.commit()
-
-            return jsonify(results={'success': True})
-
+            if not favoriteListing.show:
+                favoriteListing.show = True
+                session.commit()
+                return jsonify(results={'success': True})
+            else:
+                errorMessage = 'Favorited Listing is already showing'
         else:
             errorMessage = 'Permissions Error'
     else:
@@ -389,11 +390,12 @@ def favoriteListingHide(favoriteListingID):
     if favoriteListing is not None:
         if favoriteListing.group.isEditableBy(user=current_user, flash=False):
 
-            favoriteListing.show = False
-            session.commit()
-
-            return jsonify(results={'success': True})
-
+            if favoriteListing.show:
+                favoriteListing.show = False
+                session.commit()
+                return jsonify(results={'success': True})
+            else:
+                errorMessage = 'Favorited Listing has already been hidden'
         else:
             errorMessage = 'Permissions Error'
     else:

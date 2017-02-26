@@ -407,6 +407,28 @@
 
     function deleteFavoritedListing(id) {
         alert("Deleted " + id);
+        $.getJSON('/group/favoriteListing/' + id + '/hide', function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+                alert('we did it!, now we need to hide the element but also show the undo part. Have the undo part call showFavoritedListing(id) which is where I will reverse what was done');
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
+    }
+
+    function showFavoritedListing(id) {
+        alert("Show " + id);
+        $.getJSON('/group/favoriteListing/' + id + '/show', function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+                alert('we did it!, now we need to show the elemnt again');
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
     }
     
     $("#userSearch").keyup(function() {
