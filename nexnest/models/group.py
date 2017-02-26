@@ -99,19 +99,19 @@ class Group(Base):
 
         return users
 
-    def isViewableBy(self, user):
+    def isViewableBy(self, user, flash=True):
         if user in self.acceptedUsers:
             return True
-        else:
+        elif flash:
             flash("You do not have permissions to view this Group", 'warning')
-            return False
+        return False
 
-    def isEditableBy(self, user):
+    def isEditableBy(self, user, flash=True):
         if user.id == self.leader_id:
             return True
-        else:
+        elif flash:
             flash("You do not permissions to modify this group", 'warning')
-            return False
+        return False
 
     def hasTourForListing(self, listing):
         for tour in self.tours:

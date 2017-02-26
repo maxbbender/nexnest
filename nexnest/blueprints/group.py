@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
 
@@ -90,14 +90,15 @@ def viewGroup(group_id):
         order_by(desc(GroupMessage.date_created)).all()
 
     # Let's get the group's tours
-    tours = session.query(Tour).filter_by(group_id=group.id).order_by(asc(Tour.last_requested)).all()
+    tours = session.query(Tour).filter_by(
+        group_id=group.id).order_by(asc(Tour.last_requested)).all()
 
     if group in current_user.accepted_groups:
 
         return render_template('group/viewGroup.html',
                                group=group,
                                housingRequests=groupListings,
-                               favoritedListings=group.favorites,
+                               suggestedListings=group.favorites,
                                invite_form=invite_form,
                                messages=messages,
                                tours=tours,
@@ -167,35 +168,6 @@ def createMessage():
     return message_form.redirect()
     # return redirect(url_for('groups.viewGroup',
     #                         group_id=message_form.group_id.data))
-
-
-@groups.route('/group/<groupID>/favoriteListing/<listingID>', methods=['GET'])
-@login_required
-def favoriteListing(groupID, listingID):
-    group = session.query(Group).filter_by(id=groupID).first()
-
-    if group is not None:
-        if group.isViewableBy(current_user):
-            listing = session.query(Listing).filter_by(id=listingID).first()
-
-            # Has the listing already been suggested?
-            count = session.query(GroupListingFavorite) \
-                .filter_by(group_id=group.id, listing_id=listing.id)\
-                .count()
-
-            if count == 0:
-
-                newGLF = GroupListingFavorite(group=group,
-                                              listing=listing,
-                                              user=current_user)
-                session.add(newGLF)
-                session.commit()
-            else:
-                flash("Listing already favorited by the %s" % group.name)
-            return redirect(url_for('groups.viewGroup', group_id=group.id))
-    else:
-        flash("Invalid Request")
-        return redirect(url_for('indexs.index'))
 
 
 @groups.route('/group/suggestListing', methods=['POST'])
@@ -332,7 +304,8 @@ def requestListing():
                                          reqDescription=rLForm.reqDescription.data)
                     session.add(newGL)
                     session.commit()
-                    # TODO REDIRECT TO GROUPLISTING PAGE
+
+                    return redirect(url_for('housingRequests.view', id=newGL.id))
                     flash("You have requested to live at this listing!", 'success')
                 else:
                     flash("Listing does not exist", 'warning')
@@ -343,3 +316,83 @@ def requestListing():
         flash_errors(rLForm)
 
     return rLForm.redirect()
+
+
+@groups.route('/group/<groupID>/favoriteListing/<listingID>', methods=['GET'])
+@login_required
+def favoriteListing(groupID, listingID):
+    group = session.query(Group).filter_by(id=groupID).first()
+    errorMessage = None
+    favoriteCount = session.query(GroupListingFavorite) \
+        .filter_by(group_id=groupID, listing_id=listingID)\
+        .count()
+
+    if favoriteCount == 0:
+
+        group = session.query(Group).filter_by(id=groupID).first()
+        listing = session.query(Listing).filter_by(id=listingID).first()
+
+        if group is not None and listing is not None:
+            if group.isViewableBy(user=current_user, flash=False):
+                newGLF = GroupListingFavorite(group=group,
+                                              listing=listing,
+                                              user=current_user)
+                session.add(newGLF)
+                session.commit()
+
+                return jsonify(results={'success': True})
+
+            else:
+                errorMessage = 'Permissions Error'
+        else:
+            errorMessage = 'Invalid Request'
+    else:
+        errorMessage = 'Listing has already been favorited by your group'
+
+    return jsonify(results={'success': False, 'message': errorMessage})
+
+
+@groups.route('/group/favoriteListing/<favoriteListingID>/show', methods=['GET'])
+@login_required
+def favoriteListingShow(favoriteListingID):
+    favoriteListing = session.query(GroupListingFavorite) \
+        .filter_by(id=favoriteListingID)\
+        .first()
+
+    if favoriteListing is not None:
+        if favoriteListing.group.isEditableBy(user=current_user, flash=False):
+
+            favoriteListing.show = False
+            session.commit()
+
+            return jsonify(results={'success': True})
+
+        else:
+            errorMessage = 'Permissions Error'
+    else:
+        errorMessage = 'Invalid Request'
+
+    return jsonify(results={'success': False, 'message': errorMessage})
+
+
+@groups.route('/group/favoriteListing/<favoriteListingID>/hide', methods=['GET'])
+@login_required
+def favoriteListingHide(favoriteListingID):
+    favoriteListing = session.query(GroupListingFavorite) \
+        .filter_by(id=favoriteListingID)\
+        .first()
+
+    if favoriteListing is not None:
+        if favoriteListing.group.isEditableBy(user=current_user, flash=False):
+
+            favoriteListing.show = False
+            session.commit()
+
+            return jsonify(results={'success': True})
+
+        else:
+            errorMessage = 'Permissions Error'
+    else:
+        errorMessage = 'Invalid Request'
+
+    return jsonify(results={'success': False, 'message': errorMessage})

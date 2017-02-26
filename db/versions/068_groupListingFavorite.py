@@ -5,13 +5,15 @@ from migrate import *
 meta = MetaData()
 # Column('XXXX', String(120)),
 glf = Table('group_listing_favorites', meta,
-            Column('group_id', Integer(),
+            Column('id', Integer(),
                    primary_key=True,
+                   nullable=False),
+            Column('group_id', Integer(),
                    nullable=False),
             Column('listing_id', Integer(),
-                   primary_key=True,
                    nullable=False),
             Column('date_created', DateTime()),
+            Column('show', Boolean()),
             Column('user_id', Integer()))
 
 
