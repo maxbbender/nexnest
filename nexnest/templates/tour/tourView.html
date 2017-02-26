@@ -40,9 +40,12 @@
                                                 <strong>Tour Status:</strong>
                                                 {% if tour.tour_confirmed %}
                                                     <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                                    <br>
+                                                    Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour
                                                 {% else %}
                                                     <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the you to confrim the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
-                                                    <br><br>
+                                                    <br>
+                                                    Waiting for the you to confrim the requested time or suggest a different one<br>
                                                     <a href='#' class="btn btn-success" data-toggle="modal" data-target="#confirmTourModal">Confirm Time</a>
                                                     <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestTimeTourModal">Suggest Different Time</a>
                                                 {% endif %}
@@ -51,8 +54,12 @@
                                                     <strong>Tour Status:</strong>
                                                     {% if tour.tour_confirmed %}
                                                         <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                                        <br>
+                                                        Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour
                                                     {% else %}
                                                         <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the landlord to confrim your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                        <br>
+                                                        Waiting for the landlord to confrim your requested time or suggest a different one
                                                     {% endif %}
                                                 </p>
                                             {% endif %}
@@ -61,9 +68,13 @@
                                                 <strong>Tour Status:</strong>
                                                 {% if tour.tour_confirmed %}
                                                     <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                                    <br>
+                                                    Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour
                                                 {% else %}
                                                     <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the you to confirm the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
-                                                    <br><br>
+                                                    <br>
+                                                    Waiting for the you to confirm the requested time or suggest a different one
+                                                    <br>
                                                     <a href='#' class="btn btn-success" data-toggle="modal" data-target="#confirmTourModal">Confirm Time</a>
                                                     <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestTimeTourModal">Suggest Different Time</a>
                                                 {% endif %}
@@ -71,8 +82,12 @@
                                                 <strong>Tour Status:</strong>
                                                 {% if tour.tour_confirmed %}
                                                     <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                                    <br>
+                                                    Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour
                                                 {% else %}
                                                     <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the group leader to confirm your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                    <br>
+                                                    Waiting for the group leader to confirm your requested time or suggest a different one
                                                 {% endif %}
                                             {% endif %}
                                             <br><br>
@@ -80,11 +95,17 @@
                                             <strong>Tour Status:</strong>
                                             {% if tour.tour_confirmed %}
                                                 <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                                <br>
+                                                Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour
                                             {% else %}
                                                 {% if tour.last_requested == 'group' %}
                                                     <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Request Pending</b>" data-placement="top" data-content="Waiting for the landlord to confirm your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                    <br>
+                                                    Waiting for the landlord to confirm your requested time or suggest a different one
                                                 {% else %}
                                                     <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Request Pending</b>" data-placement="top" data-content="The landlord has proposed a different time. Waiting for your group leader to make a decision"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                    <br>
+                                                    The landlord has proposed a different time. Waiting for your group leader to make a decision
                                                 {% endif %}
                                             {% endif %}
                                         {% endif %}
