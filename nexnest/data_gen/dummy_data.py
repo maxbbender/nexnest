@@ -47,7 +47,17 @@ group3 = GroupFactory(leader=user4)
 
 session.commit()
 
+
+group1Users = [user2, user3, user4]
+listings = [listing1, listing2, listing3, listing4]
 # GROUP LISTING FAVORITES
+for listing in listings:
+    user = random.choice(group1Users)
+
+    gf = GroupListingFavoriteFactory(group=group1,
+                                     listing=listing,
+                                     user=user)
+
 gf1 = GroupListingFavoriteFactory(group=group1,
                                   listing=listing1,
                                   user=user2)
@@ -74,9 +84,12 @@ groupuser2 = GroupUserFactory(group=group1, user=user3)
 groupuser3 = GroupUserFactory(group=group1, user=user4)
 groupuser4 = GroupUserFactory(group=group1, user=user5)
 
+
 # Group 2
 groupuser5 = GroupUserFactory(group=group2, user=user3)
 groupuser6 = GroupUserFactory(group=group2, user=user2)
+
+group2Users = [user2, user3]
 
 # Group3
 groupuser7 = GroupUserFactory(group=group3, user=user2)
@@ -84,6 +97,8 @@ groupuser8 = GroupUserFactory(group=group3, user=user8)
 groupuser9 = GroupUserFactory(group=group3, user=user3)
 groupuser10 = GroupUserFactory(group=group3, user=user4)
 groupuser11 = GroupUserFactory(group=group3, user=user5)
+
+group3Users = [user2, user8, user3, user4, user5]
 
 groupuser1.accepted = True
 groupuser2.accepted = True
@@ -138,21 +153,30 @@ gun6 = NotificationFactory(target_user=groupuser11.user,
 session.commit()
 
 # GROUP MESSAGES
-gmsg1 = GroupMessageFactory(group=group1, user=user2)
-gmsg2 = GroupMessageFactory(group=group1, user=user3)
-gmsg3 = GroupMessageFactory(group=group1, user=user2)
-gmsg4 = GroupMessageFactory(group=group1, user=user4)
-gmsg5 = GroupMessageFactory(group=group1, user=user2)
-gmsg6 = GroupMessageFactory(group=group1, user=user5)
+# Group 1
+uListGroup1 = [user2, user3, user4]
 
-session.commit()
+for i in range(10):
+    source_user = random.choice(uListGroup1)
+
+    gmsg = GroupMessageFactory(group=group1, user=source_user)
+
+    session.commit()
+
+    for user in uListGroup1:
+        if user is not source_user:
+            gmn = NotificationFactory(target_user=user,
+                                      type='group_message',
+                                      target_model_id=gmsg.id)
+            session.commit()
+
 
 # DIRECT MESSAGES
 # We want MOAR
 
 userMessageList = [user2, user3, user4, user5, landlord, user7, user8]
 
-for i in range(50):
+for i in range(10):
     source_user = random.choice(userMessageList)
     target_user = random.choice(userMessageList)
 
@@ -161,7 +185,7 @@ for i in range(50):
 
     dm = DirectMessageFactory(source_user=source_user, target_user=target_user)
 
-    #_Direct Messages Notifications
+    # Direct Messages Notifications
     dmn = NotificationFactory(target_user=target_user,
                               type='direct_message',
                               target_model_id=source_user.id)
@@ -195,6 +219,10 @@ gl3 = GroupListingFactory(group=group1, listing=listing3)
 
 
 
+gl2.accepted = True
+gl2.completed = True
+
+gl3.accepted = True
 
 session.commit()
 
@@ -211,7 +239,7 @@ for i in range(10):
         if user is not userTemp:
             glmn = NotificationFactory(target_user=user,
                                        type='group_listing_message',
-                                       target_model_id=gl1.id)
+                                       target_model_id=glm.id)
             session.commit()
 
 glm1 = GroupListingMessageFactory(groupListing=gl1, user=user2)
@@ -257,6 +285,12 @@ session.commit()
 h1 = HouseFactory(listing=listing2, group=group1)
 
 session.commit()
+
+for user in uListGroup1:
+    hnf = NotificationFactory(target_user=user,
+                              type='house',
+                              target_model_id=h1.id)
+
 
 # House Messages
 hm1 = HouseMessageFactory(house=h1, user=user2)

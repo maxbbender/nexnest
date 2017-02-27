@@ -57,15 +57,17 @@ class User(Base):
                               )
     groups = relationship("GroupUser", back_populates='user')
     groupLeader = relationship("Group", backref='leader')
-    groupMessages = relationship("GroupMessage", backref='user')
-    houseMessages = relationship("HouseMessage", backref='user')
+    # groupMessages = relationship("GroupMessage", backref='user')
+    # houseMessages = relationship("HouseMessage", backref='user')
     landlord = relationship('Landlord', backref='user')
-    tourMessages = relationship("TourMessage", backref='user')
-    groupListingMessages = relationship("GroupListingMessage", backref='user')
+    # tourMessages = relationship("TourMessage", backref='user')
+    # groupListingMessages = relationship("GroupListingMessage", backref='user')
     securityDeposits = relationship("SecurityDeposit", backref='user')
-    maintenanceMessages = relationship("MaintenanceMessage", backref='user')
+    # maintenanceMessages = relationship("MaintenanceMessage", backref='user')
     maintenanceRequests = relationship("Maintenance", backref='user')
-    notifications = relationship("Notification", backref='user', lazy="dynamic")
+    notifications = relationship(
+        "Notification", backref='user', lazy="dynamic")
+    messages = relationship('Message', backref='user')
 
     def __init__(self,
                  email,
@@ -255,3 +257,7 @@ class User(Base):
         # return session.query(Notification) \
         #     .filter_by(target_user_id=self.id, viewed=False) \
         #     .all()
+
+    @property
+    def name(self):
+        return "%s %s" % (self.fname, self.lname)

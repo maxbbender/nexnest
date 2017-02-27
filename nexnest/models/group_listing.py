@@ -46,6 +46,8 @@ class GroupListing(Base):
 
     all_leases_submitted = db.Column(db.Boolean)
 
+    messages = relationship('GroupListingMessage', backref='groupListing')
+
     __table_args__ = (UniqueConstraint('group_id', 'listing_id', name='groupListing_constraint'),
                       )
 
@@ -106,7 +108,8 @@ class GroupListing(Base):
 
     def canChangeLease(self):
         if len(self.securityDeposits) > 0:
-            flash('Cannot change lease, security deposits have already been submitted', 'danger')
+            flash(
+                'Cannot change lease, security deposits have already been submitted', 'danger')
             return False
 
         return True

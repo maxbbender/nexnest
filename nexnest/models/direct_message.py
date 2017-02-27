@@ -37,4 +37,4 @@ class DirectMessage(Message):
 
     def __repr__(self):
         return '<DirectMessage ~ Source %r | Target %r | Message %r>' % \
-            (self.source_user_id, self.target_user_id, self.message_id)
+            (self.user_id, self.target_user_id, self.message_id)

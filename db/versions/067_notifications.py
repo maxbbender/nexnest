@@ -13,6 +13,7 @@ notifications = Table('notifications', meta,
                       Column('viewed', Boolean()),
                       Column('date_created', DateTime()),
                       Column('date_modified', DateTime()),
+                      # Column('message', Text()),
                       Column('type', String(length=128)))
 
 
