@@ -80,6 +80,7 @@ class Notification(Base):
         from nexnest.models.platform_report import PlatformReport
         from nexnest.models.security_deposit import SecurityDeposit
         from nexnest.models.maintenance import Maintenance
+        from nexnest.models.maintenance_message import MaintenanceMessage
 
         message = None
         returnObject = None
@@ -240,7 +241,7 @@ class Notification(Base):
             if returnObject is not None:
                 message = "There is a new maintenance request for your listing"
 
-                redirectURL = '/house/view/%d' % returnObject.house.id
+                redirectURL = '/house/maintenanceRequest/%d/view' % returnObject.id
 
                 return message, returnObject, redirectURL
             else:
@@ -259,6 +260,34 @@ class Notification(Base):
                 return message, returnObject, redirectURL
             else:
                 return None, None, None
+
+        elif self.type == 'tour':
+            returnObject = session.query(Tour) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "A new tour has been requested for your listing" % returnObject.user.name
+
+                redirectURL = '/tour/view/%d' % returnObject.id
+
+                return message, returnObject, redirectURL
+            else:
+                return None, None, None
+        
+        elif self.type == 'maintenance_message':
+            returnObject = session.query(MaintenanceMessage) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "%s has posted a new message in %s's Maintenance Request"
+
+                redirectURL = '/house/maintenanceRequest/%d/view' % returnObject.id
+
+                return message, returnObject, redirectURL
+            else:
+                return None, None, None       
 
 
 def update_date_modified(mapper, connection, target):

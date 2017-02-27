@@ -202,6 +202,23 @@ t3 = TourFactory(listing=listing2, group=group1)
 
 session.commit()
 
+# TOUR NOTIFICATIONS
+tn1 = NotificationFactory(target_user=landlord,
+                          type='tour',
+                          target_model_id=t1.id)
+tn2 = NotificationFactory(target_user=landlord,
+                          type='tour',
+                          target_model_id=t2.id)
+tn3 = NotificationFactory(target_user=landlord,
+                          type='tour',
+                          target_model_id=t3.id)
+tn4 = NotificationFactory(target_user=landlord,
+                          type='tour',
+                          target_model_id=t4.id)
+
+session.commit()
+
+
 # TOUR MESSAGES
 
 tm1 = TourMessageFactory(tour=t1, user=user2)
