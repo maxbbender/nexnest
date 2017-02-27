@@ -19,6 +19,7 @@ class Notification(Base):
     target_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     target_model_id = db.Column(db.Integer)
     viewed = db.Column(db.Boolean)
+    category = db.Column(db.Text)
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
 
@@ -45,6 +46,28 @@ class Notification(Base):
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
         self.date_created = now
         self.date_modified = now
+
+        generic_message = ['group_listing_message', 'group_message',
+                           'house_message', 'tour_message',
+                           'maintenance_message']
+
+        generic_notification = ['friend', 'group_user',
+                                'group_listing', 'house',
+                                'group_listing_favorite', 'maintenance',
+                                'security_deposit', 'tour',
+                                'rent_reminder', 'new_tour_time']
+
+        report_notification = ['platform_report', 'report_group',
+                               'report_landlord', 'report_listing']
+
+        if self.type == 'direct_message':
+            self.category = 'direct_message'
+        elif self.type in generic_message:
+            self.category = 'generic_message'
+        elif self.type in generic_notification:
+            self.category = 'generic_notification'
+        elif self.type in report_notification:
+            self.category = 'report_notification'
 
     def __repr__(self):
         return '<Notification %r>' % self.id
