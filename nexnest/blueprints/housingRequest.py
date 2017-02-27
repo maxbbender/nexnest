@@ -248,14 +248,16 @@ def unPaySecurityDeposit(id, userID):
                 if securityDeposit.completed:
                     securityDeposit.completed = False
                     session.commit()
-                else:
-                    flash("Security Deposit was already not paid", 'warning')
-            else:
-                flash("Invalid Reqeust", 'warning')
-    else:
-        flash("Invalid Request", 'warning')
+                    return jsonify(results={'success': True})
 
-    return redirect(url_for('housingRequests.view', id=groupListing.id))
+                else:
+                    errorMessage = "Security Deposit already paid"
+            else:
+                errorMessage = "Invalid Reqeust"
+    else:
+        errorMessage = "Invalid Request"
+
+    return jsonify(results={'success': False, 'message': errorMessage})
 
 
 @housingRequests.route('/houseRequest/<id>/securityDeposit/allPaid', methods=['GET'])

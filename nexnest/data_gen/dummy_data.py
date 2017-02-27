@@ -105,7 +105,7 @@ group3Users = [user2, user8, user3, user4, user5]
 groupuser1.accepted = True
 groupuser2.accepted = True
 groupuser3.accepted = True
-groupuser6.accepted = True
+groupuser5.accepted = True
 groupuser7.accepted = True
 
 
@@ -156,16 +156,15 @@ session.commit()
 
 # GROUP MESSAGES
 # Group 1
-uListGroup1 = [user2, user3, user4]
 
 for i in range(10):
-    source_user = random.choice(uListGroup1)
+    source_user = random.choice(group1AcceptedUsers)
 
     gmsg = GroupMessageFactory(group=group1, user=source_user)
 
     session.commit()
 
-    for user in uListGroup1:
+    for user in group1AcceptedUsers:
         if user is not source_user:
             gmn = NotificationFactory(target_user=user,
                                       type='group_message',
