@@ -97,7 +97,7 @@
                                 </div>
                                 <ul class="notifications">
                                     {% for notification in notifications %}
-                                        {% include 'notifications/' + notification.type +'.html' %}
+                                        {% include 'notifications/' + notification.category +'.html' %}
                                     {% endfor %}
                                 </ul>
                             </div>

@@ -9,7 +9,7 @@
             </div>
             <div class="media-body">
                 <strong class="notification-title">{{ notification.message }}</strong>
-                <p class="notification-desc">{{ notification.returnObject.brief }}</p>
+                <p class="notification-desc"><strong>{{ notification.returnObject.user.fname }} {{ notification.returnObject.user.fname }}: </strong> {{ notification.returnObject.brief }}</p>
                 <div class="notification-meta">
                     <small class="timestamp">{{ notification.date_created }}</small>
                 </div>

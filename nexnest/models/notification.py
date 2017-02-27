@@ -119,7 +119,7 @@ class Notification(Base):
                 .first()
 
             if returnObject is not None:
-                message = "You have recieved a new Direct Message from %s" % returnObject.user.name
+                message = "New Direct Message from %s" % returnObject.user.name
                 redirectURL = '/user/directMessages/%d' % returnObject.user.id
 
                 return message, returnObject, redirectURL
@@ -194,7 +194,7 @@ class Notification(Base):
                 .first()
 
             if returnObject is not None:
-                message = "You have new messages in %s's House Request" % returnObject.groupListing.group.name
+                message = "New messages in %s's House Request" % returnObject.groupListing.group.name
 
                 redirectURL = '/houseRequest/view/%d' % returnObject.groupListing.id
                 return message, returnObject, redirectURL
@@ -207,7 +207,7 @@ class Notification(Base):
                 .first()
 
             if returnObject is not None:
-                message = "You have a new message in %s" % returnObject.group.name
+                message = "New message in %s" % returnObject.group.name
 
                 redirectURL = '/group/view/%d' % returnObject.id
 
@@ -238,7 +238,7 @@ class Notification(Base):
                 .first()
 
             if returnObject is not None:
-                message = "You have a new message in %s's House" % returnObject.house.group.name
+                message = "New message in %s's House" % returnObject.house.group.name
 
                 redirectURL = '/house/view/%d' % returnObject.house.id
 

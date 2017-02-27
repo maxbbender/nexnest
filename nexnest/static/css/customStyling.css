@@ -334,3 +334,7 @@ select.form-control:not([size]):not([multiple]) {
   display: flex;
   align-items: center;
 }
+
+.media:hover {
+  background-color: whitesmoke;
+}
