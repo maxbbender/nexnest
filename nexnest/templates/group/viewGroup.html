@@ -7,9 +7,6 @@ yo
 poop
 {% endif %}
 <link href="{{url_for('static', filename='css/landlord/dashboardStyling.css')}}" rel="stylesheet">
-{% for test in housingRequests %}
-    {{ test.listing_id }}
-{% endfor %}
 <div class="row">
     <div class="col-md-2 col-sm-1 hidden-xs display-table-cell v-align box" id="navigation" style="height: inherit;">
         <div class="navi navbar">
@@ -64,21 +61,6 @@ poop
                                 <div class="card-block">
                                     <div class="row">
                                         <div class="col-xs-12">
-                                            <strong>Current Group Members:</strong>
-                                            {% for user in group.acceptedUsers %}                                    
-                                                {% include 'group/member.html' %}
-                                            {% endfor %}                        
-                                            {% if group.unAcceptedUsers %}
-                                            {% if group.leader_id == current_user.id %}
-                                                <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#changeGroupLeaderModal">Change Group Leader</a>
-                                                <br><br>
-                                            {% endif %}
-                                            <strong>Invited Members:</strong>
-                                            {% for user in group.unAcceptedUsers %}
-                                                {% include 'group/member.html' %}
-                                            {% endfor %}
-                                            {% endif %}
-
                                             <!-- Group Leader Actions -->
                                             {% if group.leader_id == current_user.id %}
                                             <br>
@@ -97,6 +79,20 @@ poop
                                                 {{invite_form.user_id}}
                                             </form>
                                             <span class="" id="userSearchUL"></span>
+                                            {% endif %}
+                                            <strong>Current Group Members:</strong>
+                                            {% for user in group.acceptedUsers %}                                    
+                                                {% include 'group/member.html' %}
+                                            {% endfor %}                        
+                                            {% if group.unAcceptedUsers %}
+                                            {% if group.leader_id == current_user.id %}
+                                                <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#changeGroupLeaderModal">Change Group Leader</a>
+                                                <br><br>
+                                            {% endif %}
+                                            <strong>Invited Members:</strong>
+                                            {% for user in group.unAcceptedUsers %}
+                                                {% include 'group/member.html' %}
+                                            {% endfor %}
                                             {% endif %}
                                         </div>
                                     </div>
@@ -297,24 +293,50 @@ poop
                     <div class="tab-pane" id="listingRequestsTab" role="tabpanel" style="padding: 0px;">
                         <div class="row">
                             <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">Request Status</h3>
+                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">Property Requests</h3>
                                 <div class="card-block">
                                     <div class="row">
                                         {% for request in housingRequests %}
                                             <div class="row">
                                                 <div class="card">
                                                     <div class="card-block">
+                                                        <div class="card" style="width: 100%;">
+                                                            <a href="{{ url_for('housingRequests.view', id=request.id) }}">
+                                                                <img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg card-img-top">
+                                                            </a>
+                                                            <div class="card-block">
+                                                                <div class="row">
+                                                                    <div class="col-xs-6">
+                                                                        {{ request.listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
+                                                                        &nbsp;
+                                                                        {{ request.listing.num_full_baths }}<i class="fa fa-bath" aria-hidden="true"></i>
+                                                                        <br>
+                                                                        ${{ request.listing.price }} per {{ request.listing.rent_due }}
+                                                                    </div>
+                                                                    <div class="col-xs-6" style="text-align: right;">
+                                                                        {{ request.listing.street }}
+                                                                        <br>
+                                                                        {{ request.listing.city }}, {{ request.listing.state }}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                         {% if not request.landlord_show %}
                                                             <h1 style="color: red"><i class="fa fa-times-circle" aria-hidden="true"></i>Request Declined</h1>
                                                             The landlord has declined your group's request to live at this property
                                                         {% else %}
                                                             {% if request.accepted %}
                                                                 <div class="row">
-                                                                    <div class="col-xl-10">
-                                                                        <strong style="padding-right: 5px;">Application: </strong>
+                                                                    <div class="col-xl-12">
+                                                                        <h4><strong>Status of request:</strong></h4>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-xl-10">                                          
+                                                                        <strong style="padding-right: 5px;">Application Accepted: </strong>
                                                                     </div>
                                                                     <div class="col-xl-1">
-                                                                        <button type="button" id="confirmed" class="btn btn-success btn-circle"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                                                        <button type="button" id="confirmed" class="btn btn-success btn-circle" style="pointer-events: none;"><i class="fa fa-check" aria-hidden="true"></i></button>
                                                                     </div>
                                                                 </div>
                                                                 <hr>
@@ -324,7 +346,7 @@ poop
                                                                         <strong style="padding-right: 5px;">Leases Signed: </strong>
                                                                     </div>
                                                                     <div class="col-xl-1">
-                                                                        <button type="button" id="pending" class="btn btn-warning btn-circle pending"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                                        <button type="button" id="pending" class="btn btn-warning btn-circle pending" style="pointer-events: none;"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                                     </div>
                                                                 </div>
                                                                 <hr>
@@ -334,86 +356,36 @@ poop
                                                                         <strong style="padding-right: 5px;">Deposits Collected: </strong>
                                                                     </div>
                                                                     <div class="col-xl-1">
-                                                                        <button type="button" id="pending" class="btn btn-warning btn-circle pending"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                                        <button type="button" id="pending" class="btn btn-warning btn-circle pending" style="pointer-events: none;"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                                     </div>
                                                                 </div>
                                                                 <hr>
-                                                                <br>
-                                                                {% if current_user in landlords %}
-                                                                    <span>You have accepted <strong>{{ housingRequest.group.name }}</strong> to live at this property. Now you must arrange to collect signed leases from all tenants and security deposits if you require them. To make it easier for you, you can upload the blank lease here for the tenants to print out and get back to you in the method you agree upon. After everything has been collected click the "process completed button" to confirm the group for this property.</span>
-                                                                    <br>
-                                                                    <hr>
+                                                                <strong style="padding-right: 5px;">Who's Paid Their Deposit: </strong>
+                                                                <br><br>
+                                                                {% for deposit in request.securityDeposits %}                                    
                                                                     <div class="row">
-                                                                        <div class="col-xs-8">
-                                                                            <h3><strong>Leases Collected:</strong></h3>
-                                                                        </div>
-                                                                        <div class="col-xs-4" style="text-align: right">
-                                                                            <a href="#" class="btn btn-primary">Mark Collected</a>
-                                                                        </div>
-                                                                    </div>
-                                                                    {% if not hasLease %}
-                                                                        <form method='POST' action="{{url_for('housingRequests.uploadLease')}}" enctype="multipart/form-data">
-                                                                            {{leaseUploadForm.csrf_token}}
-                                                                            {{leaseUploadForm.lease}}
-                                                                            {{leaseUploadForm.groupListingID}}
-                                                                            <input type="submit">
-                                                                        </form>
-                                                                    {% else %}
-                                                                        <a href="#">View Lease</a>
-                                                                    {% endif %}
-                                                                    <br>
-                                                                    <hr>
-                                                                    <div class="row">
-                                                                        <div class="col-xs-8">
-                                                                            <h3><strong>Security Deposits:</strong></h3>
-                                                                        </div>
-                                                                        <div class="col-xs-4" style="text-align: right">
-                                                                            <button class="btn btn-primary" onclick="markAllDepositsPaid()">All Collected</button>
-                                                                        </div>
-                                                                    </div>
-                                                                    <hr>
-                                                                    {% for deposit in request.securityDeposits %}                                    
-                                                                        <div class="row">
-                                                                            <div class="col-xs-8">
-                                                                                <a href="{{ url_for('users.viewUser', userID=deposit.user.id) }}">
-                                                                                    <h4>
-                                                                                        <img src="{{deposit.user.profile_image}}" alt="Profile Image" class="img-responsive" style="height: 50px; width: 50px;" />
-                                                                                        {{ deposit.user.fname }} {{ deposit.user.lname }}
-                                                                                        {% if deposit.completed %}
-                                                                                            <span class="securityDeposit" id="markDepositPaid{{deposit.user.id}}" style="color: green"><i class="fa fa-check-circle" aria-hidden="true"></i></span>
-                                                                                        {% else %}
-                                                                                            <span class="securityDeposit" id="markDepositPaid{{deposit.user.id}}" style="color: red"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
-                                                                                        {% endif %}
-                                                                                    </h4>
-                                                                                </a>
-                                                                            </div>
-                                                                            <div class="col-xs-4" style="text-align: right">
-                                                                                {% if not deposit.completed %}
-                                                                                    <button id="markPaidButton{{deposit.user.id}}" class="btn btn-success securityDepositButton" onclick="markDepositPaid({{ deposit.user.id }})">Mark Paid</button>
+                                                                        <div class="col-xs-10">
+                                                                            <h4>
+                                                                                <img src="{{deposit.user.profile_image}}" alt="Profile Image" class="img-responsive" style="height: 50px; width: 50px;" />
+                                                                                {{ deposit.user.fname }} {{ deposit.user.lname }}
+                                                                                {% if deposit.completed %}
+                                                                                    <span class="securityDeposit" id="markDepositPaid{{deposit.user.id}}" style="color: green"><i class="fa fa-check-circle" aria-hidden="true"></i></span>
                                                                                 {% else %}
-                                                                                    <button id="markPaidButton{{deposit.user.id}}" class="btn btn-danger securityDepositButton" onclick="markDepositPaid({{ deposit.user.id }})">Mark Unpaid</button>
+                                                                                    <span class="securityDeposit" id="markDepositPaid{{deposit.user.id}}" style="color: red"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
                                                                                 {% endif %}
-                                                                            </div>
+                                                                            </h4>
                                                                         </div>
-                                                                        <hr>
-                                                                    {% endfor %}
-                                                                    <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#confirmGroupModal">Confirm Group</a>
-                                                                    <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#somethingHappenedModal">Something Happened</a>
-                                                                {% else %}
-                                                                    <span>You and the landlord must make arrangements to sign leases and pay your security deposits if they are required. After that has happened the landlord will confirm the listing and you will have this listing for {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}. </span>
-                                                                {% endif %}
+                                                                    </div>
+                                                                    <hr>
+                                                                {% endfor %}
+                                                                <br>                                                                
+                                                                <span>You and the landlord must make arrangements to sign leases and pay your security deposits if they are required. After that has happened the landlord will confirm the listing and you will have this listing for {{ request.listing.start_date }} - {{ request.listing.end_date }}. </span>                       
                                                             {% else %}
-                                                                <strong style="padding-right: 5px;">Application: </strong>
-                                                                <button type="button" id="pending" class="btn btn-warning btn-circle pending"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                                <h4><strong>Status of request:</strong></h4>
+                                                                <strong style="padding-right: 5px;">Application Accepted: </strong>
+                                                                <button type="button" id="pending" class="btn btn-warning btn-circle pending" style="pointer-events: none;"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                                 <br>
-                                                                {% if current_user in landlords %}
-                                                                    <span>If you have decided you want this group to live in this listing for {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}, please click the accept this listing button. The next step will be having the tenants sign leases and pay thier security deposits.</span>
-                                                                    <br><br>
-                                                                    <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#acceptGroupModal">Accept Group</a>
-                                                                    <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#declineGroupModal">Decline</a>
-                                                                {% else %}
-                                                                    <span>Waiting for the landlord to either accept or decline your request. If he accepts the next step will have all members of your group signing leases and paying your security deposits.</span>
-                                                                {% endif %}
+                                                                <span>Waiting for the landlord to either accept or decline your request. If he accepts the next step will have all members of your group signing leases and paying your security deposits.</span>
                                                             {% endif %}
                                                         {% endif %}
                                                     </div>

@@ -194,7 +194,10 @@ gl2 = GroupListingFactory(group=group1, listing=listing2)
 gl3 = GroupListingFactory(group=group1, listing=listing3)
 
 
+gl2.accepted = True
+gl2.completed = True
 
+gl3.accepted = True
 
 session.commit()
 
