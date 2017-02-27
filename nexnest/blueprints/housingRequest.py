@@ -1,4 +1,4 @@
-from flask import Blueprint, request, redirect, flash, render_template, url_for
+from flask import Blueprint, request, redirect, flash, render_template, url_for, jsonify
 
 from flask_login import login_required, current_user
 
@@ -21,7 +21,8 @@ from sqlalchemy import asc, desc
 
 import os
 
-housingRequests = Blueprint('housingRequests', __name__, template_folder='../templates/housingRequest')
+housingRequests = Blueprint(
+    'housingRequests', __name__, template_folder='../templates/housingRequest')
 
 
 @housingRequests.route('/houseRequest/create', methods=['POST'])
@@ -41,7 +42,8 @@ def create():
             if group.isEditableBy(current_user):
 
                 # Get the listing
-                listing = session.query(Listing).filter_by(id=form.listingID.data).first()
+                listing = session.query(Listing).filter_by(
+                    id=form.listingID.data).first()
 
                 if listing is not None:
 
@@ -110,7 +112,8 @@ def messageCreate():
     if form.validate():
 
         # Group Listing
-        gl = session.query(GroupListing).filter_by(id=form.groupListingID.data).first()
+        gl = session.query(GroupListing).filter_by(
+            id=form.groupListingID.data).first()
 
         if gl is not None:
 
@@ -137,7 +140,8 @@ def acceptRequest(id):
     if groupListing is not None:
 
         if groupListing.isEditableBy(current_user):
-            # At this point the house request is accepted and security deposits must be paid.
+            # At this point the house request is accepted and security deposits
+            # must be paid.
             groupListing.accepted = True
             session.commit()
 
@@ -204,25 +208,29 @@ def confirmRequest(id):
 @housingRequests.route('/houseRequest/<id>/securityDeposit/<userID>/paid')
 @login_required
 def paySecurityDeposit(id, userID):
-    groupListing = session.query(GroupListing).filter_by(id=id).first()
-
+    groupListing = session.query(GroupListing) \
+        .filter_by(id=id) \
+        .first()
+    errorMessage = None
     if groupListing is not None:
-
-        if groupListing.isEditableBy(current_user):
-            securityDeposit = session.query(SecurityDeposit).filter_by(group_listing_id=groupListing.id, user_id=userID).first()
+        if groupListing.isEditableBy(user=current_user, flash=False):
+            securityDeposit = session.query(SecurityDeposit) \
+                .filter_by(group_listing_id=groupListing.id, user_id=userID) \
+                .first()
 
             if securityDeposit is not None:
                 if not securityDeposit.completed:
                     securityDeposit.completed = True
                     session.commit()
+                    return jsonify(results={'success': True})
                 else:
-                    flash("Security Deposit already paid", 'warning')
+                    errorMessage = "Security Deposit already paid"
             else:
-                flash("Invalid Reqeust", 'warning')
+                errorMessage = "Invalid Reqeust"
     else:
-        flash("Invalid Request", 'warning')
+        errorMessage = "Invalid Request"
 
-    return redirect(url_for('housingRequests.view', id=groupListing.id))
+    return jsonify(results={'success': False, 'message': errorMessage})
 
 
 @housingRequests.route('/houseRequest/<id>/securityDeposit/<userID>/unPaid')
@@ -233,7 +241,8 @@ def unPaySecurityDeposit(id, userID):
     if groupListing is not None:
 
         if groupListing.isEditableBy(current_user):
-            securityDeposit = session.query(SecurityDeposit).filter_by(group_listing_id=groupListing.id, user_id=userID).first()
+            securityDeposit = session.query(SecurityDeposit).filter_by(
+                group_listing_id=groupListing.id, user_id=userID).first()
 
             if securityDeposit is not None:
                 if securityDeposit.completed:
@@ -257,7 +266,8 @@ def allSecurityDepositPaid(id):
     if groupListing is not None:
 
         if groupListing.isEditableBy(current_user):
-            allSecurityDeposits = session.query(SecurityDeposit).filter_by(group_listing_id=groupListing.id).all()
+            allSecurityDeposits = session.query(SecurityDeposit).filter_by(
+                group_listing_id=groupListing.id).all()
             for securityDeposit in allSecurityDeposits:
                 securityDeposit.completed = True
             session.commit()
@@ -273,7 +283,8 @@ def uploadLease():
     form = LeaseUploadForm(request.form)
 
     if form.validate():
-        groupListing = session.query(GroupListing).filter_by(id=form.groupListingID.data).first()
+        groupListing = session.query(GroupListing).filter_by(
+            id=form.groupListingID.data).first()
 
         if groupListing is not None:
             if groupListing.isEditableBy(current_user):
@@ -294,7 +305,8 @@ def uploadLease():
                         fileSavePath = './nexnest/uploads/leases/groupListingLease%d.pdf' % groupListing.id
 
                         if os.path.exists(fileSavePath):
-                            flash("Lease already exists for house. Overwriting", 'info')
+                            flash(
+                                "Lease already exists for house. Overwriting", 'info')
                             os.remove(fileSavePath)
 
                         flash('Lease Uploaded', 'success')

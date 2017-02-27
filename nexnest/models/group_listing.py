@@ -84,20 +84,22 @@ class GroupListing(Base):
         else:
             return 'Not Accepted'
 
-    def isViewableBy(self, user):
+    def isViewableBy(self, user, flash=True):
         if user in self.group.getUsers():
             return True
         elif user in self.listing.landLordsAsUsers():
             return True
         else:
-            flash("Permissions Error", 'danger')
+            if flash:
+                flash("Permissions Error", 'danger')
             return False
 
-    def isEditableBy(self, user):
+    def isEditableBy(self, user, flash=True):
         if user in self.listing.landLordsAsUsers():
             return True
         else:
-            flash("Permissions Error", 'danger')
+            if flash:
+                flash("Permissions Error", 'danger')
             return False
 
     def hasLease(self):

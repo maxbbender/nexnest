@@ -403,6 +403,16 @@
 
 	function markDepositPaid(userID) {
 		if($("#markPaidButton"+userID).text() == "Mark Paid"){
+            requestURL = '/houseRequest/{{housingRequest.id}}/securityDeposit/' + userID + '/paid'
+            $.getJSON(requestURL, function(data) {
+                results = data['results'];
+                // alert(data['results'].success);
+                if (results.success == true){ 
+                    alert('we did it!, now we need to show the elemnt again');
+                } else {
+                    alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+                }
+            });
 			$("#markDepositPaid"+userID).html('<i class="fa fa-check-circle" aria-hidden="true"></i>');
 			$("#markDepositPaid"+userID).css("color", "green")
 			$("#markPaidButton"+userID).text("Mark Unpaid")
