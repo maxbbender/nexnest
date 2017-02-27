@@ -2,6 +2,10 @@ from nexnest.application import session
 
 from nexnest.data_gen.factories import *
 
+from faker import Faker
+
+fake = Faker()
+
 # Schools
 s = SchoolFactory()
 session.commit()
@@ -47,37 +51,10 @@ group3 = GroupFactory(leader=user4)
 
 session.commit()
 
-
-group1Users = [user2, user3, user4]
 listings = [listing1, listing2, listing3, listing4]
-# GROUP LISTING FAVORITES
-for listing in listings:
-    user = random.choice(group1Users)
 
-    gf = GroupListingFavoriteFactory(group=group1,
-                                     listing=listing,
-                                     user=user)
-
-gf1 = GroupListingFavoriteFactory(group=group1,
-                                  listing=listing1,
-                                  user=user2)
-gf2 = GroupListingFavoriteFactory(group=group2,
-                                  listing=listing1,
-                                  user=user5)
-gf3 = GroupListingFavoriteFactory(group=group3,
-                                  listing=listing1,
-                                  user=user7)
-gf4 = GroupListingFavoriteFactory(group=group2,
-                                  listing=listing3,
-                                  user=user6)
-gf5 = GroupListingFavoriteFactory(group=group1,
-                                  listing=listing2,
-                                  user=user3)
-
-session.commit()
 
 # GROUP USERS
-
 # Group 1
 groupuser1 = GroupUserFactory(group=group1, user=user2)
 groupuser2 = GroupUserFactory(group=group1, user=user3)
@@ -108,6 +85,20 @@ groupuser3.accepted = True
 groupuser5.accepted = True
 groupuser7.accepted = True
 
+
+session.commit()
+
+# GROUP LISTING FAVORITES
+for listing in listings:
+    user = random.choice(group1AcceptedUsers)
+
+    gf = GroupListingFavoriteFactory(group=group1,
+                                     listing=listing,
+                                     user=user)
+    session.commit()
+
+    # for tempUser in group1AcceptedUsers:
+    #     if tempUser is not
 
 session.commit()
 
@@ -194,10 +185,14 @@ for i in range(10):
 
 
 # TOURS
+# Won't show in landlords active tours because listing1 is
+# already completed
 t1 = TourFactory(listing=listing1, group=group1)
-t2 = TourFactory(listing=listing1, group=group2)
-t3 = TourFactory(listing=listing1, group=group3)
-t4 = TourFactory(listing=listing2, group=group1)
+t2 = TourFactory(listing=listing2, group=group2,
+                 time_requested=fake.date_time_this_year(before_now=True))
+t3 = TourFactory(listing=listing2, group=group3)
+t4 = TourFactory(listing=listing3, group=group2)
+t5 = TourFactory(listing=listing3, group=group3)
 
 session.commit()
 
@@ -317,11 +312,11 @@ for user in group1AcceptedUsers:
 
 
 # House
-h1 = HouseFactory(listing=listing2, group=group1)
+h1 = HouseFactory(listing=listing1, group=group1)
 
 session.commit()
 
-for user in uListGroup1:
+for user in group1AcceptedUsers:
     hnf = NotificationFactory(target_user=user,
                               type='house',
                               target_model_id=h1.id)

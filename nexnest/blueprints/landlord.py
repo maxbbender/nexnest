@@ -25,17 +25,16 @@ def landlordDashboard():
             .filter_by(user_id=current_user.id) \
             .first()
 
-        unAcceptedListings = session.query(GroupListing) \
-            .filter_by(landlord_show=True,
-                       accepted=False,
-                       completed=False,
-                       group_show=True) \
-            .all()
+        unAcceptedHousingRequests, acceptedHousingRequests, completedHousingRequests = landlord.getHousingRequests()
 
         return render_template('dashboard.html',
                                landlord=landlord,
                                dateChangeForm=dateChangeForm,
-                               listings=landlord.getListings())
+                               listings=landlord.getListings(),
+                               activeTours=landlord.getActiveTours(),
+                               unAcceptedHousingRequests=unAcceptedHousingRequests,
+                               acceptedHousingRequests=acceptedHousingRequests,
+                               completedHousingRequests=completedHousingRequests)
     else:
         flash("You are not a landlord", 'warning')
         return redirect(url_for('indexs.index'))

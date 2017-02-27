@@ -76,8 +76,10 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     apartment_number = 2
     property_type = 'apartment'
     rent_due = 'semester'
-    first_semester_rent_due_date = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
-    second_semester_rent_due_date = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
+    first_semester_rent_due_date = factory.LazyAttribute(
+        lambda x: fake.date(pattern="%Y-%m-%d"))
+    second_semester_rent_due_date = factory.LazyAttribute(
+        lambda x: fake.date(pattern="%Y-%m-%d"))
     # monthly_rent_due_date = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
 
 
@@ -171,7 +173,8 @@ class TourFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     listing = factory.SubFactory(ListingFactory)
     group = factory.SubFactory(GroupFactory)
-    time_requested = factory.LazyAttribute(lambda x: fake.date_time())
+    time_requested = factory.LazyAttribute(
+        lambda x: fake.date_time_this_year(before_now=False, after_now=True))
 
 
 class TourMessageFactory(factory.alchemy.SQLAlchemyModelFactory):
