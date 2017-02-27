@@ -328,3 +328,9 @@ select.form-control:not([size]):not([multiple]) {
     right:0px;
     z-index:100
 }
+
+.vertical-center {
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  display: flex;
+  align-items: center;
+}

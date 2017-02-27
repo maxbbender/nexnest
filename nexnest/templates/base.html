@@ -23,12 +23,12 @@
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 	<body>
-        {% for notification in notifications %}
+        <!-- {% for notification in notifications %}
             <strong>{{notification.type}}</strong><br>
             {{notification.message}}<br>
             {{notification.returnObject}}<br>
             {{notification.redirectURL}}<br>
-        {% endfor %}
+        {% endfor %} -->
 		<nav class="navbar navbar-light bg-faded">
 			<a class="navbar-brand" href="{{ url_for('indexs.index') }}">NexNest</a>
 		    <ul class="nav navbar-nav">
@@ -93,26 +93,11 @@
                                     <div class="dropdown-toolbar-actions">
                                         <a href="#">Mark all as read</a>
                                     </div>
-                                    <h2 class="dropdown-toolbar-title"><strong>Notifications (2)</strong></h2>
+                                    <h2 class="dropdown-toolbar-title"><strong>Notifications ({{ notifications|length }})</strong></h2>
                                 </div>
                                 <ul class="notifications">
                                     {% for notification in notifications %}
-                                        <li class="notification">
-                                            <div class="media">
-                                                <div class="media-left">
-                                                    <div class="media-object">
-                                                        <img src="{{current_user.profile_image}}" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle" alt="Name" />
-                                                    </div>
-                                                </div>
-                                                <div class="media-body">
-                                                    <strong class="notification-title">{{ notification.message }}</strong>
-                                                    <p class="notification-desc">I totally don't wanna do it. Rimmer can do it.</p>
-                                                    <div class="notification-meta">
-                                                        <small class="timestamp">27. 11. 2015, 15:00</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
+                                        {% include 'notifications/' + notification.type +'.html' %}
                                     {% endfor %}
                                 </ul>
                             </div>
