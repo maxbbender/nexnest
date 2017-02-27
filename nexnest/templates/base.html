@@ -87,13 +87,25 @@
                     {% if current_user %}
                     <li class="nav-item">
                         <div class="dropdown dropdown-notifications dropdown-toggle">
+                            <i data-count="{{ notifications|length }}" class="fa fa-comments fa-2x notification-icon" style="padding-top: 4px;" id="dropdownNotificationButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
+                            <div class="dropdown-menu dropdown-menu-right" style="overflow:hidden;" aria-labelledby="dropdownNotificationButton">
+                                <div class="dropdown-toolbar">
+                                    <h2 class="dropdown-toolbar-title"><strong>Messages ({{ notifications|length }} new)</strong></h2>
+                                </div>
+                                <ul class="notifications">
+                                    {% for notification in notifications %}
+                                        {% include 'notifications/' + notification.category +'.html' %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <div class="dropdown dropdown-notifications dropdown-toggle">
                             <i data-count="{{ notifications|length }}" class="fa fa-bell fa-2x notification-icon" style="padding-top: 4px;" id="dropdownNotificationButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
                             <div class="dropdown-menu dropdown-menu-right" style="overflow:hidden;" aria-labelledby="dropdownNotificationButton">
                                 <div class="dropdown-toolbar">
-                                    <div class="dropdown-toolbar-actions">
-                                        <a href="#">Mark all as read</a>
-                                    </div>
-                                    <h2 class="dropdown-toolbar-title"><strong>Notifications ({{ notifications|length }})</strong></h2>
+                                    <h2 class="dropdown-toolbar-title"><strong>Notifications ({{ notifications|length }} new)</strong></h2>
                                 </div>
                                 <ul class="notifications">
                                     {% for notification in notifications %}
