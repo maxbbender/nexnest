@@ -18,6 +18,12 @@
             </div>
         </div>
         <div class="row">
+            <div class="col-xs-12" style="padding-left: 15px;">
+                <br>
+                <strong>Landlord: </strong> {% for user in landlords %} {{ user.fname }} {{ user.lname }} {% endfor %}
+            </div>
+        </div>
+        <div class="row">
             <div class="col-xs-12 col-xl-12" style="padding-left: 15px;">
                 <br>
                 <strong> Property Description: </strong> {{ listing.description }}
