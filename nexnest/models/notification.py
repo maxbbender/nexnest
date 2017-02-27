@@ -79,6 +79,7 @@ class Notification(Base):
         from nexnest.models.house_message import HouseMessage
         from nexnest.models.platform_report import PlatformReport
         from nexnest.models.security_deposit import SecurityDeposit
+        from nexnest.models.maintenance import Maintenance
 
         message = None
         returnObject = None
@@ -232,12 +233,12 @@ class Notification(Base):
                 return None, None, None
 
         elif self.type == 'maintenance':
-            returnObject = session.query(Maintennance) \
+            returnObject = session.query(Maintenance) \
                 .filter_by(id=self.target_model_id) \
                 .first()
 
             if returnObject is not None:
-                message = "There is a new maintenance request for your house"
+                message = "There is a new maintenance request for your listing"
 
                 redirectURL = '/house/view/%d' % returnObject.house.id
 
