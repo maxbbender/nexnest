@@ -65,6 +65,9 @@ class Notification(Base):
         return redirectURL
 
     def getNotification(self):
+        ########TODODOOOO#########
+        # report_group | report_landlord | report_listing | rent_reminder
+        ##########################
         # So this is super hacky, and not good to do....
         # but i can't figure out how to do it otherwise
         from nexnest.models.direct_message import DirectMessage
@@ -81,6 +84,8 @@ class Notification(Base):
         from nexnest.models.security_deposit import SecurityDeposit
         from nexnest.models.maintenance import Maintenance
         from nexnest.models.maintenance_message import MaintenanceMessage
+        from nexnest.models.tour import Tour
+        from nexnest.models.tour_message import TourMessage
 
         message = None
         returnObject = None
@@ -267,27 +272,58 @@ class Notification(Base):
                 .first()
 
             if returnObject is not None:
-                message = "A new tour has been requested for your listing" % returnObject.user.name
+                message = "A new tour has been requested for your listing"
 
                 redirectURL = '/tour/view/%d' % returnObject.id
 
                 return message, returnObject, redirectURL
             else:
                 return None, None, None
-        
+
         elif self.type == 'maintenance_message':
             returnObject = session.query(MaintenanceMessage) \
                 .filter_by(id=self.target_model_id) \
                 .first()
 
             if returnObject is not None:
-                message = "%s has posted a new message in %s's Maintenance Request"
+                message = "%s has posted a new message in %s's Maintenance Request" % \
+                    (returnObject.user.name, returnObject.maintenance.house.group.name)
 
                 redirectURL = '/house/maintenanceRequest/%d/view' % returnObject.id
 
                 return message, returnObject, redirectURL
             else:
-                return None, None, None       
+                return None, None, None
+
+        elif self.type == 'new_tour_time':
+            returnObject = session.query(Tour) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "A revised tour time has been requested for a tour. Click to view"
+
+                redirectURL = '/tour/view/%d' % returnObject.id
+
+                return message, returnObject, redirectURL
+            else:
+                return None, None, None
+
+        elif self.type == 'tour_message':
+            returnObject = session.query(TourMessage) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+            print('bruh %r' % returnObject.id)
+
+            if returnObject is not None:
+                message = "%s has posted a new message in %s's Tour Request" % \
+                    (returnObject.user.name, returnObject.tour.group.name)
+
+                redirectURL = '/tour/view/%d' % returnObject.id
+
+                return message, returnObject, redirectURL
+            else:
+                return None, None, None
 
 
 def update_date_modified(mapper, connection, target):

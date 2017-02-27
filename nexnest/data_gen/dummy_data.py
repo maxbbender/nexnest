@@ -198,8 +198,16 @@ for i in range(10):
 t1 = TourFactory(listing=listing1, group=group1)
 t2 = TourFactory(listing=listing1, group=group2)
 t3 = TourFactory(listing=listing1, group=group3)
-t3 = TourFactory(listing=listing2, group=group1)
+t4 = TourFactory(listing=listing2, group=group1)
 
+session.commit()
+
+newTourTimeNotif1 = NotificationFactory(target_user=landlord,
+                                        type='new_tour_time',
+                                        target_model_id=t1.id)
+newTourTimeNotif2 = NotificationFactory(target_user=user2,
+                                        type='new_tour_time',
+                                        target_model_id=t1.id)
 session.commit()
 
 # TOUR NOTIFICATIONS
@@ -219,17 +227,35 @@ tn4 = NotificationFactory(target_user=landlord,
 session.commit()
 
 
-# TOUR MESSAGES
+# TOUR MESSAGES (t1)
+for i in range(5):
+    if random.randint(0, 1) == 0:
+        tm = TourMessageFactory(tour=t1, user=landlord)
+        session.commit()
+        for user in group1AcceptedUsers:
+            tmn = NotificationFactory(target_user=user,
+                                      type='tour_message',
+                                      target_model_id=tm.id)
+            session.commit()
+    else:
+        user = random.choice(group1AcceptedUsers)
 
-tm1 = TourMessageFactory(tour=t1, user=user2)
-tm2 = TourMessageFactory(tour=t2, user=user3)
-tm3 = TourMessageFactory(tour=t3, user=user4)
-tm4 = TourMessageFactory(tour=t1, user=landlord1.user)
-tm1 = TourMessageFactory(tour=t1, user=user3)
-tm1 = TourMessageFactory(tour=t1, user=user4)
-tm1 = TourMessageFactory(tour=t1, user=landlord1.user)
+        tm = TourMessageFactory(tour=t1, user=user)
 
-session.commit()
+        session.commit()
+
+        for tempUser in group1AcceptedUsers:
+            if tempUser is not user:
+                tmn = NotificationFactory(target_user=tempUser,
+                                          type='tour_message',
+                                          target_model_id=tm.id)
+                session.commit()
+
+        tmn = NotificationFactory(target_user=landlord,
+                                  type='tour_message',
+                                  target_model_id=tm.id)
+        session.commit()
+
 
 # GROUP LISTING
 gl1 = GroupListingFactory(group=group1, listing=listing1)
@@ -347,10 +373,23 @@ session.commit()
 # Maintenance Request Messages
 
 # m1
-mm1 = MaintenanceMessageFactory(maintenance=m1, user=user2)
-mm2 = MaintenanceMessageFactory(maintenance=m1, user=user3)
-mm3 = MaintenanceMessageFactory(maintenance=m1, user=user2)
-mm4 = MaintenanceMessageFactory(maintenance=m1, user=user4)
+for i in range(5):
+    user = random.choice(group1AcceptedUsers)
+
+    mm = MaintenanceMessageFactory(maintenance=m1, user=user)
+
+    session.commit()
+
+    for tempUser in group1AcceptedUsers:
+        if tempUser is not user:
+            mmn = NotificationFactory(target_user=tempUser,
+                                      type='maintenance_message',
+                                      target_model_id=mm.id)
+            session.commit()
+    mmn = NotificationFactory(target_user=landlord,
+                              type='maintenance_message',
+                              target_model_id=mm.id)
+    session.commit()
 
 # m2
 mm5 = MaintenanceMessageFactory(maintenance=m2, user=user5)

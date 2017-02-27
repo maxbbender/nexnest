@@ -5,6 +5,7 @@ from nexnest.application import db
 from .base import Base
 
 from sqlalchemy import event
+from sqlalchemy.orm import relationship
 
 from flask import flash
 
@@ -20,6 +21,7 @@ class Maintenance(Base):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
+    messages = relationship('MaintenanceMessage', backref='maintenance')
 
     def __init__(
             self,
