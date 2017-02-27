@@ -15,18 +15,16 @@
         	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Maintenance Requests</span>
         	        </a>
         	    </li>
+        	    {% if current_user in landlords %}
         	    <li class="nav-item">
         	        <a class="nav-link" data-toggle="tab" href="#membersTab" role="tab">
         	        	<i class="fa fa-tasks" aria-hidden="true"></i>
         	        	<span class="hidden-xs hidden-sm">
-        	        		{% if current_user in landlords %}
-        	        			Group Members
-        	        		{% else %}
-        	        			The Landlord
-        	        		{% endif %}
+        	        		Group Members
         	        	</span>
         	        </a>
         	    </li>
+        	    {% endif %}
         	    <li class="nav-item">
         	        <a class="nav-link" data-toggle="tab" href="#propertyTab" role="tab">
         	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Property</span>
@@ -127,8 +125,6 @@
 			        	        <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
 			        	        	{% if current_user in landlords %}
 			        	        		Members
-			        	        	{% else %}
-			        	        		The landlord
 			        	        	{% endif %}
 			        	        </h3>
 			        	        <div class="card-block">
@@ -143,10 +139,6 @@
 			        	                                        {% include 'tour/member.html' %}
 			        	                                    {% endfor %}
 			        	                                {% endwith %}
-			        	                            {% else %}
-			        	                                {% for user in landlords %}
-			        	                                    {% include 'tour/member.html' %}
-			        	                                {% endfor %}
 			        	                            {% endif %}
 			        	                        </div>
 			        	                    </div>

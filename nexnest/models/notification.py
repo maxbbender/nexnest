@@ -119,7 +119,7 @@ class Notification(Base):
                 .first()
 
             if returnObject is not None:
-                message = "New Direct Message from %s" % returnObject.user.name
+                message = "Direct Message from %s" % returnObject.user.name
                 redirectURL = '/user/directMessages/%d' % returnObject.user.id
 
                 return message, returnObject, redirectURL
