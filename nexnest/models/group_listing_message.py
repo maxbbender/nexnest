@@ -13,6 +13,10 @@ class GroupListingMessage(Message):
                           db.ForeignKey('messages.id'),
                           primary_key=True)
 
+    __mapper_args__ = {
+        'polymorphic_identity': 'groupListing',
+    }
+
     def __init__(
             self,
             groupListing,
