@@ -103,3 +103,31 @@ class Landlord(Base):
                         break
 
         return unAcceptedHousingRequests, acceptedHousingRequests, completedHousingRequests
+
+    def getHouses(self):
+        houses = []
+        for listing in self.getListings():
+            if listing.hasHouse():
+                houses.append(listing.house[0])
+                # if len(listing.house) > 0:
+                #     for house in listing.house:
+                #         houses.append(listing.house)
+                # else:
+                #     houses.append(listing.house[0])
+        if len(houses) > 0:
+            return houses
+        else:
+            return None
+
+    def getMaintenanceRequests(self):
+        maintenanceRequests = []
+
+        for house in self.getHouses():
+            houseObject = {'house' : house, 'maintenanceRequests' : house.activeMaintenanceRequests()}
+            maintenanceRequests.append(houseObject)
+
+        if len(maintenanceRequests) > 0:
+            return maintenanceRequests
+        else:
+            return None
+

@@ -35,6 +35,24 @@
         {{housingRequest}}<br>
     {% endfor %}
 {% endif %}
+<hr>
+{% if houses %}
+    <h1>Houses</h1>
+    {% for house in houses %}
+        {{house}}<br>
+    {% endfor %}
+{% endif %}
+<hr>
+{% if maintenanceRequests %}
+    <h1>Maintenance Requests</h1>
+    {% for maintenanceRequestObject in maintenanceRequests %}
+        <strong>{{maintenanceRequestObject.house}}</strong><br>
+        {% for maintenanceRequest in maintenanceRequestObject.maintenanceRequests %}
+            {{maintenanceRequest}}<br>
+        {% endfor %}
+    {% endfor %}
+{% endif %}
+<hr>
 
 <link href="{{url_for('static', filename='css/landlord/dashboardStyling.css')}}" rel="stylesheet">
 <div class="row">

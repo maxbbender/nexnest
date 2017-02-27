@@ -50,6 +50,14 @@ class House(Base):
     def tenants(self):
         return self.group.acceptedUsers
 
+    def activeMaintenanceRequests(self):
+        maintenanceRequests = []
+        for maintenanceRequest in self.maintenanceRequests:
+            if maintenanceRequest.status is not 'completed':
+                maintenanceRequests.append(maintenanceRequest)
+
+        return maintenanceRequests
+
 
 def update_date_modified(mapper, connection, target):
     # 'target' is the inserted object

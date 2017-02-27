@@ -6,7 +6,7 @@ from .base import Base
 
 from sqlalchemy import event
 
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 import os
 
@@ -67,7 +67,7 @@ class Listing(Base):
     groups = relationship("GroupListing", back_populates='listing')
     landlords = relationship("LandlordListing", back_populates='listing')
     tours = relationship("Tour", backref='listing')
-    house = relationship("House", backref='listing')
+    house = relationship("House", backref=backref('listing', uselist=False))
     favorite = relationship("GroupListingFavorite", backref='listing')
 
     def __init__(

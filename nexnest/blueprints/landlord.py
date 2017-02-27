@@ -34,7 +34,9 @@ def landlordDashboard():
                                activeTours=landlord.getActiveTours(),
                                unAcceptedHousingRequests=unAcceptedHousingRequests,
                                acceptedHousingRequests=acceptedHousingRequests,
-                               completedHousingRequests=completedHousingRequests)
+                               completedHousingRequests=completedHousingRequests,
+                               houses=landlord.getHouses(),
+                               maintenanceRequests=landlord.getMaintenanceRequests())
     else:
         flash("You are not a landlord", 'warning')
         return redirect(url_for('indexs.index'))
