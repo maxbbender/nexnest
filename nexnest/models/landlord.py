@@ -47,29 +47,42 @@ class Landlord(Base):
         return listings
 
     def getActiveTours(self):
-        activeTours = []
+        requestedTours = []
+        scheduledTours = []
 
         for listing in self.getListings():
             if not listing.hasHouse():
-                listingDict = {'listing': listing}
-                tours = []
+                requestedToursObject = {'listing': listing}
+                scheduledToursObject = {'listing': listing}
+
+                rqTours = []
+                schTours = []
+
                 for tour in listing.tours:
                     if tour.time_requested >= dt.now():
-                        tours.append(tour)
+                        if tour.tour_confirmed:
+                            schTours.append(tour)
+                        else:
+                            rqTours.append(tour)
 
-                if len(tours) == 0:
-                    continue
+                if len(rqTours) > 0:
+                    requestedToursObject['tours'] = rqTours
+                    requestedTours.append(requestedToursObject)
 
-                listingDict['tours'] = tours
+                if len(schTours) > 0:
+                    scheduledToursObject['tours'] = schTours
+                    scheduledTours.append(scheduledToursObject)
             else:
                 continue
 
-            activeTours.append(listingDict)
-
-        if len(activeTours) > 0:
-            return activeTours
+        if len(requestedTours) > 0 and len(scheduledTours) > 0:
+            return requestedTours, scheduledTours
+        elif len(requestedTours) > 0 and len(scheduledTours) == 0:
+            return requestedTours, None
+        elif len(requestedTours) == 0 and len(scheduledTours) > 0:
+            return None, scheduledTours
         else:
-            return None
+            return None, None
 
     def getHousingRequests(self):
         unAcceptedHousingRequests = []
@@ -123,11 +136,11 @@ class Landlord(Base):
         maintenanceRequests = []
 
         for house in self.getHouses():
-            houseObject = {'house' : house, 'maintenanceRequests' : house.activeMaintenanceRequests()}
+            houseObject = {
+                'house': house, 'maintenanceRequests': house.activeMaintenanceRequests()}
             maintenanceRequests.append(houseObject)
 
         if len(maintenanceRequests) > 0:
             return maintenanceRequests
         else:
             return None
-

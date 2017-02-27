@@ -8,7 +8,11 @@ import os
 
 u = session.query(landlord.Landlord).filter_by(user_id=1).first()
 print(u)
-print("tours %r" % u.getActiveTours())
+requestedTours, scheduledTours = u.getActiveTours()
+
+print('RequestedTours %r' % requestedTours)
+
+print('ScheduledTours %r' % scheduledTours)
 
 un, ac, com = u.getHousingRequests()
 

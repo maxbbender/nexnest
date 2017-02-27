@@ -27,11 +27,14 @@ def landlordDashboard():
 
         unAcceptedHousingRequests, acceptedHousingRequests, completedHousingRequests = landlord.getHousingRequests()
 
+        requestedTours, scheduledTours = landlord.getActiveTours()
+
         return render_template('dashboard.html',
                                landlord=landlord,
                                dateChangeForm=dateChangeForm,
                                listings=landlord.getListings(),
-                               activeTours=landlord.getActiveTours(),
+                               requestedTours=requestedTours,
+                               scheduledTours=scheduledTours,
                                unAcceptedHousingRequests=unAcceptedHousingRequests,
                                acceptedHousingRequests=acceptedHousingRequests,
                                completedHousingRequests=completedHousingRequests,

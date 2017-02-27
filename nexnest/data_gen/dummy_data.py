@@ -193,6 +193,8 @@ t2 = TourFactory(listing=listing2, group=group2,
 t3 = TourFactory(listing=listing2, group=group3)
 t4 = TourFactory(listing=listing3, group=group2)
 t5 = TourFactory(listing=listing3, group=group3)
+t6 = TourFactory(listing=listing3, group=group1)
+t6.tour_confirmed = True
 
 session.commit()
 
