@@ -101,7 +101,6 @@ class Landlord(Base):
                             houseRequest = []
                             break
                         else:
-                            print('appending')
                             houseRequests.append(houseRequest)
 
                 if len(houseRequests) > 0:
@@ -110,7 +109,6 @@ class Landlord(Base):
 
             else:
                 for houseRequest in listing.groups:
-                    print(houseRequest.completed)
                     if houseRequest.completed:
                         completedHousingRequests.append(houseRequest)
                         break
