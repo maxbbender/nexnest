@@ -54,9 +54,9 @@ listings = [listing1, listing2, listing3, listing4]
 for listing in listings:
     user = random.choice(group1Users)
 
-    gf = GroupListingFavorite(group=group1,
-                              listing=listing,
-                              user=user)
+    gf = GroupListingFavoriteFactory(group=group1,
+                                     listing=listing,
+                                     user=user)
 
 gf1 = GroupListingFavoriteFactory(group=group1,
                                   listing=listing1,
@@ -279,6 +279,12 @@ session.commit()
 h1 = HouseFactory(listing=listing2, group=group1)
 
 session.commit()
+
+for user in uListGroup1:
+    hnf = NotificationFactory(target_user=user,
+                              type='house',
+                              target_model_id=h1.id)
+
 
 # House Messages
 hm1 = HouseMessageFactory(house=h1, user=user2)

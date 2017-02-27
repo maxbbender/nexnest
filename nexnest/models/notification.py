@@ -173,21 +173,21 @@ class Notification(Base):
 
         # If a house request has been accepted + completed, a house
         # notification gets created.
-        # elif self.type == 'house':
-        #     returnObject = session.query(House) \
-        #         .filter_by(id=self.target_model_id) \
-        #         .first()
+        elif self.type == 'house':
+            returnObject = session.query(House) \
+                .filter_by(id=self.target_model_id) \
+                .first()
 
-        #     if returnObject is not None:
-        #         message = "Congratulations! %s has accepted your Housing Request, Click here to go to your new humble abode!" % \
-        #             returnObject.listing.landLordsAsUsers()[0].name
+            if returnObject is not None:
+                message = "Congratulations! %s has accepted your Housing Request, Click here to go to your new humble abode!" % \
+                    returnObject.listing.landLordsAsUsers()[0].name
 
-        #         redirectURL = '/group/view/%d' % returnObject.id
-        #         # redirectURL = url_for('housingRequests.view', id=returnObject.id)
+                redirectURL = '/house/view/%d' % returnObject.id
+                # redirectURL = url_for('housingRequests.view', id=returnObject.id)
 
-        #         return message, returnObject, redirectURL
-        #     else:
-        #         return None, None, None
+                return message, returnObject, redirectURL
+            else:
+                return None, None, None
 
 
 def update_date_modified(mapper, connection, target):
