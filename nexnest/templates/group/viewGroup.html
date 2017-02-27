@@ -1,11 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-{% if house %}
-yo
-{{house.group_id}}
-{% else %}
-poop
-{% endif %}
 <link href="{{url_for('static', filename='css/landlord/dashboardStyling.css')}}" rel="stylesheet">
 <div class="row">
     <div class="col-md-2 col-sm-1 hidden-xs display-table-cell v-align box" id="navigation" style="height: inherit;">
@@ -31,11 +25,20 @@ poop
                         <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Tours</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#listingRequestsTab" role="tab">
-                        <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Listing Requests</span>
-                    </a>
-                </li>
+                {% if housingRequests %}
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#listingRequestsTab" role="tab">
+                            <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Listing Requests</span>
+                        </a>
+                    </li>
+                {% endif %}
+                {% if house %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('houses.view', id=house.id) }}">
+                            <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">My House</span>
+                        </a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>
