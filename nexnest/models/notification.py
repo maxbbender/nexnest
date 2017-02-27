@@ -72,9 +72,11 @@ class Notification(Base):
         from nexnest.models.friend import Friend
         from nexnest.models.group import Group
         from nexnest.models.group_listing import GroupListing
+        from nexnest.models.group_listing_favorite import GroupListingFavorite
         from nexnest.models.group_message import GroupMessage
         from nexnest.models.house import House
         from nexnest.models.message import Message
+        from nexnest.models.house_message import HouseMessage
 
         message = None
         returnObject = None
@@ -87,6 +89,7 @@ class Notification(Base):
             if returnObject is not None:
                 message = "You have recieved a new Direct Message from %s" % returnObject.user.name
                 redirectURL = '/user/directMessages/%d' % returnObject.user.id
+                
                 return message, returnObject, redirectURL
             else:
                 return None, None, None
@@ -117,7 +120,6 @@ class Notification(Base):
                     (returnObject.name, returnObject.leader.fname)
 
                 redirectURL = '/group/view/%d' % returnObject.id
-                # redirectURL = url_for('groups.view', group_id=returnObject.id)
 
                 return message, returnObject, redirectURL
             else:
@@ -131,7 +133,6 @@ class Notification(Base):
                 message = "A new listing has been suggested to your Group %s" % returnObject.name
 
                 redirectURL = '/group/view/%d' % returnObject.id
-                # redirectURL = url_for('groups.view', group_id=returnObject.id)
 
                 return message, returnObject, redirectURL
             else:
@@ -143,17 +144,11 @@ class Notification(Base):
                 .first()
 
             if returnObject is not None:
-                print('wo')
                 message = "You have new messages in %s's House Request" % returnObject.groupListing.group.name
 
                 redirectURL = '/houseRequest/view/%d' % returnObject.groupListing.id
-                # redirectURL = url_for('housingRequests.view', id=returnObject.id)
-                print(message)
-                print(returnObject)
-                print(redirectURL)
                 return message, returnObject, redirectURL
             else:
-                print('h')
                 return None, None, None
 
         elif self.type == 'group_message':
@@ -165,7 +160,6 @@ class Notification(Base):
                 message = "You have a new message in %s" % returnObject.group.name
 
                 redirectURL = '/group/view/%d' % returnObject.id
-                # redirectURL = url_for('housingRequests.view', id=returnObject.id)
 
                 return message, returnObject, redirectURL
             else:
@@ -183,11 +177,70 @@ class Notification(Base):
                     returnObject.listing.landLordsAsUsers()[0].name
 
                 redirectURL = '/house/view/%d' % returnObject.id
-                # redirectURL = url_for('housingRequests.view', id=returnObject.id)
 
                 return message, returnObject, redirectURL
             else:
                 return None, None, None
+
+        elif self.type == 'house_message':
+            returnObject = session.query(HouseMessage) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "You have a new message in %s's House" % returnObject.house.group.name
+
+                redirectURL = '/house/view/%d' % returnObject.house.id
+
+                return message, returnObject, redirectURL
+            else:
+                return None, None, None
+
+        elif self.type == 'group_listing_favorite':
+            returnObject = session.query(GroupListingFavorite) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "%s has favorited a new listing in %s" % \
+                    (returnObject.user, returnObject.group.name)
+
+                redirectURL = '/group/view/%d' % returnObject.group.id
+
+                return message, returnObject, redirectURL
+            else:
+                return None, None, None
+
+        elif self.type == 'maintenance':
+            returnObject = session.query(Maintennance) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "There is a new maintenance request for your house"
+
+                redirectURL = '/house/view/%d' % returnObject.house.id
+
+                return message, returnObject, redirectURL
+            else:
+                return None, None, None
+
+        elif self.type == 'platform_report':
+            returnObject = session.query(Maintennance) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "There is a new platform report!"
+
+                redirectURL = '/house/view/%d' % returnObject.house.id
+
+                return message, returnObject, redirectURL
+            else:
+                return None, None, None
+
+
+
 
 
 def update_date_modified(mapper, connection, target):

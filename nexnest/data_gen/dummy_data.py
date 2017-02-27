@@ -84,6 +84,8 @@ groupuser2 = GroupUserFactory(group=group1, user=user3)
 groupuser3 = GroupUserFactory(group=group1, user=user4)
 groupuser4 = GroupUserFactory(group=group1, user=user5)
 
+group1Users = [user2, user3, user4, user5]
+group1AcceptedUsers = [user2, user3, user4]
 
 # Group 2
 groupuser5 = GroupUserFactory(group=group2, user=user3)
@@ -285,13 +287,32 @@ for user in uListGroup1:
                               type='house',
                               target_model_id=h1.id)
 
-
 # House Messages
-hm1 = HouseMessageFactory(house=h1, user=user2)
-hm2 = HouseMessageFactory(house=h1, user=user3)
-hm3 = HouseMessageFactory(house=h1, user=user2)
-hm4 = HouseMessageFactory(house=h1, user=user5)
-hm5 = HouseMessageFactory(house=h1, user=landlord1.user)
+for i in range(3):
+    user = random.choice(group1AcceptedUsers)
+
+    hm = HouseMessageFactory(house=h1, user=user)
+
+    session.commit()
+
+    for userTemp in group1AcceptedUsers:
+        if userTemp is not user:
+            hmn = NotificationFactory(target_user=userTemp,
+                                      type='house_message',
+                                      target_model_id=hm.id)
+            session.commit()
+
+#--House Messages (Landlord)
+hm = HouseMessageFactory(house=h1, user=landlord)
+
+session.commit()
+
+for user in group1AcceptedUsers:
+    hmn = NotificationFactory(target_user=user,
+                              type='house_message',
+                              target_model_id=hm.id)
+    session.commit()
+
 
 # Maintenance Requests
 m1 = MaintenanceFactory(house=h1, user=user2)
