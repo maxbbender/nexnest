@@ -38,6 +38,10 @@ class Message(Base):
     def __repr__(self):
         return '<Message %r>' % self.id
 
+    @property
+    def brief(self):
+        return self.content[0:50] + "..."
+
 
 def update_date_modified(mapper, connection, target):
     # 'target' is the inserted object
