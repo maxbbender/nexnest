@@ -77,6 +77,8 @@ class Notification(Base):
         from nexnest.models.house import House
         from nexnest.models.message import Message
         from nexnest.models.house_message import HouseMessage
+        from nexnest.models.platform_report import PlatformReport
+        from nexnest.models.security_deposit import SecurityDeposit
 
         message = None
         returnObject = None
@@ -89,10 +91,28 @@ class Notification(Base):
             if returnObject is not None:
                 message = "You have recieved a new Direct Message from %s" % returnObject.user.name
                 redirectURL = '/user/directMessages/%d' % returnObject.user.id
-                
+
                 return message, returnObject, redirectURL
             else:
                 return None, None, None
+
+        elif self.type == 'platform_report':
+            returnObject = session.query(PlatformReport) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "There is a new platform report!"
+
+                ##########################
+                ######TODDDDDOOOOOOO######
+                ##########################
+                redirectURL = '/index'
+
+                return message, returnObject, redirectURL
+            else:
+                return None, None, None
+
         elif self.type == 'friend':
             returnObject = session.query(Friend) \
                 .filter_by(target_user_id=self.target_model_id) \
@@ -225,22 +245,19 @@ class Notification(Base):
             else:
                 return None, None, None
 
-        elif self.type == 'platform_report':
-            returnObject = session.query(Maintennance) \
+        elif self.type == 'security_deposit':
+            returnObject = session.query(SecurityDeposit) \
                 .filter_by(id=self.target_model_id) \
                 .first()
 
             if returnObject is not None:
-                message = "There is a new platform report!"
+                message = "%s has paid their security deposit!" % returnObject.user.name
 
-                redirectURL = '/house/view/%d' % returnObject.house.id
+                redirectURL = '/houseRequest/view/%d' % returnObject.groupListing.id
 
                 return message, returnObject, redirectURL
             else:
                 return None, None, None
-
-
-
 
 
 def update_date_modified(mapper, connection, target):

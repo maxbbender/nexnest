@@ -223,15 +223,13 @@ gl3 = GroupListingFactory(group=group1, listing=listing3)
 session.commit()
 
 # GROUP LISTING MESSAGES
-# GL1
-gl1Users = [user2, user3, user4, user5]
 for i in range(10):
-    userTemp = random.choice(gl1Users)
+    userTemp = random.choice(group1AcceptedUsers)
     glm = GroupListingMessageFactory(groupListing=gl1, user=userTemp)
 
     session.commit()
 
-    for user in gl1Users:
+    for user in group1AcceptedUsers:
         if user is not userTemp:
             glmn = NotificationFactory(target_user=user,
                                        type='group_listing_message',
@@ -258,24 +256,18 @@ glm14 = GroupListingMessageFactory(groupListing=gl2, user=user2)
 session.commit()
 
 # SECURITY DEPOSITS
+# gl1 (group 1)
+for user in group1AcceptedUsers:
+    sd = SecurityDepositFactory(user=user, groupListing=gl1)
 
-# gl3
-sd1 = SecurityDepositFactory(user=user2, groupListing=gl3)
-sd2 = SecurityDepositFactory(user=user3, groupListing=gl3)
-sd3 = SecurityDepositFactory(user=user4, groupListing=gl3)
-sd4 = SecurityDepositFactory(user=user5, groupListing=gl3)
+    if random.randint(0, 1) == 0:
+        sd.completed = True
+        session.commit()
 
-# gl2
-sd5 = SecurityDepositFactory(user=user2, groupListing=gl2)
-sd6 = SecurityDepositFactory(user=user3, groupListing=gl2)
-sd7 = SecurityDepositFactory(user=user4, groupListing=gl2)
-sd8 = SecurityDepositFactory(user=user5, groupListing=gl2)
-
-sd2.completed = True
-sd5.completed = True
-sd6.completed = True
-
-session.commit()
+        sdn = NotificationFactory(target_user=landlord,
+                                  type='security_deposit',
+                                  target_model_id=sd.id)
+    session.commit()
 
 # House
 h1 = HouseFactory(listing=listing2, group=group1)
@@ -302,7 +294,7 @@ for i in range(3):
                                       target_model_id=hm.id)
             session.commit()
 
-#--House Messages (Landlord)
+# -- House Messages (Landlord)
 hm = HouseMessageFactory(house=h1, user=landlord)
 
 session.commit()
@@ -324,6 +316,17 @@ m3.status = 'completed'
 
 session.commit()
 
+mn1 = NotificationFactory(target_user=landlord,
+                          type='maintenance',
+                          target_model_id=m1.id)
+mn2 = NotificationFactory(target_user=landlord,
+                          type='maintenance',
+                          target_model_id=m2.id)
+mn3 = NotificationFactory(target_user=landlord,
+                          type='maintenance',
+                          target_model_id=m3.id)
+session.commit()
+
 # Maintenance Request Messages
 
 # m1
@@ -343,6 +346,3 @@ mm9 = MaintenanceMessageFactory(maintenance=m3, user=user3)
 mm10 = MaintenanceMessageFactory(maintenance=m3, user=user4)
 
 session.commit()
-
-
-# Notifications
