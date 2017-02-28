@@ -13,7 +13,7 @@ from nexnest.models.tour_message import TourMessage
 
 from nexnest.utils.flash import flash_errors
 
-from sqlalchemy import asc
+from sqlalchemy import asc, desc
 
 tours = Blueprint('tours', __name__, template_folder='../templates/tour')
 
@@ -87,7 +87,7 @@ def viewTour(tourID):
         # Tour Messages
         messages = session.query(TourMessage) \
             .filter_by(tour_id=tour.id) \
-            .order_by(asc(TourMessage.date_created)) \
+            .order_by(desc(TourMessage.date_created)) \
             .all()
 
         return render_template('tourView.html',
@@ -153,3 +153,28 @@ def updateTime(tourID):
         return redirect(url_for('indexs.index'))
 
     return redirect(url_for('tours.viewTour', tourID=tourID))
+
+
+@tours.route('/tour/createMessage', methods=['POST'])
+@login_required
+def createMessage():
+    form = TourMessageForm(request.form)
+
+    if form.validate():
+        tour = session.query(Tour).filter_by(id=form.tour_id.data).first()
+
+        if tour is not None:
+            if tour.isViewableBy(current_user):
+                newTM = TourMessage(tour=tour,
+                                    content=form.content.data,
+                                    user=current_user)
+                session.add(newTM)
+                session.commit()
+
+                return redirect(url_for('tours.viewTour', tourID=tour.id))
+        else:
+            flash("Tour does not exist", 'warning')
+    else:
+        flash_errors(form)
+
+    return form.redirect()

@@ -2,14 +2,18 @@ from flask import Blueprint
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
 
-from nexnest.application import session
+from nexnest.application import session, app
 
-from nexnest.forms import ListingForm, SuggestListingForm, TourForm
-
+from nexnest.forms import ListingForm, SuggestListingForm, TourForm, GroupListingForm
 from nexnest.models.listing import Listing
 from nexnest.models.landlord_listing import LandlordListing
 
 from nexnest.utils.flash import flash_errors
+from nexnest.utils.file import allowed_file
+
+import os
+
+from werkzeug import secure_filename
 
 listings = Blueprint('listings', __name__, template_folder='../templates')
 
@@ -17,16 +21,16 @@ listings = Blueprint('listings', __name__, template_folder='../templates')
 @listings.route('/listing/view/<listingID>', methods=['GET', 'POST'])
 @login_required
 def viewListing(listingID):
-    form = SuggestListingForm()
-    requestTourForm = TourForm()
     viewListing = session.query(Listing).filter_by(id=listingID).first()
     myGroups = current_user.accepted_groups
     return render_template('detailedListing.html',
-                           suggest_listing_form=form,
-                           request_tour_form=requestTourForm,
+                           suggestListingForm=SuggestListingForm(),
+                           requestTourForm=TourForm(),
+                           requestListingForm=GroupListingForm(),
                            listing=viewListing,
                            groups=myGroups,
-                           title='Listing')
+                           title='Listing',
+                           pictures=viewListing.getPhotoURLs())
 
 
 @listings.route('/listing/create', methods=['GET', 'POST'])
@@ -36,19 +40,15 @@ def createListing():
     if current_user.isLandlord:
         if request.method == 'POST':
             form = ListingForm(request.form)
+            print(form)
             if form.validate():
                 newListing = Listing(street=form.street.data,
-                                     apartment_number=form.apartment_number.data,
                                      city=form.city.data,
                                      state=form.state.data,
                                      zip_code=form.zip_code.data,
                                      start_date=form.start_date.data,
                                      end_date=form.end_date.data,
-                                     time_period=form.time_period.data,
-                                     unit_type=form.unit_type.data,
                                      num_bedrooms=form.num_bedrooms.data,
-                                     num_full_baths=form.num_full_baths.data,
-                                     num_half_baths=form.num_half_baths.data,
                                      price=form.price.data,
                                      square_footage=form.square_footage.data,
                                      parking=form.parking.data,
@@ -66,11 +66,44 @@ def createListing():
                                      snow_plowing=form.snow_plowing.data,
                                      garbage_service=form.garbage_service.data,
                                      security_service=form.security_service.data,
-                                     description=form.description.data)
+                                     description=form.description.data,
+                                     num_full_baths=form.num_full_baths.data,
+                                     num_half_baths=form.num_half_baths.data,
+                                     time_period=form.time_period.data,
+                                     rent_due=form.rent_due.data,
+                                     property_type=form.property_type.data)
                 session.add(newListing)
                 session.commit()
+
+                if newListing.property_type == 'apartment':
+                    newListing.apartment_number = form.apartment_number.data
+
+                if newListing.rent_due == 'semester':
+                    newListing.first_semester_rent_due_date = form.first_semester_rent_due_date.data
+                    newListing.second_semester_rent_due_date = form.second_semester_rent_due_date.data
+
+                session.commit()
+
+                # Let's create the folder to upload the photos to.
+                folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(newListing.id))
+
+                if not os.path.exists(folderPath):
+                    os.makedirs(folderPath)
+
+                # Lets add the photos
+                uploadedFiles = request.files.getlist("pictures")
+                filenames = []
+                for file in uploadedFiles:
+                    if file and allowed_file(file.filename):
+                        filename = secure_filename(file.filename)
+
+                        file.save(os.path.join(folderPath, filename))
+                        filenames.append(filename)
+                    else:
+                        flash("Error saving file %s" % file.filename, 'error')
+
                 flash('Listing Created', 'success')
-                return redirect(url_for('indexs.index'))
+                return redirect(url_for('listings.viewListing', listingID=newListing.id))
             else:
                 flash_errors(form)
                 return render_template('/landlord/createListing.html',

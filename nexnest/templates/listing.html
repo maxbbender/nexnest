@@ -1,8 +1,21 @@
-<a href="{{ url_for('listings.viewListing', listingID=listing.id) }}">
-	<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
-	<div class="listingDescription d-flex align-items-end">
-		{{ listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i> ${{ listing.price }}
-		<br>
-		{{ listing.street }}, {{ listing.city }}, {{ listing.state }}
+<div class="card" style="width: 80%;">
+	<a href="{{ url_for('listings.viewListing', listingID=listing.id) }}">
+		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg card-img-top">
+	</a>
+	<div class="card-block">
+		<div class="row">
+			<div class="col-xs-6">
+				{{ listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
+				&nbsp;
+				{{ listing.num_full_baths }}<i class="fa fa-bath" aria-hidden="true"></i>
+				<br>
+				${{ listing.price }} per {{ listing.rent_due }}
+			</div>
+			<div class="col-xs-6" style="text-align: right;">
+				{{ listing.street }}
+				<br>
+				{{ listing.city }}, {{ listing.state }}
+			</div>
+		</div>
 	</div>
-</a>
+</div>

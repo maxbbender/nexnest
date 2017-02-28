@@ -5,6 +5,9 @@ from nexnest.application import db
 from .base import Base
 
 from sqlalchemy import event
+from sqlalchemy.orm import relationship
+
+from flask import flash
 
 
 # class PostReport(Base):
@@ -14,21 +17,25 @@ class Maintenance(Base):
     status = db.Column(db.String(10))
     request_type = db.Column(db.String(20))
     details = db.Column(db.Text())
-    listing_id = db.Column(db.Integer, db.ForeignKey('listings.id'))
+    house_id = db.Column(db.Integer, db.ForeignKey('houses.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
+    messages = relationship('MaintenanceMessage', backref='maintenance')
 
     def __init__(
             self,
             request_type,
             details,
-            listing
+            house,
+            user
     ):
 
-        self.listing_id = listing.id
+        self.house_id = house.id
         self.details = details
         self.status = 'open'
         self.request_type = request_type
+        self.user_id = user.id
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
@@ -37,6 +44,13 @@ class Maintenance(Base):
 
     def __repr__(self):
         return '<Maintenance %r>' % self.id
+
+    def isEditableBy(self, user):
+        if user in self.house.listing.landLordsAsUsers():
+            return True
+
+        flash('Permissions Error', 'warning')
+        return False
 
 
 def update_date_modified(mapper, connection, target):

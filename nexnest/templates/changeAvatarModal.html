@@ -1,0 +1,31 @@
+<div class="modal fade" id="changeAvatarModal" tabindex="-1" role="dialog" aria-labelledby="changeAvatarModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="login"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12 text-xs-center">
+                        <h3><strong>Current Avatar:</strong></h3>
+                        <img class="card-img" src="{{current_user.profile_image}}" style="height: 150px;">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+             <div class="row">
+                    <div class="col-xs-12 text-xs-center">
+                        <form action="{{url_for('users.updateProfilePicture')}}" method="POST", enctype="multipart/form-data">
+                            {{avatarChangeForm.csrf_token}}
+                            {{avatarChangeForm.profilePicture}}
+                            <input type="submit" id="test" value="Upload" class="btn btn-primary">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

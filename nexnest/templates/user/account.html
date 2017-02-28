@@ -2,7 +2,101 @@
 {% extends "base.html" %}
 
 {% block content %}
+    {% if user.id == current_user.id %}
+    <link href="{{url_for('static', filename='css/landlord/dashboardStyling.css')}}" rel="stylesheet">
     <div class="row">
+        <div class="col-md-2 col-sm-1 hidden-xs display-table-cell v-align box" id="navigation" style="height: inherit;">
+            <div class="navi navbar">
+                <ul>
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#meTab" role="tab">
+                            <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Me</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#houseTab" role="tab">
+                            <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">My House</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#myGroupsTab" role="tab">
+                            <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">My Groups</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#myToursTab" role="tab">
+                            <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">My Tours</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#requestsTab" role="tab">
+                            <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">My Listing Requests</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-sm-11 col-md-10">
+        <div class="tab-content">
+            <div class="tab-pane active" id="meTab" role="tabpanel" style="padding: 0px;">
+                <div class="row">
+                    <div class="col-xs-1"></div>
+                    <div class="col-xs-10">
+                        <div class="callout-block text-center fade-in-b">
+                            <h1>My Account</h1>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-xs-1"></div>
+                    <div class="col-xs-10">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <div class="card" style="width: 150px;">
+                                            <img class="card-img" src="{{user.profile_image}}" style="height: 150px; width: 150px;">
+                                        </div>
+                                        <a href="#" data-toggle="modal" data-target="#changeAvatarModal">Change Photo</a>
+                                    </div>
+                                    <div class="col-xs-4" style="align-self: center; text-align: center;">
+                                        <h1 style="margin-left: auto; margin-right: auto;"><strong>{{ user.fname }} {{ user.lname }}</strong></h1>
+                                        <a href="{{ url_for('users.editAccountInfo') }}" class="btn btn-outline-info">Edit your profile</a>
+                                        <a href="#" data-toggle="modal" data-target="#passwordChangeModal" class="btn btn-outline-info">Change Password</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-block">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        {% if user.bio is not none %}
+                                            <span>Bio: {{ user.bio }}</span>
+                                            <br>
+                                        {% endif %}
+                                        {% if user.website is not none %}
+                                            <span>Website: <a href="{{ user.website }}">{{ user.website }}</a></span>
+                                        {% endif %}
+                                        {% if user.school is not none %}
+                                            <strong>College Attending: </strong>{{ user.school.name }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>                    
+                        </div>
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>
+    {% else %}
+
+    {% endif %}
+
+
+
+
+    <!-- <div class="row">
         <div class="col-xs-4"></div>
         <div class="col-xs-4 col-centered">
             <h1 style="display: inline; text-transform:capitalize;">{{ user.fname }} {{ user.lname }}</h1>
@@ -12,6 +106,7 @@
     <div class="text-xs-center">
         {% if user.id == current_user.id %}
             <a href="{{ url_for('users.editAccountInfo') }}" class="btn btn-outline-info">Edit your profile</a>
+            <a href="#" data-toggle="modal" data-target="#passwordChangeModal" class="btn btn-outline-info">Change Password</a>
         {% elif not user.id == current_user.id %}
             <a href="{{ url_for('indexs.index') }}" class="btn btn-outline-info">Invite to group</a>
             <a href="{{ url_for('users.directMessagesIndividual', user_id=user.id) }}" class="btn btn-outline-info">Message</a>
@@ -23,7 +118,7 @@
             <img class="card-img" src="{{user.profile_image}}" style="height: 150px;">
             <div class="card-img-overlay"> 
             {% if user.id == current_user.id %}
-                <a href="{{ url_for('indexs.index') }}" style="position: absolute; bottom:0px;right:0px;color:#0275d8;"><i class="fa fa-pencil-square fa-2x" aria-hidden="true"></i></a>
+                <a href="#" data-toggle="modal" data-target="#changeAvatarModal" style="position: absolute; bottom:0px;right:0px;color:#0275d8;"><i class="fa fa-pencil-square fa-2x" aria-hidden="true"></i></a>
             {% endif %}
             </div>
         </div>
@@ -38,10 +133,12 @@
                 {% endif %}
             </div>
             <div class="row">
-                {% if user.bio is not none %}
+                {% if user.website is not none %}
                     <span>Website: <a href="{{ user.website }}">{{ user.website }}</a></span>
                 {% endif %}
             </div>
         </div>
-    </div>
+    </div> -->
+    {% include 'changePasswordModal.html' %}
+    {% include 'changeAvatarModal.html' %}
 {% endblock %}

@@ -1,30 +1,22 @@
 from nexnest.application import session
 
-from nexnest.models.user import User
-from nexnest.models.listing import Listing
-from nexnest.models.landlord import Landlord
-from nexnest.models.landlord_listing import LandlordListing
-from nexnest.models.group import Group
-from nexnest.models.group_user import GroupUser
-from nexnest.models.group_listing import GroupListing
-from nexnest.models.message import Message
-from nexnest.models.group_message import GroupMessage
-from nexnest.models.school import School
-from nexnest.models.direct_message import DirectMessage
-from nexnest.models.tour import Tour
-from nexnest.models.tour_message import TourMessage
+from nexnest.models import *
 
 import factory
 from faker import Faker
 
 from datetime import date
 
+import random
+
+from nexnest.static.dataSets import maintenanceRequestTypes, notificationTypes
+
 fake = Faker()
 
 
 class SchoolFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
-        model = School
+        model = school.School
         sqlalchemy_session = session
 
     name = factory.LazyAttribute(lambda x: fake.company())
@@ -37,7 +29,7 @@ class SchoolFactory(factory.alchemy.SQLAlchemyModelFactory):
 
 class UserFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
-        model = User
+        model = user.User
         sqlalchemy_session = session
 
     email = factory.Sequence(lambda x: u'fake%d@fake.com' % x)
@@ -45,11 +37,12 @@ class UserFactory(factory.alchemy.SQLAlchemyModelFactory):
     fname = factory.LazyAttribute(lambda x: fake.first_name())
     lname = factory.LazyAttribute(lambda x: fake.last_name())
     school = factory.SubFactory(SchoolFactory)
+    role = 'user'
 
 
 class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
-        model = Listing
+        model = listing.Listing
         sqlalchemy_session = session
 
     street = factory.LazyAttribute(lambda x: fake.street_address())
@@ -58,7 +51,6 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     zip_code = factory.LazyAttribute(lambda x: fake.zipcode())
     start_date = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
     end_date = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
-    unit_type = 'apartment'
     num_bedrooms = 3
     price = 6000
     square_footage = 3500
@@ -80,13 +72,20 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     description = factory.LazyAttribute(lambda x: fake.paragraph())
     num_half_baths = 4
     num_full_baths = 3
-    time_period = 'semester'
+    time_period = 'school'
     apartment_number = 2
+    property_type = 'apartment'
+    rent_due = 'semester'
+    first_semester_rent_due_date = factory.LazyAttribute(
+        lambda x: fake.date(pattern="%Y-%m-%d"))
+    second_semester_rent_due_date = factory.LazyAttribute(
+        lambda x: fake.date(pattern="%Y-%m-%d"))
+    # monthly_rent_due_date = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
 
 
 class LandlordFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
-        model = Landlord
+        model = landlord.Landlord
         sqlalchemy_session = session
 
     user = factory.SubFactory(UserFactory)
@@ -100,7 +99,7 @@ class LandlordFactory(factory.alchemy.SQLAlchemyModelFactory):
 
 class LandlordListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
-        model = LandlordListing
+        model = landlord_listing.LandlordListing
         sqlalchemy_session = session
 
     landlord = factory.SubFactory(LandlordFactory)
@@ -109,7 +108,7 @@ class LandlordListingFactory(factory.alchemy.SQLAlchemyModelFactory):
 
 class GroupFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
-        model = Group
+        model = group.Group
         sqlalchemy_session = session
 
     name = factory.LazyAttribute(lambda x: fake.company())
@@ -122,7 +121,7 @@ class GroupFactory(factory.alchemy.SQLAlchemyModelFactory):
 
 class GroupUserFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
-        model = GroupUser
+        model = group_user.GroupUser
         sqlalchemy_session = session
 
     group = factory.SubFactory(GroupFactory)
@@ -131,17 +130,16 @@ class GroupUserFactory(factory.alchemy.SQLAlchemyModelFactory):
 
 class GroupListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
-        model = GroupListing
+        model = group_listing.GroupListing
         sqlalchemy_session = session
 
     group = factory.SubFactory(GroupFactory)
     listing = factory.SubFactory(ListingFactory)
-    req_description = factory.LazyAttribute(lambda x: fake.paragraph())
 
 
 class MessageFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
-        model = Message
+        model = message.Message
         sqlalchemy_session = session
 
     content = factory.LazyAttribute(lambda x: fake.paragraph())
@@ -150,7 +148,7 @@ class MessageFactory(factory.alchemy.SQLAlchemyModelFactory):
 
 class GroupMessageFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
-        model = GroupMessage
+        model = group_message.GroupMessage
         sqlalchemy_session = session
 
     group = factory.SubFactory(GroupFactory)
@@ -160,7 +158,7 @@ class GroupMessageFactory(factory.alchemy.SQLAlchemyModelFactory):
 
 class DirectMessageFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
-        model = DirectMessage
+        model = direct_message.DirectMessage
         sqlalchemy_session = session
 
     source_user = factory.SubFactory(UserFactory)
@@ -170,19 +168,99 @@ class DirectMessageFactory(factory.alchemy.SQLAlchemyModelFactory):
 
 class TourFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
-        model = Tour
+        model = tour.Tour
         sqlalchemy_session = session
 
     listing = factory.SubFactory(ListingFactory)
     group = factory.SubFactory(GroupFactory)
-    time_requested = factory.LazyAttribute(lambda x: fake.date_time())
+    time_requested = factory.LazyAttribute(
+        lambda x: fake.date_time_this_year(before_now=False, after_now=True))
 
 
 class TourMessageFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
-        model = TourMessage
+        model = tour_message.TourMessage
         sqlalchemy_session = session
 
     tour = factory.SubFactory(TourFactory)
     content = factory.LazyAttribute(lambda x: fake.paragraph(3))
+    user = factory.SubFactory(UserFactory)
+
+
+class GroupListingMessageFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = group_listing_message.GroupListingMessage
+        sqlalchemy_session = session
+
+    groupListing = factory.SubFactory(GroupListingFactory)
+    content = factory.LazyAttribute(lambda x: fake.paragraph(3))
+    user = factory.SubFactory(UserFactory)
+
+
+class HouseFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = house.House
+        sqlalchemy_session = session
+
+    listing = factory.SubFactory(ListingFactory)
+    group = factory.SubFactory(GroupFactory)
+
+
+class HouseMessageFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = house_message.HouseMessage
+        sqlalchemy_session = session
+
+    house = factory.SubFactory(HouseFactory)
+    content = factory.LazyAttribute(lambda x: fake.paragraph(3))
+    user = factory.SubFactory(UserFactory)
+
+
+class SecurityDepositFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = security_deposit.SecurityDeposit
+        sqlalchemy_session = session
+
+    groupListing = factory.SubFactory(GroupListingFactory)
+    user = factory.SubFactory(UserFactory)
+
+
+class MaintenanceFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = maintenance.Maintenance
+        sqlalchemy_session = session
+
+    request_type = random.choice(maintenanceRequestTypes)[0]
+    details = factory.LazyAttribute(lambda x: fake.paragraph(3))
+    house = factory.SubFactory(HouseFactory)
+    user = factory.SubFactory(UserFactory)
+
+
+class MaintenanceMessageFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = maintenance_message.MaintenanceMessage
+        sqlalchemy_session = session
+
+    maintenance = factory.SubFactory(MaintenanceFactory)
+    content = factory.LazyAttribute(lambda x: fake.paragraph(3))
+    user = factory.SubFactory(UserFactory)
+
+
+class NotificationFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = notification.Notification
+        sqlalchemy_session = session
+
+    target_user = factory.SubFactory(UserFactory)
+    target_model_id = -1
+    type = random.choice(notificationTypes)
+
+
+class GroupListingFavoriteFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = group_listing_favorite.GroupListingFavorite
+        sqlalchemy_session = session
+
+    group = factory.SubFactory(GroupFactory)
+    listing = factory.SubFactory(ListingFactory)
     user = factory.SubFactory(UserFactory)

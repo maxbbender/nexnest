@@ -6,17 +6,21 @@ from datetime import datetime as dt
 
 from sqlalchemy.orm import relationship
 
+from sqlalchemy.schema import UniqueConstraint
+
+from flask import flash
+
+import os
+
 
 # class PostReport(Base):
 class GroupListing(Base):
     __tablename__ = 'group_listings'
+    id = db.Column(db.Integer, primary_key=True)
     group_id = db.Column(db.Integer,
-                         db.ForeignKey('groups.id'),
-                         primary_key=True)
+                         db.ForeignKey('groups.id'))
     listing_id = db.Column(db.Integer,
-                           db.ForeignKey('listings.id'),
-                           primary_key=True)
-    req_description = db.Column(db.Text)
+                           db.ForeignKey('listings.id'))
 
     # This is for when a group has been accepted and the process
     # of putting in the down payment and signing the lease is
@@ -36,24 +40,32 @@ class GroupListing(Base):
     group = relationship("Group", back_populates="listings")
     listing = relationship("Listing", back_populates='groups')
 
+    securityDeposits = relationship('SecurityDeposit', backref='groupListing')
+
     date_created = db.Column(db.DateTime)
+
+    all_leases_submitted = db.Column(db.Boolean)
+
+    messages = relationship('GroupListingMessage', backref='groupListing')
+
+    __table_args__ = (UniqueConstraint('group_id', 'listing_id', name='groupListing_constraint'),
+                      )
 
     def __init__(
             self,
             group,
             listing,
-            req_description
     ):
         self.group_id = group.id
         self.listing_id = listing.id
         self.group = group
         self.listing = listing
-        self.req_description = req_description
 
         self.accepted = False
         self.completed = False
         self.group_show = True
         self.landlord_show = True
+        self.all_leases_submitted = False
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
@@ -71,3 +83,35 @@ class GroupListing(Base):
             return 'Accepted'
         else:
             return 'Not Accepted'
+
+    def isViewableBy(self, user, flash=True):
+        if user in self.group.getUsers():
+            return True
+        elif user in self.listing.landLordsAsUsers():
+            return True
+        else:
+            if flash:
+                flash("Permissions Error", 'danger')
+            return False
+
+    def isEditableBy(self, user, flash=True):
+        if user in self.listing.landLordsAsUsers():
+            return True
+        else:
+            if flash:
+                flash("Permissions Error", 'danger')
+            return False
+
+    def hasLease(self):
+        if os.path.exists('./nexnest/uploads/leases/groupListingLease%d.pdf' % self.id):
+            return True
+
+        return False
+
+    def canChangeLease(self):
+        if len(self.securityDeposits) > 0:
+            flash(
+                'Cannot change lease, security deposits have already been submitted', 'danger')
+            return False
+
+        return True

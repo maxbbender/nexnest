@@ -1,0 +1,30 @@
+<div class="card" style="width: 100%;">
+    <div class="card-block">
+        <div class="row">
+            <div class="col-xs-2 col-xl-2" style="height: 75px;">
+                <img src="{{message.user.profile_image}}" alt="Profile Image" class="img-responsive" style="height: 100%" />
+            </div>
+            <div class="col-xs-10">
+                <div class="row">
+                    <h4 class="card-title">
+                        {{ message.user.fname }} {{ message.user.lname }} 
+                        {% if housingRequest.group.leader_id == message.user.id %}
+                            <h6 style="padding-top: 10px; padding-left: 5px;"><span class="tag tag-primary">Group Leader</span></h6>
+                        {% endif %}
+                        {% if message.user in landlords %}
+                            <h6 style="padding-top: 10px; padding-left: 5px;"><span class="tag tag-success">Landlord</span></h6>
+                        {% endif %}
+                    </h4>
+                </div>
+                <div class="row">
+                    <h6 class="card-subtitle mb-2 text-muted">{{ message.date_created }}</h6>
+                </div>
+            </div>
+        </div>                                   
+        <div class="row">
+            <div class="col-xs-12">
+                <p class="card-text">{{ message.content }}</p>
+            </div>
+        </div>
+    </div>
+</div>

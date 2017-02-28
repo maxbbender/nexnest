@@ -4,12 +4,13 @@ from flask_login import login_user, logout_user, current_user, login_required
 
 from nexnest.application import session
 
+# from nexnest.models import user.User, Group, School, DirectMessage
 from nexnest.models.user import User
 from nexnest.models.group import Group
 from nexnest.models.school import School
 from nexnest.models.direct_message import DirectMessage
 
-from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm
+from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm, CreateGroupForm
 
 from nexnest.utils.password import check_password
 from nexnest.utils.flash import flash_errors
@@ -68,8 +69,9 @@ def login():
 
         if login_form.validate():
 
-            user = session.query(User).filter_by(
-                email=login_form.email.data).first()
+            user = session.query(User) \
+                .filter_by(email=login_form.email.data) \
+                .first()
 
             # Does the user exist
             if user is not None:
@@ -77,17 +79,19 @@ def login():
 
                     if check_password(user, login_form.password.data):
                         login_user(user)
-                        return redirect('/')
+
+                        if user.isLandlord:
+                            return redirect(url_for('landlords.landlordDashboard'))
                     else:
-                        flash("Error validating login credentials")
+                        flash("Error validating login credentials", 'danger')
                 else:
-                    flash("User account has been deleted")
+                    flash("User account has been deleted", 'warning')
             else:
-                flash("User not found")
+                flash("User not found", 'warning')
         else:
             flash_errors(login_form)
 
-        return redirect(url_for('users.login'))
+        return login_form.redirect()
 
 
 @users.route('/logout')
@@ -120,44 +124,6 @@ def editAccountInfo():
                            form=editForm,
                            title='Edit Account',
                            schools=schools)
-
-    # @users.route('/user/edit', methods=['GET', 'POST'])
-    # @login_required
-    # def editAccount():
-    #     editForm = EditAccountForm(request.data, obj=current_user)
-
-    #     if request.method == 'POST' and editForm.validate():
-
-    #     if request == 'GET':
-    #         schools = [r for r, in session.query(School.name).all()]
-    #         form = EditAccountForm(obj=current_user)
-    #         return render_template('editAccount.html', form=form, title='Edit Account', schools=schools)
-    #     else:
-    #         form = EditAccountForm
-
-    #     form = EditAccountForm(obj=current_user)
-    #     # if request.method == 'GET':
-    #     #     form.fname.data = current_user.fname
-    #     #     form.lname.data = current_user.lname
-    #     #     form.email.data = current_user.email
-    #     #     form.website.data = current_user.website
-    #     #     form.bio.data = current_user.bio
-    #     #     form.phone.data = current_user.phone
-    #     # form.school.data = current_user.school
-    #     if form.validate_on_submit():
-    #         current_user.fname = form.fname.data
-    #         current_user.lname = form.lname.data
-    #         current_user.email = form.email.data
-    #         current_user.website = form.website.data
-    #         current_user.bio = form.bio.data
-    #         current_user.phone = form.phone.data
-    #         # current_user.school = form.school.data
-    #         if not form.password.data == '':
-    #             current_user.set_password(form.password.data)
-    #         session.commit()
-    #         flash('Account Updated', 'info')
-    #         return redirect(url_for('viewUsers.viewUser', userID=current_user.id))
-    #
 
 
 @users.route('/user/search/<username>')
@@ -217,8 +183,9 @@ def directMessagesAll():
     users = []
     direct_messages = session.query(DirectMessage.target_user_id) \
         .filter_by(source_user_id=current_user.id) \
+        .order_by('date_created desc') \
         .group_by(DirectMessage.target_user_id) \
-        .all()
+        .limit(1)
 
     for dm in direct_messages:
         user = session.query(User).filter_by(id=dm).first()
@@ -280,26 +247,27 @@ def myGroups():
     return render_template('group/myGroups.html',
                            acceptedGroups=groupsImIn,
                            invitedGroups=groupsImInvitedTo,
+                           createGroupForm=CreateGroupForm(request.form),
                            title='My Groups')
 
 
 @users.route('/user/updateProfilePicture', methods=['GET', 'POST'])
 @login_required
 def updateProfilePicture():
-    picForm = ProfilePictureForm()
+    picForm = ProfilePictureForm(request.form)
     if request.method == 'GET':
         return render_template('changeProfilePicture.html',
                                picForm=picForm)
     else:
         if 'profilePicture' not in request.files:
             flash('No file part', 'warning')
-            return redirect(request.url)
+            return picForm.redirect()
 
         file = request.files['profilePicture']
 
         if file.filename == '':
             flash('No selected file', 'warning')
-            return redirect(request.url)
+            return picForm.redirect()
 
         filename = secure_filename(request.files['profilePicture'].filename)
 
@@ -312,24 +280,31 @@ def updateProfilePicture():
 
             request.files['profilePicture'].save(userFilePath + '/' + filename)
 
-            current_user.profile_image = '/uploads/users/' + str(current_user.id) + '/' + filename
+            current_user.profile_image = '/uploads/users/' + \
+                str(current_user.id) + '/' + filename
 
             session.commit()
             return redirect(url_for('users.viewUser', userID=current_user.id))
         else:
             flash("File doesn't exist or file extension is not allowed", 'danger')
-            return redirect(request.url)
+            return picForm.redirect()
 
 
-@users.route('/user/changePassword', methods=['GET'])
+@users.route('/user/changePassword', methods=['GET', 'POST'])
 @login_required
 def changePassword():
     passForm = PasswordChangeForm(request.form)
 
     if passForm.validate():
-        current_user.set_password(passForm.newPassword.data)
-        session.commit()
+
+        # Is the old password the same?
+        if check_password(current_user, passForm.oldPassword.data):
+            flash("Password Changed", 'success')
+            current_user.set_password(passForm.newPassword.data)
+            session.commit()
+        else:
+            flash("Password Change Failed, Old Password does not match", 'danger')
     else:
         flash_errors(passForm)
 
-    return redirect(url_for('users.viewUser', userID=current_user.id))
+    return passForm.redirect()

@@ -3,17 +3,52 @@
 	<div class="row">
 		<div class="col-xs-1 col-md-3 col-lg-3"></div>
 		<div class="col-xs-10 col-md-6 col-lg-6">
-			<div class="gallery" align="center">
+			<!-- <div class="gallery" align="center">
 				<div class="preview" align="center">
+                    {% if pictures|length > 0 %}
+                        <img name="preview" src="{{pictures[0]}}" style="height: 300px; width: 100%;" alt=""/>
+                    {% else %}
 					<img name="preview" src="/static/img/testHouse.jpg" style="height: 300px; width: 100%;" alt=""/>
+                    
+                    {% endif %}
 				</div>
 				<br>
 				<div class="thumbnails">
-					<img onmouseover="preview.src=img1.src" name="img1" src="/static/img/testHouse.jpg" style="width: 100px; height: 100px;" alt=""/>
-					<img onmouseover="preview.src=img2.src" name="img2" src="/static/img/testLivingRoom.jpg" style="width: 100px; height: 100px;" alt=""/>
-					<img onmouseover="preview.src=img3.src" name="img3" src="/static/img/testKitchen.jpg" style="width: 100px; height: 100px;" alt=""/>
-					<img onmouseover="preview.src=img4.src" name="img4" src="/static/img/testBathroom.jpg" style="width: 100px; height: 100px;" alt=""/>
-					<img onmouseover="preview.src=img5.src" name="img5" src="/static/img/testBedroom.jpg" style="width: 100px; height: 100px;" alt=""/>
+                    {% if pictures|length > 0 %}
+                        {% for picture in pictures %}
+                            <img onmouseover="preview.src=img{{loop.index}}.src" name="img{{loop.index}}" src="{{picture}}" style="width: 100px; height: 100px;" alt=""/>
+                        {% endfor %}
+                    {% else %}
+                        <img onmouseover="preview.src=img1.src" name="img1" src="/static/img/testHouse.jpg" style="width: 100px; height: 100px;" alt=""/>
+                        <img onmouseover="preview.src=img2.src" name="img2" src="/static/img/testLivingRoom.jpg" style="width: 100px; height: 100px;" alt=""/>
+                        <img onmouseover="preview.src=img3.src" name="img3" src="/static/img/testKitchen.jpg" style="width: 100px; height: 100px;" alt=""/>
+                        <img onmouseover="preview.src=img4.src" name="img4" src="/static/img/testBathroom.jpg" style="width: 100px; height: 100px;" alt=""/>
+                        <img onmouseover="preview.src=img5.src" name="img5" src="/static/img/testBedroom.jpg" style="width: 100px; height: 100px;" alt=""/>
+                    {% endif %}
+				</div>
+			</div> -->
+			<div class="row">
+				<a class="test-popup-link" href="/static/img/testHouse.jpg">
+					<img src="/static/img/testHouse.jpg" style="height: 300px; width: 100%;">
+				</a>
+			</div>
+			<br>
+			<div class="row">
+				<div class="col-xs-12" style="text-align: center;">
+					<div class="popup-gallery">
+						<a href="/static/img/testKitchen.jpg" data-group="1" class="galleryItem">
+							<img src="/static/img/testKitchen.jpg" width="150" height="150">
+						</a>
+						<a href="/static/img/testLivingRoom.jpg" data-group="1" class="galleryItem"">
+							<img src="/static/img/testLivingRoom.jpg" width="150" height="150">
+						</a>
+						<a href="/static/img/testBathroom.jpg" data-group="1" class="galleryItem"">
+							<img src="/static/img/testBathroom.jpg" width="150" height="150">
+						</a>
+						<a href="/static/img/testBedroom.jpg" data-group="1" class="galleryItem">
+							<img src="/static/img/testBedroom.jpg" width="150" height="150">
+						</a>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -23,21 +58,14 @@
 		<div class="col-xs-10 col-md-6 col-lg-6">
 			<div class="row">
 				<div class="col-xs-7">
-					<h4>{{ listing.street }},</h4>
-					<h5>{{ listing.city }}, {{ listing.state }}, {{ listing.zip_code }}</h5>
-				</div>
-				<div class="col-xs-5" style="text-align: right">
-					<h2>${{ listing.price }}</h2>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-7">
-					<i class="fa fa-bed" aria-hidden="true"></i> {{ listing.num_bedrooms }} Bedrooms - {{ listing.num_full_baths }} Full Bathrooms - {{ listing.num_half_baths }} Half Bathrooms - {{ listing.square_footage }} sqft
-				</div>
-				<div class="col-xs-5" style="text-align: right">
-					<strong>Landlord: </strong>Pablo Revis
+					<br>
+					<h4>{{ listing.street }},
+					<br>
+					{{ listing.city }}, {{ listing.state }}, {{ listing.zip_code }}</h4>
+					<h5>${{ listing.price }} Per Bedroom Per {{ listing.rent_due }}</h5>
 				</div>
 			</div>
+			<hr>
 			<div class="row">
 				<div class="col-lg-3" style="text-align:left">
 					<a href="{{ url_for('indexs.index') }}" class="btn btn-info">Contact Landlord</a>
@@ -46,7 +74,7 @@
 		            <a href='#' class="btn btn-info" data-toggle="modal" data-target="#selectGroupForTourModal">Request Tour</a>
 				</div>
 				<div class="col-lg-3 col-centered">
-					<a href="{{ url_for('indexs.index') }}" class="btn btn-info">Request House</a>
+					<a href='#' class="btn btn-info" data-toggle="modal" data-target="#selectGroupForHouseModal">Request House</a>
 				</div>
 				<div class="col-lg-3" style="text-align:right">
 					<a href='#' class="btn btn-info" data-toggle="modal" data-target="#suggestListingModal">Suggest To Group</a>
@@ -54,10 +82,99 @@
 			</div>
 			<hr>
 			<div class="row">
-				{{ listing.description }}
+				<strong>Property Description:</strong> {{ listing.description }}
 			</div>
-			<br>
 			<div class="row">
+				<div class="col-xl-4" style="padding-top: 25px;">
+					<h2><strong>Lease:</strong></h2>
+					<strong>Time Period:</strong> {{ listing.time_period }}
+					<br>
+					<strong>Start Date:</strong> {{ listing.start_date }}
+					<br>
+					<strong>End Date:</strong> {{ listing.end_date }}
+					<br>
+					{% if listing.rent_due == "semester" %}					
+						<strong>First Semester Rent Due:</strong> {{ listing.first_semester_rent_due_date }}
+						<strong>Second Semester Rent Due:</strong> {{ listing.second_semester_rent_due_date }}
+					{% elif listing.rent_due == "monthly" %}
+						<strong>Rent Due: </strong>1st of each month
+					{% endif %}
+
+				</div>
+				<div class="col-xl-4" style="padding-top: 25px;">
+					<h2><strong>Property:</strong></h2>
+					Property Type: {{ listing.property_type }}
+					<br>
+					<i class="fa fa-bed" aria-hidden="true"></i> {{ listing.num_bedrooms }} Beds
+					<br>
+					<i class="fa fa-bath" aria-hidden="true"></i>{{ listing.num_full_baths }} Full Baths
+					<br>
+					{% if listing.num_half_baths > 0 %}
+						<i class="fa fa-bath" aria-hidden="true"></i>{{ listing.num_half_baths }} Half Baths
+						<br>
+					{% endif %}
+					{{ listing.square_footage }} SQFT
+					<br>
+					{% if listing.utilities_included %}
+						Utilities Included
+						<br>
+					{% endif %}
+					{% if listing.furnished %}
+						Property Furnished
+						<br>
+					{% endif %}
+					{% if listing.handicap %}
+						Handicap Accessible
+						<br>
+					{% endif %}
+					Parking: {{ listing.parking }}
+				</div>
+				<div class="col-xl-4" style="padding-top: 25px;">
+					<h2><strong>Appliances:</strong></h2>
+					{% if listing.air_conditioning %}
+						<li>Air Conditioning</li>
+					{% endif %}
+					{% if listing.washer %}
+						<li>Washing Machine</li>
+					{% endif %}					
+					{% if listing.dryer %}
+						<li>Dryer</li>
+					{% endif %}
+					{% if listing.dishwasher %}
+						<li>Dishwasher</li>
+					{% endif %}
+				</div>
+				<div class="col-xl-4" style="padding-top: 25px;">
+					<h2><strong>Services Included:</strong></h2>
+					{% if listing.snow_plowing %}
+						<li>Snow Plowing</li>
+					{% endif %}
+					{% if listing.garbage_service %}
+						<li>Garbage Removal</li>
+					{% endif %}
+					{% if listing.security_service %}
+						<li>Security Services</li>
+					{% endif %}
+					{% if listing.emergency_maintenance %}
+						<li>Emergency Maintenance</li>
+					{% endif %}
+				</div>
+				<div class="col-xl-4" style="padding-top: 25px;">
+					<h2><strong>Pets Allowed:</strong></h2>
+					{% if listing.dogs %}
+						<li>Dogs</li>
+					{% endif %}
+					{% if listing.cats %}
+						<li>Cats</li>
+					{% endif %}
+					{% if listing.other_pets %}
+						<li>Other Pets</li>
+					{% endif %}
+				</div>
+			</div>
+			<br><br>
+
+			<!-- <div class="row">
 				<h4><u>Details:</u></h4>
 				<br>	
 			</div>
@@ -69,7 +186,7 @@
 					<strong>Lease End:</strong> {{ listing.end_date }}
 				</div>
 				<div class="col-lg-4">
-					<strong>Unit Type:</strong> {{ listing.unit_type }}
+					<strong>Unit Type:</strong> {{ listing.property_type }}
 				</div>
 			</div>
 			<div class="row">
@@ -126,7 +243,7 @@
 				<div class="col-lg-4">
 					<strong>Security Service:</strong> {% if listing.security_service %} Yes {% else %} No {% endif %}
 				</div>
-			</div>
+			</div> -->
 		</div>
 	</div>
 
@@ -163,9 +280,9 @@
 			      					    		</div>
 			      					    	</p>
 			      					    	<form id="suggest_listing" action="{{url_for('groups.suggestListing')}}" method="POST">
-			      					    	    {{ suggest_listing_form.csrf_token }}
-			      					    	    {{ suggest_listing_form.group_id }}
-			      					    	    {{ suggest_listing_form.listing_id(value=listing.id) }}
+			      					    	    {{ suggestListingForm.csrf_token }}
+			      					    	    {{ suggestListingForm.group_id }}
+			      					    	    {{ suggestListingForm.listing_id(value=listing.id) }}
 			      					    	</form>  
 					      					<a href='#' onClick="submitForm({{group.id}})" class="btn btn-primary" id="group.id">Suggest Listing</a>	
 			      					    </div>
@@ -234,16 +351,6 @@
 			      					    </div>
 			      					</div>
 			      					<script>
-			      						function submitForm(id) {
-			      							$("#group_id").val(id);
-			      						    $("#suggest_listing").submit()
-			      						}
-			      						//Suggest Listing Modal
-			      						$('#selectGroupForTourModal').on('show.bs.modal', function (event) {
-			      						  var button = $(event.relatedTarget)
-			      						  var modal = $(this)
-			      						  modal.find('.modal-title').text('Request Tour for Which Group?')
-			      						})
 			      						//Show/hide all members of group
 			      						$("#allTourMembersToggle{{group.id}}").click(function(){
 			      						    $("#allTourMembers{{group.id}}").toggle();
@@ -268,24 +375,24 @@
 		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		          			<span aria-hidden="true">&times;</span>
 		        		</button>
-		        		<h4 class="modal-title" id="login"></h4>
+		        		<h4 class="modal-title" id="requestTour"></h4>
 		      		</div>
 		      		<div class="modal-body">
 		      			<div class="row">
 		      				<div class="col-xs-1"></div>
 		      				<div class="col-xs-10">
 		      					<form id="request_tour" action="{{url_for('tours.createTour')}}" method="POST">
-		      					    {{ request_tour_form.csrf_token }}
-		      					    {{ request_tour_form.group_tour_id }}
-		      					    {{ request_tour_form.listing_id(value=listing.id) }}
-		      					    {{ request_tour_form.requestedDateTime() }}		      					
+		      					    {{ requestTourForm.csrf_token }}
+		      					    {{ requestTourForm.group_tour_id }}
+		      					    {{ requestTourForm.listing_id(value=listing.id) }}
+		      					    {{ requestTourForm.requestedDateTime() }}		      					
 			      					<p class="flatpickr input-group" data-wrap="true" data-clickOpens="false">
 			      						<input id="tourRequestTime" placeholder="Pick date" data-input style="background-color: inherit;">
 			      						<a class="btn input-btn" style="border-color: #ddd;" data-toggle><i class="fa fa-calendar" aria-hidden="true"></i></a>
 			      						<a class="btn input-btn" style="border-color: #ddd;" data-clear><i class="fa fa-times" aria-hidden="true"></i></a>
 			      					</p>
 			      					{% from "_formhelpers.html" import render_field %}
-			      					{{ render_field(request_tour_form.description, class="form-control", type="text") }}
+			      					{{ render_field(requestTourForm.description, class="form-control", type="text") }}
 		      					</form>  
 		      				</div>
 		      			</div>
@@ -293,6 +400,91 @@
 		      		</div>
 			      	<div class="modal-footer">
 			        	<button type="button" class="btn btn-primary" onClick="submitTourForm()" data-dismiss="modal">Request Tour</button>
+			      	</div>
+		    	</div>
+		  	</div>
+		</div>
+
+		<!-- House Request Select Group Modal -->
+		<div class="modal fade" id="selectGroupForHouseModal" tabindex="-1" role="dialog" aria-labelledby="selectGroupForHouseModal" aria-hidden="true">
+		  	<div class="modal-dialog" role="document">
+		    	<div class="modal-content">
+		      		<div class="modal-header">
+		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          			<span aria-hidden="true">&times;</span>
+		        		</button>
+		        		<h4 class="modal-title" id="requestHouseGroup"></h4>
+		      		</div>
+		      		<div class="modal-body">
+		      			<div class="row">
+		      				<div class="col-xs-1"></div>
+		      				<div class="col-xs-10">
+		      					{% for group in groups %}
+			      					<div class="card" style="width:100%;">
+			      					    <h3 class="card-header">{{ group.name }}</h3>
+			      					    <div class="card-block">	        
+			      					        <p class="card-text">
+			      					        	<strong>Group Leader:</strong>{{ group.leader.fname }} {{ group.leader.lname }}
+			      					        </p>
+			      					    	<p class="card-text">
+			      					    		<strong>Intended Lease Period:</strong> {{ group.start_date }} - {{ group.end_date }}
+			      					    	</p>
+			      					    	<p class="card-text">
+			      					    		<strong><a href=# id="allTourMembersToggle{{group.id}}">See all members</a></strong>
+			      					    		<div id="allTourMembers{{group.id}}" style="display: none;">
+		      					    				{% for user in group.acceptedUsers %}
+		      					    			    	<li>{{ user.fname }} {{ user.lname }}</li>
+		      					    			    {% endfor %}
+			      					    		</div>
+			      					    	</p>
+			      					    	<!-- If group.hasTourForLisiting -->
+					      					<button class="btn btn-primary" data-toggle="modal" data-target="#requestHouseModal" data-group="{{group.id}}" data-dismiss="modal">Select Group</button>
+			      					    </div>
+			      					</div>
+			      					<script>
+			      						//Show/hide all members of group
+			      						$("#allTourMembersToggle{{group.id}}").click(function(){
+			      						    $("#allTourMembers{{group.id}}").toggle();
+			      						});
+			      					</script>
+		      					{% endfor %}
+		      				</div>
+		      			</div>
+		      		</div>
+			      	<div class="modal-footer">
+			        	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			      	</div>
+		    	</div>
+		  	</div>
+		</div>
+
+		<!--Request House Modal-->
+		<div class="modal fade" id="requestHouseModal" tabindex="-1" role="dialog" aria-labelledby="requestHouse" aria-hidden="true">
+		  	<div class="modal-dialog" role="document">
+		    	<div class="modal-content">
+		      		<div class="modal-header">
+		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          			<span aria-hidden="true">&times;</span>
+		        		</button>
+		        		<h4 class="modal-title" id="requestHouse"></h4>
+		      		</div>
+		      		<div class="modal-body">
+		      			<div class="row">
+		      				<div class="col-xs-1"></div>
+		      				<div class="col-xs-10">
+		      					<form id="request_house" action="{{url_for('housingRequests.create')}}" method="POST">
+		      					    {{ requestListingForm.csrf_token }}
+		      					    {{ requestListingForm.groupID }}
+		      					    {{ requestListingForm.listingID(value=listing.id) }}		      					
+			      					{% from "_formhelpers.html" import render_field %}
+			      					{{ render_field(requestListingForm.reqDescription, class="form-control", type="text") }}
+		      					</form>  
+		      				</div>
+		      			</div>
+		      			<div id="groupNumberHouse" style="display: none;"></div>
+		      		</div>
+			      	<div class="modal-footer">
+			        	<button type="button" class="btn btn-primary" onClick="submitHouseForm()" data-dismiss="modal">Request House</button>
 			      	</div>
 		    	</div>
 		  	</div>
@@ -311,14 +503,25 @@
         	disable: [{from: "0001-01-01",
         			  to: "today"}]
         });
+        $('.flatpickr-calendar').css('z-index', 99999999999999);
     });
-    //Suggest Listing Modal
+
+    //Request Tour Modal
     $('#requestTourModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget);
       var modal = $(this);
       var group = $(event.relatedTarget).data('group');
-      modal.find('.modal-title').text('Request a Tour');
+      modal.find('.modal-title').text('Request This House');
       modal.find('#groupNumber').text(group);
+    })
+
+    //Request House Modal
+    $('#requestHouseModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      var modal = $(this);
+      var group = $(event.relatedTarget).data('group');
+      modal.find('.modal-title').text('Request a Tour');
+      modal.find('#groupNumberHouse').text(group);
     })
 
     function submitTourForm() {
@@ -326,5 +529,38 @@
     	$("#requestedDateTime").val($("#tourRequestTime").val());
         $("#request_tour").submit();
     }
+
+    function submitHouseForm() {
+    	$("#groupID").val($("#groupNumberHouse").text());
+        $("#request_house").submit();
+    }
+
+    var groups = {};
+    $('.galleryItem').each(function() {
+      var id = parseInt($(this).attr('data-group'), 10);
+      
+      if(!groups[id]) {
+        groups[id] = [];
+      } 
+      
+      groups[id].push( this );
+    });
+
+
+    $.each(groups, function() {
+      
+      $(this).magnificPopup({
+          type: 'image',
+          closeOnContentClick: true,
+          closeBtnInside: false,
+          gallery: { enabled:true }
+      })
+      
+    });
+
+    $('.test-popup-link').magnificPopup({
+      type: 'image'
+      // other options
+    });
 </script>
 {% endblock %}

@@ -1,38 +1,74 @@
+from flask import request, url_for, redirect
 from flask_wtf import FlaskForm
 from wtforms.fields import StringField, PasswordField, SubmitField, BooleanField, IntegerField, TextAreaField, SelectField, DateField, HiddenField
 
 from flask_wtf.file import FileField, FileRequired
 
-from wtforms.validators import InputRequired, Length, Email, EqualTo
+from wtforms.validators import InputRequired, Length, Email, EqualTo, Optional
 
-from nexnest.static.dataSets import valid_time_periods, valid_parking_types, valid_unit_types, states
+from nexnest.static.dataSets import *
+
+from urllib.parse import urlparse, urljoin
 
 
-class TourMessageForm(FlaskForm):
+def is_safe_url(target):
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ('http', 'https') and \
+        ref_url.netloc == test_url.netloc
+
+
+def get_redirect_target():
+    for target in request.args.get('next'), request.referrer:
+        if not target:
+            continue
+        if is_safe_url(target):
+            return target
+
+
+class RedirectForm(FlaskForm):
+    next = HiddenField()
+
+    def __init__(self, *args, **kwargs):
+        FlaskForm.__init__(self, *args, **kwargs)
+        if not self.next.data:
+            self.next.data = get_redirect_target() or ''
+
+    def redirect(self, endpoint='index', **values):
+        if is_safe_url(self.next.data):
+            return redirect(self.next.data)
+        target = get_redirect_target()
+        return redirect(target or url_for(endpoint, **values))
+
+
+class TourMessageForm(RedirectForm):
     tour_id = HiddenField('Tour ID',
                           [InputRequired("Group ID Field Required")])
     content = TextAreaField('Message',
                             [InputRequired("You must put in a message")])
 
 
-class TourForm(FlaskForm):
+class TourForm(RedirectForm):
     group_tour_id = HiddenField('group_id', [InputRequired()])
     listing_id = HiddenField('listing_id', [InputRequired()])
-    description = TextAreaField('Message to Landlord', [Length(min=1, max=1500), InputRequired()])
-    requestedDateTime = HiddenField('Date and time you would like to tour the house')
+    description = TextAreaField('Message to Landlord', [
+                                Length(min=1, max=1500), InputRequired()])
+    requestedDateTime = HiddenField(
+        'Date and time you would like to tour the house')
 
 
-class TourDateChangeForm(FlaskForm):
+class TourDateChangeForm(RedirectForm):
     input_id = HiddenField('group_id', [InputRequired()])
-    requestedDateTime = HiddenField('Date and time you would like to tour the house')
+    requestedDateTime = HiddenField(
+        'Date and time you would like to tour the house')
 
 
-class SuggestListingForm(FlaskForm):
+class SuggestListingForm(RedirectForm):
     group_id = HiddenField('group_id', [InputRequired()])
     listing_id = HiddenField('listing_id', [InputRequired()])
 
 
-class RegistrationForm(FlaskForm):
+class RegistrationForm(RedirectForm):
     email = StringField('Email',
                         [InputRequired("You must enter an email address"),
                          Email("Email must be valid format")])
@@ -48,31 +84,36 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Register')
 
 
-class ProfilePictureForm(FlaskForm):
+class ProfilePictureForm(RedirectForm):
     profilePicture = FileField('Profile Picture', validators=[FileRequired()])
 
 
-class LoginForm(FlaskForm):
+class LoginForm(RedirectForm):
     email = StringField('Email Address', [Length(min=6, max=35)])
     password = PasswordField('Password', [InputRequired()])
 
 
-class ListingForm(FlaskForm):
-    street = StringField('Street Address', [Length(min=2, max=50), InputRequired()])
-    apartment_number = IntegerField('Apartment Number', [InputRequired()])
+class ListingForm(RedirectForm):
+    street = StringField('Street Address', [
+                         Length(min=2, max=50), InputRequired()])
+    apartment_number = IntegerField('Apartment Number', [Optional()])
     city = StringField('City', [Length(min=2, max=50), InputRequired()])
-    state = SelectField('State', choices=states)
+    state = SelectField('State', choices=statesLong)
     zip_code = StringField('Zipcode', [Length(min=5, max=5), InputRequired()])
-    start_date = StringField('Start Date', [Length(min=5, max=15), InputRequired()])
-    end_date = StringField('End Date', [Length(min=5, max=15), InputRequired()])
+    start_date = StringField(
+        'Start Date', [Length(min=5, max=15), InputRequired()])
+    end_date = StringField(
+        'End Date', [Length(min=5, max=15), InputRequired()])
     time_period = SelectField('Length of Lease', choices=valid_time_periods)
-    unit_type = SelectField('Unit Type', choices=valid_unit_types)
     num_bedrooms = IntegerField('Number of Bedrooms', [InputRequired()])
-    num_full_baths = IntegerField('Number of Full Bathrooms', [InputRequired()])
-    num_half_baths = IntegerField('Number of Half Bathrooms', [InputRequired()])
+    num_full_baths = IntegerField(
+        'Number of Full Bathrooms', [InputRequired()])
+    num_half_baths = IntegerField(
+        'Number of Half Bathrooms', [InputRequired()])
     price = IntegerField('Price per Bedroom per Semester', [InputRequired()])
     square_footage = IntegerField('Square Footage of House', [InputRequired()])
-    parking = SelectField('What Parking is Available', choices=valid_parking_types)
+    parking = SelectField('What Parking is Available',
+                          choices=valid_parking_types)
     cats = BooleanField('Are Cats Allowed?')
     dogs = BooleanField('Are Dogs Allowed?')
     other_pets = BooleanField('Are Other Pets Allowed?')
@@ -83,14 +124,22 @@ class ListingForm(FlaskForm):
     handicap = BooleanField('Is the property handicap accessible?')
     furnished = BooleanField('Is the property furnished?')
     utilities_included = BooleanField('Are utilities included in the price?')
-    emergency_maintenance = BooleanField('Do you provide emergency maintenance?')
+    emergency_maintenance = BooleanField(
+        'Do you provide emergency maintenance?')
     snow_plowing = BooleanField('Do you provide snow removal?')
     garbage_service = BooleanField('Is garbage service included?')
     security_service = BooleanField('Is there a security service provided?')
-    description = TextAreaField('Please provide a detailed description of the property', [Length(min=1, max=1500), InputRequired()])
+    description = TextAreaField('Please provide a detailed description of the property', [
+                                Length(min=1, max=1500), InputRequired()])
+    pictures = FileField('Pictures for Listing')
+    property_type = SelectField('Property Type', choices=propertyTypes)
+    rent_due = SelectField('How often is rent due?', choices=rentDue)
+    first_semester_rent_due_date = DateField('What date is rent due for the first semester?', [Optional()])
+    second_semester_rent_due_date = DateField('What date is rent due for the second semester?', [Optional()])
+    monthly_rent_due_date = DateField('What day of month is rent due?', [Optional()])
 
 
-class CreateGroupForm(FlaskForm):
+class CreateGroupForm(RedirectForm):
     name = StringField('Group Name:', [Length(min=2, max=50), InputRequired()])
     # time_frame = SelectField(
     #     'When are you looking for a house?', choices=valid_time_frames)
@@ -98,37 +147,36 @@ class CreateGroupForm(FlaskForm):
     end_date = DateField('End Date', format='%Y-%m-%d')
 
 
-class GroupMessageForm(FlaskForm):
+class GroupMessageForm(RedirectForm):
     group_id = HiddenField(
         'groupID', [InputRequired("Group ID Field Required")])
     content = TextAreaField(
         'Message', [InputRequired("You must put in a message")])
 
 
-class DirectMessageForm(FlaskForm):
+class DirectMessageForm(RedirectForm):
     target_user_id = HiddenField('Target User', [InputRequired()])
     content = TextAreaField('Message', [InputRequired("Message is required")])
 
 
-class EditAccountForm(FlaskForm):
-    fname = StringField('First Name', [InputRequired()])
-    lname = StringField('Last Name', [InputRequired()])
-    school = StringField('School Attending')
+class EditAccountForm(RedirectForm):
+    fname = StringField('First Name<span style="color: red;"> (Required)</span>', [InputRequired()])
+    lname = StringField('Last Name<span style="color: red;"> (Required)</span>', [InputRequired()])
+    school = StringField('School Attending<span style="color: red;"> (Required)</span>', [InputRequired()])
     dob = StringField('Date of Birth')
     bio = TextAreaField('If you wish provide a short personal bio')
-    phone = StringField('Phone Number', [Length(min=10, max=10)])
-    website = StringField('Your personal website url')
-    email = StringField('Email',
+    phone = StringField('Phone Number')
+    email = StringField('Email<span style="color: red;"> (Required)</span>',
                         [InputRequired("You must enter an email address"),
                          Email("Email must be valid format")])
 
 
-class InviteGroupForm(FlaskForm):
+class InviteGroupForm(RedirectForm):
     group_id = HiddenField('group_id', [InputRequired()])
     user_id = HiddenField('user_id', [InputRequired()])
 
 
-class PasswordChangeForm(FlaskForm):
+class PasswordChangeForm(RedirectForm):
     oldPassword = PasswordField('Old Password', [InputRequired()])
 
     newPassword = PasswordField('Password',
@@ -136,3 +184,43 @@ class PasswordChangeForm(FlaskForm):
                                  EqualTo('newPasswordConfirm',
                                          message="Passwords must match")])
     newPasswordConfirm = PasswordField('Confirm Password', [InputRequired()])
+
+
+class GroupListingForm(RedirectForm):
+    groupID = HiddenField('groupID', [InputRequired()])
+    listingID = HiddenField('listingID', [InputRequired()])
+    reqDescription = TextAreaField(
+        'Aything you would like to say to the landlord to go along with your request', [InputRequired()])
+
+
+class GroupListingMessageForm(RedirectForm):
+    groupListingID = HiddenField('groupID', [InputRequired()])
+    content = TextAreaField('Message',
+                            [InputRequired("You must put in a message")])
+
+
+class HouseMessageForm(RedirectForm):
+    houseID = HiddenField('groupID', [InputRequired()])
+    content = TextAreaField('Message',
+                            [InputRequired("You must put in a message")])
+
+
+class MaintenanceRequestForm(RedirectForm):
+    requestType = SelectField('Request Type', choices=maintenanceRequestTypes)
+    details = TextAreaField('Details', [InputRequired()])
+    houseID = HiddenField('houseID', [InputRequired()])
+
+
+class MaintenanceRequestMessageForm(RedirectForm):
+    maintenanceID = HiddenField('maintenanceID',
+                                validators=[InputRequired()])
+
+    content = TextAreaField('Message',
+                            validators=[InputRequired("You must put in a message")])
+
+
+class LeaseUploadForm(RedirectForm):
+    lease = FileField('Lease')
+
+    groupListingID = HiddenField('groupListingID',
+                                 validators=[InputRequired()])

@@ -25,6 +25,8 @@ class Group(Base):
     listings = relationship("GroupListing", back_populates='group')
     messages = relationship("GroupMessage", backref='group')
     tours = relationship("Tour", backref='group')
+    house = relationship("House", backref='group')
+    favorites = relationship("GroupListingFavorite", backref='group')
 
     def __init__(
             self,
@@ -68,7 +70,7 @@ class Group(Base):
     def unAcceptedUsers(self):
         unAcceptedUsers = []
         for groupUser in self.users:
-            if groupUser.accepted == False and groupUser.show == True:
+            if not groupUser.accepted and groupUser.show:
                 unAcceptedUsers.append(groupUser.user)
 
         return unAcceptedUsers
@@ -77,33 +79,39 @@ class Group(Base):
     def acceptedUsers(self):
         acceptedUsers = []
         for groupUser in self.users:
-            if groupUser.accepted == True:
+            if groupUser.accepted:
                 acceptedUsers.append(groupUser.user)
 
         return acceptedUsers
 
     @property
-    def suggestedListings(self):
-        suggestedListings = []
+    def housingRequests(self):
+        housingRequests = []
         for groupListing in self.listings:
-            if groupListing.group_show == True and groupListing.accepted == False:
-                suggestedListings.append(groupListing.listing)
-        return suggestedListings
+            if groupListing.group_show:
+                housingRequests.append(groupListing)
+        return housingRequests
 
     def getUsers(self):
         users = []
         for groupUser in self.users:
-            print(groupUser)
             users.append(groupUser.user)
 
         return users
 
-    def isEditableBy(self, user):
+    def isViewableBy(self, user, flash=True):
+        if user in self.acceptedUsers:
+            return True
+        elif flash:
+            flash("You do not have permissions to view this Group", 'warning')
+        return False
+
+    def isEditableBy(self, user, flash=True):
         if user.id == self.leader_id:
             return True
-        else:
+        elif flash:
             flash("You do not permissions to modify this group", 'warning')
-            return False
+        return False
 
     def hasTourForListing(self, listing):
         for tour in self.tours:
@@ -111,6 +119,14 @@ class Group(Base):
                 return True
 
         return False
+
+    def displayedFavorites(self):
+        favorites = []
+        for favorite in self.favorites:
+            if favorite.show:
+                favorites.append(favorite)
+
+        return favorites
 
 
 def update_date_modified(mapper, connection, target):

@@ -1,0 +1,62 @@
+<div class="card" style="width: 100%;">
+    <a href="{{ url_for('listings.viewListing', listingID=listing.id) }}">
+        <img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg card-img-top">
+    </a>
+    <div class="card-block">
+        <div class="row">
+            <div class="col-xs-6">
+                {{ listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
+                &nbsp;
+                {{ listing.num_full_baths }}<i class="fa fa-bath" aria-hidden="true"></i>
+                <br>
+                ${{ listing.price }} per {{ listing.rent_due }}
+            </div>
+            <div class="col-xs-6" style="text-align: right;">
+                {{ listing.street }}
+                <br>
+                {{ listing.city }}, {{ listing.state }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12" style="padding-left: 15px;">
+                <br>
+                <strong>Landlord: </strong> {% for user in landlords %} {{ user.fname }} {{ user.lname }} {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-xl-12" style="padding-left: 15px;">
+                <br>
+                <strong> Property Description: </strong> {{ listing.description }}
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-xl-4">
+                <strong>Time Period of Rental:</strong> {{ listing.time_period }}
+            </div>
+        </div>
+        <br>
+        <div class="row">                                                         
+            <div class="col-xl-5">
+                <strong>Lease Start Date:</strong> {{ listing.start_date }}
+            </div>
+            <div class="col-xl-5">
+                <strong>Lease End Date:</strong> {{ listing.end_date }}
+            </div>
+        </div>
+        <div class="row">
+            {% if listing.rent_due == "semester" %}
+                <div class="col-xl-5">
+                    <strong>First Semester Rent Due:</strong> {{ listing.first_semester_rent_due_date }}
+                </div>
+                <div class="col-xl-5">
+                    <strong>Second Semester Rent Due:</strong> {{ listing.second_semester_rent_due_date }}
+                </div>                                                               
+            {% elif listing.rent_due == "monthly" %}
+                <div class="col-xl-5">
+                    <strong>Rent Due: </strong>1st of each month
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

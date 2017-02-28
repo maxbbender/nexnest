@@ -16,21 +16,13 @@ valid_parking_types = [
     ('2', 'none')
 ]
 
-valid_unit_types = [
-    ('0', 'room'),
-    ('1', 'house'),
-    ('2', 'complex'),
-    ('3', 'apartment')
-]
-
 valid_time_periods = [
-    ('0', 'Month'),
-    ('1', 'Semester'),
-    ('2', 'Year'),
-    ('3', 'Summer')
+    ('school', 'School Year'),
+    ('year', 'Full Year'),
+    ('summer', 'Summer')
 ]
 
-states = [
+statesShort = [
     ('0', 'AL'),
     ('1', 'AK'),
     ('2', 'AZ'),
@@ -81,4 +73,95 @@ states = [
     ('47', 'WV'),
     ('48', 'WI'),
     ('49', 'WY')
+]
+
+statesLong = [
+    ('AK', 'Alaska'),
+    ('AL', 'Alabama'),
+    ('AR', 'Arkansas'),
+    ('AS', 'American Samoa'),
+    ('AZ', 'Arizona'),
+    ('CA', 'California'),
+    ('CO', 'Colorado'),
+    ('CT', 'Connecticut'),
+    ('DC', 'District of Columbia'),
+    ('DE', 'Delaware'),
+    ('FL', 'Florida'),
+    ('GA', 'Georgia'),
+    ('GU', 'Guam'),
+    ('HI', 'Hawaii'),
+    ('IA', 'Iowa'),
+    ('ID', 'Idaho'),
+    ('IL', 'Illinois'),
+    ('IN', 'Indiana'),
+    ('KS', 'Kansas'),
+    ('KY', 'Kentucky'),
+    ('LA', 'Louisiana'),
+    ('MA', 'Massachusetts'),
+    ('MD', 'Maryland'),
+    ('ME', 'Maine'),
+    ('MI', 'Michigan'),
+    ('MN', 'Minnesota'),
+    ('MO', 'Missouri'),
+    ('MP', 'Northern Mariana Islands'),
+    ('MS', 'Mississippi'),
+    ('MT', 'Montana'),
+    ('NA', 'National'),
+    ('NC', 'North Carolina'),
+    ('ND', 'North Dakota'),
+    ('NE', 'Nebraska'),
+    ('NH', 'New Hampshire'),
+    ('NJ', 'New Jersey'),
+    ('NM', 'New Mexico'),
+    ('NV', 'Nevada'),
+    ('NY', 'New York'),
+    ('OH', 'Ohio'),
+    ('OK', 'Oklahoma'),
+    ('OR', 'Oregon'),
+    ('PA', 'Pennsylvania'),
+    ('PR', 'Puerto Rico'),
+    ('RI', 'Rhode Island'),
+    ('SC', 'South Carolina'),
+    ('SD', 'South Dakota'),
+    ('TN', 'Tennessee'),
+    ('TX', 'Texas'),
+    ('UT', 'Utah'),
+    ('VA', 'Virginia'),
+    ('VI', 'Virgin Islands'),
+    ('VT', 'Vermont'),
+    ('WA', 'Washington'),
+    ('WI', 'Wisconsin'),
+    ('WV', 'West Virginia'),
+    ('WY', 'Wyoming')
+]
+
+maintenanceRequestTypes = [
+    ('heatingCooling', 'Heating or Cooling'),
+    ('internet', 'Internet'),
+    ('yardDriveway', 'Yard or Driveway'),
+    ('appliance', 'Appliance'),
+    ('plumbing', 'Plumbing'),
+    ('electrical', 'Electrical'),
+    ('furnishing', 'Furnishing'),
+    ('other', 'Other')
+]
+
+propertyTypes = [
+    ('house', 'House'),
+    ('apartment', 'Apartment'),
+    ('complex', 'Complex'),
+    ('room', 'Room'),
+]
+
+rentDue = [
+    ('monthly', 'Per Month'),
+    ('semester', 'Per Semester')
+]
+
+
+notificationTypes = [
+    'direct_message',
+    'friend',
+    'group_user',
+    'group_listing'
 ]

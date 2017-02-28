@@ -1,9 +1,9 @@
 from nexnest.application import db
 
-from .base import Base
+from .message import Message
 
 
-class MaintenanceMessage(Base):
+class MaintenanceMessage(Message):
     __tablename__ = 'maintenance_messages'
     message_id = db.Column(db.Integer,
                            db.ForeignKey('messages.id'),
@@ -12,13 +12,21 @@ class MaintenanceMessage(Base):
                                db.ForeignKey('maintenances.id'),
                                primary_key=True)
 
+    __mapper_args__ = {
+        'polymorphic_identity': 'maintenance',
+    }
+
     def __init__(
             self,
-            message,
-            maintenance
+            maintenance,
+            content,
+            user
     ):
+        super().__init__(
+            content=content,
+            user=user
+        )
 
-        self.message_id = message.id
         self.maintenance_id = maintenance.id
 
     def __repr__(self):

@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-block">
         <div class="row">
-            <div class="col-xs-2" style="height: 50px;">
+            <div class="col-xs-2" style="height: 100px;">
                 <img src="{{user.profile_image}}" alt="Profile Image" class="img-responsive" style="height: 100%" />
             </div>
             <div class="col-xs-10">
@@ -17,7 +17,7 @@
                     <div class="col-xs-4">                            
                         {% if group.leader_id == current_user.id %}
                             {% if current_user.id != user.id %}
-                                <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#removeUser" style="float: right;">Remove</a>
+                                <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#removeUser" data-user="{{user.id}}" style="float: right;">Remove</a>
                             {% endif %}
                         {% endif %}
                         {% if current_user.id == user.id %}

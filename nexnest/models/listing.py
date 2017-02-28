@@ -1,12 +1,14 @@
 from datetime import datetime as dt
 
-from nexnest.application import db
+from nexnest.application import db, app
 
 from .base import Base
 
 from sqlalchemy import event
 
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
+
+import os
 
 
 # class PostReport(Base):
@@ -19,7 +21,6 @@ class Listing(Base):
     zip_code = db.Column(db.String(5))
     start_date = db.Column(db.Date)
     end_date = db.Column(db.Date)
-    unit_type = db.Column(db.String(10))
     num_bedrooms = db.Column(db.Integer)
     price = db.Column(db.Integer)
     square_footage = db.Column(db.Integer)
@@ -41,9 +42,14 @@ class Listing(Base):
     description = db.Column(db.Text)
     num_full_baths = db.Column(db.Integer)
     num_half_baths = db.Column(db.Integer)
-    time_period = db.Column(db.String(8))
+    time_period = db.Column(db.Text)
     apartment_number = db.Column(db.Integer)
     disabled = db.Column(db.Boolean)
+    property_type = db.Column(db.Text)
+    rent_due = db.Column(db.String(20))
+    first_semester_rent_due_date = db.Column(db.Date)
+    second_semester_rent_due_date = db.Column(db.Date)
+    # monthly_rent_due_date = db.Column(db.Date)
 
     # This is for whether or not the landlord has deleted
     # the listing. This comes into play for checking dates
@@ -61,6 +67,8 @@ class Listing(Base):
     groups = relationship("GroupListing", back_populates='listing')
     landlords = relationship("LandlordListing", back_populates='listing')
     tours = relationship("Tour", backref='listing')
+    house = relationship("House", backref=backref('listing', uselist=False))
+    favorite = relationship("GroupListingFavorite", backref='listing')
 
     def __init__(
             self,
@@ -70,7 +78,6 @@ class Listing(Base):
             zip_code,
             start_date,
             end_date,
-            unit_type,
             num_bedrooms,
             price,
             square_footage,
@@ -93,7 +100,11 @@ class Listing(Base):
             num_half_baths,
             num_full_baths,
             time_period,
-            apartment_number):
+            property_type,
+            rent_due,
+            apartment_number=None,
+            first_semester_rent_due_date=None,
+            second_semester_rent_due_date=None):
 
         self.street = street
         self.city = city
@@ -126,8 +137,11 @@ class Listing(Base):
         self.active = False  # Landlords have to activate listing
         self.show = False  # Landlord have to activate listing
         self.time_period = time_period
-        self.unit_type = unit_type
         self.parking = parking
+        self.property_type = property_type
+        self.rent_due = rent_due
+        self.first_semester_rent_due_date = first_semester_rent_due_date
+        self.second_semester_rent_due_date = second_semester_rent_due_date
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
@@ -152,6 +166,19 @@ class Listing(Base):
             landlords.append(landlordListing.landlord.user)
 
         return landlords
+
+    def getPhotoURLs(self):
+        photoURLs = []
+        folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(self.id))
+
+        if os.path.exists(folderPath):
+
+            for filename in os.listdir(folderPath):
+                photoURLs.append("/uploads/listings/%r/%s" % (self.id, filename.replace("\'", "")))
+        return photoURLs
+
+    def hasHouse(self):
+        return len(self.house) > 0
 
 
 def update_date_modified(mapper, connection, target):

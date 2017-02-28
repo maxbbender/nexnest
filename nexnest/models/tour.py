@@ -5,6 +5,7 @@ from nexnest.application import db
 from .base import Base
 
 from sqlalchemy import event
+from sqlalchemy.orm import relationship
 
 
 # class PostReport(Base):
@@ -18,6 +19,7 @@ class Tour(Base):
     date_modified = db.Column(db.DateTime)
     tour_confirmed = db.Column(db.Boolean)
     last_requested = db.Column(db.String(8))
+    messages = relationship('TourMessage', backref='tour')
 
     def __init__(
             self,
