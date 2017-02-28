@@ -196,7 +196,7 @@
                                                         <div class="row m-x-auto" id="favoritedListingUndo{{favorite.listing.id}}" style="display: none;">
                                                             <div class="col-xs-12" style="padding-left: 30px;">
                                                                 <div class="alert alert-info" role="alert">
-                                                                    You have just unfavorited {{ favorite.listing.street }} <a href="#" class="alert-link" onclick="showFavoritedListing({{favorite.listing.id}})">Undo?</a>
+                                                                    You have just unfavorited {{ favorite.listing.street }} <a href="#!" class="alert-link" onclick="showFavoritedListing({{favorite.listing.id}})">Undo?</a>
                                                                 </div>
                                                             </div>
                                                             <!-- <div class="col-xs-12" style="padding-left: 30px;">
@@ -565,13 +565,13 @@
             // alert(data['results'].success);
             if (results.success == true){ 
                 //alert('we did it!, now we need to hide the element but also show the undo part. Have the undo part call showFavoritedListing(id) which is where I will reverse what was done');
-                $("#favoritedListing"+id).hide();
+                $("#favoritedListing"+id).fadeOut(300);
                 $("#favoritedListingUndo"+id).show();
                 $("#favoritedListingUndo"+id).delay(6000).fadeOut(300);
             } else {
                 //alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
-        });
+        });        
     }
 
     function showFavoritedListing(id) {
@@ -587,6 +587,7 @@
                 //alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
         });
+        return false;
     }
     
     $("#userSearch").keyup(function() {
