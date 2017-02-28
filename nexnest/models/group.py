@@ -120,6 +120,14 @@ class Group(Base):
 
         return False
 
+    def displayedFavorites(self):
+        favorites = []
+        for favorite in self.favorites:
+            if favorite.show:
+                favorites.append(favorite)
+
+        return favorites
+
 
 def update_date_modified(mapper, connection, target):
     # 'target' is the inserted object

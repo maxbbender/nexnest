@@ -106,7 +106,7 @@ def viewGroup(group_id):
         return render_template('group/viewGroup.html',
                                group=group,
                                housingRequests=housingRequests,
-                               favoritedListings=group.favorites,
+                               favoritedListings=group.displayedFavorites(),
                                invite_form=invite_form,
                                messages=messages,
                                tours=tours,
