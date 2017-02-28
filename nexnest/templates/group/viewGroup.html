@@ -186,7 +186,7 @@
                                                         </div>
                                                        <div class="row m-x-auto">
                                                             <div class="col-xs-12">
-                                                                <span>You have just unfavorited {{ favorite.listing.street }} </span>
+                                                                <span>You have just unfavorited {{ favorite.listing.street }} <a onclick="showFavoritedListing(favorite.listing.id)">Undo?</a></span>
                                                             </div>
                                                        </div>
                                                     {% endfor %}

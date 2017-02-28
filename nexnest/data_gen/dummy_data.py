@@ -19,6 +19,26 @@ user5 = UserFactory(school=s)
 user6 = UserFactory(school=s)
 user7 = UserFactory(school=s)
 user8 = UserFactory(school=s)
+#group 4
+user9 = UserFactory(school=s)
+user10 = UserFactory(school=s)
+user11 = UserFactory(school=s)
+user12 = UserFactory(school=s)
+#group 5
+user13 = UserFactory(school=s)
+user14 = UserFactory(school=s)
+user15 = UserFactory(school=s)
+#group 6
+user16 = UserFactory(school=s)
+user17 = UserFactory(school=s)
+user18 = UserFactory(school=s)
+#group 7
+user19 = UserFactory(school=s)
+user20 = UserFactory(school=s)
+user21 = UserFactory(school=s)
+user22 = UserFactory(school=s)
+user23 = UserFactory(school=s)
+
 admin = UserFactory(role='admin', email='admin@admin.com')
 
 session.commit()
@@ -33,6 +53,8 @@ listing1 = ListingFactory()
 listing2 = ListingFactory()
 listing3 = ListingFactory()
 listing4 = ListingFactory()
+listing5 = ListingFactory()
+listing6 = ListingFactory()
 
 session.commit()
 
@@ -41,6 +63,8 @@ landlordListing1 = LandlordListingFactory(landlord=landlord1, listing=listing1)
 landlordListing2 = LandlordListingFactory(landlord=landlord1, listing=listing2)
 landlordListing3 = LandlordListingFactory(landlord=landlord1, listing=listing3)
 landlordListing4 = LandlordListingFactory(landlord=landlord1, listing=listing4)
+landlordListing5 = LandlordListingFactory(landlord=landlord1, listing=listing5)
+landlordListing6 = LandlordListingFactory(landlord=landlord1, listing=listing6)
 
 session.commit()
 
@@ -49,9 +73,15 @@ group1 = GroupFactory(leader=user2)
 group2 = GroupFactory(leader=user3)
 group3 = GroupFactory(leader=user4)
 
+
+group4 = GroupFactory(leader=user9)
+group5 = GroupFactory(leader=user13)
+group6 = GroupFactory(leader=user16)
+group7 = GroupFactory(leader=user19)
+
 session.commit()
 
-listings = [listing1, listing2, listing3, listing4]
+listings = [listing1, listing2, listing3, listing4, listing5, listing6]
 
 
 # GROUP USERS
@@ -79,11 +109,62 @@ groupuser11 = GroupUserFactory(group=group3, user=user5)
 
 group3Users = [user2, user8, user3, user4, user5]
 
+#group 4
+groupuser12 = GroupUserFactory(group=group4, user=user9)
+groupuser13 = GroupUserFactory(group=group4, user=user10)
+groupuser14 = GroupUserFactory(group=group4, user=user11)
+groupuser15 = GroupUserFactory(group=group4, user=user12)
+
+group4Users = [user9, user10, user11, user12]
+group4AcceptedUsers = [user9, user10, user11, user12]
+
+#group 5
+groupuser16 = GroupUserFactory(group=group5, user=user13)
+groupuser17 = GroupUserFactory(group=group5, user=user14)
+groupuser18 = GroupUserFactory(group=group5, user=user15)
+
+group5Users = [user13, user14, user15]
+group5AcceptedUsers = [user13, user14, user15]
+
+#group 6
+groupuser19 = GroupUserFactory(group=group6, user=user16)
+groupuser20 = GroupUserFactory(group=group6, user=user17)
+groupuser21 = GroupUserFactory(group=group6, user=user18)
+
+group6Users = [user16, user17, user18]
+group6AcceptedUsers = [user16, user17, user18]
+
+#group 7
+groupuser22 = GroupUserFactory(group=group7, user=user19)
+groupuser23 = GroupUserFactory(group=group7, user=user20)
+groupuser24 = GroupUserFactory(group=group7, user=user21)
+groupuser25 = GroupUserFactory(group=group7, user=user22)
+groupuser26 = GroupUserFactory(group=group7, user=user23)
+
+group7Users = [user19, user20, user21, user22, user23]
+group7AcceptedUsers = [user19, user20, user21, user22, user23]
+
 groupuser1.accepted = True
 groupuser2.accepted = True
 groupuser3.accepted = True
 groupuser5.accepted = True
 groupuser7.accepted = True
+
+groupuser12.accepted = True
+groupuser13.accepted = True
+groupuser14.accepted = True
+groupuser15.accepted = True
+groupuser16.accepted = True
+groupuser17.accepted = True
+groupuser18.accepted = True
+groupuser19.accepted = True
+groupuser20.accepted = True
+groupuser21.accepted = True
+groupuser22.accepted = True
+groupuser23.accepted = True
+groupuser24.accepted = True
+groupuser25.accepted = True
+groupuser26.accepted = True
 
 
 session.commit()
@@ -253,13 +334,16 @@ for i in range(5):
 
 # GROUP LISTING
 gl1 = GroupListingFactory(group=group1, listing=listing1)
-gl2 = GroupListingFactory(group=group1, listing=listing2)
-gl3 = GroupListingFactory(group=group1, listing=listing3)
+gl2 = GroupListingFactory(group=group2, listing=listing2)
+gl3 = GroupListingFactory(group=group3, listing=listing3)
+
+gl4 = GroupListingFactory(group=group4, listing=listing4)
+gl5 = GroupListingFactory(group=group5, listing=listing2)
+gl6 = GroupListingFactory(group=group6, listing=listing5)
+gl7 = GroupListingFactory(group=group7, listing=listing6)
 
 gl1.accepted = True
-gl1.completed = True
-
-gl3.accepted = True
+gl7.accepted = True
 
 session.commit()
 
@@ -309,6 +393,20 @@ for user in group1AcceptedUsers:
                                   type='security_deposit',
                                   target_model_id=sd.id)
     session.commit()
+
+# gl7 (group 7)
+for user in group7AcceptedUsers:
+    sd = SecurityDepositFactory(user=user, groupListing=gl7)
+
+    if random.randint(0, 1) == 0:
+        sd.completed = True
+        session.commit()
+
+        sdn = NotificationFactory(target_user=landlord,
+                                  type='security_deposit',
+                                  target_model_id=sd.id)
+    session.commit()
+
 
 
 # House
