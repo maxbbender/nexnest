@@ -21,3 +21,9 @@ factory_boy
 Faker
 
 readline
+
+# Testing
+nose
+mamba
+nosexcover
+pylint

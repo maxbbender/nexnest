@@ -43,3 +43,6 @@ server:
 
 psql:
 	psql -U nexnest_development
+
+test:
+	cd tests; nosetests
