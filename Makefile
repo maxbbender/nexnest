@@ -46,8 +46,8 @@ psql:
 	psql -U nexnest_development
 
 test:
-	nosetests --with-xcoverage --with-xunit --cover-package=nexnest --cover-erase
-	pylint -f parseable nexnest/ | tee pylint.out
+	NEXNEST_ENV=test nosetests --with-xcoverage --with-xunit --cover-package=nexnest --cover-erase
+	NEXNEST_ENV=test pylint -f parseable nexnest/ | tee pylint.out
 
 test_setup:
 	# nexnest_test ~~ Drop->Create->Version Control->InitDB->[INIT DATA]
