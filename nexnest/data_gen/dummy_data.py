@@ -268,14 +268,13 @@ for i in range(10):
 # TOURS
 # Won't show in landlords active tours because listing1 is
 # already completed
-t1 = TourFactory(listing=listing1, group=group1)
-t2 = TourFactory(listing=listing2, group=group2,
+t1 = TourFactory(listing=listing1, group=group4)
+t2 = TourFactory(listing=listing2, group=group4,
                  time_requested=fake.date_time_this_year(before_now=True))
-t3 = TourFactory(listing=listing2, group=group3)
-t4 = TourFactory(listing=listing3, group=group2)
-t5 = TourFactory(listing=listing3, group=group3)
-t6 = TourFactory(listing=listing3, group=group1)
-t6.tour_confirmed = True
+t3 = TourFactory(listing=listing2, group=group5)
+t4 = TourFactory(listing=listing4, group=group5)
+t5 = TourFactory(listing=listing5, group=group6)
+t6 = TourFactory(listing=listing5, group=group7)
 
 session.commit()
 
