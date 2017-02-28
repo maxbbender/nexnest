@@ -112,6 +112,15 @@
                                         <div class="col-xs-12" style="padding-left: 15px;">
                                             <div class="row">
                                                 <div class="col-xs-12" style="padding-left: 15px;">
+                                                    {% if favoritedListings|count == 0 %}
+                                                        <div class="row">
+                                                            <div class="col-xs-12">
+                                                                <div class="alert alert-info" role="alert">
+                                                                    No one in your group has suggested any listings to this group yet. Any one can suggest a listing by clicking the suggest to group button from the listing page
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
                                                     {% for favorite in favoritedListings %}
                                                         <div class="row m-x-auto" id="favoritedListing{{favorite.listing.id}}">
                                                             <div class="col-md-12" style="padding-left: 30px; padding-right: 30px;">
@@ -210,6 +219,15 @@
                                 <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">Tours</h3>
                                 <div class="card-block">
                                     <div class="row">
+                                        {% if tours|count == 0 %}
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <div class="alert alert-info" role="alert">
+                                                        You currently do not have any tours requested or scheduled. Ask your group leader to set some of for your group
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
                                         {% for tour in tours %}
                                             <div class="row">
                                                 <div class="card">
@@ -310,6 +328,15 @@
                                 <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">Property Requests</h3>
                                 <div class="card-block">
                                     <div class="row">
+                                    {% if housingRequests|count == 0 %}
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <div class="alert alert-info" role="alert">
+                                                        Your group currently isn't in the process of requesting any properties
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
                                         {% for request in housingRequests %}
                                             <div class="row">
                                                 <div class="card">
@@ -376,7 +403,6 @@
                                                                 <hr>
                                                                 <strong style="padding-right: 5px;">Who's Paid Their Deposit: </strong>
                                                                 <br><br>
-                                                                {{request.securityDeposits}}
                                                                 {% for deposit in request.securityDeposits %}                                    
                                                                     <div class="row">
                                                                         <div class="col-xs-10">
