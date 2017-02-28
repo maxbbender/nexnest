@@ -3,6 +3,20 @@
 <!-- {% if activeTours %}
     <h1>Tours</h1>
     {% for tourObject in activeTours %}
+{% if requestedTours %}
+    <h1>Requested Tours</h1>
+    {% for tourObject in requestedTours %}
+        <strong>{{tourObject.listing}}</strong><br>
+        {% for tour in tourObject.tours %}
+            {{tour}}<br>
+        {% endfor %}
+        <hr>
+    {% endfor %}
+{% endif %}
+
+{% if scheduledTours %}
+    <h1>Suggested Tours</h1>
+    {% for tourObject in scheduledTours %}
         <strong>{{tourObject.listing}}</strong><br>
         {% for tour in tourObject.tours %}
             {{tour}}<br>

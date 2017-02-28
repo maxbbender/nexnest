@@ -336,7 +336,6 @@ class Notification(Base):
             returnObject = session.query(TourMessage) \
                 .filter_by(id=self.target_model_id) \
                 .first()
-            print('bruh %r' % returnObject.id)
 
             if returnObject is not None:
                 message = "%s has posted a new message in %s's Tour Request" % \
