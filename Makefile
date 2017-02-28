@@ -19,7 +19,8 @@ sync:
 	NEXNEST_ENV=test python db/manage.py version_control
 	NEXNEST_ENV=test python db/manage.py upgrade
 
-	python data_create.py
+
+	NEXNEST_ENV=development python data_create.py
 
 user_setup:
 	sudo -u postgres createuser -U postgres -p 5432 -d -w nexnest_development
