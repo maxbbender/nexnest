@@ -47,3 +47,10 @@ psql:
 
 test:
 	cd tests; nosetests
+
+test_setup:
+	# nexnest_test ~~ Drop->Create->Version Control->InitDB->[INIT DATA]
+	dropdb -U nexnest_test nexnest_test --if-exists
+	createdb -U nexnest_test -O nexnest_test -h localhost -p 5432 nexnest_test
+	NEXNEST_ENV=test python db/manage.py version_control
+	NEXNEST_ENV=test python db/manage.py upgrade

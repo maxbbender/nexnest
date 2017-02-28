@@ -41,7 +41,7 @@ if superENV is not None:
 else:
     app.config.from_envvar('NEXNEST_%s_SETTINGS' % env.upper())
 
-
+print(app.config)
 app.secret_key = 'domislove'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
