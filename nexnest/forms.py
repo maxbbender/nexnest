@@ -1,14 +1,14 @@
+from urllib.parse import urlparse, urljoin
+
 from flask import request, url_for, redirect
 from flask_wtf import FlaskForm
-from wtforms.fields import StringField, PasswordField, SubmitField, BooleanField, IntegerField, TextAreaField, SelectField, DateField, HiddenField
-
 from flask_wtf.file import FileField, FileRequired
+
+from wtforms.fields import StringField, PasswordField, SubmitField, BooleanField, IntegerField, TextAreaField, SelectField, DateField, HiddenField
 
 from wtforms.validators import InputRequired, Length, Email, EqualTo, Optional
 
 from nexnest.static.dataSets import *
-
-from urllib.parse import urlparse, urljoin
 
 
 def is_safe_url(target):
@@ -51,8 +51,8 @@ class TourMessageForm(RedirectForm):
 class TourForm(RedirectForm):
     group_tour_id = HiddenField('group_id', [InputRequired()])
     listing_id = HiddenField('listing_id', [InputRequired()])
-    description = TextAreaField('Message to Landlord', [
-                                Length(min=1, max=1500), InputRequired()])
+    description = TextAreaField('Message to Landlord',
+                                [Length(min=1, max=1500), InputRequired()])
     requestedDateTime = HiddenField(
         'Date and time you would like to tour the house')
 
@@ -134,9 +134,12 @@ class ListingForm(RedirectForm):
     pictures = FileField('Pictures for Listing')
     property_type = SelectField('Property Type', choices=propertyTypes)
     rent_due = SelectField('How often is rent due?', choices=rentDue)
-    first_semester_rent_due_date = DateField('What date is rent due for the first semester?', [Optional()])
-    second_semester_rent_due_date = DateField('What date is rent due for the second semester?', [Optional()])
-    monthly_rent_due_date = DateField('What day of month is rent due?', [Optional()])
+    first_semester_rent_due_date = DateField(
+        'What date is rent due for the first semester?', [Optional()])
+    second_semester_rent_due_date = DateField(
+        'What date is rent due for the second semester?', [Optional()])
+    monthly_rent_due_date = DateField(
+        'What day of month is rent due?', [Optional()])
 
 
 class CreateGroupForm(RedirectForm):
@@ -160,9 +163,12 @@ class DirectMessageForm(RedirectForm):
 
 
 class EditAccountForm(RedirectForm):
-    fname = StringField('First Name<span style="color: red;"> (Required)</span>', [InputRequired()])
-    lname = StringField('Last Name<span style="color: red;"> (Required)</span>', [InputRequired()])
-    school = StringField('School Attending<span style="color: red;"> (Required)</span>', [InputRequired()])
+    fname = StringField(
+        'First Name<span style="color: red;"> (Required)</span>', [InputRequired()])
+    lname = StringField(
+        'Last Name<span style="color: red;"> (Required)</span>', [InputRequired()])
+    school = StringField(
+        'School Attending<span style="color: red;"> (Required)</span>', [InputRequired()])
     dob = StringField('Date of Birth')
     bio = TextAreaField('If you wish provide a short personal bio')
     phone = StringField('Phone Number')

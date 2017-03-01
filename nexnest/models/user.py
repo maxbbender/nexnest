@@ -1,23 +1,17 @@
-
-from nexnest.application import db, session
-from nexnest.utils.password import hash_password
-
-# from nexnest.models import Group, GroupUser, GroupListing, Notification, DirectMessage
-# from nexnest.models.group import Group
-# from nexnest.models import direct_message
-from nexnest.models.group_user import GroupUser
-from nexnest.models.group_listing import GroupListing
-from nexnest.models.notification import Notification
-
-
-from .base import Base
-from .landlord import Landlord
-
 from datetime import datetime as dt
 
 from sqlalchemy.orm import relationship
 
 from flask import flash
+
+from nexnest.application import db, session
+from nexnest.utils.password import hash_password
+from nexnest.models.group_user import GroupUser
+from nexnest.models.group_listing import GroupListing
+from nexnest.models.notification import Notification
+from nexnest.models.landlord import Landlord
+
+from .base import Base
 
 
 class User(Base):

@@ -1,8 +1,6 @@
 from nexnest.application import db
 
 from nexnest.models.message import Message
-from nexnest.models.user import User
-# from nexnest.models.base import Base
 
 
 class DirectMessage(Message):

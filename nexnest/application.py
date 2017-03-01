@@ -1,7 +1,6 @@
 # Application Config
 
 # Flask
-from flask import redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user
 from flask_wtf.csrf import CSRFProtect
@@ -78,4 +77,4 @@ def insert_login_form():
         login_form = LoginForm()
         return dict(login_form=login_form)
 
-import nexnest.admin
+import nexnest.admin # pylint: disable=unused-import

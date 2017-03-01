@@ -12,7 +12,7 @@ from nexnest.models.maintenance_message import MaintenanceMessage
 
 from nexnest.utils.flash import flash_errors
 
-from sqlalchemy import asc, desc
+from sqlalchemy import desc
 
 houses = Blueprint('houses', __name__, template_folder='../templates/house')
 
@@ -38,7 +38,7 @@ def view(id):
     if house is not None:
 
         if house.isViewableBy(current_user):
-            
+
             return render_template('viewHouse.html',
                                    house=house,
                                    landlords=house.listing.landLordsAsUsers(),
@@ -74,7 +74,7 @@ def messageCreate():
                 session.commit()
 
         else:
-            ("Invalid Request", 'warning')
+            flash("Invalid Request", 'warning')
     else:
         flash_errors(form)
 
@@ -145,7 +145,7 @@ def maintenanceRequestView(id):
             messageForm = MaintenanceRequestMessageForm()
             messageForm.maintenanceID = id
 
-            #House
+            # House
             house = session.query(House) \
                 .filter_by(id=maintenanceRequest.house.id) \
                 .first()

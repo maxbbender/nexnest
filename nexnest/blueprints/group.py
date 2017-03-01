@@ -1,3 +1,5 @@
+from sqlalchemy import asc, desc
+
 from flask import Blueprint, jsonify
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
@@ -6,7 +8,6 @@ from nexnest.forms import CreateGroupForm, InviteGroupForm, SuggestListingForm, 
 
 from nexnest.application import session
 
-# from nexnest.models import Group, GroupUser, GroupListing, User, Listing, GroupMessage, Tour, GroupListingFavorite
 from nexnest.models.group import Group
 from nexnest.models.group_user import GroupUser
 from nexnest.models.group_listing import GroupListing
@@ -16,10 +17,10 @@ from nexnest.models.group_message import GroupMessage
 from nexnest.models.tour import Tour
 from nexnest.models.group_listing_favorite import GroupListingFavorite
 from nexnest.models.house import House
+from nexnest.models.group_listing_message import GroupListingMessage
 
 from nexnest.utils.flash import flash_errors
 
-from sqlalchemy import asc, desc
 
 groups = Blueprint('groups', __name__, template_folder='../templates')
 
@@ -309,13 +310,18 @@ def requestListing():
 
                 if listing is not None:
                     newGL = GroupListing(group=group,
-                                         listing=listing,
-                                         reqDescription=rLForm.reqDescription.data)
+                                         listing=listing)
                     session.add(newGL)
                     session.commit()
 
-                    return redirect(url_for('housingRequests.view', id=newGL.id))
+                    newGLM = GroupListingMessage(groupListing=newGL,
+                                                 user=current_user,
+                                                 content=rLForm.reqDescription.data)
+
+                    session.add(newGLM)
+                    session.commit()
                     flash("You have requested to live at this listing!", 'success')
+                    return redirect(url_for('housingRequests.view', id=newGL.id))
                 else:
                     flash("Listing does not exist", 'warning')
         else:
@@ -342,7 +348,7 @@ def favoriteListing(groupID, listingID):
         listing = session.query(Listing).filter_by(id=listingID).first()
 
         if group is not None and listing is not None:
-            if group.isViewableBy(user=current_user, flash=False):
+            if group.isViewableBy(user=current_user, toFlash=False):
                 newGLF = GroupListingFavorite(group=group,
                                               listing=listing,
                                               user=current_user)
@@ -368,15 +374,15 @@ def favoriteListing(groupID, listingID):
 @groups.route('/group/favoriteListing/<favoriteListingID>/show', methods=['GET'])
 @login_required
 def favoriteListingShow(favoriteListingID):
-    favoriteListing = session.query(GroupListingFavorite) \
+    favoritedListing = session.query(GroupListingFavorite) \
         .filter_by(id=favoriteListingID)\
         .first()
 
-    if favoriteListing is not None:
-        if favoriteListing.group.isEditableBy(user=current_user, flash=False):
+    if favoritedListing is not None:
+        if favoritedListing.group.isEditableBy(user=current_user, toFlash=False):
 
-            if not favoriteListing.show:
-                favoriteListing.show = True
+            if not favoritedListing.show:
+                favoritedListing.show = True
                 session.commit()
                 return jsonify(results={'success': True})
             else:
@@ -392,15 +398,15 @@ def favoriteListingShow(favoriteListingID):
 @groups.route('/group/favoriteListing/<favoriteListingID>/hide', methods=['GET'])
 @login_required
 def favoriteListingHide(favoriteListingID):
-    favoriteListing = session.query(GroupListingFavorite) \
+    favoritedListing = session.query(GroupListingFavorite) \
         .filter_by(id=favoriteListingID)\
         .first()
 
-    if favoriteListing is not None:
-        if favoriteListing.group.isEditableBy(user=current_user, flash=False):
+    if favoritedListing is not None:
+        if favoritedListing.group.isEditableBy(user=current_user, toFlash=False):
 
-            if favoriteListing.show:
-                favoriteListing.show = False
+            if favoritedListing.show:
+                favoritedListing.show = False
                 session.commit()
                 return jsonify(results={'success': True})
             else:

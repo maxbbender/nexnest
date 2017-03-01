@@ -2,12 +2,7 @@ from nexnest.application import db
 
 from .message import Message
 
-from .base import Base
 
-from sqlalchemy import event
-
-
-# class PostReport(Base):
 class TourMessage(Message):
     __tablename__ = 'tour_messages'
     tour_id = db.Column(db.Integer,

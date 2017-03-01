@@ -13,7 +13,7 @@ from nexnest.utils.file import allowed_file
 
 import os
 
-from werkzeug import secure_filename
+from werkzeug import secure_filename  # pylint: disable=E0611
 
 listings = Blueprint('listings', __name__, template_folder='../templates')
 
@@ -21,16 +21,16 @@ listings = Blueprint('listings', __name__, template_folder='../templates')
 @listings.route('/listing/view/<listingID>', methods=['GET', 'POST'])
 @login_required
 def viewListing(listingID):
-    viewListing = session.query(Listing).filter_by(id=listingID).first()
+    listing = session.query(Listing).filter_by(id=listingID).first()
     myGroups = current_user.accepted_groups
     return render_template('detailedListing.html',
                            suggestListingForm=SuggestListingForm(),
                            requestTourForm=TourForm(),
                            requestListingForm=GroupListingForm(),
-                           listing=viewListing,
+                           listing=listing,
                            groups=myGroups,
                            title='Listing',
-                           pictures=viewListing.getPhotoURLs())
+                           pictures=listing.getPhotoURLs())
 
 
 @listings.route('/listing/create', methods=['GET', 'POST'])

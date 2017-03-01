@@ -117,7 +117,7 @@ def editAccountInfo():
     if request.method == 'POST' and editForm.validate():
         editForm.populate_obj(current_user)
         session.commit()
-        return redirect(url_for('users.viewUser', current_user.id))
+        return redirect(url_for('users.viewUser', userID=current_user.id))
 
     schools = [r for r, in session.query(School.name).all()]
     return render_template('editAccount.html',
@@ -159,7 +159,7 @@ def searchForGroupUser(username, group_id):
 
     group = session.query(Group).filter_by(id=group_id).first()
 
-    users = []
+    userList = []
     apartOfGroup = False
     for user in usersToReturn:
         if user.isLandlord:
@@ -170,17 +170,17 @@ def searchForGroupUser(username, group_id):
                 apartOfGroup = True
                 break
         if not apartOfGroup:
-            users.append(user.serialize)
+            userList.append(user.serialize)
         else:
             apartOfGroup = False
 
-    return jsonify(users=users)
+    return jsonify(users=userList)
 
 
 @users.route('/user/directMessages')
 @login_required
 def directMessagesAll():
-    users = []
+    userList = []
     direct_messages = session.query(DirectMessage.target_user_id) \
         .filter_by(source_user_id=current_user.id) \
         .order_by('date_created desc') \
@@ -189,10 +189,10 @@ def directMessagesAll():
 
     for dm in direct_messages:
         user = session.query(User).filter_by(id=dm).first()
-        users.append(user)
+        userList.append(user)
 
     return render_template('directMessageAll.html',
-                           users=users)
+                           users=userList)
 
 
 @users.route('/user/directMessages/<user_id>')

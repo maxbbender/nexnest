@@ -1,8 +1,8 @@
+from sqlalchemy.orm import relationship
+
 from nexnest.application import db
 
 from .base import Base
-
-from sqlalchemy.orm import relationship
 
 
 class GroupUser(Base):

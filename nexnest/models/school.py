@@ -1,11 +1,11 @@
 from datetime import datetime as dt
 
+from sqlalchemy import event
+from sqlalchemy.orm import relationship
+
 from nexnest.application import db
 
 from .base import Base
-
-from sqlalchemy import event
-from sqlalchemy.orm import relationship
 
 
 class School(Base):
@@ -48,7 +48,7 @@ class School(Base):
         return '<School %r>' % self.name
 
 
-def update_date_modified(mapper, connection, target):
+def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument
     # 'target' is the inserted object
     target.date_modified = dt.now().isoformat()  # Update Date Modified
 
