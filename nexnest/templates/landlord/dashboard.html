@@ -77,11 +77,6 @@
         	        </a>
         	    </li>
         	    <li class="nav-item">
-        	        <a class="nav-link" data-toggle="tab" href="#futureListingsTab" role="tab">
-        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Booked Future Listings</span>
-        	        </a>
-        	    </li>
-        	    <li class="nav-item">
         	        <a class="nav-link" data-toggle="tab" href="#unbookedListingsTab" role="tab">
         	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Unbooked Listings</span>
         	        </a>
@@ -465,7 +460,18 @@
 		        							                    				<div class="row">
 		        								                    				<div class="col-xl-10">
 					        	                    	            					<h3><strong>{{tour.group.name}}</strong>({{tour.group.acceptedUsers|count}} Members)</h3>
-					        	                    	            					Confirmed Date and Time: {{tour.time_requested}}			
+					        	                    	            					Confirmed Date and Time: {{tour.time_requested}}
+					        	                    	            					<br><br>
+					        	                    	            					<div class="row">
+					        	                    	            						<div class="col-12 col-md-auto">
+							        	                    	            					<div id="cancelTourButton{{tour.id}}" style="padding-left: 15px;">
+							        	                    	            						<button class="btn btn-danger" onclick="cancelTour({{tour.id}})">Cancel Tour</button>
+							        	                    	            					</div>
+							        	                    	            					<div id="cancelTourUndo{{tour.id}}" style="display: none; padding-left: 15px;">
+							        	                    	            						<a href="#!" class="alert-link" onclick="undoCancelTour({{tour.id}})">Undo</a>
+							        	                    	            					</div>
+							        	                    	            				</div>
+					        	                    	            					</div>
 					        	                    	            				</div>
 					        	                    	            				<div class="col-xl-2" style="text-align: right;">
 					        	                    	            					<a class="btn btn-primary" href="{{ url_for('tours.viewTour', tourID=tour.id) }}">View Request</a>
@@ -798,6 +804,51 @@
 		        	</div>
 		        </div>
 	        </div>
+	        <div class="tab-pane" id="maintenanceTab" role="tabpanel" style="padding: 0px;">
+	        	<div class="row">
+			    	<div class="col-xs-1"></div>
+			    	<div class="col-xs-10" style="width: 100%">
+				    	<div class="callout-block text-center fade-in-b">
+				    		<h1>Maintenance Requests</h1>
+				    	</div>
+			    	</div>
+			    </div>
+		    	<br>
+		    	<div class="row">
+		        	<div class="col-xs-1"></div>
+		        	<div class="col-md-10 col-lg-10 col-xl-10">
+		        	    <div class="row">
+		        	        <div class="card" style="width:100%; border: none;">
+		        	            <div class="card-block">
+		        	                <ul class="nav nav-tabs">
+		        	                    <li class="nav-item">
+		        	                        <a class="nav-link active" data-toggle="tab" href="#newMaintenanceTab" role="tab">New Requests</a>
+		        	                    </li>
+		        	                    <li class="nav-item">
+		        	                        <a class="nav-link" data-toggle="tab" href="#inProgressMaintenanceTab" role="tab">In-Progress</a>
+		        	                    </li>
+		        	                    <li class="nav-item">
+		        	                        <a class="nav-link" data-toggle="tab" href="#completedMaintenanceTab" role="tab">Completed</a>
+		        	                    </li>
+		        	                </ul>
+		        	                <br>
+		        	                <div class="tab-content">
+		        	                    <div class="tab-pane active" id="newMaintenanceTab" role="tabpanel" style="padding: 0px;">
+		        	                    	New
+		        	                    </div>
+		        	                    <div class="tab-pane" id="inProgressMaintenanceTab" role="tabpanel" style="padding: 0px;">
+		        	                    	In-Progress
+		        	                    </div>
+		        	                    <div class="tab-pane" id="completedMaintenanceTab" role="tabpanel" style="padding: 0px;">
+		        	                    	Completed
+		        	                    </div>
+		        	                </div>
+		        	            </div>
+		        	        </div>
+		        	    </div>
+		        	</div>
+		        </div>
+		    </div>
 	        <div class="tab-pane" id="paymentTab" role="tabpanel">
 	            Payment Portal
 	        </div>
@@ -859,6 +910,16 @@
     function undoDeclineTour(id){
         $("#declineTourButton"+id).show();
         $("#declineTourUndo"+id).hide();
+    }
+
+    function cancelTour(id){
+        $("#cancelTourButton"+id).hide();
+        $("#cancelTourUndo"+id).show();
+    }
+
+    function undoCancelTour(id){
+        $("#cancelTourButton"+id).show();
+        $("#cancelTourUndo"+id).hide();
     }
 
 	$(document).ready(function() {
