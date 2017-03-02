@@ -24,6 +24,7 @@ def landlordDashboard():
 
         unAcceptedHousingRequests, acceptedHousingRequests, completedHousingRequests = landlord.getHousingRequests()
         openMaintenanceRequests, inProgressMaintenanceRequests, completedMaintenanceRequests = landlord.getMaintenanceRequests()
+        currentHouses, futureHouses = landlord.getHouses()
 
         requestedTours, scheduledTours = landlord.getActiveTours()
 
@@ -36,7 +37,8 @@ def landlordDashboard():
                                unAcceptedHousingRequests=unAcceptedHousingRequests,
                                acceptedHousingRequests=acceptedHousingRequests,
                                completedHousingRequests=completedHousingRequests,
-                               houses=landlord.getHouses(),
+                               currentHouses=currentHouses,
+                               futureHouses=futureHouses,
                                openMaintenanceRequests=openMaintenanceRequests,
                                inProgressMaintenanceRequests=inProgressMaintenanceRequests,
                                completedMaintenanceRequests=completedMaintenanceRequests)

@@ -128,8 +128,8 @@ class Landlord(Base):
                 elif listing.start_date >= currDate:
                     futureHouses.append(listing.house[0])
 
-        print("Current Houses %r" % currentHouses)
-        print("Future Houses %r" % futureHouses)
+        # print("Current Houses %r" % currentHouses)
+        # print("Future Houses %r" % futureHouses)
         return currentHouses, futureHouses
 
     def getMaintenanceRequests(self):
