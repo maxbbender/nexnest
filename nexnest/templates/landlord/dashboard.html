@@ -893,13 +893,36 @@
 {% block scripts %}
 <script>
 	function acceptTour(id){
-        $("#acceptTourButton"+id).hide();
-        $("#acceptTourUndo"+id).show();
+        alert('oooo')
+        requestURL = '/tour/' + id + '/confirm/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+                alert("Tour accepted now we need to move this element to 'Scheduled Tours'... make sure to make the button think toO!");
+                $("#acceptTourButton"+id).hide();
+                $("#acceptTourUndo"+id).show();
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
+        
     }
 
     function undoAcceptTour(id){
-        $("#acceptTourButton"+id).show();
-        $("#acceptTourUndo"+id).hide();
+        alert('oooddo')
+        requestURL = '/tour/' + id + '/unConfirm/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+                alert("Tour has been un-accepted now we need to move this element to 'Scheduled Tours'... make sure to make the button think toO!");
+                $("#acceptTourButton"+id).show();
+                $("#acceptTourUndo"+id).hide();
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
     }
 
     function declineTour(id){

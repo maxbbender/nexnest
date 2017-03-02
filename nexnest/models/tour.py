@@ -3,6 +3,8 @@ from datetime import datetime as dt
 from sqlalchemy import event
 from sqlalchemy.orm import relationship
 
+from flask import flash
+
 from nexnest.application import db
 
 from .base import Base
@@ -42,15 +44,19 @@ class Tour(Base):
     def __repr__(self):
         return '<Tour %r>' % self.id
 
-    def isViewableBy(self, user):
+    def isViewableBy(self, user, toFlash=True):
         if user in self.group.getUsers() or user in self.listing.landLordsAsUsers():
             return True
+        elif toFlash:
+            flash("Permissions Error")
 
         return False
 
-    def isEditableBy(self, user):
+    def isEditableBy(self, user, toFlash=True):
         if user == self.group.leader or user in self.listing.landLordsAsUsers():
             return True
+        elif toFlash:
+            flash("Permissions Error")
 
         return False
 

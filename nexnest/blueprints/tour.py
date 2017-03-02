@@ -1,4 +1,4 @@
-from flask import Blueprint, request, redirect, flash, render_template, url_for
+from flask import Blueprint, request, redirect, flash, render_template, url_for, jsonify
 
 from flask_login import current_user, login_required
 
@@ -121,6 +121,52 @@ def confirmTour(tourID):
     else:
         flash("Tour does not exist", 'warning')
         return redirect(request.url)
+
+
+@tours.route('/tour/<tourID>/confirm/ajax')
+@login_required
+def confirmTourAJAX(tourID):
+    tour = session.query(Tour) \
+        .filter_by(id=tourID) \
+        .first()
+
+    errorMessage = None
+
+    if tour is not None:
+        if tour.isEditableBy(current_user, toFlash=False):
+            tour.tour_confirmed = True
+            session.commit()
+
+            return jsonify(results={'success': True})
+        else:
+            errorMessage = 'Permissions Error'
+    else:
+        errorMessage = 'Invalid Reqeuest'
+
+    return jsonify(results={'success': False, 'message': errorMessage})
+
+
+@tours.route('/tour/<tourID>/unConfirm/ajax')
+@login_required
+def unConfirmTourAJAX(tourID):
+    tour = session.query(Tour) \
+        .filter_by(id=tourID) \
+        .first()
+
+    errorMessage = None
+
+    if tour is not None:
+        if tour.isEditableBy(current_user, toFlash=False):
+            tour.tour_confirmed = False
+            session.commit()
+
+            return jsonify(results={'success': True})
+        else:
+            errorMessage = 'Permissions Error'
+    else:
+        errorMessage = 'Invalid Reqeuest'
+
+    return jsonify(results={'success': False, 'message': errorMessage})
 
 
 @tours.route('/tour/<tourID>/updateDate', methods=['POST'])
