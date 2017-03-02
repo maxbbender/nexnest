@@ -20,6 +20,7 @@ class Tour(Base):
     date_modified = db.Column(db.DateTime)
     tour_confirmed = db.Column(db.Boolean)
     last_requested = db.Column(db.String(8))
+    declined = db.Column(db.Boolean)
     messages = relationship('TourMessage', backref='tour')
 
     def __init__(
@@ -35,6 +36,7 @@ class Tour(Base):
 
         self.last_requested = 'group'
         self.tour_confirmed = False
+        self.declined = False
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels

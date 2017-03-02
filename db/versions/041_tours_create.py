@@ -12,6 +12,7 @@ tours = Table('tours', meta,
               Column('group_id', Integer()),
               Column('time_requested', DateTime()),
               Column('description', Text()),
+              Column('declined', Boolean()),
               Column('date_created', DateTime()),
               Column('date_modified', DateTime()))
 

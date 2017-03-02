@@ -224,3 +224,49 @@ def createMessage():
         flash_errors(form)
 
     return form.redirect()
+
+
+@tours.route('/tour/<tourID>/decline/ajax')
+@login_required
+def declineTourAJAX(tourID):
+    tour = session.query(Tour) \
+        .filter_by(id=tourID) \
+        .first()
+
+    errorMessage = None
+
+    if tour is not None:
+        if tour.isEditableBy(current_user, toFlash=False):
+            tour.declined = True
+            session.commit()
+
+            return jsonify(results={'success': True})
+        else:
+            errorMessage = 'Permissions Error'
+    else:
+        errorMessage = 'Invalid Reqeuest'
+
+    return jsonify(results={'success': False, 'message': errorMessage})
+
+
+@tours.route('/tour/<tourID>/unDecline/ajax')
+@login_required
+def unDeclineTourAJAX(tourID):
+    tour = session.query(Tour) \
+        .filter_by(id=tourID) \
+        .first()
+
+    errorMessage = None
+
+    if tour is not None:
+        if tour.isEditableBy(current_user, toFlash=False):
+            tour.declined = False
+            session.commit()
+
+            return jsonify(results={'success': True})
+        else:
+            errorMessage = 'Permissions Error'
+    else:
+        errorMessage = 'Invalid Reqeuest'
+
+    return jsonify(results={'success': False, 'message': errorMessage})
