@@ -19,20 +19,20 @@ user5 = UserFactory(school=s)
 user6 = UserFactory(school=s)
 user7 = UserFactory(school=s)
 user8 = UserFactory(school=s)
-#group 4
+# group 4
 user9 = UserFactory(school=s)
 user10 = UserFactory(school=s)
 user11 = UserFactory(school=s)
 user12 = UserFactory(school=s)
-#group 5
+# group 5
 user13 = UserFactory(school=s)
 user14 = UserFactory(school=s)
 user15 = UserFactory(school=s)
-#group 6
+# group 6
 user16 = UserFactory(school=s)
 user17 = UserFactory(school=s)
 user18 = UserFactory(school=s)
-#group 7
+# group 7
 user19 = UserFactory(school=s)
 user20 = UserFactory(school=s)
 user21 = UserFactory(school=s)
@@ -49,8 +49,14 @@ landlord1 = LandlordFactory(user=landlord)
 session.commit()
 
 # LISTINGS
-listing1 = ListingFactory()
-listing2 = ListingFactory()
+start_date = fake.date_time_this_year(before_now=True)
+end_date = fake.date_time_this_year(before_now=False, after_now=True)
+# start_date = fake.date_time_between(start_date="-7M", end_date="now")
+# end_date = fake.date_time_between(start_date="+5M", end_date="+6M")
+print(start_date)
+print(end_date)
+listing1 = ListingFactory(start_date=start_date, end_date=end_date, num_bedrooms=4)
+listing2 = ListingFactory(start_date=fake.date_time_this_year(before_now=False, after_now=True))
 listing3 = ListingFactory()
 listing4 = ListingFactory()
 listing5 = ListingFactory()
@@ -109,7 +115,7 @@ groupuser11 = GroupUserFactory(group=group3, user=user5)
 
 group3Users = [user2, user8, user3, user4, user5]
 
-#group 4
+# group 4
 groupuser12 = GroupUserFactory(group=group4, user=user9)
 groupuser13 = GroupUserFactory(group=group4, user=user10)
 groupuser14 = GroupUserFactory(group=group4, user=user11)
@@ -118,7 +124,7 @@ groupuser15 = GroupUserFactory(group=group4, user=user12)
 group4Users = [user9, user10, user11, user12]
 group4AcceptedUsers = [user9, user10, user11, user12]
 
-#group 5
+# group 5
 groupuser16 = GroupUserFactory(group=group5, user=user13)
 groupuser17 = GroupUserFactory(group=group5, user=user14)
 groupuser18 = GroupUserFactory(group=group5, user=user15)
@@ -126,7 +132,7 @@ groupuser18 = GroupUserFactory(group=group5, user=user15)
 group5Users = [user13, user14, user15]
 group5AcceptedUsers = [user13, user14, user15]
 
-#group 6
+# group 6
 groupuser19 = GroupUserFactory(group=group6, user=user16)
 groupuser20 = GroupUserFactory(group=group6, user=user17)
 groupuser21 = GroupUserFactory(group=group6, user=user18)
@@ -134,7 +140,7 @@ groupuser21 = GroupUserFactory(group=group6, user=user18)
 group6Users = [user16, user17, user18]
 group6AcceptedUsers = [user16, user17, user18]
 
-#group 7
+# group 7
 groupuser22 = GroupUserFactory(group=group7, user=user19)
 groupuser23 = GroupUserFactory(group=group7, user=user20)
 groupuser24 = GroupUserFactory(group=group7, user=user21)
@@ -409,9 +415,9 @@ for user in group7AcceptedUsers:
     session.commit()
 
 
-
 # House
 h1 = HouseFactory(listing=listing1, group=group1)
+h2 = HouseFactory(listing=listing2, group=group2)
 
 session.commit()
 

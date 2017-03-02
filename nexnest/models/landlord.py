@@ -1,4 +1,4 @@
-from datetime import datetime as dt
+from datetime import datetime, date
 from sqlalchemy.orm import relationship
 
 from nexnest.application import db
@@ -60,7 +60,7 @@ class Landlord(Base):
                 schTours = []
 
                 for tour in listing.tours:
-                    if tour.time_requested >= dt.now():
+                    if tour.time_requested >= datetime.now():
                         if tour.tour_confirmed:
                             schTours.append(tour)
                         else:
@@ -117,28 +117,30 @@ class Landlord(Base):
         return unAcceptedHousingRequests, acceptedHousingRequests, completedHousingRequests
 
     def getHouses(self):
-        houses = []
+        currentHouses = []
+        futureHouses = []
+        currDate = date.today()
         for listing in self.getListings():
             if listing.hasHouse():
-                houses.append(listing.house[0])
-                # if len(listing.house) > 0:
-                #     for house in listing.house:
-                #         houses.append(listing.house)
-                # else:
-                #     houses.append(listing.house[0])
-        if len(houses) > 0:
-            return houses
-        else:
-            return None
+                # Current Listing
+                if listing.start_date <= currDate and listing.end_date >= currDate:
+                    currentHouses.append(listing.house[0])
+                elif listing.start_date >= currDate:
+                    futureHouses.append(listing.house[0])
+
+        print("Current Houses %r" % currentHouses)
+        print("Future Houses %r" % futureHouses)
+        return currentHouses, futureHouses
 
     def getMaintenanceRequests(self):
         openMaintenanceRequests = []
         inProgressMaintenanceRequests = []
         completedMaintenanceRequests = []
 
-        for house in self.getHouses():
+        currentHouses, futureHouses = self.getHouses()
+
+        for house in currentHouses:
             openMR, inProgressMR, completedMR = house.groupedMaintenanceRequests()
-            
             if len(openMR) > 0:
                 houseObject = {'house': house}
                 houseObject['maintenanceRequests'] = openMR
