@@ -17,7 +17,7 @@ from nexnest.utils.file import isPDF
 
 from werkzeug.utils import secure_filename
 
-from sqlalchemy import asc, desc
+from sqlalchemy import desc
 
 import os
 
@@ -125,7 +125,7 @@ def messageCreate():
                 session.commit()
 
         else:
-            ("House Request does not exist", 'info')
+            flash("House Request does not exist", 'info')
     else:
         flash_errors(form)
 
@@ -213,7 +213,7 @@ def paySecurityDeposit(id, userID):
         .first()
     errorMessage = None
     if groupListing is not None:
-        if groupListing.isEditableBy(user=current_user, flash=False):
+        if groupListing.isEditableBy(user=current_user, toFlash=False):
             securityDeposit = session.query(SecurityDeposit) \
                 .filter_by(group_listing_id=groupListing.id, user_id=userID) \
                 .first()

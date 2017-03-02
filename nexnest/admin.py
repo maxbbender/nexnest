@@ -1,8 +1,24 @@
 from nexnest import app
-from nexnest.models import *
+from nexnest.application import session
+from nexnest.models.user import User
+from nexnest.models.group import Group
+from nexnest.models.listing import Listing
+from nexnest.models.message import Message
+from nexnest.models.landlord import Landlord
+from nexnest.models.school import School
+from nexnest.models.tour import Tour
+from nexnest.models.tour_message import TourMessage
+from nexnest.models.group_message import GroupMessage
+from nexnest.models.direct_message import DirectMessage
+from nexnest.models.group_listing import GroupListing
+from nexnest.models.notification import Notification
+from nexnest.models.group_listing_favorite import GroupListingFavorite
+from nexnest.models.security_deposit import SecurityDeposit
+from nexnest.models.house import House
+
+from flask import redirect, url_for
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
-from nexnest.application import session
 
 
 class AdminModelView(ModelView):
@@ -18,18 +34,18 @@ class AdminModelView(ModelView):
 admin = Admin(app, name='Nexnest', template_mode='bootstrap3')
 
 # Register the Views
-admin.add_view(AdminModelView(user.User, session))
-admin.add_view(AdminModelView(group.Group, session))
-admin.add_view(AdminModelView(listing.Listing, session))
-admin.add_view(AdminModelView(message.Message, session))
-admin.add_view(AdminModelView(landlord.Landlord, session))
-admin.add_view(AdminModelView(school.School, session))
-admin.add_view(AdminModelView(tour.Tour, session))
-admin.add_view(AdminModelView(tour_message.TourMessage, session))
-admin.add_view(AdminModelView(group_message.GroupMessage, session))
-admin.add_view(AdminModelView(direct_message.DirectMessage, session))
-admin.add_view(AdminModelView(group_listing.GroupListing, session))
-admin.add_view(AdminModelView(notification.Notification, session))
-admin.add_view(AdminModelView(group_listing_favorite.GroupListingFavorite, session))
-admin.add_view(AdminModelView(security_deposit.SecurityDeposit, session))
-admin.add_view(AdminModelView(house.House, session))
+admin.add_view(AdminModelView(User, session))
+admin.add_view(AdminModelView(Group, session))
+admin.add_view(AdminModelView(Listing, session))
+admin.add_view(AdminModelView(Message, session))
+admin.add_view(AdminModelView(Landlord, session))
+admin.add_view(AdminModelView(School, session))
+admin.add_view(AdminModelView(Tour, session))
+admin.add_view(AdminModelView(TourMessage, session))
+admin.add_view(AdminModelView(GroupMessage, session))
+admin.add_view(AdminModelView(DirectMessage, session))
+admin.add_view(AdminModelView(GroupListing, session))
+admin.add_view(AdminModelView(Notification, session))
+admin.add_view(AdminModelView(GroupListingFavorite, session))
+admin.add_view(AdminModelView(SecurityDeposit, session))
+admin.add_view(AdminModelView(House, session))

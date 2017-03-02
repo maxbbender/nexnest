@@ -1,8 +1,11 @@
-from .base import Base
 from datetime import datetime as dt
+from sqlalchemy.orm import relationship
+
 from nexnest.application import db
 
-from sqlalchemy.orm import relationship
+from .base import Base
+
+
 
 
 class Landlord(Base):

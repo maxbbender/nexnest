@@ -1,14 +1,13 @@
 from datetime import datetime as dt
 
+from sqlalchemy import event
+from sqlalchemy.orm import relationship
+
 from nexnest.application import db
 
 from .base import Base
 
-from sqlalchemy import event
-from sqlalchemy.orm import relationship
 
-
-# class PostReport(Base):
 class Tour(Base):
     __tablename__ = 'tours'
     id = db.Column(db.Integer, primary_key=True)
@@ -56,7 +55,7 @@ class Tour(Base):
         return False
 
 
-def update_date_modified(mapper, connection, target):
+def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument
     # 'target' is the inserted object
     target.date_modified = dt.now().isoformat()  # Update Date Modified
 

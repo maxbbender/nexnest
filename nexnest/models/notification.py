@@ -1,16 +1,10 @@
 from datetime import datetime as dt
 
-from nexnest.application import db, session, app
-
-from .base import Base
-
 from sqlalchemy import event
 
+from nexnest.application import db, session
 
-# from nexnest.models import direct_message
-
-
-from flask import url_for
+from .base import Base
 
 
 class Notification(Base):
@@ -29,17 +23,17 @@ class Notification(Base):
     # | group_listing_favorite| maintenance   | platform_report  | report_group
     # | report_landlord       | report_listing| security_deposit | tour
     # | maintenance_message   | rent_reminder | new_tour_time    | tour_message
-    type = db.Column(db.String(128))
+    notif_type = db.Column(db.String(128))
 
     def __init__(
             self,
             target_user,
             target_model_id,
-            type
+            notif_type
     ):
         self.target_user_id = target_user.id
         self.target_model_id = target_model_id
-        self.type = type
+        self.notif_type = notif_type
         self.viewed = False
 
         # Default Values
@@ -60,13 +54,13 @@ class Notification(Base):
         report_notification = ['platform_report', 'report_group',
                                'report_landlord', 'report_listing']
 
-        if self.type == 'direct_message':
+        if self.notif_type == 'direct_message':
             self.category = 'direct_message'
-        elif self.type in generic_message:
+        elif self.notif_type in generic_message:
             self.category = 'generic_message'
-        elif self.type in generic_notification:
+        elif self.notif_type in generic_notification:
             self.category = 'generic_notification'
-        elif self.type in report_notification:
+        elif self.notif_type in report_notification:
             self.category = 'report_notification'
 
     def __repr__(self):
@@ -74,17 +68,17 @@ class Notification(Base):
 
     @property
     def message(self):
-        message, returnObject, redirectURL = self.getNotification()
+        message, returnObject, redirectURL = self.getNotification()  # pylint: disable=unused-variable
         return message
 
     @property
     def returnObject(self):
-        message, returnObject, redirectURL = self.getNotification()
+        message, returnObject, redirectURL = self.getNotification()  # pylint: disable=unused-variable
         return returnObject
 
     @property
     def redirectURL(self):
-        message, returnObject, redirectURL = self.getNotification()
+        message, returnObject, redirectURL = self.getNotification()  # pylint: disable=unused-variable
         return redirectURL
 
     def getNotification(self):
@@ -97,11 +91,10 @@ class Notification(Base):
         from nexnest.models.group_listing_message import GroupListingMessage
         from nexnest.models.friend import Friend
         from nexnest.models.group import Group
-        from nexnest.models.group_listing import GroupListing
+        # from nexnest.models.group_listing import GroupListing
         from nexnest.models.group_listing_favorite import GroupListingFavorite
         from nexnest.models.group_message import GroupMessage
         from nexnest.models.house import House
-        from nexnest.models.message import Message
         from nexnest.models.house_message import HouseMessage
         from nexnest.models.platform_report import PlatformReport
         from nexnest.models.security_deposit import SecurityDeposit
@@ -113,7 +106,7 @@ class Notification(Base):
         message = None
         returnObject = None
         redirectURL = None
-        if self.type == 'direct_message':
+        if self.notif_type == 'direct_message':
             returnObject = session.query(DirectMessage) \
                 .filter_by(user_id=self.target_model_id) \
                 .first()
@@ -123,10 +116,8 @@ class Notification(Base):
                 redirectURL = '/user/directMessages/%d' % returnObject.user.id
 
                 return message, returnObject, redirectURL
-            else:
-                return None, None, None
 
-        elif self.type == 'platform_report':
+        elif self.notif_type == 'platform_report':
             returnObject = session.query(PlatformReport) \
                 .filter_by(id=self.target_model_id) \
                 .first()
@@ -140,10 +131,8 @@ class Notification(Base):
                 redirectURL = '/index'
 
                 return message, returnObject, redirectURL
-            else:
-                return None, None, None
 
-        elif self.type == 'friend':
+        elif self.notif_type == 'friend':
             returnObject = session.query(Friend) \
                 .filter_by(target_user_id=self.target_model_id) \
                 .first()
@@ -158,9 +147,7 @@ class Notification(Base):
                 redirectURL = '/index'
 
                 return message, returnObject, redirectURL
-            else:
-                return None, None, None
-        elif self.type == 'group_user':
+        elif self.notif_type == 'group_user':
             returnObject = session.query(Group) \
                 .filter_by(id=self.target_model_id) \
                 .first()
@@ -172,9 +159,7 @@ class Notification(Base):
                 redirectURL = '/group/view/%d' % returnObject.id
 
                 return message, returnObject, redirectURL
-            else:
-                return None, None, None
-        elif self.type == 'group_listing_favorite':
+        elif self.notif_type == 'group_listing_favorite':
             returnObject = session.query(Group) \
                 .filter_by(id=self.target_model_id) \
                 .first()
@@ -185,10 +170,8 @@ class Notification(Base):
                 redirectURL = '/group/view/%d' % returnObject.id
 
                 return message, returnObject, redirectURL
-            else:
-                return None, None, None
 
-        elif self.type == 'group_listing_message':
+        elif self.notif_type == 'group_listing_message':
             returnObject = session.query(GroupListingMessage) \
                 .filter_by(id=self.target_model_id) \
                 .first()
@@ -198,10 +181,8 @@ class Notification(Base):
 
                 redirectURL = '/houseRequest/view/%d' % returnObject.groupListing.id
                 return message, returnObject, redirectURL
-            else:
-                return None, None, None
 
-        elif self.type == 'group_message':
+        elif self.notif_type == 'group_message':
             returnObject = session.query(GroupMessage) \
                 .filter_by(id=self.target_model_id) \
                 .first()
@@ -212,12 +193,10 @@ class Notification(Base):
                 redirectURL = '/group/view/%d' % returnObject.id
 
                 return message, returnObject, redirectURL
-            else:
-                return None, None, None
 
         # If a house request has been accepted + completed, a house
         # notification gets created.
-        elif self.type == 'house':
+        elif self.notif_type == 'house':
             returnObject = session.query(House) \
                 .filter_by(id=self.target_model_id) \
                 .first()
@@ -229,10 +208,8 @@ class Notification(Base):
                 redirectURL = '/house/view/%d' % returnObject.id
 
                 return message, returnObject, redirectURL
-            else:
-                return None, None, None
 
-        elif self.type == 'house_message':
+        elif self.notif_type == 'house_message':
             returnObject = session.query(HouseMessage) \
                 .filter_by(id=self.target_model_id) \
                 .first()
@@ -243,10 +220,8 @@ class Notification(Base):
                 redirectURL = '/house/view/%d' % returnObject.house.id
 
                 return message, returnObject, redirectURL
-            else:
-                return None, None, None
 
-        elif self.type == 'group_listing_favorite':
+        elif self.notif_type == 'group_listing_favorite':
             returnObject = session.query(GroupListingFavorite) \
                 .filter_by(id=self.target_model_id) \
                 .first()
@@ -258,10 +233,8 @@ class Notification(Base):
                 redirectURL = '/group/view/%d' % returnObject.group.id
 
                 return message, returnObject, redirectURL
-            else:
-                return None, None, None
 
-        elif self.type == 'maintenance':
+        elif self.notif_type == 'maintenance':
             returnObject = session.query(Maintenance) \
                 .filter_by(id=self.target_model_id) \
                 .first()
@@ -272,10 +245,8 @@ class Notification(Base):
                 redirectURL = '/house/maintenanceRequest/%d/view' % returnObject.id
 
                 return message, returnObject, redirectURL
-            else:
-                return None, None, None
 
-        elif self.type == 'security_deposit':
+        elif self.notif_type == 'security_deposit':
             returnObject = session.query(SecurityDeposit) \
                 .filter_by(id=self.target_model_id) \
                 .first()
@@ -286,10 +257,8 @@ class Notification(Base):
                 redirectURL = '/houseRequest/view/%d' % returnObject.groupListing.id
 
                 return message, returnObject, redirectURL
-            else:
-                return None, None, None
 
-        elif self.type == 'tour':
+        elif self.notif_type == 'tour':
             returnObject = session.query(Tour) \
                 .filter_by(id=self.target_model_id) \
                 .first()
@@ -300,10 +269,8 @@ class Notification(Base):
                 redirectURL = '/tour/view/%d' % returnObject.id
 
                 return message, returnObject, redirectURL
-            else:
-                return None, None, None
 
-        elif self.type == 'maintenance_message':
+        elif self.notif_type == 'maintenance_message':
             returnObject = session.query(MaintenanceMessage) \
                 .filter_by(id=self.target_model_id) \
                 .first()
@@ -315,10 +282,8 @@ class Notification(Base):
                 redirectURL = '/house/maintenanceRequest/%d/view' % returnObject.id
 
                 return message, returnObject, redirectURL
-            else:
-                return None, None, None
 
-        elif self.type == 'new_tour_time':
+        elif self.notif_type == 'new_tour_time':
             returnObject = session.query(Tour) \
                 .filter_by(id=self.target_model_id) \
                 .first()
@@ -329,10 +294,8 @@ class Notification(Base):
                 redirectURL = '/tour/view/%d' % returnObject.id
 
                 return message, returnObject, redirectURL
-            else:
-                return None, None, None
 
-        elif self.type == 'tour_message':
+        elif self.notif_type == 'tour_message':
             returnObject = session.query(TourMessage) \
                 .filter_by(id=self.target_model_id) \
                 .first()
@@ -344,11 +307,11 @@ class Notification(Base):
                 redirectURL = '/tour/view/%d' % returnObject.id
 
                 return message, returnObject, redirectURL
-            else:
-                return None, None, None
+
+        return None, None, None
 
 
-def update_date_modified(mapper, connection, target):
+def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument
     # 'target' is the inserted object
     target.date_modified = dt.now().isoformat()  # Update Date Modified
 

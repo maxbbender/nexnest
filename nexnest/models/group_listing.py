@@ -1,16 +1,15 @@
-from nexnest.application import db
-
-from .base import Base
+import os
 
 from datetime import datetime as dt
 
 from sqlalchemy.orm import relationship
-
 from sqlalchemy.schema import UniqueConstraint
 
 from flask import flash
 
-import os
+from nexnest.application import db
+
+from .base import Base
 
 
 # class PostReport(Base):
@@ -84,21 +83,21 @@ class GroupListing(Base):
         else:
             return 'Not Accepted'
 
-    def isViewableBy(self, user, flash=True):
+    def isViewableBy(self, user, toFlash=True):
         if user in self.group.getUsers():
             return True
         elif user in self.listing.landLordsAsUsers():
             return True
         else:
-            if flash:
+            if toFlash:
                 flash("Permissions Error", 'danger')
             return False
 
-    def isEditableBy(self, user, flash=True):
+    def isEditableBy(self, user, toFlash=True):
         if user in self.listing.landLordsAsUsers():
             return True
         else:
-            if flash:
+            if toFlash:
                 flash("Permissions Error", 'danger')
             return False
 

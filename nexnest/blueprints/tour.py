@@ -13,7 +13,7 @@ from nexnest.models.tour_message import TourMessage
 
 from nexnest.utils.flash import flash_errors
 
-from sqlalchemy import asc, desc
+from sqlalchemy import desc
 
 tours = Blueprint('tours', __name__, template_folder='../templates/tour')
 

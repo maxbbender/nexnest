@@ -64,7 +64,10 @@ class Group(Base):
             flash("Group Size Limit Reached")
 
     def removeUser(self, user):
-        session.query(GroupUser).filter_by()
+        user = session.query(GroupUser).filter_by(group_id=self.id, user_id=user.id).first()
+        session.delete(user)
+        session.commit()
+        return True
 
     @property
     def unAcceptedUsers(self):
@@ -99,17 +102,17 @@ class Group(Base):
 
         return users
 
-    def isViewableBy(self, user, flash=True):
+    def isViewableBy(self, user, toFlash=True):
         if user in self.acceptedUsers:
             return True
-        elif flash:
+        elif toFlash:
             flash("You do not have permissions to view this Group", 'warning')
         return False
 
-    def isEditableBy(self, user, flash=True):
+    def isEditableBy(self, user, toFlash=True):
         if user.id == self.leader_id:
             return True
-        elif flash:
+        elif toFlash:
             flash("You do not permissions to modify this group", 'warning')
         return False
 
@@ -129,7 +132,7 @@ class Group(Base):
         return favorites
 
 
-def update_date_modified(mapper, connection, target):
+def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument
     # 'target' is the inserted object
     target.date_modified = dt.now().isoformat()  # Update Date Modified
 

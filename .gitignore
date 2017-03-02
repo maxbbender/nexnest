@@ -6,3 +6,7 @@ venv/
 .vagrant/
 *.glue
 nexnest/uploads/*
+nosetests.xml
+coverage.xml
+pylint.out
+.coverage/

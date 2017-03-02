@@ -1,16 +1,10 @@
-from flask import Blueprint
-from flask import render_template, abort, request, redirect, url_for, flash, jsonify
-
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask_login import login_required
 
 from nexnest.forms import LoginForm
-
-
-from flask_login import login_required
 from nexnest.application import session
-
 from nexnest.models.listing import Listing
 
-from nexnest.utils.flash import flash_errors
 
 indexs = Blueprint('indexs', __name__, template_folder='../templates')
 

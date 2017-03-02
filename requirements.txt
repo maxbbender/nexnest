@@ -22,5 +22,12 @@ Faker
 
 readline
 
+
+# Testing
+nose
+mamba
+nosexcover
+pylint
+
 # Admin
 flask-admin
