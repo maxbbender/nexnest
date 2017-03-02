@@ -6,8 +6,6 @@ from nexnest.application import db
 from .base import Base
 
 
-
-
 class Landlord(Base):
     __tablename__ = 'landlords'
     user_id = db.Column(db.Integer,
@@ -134,14 +132,23 @@ class Landlord(Base):
             return None
 
     def getMaintenanceRequests(self):
-        maintenanceRequests = []
+        openMaintenanceRequests = []
+        inProgressMaintenanceRequests = []
+        completedMaintenanceRequests = []
 
         for house in self.getHouses():
-            houseObject = {
-                'house': house, 'maintenanceRequests': house.activeMaintenanceRequests()}
-            maintenanceRequests.append(houseObject)
+            openMR, inProgressMR, completedMR = house.groupedMaintenanceRequests()
+            houseObject = {'house': house}
+            if len(openMR) > 0:
+                houseObject['maintenanceRequests'] = openMR
+                openMaintenanceRequests.append(houseObject)
 
-        if len(maintenanceRequests) > 0:
-            return maintenanceRequests
-        else:
-            return None
+            if len(inProgressMR) > 0:
+                houseObject['maintenanceRequests'] = inProgressMR
+                inProgressMaintenanceRequests.append(houseObject)
+
+            if len(completedMR) > 0:
+                houseObject['maintenanceRequests'] = completedMR
+                completedMaintenanceRequests.append(houseObject)
+
+        return openMaintenanceRequests, inProgressMaintenanceRequests, completedMaintenanceRequests

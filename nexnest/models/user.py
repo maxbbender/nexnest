@@ -249,7 +249,7 @@ class User(Base):
     def unreadNotifications(self):
         return self.notifications \
             .filter_by(viewed=False) \
-            .group_by(Notification.id, Notification.type, Notification.target_model_id) \
+            .group_by(Notification.id, Notification.notif_type, Notification.target_model_id) \
             .all()
         # return session.query(Notification) \
         #     .filter_by(target_user_id=self.id, viewed=False) \

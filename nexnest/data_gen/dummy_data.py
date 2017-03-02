@@ -404,7 +404,7 @@ for user in group7AcceptedUsers:
         session.commit()
 
         sdn = NotificationFactory(target_user=landlord,
-                                  type='security_deposit',
+                                  notif_type='security_deposit',
                                   target_model_id=sd.id)
     session.commit()
 

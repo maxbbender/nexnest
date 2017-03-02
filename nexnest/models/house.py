@@ -57,6 +57,21 @@ class House(Base):
 
         return maintenanceRequests
 
+    def groupedMaintenanceRequests(self):
+        openMR = []
+        inProgressMR = []
+        completedMR = []
+
+        for mr in self.maintenanceRequests:
+            if mr.status is 'open':
+                openMR.append(mr)
+            elif mr.status is 'inprogress':
+                inProgressMR.append(mr)
+            else:
+                completedMR.append(mr)
+
+        return openMR, inProgressMR, completedMR
+
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument
     # 'target' is the inserted object
