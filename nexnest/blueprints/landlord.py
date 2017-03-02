@@ -23,6 +23,7 @@ def landlordDashboard():
             .first()
 
         unAcceptedHousingRequests, acceptedHousingRequests, completedHousingRequests = landlord.getHousingRequests()
+        openMaintenanceRequests, inProgressMaintenanceRequests, completedMaintenanceRequests = landlord.getMaintenanceRequests()
 
         requestedTours, scheduledTours = landlord.getActiveTours()
 
@@ -36,7 +37,9 @@ def landlordDashboard():
                                acceptedHousingRequests=acceptedHousingRequests,
                                completedHousingRequests=completedHousingRequests,
                                houses=landlord.getHouses(),
-                               maintenanceRequests=landlord.getMaintenanceRequests())
+                               openMaintenanceRequests=openMaintenanceRequests,
+                               inProgressMaintenanceRequests=inProgressMaintenanceRequests,
+                               completedMaintenanceRequests=completedMaintenanceRequests)
     else:
         flash("You are not a landlord", 'warning')
         return redirect(url_for('indexs.index'))

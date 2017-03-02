@@ -15,6 +15,7 @@ from nexnest.models.notification import Notification
 from nexnest.models.group_listing_favorite import GroupListingFavorite
 from nexnest.models.security_deposit import SecurityDeposit
 from nexnest.models.house import House
+from nexnest.models.maintenance import Maintenance
 
 from flask import redirect, url_for
 from flask_admin import Admin
@@ -49,3 +50,5 @@ admin.add_view(AdminModelView(Notification, session))
 admin.add_view(AdminModelView(GroupListingFavorite, session))
 admin.add_view(AdminModelView(SecurityDeposit, session))
 admin.add_view(AdminModelView(House, session))
+admin.add_view(AdminModelView(Maintenance, session))
+

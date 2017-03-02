@@ -8,4 +8,8 @@ import os
 
 u = session.query(landlord.Landlord).filter_by(user_id=1).first()
 print(u)
-print(u.getMaintenanceRequests())
+openMR, ipMR, compMR = u.getMaintenanceRequests()
+
+print('Open Maintenance Requests : %r' % openMR)
+print('In Progress Maintenance Requests : %r' % ipMR)
+print('Completed Maintenance Requests : %r' % compMR)

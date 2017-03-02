@@ -138,16 +138,19 @@ class Landlord(Base):
 
         for house in self.getHouses():
             openMR, inProgressMR, completedMR = house.groupedMaintenanceRequests()
-            houseObject = {'house': house}
+            
             if len(openMR) > 0:
+                houseObject = {'house': house}
                 houseObject['maintenanceRequests'] = openMR
                 openMaintenanceRequests.append(houseObject)
 
             if len(inProgressMR) > 0:
+                houseObject = {'house': house}
                 houseObject['maintenanceRequests'] = inProgressMR
                 inProgressMaintenanceRequests.append(houseObject)
 
             if len(completedMR) > 0:
+                houseObject = {'house': house}
                 houseObject['maintenanceRequests'] = completedMR
                 completedMaintenanceRequests.append(houseObject)
 
