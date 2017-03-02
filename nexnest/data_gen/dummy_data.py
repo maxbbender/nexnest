@@ -104,43 +104,43 @@ session.commit()
 
 # GROUP FAVORITE NOTIFICATIONS
 glfn1 = NotificationFactory(target_user=user3,
-                            type='group_listing_favorite',
+                            notif_type='group_listing_favorite',
                             target_model_id=group1.id)
 glfn2 = NotificationFactory(target_user=user4,
-                            type='group_listing_favorite',
+                            notif_type='group_listing_favorite',
                             target_model_id=group1.id)
 glfn3 = NotificationFactory(target_user=user5,
-                            type='group_listing_favorite',
+                            notif_type='group_listing_favorite',
                             target_model_id=group1.id)
 glfn4 = NotificationFactory(target_user=user3,
-                            type='group_listing_favorite',
+                            notif_type='group_listing_favorite',
                             target_model_id=group1.id)
 glfn5 = NotificationFactory(target_user=user6,
-                            type='group_listing_favorite',
+                            notif_type='group_listing_favorite',
                             target_model_id=group2.id)
 glfn6 = NotificationFactory(target_user=user8,
-                            type='group_listing_favorite',
+                            notif_type='group_listing_favorite',
                             target_model_id=group3.id)
 
 
 # GROUP USER NOTIFICATIONS
 gun1 = NotificationFactory(target_user=groupuser4.user,
-                           type='group_user',
+                           notif_type='group_user',
                            target_model_id=groupuser4.group.id)
 gun2 = NotificationFactory(target_user=groupuser5.user,
-                           type='group_user',
+                           notif_type='group_user',
                            target_model_id=groupuser5.group.id)
 gun3 = NotificationFactory(target_user=groupuser8.user,
-                           type='group_user',
+                           notif_type='group_user',
                            target_model_id=groupuser8.group.id)
 gun4 = NotificationFactory(target_user=groupuser9.user,
-                           type='group_user',
+                           notif_type='group_user',
                            target_model_id=groupuser9.group.id)
 gun5 = NotificationFactory(target_user=groupuser10.user,
-                           type='group_user',
+                           notif_type='group_user',
                            target_model_id=groupuser10.group.id)
 gun6 = NotificationFactory(target_user=groupuser11.user,
-                           type='group_user',
+                           notif_type='group_user',
                            target_model_id=groupuser11.group.id)
 
 session.commit()
@@ -158,7 +158,7 @@ for i in range(10):
     for user in group1AcceptedUsers:
         if user is not source_user:
             gmn = NotificationFactory(target_user=user,
-                                      type='group_message',
+                                      notif_type='group_message',
                                       target_model_id=gmsg.id)
             session.commit()
 
@@ -179,7 +179,7 @@ for i in range(10):
 
     # Direct Messages Notifications
     dmn = NotificationFactory(target_user=target_user,
-                              type='direct_message',
+                              notif_type='direct_message',
                               target_model_id=source_user.id)
     session.commit()
 
@@ -199,25 +199,25 @@ t6.tour_confirmed = True
 session.commit()
 
 newTourTimeNotif1 = NotificationFactory(target_user=landlord,
-                                        type='new_tour_time',
+                                        notif_type='new_tour_time',
                                         target_model_id=t1.id)
 newTourTimeNotif2 = NotificationFactory(target_user=user2,
-                                        type='new_tour_time',
+                                        notif_type='new_tour_time',
                                         target_model_id=t1.id)
 session.commit()
 
 # TOUR NOTIFICATIONS
 tn1 = NotificationFactory(target_user=landlord,
-                          type='tour',
+                          notif_type='tour',
                           target_model_id=t1.id)
 tn2 = NotificationFactory(target_user=landlord,
-                          type='tour',
+                          notif_type='tour',
                           target_model_id=t2.id)
 tn3 = NotificationFactory(target_user=landlord,
-                          type='tour',
+                          notif_type='tour',
                           target_model_id=t3.id)
 tn4 = NotificationFactory(target_user=landlord,
-                          type='tour',
+                          notif_type='tour',
                           target_model_id=t4.id)
 
 session.commit()
@@ -230,7 +230,7 @@ for i in range(5):
         session.commit()
         for user in group1AcceptedUsers:
             tmn = NotificationFactory(target_user=user,
-                                      type='tour_message',
+                                      notif_type='tour_message',
                                       target_model_id=tm.id)
             session.commit()
     else:
@@ -243,12 +243,12 @@ for i in range(5):
         for tempUser in group1AcceptedUsers:
             if tempUser is not user:
                 tmn = NotificationFactory(target_user=tempUser,
-                                          type='tour_message',
+                                          notif_type='tour_message',
                                           target_model_id=tm.id)
                 session.commit()
 
         tmn = NotificationFactory(target_user=landlord,
-                                  type='tour_message',
+                                  notif_type='tour_message',
                                   target_model_id=tm.id)
         session.commit()
 
@@ -275,7 +275,7 @@ for i in range(10):
     for user in group1AcceptedUsers:
         if user is not userTemp:
             glmn = NotificationFactory(target_user=user,
-                                       type='group_listing_message',
+                                       notif_type='group_listing_message',
                                        target_model_id=glm.id)
             session.commit()
 
@@ -308,7 +308,7 @@ for user in group1AcceptedUsers:
         session.commit()
 
         sdn = NotificationFactory(target_user=landlord,
-                                  type='security_deposit',
+                                  notif_type='security_deposit',
                                   target_model_id=sd.id)
     session.commit()
 
@@ -320,7 +320,7 @@ session.commit()
 
 for user in group1AcceptedUsers:
     hnf = NotificationFactory(target_user=user,
-                              type='house',
+                              notif_type='house',
                               target_model_id=h1.id)
 
 # House Messages
@@ -334,7 +334,7 @@ for i in range(3):
     for userTemp in group1AcceptedUsers:
         if userTemp is not user:
             hmn = NotificationFactory(target_user=userTemp,
-                                      type='house_message',
+                                      notif_type='house_message',
                                       target_model_id=hm.id)
             session.commit()
 
@@ -345,7 +345,7 @@ session.commit()
 
 for user in group1AcceptedUsers:
     hmn = NotificationFactory(target_user=user,
-                              type='house_message',
+                              notif_type='house_message',
                               target_model_id=hm.id)
     session.commit()
 
@@ -361,13 +361,13 @@ m3.status = 'completed'
 session.commit()
 
 mn1 = NotificationFactory(target_user=landlord,
-                          type='maintenance',
+                          notif_type='maintenance',
                           target_model_id=m1.id)
 mn2 = NotificationFactory(target_user=landlord,
-                          type='maintenance',
+                          notif_type='maintenance',
                           target_model_id=m2.id)
 mn3 = NotificationFactory(target_user=landlord,
-                          type='maintenance',
+                          notif_type='maintenance',
                           target_model_id=m3.id)
 session.commit()
 
@@ -384,11 +384,11 @@ for i in range(5):
     for tempUser in group1AcceptedUsers:
         if tempUser is not user:
             mmn = NotificationFactory(target_user=tempUser,
-                                      type='maintenance_message',
+                                      notif_type='maintenance_message',
                                       target_model_id=mm.id)
             session.commit()
     mmn = NotificationFactory(target_user=landlord,
-                              type='maintenance_message',
+                              notif_type='maintenance_message',
                               target_model_id=mm.id)
     session.commit()
 
