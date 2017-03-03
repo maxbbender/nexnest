@@ -299,7 +299,7 @@
         							                    		</div>
         							                    	</div>
 	        	                    	        			{% for tour in tourObject.tours %}
-	        	                    	        				<div class="row">
+	        	                    	        				<div class="row" id="requestedTour{{tour.id}}">
 	        	                    	        					<div class="col-xl-1"></div>
 	        	                    	        					<div class="col-xl-10">
 			        	                    	        				<div class="card">
@@ -314,6 +314,11 @@
 						        	                    	            						<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
 								        	                    	            					<div id="acceptTourButton{{tour.id}}">
 								        	                    	            						<button class="btn btn-success" onclick="acceptTour({{tour.id}})">Accept Tour</button>
+								        	                    	            					</div>
+								        	                    	            					<div id="acceptTourLoading{{tour.id}}" style="display: none;">
+								        	                    	            						<button class="btn btn-success" style="width: 117.5px;">
+								        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+								        	                    	            						</button>
 								        	                    	            					</div>
 								        	                    	            					<div id="acceptTourUndo{{tour.id}}" style="display: none; padding-top: 6px;">	
 								        	                    	            						<a href="#!" class="alert-link" onclick="undoAcceptTour({{tour.id}})">Undo</a>
@@ -414,6 +419,14 @@
 					                    			      					    	</div>
 					                    			      					    </div>
 					                    			      					</div>
+					                    			      				</div>
+					                    			      			</div>
+					                    			      		</div>
+					                    			      		<div class="row" id="undoAcceptTourDiv{{tour.id}}" style="display: none;">
+					                    			      			<div class="col-xl-1"></div>
+					                    			      			<div class="col-xl-10">
+					                    			      				<div class="alert alert-info" role="alert">
+					                    			      				    You have just accepted a tour for {{ tour.time_requested }} <a href="#!" class="alert-link" onclick="undoAcceptTour({{tour.id}})">Undo?</a>
 					                    			      				</div>
 					                    			      			</div>
 					                    			      		</div>
@@ -894,12 +907,23 @@
 <script>
 	function acceptTour(id){
         $("#acceptTourButton"+id).hide();
-        $("#acceptTourUndo"+id).show();
+        $("#acceptTourLoading"+id).show();
+        // setTimeout(function () {
+        // 	$("#acceptTourLoading"+id).hide();
+        // }, 1200);
+        setTimeout(function () {
+        	$("#requestedTour"+id).fadeOut(300);
+        	$("#undoAcceptTourDiv"+id).show(500);
+        	$("#undoAcceptTourDiv"+id).delay(8000).fadeOut(300);
+        }, 1200);
     }
 
     function undoAcceptTour(id){
+    	$("#acceptTourLoading"+id).hide();
         $("#acceptTourButton"+id).show();
         $("#acceptTourUndo"+id).hide();
+        $("#undoAcceptTourDiv"+id).hide();
+        $("#requestedTour"+id).show();
     }
 
     function declineTour(id){
@@ -955,7 +979,7 @@
         $("#input_id").val(id);
         $("#requestedDateTime").val($("#tourRequestTime").val());
         $("#request_tour_time_change").submit()
-    }
+    }   
 
 </script>
 {% endblock %}
