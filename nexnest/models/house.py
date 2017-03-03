@@ -1,16 +1,15 @@
 from datetime import datetime as dt
 
-from nexnest.application import db
-
-from .base import Base
-
 from sqlalchemy import event
 from sqlalchemy.orm import relationship
 
 from flask import flash
 
+from nexnest.application import db
 
-# class PostReport(Base):
+from .base import Base
+
+
 class House(Base):
     __tablename__ = 'houses'
     id = db.Column(db.Integer, primary_key=True)
@@ -58,8 +57,27 @@ class House(Base):
 
         return maintenanceRequests
 
+    def groupedMaintenanceRequests(self):
+        openMR = []
+        inProgressMR = []
+        completedMR = []
 
-def update_date_modified(mapper, connection, target):
+        for mr in self.maintenanceRequests:
+            # print('Maintenance Request %r ~ Status %s' % (mr, mr.status))
+            if mr.status == 'open':
+                openMR.append(mr)
+            elif mr.status == 'inprogress':
+                inProgressMR.append(mr)
+            else:
+                completedMR.append(mr)
+
+        # print(openMR)
+        # print(inProgressMR)
+        # print(completedMR)
+        return openMR, inProgressMR, completedMR
+
+
+def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument
     # 'target' is the inserted object
     target.date_modified = dt.now().isoformat()  # Update Date Modified
 

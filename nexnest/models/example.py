@@ -1,3 +1,4 @@
+# pylint: skip-file
 from datetime import datetime as dt
 
 from nexnest.application import db

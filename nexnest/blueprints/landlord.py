@@ -4,10 +4,7 @@ from flask_login import login_required, current_user
 
 from nexnest.application import session
 
-from nexnest.models.listing import Listing
 from nexnest.models.landlord import Landlord
-from nexnest.models.landlord_listing import LandlordListing
-from nexnest.models.group_listing import GroupListing
 
 from nexnest.forms import TourDateChangeForm
 
@@ -26,6 +23,8 @@ def landlordDashboard():
             .first()
 
         unAcceptedHousingRequests, acceptedHousingRequests, completedHousingRequests = landlord.getHousingRequests()
+        openMaintenanceRequests, inProgressMaintenanceRequests, completedMaintenanceRequests = landlord.getMaintenanceRequests()
+        currentHouses, futureHouses = landlord.getHouses()
 
         requestedTours, scheduledTours = landlord.getActiveTours()
 
@@ -38,8 +37,11 @@ def landlordDashboard():
                                unAcceptedHousingRequests=unAcceptedHousingRequests,
                                acceptedHousingRequests=acceptedHousingRequests,
                                completedHousingRequests=completedHousingRequests,
-                               houses=landlord.getHouses(),
-                               maintenanceRequests=landlord.getMaintenanceRequests())
+                               currentHouses=currentHouses,
+                               futureHouses=futureHouses,
+                               openMaintenanceRequests=openMaintenanceRequests,
+                               inProgressMaintenanceRequests=inProgressMaintenanceRequests,
+                               completedMaintenanceRequests=completedMaintenanceRequests)
     else:
         flash("You are not a landlord", 'warning')
         return redirect(url_for('indexs.index'))

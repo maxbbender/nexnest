@@ -1,23 +1,17 @@
-
-from nexnest.application import db, session
-from nexnest.utils.password import hash_password
-
-# from nexnest.models import Group, GroupUser, GroupListing, Notification, DirectMessage
-# from nexnest.models.group import Group
-# from nexnest.models import direct_message
-from nexnest.models.group_user import GroupUser
-from nexnest.models.group_listing import GroupListing
-from nexnest.models.notification import Notification
-
-
-from .base import Base
-from .landlord import Landlord
-
 from datetime import datetime as dt
 
 from sqlalchemy.orm import relationship
 
 from flask import flash
+
+from nexnest.application import db, session
+from nexnest.utils.password import hash_password
+from nexnest.models.group_user import GroupUser
+from nexnest.models.group_listing import GroupListing
+from nexnest.models.notification import Notification
+from nexnest.models.landlord import Landlord
+
+from .base import Base
 
 
 class User(Base):
@@ -255,7 +249,7 @@ class User(Base):
     def unreadNotifications(self):
         return self.notifications \
             .filter_by(viewed=False) \
-            .group_by(Notification.id, Notification.type, Notification.target_model_id) \
+            .group_by(Notification.id, Notification.notif_type, Notification.target_model_id) \
             .all()
         # return session.query(Notification) \
         #     .filter_by(target_user_id=self.id, viewed=False) \

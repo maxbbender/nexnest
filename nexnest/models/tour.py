@@ -1,14 +1,15 @@
 from datetime import datetime as dt
 
+from sqlalchemy import event
+from sqlalchemy.orm import relationship
+
+from flask import flash
+
 from nexnest.application import db
 
 from .base import Base
 
-from sqlalchemy import event
-from sqlalchemy.orm import relationship
 
-
-# class PostReport(Base):
 class Tour(Base):
     __tablename__ = 'tours'
     id = db.Column(db.Integer, primary_key=True)
@@ -19,6 +20,7 @@ class Tour(Base):
     date_modified = db.Column(db.DateTime)
     tour_confirmed = db.Column(db.Boolean)
     last_requested = db.Column(db.String(8))
+    declined = db.Column(db.Boolean)
     messages = relationship('TourMessage', backref='tour')
 
     def __init__(
@@ -34,6 +36,7 @@ class Tour(Base):
 
         self.last_requested = 'group'
         self.tour_confirmed = False
+        self.declined = False
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
@@ -43,20 +46,24 @@ class Tour(Base):
     def __repr__(self):
         return '<Tour %r>' % self.id
 
-    def isViewableBy(self, user):
+    def isViewableBy(self, user, toFlash=True):
         if user in self.group.getUsers() or user in self.listing.landLordsAsUsers():
             return True
+        elif toFlash:
+            flash("Permissions Error")
 
         return False
 
-    def isEditableBy(self, user):
+    def isEditableBy(self, user, toFlash=True):
         if user == self.group.leader or user in self.listing.landLordsAsUsers():
             return True
+        elif toFlash:
+            flash("Permissions Error")
 
         return False
 
 
-def update_date_modified(mapper, connection, target):
+def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument
     # 'target' is the inserted object
     target.date_modified = dt.now().isoformat()  # Update Date Modified
 

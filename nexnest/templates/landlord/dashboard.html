@@ -908,14 +908,23 @@
 	function acceptTour(id){
         $("#acceptTourButton"+id).hide();
         $("#acceptTourLoading"+id).show();
-        // setTimeout(function () {
-        // 	$("#acceptTourLoading"+id).hide();
-        // }, 1200);
         setTimeout(function () {
         	$("#requestedTour"+id).fadeOut(300);
         	$("#undoAcceptTourDiv"+id).show(500);
         	$("#undoAcceptTourDiv"+id).delay(8000).fadeOut(300);
         }, 1200);
+        requestURL = '/tour/' + id + '/confirm/ajax';
+        setTimeout(function () {
+	        $.getJSON(requestURL, function(data) {
+	            results = data['results'];
+	            // alert(data['results'].success);
+	            if (results.success == true){ 
+	                alert("Tour accepted now we need to move this element to 'Scheduled Tours'... make sure to make the button think toO!");
+	            } else {
+	                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+	            }
+	        });
+	    }, 9000);
     }
 
     function undoAcceptTour(id){
@@ -924,16 +933,48 @@
         $("#acceptTourUndo"+id).hide();
         $("#undoAcceptTourDiv"+id).hide();
         $("#requestedTour"+id).show();
+        requestURL = '/tour/' + id + '/unConfirm/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+                alert("Tour has been un-accepted now we need to move this element to 'Requested Tours'");
+                $("#acceptTourButton"+id).show();
+                $("#acceptTourUndo"+id).hide();
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
     }
 
     function declineTour(id){
-        $("#declineTourButton"+id).hide();
-        $("#declineTourUndo"+id).show();
+        requestURL = '/tour/' + id + '/decline/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+                alert("Tour has been declined, just hide element after 5 seconds or so along with the undo button'");
+                $("#declineTourButton"+id).hide();
+                $("#declineTourUndo"+id).show();
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
     }
 
     function undoDeclineTour(id){
-        $("#declineTourButton"+id).show();
-        $("#declineTourUndo"+id).hide();
+        requestURL = '/tour/' + id + '/unDecline/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+                alert("Tour has been unDeclined, Don't hide it!");
+                $("#declineTourButton"+id).show();
+                $("#declineTourUndo"+id).hide();
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
     }
 
     function cancelTour(id){

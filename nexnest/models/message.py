@@ -1,13 +1,12 @@
 from datetime import datetime as dt
 
+from sqlalchemy import event
+
 from nexnest.application import db
 
 from .base import Base
 
-from sqlalchemy import event
 
-
-# class PostReport(Base):
 class Message(Base):
     __tablename__ = 'messages'
     id = db.Column(db.Integer, primary_key=True)
@@ -43,7 +42,7 @@ class Message(Base):
         return self.content[0:50] + "..."
 
 
-def update_date_modified(mapper, connection, target):
+def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument
     # 'target' is the inserted object
     target.date_modified = dt.now().isoformat()  # Update Date Modified
 

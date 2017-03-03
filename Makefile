@@ -19,7 +19,8 @@ sync:
 	NEXNEST_ENV=test python db/manage.py version_control
 	NEXNEST_ENV=test python db/manage.py upgrade
 
-	python data_create.py
+
+	NEXNEST_ENV=development python data_create.py
 
 user_setup:
 	sudo -u postgres createuser -U postgres -p 5432 -d -w nexnest_development
@@ -43,3 +44,14 @@ server:
 
 psql:
 	psql -U nexnest_development
+
+test:
+	NEXNEST_ENV=test nosetests --with-xcoverage --with-xunit --cover-package=nexnest --cover-erase
+	NEXNEST_ENV=test pylint -f parseable nexnest/ | tee pylint.out
+
+test_setup:
+	# nexnest_test ~~ Drop->Create->Version Control->InitDB->[INIT DATA]
+	dropdb -U nexnest_test nexnest_test --if-exists
+	createdb -U nexnest_test -O nexnest_test -h localhost -p 5432 nexnest_test
+	NEXNEST_ENV=test python db/manage.py version_control
+	NEXNEST_ENV=test python db/manage.py upgrade

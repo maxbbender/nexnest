@@ -1,6 +1,8 @@
-from nexnest.application import session
+# pylint: disable=E0602
 
+from nexnest.application import session
 from nexnest.models import *
+from nexnest.static.dataSets import maintenanceRequestTypes, notificationTypes
 
 import factory
 from faker import Faker
@@ -9,7 +11,6 @@ from datetime import date
 
 import random
 
-from nexnest.static.dataSets import maintenanceRequestTypes, notificationTypes
 
 fake = Faker()
 
@@ -253,7 +254,7 @@ class NotificationFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     target_user = factory.SubFactory(UserFactory)
     target_model_id = -1
-    type = random.choice(notificationTypes)
+    notif_type = random.choice(notificationTypes)
 
 
 class GroupListingFavoriteFactory(factory.alchemy.SQLAlchemyModelFactory):
