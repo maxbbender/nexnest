@@ -472,7 +472,7 @@
         							                    		</div>
         							                    	</div>
 	        	                    	        			{% for tour in tourObject.tours %}
-	        	                    	        				<div class="row">
+	        	                    	        				<div class="row" id="scheduledTour{{tour.id}}">
 	        	                    	        					<div class="col-xl-1"></div>
 	        	                    	        					<div class="col-xl-10">
 			        	                    	        				<div class="card">
@@ -487,8 +487,10 @@
 							        	                    	            					<div id="cancelTourButton{{tour.id}}" style="padding-left: 15px;">
 							        	                    	            						<button class="btn btn-danger" onclick="cancelTour({{tour.id}})">Cancel Tour</button>
 							        	                    	            					</div>
-							        	                    	            					<div id="cancelTourUndo{{tour.id}}" style="display: none; padding-left: 15px;">
-							        	                    	            						<a href="#!" class="alert-link" onclick="undoCancelTour({{tour.id}})">Undo</a>
+							        	                    	            					<div id="cancelTourLoading{{tour.id}}" style="display: none; padding-left: 15px;">
+							        	                    	            						<button class="btn btn-danger" style="width: 117.5px;">
+							        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+							        	                    	            						</button>
 							        	                    	            					</div>
 							        	                    	            				</div>
 					        	                    	            					</div>
@@ -567,20 +569,19 @@
 					                    			      				</div>
 					                    			      			</div>
 					                    			      		</div>
+					                    			      		<div class="row" id="undoCancelTourDiv{{tour.id}}" style="display: none;">
+					                    			      			<div class="col-xl-1"></div>
+					                    			      			<div class="col-xl-10">
+					                    			      				<div class="alert alert-info" role="alert">
+					                    			      				    You have just canceled a tour for {{ tour.time_requested }} <a href="#!" class="alert-link" onclick="undoCancelTour({{tour.id}})">Undo?</a>
+					                    			      				</div>
+					                    			      			</div>
+					                    			      		</div>
 	        	                    	        			{% endfor %}
 					        	                        </div>
 					        	                    </div>
 			            						{% endfor %}
 		            						{% endif %}
-		        	                    </div>
-		        	                    <div class="tab-pane" id="completedToursTab" role="tabpanel" style="padding: 0px;">
-		        	                        {% for listing in listings %}
-			            						{% for tour in listing.tours %}
-			            							{% if tour.tour_confirmed %}
-			            								
-			            							{% endif %}
-			            						{% endfor %}
-		            						{% endfor %}
 		        	                    </div>
 		        	                </div>
 		        	            </div>
@@ -995,13 +996,43 @@
     }
 
     function cancelTour(id){
-        $("#cancelTourButton"+id).hide();
-        $("#cancelTourUndo"+id).show();
+    	$("#cancelTourButton"+id).hide();
+        $("#cancelTourLoading"+id).show();
+        setTimeout(function () {
+        	$("#scheduledTour"+id).fadeOut(300);
+        	$("#undoCancelTourDiv"+id).show(500);
+        	$("#undoCancelTourDiv"+id).delay(8000).fadeOut(300);
+        }, 1200);
+        requestURL = '/tour/' + id + '/decline/ajax';
+        setTimeout(function () {
+	        $.getJSON(requestURL, function(data) {
+	            results = data['results'];
+	            // alert(data['results'].success);
+	            if (results.success == true){ 
+	                alert("Tour has been declined, just hide element after 5 seconds or so along with the undo button'");
+	            } else {
+	                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+	            }
+	        });
+	    }, 9000);
     }
 
     function undoCancelTour(id){
+    	$("#cancelTourLoading"+id).hide();
         $("#cancelTourButton"+id).show();
         $("#cancelTourUndo"+id).hide();
+        $("#undoCancelTourDiv"+id).hide();
+        $("#scheduledTour"+id).show();
+        requestURL = '/tour/' + id + '/unDecline/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+                alert("Tour has been unDeclined, Don't hide it!");
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
     }
 
 	$(document).ready(function() {
