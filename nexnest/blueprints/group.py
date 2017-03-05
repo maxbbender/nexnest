@@ -93,7 +93,7 @@ def viewGroup(group_id):
 
     # Let's get the group's tours
     tours = session.query(Tour)\
-        .filter_by(group_id=group.id)\
+        .filter_by(group_id=group.id, declined=False)\
         .order_by(asc(Tour.last_requested))\
         .all()
 

@@ -60,6 +60,9 @@ class Landlord(Base):
                 schTours = []
 
                 for tour in listing.tours:
+                    if tour.declined:
+                        continue
+
                     if tour.time_requested >= datetime.now():
                         if tour.tour_confirmed:
                             schTours.append(tour)
