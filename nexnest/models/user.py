@@ -247,13 +247,25 @@ class User(Base):
     #     return mySentMessages
 
     def unreadNotifications(self):
-        return self.notifications \
+        allNotifications = self.notifications \
             .filter_by(viewed=False) \
             .group_by(Notification.id, Notification.notif_type, Notification.target_model_id) \
             .all()
-        # return session.query(Notification) \
-        #     .filter_by(target_user_id=self.id, viewed=False) \
-        #     .all()
+
+        messages = []
+        notifications = []
+
+        messageTypes = ['group_listing_message', 'group_message',
+                        'house_message', 'tour_message',
+                        'maintenance_message', 'direct_message']
+
+        for notification in allNotifications:
+            if notification.notif_type in messageTypes:
+                messages.append(notification)
+            else:
+                notifications.append(notification)
+
+        return messages, notifications
 
     @property
     def name(self):

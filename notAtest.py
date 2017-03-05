@@ -6,10 +6,10 @@ from nexnest.models import *
 import os
 
 
-u = session.query(landlord.Landlord).filter_by(user_id=1).first()
+u = session.query(user.User).filter_by(id=1).first()
 print(u)
 
-currH, futureH = u.getHouses()
+m, n = u.unreadNotifications()
 
-print("Current Houses %r" % currH)
-print("Future Houses %r" % futureH)
+print("Messages %r" % m)
+print("not %r" % n)

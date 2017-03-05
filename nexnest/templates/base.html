@@ -23,12 +23,20 @@
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 	<body>
-        <!-- {% for notification in notifications %}
+        <h1>NOTIFICATIONS</h1>
+        {% for notification in notifications %}
             <strong>{{notification.type}}</strong><br>
             {{notification.message}}<br>
             {{notification.returnObject}}<br>
             {{notification.redirectURL}}<br>
-        {% endfor %} -->
+        {% endfor %}
+        <h1>MESSAGES</h1>
+        {% for message in messages %}
+            <strong>{{message.type}}</strong><br>
+            {{message.message}}<br>
+            {{message.returnObject}}<br>
+            {{message.redirectURL}}<br>
+        {% endfor %}
 		<nav class="navbar navbar-light bg-faded">
 			<a class="navbar-brand" href="{{ url_for('indexs.index') }}">NexNest</a>
 		    <ul class="nav navbar-nav">
