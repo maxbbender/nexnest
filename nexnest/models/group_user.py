@@ -37,6 +37,8 @@ class GroupUser(Base):
     ):
         self.group_id = group.id
         self.user_id = user.id
+        self.group = group
+        self.user = user
 
         self.accepted = False
         self.show = True
