@@ -15,7 +15,8 @@ notifications = Table('notifications', meta,
                       Column('date_modified', DateTime()),
                       Column('category', Text()),
                       # Column('message', Text()),
-                      Column('notif_type', String(length=128)))
+                      Column('notif_type', String(length=128)),
+                      Column('redirect_url', String(length=128)))
 
 
 def upgrade(migrate_engine):

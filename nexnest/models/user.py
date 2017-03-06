@@ -249,8 +249,9 @@ class User(Base):
     def unreadNotifications(self):
         allNotifications = self.notifications \
             .filter_by(viewed=False) \
-            .group_by(Notification.id, Notification.notif_type, Notification.target_model_id) \
-            .all()
+            .group_by(Notification.id, Notification.notif_type, Notification.redirect_url).all()
+
+        # print(allNotifications)
 
         messages = []
         notifications = []
