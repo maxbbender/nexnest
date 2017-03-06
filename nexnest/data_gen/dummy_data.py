@@ -461,6 +461,8 @@ m7 = MaintenanceFactory(house=h3, user=user4)
 
 m2.status = 'inprogress'
 m3.status = 'completed'
+m6.status = 'inprogress'
+m7.status = 'inprogress'
 
 session.commit()
 

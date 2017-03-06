@@ -974,7 +974,87 @@
 		            						{% endif %}
 		        	                    </div>
 		        	                    <div class="tab-pane" id="inProgressMaintenanceTab" role="tabpanel" style="padding: 0px;">
-		        	                    	In-Progress
+		        	                    	{% if inProgressMaintenanceRequests|length > 0 %}
+		        	                            {% for requestObject in inProgressMaintenanceRequests %}		        	                            
+		        	                            	<div id="numberOfInProgressRequests{{requestObject.house.listing.id}}" style="display: none;">{{requestObject.maintenanceRequests|length }}</div>
+		        	                            	<div id="doIShowInProgressRequestsDiv{{requestObject.house.listing.id}}" style="display: none;">show</div>
+		        	                            	<div class="card" id="inProgressRequestListing{{requestObject.house.listing.id}}" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+        							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
+        								                    <div class="row">
+        								                    	<div class="col-xl-12">
+        								                    		<h3 id="inProgressRequestsCount{{requestObject.house.listing.id}}"><strong>
+        								                    		{{requestObject.maintenanceRequests|length }} In Progress Maintenance Request(s) for {{requestObject.house.listing.street}}</strong></h3>
+        								                    	</div>
+        								                    </div>			                    
+        							                    </div>
+        							                    <div class="card-block">
+        							                    	<div class="row">
+        							                    		<div class="col-xl-1"></div>
+        							                    		<div class="col-xl-10">
+        							                    			<strong><h2>Maintenance Requests for this listing: </h2></strong>
+        							                    		</div>
+        							                    	</div>
+	        	                    	        			{% for request in requestObject.maintenanceRequests %}
+	        	                    	        				<div class="row" id="inProgress{{request.id}}">
+	        	                    	        					<div class="col-xl-1"></div>
+	        	                    	        					<div class="col-xl-10">
+			        	                    	        				<div class="card">
+		        							                    			<div class="card-header">
+		        							                    				<div class="row">
+		        								                    				<div class="col-xl-10">
+					        	                    	            					<h3><strong>{{request.request_type}} </strong></h3>
+					        	                    	            					Reported on: {{request.date_created}}
+					        	                    	            					<br><br>
+					        	                    	            					<div class="row">
+							        	                    	            				<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+							        	                    	            					<div id="inProgressToCompletedButton{{request.id}}">
+							        	                    	            						<button class="btn btn-success" onclick="inProgressToCompleted({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.listing.street}}')">Mark Completed</button>
+							        	                    	            					</div>
+							        	                    	            					<div id="inProgressToCompletedLoading{{request.id}}" style="display: none;">
+							        	                    	            						<button class="btn btn-success" style="width: 152.33px;">
+							        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+							        	                    	            						</button>
+							        	                    	            					</div>
+							        	                    	            				</div>
+						        	                    	            				</div>
+					        	                    	            				</div>
+					        	                    	            				<div class="col-xl-2" style="text-align: right;">
+					        	                    	            					<a class="btn btn-primary" href="{{ url_for('houses.maintenanceRequestView', id=request.id) }}">View Request</a>
+					        	                    	            				</div>
+					        	                    	            			</div>
+					        	                    	            		</div>
+					        	                    	            		<div class="card-block">
+		        							                    				<div class="row">
+		        							                    					<div class="col-xs-12">
+		        							                    						<strong>Reported by:</strong> {{request.user.name}}
+		        							                    						<br><br>
+		        							                    						<strong>Details: </strong>{{request.details}}
+					                    			      					    	</div>
+					                    			      					    </div>
+					                    			      					</div>
+					                    			      				</div>
+					                    			      			</div>
+					                    			      		</div>
+					                    			      		<div class="row" id="undoInProgressToCompleted{{request.id}}" style="display: none;">
+					                    			      			<div class="col-xl-1"></div>
+					                    			      			<div class="col-xl-10">
+					                    			      				<div class="alert alert-info" role="alert">
+					                    			      				    Marked as Completed <a href="#!" class="alert-link" onclick="undoInProgressToCompleted({{request.id}}, {{request.house.listing.id}}, '{{requestObject.house.listing.street}}')">Undo?</a>
+					                    			      				</div>
+					                    			      			</div>
+					                    			      		</div>
+	        	                    	        			{% endfor %}
+					        	                        </div>
+					        	                    </div>
+			            						{% endfor %}
+			            						<div id="noInProgressMaintenanceRequests" style="display: none;" class="alert alert-info" role="alert">
+			            							<strong>No In Progress Maintenance Requests</strong>
+			            						</div>
+		            						{% else %}
+		            							<div class="alert alert-info" role="alert">
+		            								<strong>No In Progress Maintenance Requests</strong>
+		            							</div>
+		            						{% endif %}
 		        	                    </div>
 		        	                    <div class="tab-pane" id="completedMaintenanceTab" role="tabpanel" style="padding: 0px;">
 		        	                    	Completed
@@ -1039,6 +1119,8 @@
 	var setInProgressChangeDivTimeoutTimer;
 	var setCompletedUndoTimeoutTimer;
 	var setCompletedChangeDivTimeoutTimer;
+	var markCompletedUndoTimeoutTimer;
+	var markCompletedChangeDivTimeoutTimer;
 
 	function acceptTour(id, surroundingID, listing){
 		var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
@@ -1352,10 +1434,9 @@
         setTimeout(function () {
         	$("#openRequest"+id).fadeOut(300);
         	$("#undoMarkCompleted"+id).show();
-        	timeoutTimer = setTimeout(function () {
+        	markCompletedUndoTimeoutTimer = setTimeout(function () {
 	        	$("#undoMarkCompleted"+id).fadeOut(300);
         	}, 8000);
-        	$("#undoMarkCompleted"+id).delay(8000).fadeOut(300);
         }, 1200);
         // requestURL = '/tour/' + id + '/confirm/ajax';
         // $.getJSON(requestURL, function(data) {
@@ -1420,6 +1501,82 @@
     		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
     	}    	
     	$("#noNewMaintenanceRequests").hide();
+    }
+
+    function inProgressToCompleted(id, surroundingID, listing){
+		var count = parseFloat($("#numberOfInProgressRequests"+surroundingID).html()) || 0;		
+        $("#inProgressToCompletedButton"+id).hide();
+        $("#inProgressToCompletedLoading"+id).show();
+        setTimeout(function () {
+        	$("#inProgress"+id).fadeOut(300);
+        	$("#undoInProgressToCompleted"+id).show();
+        	markCompletedUndoTimeoutTimer = setTimeout(function () {
+	        	$("#undoInProgressToCompleted"+id).fadeOut(300);
+        	}, 8000);
+        	$("#undoMarkCompleted"+id).delay(8000).fadeOut(300);
+        }, 1200);
+        // requestURL = '/tour/' + id + '/confirm/ajax';
+        // $.getJSON(requestURL, function(data) {
+        //     results = data['results'];
+        //     // alert(data['results'].success);
+        //     if (results.success == true){ 
+        //         //alert("Tour accepted now we need to move this element to 'Scheduled Tours'... make sure to make the button think toO!");
+        //     } else {
+        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+        //     }
+        // });
+        $("#doIShowInProgressRequestsDiv"+surroundingID).html("hide");
+        $("#numberOfInProgressRequests"+surroundingID).html(count-1);
+        markCompletedChangeDivTimeoutTimer = setTimeout(function () {
+        	count = parseFloat($("#numberOfInProgressRequests"+surroundingID).html()) || 0;
+        	if(count == 0){
+        		if($("#doIShowInProgressRequestsDiv"+surroundingID).html() == "hide"){
+        			$("#inProgressRequestListing"+surroundingID).fadeOut(300);
+        			$("#noInProgressMaintenanceRequests").show();
+        		}
+        	}
+        	else if(count == 1){
+        		$("#inProgressRequestsCount"+surroundingID).html("<h3><strong>" + count + ' In Progress Maintenance Request(s) for ' + listing + "</strong></h3>");
+        		$("#noInProgressMaintenanceRequests").hide();
+        	}
+        	else if(count > 1){
+        		$("#inProgressRequestsCount"+surroundingID).html("<h3><strong>" + count + ' In Progress Maintenance Request(s) for ' + listing + "</strong></h3>");
+        		$("#noInProgressMaintenanceRequests").hide();
+        	}        	
+        }, 10000);
+    }
+
+    function undoInProgressToCompleted(id, surroundingID, listing){    	
+    	clearTimeout(markCompletedUndoTimeoutTimer);
+    	clearTimeout(markCompletedChangeDivTimeoutTimer);
+    	var count = parseFloat($("#numberOfInProgressRequests"+surroundingID).html()) || 0;
+    	$("#numberOfInProgressRequests"+surroundingID).html(count+1);
+    	count = parseFloat($("#numberOfInProgressRequests"+surroundingID).html()) || 0;
+    	$("#inProgressToCompletedLoading"+id).hide();
+        $("#inProgressToCompletedButton"+id).show();
+        $("#undoInProgressToCompleted"+id).hide();
+        $("#inProgress"+id).show();
+        // requestURL = '/tour/' + id + '/unConfirm/ajax';
+        // $.getJSON(requestURL, function(data) {
+        //     results = data['results'];
+        //     // alert(data['results'].success);
+        //     if (results.success == true){ 
+        //         //alert("Tour has been un-accepted now we need to move this element to 'Requested Tours'");
+        //     } else {
+        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+        //     }
+        // });
+        $("#doIShowInProgressRequestsDiv"+surroundingID).html("show");
+        if(count == 0){
+    		$("#inProgressRequest"+surroundingID).fadeIn(300);
+    	}
+    	else if(count == 1){
+    		$("#inProgressRequestsCount"+surroundingID).html("<h3><strong>" + count + ' In Progress Maintenance Request(s) for ' + listing + "</strong></h3>");
+    	}
+    	else if(count > 1){
+    		$("#inProgressRequestsCount"+surroundingID).html("<h3><strong>" + count + ' In Progress Maintenance Request(s) for ' + listing + "</strong></h3>");
+    	}    	
+    	$("#noInProgressMaintenanceRequests").hide();
     }
 
 	$(document).ready(function() {
