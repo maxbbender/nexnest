@@ -24,6 +24,7 @@ class Notification(Base):
     # | report_landlord       | report_listing| security_deposit | tour
     # | maintenance_message   | rent_reminder | new_tour_time    | tour_message
     notif_type = db.Column(db.String(128))
+    redirect_url = db.Column(db.String(128))
 
     def __init__(
             self,
@@ -63,6 +64,9 @@ class Notification(Base):
         elif self.notif_type in report_notification:
             self.category = 'report_notification'
 
+        message, returnObject, redirectURL = self.getNotification()  # pylint: disable=unused-variable
+        self.redirect_url = redirectURL
+
     def __repr__(self):
         return '<Notification %r>' % self.id
 
@@ -78,8 +82,7 @@ class Notification(Base):
 
     @property
     def redirectURL(self):
-        message, returnObject, redirectURL = self.getNotification()  # pylint: disable=unused-variable
-        return redirectURL
+        return self.redirect_url
 
     def getNotification(self):
         ########TODODOOOO#########
@@ -279,7 +282,7 @@ class Notification(Base):
                 message = "%s has posted a new message in %s's Maintenance Request" % \
                     (returnObject.user.name, returnObject.maintenance.house.group.name)
 
-                redirectURL = '/house/maintenanceRequest/%d/view' % returnObject.id
+                redirectURL = '/house/maintenanceRequest/%d/view' % returnObject.maintenance.id
 
                 return message, returnObject, redirectURL
 
