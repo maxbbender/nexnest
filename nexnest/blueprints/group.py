@@ -18,6 +18,7 @@ from nexnest.models.tour import Tour
 from nexnest.models.group_listing_favorite import GroupListingFavorite
 from nexnest.models.house import House
 from nexnest.models.group_listing_message import GroupListingMessage
+from nexnest.models.notification import Notification
 
 from nexnest.utils.flash import flash_errors
 
@@ -124,13 +125,14 @@ def viewGroup(group_id):
 def invite():
     if request.method == 'POST':
         form = InviteGroupForm(request.form)
-        print("@groups.invite() form.group_id.data : %s" % form.group_id.data)
+        # print("@groups.invite() form.group_id.data : %s" % form.group_id.data)
         if form.validate():
-            group = session.query(Group).filter_by(
-                id=int(form.group_id.data)).first()
+            group = session.query(Group) \
+                .filter_by(id=int(form.group_id.data)) \
+                .first()
 
             # Is the current user apart of the group
-            if group in current_user.accepted_groups:
+            if group.isViewableBy(current_user):
                 user = session.query(User) \
                     .filter_by(id=int(form.user_id.data)) \
                     .first()

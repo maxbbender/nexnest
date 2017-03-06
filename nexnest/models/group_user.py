@@ -1,6 +1,9 @@
 from sqlalchemy.orm import relationship
 
 from nexnest.application import db
+from nexnest.models.notification import Notification
+
+from nexnest.application import session
 
 from .base import Base
 
@@ -34,11 +37,17 @@ class GroupUser(Base):
     ):
         self.group_id = group.id
         self.user_id = user.id
-        self.group = group
-        self.user = user
 
         self.accepted = False
         self.show = True
+
+        # We create a notification for the target user.
+        notif = Notification(target_user=user,
+                             target_model_id=group.id,
+                             notif_type='group_user')
+
+        session.add(notif)
+        session.commit()
 
     def __repr__(self):
         return '<GroupUser ~ Group %r | User %r>' % \

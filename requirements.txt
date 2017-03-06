@@ -28,6 +28,7 @@ nose
 mamba
 nosexcover
 pylint
+unittest
 
 # Admin
 flask-admin
