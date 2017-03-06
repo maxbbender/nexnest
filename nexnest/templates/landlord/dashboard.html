@@ -50,16 +50,16 @@
 <hr>
 
 <hr>
-{% if maintenanceRequests %}
+{% if openMaintenanceRequests %}
     <h1>Maintenance Requests</h1>
-    {% for maintenanceRequestObject in maintenanceRequests %}
-        <strong>{{maintenanceRequestObject.house}}</strong><br>
+    {% for maintenanceRequestObject in openMaintenanceRequests %}
+        <strong>{{maintenanceRequestObject.house.listing.street}}</strong><br>
         {% for maintenanceRequest in maintenanceRequestObject.maintenanceRequests %}
             {{maintenanceRequest}}<br>
         {% endfor %}
     {% endfor %}
-{% endif %}
-<hr> -->
+{% endif %}-->
+
 
 <link href="{{url_for('static', filename='css/landlord/dashboardStyling.css')}}" rel="stylesheet">
 <div class="row">
@@ -273,7 +273,6 @@
 		        	                    <div class="tab-pane active" id="requestedToursTab" role="tabpanel" style="padding: 0px;">
 		        	                        {% if requestedTours %}
 		        	                            {% for tourObject in requestedTours %}
-		        	                            {{ tourObject.id }}
 		        	                            	<div id="numberOfRequestedTours{{tourObject.listing.id}}" style="display: none;">{{tourObject.tours|length }}</div>
 		        	                            	<div id="doIShowDiv{{tourObject.listing.id}}" style="display: none;">show</div>
 		        	                            	<div class="card" id="requestedTourListing{{tourObject.listing.id}}" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
@@ -874,7 +873,105 @@
 		        	                <br>
 		        	                <div class="tab-content">
 		        	                    <div class="tab-pane active" id="newMaintenanceTab" role="tabpanel" style="padding: 0px;">
-		        	                    	New
+		        	                    	{% if openMaintenanceRequests|length > 0 %}
+		        	                            {% for requestObject in openMaintenanceRequests %}		        	                            
+		        	                            	<div id="numberOfOpenRequests{{requestObject.house.listing.id}}" style="display: none;">{{requestObject.maintenanceRequests|length }}</div>
+		        	                            	<div id="doIShowOpenRequestsDiv{{requestObject.house.listing.id}}" style="display: none;">show</div>
+		        	                            	<div class="card" id="openRequestListing{{requestObject.house.listing.id}}" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+        							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
+        								                    <div class="row">
+        								                    	<div class="col-xl-12">
+        								                    		<h3 id="openRequestsCount{{requestObject.house.listing.id}}"><strong>
+        								                    		{{requestObject.maintenanceRequests|length }} New Maintenance Request(s) for {{requestObject.house.listing.street}}</strong></h3>
+        								                    	</div>
+        								                    </div>			                    
+        							                    </div>
+        							                    <div class="card-block">
+        							                    	<div class="row">
+        							                    		<div class="col-xl-1"></div>
+        							                    		<div class="col-xl-10">
+        							                    			<strong><h2>Group(s) Requesting This Tour: </h2></strong>
+        							                    		</div>
+        							                    	</div>
+	        	                    	        			{% for request in requestObject.maintenanceRequests %}
+	        	                    	        				<div class="row" id="openRequest{{request.id}}">
+	        	                    	        					<div class="col-xl-1"></div>
+	        	                    	        					<div class="col-xl-10">
+			        	                    	        				<div class="card">
+		        							                    			<div class="card-header">
+		        							                    				<div class="row">
+		        								                    				<div class="col-xl-10">
+					        	                    	            					<h3><strong>{{request.request_type}} </strong></h3>
+					        	                    	            					Reported on: {{request.date_created}}
+					        	                    	            					<br><br>
+					        	                    	            					<div class="row">   
+					        	                    	            						<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+							        	                    	            					<div id="markInProgressButton{{request.id}}">
+							        	                    	            						<button class="btn btn-warning" onclick="markInProgress({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.listing.street}}')">Mark In Progress</button>
+							        	                    	            					</div>
+							        	                    	            					<div id="markInProgressLoading{{request.id}}" style="display: none;">
+							        	                    	            						<button class="btn btn-warning" style="width: 117.5px;">
+							        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+							        	                    	            						</button>
+							        	                    	            					</div>
+							        	                    	            				</div>
+							        	                    	            				<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+							        	                    	            					<div id="markCompletedButton{{request.id}}">
+							        	                    	            						<button class="btn btn-success" onclick="markCompleted({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.street}}')">Mark Completed</button>
+							        	                    	            					</div>
+							        	                    	            					<div id="completedLoading{{request.id}}" style="display: none;">
+							        	                    	            						<button class="btn btn-success" style="width: 117.5px;">
+							        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+							        	                    	            						</button>
+							        	                    	            					</div>
+							        	                    	            				</div>
+						        	                    	            				</div>
+					        	                    	            				</div>
+					        	                    	            				<div class="col-xl-2" style="text-align: right;">
+					        	                    	            					<a class="btn btn-primary" href="{{ url_for('houses.maintenanceRequestView', id=request.id) }}">View Request</a>
+					        	                    	            				</div>
+					        	                    	            			</div>
+					        	                    	            		</div>
+					        	                    	            		<div class="card-block">
+		        							                    				<div class="row">
+		        							                    					<div class="col-xs-12">
+		        							                    						<strong>Reported by:</strong> {{request.user.name}}
+		        							                    						<br><br>
+		        							                    						<strong>Details: </strong>{{request.details}}
+					                    			      					    	</div>
+					                    			      					    </div>
+					                    			      					</div>
+					                    			      				</div>
+					                    			      			</div>
+					                    			      		</div>
+					                    			      		<div class="row" id="undoInProgressDiv{{request.id}}" style="display: none;">
+					                    			      			<div class="col-xl-1"></div>
+					                    			      			<div class="col-xl-10">
+					                    			      				<div class="alert alert-info" role="alert">
+					                    			      				    Marked as In Progress <a href="#!" class="alert-link" onclick="undoMarkInProgress({{request.id}}, {{request.house.listing.id}})">Undo?</a>
+					                    			      				</div>
+					                    			      			</div>
+					                    			      		</div>
+					                    			      		<div class="row" id="undoCompletedDiv{{request.id}}" style="display: none;">
+					                    			      			<div class="col-xl-1"></div>
+					                    			      			<div class="col-xl-10">
+					                    			      				<div class="alert alert-info" role="alert">
+					                    			      				    Marked as Completed <a href="#!" class="alert-link" onclick="undoCompleted({{request.id}}, {{request.house.listing.id}})">Undo?</a>
+					                    			      				</div>
+					                    			      			</div>
+					                    			      		</div>
+	        	                    	        			{% endfor %}
+					        	                        </div>
+					        	                    </div>
+			            						{% endfor %}
+			            						<div id="noNewMaintenanceRequests" style="display: none;" class="alert alert-info" role="alert">
+			            							<strong>No New Maintenance Requests</strong>
+			            						</div>
+		            						{% else %}
+		            							<div class="alert alert-info" role="alert">
+		            								<strong>No New Maintenance Requests</strong>
+		            							</div>
+		            						{% endif %}
 		        	                    </div>
 		        	                    <div class="tab-pane" id="inProgressMaintenanceTab" role="tabpanel" style="padding: 0px;">
 		        	                    	In-Progress
@@ -962,11 +1059,11 @@
         		}
         	}
         	else if(count == 1){
-        		$("#requestedToursCount"+surroundingID).text(count + " Request to tour " + listing);
+        		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
         		$("#noRequestedTours").hide();
         	}
         	else if(count > 1){
-        		$("#requestedToursCount"+surroundingID).text(count + " Requests to tour " + listing);
+        		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
         		$("#noRequestedTours").hide();
         	}        	
         }, 10000);
@@ -976,7 +1073,6 @@
     	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
     	$("#acceptTourLoading"+id).hide();
         $("#acceptTourButton"+id).show();
-        $("#acceptTourUndo"+id).hide();
         $("#undoAcceptTourDiv"+id).hide();
         $("#requestedTour"+id).show();
         requestURL = '/tour/' + id + '/unConfirm/ajax';
@@ -985,8 +1081,6 @@
             // alert(data['results'].success);
             if (results.success == true){ 
                 //alert("Tour has been un-accepted now we need to move this element to 'Requested Tours'");
-                $("#acceptTourButton"+id).show();
-                $("#acceptTourUndo"+id).hide();
             } else {
                 alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
@@ -996,10 +1090,10 @@
     		$("#requestedTourListing"+surroundingID).fadeIn(300);
     	}
     	else if(count-1 == 1){
-    		$("#requestedToursCount"+surroundingID).text(count + " Request to tour " + listing);
+    		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
     	}
     	else if(count-1 > 1){
-    		$("#requestedToursCount"+surroundingID).text(count + " Requests to tour " + listing);
+    		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
     	}
     	$("#numberOfRequestedTours"+surroundingID).html(count+1);
     	$("#noRequestedTours").hide();
@@ -1035,17 +1129,18 @@
         		}
         	}
         	else if(count == 1){
-        		$("#requestedToursCount"+surroundingID).text(count + " Request to tour " + listing);
+        		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
         		$("#noRequestedTours").hide();
         	}
         	else if(count > 1){
-        		$("#requestedToursCount"+surroundingID).text(count + " Requests to tour " + listing);
+        		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
         		$("#noRequestedTours").hide();
         	}        	
         }, 10000);
     }
 
     function undoDeclineTour(id, surroundingID){
+    	$("#numberOfRequestedTours"+surroundingID).html(count+1);
     	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
     	$("#declineTourLoading"+id).hide();
         $("#declineTourButton"+id).show();
@@ -1067,12 +1162,11 @@
     		$("#requestedTourListing"+surroundingID).fadeIn(300);    		
     	}
     	else if(count-1 == 1){
-    		$("#requestedToursCount"+surroundingID).html(count + " Request to tour " + listing);
+    		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
     	}
     	else if(count-1 > 1){
-    		$("#requestedToursCount"+surroundingID).html(count + " Requests to tour " + listing);
-    	}
-    	$("#numberOfRequestedTours"+surroundingID).html(count+1);
+    		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+    	}    	
     	$("#noRequestedTours").hide();
     }
 
@@ -1106,17 +1200,18 @@
         		}
         	}
         	else if(count == 1){
-        		$("#scheduledToursCount"+surroundingID).text(count + " Scheduled tour(s) of " + listing);
+        		$("#scheduledToursCount"+surroundingID).html("<h3><strong>" + count + " Scheduled tour(s) of " + listing + "</h3></strong>");
         		$("#noScheduledTours").hide();
         	}
         	else if(count > 1){
-        		$("#scheduledToursCount"+surroundingID).text(count + " Scheduled tour(s) of " + listing);
+        		$("#scheduledToursCount"+surroundingID).html("<h3><strong>" + count + " Scheduled tour(s) of " + listing + "</h3></strong>");
         		$("#noScheduledTours").hide();
         	}        	
         }, 10000);
     }
 
     function undoCancelTour(id, surroundingID){
+    	$("#numberOfScheduledTours"+surroundingID).html(count+1);
     	var count = parseFloat($("#numberOfScheduledTours"+surroundingID).html()) || 0;
     	$("#cancelTourLoading"+id).hide();
         $("#cancelTourButton"+id).show();
@@ -1138,13 +1233,82 @@
     		$("#scheduledTourListing"+surroundingID).fadeIn(300);
     	}
     	else if(count-1 == 1){
-    		$("#scheduledToursCount"+surroundingID).html(count + " Scheduled tour(s) of " + listing);
+    		$("#scheduledToursCount"+surroundingID).html("<h3><strong>" + count + " Scheduled tour(s) of " + listing + "</h3></strong>");
     	}
     	else if(count-1 > 1){
-    		$("#scheduledToursCount"+surroundingID).html(count + " Scheduled tour(s) of " + listing);
-    	}
-    	$("#numberOfScheduledTours"+surroundingID).html(count+1);
+    		$("#scheduledToursCount"+surroundingID).html("<h3><strong>" + count + " Scheduled tour(s) of " + listing + "</h3></strong>");
+    	}    	
     	$("#noScheduledTours").hide();
+    }
+
+    function markInProgress(id, surroundingID, listing){
+		var count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
+        $("#markInProgressButton"+id).hide();
+        $("#markInProgressLoading"+id).show();
+        setTimeout(function () {
+        	$("#openRequest"+id).fadeOut(300);
+        	$("#undoInProgressDiv"+id).show(500);
+        	$("#undoInProgressDiv"+id).delay(8000).fadeOut(300);
+        }, 1200);
+        // requestURL = '/tour/' + id + '/confirm/ajax';
+        // $.getJSON(requestURL, function(data) {
+        //     results = data['results'];
+        //     // alert(data['results'].success);
+        //     if (results.success == true){ 
+        //         //alert("Tour accepted now we need to move this element to 'Scheduled Tours'... make sure to make the button think toO!");
+        //     } else {
+        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+        //     }
+        // });
+        $("#doIShowOpenRequestsDiv"+surroundingID).html("hide");
+        $("#numberOfOpenRequests"+surroundingID).html(count-1);
+        setTimeout(function () {
+        	count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
+        	if(count == 0){
+        		if($("#doIShowOpenRequestsDiv"+surroundingID).html() == "hide"){
+        			$("#openRequestListing"+surroundingID).fadeOut(300);
+        			//$("#noRequestedTours").show();
+        		}
+        	}
+        	else if(count == 1){
+        		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+        		//$("#noRequestedTours").hide();
+        	}
+        	else if(count > 1){
+        		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+        		//$("#noRequestedTours").hide();
+        	}        	
+        }, 10000);
+    }
+
+    function undoMarkInProgress(id, surroundingID){
+    	$("#numberOfOpenRequests"+surroundingID).html(count+1);
+    	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
+    	$("#markInProgressLoading"+id).hide();
+        $("#markInProgressButton"+id).show();
+        $("#undoInProgressDiv"+id).hide();
+        $("#openRequest"+id).show();
+        // requestURL = '/tour/' + id + '/unConfirm/ajax';
+        // $.getJSON(requestURL, function(data) {
+        //     results = data['results'];
+        //     // alert(data['results'].success);
+        //     if (results.success == true){ 
+        //         //alert("Tour has been un-accepted now we need to move this element to 'Requested Tours'");
+        //     } else {
+        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+        //     }
+        // });
+        $("#doIShowOpenRequestsDiv"+surroundingID).html("show");
+        if(count-1 == 0){
+    		$("#openRequest"+surroundingID).fadeIn(300);
+    	}
+    	else if(count-1 == 1){
+    		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+    	}
+    	else if(count-1 > 1){
+    		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+    	}    	
+    	$("#noNewMaintenanceRequests").hide();
     }
 
 	$(document).ready(function() {
