@@ -1,4 +1,4 @@
-<a href="{{ notification.redirectURL }}">
+<a href="{{ message.redirectURL }}">
     <li class="notification">
         <div class="media">
             <div class="media-left vertical-center" style="text-align: center">
@@ -8,10 +8,10 @@
                 </div>
             </div>
             <div class="media-body">
-                <strong class="notification-title">{{ notification.message }}</strong>
-                <p class="notification-desc"><b>{{ notification.returnObject.user.fname }} {{ notification.returnObject.user.fname }}: </b> {{ notification.returnObject.brief }}</p>
+                <strong class="notification-title">{{ message.message }}</strong>
+                <p class="notification-desc"><b>{{ message.returnObject.user.fname }} {{ message.returnObject.user.fname }}: </b> {{ message.returnObject.brief }}</p>
                 <div class="notification-meta">
-                    <small class="timestamp">{{ notification.date_created }}</small>
+                    <small class="timestamp">{{ message.date_created }}</small>
                 </div>
             </div>
         </div>

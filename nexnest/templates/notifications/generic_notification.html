@@ -1,0 +1,18 @@
+<a href="{{ notification.redirectURL }}">
+    <li class="notification">
+        <div class="media">
+            <div class="media-left vertical-center" style="text-align: center">
+                <div class="media-object">
+                    <i class="fa fa-users fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>
+                    <!-- <img src="{{current_user.profile_image}}" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle" alt="Name" /> -->
+                </div>
+            </div>
+            <div class="media-body">
+                <strong class="notification-title">{{ notification.message }}</strong>
+                <div class="notification-meta">
+                    <small class="timestamp">{{ notification.date_created }}</small>
+                </div>
+            </div>
+        </div>
+    </li>
+</a>

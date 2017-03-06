@@ -53,7 +53,7 @@ start_date = fake.date_time_this_year(before_now=True)
 end_date = fake.date_time_this_year(before_now=False, after_now=True)
 listing1 = ListingFactory(start_date=start_date, end_date=end_date, num_bedrooms=4)
 listing2 = ListingFactory(start_date=fake.date_time_this_year(before_now=False, after_now=True))
-listing3 = ListingFactory()
+listing3 = ListingFactory(start_date=start_date, end_date=end_date, num_bedrooms=5)
 listing4 = ListingFactory()
 listing5 = ListingFactory()
 listing6 = ListingFactory()
@@ -414,6 +414,7 @@ for user in group7AcceptedUsers:
 # House
 h1 = HouseFactory(listing=listing1, group=group1)
 h2 = HouseFactory(listing=listing2, group=group2)
+h3 = HouseFactory(listing=listing3, group=group3)
 
 session.commit()
 
@@ -453,6 +454,10 @@ for user in group1AcceptedUsers:
 m1 = MaintenanceFactory(house=h1, user=user2)
 m2 = MaintenanceFactory(house=h1, user=user3)
 m3 = MaintenanceFactory(house=h1, user=user4)
+m4 = MaintenanceFactory(house=h1, user=user4)
+m5 = MaintenanceFactory(house=h1, user=user3)
+m6 = MaintenanceFactory(house=h3, user=user2)
+m7 = MaintenanceFactory(house=h3, user=user4)
 
 m2.status = 'inprogress'
 m3.status = 'completed'

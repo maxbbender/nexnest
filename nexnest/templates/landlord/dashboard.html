@@ -50,16 +50,16 @@
 <hr>
 
 <hr>
-{% if maintenanceRequests %}
+{% if openMaintenanceRequests %}
     <h1>Maintenance Requests</h1>
-    {% for maintenanceRequestObject in maintenanceRequests %}
-        <strong>{{maintenanceRequestObject.house}}</strong><br>
+    {% for maintenanceRequestObject in openMaintenanceRequests %}
+        <strong>{{maintenanceRequestObject.house.listing.street}}</strong><br>
         {% for maintenanceRequest in maintenanceRequestObject.maintenanceRequests %}
             {{maintenanceRequest}}<br>
         {% endfor %}
     {% endfor %}
-{% endif %}
-<hr> -->
+{% endif %}-->
+
 
 <link href="{{url_for('static', filename='css/landlord/dashboardStyling.css')}}" rel="stylesheet">
 <div class="row">
@@ -273,11 +273,13 @@
 		        	                    <div class="tab-pane active" id="requestedToursTab" role="tabpanel" style="padding: 0px;">
 		        	                        {% if requestedTours %}
 		        	                            {% for tourObject in requestedTours %}
-		        	                            	<div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+		        	                            	<div id="numberOfRequestedTours{{tourObject.listing.id}}" style="display: none;">{{tourObject.tours|length }}</div>
+		        	                            	<div id="doIShowDiv{{tourObject.listing.id}}" style="display: none;">show</div>
+		        	                            	<div class="card" id="requestedTourListing{{tourObject.listing.id}}" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
         							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
         								                    <div class="row">
         								                    	<div class="col-xl-12">
-        								                    		<h3><strong>
+        								                    		<h3 id="requestedToursCount{{tourObject.listing.id}}"><strong>
         								                    		{{tourObject.tours|length }} Request(s) to tour {{tourObject.listing.street}}</strong></h3>
         								                    		<small>Lease Period: {{ tourObject.listing.start_date }} - {{ tourObject.listing.end_date }}</small>
         								                    	</div>
@@ -313,7 +315,7 @@
 					        	                    	            						{% if tour.last_requested == 'group' %}
 						        	                    	            						<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
 								        	                    	            					<div id="acceptTourButton{{tour.id}}">
-								        	                    	            						<button class="btn btn-success" onclick="acceptTour({{tour.id}})">Accept Tour</button>
+								        	                    	            						<button class="btn btn-success" onclick="acceptTour({{tour.id}}, {{tourObject.listing.id}}, '{{tourObject.listing.street}}')">Accept Tour</button>
 								        	                    	            					</div>
 								        	                    	            					<div id="acceptTourLoading{{tour.id}}" style="display: none;">
 								        	                    	            						<button class="btn btn-success" style="width: 117.5px;">
@@ -331,7 +333,7 @@
 							        	                    	            				{% endif %}
 							        	                    	            				<div class="col-12 col-md-auto">
 							        	                    	            					<div id="declineTourButton{{tour.id}}">
-							        	                    	            						<button class="btn btn-danger" onclick="declineTour({{tour.id}})">Decline Tour</button>
+							        	                    	            						<button class="btn btn-danger" onclick="declineTour({{tour.id}}, {{tourObject.listing.id}}, '{{tourObject.listing.street}}')">Decline Tour</button>
 							        	                    	            					</div>
 							        	                    	            					<div id="declineTourLoading{{tour.id}}" style="display: none;">
 							        	                    	            						<button class="btn btn-danger" style="width: 117.5px;">
@@ -425,7 +427,7 @@
 					                    			      			<div class="col-xl-1"></div>
 					                    			      			<div class="col-xl-10">
 					                    			      				<div class="alert alert-info" role="alert">
-					                    			      				    You have just accepted a tour for {{ tour.time_requested }} <a href="#!" class="alert-link" onclick="undoAcceptTour({{tour.id}})">Undo?</a>
+					                    			      				    You have just accepted a tour for {{ tour.time_requested }} <a href="#!" class="alert-link" onclick="undoAcceptTour({{tour.id}}, {{tourObject.listing.id}})">Undo?</a>
 					                    			      				</div>
 					                    			      			</div>
 					                    			      		</div>
@@ -433,7 +435,7 @@
 					                    			      			<div class="col-xl-1"></div>
 					                    			      			<div class="col-xl-10">
 					                    			      				<div class="alert alert-info" role="alert">
-					                    			      				    You have just declined a tour for {{ tour.time_requested }} <a href="#!" class="alert-link" onclick="undoDeclineTour({{tour.id}})">Undo?</a>
+					                    			      				    You have just declined a tour for {{ tour.time_requested }} <a href="#!" class="alert-link" onclick="undoDeclineTour({{tour.id}}, {{tourObject.listing.id}})">Undo?</a>
 					                    			      				</div>
 					                    			      			</div>
 					                    			      		</div>
@@ -441,17 +443,26 @@
 					        	                        </div>
 					        	                    </div>
 			            						{% endfor %}
+			            						<div id="noRequestedTours" style="display: none;" class="alert alert-info" role="alert">
+			            							<strong>No Requested Tours</strong>
+			            						</div>
+		            						{% else %}
+		            							<div class="alert alert-info" role="alert">
+		            								<strong>No Requested Tours</strong>
+		            							</div>
 		            						{% endif %}
 		        	                    </div>
 		        	                    <div class="tab-pane" id="scheduledToursTab" role="tabpanel" style="padding: 0px;">
-		        	                         {% if scheduledTours %}
+		        	                        {% if scheduledTours %}
 		        	                            {% for tourObject in scheduledTours %}
-		        	                            	<div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+		        	                            	<div id="numberOfScheduledTours{{tourObject.listing.id}}" style="display: none;">{{tourObject.tours|length }}</div>
+		        	                            	<div id="doIShowScheduledDiv{{tourObject.listing.id}}" style="display: none;">show</div>
+		        	                            	<div class="card" id="scheduledTourListing{{tourObject.listing.id}}" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
         							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
         								                    <div class="row">
         								                    	<div class="col-xl-12">
-        								                    		<h3><strong>
-        								                    		{{tourObject.tours|length }} Request(s) to tour {{tourObject.listing.street}}</strong></h3>
+        								                    		<h3 id="requestedToursCount{{tourObject.listing.id}}"><strong>
+        								                    		{{tourObject.tours|length }} Scheduled tour(s) of {{tourObject.listing.street}}</strong></h3>
         								                    		<small>Lease Period: {{ tourObject.listing.start_date }} - {{ tourObject.listing.end_date }}</small>
         								                    	</div>
         								                    </div>			                    
@@ -485,7 +496,7 @@
 					        	                    	            					<div class="row">
 					        	                    	            						<div class="col-12 col-md-auto">
 							        	                    	            					<div id="cancelTourButton{{tour.id}}" style="padding-left: 15px;">
-							        	                    	            						<button class="btn btn-danger" onclick="cancelTour({{tour.id}})">Cancel Tour</button>
+							        	                    	            						<button class="btn btn-danger" onclick="cancelTour({{tour.id}}, {{tourObject.listing.id}}, '{{tourObject.listing.street}}')">Cancel Tour</button>
 							        	                    	            					</div>
 							        	                    	            					<div id="cancelTourLoading{{tour.id}}" style="display: none; padding-left: 15px;">
 							        	                    	            						<button class="btn btn-danger" style="width: 117.5px;">
@@ -573,7 +584,7 @@
 					                    			      			<div class="col-xl-1"></div>
 					                    			      			<div class="col-xl-10">
 					                    			      				<div class="alert alert-info" role="alert">
-					                    			      				    You have just canceled a tour for {{ tour.time_requested }} <a href="#!" class="alert-link" onclick="undoCancelTour({{tour.id}})">Undo?</a>
+					                    			      				    You have just canceled a tour for {{ tour.time_requested }} <a href="#!" class="alert-link" onclick="undoCancelTour({{tour.id}}, {{tourObject.listing.id}})">Undo?</a>
 					                    			      				</div>
 					                    			      			</div>
 					                    			      		</div>
@@ -581,6 +592,13 @@
 					        	                        </div>
 					        	                    </div>
 			            						{% endfor %}
+			            						<div id="noScheduledTours" style="display: none;" class="alert alert-info" role="alert">
+			            							<strong>No Scheduled Tours</strong>
+			            						</div>
+		            						{% else %}
+		            							<div class="alert alert-info" role="alert">
+		            								<strong>No Scheduled Tours</strong>
+		            							</div>
 		            						{% endif %}
 		        	                    </div>
 		        	                </div>
@@ -855,7 +873,105 @@
 		        	                <br>
 		        	                <div class="tab-content">
 		        	                    <div class="tab-pane active" id="newMaintenanceTab" role="tabpanel" style="padding: 0px;">
-		        	                    	New
+		        	                    	{% if openMaintenanceRequests|length > 0 %}
+		        	                            {% for requestObject in openMaintenanceRequests %}		        	                            
+		        	                            	<div id="numberOfOpenRequests{{requestObject.house.listing.id}}" style="display: none;">{{requestObject.maintenanceRequests|length }}</div>
+		        	                            	<div id="doIShowOpenRequestsDiv{{requestObject.house.listing.id}}" style="display: none;">show</div>
+		        	                            	<div class="card" id="openRequestListing{{requestObject.house.listing.id}}" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+        							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
+        								                    <div class="row">
+        								                    	<div class="col-xl-12">
+        								                    		<h3 id="openRequestsCount{{requestObject.house.listing.id}}"><strong>
+        								                    		{{requestObject.maintenanceRequests|length }} New Maintenance Request(s) for {{requestObject.house.listing.street}}</strong></h3>
+        								                    	</div>
+        								                    </div>			                    
+        							                    </div>
+        							                    <div class="card-block">
+        							                    	<div class="row">
+        							                    		<div class="col-xl-1"></div>
+        							                    		<div class="col-xl-10">
+        							                    			<strong><h2>Maintenance Requests for this listing: </h2></strong>
+        							                    		</div>
+        							                    	</div>
+	        	                    	        			{% for request in requestObject.maintenanceRequests %}
+	        	                    	        				<div class="row" id="openRequest{{request.id}}">
+	        	                    	        					<div class="col-xl-1"></div>
+	        	                    	        					<div class="col-xl-10">
+			        	                    	        				<div class="card">
+		        							                    			<div class="card-header">
+		        							                    				<div class="row">
+		        								                    				<div class="col-xl-10">
+					        	                    	            					<h3><strong>{{request.request_type}} </strong></h3>
+					        	                    	            					Reported on: {{request.date_created}}
+					        	                    	            					<br><br>
+					        	                    	            					<div class="row">   
+					        	                    	            						<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+							        	                    	            					<div id="markInProgressButton{{request.id}}">
+							        	                    	            						<button id="inProgressButton{{request.id}}" class="btn btn-warning" onclick="markInProgress({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.listing.street}}')">Mark In Progress</button>
+							        	                    	            					</div>
+							        	                    	            					<div id="markInProgressLoading{{request.id}}" style="display: none;">
+							        	                    	            						<button class="btn btn-warning" style="width: 152.94px;">
+							        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+							        	                    	            						</button>
+							        	                    	            					</div>
+							        	                    	            				</div>
+							        	                    	            				<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+							        	                    	            					<div id="markCompletedButton{{request.id}}">
+							        	                    	            						<button id="completedButton{{request.id}}" class="btn btn-success" onclick="markCompleted({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.listing.street}}')">Mark Completed</button>
+							        	                    	            					</div>
+							        	                    	            					<div id="markCompletedLoading{{request.id}}" style="display: none;">
+							        	                    	            						<button class="btn btn-success" style="width: 152.33px;">
+							        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+							        	                    	            						</button>
+							        	                    	            					</div>
+							        	                    	            				</div>
+						        	                    	            				</div>
+					        	                    	            				</div>
+					        	                    	            				<div class="col-xl-2" style="text-align: right;">
+					        	                    	            					<a class="btn btn-primary" href="{{ url_for('houses.maintenanceRequestView', id=request.id) }}">View Request</a>
+					        	                    	            				</div>
+					        	                    	            			</div>
+					        	                    	            		</div>
+					        	                    	            		<div class="card-block">
+		        							                    				<div class="row">
+		        							                    					<div class="col-xs-12">
+		        							                    						<strong>Reported by:</strong> {{request.user.name}}
+		        							                    						<br><br>
+		        							                    						<strong>Details: </strong>{{request.details}}
+					                    			      					    	</div>
+					                    			      					    </div>
+					                    			      					</div>
+					                    			      				</div>
+					                    			      			</div>
+					                    			      		</div>
+					                    			      		<div class="row" id="undoInProgressDiv{{request.id}}" style="display: none;">
+					                    			      			<div class="col-xl-1"></div>
+					                    			      			<div class="col-xl-10">
+					                    			      				<div class="alert alert-info" role="alert">
+					                    			      				    Marked as In Progress <a href="#!" class="alert-link" onclick="undoMarkInProgress({{request.id}}, {{request.house.listing.id}}, '{{requestObject.house.listing.street}}')">Undo?</a>
+					                    			      				</div>
+					                    			      			</div>
+					                    			      		</div>
+					                    			      		<div class="row" id="undoMarkCompleted{{request.id}}" style="display: none;">
+					                    			      			<div class="col-xl-1"></div>
+					                    			      			<div class="col-xl-10">
+					                    			      				<div class="alert alert-info" role="alert">
+					                    			      				    Marked as Completed <a href="#!" class="alert-link" onclick="undoMarkCompleted({{request.id}}, {{request.house.listing.id}}, '{{requestObject.house.listing.street}}')">Undo?</a>
+					                    			      				</div>
+					                    			      			</div>
+					                    			      		</div>
+	        	                    	        			{% endfor %}
+					        	                        </div>
+					        	                    </div>
+			            						{% endfor %}
+			            						<div id="noNewMaintenanceRequests" style="display: none;" class="alert alert-info" role="alert">
+			            							<strong>No New Maintenance Requests</strong>
+			            						</div>
+		            						{% else %}
+		            							<div class="alert alert-info" role="alert">
+		            								<strong>No New Maintenance Requests</strong>
+		            							</div>
+		            						{% endif %}
 		        	                    </div>
 		        	                    <div class="tab-pane" id="inProgressMaintenanceTab" role="tabpanel" style="padding: 0px;">
 		        	                    	In-Progress
@@ -913,32 +1029,67 @@
 {% endblock %}
 {% block scripts %}
 <script>
-	function acceptTour(id){
+	var acceptTourUndoTimeoutTimer;
+	var acceptTourChangeDivTimeoutTimer;
+	var declineTourUndoTimeoutTimer;
+	var declineTourChangeDivTimeoutTimer;
+	var cancelTourUndoTimeoutTimer;
+	var cancelTourChangeDivTimeoutTimer;
+	var setInProgressUndoTimeoutTimer;
+	var setInProgressChangeDivTimeoutTimer;
+	var setCompletedUndoTimeoutTimer;
+	var setCompletedChangeDivTimeoutTimer;
+
+	function acceptTour(id, surroundingID, listing){
+		var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
         $("#acceptTourButton"+id).hide();
         $("#acceptTourLoading"+id).show();
         setTimeout(function () {
         	$("#requestedTour"+id).fadeOut(300);
-        	$("#undoAcceptTourDiv"+id).show(500);
-        	$("#undoAcceptTourDiv"+id).delay(8000).fadeOut(300);
+        	$("#undoAcceptTourDiv"+id).show();
+        	acceptTourUndoTimeoutTimer = setTimeout(function () {
+        		$("#undoAcceptTourDiv"+id).fadeOut(300);
+        	}, 8000);
         }, 1200);
         requestURL = '/tour/' + id + '/confirm/ajax';
-        setTimeout(function () {
-	        $.getJSON(requestURL, function(data) {
-	            results = data['results'];
-	            // alert(data['results'].success);
-	            if (results.success == true){ 
-	                alert("Tour accepted now we need to move this element to 'Scheduled Tours'... make sure to make the button think toO!");
-	            } else {
-	                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
-	            }
-	        });
-	    }, 9000);
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+                //alert("Tour accepted now we need to move this element to 'Scheduled Tours'... make sure to make the button think toO!");
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
+        $("#doIShowDiv"+surroundingID).html("hide");
+        $("#numberOfRequestedTours"+surroundingID).html(count-1);
+        acceptTourChangeDivTimeoutTimer = setTimeout(function () {
+        	count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
+        	if(count == 0){
+        		if($("#doIShowDiv"+surroundingID).html() == "hide"){
+        			$("#requestedTourListing"+surroundingID).fadeOut(300);
+        			$("#noRequestedTours").show();
+        		}
+        	}
+        	else if(count == 1){
+        		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+        		$("#noRequestedTours").hide();
+        	}
+        	else if(count > 1){
+        		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+        		$("#noRequestedTours").hide();
+        	}        	
+        }, 10000);
     }
 
-    function undoAcceptTour(id){
+    function undoAcceptTour(id, surroundingID){
+    	clearTimeout(acceptTourUndoTimeoutTimer);
+    	clearTimeout(acceptTourChangeDivTimeoutTimer);
+    	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
+    	$("#numberOfRequestedTours"+surroundingID).html(count+1);
+    	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
     	$("#acceptTourLoading"+id).hide();
         $("#acceptTourButton"+id).show();
-        $("#acceptTourUndo"+id).hide();
         $("#undoAcceptTourDiv"+id).hide();
         $("#requestedTour"+id).show();
         requestURL = '/tour/' + id + '/unConfirm/ajax';
@@ -946,38 +1097,72 @@
             results = data['results'];
             // alert(data['results'].success);
             if (results.success == true){ 
-                alert("Tour has been un-accepted now we need to move this element to 'Requested Tours'");
-                $("#acceptTourButton"+id).show();
-                $("#acceptTourUndo"+id).hide();
+                //alert("Tour has been un-accepted now we need to move this element to 'Requested Tours'");
             } else {
                 alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
         });
+        $("#doIShowDiv"+surroundingID).html("show");
+        if(count-1 == 0){
+    		$("#requestedTourListing"+surroundingID).fadeIn(300);
+    	}
+    	else if(count-1 == 1){
+    		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+    	}
+    	else if(count-1 > 1){
+    		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+    	}    	
+    	$("#noRequestedTours").hide();
     }
 
-    function declineTour(id){
+    function declineTour(id, surroundingID, listing){
+    	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
     	$("#declineTourButton"+id).hide();
         $("#declineTourLoading"+id).show();
         setTimeout(function () {
         	$("#requestedTour"+id).fadeOut(300);
-        	$("#undoDeclineTourDiv"+id).show(500);
-        	$("#undoDeclineTourDiv"+id).delay(8000).fadeOut(300);
+        	$("#undoDeclineTourDiv"+id).show();
+        	declineTourUndoTimeoutTimer = setTimeout(function () {
+        		$("#undoDeclineTourDiv"+id).fadeOut(300);
+        	}, 8000);
         }, 1200);
         requestURL = '/tour/' + id + '/decline/ajax';
-        setTimeout(function () {
-	        $.getJSON(requestURL, function(data) {
-	            results = data['results'];
-	            // alert(data['results'].success);
-	            if (results.success == true){ 
-	                alert("Tour has been declined, just hide element after 5 seconds or so along with the undo button'");
-	            } else {
-	                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
-	            }
-	        });
-	    }, 9000);
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+                //alert("Tour has been declined, just hide element after 5 seconds or so along with the undo button'");
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
+        $("#doIShowDiv"+surroundingID).html("hide");
+        $("#numberOfRequestedTours"+surroundingID).html(count-1);
+        declineTourChangeDivTimeoutTimer = setTimeout(function () {
+        	count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
+        	if(count == 0){
+        		if($("#doIShowDiv"+surroundingID).html() == "hide"){
+        			$("#requestedTourListing"+surroundingID).fadeOut(300);
+        			$("#noRequestedTours").show();
+        		}
+        	}
+        	else if(count == 1){
+        		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+        		$("#noRequestedTours").hide();
+        	}
+        	else if(count > 1){
+        		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+        		$("#noRequestedTours").hide();
+        	}        	
+        }, 10000);
     }
 
-    function undoDeclineTour(id){
+    function undoDeclineTour(id, surroundingID){
+    	clearTimeout(declineTourUndoTimeoutTimer);
+    	clearTimeout(declineTourChangeDivTimeoutTimer);
+    	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
+    	$("#numberOfRequestedTours"+surroundingID).html(count+1);
+    	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
     	$("#declineTourLoading"+id).hide();
         $("#declineTourButton"+id).show();
         $("#declineTourUndo"+id).hide();
@@ -988,36 +1173,72 @@
             results = data['results'];
             // alert(data['results'].success);
             if (results.success == true){ 
-                alert("Tour has been unDeclined, Don't hide it!");
+                //alert("Tour has been unDeclined, Don't hide it!");
             } else {
                 alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
         });
+        $("#doIShowDiv"+surroundingID).html("show");
+        if(count-1 == 0){
+    		$("#requestedTourListing"+surroundingID).fadeIn(300);    		
+    	}
+    	else if(count-1 == 1){
+    		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+    	}
+    	else if(count-1 > 1){
+    		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+    	}    	
+    	$("#noRequestedTours").hide();
     }
 
-    function cancelTour(id){
+    function cancelTour(id, surroundingID, listing){
+    	var count = parseFloat($("#numberOfScheduledTours"+surroundingID).html()) || 0;
     	$("#cancelTourButton"+id).hide();
         $("#cancelTourLoading"+id).show();
         setTimeout(function () {
         	$("#scheduledTour"+id).fadeOut(300);
-        	$("#undoCancelTourDiv"+id).show(500);
-        	$("#undoCancelTourDiv"+id).delay(8000).fadeOut(300);
+        	$("#undoCancelTourDiv"+id).show();
+        	cancelTourUndoTimeoutTimer = setTimeout(function () {
+        		 $("#undoCancelTourDiv"+id).fadeOut(300);
+        	}, 8000);
         }, 1200);
         requestURL = '/tour/' + id + '/decline/ajax';
-        setTimeout(function () {
-	        $.getJSON(requestURL, function(data) {
-	            results = data['results'];
-	            // alert(data['results'].success);
-	            if (results.success == true){ 
-	                alert("Tour has been declined, just hide element after 5 seconds or so along with the undo button'");
-	            } else {
-	                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
-	            }
-	        });
-	    }, 9000);
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+                //alert("Tour has been declined, just hide element after 5 seconds or so along with the undo button'");
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
+        $("#doIShowScheduledDiv"+surroundingID).html("hide");
+        $("#numberOfScheduledTours"+surroundingID).html(count-1);
+        cancelTourChangeDivTimeoutTimer = setTimeout(function () {
+        	count = parseFloat($("#numberOfScheduledTours"+surroundingID).html()) || 0;
+        	if(count == 0){
+        		if($("#doIShowScheduledDiv"+surroundingID).html() == "hide"){
+        			$("#scheduledTourListing"+surroundingID).fadeOut(300);
+        			$("#noScheduledTours").show();
+        		}
+        	}
+        	else if(count == 1){
+        		$("#scheduledToursCount"+surroundingID).html("<h3><strong>" + count + " Scheduled tour(s) of " + listing + "</h3></strong>");
+        		$("#noScheduledTours").hide();
+        	}
+        	else if(count > 1){
+        		$("#scheduledToursCount"+surroundingID).html("<h3><strong>" + count + " Scheduled tour(s) of " + listing + "</h3></strong>");
+        		$("#noScheduledTours").hide();
+        	}        	
+        }, 10000);
     }
 
-    function undoCancelTour(id){
+    function undoCancelTour(id, surroundingID){
+    	clearTimeout(cancelTourUndoTimeoutTimer);
+    	clearTimeout(cancelTourChangeDivTimeoutTimer);
+    	var count = parseFloat($("#numberOfScheduledTours"+surroundingID).html()) || 0;
+    	$("#numberOfScheduledTours"+surroundingID).html(count+1);
+    	var count = parseFloat($("#numberOfScheduledTours"+surroundingID).html()) || 0;
     	$("#cancelTourLoading"+id).hide();
         $("#cancelTourButton"+id).show();
         $("#cancelTourUndo"+id).hide();
@@ -1028,11 +1249,177 @@
             results = data['results'];
             // alert(data['results'].success);
             if (results.success == true){ 
-                alert("Tour has been unDeclined, Don't hide it!");
+                //alert("Tour has been unDeclined, Don't hide it!");
             } else {
                 alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
         });
+        $("#doIShowScheduledDiv"+surroundingID).html("show");
+        if(count-1 == 0){
+    		$("#scheduledTourListing"+surroundingID).fadeIn(300);
+    	}
+    	else if(count-1 == 1){
+    		$("#scheduledToursCount"+surroundingID).html("<h3><strong>" + count + " Scheduled tour(s) of " + listing + "</h3></strong>");
+    	}
+    	else if(count-1 > 1){
+    		$("#scheduledToursCount"+surroundingID).html("<h3><strong>" + count + " Scheduled tour(s) of " + listing + "</h3></strong>");
+    	}    	
+    	$("#noScheduledTours").hide();
+    }
+
+    function markInProgress(id, surroundingID, listing){
+		var count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
+        $("#markInProgressButton"+id).hide();
+        $("#markInProgressLoading"+id).show();
+        $("#completedButton"+id).addClass("disabled");
+        setTimeout(function () {
+        	$("#openRequest"+id).fadeOut(300);
+        	$("#undoInProgressDiv"+id).show();
+        	setInProgressUndoTimeoutTimer = setTimeout(function () {
+        		$("#undoInProgressDiv"+id).fadeOut(300);
+        	}, 8000);
+        }, 1200);
+        // requestURL = '/tour/' + id + '/confirm/ajax';
+        // $.getJSON(requestURL, function(data) {
+        //     results = data['results'];
+        //     // alert(data['results'].success);
+        //     if (results.success == true){ 
+        //         //alert("Tour accepted now we need to move this element to 'Scheduled Tours'... make sure to make the button think toO!");
+        //     } else {
+        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+        //     }
+        // });
+        $("#doIShowOpenRequestsDiv"+surroundingID).html("hide");
+        $("#numberOfOpenRequests"+surroundingID).html(count-1);        
+        setInProgressChangeDivTimeoutTimer = setTimeout(function () {
+        	count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
+        	if(count == 0){
+        		if($("#doIShowOpenRequestsDiv"+surroundingID).html() == "hide"){
+        			$("#openRequestListing"+surroundingID).fadeOut(300);
+        			$("#noNewMaintenanceRequests").show();
+        		}
+        	}
+        	else if(count == 1){
+        		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+        		$("#noNewMaintenanceRequests").hide();
+        	}
+        	else if(count > 1){
+        		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+        		$("#noNewMaintenanceRequests").hide();
+        	}        	
+        }, 10000);
+    }
+
+    function undoMarkInProgress(id, surroundingID, listing){    	
+    	clearTimeout(setInProgressUndoTimeoutTimer);
+    	clearTimeout(setInProgressChangeDivTimeoutTimer);
+    	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
+    	$("#numberOfOpenRequests"+surroundingID).html(count+1);
+    	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
+    	$("#markInProgressLoading"+id).hide();
+        $("#markInProgressButton"+id).show();
+        $("#completedButton"+id).removeClass("disabled");
+        $("#undoInProgressDiv"+id).hide();
+        $("#openRequest"+id).show();
+        // requestURL = '/tour/' + id + '/unConfirm/ajax';
+        // $.getJSON(requestURL, function(data) {
+        //     results = data['results'];
+        //     // alert(data['results'].success);
+        //     if (results.success == true){ 
+        //         //alert("Tour has been un-accepted now we need to move this element to 'Requested Tours'");
+        //     } else {
+        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+        //     }
+        // });
+        $("#doIShowOpenRequestsDiv"+surroundingID).html("show");
+        if(count-1 == 0){
+    		$("#openRequest"+surroundingID).fadeIn(300);
+    	}
+    	else if(count-1 == 1){
+    		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+    	}
+    	else if(count-1 > 1){
+    		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+    	}    	
+    	$("#noNewMaintenanceRequests").hide();
+    }
+
+    function markCompleted(id, surroundingID, listing){
+		var count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;		
+        $("#markCompletedButton"+id).hide();
+        $("#markCompletedLoading"+id).show();
+        $("#inProgressButton"+id).addClass("disabled");
+        setTimeout(function () {
+        	$("#openRequest"+id).fadeOut(300);
+        	$("#undoMarkCompleted"+id).show();
+        	timeoutTimer = setTimeout(function () {
+	        	$("#undoMarkCompleted"+id).fadeOut(300);
+        	}, 8000);
+        	$("#undoMarkCompleted"+id).delay(8000).fadeOut(300);
+        }, 1200);
+        // requestURL = '/tour/' + id + '/confirm/ajax';
+        // $.getJSON(requestURL, function(data) {
+        //     results = data['results'];
+        //     // alert(data['results'].success);
+        //     if (results.success == true){ 
+        //         //alert("Tour accepted now we need to move this element to 'Scheduled Tours'... make sure to make the button think toO!");
+        //     } else {
+        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+        //     }
+        // });
+        $("#doIShowOpenRequestsDiv"+surroundingID).html("hide");
+        $("#numberOfOpenRequests"+surroundingID).html(count-1);
+        setCompletedChangeDivTimeoutTimer = setTimeout(function () {
+        	count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
+        	if(count == 0){
+        		if($("#doIShowOpenRequestsDiv"+surroundingID).html() == "hide"){
+        			$("#openRequestListing"+surroundingID).fadeOut(300);
+        			$("#noNewMaintenanceRequests").show();
+        		}
+        	}
+        	else if(count == 1){
+        		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+        		$("#noNewMaintenanceRequests").hide();
+        	}
+        	else if(count > 1){
+        		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+        		$("#noNewMaintenanceRequests").hide();
+        	}        	
+        }, 10000);
+    }
+
+    function undoMarkCompleted(id, surroundingID, listing){    	
+    	clearTimeout(setCompletedUndoTimeoutTimer);
+    	clearTimeout(setCompletedChangeDivTimeoutTimer);
+    	var count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
+    	$("#numberOfOpenRequests"+surroundingID).html(count+1);
+    	count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
+    	$("#markCompletedLoading"+id).hide();
+        $("#markCompletedButton"+id).show();
+        $("#undoMarkCompleted"+id).hide();
+        $("#openRequest"+id).show();
+        $("#inProgressButton"+id).removeClass("disabled");
+        // requestURL = '/tour/' + id + '/unConfirm/ajax';
+        // $.getJSON(requestURL, function(data) {
+        //     results = data['results'];
+        //     // alert(data['results'].success);
+        //     if (results.success == true){ 
+        //         //alert("Tour has been un-accepted now we need to move this element to 'Requested Tours'");
+        //     } else {
+        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+        //     }
+        // });
+        $("#doIShowOpenRequestsDiv"+surroundingID).html("show");
+        if(count == 0){
+    		$("#openRequest"+surroundingID).fadeIn(300);
+    	}
+    	else if(count == 1){
+    		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+    	}
+    	else if(count > 1){
+    		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+    	}    	
+    	$("#noNewMaintenanceRequests").hide();
     }
 
 	$(document).ready(function() {
