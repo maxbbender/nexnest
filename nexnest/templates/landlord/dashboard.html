@@ -910,7 +910,7 @@
 							        	                    	            						<button class="btn btn-warning" onclick="markInProgress({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.listing.street}}')">Mark In Progress</button>
 							        	                    	            					</div>
 							        	                    	            					<div id="markInProgressLoading{{request.id}}" style="display: none;">
-							        	                    	            						<button class="btn btn-warning" style="width: 117.5px;">
+							        	                    	            						<button class="btn btn-warning" style="width: 152.94px;">
 							        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
 							        	                    	            						</button>
 							        	                    	            					</div>
@@ -919,8 +919,8 @@
 							        	                    	            					<div id="markCompletedButton{{request.id}}">
 							        	                    	            						<button class="btn btn-success" onclick="markCompleted({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.street}}')">Mark Completed</button>
 							        	                    	            					</div>
-							        	                    	            					<div id="completedLoading{{request.id}}" style="display: none;">
-							        	                    	            						<button class="btn btn-success" style="width: 117.5px;">
+							        	                    	            					<div id="markCompletedLoading{{request.id}}" style="display: none;">
+							        	                    	            						<button class="btn btn-success" style="width: 152.33px;">
 							        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
 							        	                    	            						</button>
 							        	                    	            					</div>
@@ -948,15 +948,15 @@
 					                    			      			<div class="col-xl-1"></div>
 					                    			      			<div class="col-xl-10">
 					                    			      				<div class="alert alert-info" role="alert">
-					                    			      				    Marked as In Progress <a href="#!" class="alert-link" onclick="undoMarkInProgress({{request.id}}, {{request.house.listing.id}})">Undo?</a>
+					                    			      				    Marked as In Progress <a href="#!" class="alert-link" onclick="undoMarkInProgress({{request.id}}, {{request.house.listing.id}}, '{{requestObject.house.listing.street}}')">Undo?</a>
 					                    			      				</div>
 					                    			      			</div>
 					                    			      		</div>
-					                    			      		<div class="row" id="undoCompletedDiv{{request.id}}" style="display: none;">
+					                    			      		<div class="row" id="undoMarkCompleted{{request.id}}" style="display: none;">
 					                    			      			<div class="col-xl-1"></div>
 					                    			      			<div class="col-xl-10">
 					                    			      				<div class="alert alert-info" role="alert">
-					                    			      				    Marked as Completed <a href="#!" class="alert-link" onclick="undoCompleted({{request.id}}, {{request.house.listing.id}})">Undo?</a>
+					                    			      				    Marked as Completed <a href="#!" class="alert-link" onclick="undoMarkCompleted({{request.id}}, {{request.house.listing.id}}, '{{requestObject.house.listing.street}}')">Undo?</a>
 					                    			      				</div>
 					                    			      			</div>
 					                    			      		</div>
@@ -1071,6 +1071,8 @@
 
     function undoAcceptTour(id, surroundingID){
     	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
+    	$("#numberOfRequestedTours"+surroundingID).html(count+1);
+    	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
     	$("#acceptTourLoading"+id).hide();
         $("#acceptTourButton"+id).show();
         $("#undoAcceptTourDiv"+id).hide();
@@ -1094,8 +1096,7 @@
     	}
     	else if(count-1 > 1){
     		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
-    	}
-    	$("#numberOfRequestedTours"+surroundingID).html(count+1);
+    	}    	
     	$("#noRequestedTours").hide();
     }
 
@@ -1140,6 +1141,7 @@
     }
 
     function undoDeclineTour(id, surroundingID){
+    	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
     	$("#numberOfRequestedTours"+surroundingID).html(count+1);
     	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
     	$("#declineTourLoading"+id).hide();
@@ -1211,6 +1213,7 @@
     }
 
     function undoCancelTour(id, surroundingID){
+    	var count = parseFloat($("#numberOfScheduledTours"+surroundingID).html()) || 0;
     	$("#numberOfScheduledTours"+surroundingID).html(count+1);
     	var count = parseFloat($("#numberOfScheduledTours"+surroundingID).html()) || 0;
     	$("#cancelTourLoading"+id).hide();
@@ -1261,27 +1264,28 @@
         //     }
         // });
         $("#doIShowOpenRequestsDiv"+surroundingID).html("hide");
-        $("#numberOfOpenRequests"+surroundingID).html(count-1);
+        $("#numberOfOpenRequests"+surroundingID).html(count-1);        
         setTimeout(function () {
         	count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
         	if(count == 0){
         		if($("#doIShowOpenRequestsDiv"+surroundingID).html() == "hide"){
         			$("#openRequestListing"+surroundingID).fadeOut(300);
-        			//$("#noRequestedTours").show();
+        			$("#noNewMaintenanceRequests").show();
         		}
         	}
         	else if(count == 1){
         		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
-        		//$("#noRequestedTours").hide();
+        		$("#noNewMaintenanceRequests").hide();
         	}
         	else if(count > 1){
         		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
-        		//$("#noRequestedTours").hide();
+        		$("#noNewMaintenanceRequests").hide();
         	}        	
         }, 10000);
     }
 
-    function undoMarkInProgress(id, surroundingID){
+    function undoMarkInProgress(id, surroundingID, listing){
+    	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
     	$("#numberOfOpenRequests"+surroundingID).html(count+1);
     	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
     	$("#markInProgressLoading"+id).hide();
@@ -1306,6 +1310,77 @@
     		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
     	}
     	else if(count-1 > 1){
+    		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+    	}    	
+    	$("#noNewMaintenanceRequests").hide();
+    }
+
+    function markCompleted(id, surroundingID, listing){
+		var count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
+        $("#markCompletedButton"+id).hide();
+        $("#markCompletedLoading"+id).show();
+        setTimeout(function () {
+        	$("#openRequest"+id).fadeOut(300);
+        	$("#undoMarkCompleted"+id).show(500);
+        	$("#undoMarkCompleted"+id).delay(8000).fadeOut(300);
+        }, 1200);
+        // requestURL = '/tour/' + id + '/confirm/ajax';
+        // $.getJSON(requestURL, function(data) {
+        //     results = data['results'];
+        //     // alert(data['results'].success);
+        //     if (results.success == true){ 
+        //         //alert("Tour accepted now we need to move this element to 'Scheduled Tours'... make sure to make the button think toO!");
+        //     } else {
+        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+        //     }
+        // });
+        $("#doIShowOpenRequestsDiv"+surroundingID).html("hide");
+        $("#numberOfOpenRequests"+surroundingID).html(count-1);
+        setTimeout(function () {
+        	count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
+        	if(count == 0){
+        		if($("#doIShowOpenRequestsDiv"+surroundingID).html() == "hide"){
+        			$("#openRequestListing"+surroundingID).fadeOut(300);
+        			$("#noNewMaintenanceRequests").show();
+        		}
+        	}
+        	else if(count == 1){
+        		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+        		$("#noNewMaintenanceRequests").hide();
+        	}
+        	else if(count > 1){
+        		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+        		$("#noNewMaintenanceRequests").hide();
+        	}        	
+        }, 10000);
+    }
+
+    function undoMarkCompleted(id, surroundingID, listing){    	
+    	var count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
+    	$("#numberOfOpenRequests"+surroundingID).html(count+1);
+    	count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
+    	$("#markCompletedLoading"+id).hide();
+        $("#markCompletedButton"+id).show();
+        $("#undoMarkCompleted"+id).hide();
+        $("#openRequest"+id).show();
+        // requestURL = '/tour/' + id + '/unConfirm/ajax';
+        // $.getJSON(requestURL, function(data) {
+        //     results = data['results'];
+        //     // alert(data['results'].success);
+        //     if (results.success == true){ 
+        //         //alert("Tour has been un-accepted now we need to move this element to 'Requested Tours'");
+        //     } else {
+        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+        //     }
+        // });
+        $("#doIShowOpenRequestsDiv"+surroundingID).html("show");
+        if(count == 0){
+    		$("#openRequest"+surroundingID).fadeIn(300);
+    	}
+    	else if(count == 1){
+    		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+    	}
+    	else if(count > 1){
     		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
     	}    	
     	$("#noNewMaintenanceRequests").hide();
