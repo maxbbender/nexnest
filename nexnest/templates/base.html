@@ -23,7 +23,7 @@
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 	<body>
-        <h1>NOTIFICATIONS</h1>
+        <!-- <h1>NOTIFICATIONS</h1>
         {% for notification in notifications %}
             <strong>{{notification.type}}</strong><br>
             {{notification.message}}<br>
@@ -36,7 +36,7 @@
             {{message.message}}<br>
             {{message.returnObject}}<br>
             {{message.redirectURL}}<br>
-        {% endfor %}
+        {% endfor %} -->
 		<nav class="navbar navbar-light bg-faded">
 			<a class="navbar-brand" href="{{ url_for('indexs.index') }}">NexNest</a>
 		    <ul class="nav navbar-nav">
@@ -95,14 +95,14 @@
                     {% if current_user %}
                     <li class="nav-item">
                         <div class="dropdown dropdown-notifications dropdown-toggle">
-                            <i data-count="{{ notifications|length }}" class="fa fa-comments fa-2x notification-icon" style="padding-top: 4px;" id="dropdownNotificationButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
+                            <i data-count="{{ messages|length }}" class="fa fa-comments fa-2x notification-icon" style="padding-top: 4px;" id="dropdownNotificationButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
                             <div class="dropdown-menu dropdown-menu-right" style="overflow:hidden;" aria-labelledby="dropdownNotificationButton">
                                 <div class="dropdown-toolbar">
-                                    <h2 class="dropdown-toolbar-title"><strong>Messages ({{ notifications|length }} new)</strong></h2>
+                                    <h2 class="dropdown-toolbar-title"><strong>Messages ({{ messages|length }} new)</strong></h2>
                                 </div>
                                 <ul class="notifications">
-                                    {% for notification in notifications %}
-                                        {% include 'notifications/' + notification.category +'.html' %}
+                                    {% for message in messages %}
+                                        {% include 'notifications/' + message.category +'.html' %}
                                     {% endfor %}
                                 </ul>
                             </div>
