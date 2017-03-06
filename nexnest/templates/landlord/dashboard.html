@@ -890,7 +890,7 @@
         							                    	<div class="row">
         							                    		<div class="col-xl-1"></div>
         							                    		<div class="col-xl-10">
-        							                    			<strong><h2>Group(s) Requesting This Tour: </h2></strong>
+        							                    			<strong><h2>Maintenance Requests for this listing: </h2></strong>
         							                    		</div>
         							                    	</div>
 	        	                    	        			{% for request in requestObject.maintenanceRequests %}
@@ -907,7 +907,7 @@
 					        	                    	            					<div class="row">   
 					        	                    	            						<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
 							        	                    	            					<div id="markInProgressButton{{request.id}}">
-							        	                    	            						<button class="btn btn-warning" onclick="markInProgress({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.listing.street}}')">Mark In Progress</button>
+							        	                    	            						<button id="inProgressButton{{request.id}}" class="btn btn-warning" onclick="markInProgress({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.listing.street}}')">Mark In Progress</button>
 							        	                    	            					</div>
 							        	                    	            					<div id="markInProgressLoading{{request.id}}" style="display: none;">
 							        	                    	            						<button class="btn btn-warning" style="width: 152.94px;">
@@ -917,7 +917,7 @@
 							        	                    	            				</div>
 							        	                    	            				<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
 							        	                    	            					<div id="markCompletedButton{{request.id}}">
-							        	                    	            						<button class="btn btn-success" onclick="markCompleted({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.street}}')">Mark Completed</button>
+							        	                    	            						<button id="completedButton{{request.id}}" class="btn btn-success" onclick="markCompleted({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.listing.street}}')">Mark Completed</button>
 							        	                    	            					</div>
 							        	                    	            					<div id="markCompletedLoading{{request.id}}" style="display: none;">
 							        	                    	            						<button class="btn btn-success" style="width: 152.33px;">
@@ -1029,14 +1029,27 @@
 {% endblock %}
 {% block scripts %}
 <script>
+	var acceptTourUndoTimeoutTimer;
+	var acceptTourChangeDivTimeoutTimer;
+	var declineTourUndoTimeoutTimer;
+	var declineTourChangeDivTimeoutTimer;
+	var cancelTourUndoTimeoutTimer;
+	var cancelTourChangeDivTimeoutTimer;
+	var setInProgressUndoTimeoutTimer;
+	var setInProgressChangeDivTimeoutTimer;
+	var setCompletedUndoTimeoutTimer;
+	var setCompletedChangeDivTimeoutTimer;
+
 	function acceptTour(id, surroundingID, listing){
 		var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
         $("#acceptTourButton"+id).hide();
         $("#acceptTourLoading"+id).show();
         setTimeout(function () {
         	$("#requestedTour"+id).fadeOut(300);
-        	$("#undoAcceptTourDiv"+id).show(500);
-        	$("#undoAcceptTourDiv"+id).delay(8000).fadeOut(300);
+        	$("#undoAcceptTourDiv"+id).show();
+        	acceptTourUndoTimeoutTimer = setTimeout(function () {
+        		$("#undoAcceptTourDiv"+id).fadeOut(300);
+        	}, 8000);
         }, 1200);
         requestURL = '/tour/' + id + '/confirm/ajax';
         $.getJSON(requestURL, function(data) {
@@ -1050,7 +1063,7 @@
         });
         $("#doIShowDiv"+surroundingID).html("hide");
         $("#numberOfRequestedTours"+surroundingID).html(count-1);
-        setTimeout(function () {
+        acceptTourChangeDivTimeoutTimer = setTimeout(function () {
         	count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
         	if(count == 0){
         		if($("#doIShowDiv"+surroundingID).html() == "hide"){
@@ -1070,6 +1083,8 @@
     }
 
     function undoAcceptTour(id, surroundingID){
+    	clearTimeout(acceptTourUndoTimeoutTimer);
+    	clearTimeout(acceptTourChangeDivTimeoutTimer);
     	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
     	$("#numberOfRequestedTours"+surroundingID).html(count+1);
     	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
@@ -1106,8 +1121,10 @@
         $("#declineTourLoading"+id).show();
         setTimeout(function () {
         	$("#requestedTour"+id).fadeOut(300);
-        	$("#undoDeclineTourDiv"+id).show(500);
-        	$("#undoDeclineTourDiv"+id).delay(8000).fadeOut(300);
+        	$("#undoDeclineTourDiv"+id).show();
+        	declineTourUndoTimeoutTimer = setTimeout(function () {
+        		$("#undoDeclineTourDiv"+id).fadeOut(300);
+        	}, 8000);
         }, 1200);
         requestURL = '/tour/' + id + '/decline/ajax';
         $.getJSON(requestURL, function(data) {
@@ -1121,7 +1138,7 @@
         });
         $("#doIShowDiv"+surroundingID).html("hide");
         $("#numberOfRequestedTours"+surroundingID).html(count-1);
-        setTimeout(function () {
+        declineTourChangeDivTimeoutTimer = setTimeout(function () {
         	count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
         	if(count == 0){
         		if($("#doIShowDiv"+surroundingID).html() == "hide"){
@@ -1141,6 +1158,8 @@
     }
 
     function undoDeclineTour(id, surroundingID){
+    	clearTimeout(declineTourUndoTimeoutTimer);
+    	clearTimeout(declineTourChangeDivTimeoutTimer);
     	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
     	$("#numberOfRequestedTours"+surroundingID).html(count+1);
     	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
@@ -1178,8 +1197,10 @@
         $("#cancelTourLoading"+id).show();
         setTimeout(function () {
         	$("#scheduledTour"+id).fadeOut(300);
-        	$("#undoCancelTourDiv"+id).show(500);
-        	$("#undoCancelTourDiv"+id).delay(8000).fadeOut(300);
+        	$("#undoCancelTourDiv"+id).show();
+        	cancelTourUndoTimeoutTimer = setTimeout(function () {
+        		 $("#undoCancelTourDiv"+id).fadeOut(300);
+        	}, 8000);
         }, 1200);
         requestURL = '/tour/' + id + '/decline/ajax';
         $.getJSON(requestURL, function(data) {
@@ -1193,7 +1214,7 @@
         });
         $("#doIShowScheduledDiv"+surroundingID).html("hide");
         $("#numberOfScheduledTours"+surroundingID).html(count-1);
-        setTimeout(function () {
+        cancelTourChangeDivTimeoutTimer = setTimeout(function () {
         	count = parseFloat($("#numberOfScheduledTours"+surroundingID).html()) || 0;
         	if(count == 0){
         		if($("#doIShowScheduledDiv"+surroundingID).html() == "hide"){
@@ -1213,6 +1234,8 @@
     }
 
     function undoCancelTour(id, surroundingID){
+    	clearTimeout(cancelTourUndoTimeoutTimer);
+    	clearTimeout(cancelTourChangeDivTimeoutTimer);
     	var count = parseFloat($("#numberOfScheduledTours"+surroundingID).html()) || 0;
     	$("#numberOfScheduledTours"+surroundingID).html(count+1);
     	var count = parseFloat($("#numberOfScheduledTours"+surroundingID).html()) || 0;
@@ -1248,10 +1271,13 @@
 		var count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
         $("#markInProgressButton"+id).hide();
         $("#markInProgressLoading"+id).show();
+        $("#completedButton"+id).addClass("disabled");
         setTimeout(function () {
         	$("#openRequest"+id).fadeOut(300);
-        	$("#undoInProgressDiv"+id).show(500);
-        	$("#undoInProgressDiv"+id).delay(8000).fadeOut(300);
+        	$("#undoInProgressDiv"+id).show();
+        	setInProgressUndoTimeoutTimer = setTimeout(function () {
+        		$("#undoInProgressDiv"+id).fadeOut(300);
+        	}, 8000);
         }, 1200);
         // requestURL = '/tour/' + id + '/confirm/ajax';
         // $.getJSON(requestURL, function(data) {
@@ -1265,7 +1291,7 @@
         // });
         $("#doIShowOpenRequestsDiv"+surroundingID).html("hide");
         $("#numberOfOpenRequests"+surroundingID).html(count-1);        
-        setTimeout(function () {
+        setInProgressChangeDivTimeoutTimer = setTimeout(function () {
         	count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
         	if(count == 0){
         		if($("#doIShowOpenRequestsDiv"+surroundingID).html() == "hide"){
@@ -1284,12 +1310,15 @@
         }, 10000);
     }
 
-    function undoMarkInProgress(id, surroundingID, listing){
+    function undoMarkInProgress(id, surroundingID, listing){    	
+    	clearTimeout(setInProgressUndoTimeoutTimer);
+    	clearTimeout(setInProgressChangeDivTimeoutTimer);
     	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
     	$("#numberOfOpenRequests"+surroundingID).html(count+1);
     	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
     	$("#markInProgressLoading"+id).hide();
         $("#markInProgressButton"+id).show();
+        $("#completedButton"+id).removeClass("disabled");
         $("#undoInProgressDiv"+id).hide();
         $("#openRequest"+id).show();
         // requestURL = '/tour/' + id + '/unConfirm/ajax';
@@ -1316,12 +1345,16 @@
     }
 
     function markCompleted(id, surroundingID, listing){
-		var count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
+		var count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;		
         $("#markCompletedButton"+id).hide();
         $("#markCompletedLoading"+id).show();
+        $("#inProgressButton"+id).addClass("disabled");
         setTimeout(function () {
         	$("#openRequest"+id).fadeOut(300);
-        	$("#undoMarkCompleted"+id).show(500);
+        	$("#undoMarkCompleted"+id).show();
+        	timeoutTimer = setTimeout(function () {
+	        	$("#undoMarkCompleted"+id).fadeOut(300);
+        	}, 8000);
         	$("#undoMarkCompleted"+id).delay(8000).fadeOut(300);
         }, 1200);
         // requestURL = '/tour/' + id + '/confirm/ajax';
@@ -1336,7 +1369,7 @@
         // });
         $("#doIShowOpenRequestsDiv"+surroundingID).html("hide");
         $("#numberOfOpenRequests"+surroundingID).html(count-1);
-        setTimeout(function () {
+        setCompletedChangeDivTimeoutTimer = setTimeout(function () {
         	count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
         	if(count == 0){
         		if($("#doIShowOpenRequestsDiv"+surroundingID).html() == "hide"){
@@ -1356,6 +1389,8 @@
     }
 
     function undoMarkCompleted(id, surroundingID, listing){    	
+    	clearTimeout(setCompletedUndoTimeoutTimer);
+    	clearTimeout(setCompletedChangeDivTimeoutTimer);
     	var count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
     	$("#numberOfOpenRequests"+surroundingID).html(count+1);
     	count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
@@ -1363,6 +1398,7 @@
         $("#markCompletedButton"+id).show();
         $("#undoMarkCompleted"+id).hide();
         $("#openRequest"+id).show();
+        $("#inProgressButton"+id).removeClass("disabled");
         // requestURL = '/tour/' + id + '/unConfirm/ajax';
         // $.getJSON(requestURL, function(data) {
         //     results = data['results'];
