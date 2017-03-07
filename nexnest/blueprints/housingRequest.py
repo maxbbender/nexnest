@@ -143,6 +143,7 @@ def acceptRequest(id):
             # At this point the house request is accepted and security deposits
             # must be paid.
             groupListing.accepted = True
+            groupListing.group.invalidateOpenInvitations()
             session.commit()
 
             # Create Security Deposit records

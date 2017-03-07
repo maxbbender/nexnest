@@ -321,6 +321,10 @@ def requestListing():
                     session.add(newGLM)
                     session.commit()
                     flash("You have requested to live at this listing!", 'success')
+
+                    # Invalidate all open group invitations
+                    newGL.group.invalidateOpenInvitations()
+
                     return redirect(url_for('housingRequests.view', id=newGL.id))
                 else:
                     flash("Listing does not exist", 'warning')
