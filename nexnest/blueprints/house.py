@@ -54,6 +54,7 @@ def view(id):
     return redirect(url_for('indexs.index'))
 
 
+# NOTIFICATIONS IMPLEMENTED
 @houses.route('/house/message', methods=['POST'])
 @login_required
 def messageCreate():
@@ -73,6 +74,8 @@ def messageCreate():
                 session.add(newHM)
                 session.commit()
 
+                newHM.genNotifications()
+
         else:
             flash("Invalid Request", 'warning')
     else:
@@ -81,6 +84,7 @@ def messageCreate():
     return form.redirect()
 
 
+# NOTIFICATIONS IMPLEMENTED
 @houses.route('/house/maintenanceRequest', methods=['POST'])
 @login_required
 def maintenanceRequestCreate():
@@ -98,6 +102,8 @@ def maintenanceRequestCreate():
                                     user=current_user)
                 session.add(newMR)
                 session.commit()
+
+                newMR.genNotifications()
 
                 flash("Maintenance Request Created", 'success')
                 # TODO Redirect to ViewMaintenance Page

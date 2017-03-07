@@ -1,16 +1,16 @@
 from datetime import datetime as dt
 
-from nexnest.application import db
-
-from .base import Base
-
 from sqlalchemy import event
 from sqlalchemy.orm import relationship
 
 from flask import flash
 
+from nexnest.application import db, session
 
-# class PostReport(Base):
+from nexnest.models.base import Base
+from nexnest.models.notification import Notification
+
+
 class Maintenance(Base):
     __tablename__ = 'maintenances'
     id = db.Column(db.Integer, primary_key=True)
@@ -51,6 +51,15 @@ class Maintenance(Base):
 
         flash('Permissions Error', 'warning')
         return False
+
+    def genNotifications(self):
+        for user in self.house.tenants:
+            if user is not self.user:
+                newNotif = Notification(notif_type='maintenance',
+                                        target_model_id=self.id,
+                                        target_user=user)
+                session.add(newNotif)
+                session.commit()
 
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument

@@ -1,4 +1,3 @@
-import nexnest.application
 from nexnest.utils.file import allowed_file
 
 

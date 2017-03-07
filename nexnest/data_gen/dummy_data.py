@@ -207,24 +207,24 @@ glfn6 = NotificationFactory(target_user=user8,
 
 
 # GROUP USER NOTIFICATIONS
-gun1 = NotificationFactory(target_user=groupuser4.user,
-                           notif_type='group_user',
-                           target_model_id=groupuser4.group.id)
-gun2 = NotificationFactory(target_user=groupuser5.user,
-                           notif_type='group_user',
-                           target_model_id=groupuser5.group.id)
-gun3 = NotificationFactory(target_user=groupuser8.user,
-                           notif_type='group_user',
-                           target_model_id=groupuser8.group.id)
-gun4 = NotificationFactory(target_user=groupuser9.user,
-                           notif_type='group_user',
-                           target_model_id=groupuser9.group.id)
-gun5 = NotificationFactory(target_user=groupuser10.user,
-                           notif_type='group_user',
-                           target_model_id=groupuser10.group.id)
-gun6 = NotificationFactory(target_user=groupuser11.user,
-                           notif_type='group_user',
-                           target_model_id=groupuser11.group.id)
+# gun1 = NotificationFactory(target_user=groupuser4.user,
+#                            notif_type='group_user',
+#                            target_model_id=groupuser4.group.id)
+# gun2 = NotificationFactory(target_user=groupuser5.user,
+#                            notif_type='group_user',
+#                            target_model_id=groupuser5.group.id)
+# gun3 = NotificationFactory(target_user=groupuser8.user,
+#                            notif_type='group_user',
+#                            target_model_id=groupuser8.group.id)
+# gun4 = NotificationFactory(target_user=groupuser9.user,
+#                            notif_type='group_user',
+#                            target_model_id=groupuser9.group.id)
+# gun5 = NotificationFactory(target_user=groupuser10.user,
+#                            notif_type='group_user',
+#                            target_model_id=groupuser10.group.id)
+# gun6 = NotificationFactory(target_user=groupuser11.user,
+#                            notif_type='group_user',
+#                            target_model_id=groupuser11.group.id)
 
 session.commit()
 

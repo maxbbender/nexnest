@@ -5,12 +5,15 @@ from nexnest.models import *
 
 import os
 
-
-u = session.query(group.Group).filter_by(id=1).first()
+u = session.query(user.User).filter_by(id=1).first()
 print(u)
 
-# m, n = u.unreadNotifications()
+n = u.notifications.group_by(notification.Notification.id, notification.Notification.notif_type, notification.Notification.redirect_url).all()
+# n = u.notifications.all()
 
-# print("Messages %r" % m)
-# print("not %r" % n)
-print(u.invalidateOpenInvitations())
+for f in n:
+    print("yo %rAAAA" % f.notif_type)
+    print("yo %rAAAAA" % f.redirect_url)
+
+# for f in u:
+#     print(f.redirect_url)

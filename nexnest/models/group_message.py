@@ -1,4 +1,6 @@
-from nexnest.application import db
+from nexnest.application import db, session
+
+from nexnest.models.notification import Notification
 
 from .message import Message
 
@@ -30,6 +32,16 @@ class GroupMessage(Message):
         )
 
         self.group_id = group.id
+
+    def genNotifications(self):
+        for user in self.group.acceptedUsers:
+            if user is not self.user:
+                newNotification = Notification(target_user=user,
+                                               target_model_id=self.id,
+                                               notif_type='group_message')
+
+                session.add(newNotification)
+                session.commit()
 
     def __repr__(self):
         return '<GroupMessage ~ Group %r | Message %r>' % \
