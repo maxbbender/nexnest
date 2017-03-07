@@ -95,13 +95,13 @@
                     {% if current_user %}
                     <li class="nav-item">
                         <div class="dropdown dropdown-notifications dropdown-toggle">
-                            <i data-count="{{ messages|length }}" class="fa fa-comments fa-2x notification-icon" style="padding-top: 4px;" id="dropdownNotificationButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
+                            <i data-count="{{ notificationMessages|length }}" class="fa fa-comments fa-2x notification-icon" style="padding-top: 4px;" id="dropdownNotificationButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
                             <div class="dropdown-menu dropdown-menu-right" style="overflow:hidden;" aria-labelledby="dropdownNotificationButton">
                                 <div class="dropdown-toolbar">
-                                    <h2 class="dropdown-toolbar-title"><strong>Messages ({{ messages|length }} new)</strong></h2>
+                                    <h2 class="dropdown-toolbar-title"><strong>Messages ({{ notificationMessages|length }} new)</strong></h2>
                                 </div>
                                 <ul class="notifications">
-                                    {% for message in messages %}
+                                    {% for message in notificationMessages %}
                                         {% include 'notifications/' + message.category +'.html' %}
                                     {% endfor %}
                                 </ul>
@@ -146,7 +146,7 @@
 		{% with messages = get_flashed_messages() %}
 		  {% if messages %}
 		    <ul>
-		    {% for message in messages %}
+		    {% for message in notificationMessages %}
 		        {% include 'flash.html' %}
 		    {% endfor %}
 		    </ul>

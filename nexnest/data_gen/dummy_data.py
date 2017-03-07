@@ -342,7 +342,7 @@ gl3 = GroupListingFactory(group=group3, listing=listing3)
 
 gl4 = GroupListingFactory(group=group4, listing=listing4)
 gl5 = GroupListingFactory(group=group5, listing=listing2)
-gl6 = GroupListingFactory(group=group6, listing=listing5)
+gl6 = GroupListingFactory(group=group6, listing=listing4)
 gl7 = GroupListingFactory(group=group7, listing=listing6)
 
 gl1.accepted = True

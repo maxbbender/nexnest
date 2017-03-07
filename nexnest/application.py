@@ -74,7 +74,7 @@ def insert_login_form():
         return dict(passwordChangeForm=passwordChangeForm,
                     avatarChangeForm=avatarChangeForm,
                     notifications=notifications,
-                    messages=messages)
+                    notificationMessages=messages)
     else:
         login_form = LoginForm()
         return dict(login_form=login_form)
