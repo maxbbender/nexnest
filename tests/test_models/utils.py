@@ -13,9 +13,12 @@ from nexnest.models.landlord_listing import LandlordListing
 from nexnest.models.group_listing_favorite import GroupListingFavorite
 from nexnest.models.house import House
 from nexnest.models.house_message import HouseMessage
+from nexnest.models.maintenance import Maintenance
 
 
 def dropAllRows():
+    session.query(Maintenance).delete()
+    session.commit()
     session.query(HouseMessage).delete()
     session.commit()
     session.query(House).delete()

@@ -2,7 +2,7 @@ import unittest
 
 from nexnest.application import session
 
-from nexnest.data_gen.factories import UserFactory, GroupFactory, GroupUserFactory, ListingFactory, LandlordListingFactory, LandlordFactory, HouseFactory, HouseMessageFactory
+from nexnest.data_gen.factories import UserFactory, GroupFactory, GroupUserFactory, ListingFactory, LandlordListingFactory, LandlordFactory, HouseFactory, HouseMessageFactory, MaintenanceFactory
 
 from nexnest.models.notification import Notification
 
@@ -58,6 +58,22 @@ class TestHouse(unittest.TestCase):
                 notifCount = session.query(Notification) \
                     .filter_by(notif_type='house_message',
                                target_model_id=newHM.id,
+                               target_user_id=user.id) \
+                    .count()
+
+                self.assertEqual(notifCount, 1)
+
+    def testMaintenanceNotifications(self):
+        newMaintenance = MaintenanceFactory(house=self.house, user=self.leader)
+        session.commit()
+
+        newMaintenance.genNotifications()
+
+        for user in self.house.tenants:
+            if user is not self.leader:
+                notifCount = session.query(Notification) \
+                    .filter_by(notif_type='maintenance',
+                               target_model_id=newMaintenance.id,
                                target_user_id=user.id) \
                     .count()
 

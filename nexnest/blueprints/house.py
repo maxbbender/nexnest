@@ -84,6 +84,7 @@ def messageCreate():
     return form.redirect()
 
 
+# NOTIFICATIONS IMPLEMENTED
 @houses.route('/house/maintenanceRequest', methods=['POST'])
 @login_required
 def maintenanceRequestCreate():
@@ -101,6 +102,8 @@ def maintenanceRequestCreate():
                                     user=current_user)
                 session.add(newMR)
                 session.commit()
+
+                newMR.genNotifications()
 
                 flash("Maintenance Request Created", 'success')
                 # TODO Redirect to ViewMaintenance Page
