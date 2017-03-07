@@ -746,7 +746,7 @@
 		        	                    <div class="tab-pane active" id="unacceptedTab" role="tabpanel" style="padding: 0px;">
 		        	                    	{% if unAcceptedHousingRequests %}		        	                    	
 		        	                    	    {% for housingRequestObject in unAcceptedHousingRequests %}
-		        	                    	    	<div id="numberOfUnacceptedRequests{{housingRequestObject.listing.id}}" style="display: none;">{{housingRequestObject.tours|length }}</div>
+		        	                    	    	<div id="numberOfUnacceptedRequests{{housingRequestObject.listing.id}}" style="display: none;">{{housingRequestObject.houseRequests|length }}</div>
 		        	                            	<div id="doIShowUnacceptedRequestsDiv{{housingRequestObject.listing.id}}" style="display: none;">show</div>
 		        	                    	    	<div class="card" id="unacceptedRequestsListing{{housingRequestObject.listing.id}}" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
         							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
@@ -865,14 +865,21 @@
 					                    			      			<div class="col-xl-1"></div>
 					                    			      			<div class="col-xl-10">
 					                    			      				<div class="alert alert-info" role="alert">
-					                    			      				    You have just accpeted a group for this listing <a href="#!" class="alert-link" onclick="undoAcceptHouseRequest({{housingRequest.id}}, {{housingRequestObject.listing.id}})">Undo?</a>
+					                    			      				    You have just accpeted a group for this listing <a href="#!" class="alert-link" onclick="undoAcceptHouseRequest({{housingRequest.id}}, {{housingRequestObject.listing.id}}, '{{housingRequestObject.listing.street}}')">Undo?</a>
+					                    			      				</div>
+					                    			      			</div>
+					                    			      		</div>
+					                    			      		<div class="row" id="undoDeniedRequest{{housingRequest.id}}" style="display: none;">
+					                    			      			<div class="col-xl-1"></div>
+					                    			      			<div class="col-xl-10">
+					                    			      				<div class="alert alert-info" role="alert">
+					                    			      				    You have just denied a group for this listing <a href="#!" class="alert-link" onclick="undoDeniedHouseRequest({{housingRequest.id}}, {{housingRequestObject.listing.id}}, '{{housingRequestObject.listing.street}}')">Undo?</a>
 					                    			      				</div>
 					                    			      			</div>
 					                    			      		</div>
 	        	                    	        			{% endfor %}		        	                    	        		
 		        	                    	        	</div>
 		        	                    	        </div>
-		        	                    	        <hr>
 		        	                    	    {% endfor %}
     		            						<div id="noUnacceptedRequests" style="display: none;" class="alert alert-info" role="alert">
     		            							<strong>No Unaccepted Requests</strong>
@@ -1831,7 +1838,7 @@
         }, 10000);
     }
 
-    function undoAcceptHouseRequest(id, surroundingID){
+    function undoAcceptHouseRequest(id, surroundingID, listing){
     	clearTimeout(acceptGroupUndoTimeoutTimer);
     	clearTimeout(acceptGroupChangeDivTimeoutTimer);
     	var count = parseFloat($("#numberOfUnacceptedRequests"+surroundingID).html()) || 0;
@@ -1843,6 +1850,83 @@
         $("#acceptHouseRequest"+id).show();
         $(".denyHouseRequest"+surroundingID).removeClass("disabled");
         $(".acceptHouseRequest"+surroundingID).removeClass('disabled');
+        // requestURL = '/tour/' + id + '/unDecline/ajax';
+        // $.getJSON(requestURL, function(data) {
+        //     results = data['results'];
+        //     // alert(data['results'].success);
+        //     if (results.success == true){ 
+        //         //alert("Tour has been unDeclined, Don't hide it!");
+        //     } else {
+        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+        //     }
+        // });
+        $("#doIShowUnacceptedRequestsDiv"+surroundingID).html("show");
+        if(count-1 == 0){
+    		$("#unacceptedRequestsListing"+surroundingID).fadeIn(300);    		
+    	}
+    	else if(count-1 == 1){
+    		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
+    	}
+    	else if(count-1 > 1){
+    		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
+    	}    	
+    	$("#noRequestedTours").hide();
+    }
+
+    function denyHouseRequest(id, surroundingID, listing){
+    	var count = parseFloat($("#numberOfUnacceptedRequests"+surroundingID).html()) || 0;
+    	$("#denyHouseRequest"+id).hide();
+        $("#denyHouseRequestLoading"+id).show();
+        $("#acceptHouseRequestButton"+id).addClass("disabled");
+        setTimeout(function () {
+        	$("#unAcceptedRequest"+id).fadeOut(300);
+        	$("#undoDeniedRequest"+id).show();
+        	denyGroupUndoTimeoutTimer = setTimeout(function () {
+        		$("#undoDeniedRequest"+id).fadeOut(300);
+        	}, 8000);
+        }, 1200);
+        // requestURL = '/tour/' + id + '/decline/ajax';
+        // $.getJSON(requestURL, function(data) {
+        //     results = data['results'];
+        //     // alert(data['results'].success);
+        //     if (results.success == true){ 
+        //         //alert("Tour has been declined, just hide element after 5 seconds or so along with the undo button'");
+        //     } else {
+        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+        //     }
+        // });
+        $("#doIShowUnacceptedRequestsDiv"+surroundingID).html("hide");
+        $("#numberOfUnacceptedRequests"+surroundingID).html(count-1);
+        denyGroupChangeDivTimeoutTimer = setTimeout(function () {
+        	count = parseFloat($("#numberOfUnacceptedRequests"+surroundingID).html()) || 0;
+        	if(count == 0){
+        		if($("#doIShowUnacceptedRequestsDiv"+surroundingID).html() == "hide"){
+        			$("#unacceptedRequestsListing"+surroundingID).fadeOut(300);
+        			$("#noUnacceptedRequests").show();
+        		}
+        	}
+        	else if(count == 1){
+        		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
+        		$("#noUnacceptedRequests").hide();
+        	}
+        	else if(count > 1){
+        		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
+        		$("#noUnacceptedRequests").hide();
+        	}        	
+        }, 10000);
+    }
+
+    function undoDeniedHouseRequest(id, surroundingID, listing){
+    	clearTimeout(denyGroupUndoTimeoutTimer);
+    	clearTimeout(denyGroupChangeDivTimeoutTimer);
+    	var count = parseFloat($("#numberOfUnacceptedRequests"+surroundingID).html()) || 0;
+    	$("#numberOfUnacceptedRequests"+surroundingID).html(count+1);
+    	var count = parseFloat($("#numberOfUnacceptedRequests"+surroundingID).html()) || 0;
+    	$("#denyHouseRequestLoading"+id).hide();
+        $("#unAcceptedRequest"+id).show();
+        $("#undoDeniedRequest"+id).hide();
+        $("#denyHouseRequest"+id).show();
+        $("#acceptHouseRequestButton"+id).removeClass("disabled");
         // requestURL = '/tour/' + id + '/unDecline/ajax';
         // $.getJSON(requestURL, function(data) {
         //     results = data['results'];
