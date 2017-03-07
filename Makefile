@@ -46,8 +46,7 @@ all_tests:
 
 test:
 	make test_setup
-	cd tests;
-	NEXNEST_ENV=test nosetests --with-xcoverage --with-xunit --cover-package=nexnest --cover-erase
+	NEXNEST_ENV=test nosetests --nologcapture --with-xcoverage --with-xunit --cover-package=nexnest --cover-erase
 
 
 test_setup:

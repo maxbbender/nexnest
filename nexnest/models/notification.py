@@ -94,7 +94,7 @@ class Notification(Base):
         from nexnest.models.group_listing_message import GroupListingMessage
         from nexnest.models.friend import Friend
         from nexnest.models.group import Group
-        # from nexnest.models.group_listing import GroupListing
+        from nexnest.models.group_listing import GroupListing
         from nexnest.models.group_listing_favorite import GroupListingFavorite
         from nexnest.models.group_message import GroupMessage
         from nexnest.models.house import House
@@ -105,6 +105,7 @@ class Notification(Base):
         from nexnest.models.maintenance_message import MaintenanceMessage
         from nexnest.models.tour import Tour
         from nexnest.models.tour_message import TourMessage
+        from nexnest.models.group_user import GroupUser
 
         message = None
         returnObject = None
@@ -308,6 +309,31 @@ class Notification(Base):
                     (returnObject.user.name, returnObject.tour.group.name)
 
                 redirectURL = '/tour/view/%d' % returnObject.id
+
+                return message, returnObject, redirectURL
+        elif self.notif_type == 'group_listing':
+            returnObject = session.query(GroupListing) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "You have a new House Request from %s" % \
+                    (returnObject.group.name)
+
+                redirectURL = '/houseRequest/view/%d' % returnObject.id
+
+                return message, returnObject, redirectURL
+
+        elif self.notif_type == 'user_leave_group':
+            returnObject = session.query(GroupUser) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "%s has left %s" % \
+                    (returnObject.user.name, returnObject.group.name)
+
+                redirectURL = '/group/view/%d' % returnObject.group.id
 
                 return message, returnObject, redirectURL
 

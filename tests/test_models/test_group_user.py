@@ -6,9 +6,11 @@ from nexnest.data_gen.factories import GroupUserFactory, NotificationFactory, Us
 
 from nexnest.models.group_user import GroupUser
 from nexnest.models.notification import Notification
+from nexnest.models.user import User
+from nexnest.models.group import Group
 
 
-class testGroupUser(unittest.TestCase):
+class TestGroupUser(unittest.TestCase):
 
     def setUp(self):
         self.leader = UserFactory()
@@ -16,7 +18,7 @@ class testGroupUser(unittest.TestCase):
 
         session.commit()
 
-        self.group = GroupFactory(leader=self.user)
+        self.group = GroupFactory(leader=self.leader)
 
         session.commit()
 
@@ -26,10 +28,13 @@ class testGroupUser(unittest.TestCase):
         session.commit()
 
     def tearDown(self):
-        session.delete(self.gu)
-        session.delete(self.leader)
-        session.delete(self.user)
-        session.delete(self.group)
+        session.query(GroupUser).delete()
+        session.commit()
+        session.query(Group).delete()
+        session.commit()
+        session.query(Notification).delete()
+        session.commit()
+        session.query(User).delete()
         session.commit()
 
     def testNotification(self):
@@ -40,3 +45,6 @@ class testGroupUser(unittest.TestCase):
             .count()
 
         self.assertEqual(notif, 1)
+
+    def userLeaveGroup(self):
+        

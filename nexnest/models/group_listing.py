@@ -7,7 +7,8 @@ from sqlalchemy.schema import UniqueConstraint
 
 from flask import flash
 
-from nexnest.application import db
+from nexnest.application import db, session
+from nexnest.models.notification import Notification
 
 from .base import Base
 
@@ -114,3 +115,12 @@ class GroupListing(Base):
             return False
 
         return True
+
+    def genNotifications(self):
+        for landlord in self.listing.landLordsAsUsers():
+
+            newNotif = Notification(notif_type='group_listing',
+                                    target_model_id=self.id,
+                                    target_user=landlord)
+            session.add(newNotif)
+            session.commit()

@@ -119,6 +119,8 @@ def viewGroup(group_id):
         flash("You are not a part of %s" % group.name, 'warning')
         return redirect(url_for('indexs.index'))
 
+# NOTIFICATIONS IMPLEMENTED
+
 
 @groups.route('/group/invite', methods=['POST'])
 @login_required
@@ -153,6 +155,7 @@ def invite():
                                     group_id=form.group_id.data))
 
 
+# NOTIFICATIONS IMPLEMENTED
 @groups.route('/group/message/create', methods=['POST'])
 @login_required
 def createMessage():
@@ -170,6 +173,8 @@ def createMessage():
 
             session.add(newMessage)
             session.commit()
+
+            newMessage.genNotifications()
         else:
             flash("Unable to post a message to a group you are not apart of",
                   'warning')
@@ -182,42 +187,44 @@ def createMessage():
     #                         group_id=message_form.group_id.data))
 
 
-@groups.route('/group/suggestListing', methods=['POST'])
-@login_required
-def suggestListing():
+# NOTIFICATIONS IMPLEMENTED
+# DEPRECATED DON"T USE
+# @groups.route('/group/suggestListing', methods=['POST'])
+# @login_required
+# def suggestListing():
 
-    if request.method == 'POST':
-        form = SuggestListingForm(request.form)
-        if form.validate():
-            group = session.query(Group).filter_by(
-                id=int(form.group_id.data)).first()
+#     if request.method == 'POST':
+#         form = SuggestListingForm(request.form)
+#         if form.validate():
+#             group = session.query(Group).filter_by(
+#                 id=int(form.group_id.data)).first()
 
-            # Is the current user apart of the group?
-            if group in current_user.accepted_groups:
-                listing = session.query(Listing).filter_by(
-                    id=int(form.listing_id.data)).first()
+#             # Is the current user apart of the group?
+#             if group in current_user.accepted_groups:
+#                 listing = session.query(Listing).filter_by(
+#                     id=int(form.listing_id.data)).first()
 
-                groupListing = session.query(GroupListing).filter_by(
-                    group_id=group.id, listing_id=listing.id).first()
+#                 groupListing = session.query(GroupListing).filter_by(
+#                     group_id=group.id, listing_id=listing.id).first()
 
-                if not groupListing:
-                    newGroupListing = GroupListing(group, listing)
-                    session.add(newGroupListing)
-                    session.commit()
-                    flash("This listing has been suggested to %s" %
-                          group.name, 'info')
-                else:
-                    flash("This listing has already been suggested to " +
-                          group.name + " by someone", 'info')
-            else:
-                flash("Unable to suggest a listing to a group you are not apart of",
-                      'warning')
-                return redirect(url_for('indexs.index'))
-        else:
-            flash("Errors validating Suggest Listing Invite form", 'danger')
+#                 if not groupListing:
+#                     newGroupListing = GroupListing(group, listing)
+#                     session.add(newGroupListing)
+#                     session.commit()
+#                     flash("This listing has been suggested to %s" %
+#                           group.name, 'info')
+#                 else:
+#                     flash("This listing has already been suggested to " +
+#                           group.name + " by someone", 'info')
+#             else:
+#                 flash("Unable to suggest a listing to a group you are not apart of",
+#                       'warning')
+#                 return redirect(url_for('indexs.index'))
+#         else:
+#             flash("Errors validating Suggest Listing Invite form", 'danger')
 
-    return redirect(url_for('listings.viewListing',
-                            listingID=form.listing_id.data))
+#     return redirect(url_for('listings.viewListing',
+#                             listingID=form.listing_id.data))
 
 
 @groups.route('/group/leave/<groupID>')
@@ -293,6 +300,7 @@ def removeMember(groupID, userID):
     return redirect(url_for('groups.viewGroup', group_id=groupID))
 
 
+# NOTIFICATIONS IMPLEMENTED
 @groups.route('/group/requestListing', methods=['POST'])
 @login_required
 def requestListing():

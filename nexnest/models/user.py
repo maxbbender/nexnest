@@ -227,6 +227,14 @@ class User(Base):
                 groupUser.show = False
 
                 session.commit()
+
+                for user in groupUser.group.acceptedUsers:
+                    newNotif = Notification(notif_type='user_leave_group',
+                                            target_model_id=groupUser.id,
+                                            target_user=user)
+                    session.add(newNotif)
+                    session.commit()
+
                 return True
             else:
                 flash(
