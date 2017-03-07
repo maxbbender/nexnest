@@ -214,7 +214,7 @@ class User(Base):
         else:
             groupListings = session.query(GroupListing) \
                 .filter_by(group_id=group.id,
-                           show=True,
+                           group_show=True,
                            completed=True) \
                 .count()
 

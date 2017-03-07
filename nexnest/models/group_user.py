@@ -10,12 +10,12 @@ from .base import Base
 
 class GroupUser(Base):
     __tablename__ = 'group_users'
+    id = db.Column(db.Integer,
+                   primary_key=True)
     group_id = db.Column(db.Integer,
-                         db.ForeignKey('groups.id'),
-                         primary_key=True)
+                         db.ForeignKey('groups.id'))
     user_id = db.Column(db.Integer,
-                        db.ForeignKey('users.id'),
-                        primary_key=True)
+                        db.ForeignKey('users.id'))
 
     # This is for if they have accepted to be a part of the group
     accepted = db.Column(db.Boolean)

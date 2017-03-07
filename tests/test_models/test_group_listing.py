@@ -43,7 +43,7 @@ class TestGroupListing(unittest.TestCase):
         self.landlordListing = LandlordListingFactory(landlord=self.landlord, listing=self.listing)
         session.commit()
 
-        # The leader creates a new House Request
+        # The leader creates a new listing request
         self.gl = GroupListing(group=self.group, listing=self.listing)
         session.commit()
 
