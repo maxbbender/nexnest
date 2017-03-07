@@ -1319,6 +1319,14 @@
 {% endblock %}
 {% block scripts %}
 <script>
+	/**
+	 * Returns a random integer between min (inclusive) and max (inclusive)
+	 * Using Math.round() will give you a non-uniform distribution!
+	 */
+	function getRandomInt(min, max) {
+	    return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+
 	//Tour timers
 	var acceptTourUndoTimeoutTimer;
 	var acceptTourChangeDivTimeoutTimer;
@@ -1344,17 +1352,23 @@
 
 	function acceptTour(id, surroundingID, listing){
 		var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
+
+		// Display loading gif
         $("#acceptTourButton"+id).hide();
         $("#acceptTourLoading"+id).show();
         $("#declineTourBtn"+id).addClass("disabled");
-        $("#tourTimeChangeBtn"+id).addClass("disabled");        
+        $("#tourTimeChangeBtn"+id).addClass("disabled"); 
+
+        // Load for a random amount of time       
         setTimeout(function () {
         	$("#requestedTour"+id).fadeOut(300);
         	$("#undoAcceptTourDiv"+id).show();
         	acceptTourUndoTimeoutTimer = setTimeout(function () {
         		$("#undoAcceptTourDiv"+id).fadeOut(300);
         	}, 8000);
-        }, 1200);
+        }, getRandomInt(1000, 3000));
+
+        // Send AJAX request to backend
         requestURL = '/tour/' + id + '/confirm/ajax';
         $.getJSON(requestURL, function(data) {
             results = data['results'];
@@ -1433,7 +1447,7 @@
         	declineTourUndoTimeoutTimer = setTimeout(function () {
         		$("#undoDeclineTourDiv"+id).fadeOut(300);
         	}, 8000);
-        }, 1200);
+        }, getRandomInt(1000, 3000));
         requestURL = '/tour/' + id + '/decline/ajax';
         $.getJSON(requestURL, function(data) {
             results = data['results'];
@@ -1510,7 +1524,7 @@
         	cancelTourUndoTimeoutTimer = setTimeout(function () {
         		 $("#undoCancelTourDiv"+id).fadeOut(300);
         	}, 8000);
-        }, 1200);
+        }, getRandomInt(1000, 3000));
         requestURL = '/tour/' + id + '/decline/ajax';
         $.getJSON(requestURL, function(data) {
             results = data['results'];
@@ -1578,26 +1592,32 @@
 
     function markInProgress(id, surroundingID, listing){
 		var count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
+
+		// Lets simulate loading
         $("#markInProgressButton"+id).hide();
         $("#markInProgressLoading"+id).show();
         $("#completedButton"+id).addClass("disabled");
+
+        //  After random time show undo bar
         setTimeout(function () {
         	$("#openRequest"+id).fadeOut(300);
         	$("#undoInProgressDiv"+id).show();
+
+        	// Don't hide the undo bar for 8 sec
         	setInProgressUndoTimeoutTimer = setTimeout(function () {
         		$("#undoInProgressDiv"+id).fadeOut(300);
         	}, 8000);
-        }, 1200);
-        // requestURL = '/tour/' + id + '/confirm/ajax';
-        // $.getJSON(requestURL, function(data) {
-        //     results = data['results'];
-        //     // alert(data['results'].success);
-        //     if (results.success == true){ 
-        //         //alert("Tour accepted now we need to move this element to 'Scheduled Tours'... make sure to make the button think toO!");
-        //     } else {
-        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
-        //     }
-        // });
+
+        }, getRandomInt(1000, 3000));
+
+        requestURL = '/house/maintenanceRequest/' + id + '/inProgress/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            if (results.success == true){ 
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
         $("#doIShowOpenRequestsDiv"+surroundingID).html("hide");
         $("#numberOfOpenRequests"+surroundingID).html(count-1);        
         setInProgressChangeDivTimeoutTimer = setTimeout(function () {
@@ -1631,16 +1651,14 @@
         $("#undoInProgressDiv"+id).hide();
         alert(id);
         $("#openRequest"+id).show();
-        // requestURL = '/tour/' + id + '/unConfirm/ajax';
-        // $.getJSON(requestURL, function(data) {
-        //     results = data['results'];
-        //     // alert(data['results'].success);
-        //     if (results.success == true){ 
-        //         //alert("Tour has been un-accepted now we need to move this element to 'Requested Tours'");
-        //     } else {
-        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
-        //     }
-        // });
+        requestURL = '/house/maintenanceRequest/' + id + '/undoInProgress/ajax/open';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            if (results.success == true){ 
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
         $("#doIShowOpenRequestsDiv"+surroundingID).html("show");
         if(count-1 == 0){
     		$("#openRequestListing"+surroundingID).fadeIn(300);
@@ -1665,17 +1683,15 @@
         	markCompletedUndoTimeoutTimer = setTimeout(function () {
 	        	$("#undoMarkCompleted"+id).fadeOut(300);
         	}, 8000);
-        }, 1200);
-        // requestURL = '/tour/' + id + '/confirm/ajax';
-        // $.getJSON(requestURL, function(data) {
-        //     results = data['results'];
-        //     // alert(data['results'].success);
-        //     if (results.success == true){ 
-        //         //alert("Tour accepted now we need to move this element to 'Scheduled Tours'... make sure to make the button think toO!");
-        //     } else {
-        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
-        //     }
-        // });
+        }, getRandomInt(1000,3000));
+        requestURL = '/house/maintenanceRequest/' + id + '/completed/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            if (results.success == true){ 
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
         $("#doIShowOpenRequestsDiv"+surroundingID).html("hide");
         $("#numberOfOpenRequests"+surroundingID).html(count-1);
         setCompletedChangeDivTimeoutTimer = setTimeout(function () {
@@ -1708,16 +1724,14 @@
         $("#undoMarkCompleted"+id).hide();
         $("#openRequest"+id).show();
         $("#inProgressButton"+id).removeClass("disabled");
-        // requestURL = '/tour/' + id + '/unConfirm/ajax';
-        // $.getJSON(requestURL, function(data) {
-        //     results = data['results'];
-        //     // alert(data['results'].success);
-        //     if (results.success == true){ 
-        //         //alert("Tour has been un-accepted now we need to move this element to 'Requested Tours'");
-        //     } else {
-        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
-        //     }
-        // });
+        requestURL = '/house/maintenanceRequest/' + id + '/undoCompleted/ajax/open';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            if (results.success == true){ 
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
         $("#doIShowOpenRequestsDiv"+surroundingID).html("show");
         if(count == 0){
     		$("#openRequestListing"+surroundingID).fadeIn(300);
@@ -1742,17 +1756,15 @@
 	        	$("#undoInProgressToCompleted"+id).fadeOut(300);
         	}, 8000);
         	$("#undoMarkCompleted"+id).delay(8000).fadeOut(300);
-        }, 1200);
-        // requestURL = '/tour/' + id + '/confirm/ajax';
-        // $.getJSON(requestURL, function(data) {
-        //     results = data['results'];
-        //     // alert(data['results'].success);
-        //     if (results.success == true){ 
-        //         //alert("Tour accepted now we need to move this element to 'Scheduled Tours'... make sure to make the button think toO!");
-        //     } else {
-        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
-        //     }
-        // });
+        }, getRandomInt(1000,3000));
+        requestURL = '/house/maintenanceRequest/' + id + '/completed/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            if (results.success == true){ 
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
         $("#doIShowInProgressRequestsDiv"+surroundingID).html("hide");
         $("#numberOfInProgressRequests"+surroundingID).html(count-1);
         markCompletedChangeDivTimeoutTimer = setTimeout(function () {
@@ -1784,16 +1796,14 @@
         $("#inProgressToCompletedButton"+id).show();
         $("#undoInProgressToCompleted"+id).hide();
         $("#inProgress"+id).show();
-        // requestURL = '/tour/' + id + '/unConfirm/ajax';
-        // $.getJSON(requestURL, function(data) {
-        //     results = data['results'];
-        //     // alert(data['results'].success);
-        //     if (results.success == true){ 
-        //         //alert("Tour has been un-accepted now we need to move this element to 'Requested Tours'");
-        //     } else {
-        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
-        //     }
-        // });
+        requestURL = '/house/maintenanceRequest/' + id + '/undoCompleted/ajax/inprogress';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            if (results.success == true){ 
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
         $("#doIShowInProgressRequestsDiv"+surroundingID).html("show");
         if(count == 0){
     		$("#inProgressRequestListing"+surroundingID).fadeIn(300);
