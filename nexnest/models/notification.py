@@ -163,18 +163,6 @@ class Notification(Base):
                 redirectURL = '/group/view/%d' % returnObject.id
 
                 return message, returnObject, redirectURL
-        elif self.notif_type == 'group_listing_favorite':
-            returnObject = session.query(Group) \
-                .filter_by(id=self.target_model_id) \
-                .first()
-
-            if returnObject is not None:
-                message = "A new listing has been suggested to your Group %s" % returnObject.name
-
-                redirectURL = '/group/view/%d' % returnObject.id
-
-                return message, returnObject, redirectURL
-
         elif self.notif_type == 'group_listing_message':
             returnObject = session.query(GroupListingMessage) \
                 .filter_by(id=self.target_model_id) \

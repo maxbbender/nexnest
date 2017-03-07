@@ -1,6 +1,7 @@
 from datetime import datetime as dt
 
-from nexnest.application import db
+from nexnest.application import db, session
+from nexnest.models.notification import Notification
 
 from .base import Base
 
@@ -31,3 +32,12 @@ class GroupListingFavorite(Base):
 
     def __repr__(self):
         return '<GroupListingFavorite ~ Group %r | Listing %r>' % (self.group_id, self.listing_id)
+
+    def genNotifications(self):
+        for user in self.group.acceptedUsers:
+            if user is not self.user:
+                newNotf = Notification(notif_type='group_listing_favorite',
+                                       target_model_id=self.id,
+                                       target_user=user)
+                session.add(newNotf)
+                session.commit()

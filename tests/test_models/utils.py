@@ -10,9 +10,18 @@ from nexnest.models.group_listing import GroupListing
 from nexnest.models.listing import Listing
 from nexnest.models.landlord import Landlord
 from nexnest.models.landlord_listing import LandlordListing
+from nexnest.models.group_listing_favorite import GroupListingFavorite
+from nexnest.models.house import House
+from nexnest.models.house_message import HouseMessage
 
 
 def dropAllRows():
+    session.query(HouseMessage).delete()
+    session.commit()
+    session.query(House).delete()
+    session.commit()
+    session.query(GroupListingFavorite).delete()
+    session.commit()
     session.query(GroupListing).delete()
     session.commit()
     session.query(GroupMessage).delete()

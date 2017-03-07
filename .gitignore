@@ -11,3 +11,4 @@ coverage.xml
 pylint.out
 coverage.py
 .coverage/
+.coverage

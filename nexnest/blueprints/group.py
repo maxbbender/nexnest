@@ -226,7 +226,7 @@ def createMessage():
 #     return redirect(url_for('listings.viewListing',
 #                             listingID=form.listing_id.data))
 
-
+# NOTIFICATIONS IMPLEMENTED
 @groups.route('/group/leave/<groupID>')
 @login_required
 def leaveGroup(groupID):
@@ -343,6 +343,7 @@ def requestListing():
     return rLForm.redirect()
 
 
+# NOTIFICATIONS IMPLEMENTED
 @groups.route('/group/<groupID>/favoriteListing/<listingID>', methods=['GET'])
 @login_required
 def favoriteListing(groupID, listingID):

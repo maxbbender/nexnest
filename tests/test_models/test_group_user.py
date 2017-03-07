@@ -47,4 +47,23 @@ class TestGroupUser(unittest.TestCase):
         self.assertEqual(notif, 1)
 
     def userLeaveGroupNotifications(self):
-        
+        newUser = UserFactory()
+        session.commit()
+
+        newGU = GroupUserFactory(group=self.group, user=newUser)
+        newGU.accepted = True
+        session.commit()
+
+        # Now the user leaves the group
+        newUser.leaveGroup(self.group)
+
+        # Now there should be a notification for each of the group's
+        # accepted users
+        for user in self.group.acceptedUsers:
+            notifCount = session.query(Notification) \
+                .filter_by(notif_type='user_leave_group',
+                           target_model_id=newGU.id,
+                           target_user_id=user.id) \
+                .count()
+
+            self.assertEqual(notifCount, 1)

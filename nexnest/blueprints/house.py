@@ -54,6 +54,7 @@ def view(id):
     return redirect(url_for('indexs.index'))
 
 
+# NOTIFICATIONS IMPLEMENTED
 @houses.route('/house/message', methods=['POST'])
 @login_required
 def messageCreate():
@@ -72,6 +73,8 @@ def messageCreate():
                                      user=current_user)
                 session.add(newHM)
                 session.commit()
+
+                newHM.genNotifications()
 
         else:
             flash("Invalid Request", 'warning')
