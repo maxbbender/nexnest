@@ -71,8 +71,8 @@ class GroupListing(Base):
         self.date_created = now
 
     def __repr__(self):
-        return '<GroupListing ~ Group %r | Listing %r>' % \
-            (self.group_id, self.listing_id)
+        return '<GroupListing %r ~ Group %r | Listing %r>' % \
+            (self.id, self.group_id, self.listing_id)
 
     @property
     def status(self):
@@ -114,3 +114,17 @@ class GroupListing(Base):
             return False
 
         return True
+
+    @property
+    def firstMessage(self):
+        firstMessage = None
+        for message in self.messages:
+            if firstMessage is None:
+                firstMessage = message
+                continue
+
+            if message.date_created < firstMessage.date_created:
+                firstMessage = message
+                continue
+
+        return firstMessage

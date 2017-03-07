@@ -16,6 +16,7 @@ from nexnest.models.group_listing_favorite import GroupListingFavorite
 from nexnest.models.security_deposit import SecurityDeposit
 from nexnest.models.house import House
 from nexnest.models.maintenance import Maintenance
+from nexnest.models.group_listing_message import GroupListingMessage
 
 from flask import redirect, url_for
 from flask_admin import Admin
@@ -23,6 +24,8 @@ from flask_admin.contrib.sqla import ModelView
 
 
 class AdminModelView(ModelView):
+    column_display_pk = True
+
     def is_accessible(self):
         return True
         # return current_user.isAdmin # TURN ON FOR PRODUCTION
@@ -51,4 +54,4 @@ admin.add_view(AdminModelView(GroupListingFavorite, session))
 admin.add_view(AdminModelView(SecurityDeposit, session))
 admin.add_view(AdminModelView(House, session))
 admin.add_view(AdminModelView(Maintenance, session))
-
+admin.add_view(AdminModelView(GroupListingMessage, session))

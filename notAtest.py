@@ -6,10 +6,11 @@ from nexnest.models import *
 import os
 
 
-u = session.query(user.User).filter_by(id=1).first()
+u = session.query(group_listing.GroupListing).filter_by(id=1).first()
 print(u)
 
-m, n = u.unreadNotifications()
+# m, n = u.unreadNotifications()
 
-print("Messages %r" % m)
-print("not %r" % n)
+# print("Messages %r" % m)
+# print("not %r" % n)
+print(u.firstMessage)
