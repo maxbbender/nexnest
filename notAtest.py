@@ -13,4 +13,4 @@ print(u)
 
 # print("Messages %r" % m)
 # print("not %r" % n)
-print(u.firstMessage)
+print(u.numSecurityDepositsPaid)

@@ -128,3 +128,15 @@ class GroupListing(Base):
                 continue
 
         return firstMessage
+
+    @property
+    def numSecurityDepositsPaid(self):
+        if not self.accepted:
+            return 0
+
+        numPaid = 0
+        for securityDeposit in self.securityDeposits:
+            if securityDeposit.completed:
+                numPaid += 1
+
+        return numPaid
