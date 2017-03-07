@@ -752,7 +752,7 @@
         							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
         								                    <div class="row">
         								                    	<div class="col-xl-12">
-        								                    		<h3><strong>
+        								                    		<h3 id="unacceptedRequestsCount{{housingRequestObject.listing.id}}"><strong>
         								                    		{{housingRequestObject.houseRequests|length }} Request(s) for {{housingRequestObject.listing.street}}</strong></h3>
         								                    		<small>Lease Period: {{ housingRequestObject.listing.start_date }} - {{ housingRequestObject.listing.end_date }}</small>
         								                    	</div>
@@ -1454,7 +1454,6 @@
     	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
     	$("#declineTourLoading"+id).hide();
         $("#declineTourButton"+id).show();
-        $("#declineTourUndo"+id).hide();
         $("#undoDeclineTourDiv"+id).hide();
         $("#requestedTour"+id).show();
         requestURL = '/tour/' + id + '/unDecline/ajax';
@@ -1822,14 +1821,49 @@
         		}
         	}
         	else if(count == 1){
-        		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+        		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
         		$("#noUnacceptedRequests").hide();
         	}
         	else if(count > 1){
-        		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+        		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
         		$("#noUnacceptedRequests").hide();
         	}        	
         }, 10000);
+    }
+
+    function undoAcceptHouseRequest(id, surroundingID){
+    	clearTimeout(acceptGroupUndoTimeoutTimer);
+    	clearTimeout(acceptGroupChangeDivTimeoutTimer);
+    	var count = parseFloat($("#numberOfUnacceptedRequests"+surroundingID).html()) || 0;
+    	$("#numberOfUnacceptedRequests"+surroundingID).html(count+1);
+    	var count = parseFloat($("#numberOfUnacceptedRequests"+surroundingID).html()) || 0;
+    	$("#acceptHouseRequestLoading"+id).hide();
+        $("#unAcceptedRequest"+id).show();
+        $("#undoAcceptedRequest"+id).hide();
+        $("#acceptHouseRequest"+id).show();
+        $(".denyHouseRequest"+surroundingID).removeClass("disabled");
+        $(".acceptHouseRequest"+surroundingID).removeClass('disabled');
+        // requestURL = '/tour/' + id + '/unDecline/ajax';
+        // $.getJSON(requestURL, function(data) {
+        //     results = data['results'];
+        //     // alert(data['results'].success);
+        //     if (results.success == true){ 
+        //         //alert("Tour has been unDeclined, Don't hide it!");
+        //     } else {
+        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+        //     }
+        // });
+        $("#doIShowUnacceptedRequestsDiv"+surroundingID).html("show");
+        if(count-1 == 0){
+    		$("#unacceptedRequestsListing"+surroundingID).fadeIn(300);    		
+    	}
+    	else if(count-1 == 1){
+    		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
+    	}
+    	else if(count-1 > 1){
+    		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
+    	}    	
+    	$("#noRequestedTours").hide();
     }
 
 	$(document).ready(function() {
