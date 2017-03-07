@@ -424,7 +424,7 @@
 					        	                    	            						{% if tour.last_requested == 'group' %}
 						        	                    	            						<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
 								        	                    	            					<div id="acceptTourButton{{tour.id}}">
-								        	                    	            						<button class="btn btn-success" onclick="acceptTour({{tour.id}}, {{tourObject.listing.id}}, '{{tourObject.listing.street}}')">Accept Tour</button>
+								        	                    	            						<button id="acceptTourBtn{{tour.id}}" class="btn btn-success" onclick="acceptTour({{tour.id}}, {{tourObject.listing.id}}, '{{tourObject.listing.street}}')">Accept Tour</button>
 								        	                    	            					</div>
 								        	                    	            					<div id="acceptTourLoading{{tour.id}}" style="display: none;">
 								        	                    	            						<button class="btn btn-success" style="width: 117.5px;">
@@ -433,7 +433,7 @@
 								        	                    	            					</div>
 								        	                    	            				</div>
 								        	                    	            				<div class="col-12 col-md-auto" style="padding-right: 15px;">
-								        	                    	            					<a href="#!" class="btn btn-info" data-toggle="modal" data-target="#suggestTimeTourModal" data-tourid="{{tour.id}}" data-groupid="{{tour.group.id}}">Request Date/Time Change</a>
+								        	                    	            					<a href="#!" id="tourTimeChangeBtn{{tour.id}}" class="btn btn-info" data-toggle="modal" data-target="#suggestTimeTourModal" data-tourid="{{tour.id}}" data-groupid="{{tour.group.id}}">Request Date/Time Change</a>
 								        	                    	            				</div>
 								        	                    	            			{% else %}
 								        	                    	            				<div class="col-12 col-md-auto" style="padding-left: 15px; padding-right: 15px;">
@@ -442,7 +442,7 @@
 							        	                    	            				{% endif %}
 							        	                    	            				<div class="col-12 col-md-auto">
 							        	                    	            					<div id="declineTourButton{{tour.id}}">
-							        	                    	            						<button class="btn btn-danger" onclick="declineTour({{tour.id}}, {{tourObject.listing.id}}, '{{tourObject.listing.street}}')">Decline Tour</button>
+							        	                    	            						<button id="declineTourBtn{{tour.id}}" class="btn btn-danger" onclick="declineTour({{tour.id}}, {{tourObject.listing.id}}, '{{tourObject.listing.street}}')">Decline Tour</button>
 							        	                    	            					</div>
 							        	                    	            					<div id="declineTourLoading{{tour.id}}" style="display: none;">
 							        	                    	            						<button class="btn btn-danger" style="width: 117.5px;">
@@ -1340,6 +1340,8 @@
 		var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
         $("#acceptTourButton"+id).hide();
         $("#acceptTourLoading"+id).show();
+        $("#declineTourBtn"+id).addClass("disabled");
+        $("#tourTimeChangeBtn"+id).addClass("disabled");        
         setTimeout(function () {
         	$("#requestedTour"+id).fadeOut(300);
         	$("#undoAcceptTourDiv"+id).show();
@@ -1388,6 +1390,8 @@
         $("#acceptTourButton"+id).show();
         $("#undoAcceptTourDiv"+id).hide();
         $("#requestedTour"+id).show();
+        $("#declineTourBtn"+id).removeClass("disabled");
+        $("#tourTimeChangeBtn"+id).removeClass("disabled");  
         requestURL = '/tour/' + id + '/unConfirm/ajax';
         $.getJSON(requestURL, function(data) {
             results = data['results'];
@@ -1415,6 +1419,8 @@
     	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
     	$("#declineTourButton"+id).hide();
         $("#declineTourLoading"+id).show();
+        $("#acceptTourBtn"+id).addClass("disabled");
+        $("#tourTimeChangeBtn"+id).addClass("disabled");  
         setTimeout(function () {
         	$("#requestedTour"+id).fadeOut(300);
         	$("#undoDeclineTourDiv"+id).show();
@@ -1463,6 +1469,8 @@
         $("#declineTourButton"+id).show();
         $("#undoDeclineTourDiv"+id).hide();
         $("#requestedTour"+id).show();
+        $("#acceptTourBtn"+id).removeClass("disabled");
+        $("#tourTimeChangeBtn"+id).removeClass("disabled");
         requestURL = '/tour/' + id + '/unDecline/ajax';
         $.getJSON(requestURL, function(data) {
             results = data['results'];
