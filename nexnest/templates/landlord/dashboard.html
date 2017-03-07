@@ -453,7 +453,7 @@
 						        	                    	            				</div>
 					        	                    	            				</div>
 					        	                    	            				<div class="col-xl-2" style="text-align: right;">
-					        	                    	            					<a class="btn btn-primary" href="{{ url_for('tours.viewTour', tourID=tour.id) }}">View Request</a>
+					        	                    	            					<a class="btn btn-primary" href="{{ url_for('tours.viewTour', tourID=tour.id) }}">More Info</a>
 					        	                    	            				</div>
 					        	                    	            			</div>
 					        	                    	            		</div>
@@ -616,7 +616,7 @@
 					        	                    	            					</div>
 					        	                    	            				</div>
 					        	                    	            				<div class="col-xl-2" style="text-align: right;">
-					        	                    	            					<a class="btn btn-primary" href="{{ url_for('tours.viewTour', tourID=tour.id) }}">View Request</a>
+					        	                    	            					<a class="btn btn-primary" href="{{ url_for('tours.viewTour', tourID=tour.id) }}">More Info</a>
 					        	                    	            				</div>
 					        	                    	            			</div>
 					        	                    	            		</div>
@@ -807,13 +807,16 @@
 					        	                    	            					</div>
 					        	                    	            				</div>
 					        	                    	            				<div class="col-xl-2" style="text-align: right;">
-					        	                    	            					<a class="btn btn-primary" href="{{ url_for('housingRequests.view', id=housingRequest.id) }}">View Request</a>
+					        	                    	            					<a class="btn btn-primary" href="{{ url_for('housingRequests.view', id=housingRequest.id) }}">More Info</a>
 					        	                    	            				</div>
 					        	                    	            			</div>
 					        	                    	            		</div>
 					        	                    	            		<div class="card-block">
 		        							                    				<div class="row">
 		        							                    					<div class="col-xs-12">
+		        							                    						<strong>The Group's Initial Message to You: </strong>
+		        							                    						{{ housingRequest.firstMessage.content }}
+		        							                    						<br><br>
 						    								                    		<strong>Group Leader:</strong>
 						    								                    		{% for user in housingRequest.group.acceptedUsers %}
 						    								                    			{% with group=housingRequest.group %}         
@@ -893,94 +896,96 @@
 		        	                    <div class="tab-pane" id="acceptedTab" role="tabpanel" style="padding: 0px;">
 		        	                    	{% if acceptedHousingRequests %}
 		        	                        	{% for housingRequest in acceptedHousingRequests %}
-        							                <div class="card">
+        							                <div class="card" id="confirmRequest{{housingRequest.id}}">
         							                    <div class="card-header">
         								                    <div class="row">
-        								                    	<div class="col-xl-12">
-        								                    		<h3><strong>{{ housingRequest.listing.street }} </strong></h3>
+        								                    	<div class="col-xl-10">
+        								                    		<h3><strong>{{ housingRequest.group.name }} for {{ housingRequest.listing.street }}
+        								                    		</strong></h3>
         								                    		<small>Lease Period: {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}</small>
+        								                    		<br><br>
+        								                    		<div class="row">
+        								                    			<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+	        								                    			<strong style="padding-right: 16px;">All Leases Collected: </strong>
+	        								                    			<button id="markAllCollected{{housingRequest.id}}" type="button" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" onclick="markLeasesCollected({{housingRequest.id}})"><i class="fa fa-times" aria-hidden="true"></i></button>
+	        								                    			<button type="button" id="markAllCollectedLoading{{housingRequest.id}}" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+	        								                    			<button type="button" id="markAllUncollected{{housingRequest.id}}" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" style="display: none;" onclick="markLeasesUncollected({{housingRequest.id}})"><i class="fa fa-check" aria-hidden="true"></i></button>
+	        								                    		</div>
+	        								                    		<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+	        								                    			<strong>Security Deposits Collected: </strong> 
+	        								                    			<span id="numDeposits{{housingRequest.id}}">{{housingRequest.numSecurityDepositsPaid}}</span>/{{housingRequest.group.acceptedUsers|count}}
+	        								                    		</div>
+	        								                    		<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+	        								                    			<button id="confirmGroupButton{{housingRequest.id}}" class="btn btn-success" onclick="confirmGroup({{housingRequest.id}})">Confirm Group</button>
+	        								                    			<button id="confirmGroupLoading{{housingRequest.id}}" class="btn btn-success" style="display: none; width: 139.33px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+	        								                    		</div>
+        								                    		</div>
+        								                    	</div>
+        								                    	<div class="col-xl-2" style="text-align: right;">
+        								                    		<a class="btn btn-primary" href="{{ url_for('housingRequests.view', id=housingRequest.id) }}">More Info</a>
         								                    	</div>
         								                    </div>			                    
         							                    </div>
-        							                    <div class="card-block">
+        							                    <div class="card-block">        								                    
         								                    <div class="row">
-        								                    	<div class="col-xs-4">
-        								                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
-        								                    		<br><br>
-        								                    		<a href="{{ url_for('housingRequests.view', id=housingRequest.id) }}" class="btn btn-primary">View Request</a>
-        								                    	</div>
-        								                    	<div class="col-xs-8">
-        								                    		<div class="row">
-        								                    			<div class="col-xl-12">
-		        								                    		<h3><strong>Group requesting the listing: {{housingRequest.group.name}}</strong>({{housingRequest.group.acceptedUsers|count}} Members)</h3>		 
-		        								                    	</div>
-		        								                    </div>
-		        								                    <div class="row">
-		        								                    	<div class="col-xl-12">
-		        								                    		<strong style="padding-right: 16px;">All Leases Collected: </strong>
-		        								                    		<button type="button" id="pending" class="btn btn-danger btn-circle pending"><i class="fa fa-times" aria-hidden="true"></i></button>
-		        								                    	</div>
-		        								                    </div>
-		        								                    <br>
-		        								                    <div class="row">
-		        								                    	<div class="col-xl-12">
-		        								                    		<strong>All Deposits Collected: </strong>
-		        								                    		<button type="button" id="pending" class="btn btn-danger btn-circle pending"><i class="fa fa-times" aria-hidden="true"></i></button>
-		        								                    	</div>
-		        								                    </div>
-		        								                    <br>
-		        								                    <div class="row">
-		        								                    	<div class="col-xl-12">
-		        								                    		<strong>Group Leader:</strong>
-			        								                    		{% for deposit in housingRequest.securityDeposits %}
-			        								                    			{% with group=housingRequest.group %}         
-			        								                    				<div class="row">
-			        								                    					<div class="col-xs-10">
-			        								                    						{% if group.leader_id == deposit.user.id %}
-			        								                    		    				{% include 'landlord/acceptedMember.html' %}
-			        								                    						{% endif %}
-			        								                    		    		</div>
-			        								                    		    	</div>
-			        								                    		    {% endwith %}
-			        								                    		{% endfor %}
-			                    			      					    		<div id="allGroupMembersListingAccepted{{housingRequest.group.id}}Z{{housingRequest.listing.id}}" style="display: none;">
-			                    		      					    				{% for deposit in housingRequest.securityDeposits %}
-			                    		      					    					{% with group=housingRequest.group %}         
-			                    		      					    						<div class="row">
-			                    		      					    							<div class="col-xs-10">
-			                    		      					    								{% if not group.leader_id == deposit.user.id %}
-			                    		      					    				    				{% include 'landlord/acceptedMember.html' %}
-			                    		      					    				    			{% endif %}
-			                    		      					    				    		</div>
-			                    		      					    				    	</div>
-			                    		      					    				    {% endwith %}
-			                    		      					    				{% endfor %}
-			                    			      					    		</div>
-			                    			      					    		<button class="btn btn-info" id="allGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{housingRequest.group.acceptedUsers|count-1}} members</button>
-			                    			      					    		<button class="btn btn-info" id="hideAllGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other {{housingRequest.group.acceptedUsers|count-1}} members</button>
-			                    			      					    		<script type="text/javascript">
-			                    			      					    			//Show/hide members of group
-			                    			      					    			$("#allGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").click(function(){
-			                    			      					    			    $("#allGroupMembersListingAccepted{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").toggle();
-			                    			      					    			    $("#allGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").hide();
-			                    			      					    			    $("#hideAllGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").show();   	
-			                    			      					    			});
+        								                    	<div class="col-xl-2"></div>
+        								                    	<div class="col-xl-8">
+        								                    		<strong>Security Deposits Collected:</strong>
+	        								                    		{% for deposit in housingRequest.securityDeposits %}
+	        								                    			{% with group=housingRequest.group %}         
+	        								                    				<div class="row">
+	        								                    					<div class="col-xs-12">
+	        								                    						{% if group.leader_id == deposit.user.id %}
+	        								                    		    				{% include 'landlord/acceptedMember.html' %}
+	        								                    						{% endif %}
+	        								                    		    		</div>
+	        								                    		    	</div>
+	        								                    		    {% endwith %}
+	        								                    		{% endfor %}
+	                    			      					    		<div id="allGroupMembersListingAccepted{{housingRequest.group.id}}Z{{housingRequest.listing.id}}" style="display: none;">
+	                    		      					    				{% for deposit in housingRequest.securityDeposits %}
+	                    		      					    					{% with group=housingRequest.group %}         
+	                    		      					    						<div class="row">
+	                    		      					    							<div class="col-xs-12">
+	                    		      					    								{% if not group.leader_id == deposit.user.id %}
+	                    		      					    				    				{% include 'landlord/acceptedMember.html' %}
+	                    		      					    				    			{% endif %}
+	                    		      					    				    		</div>
+	                    		      					    				    	</div>
+	                    		      					    				    {% endwith %}
+	                    		      					    				{% endfor %}
+	                    			      					    		</div>
+	                    			      					    		<button class="btn btn-info" id="allGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{housingRequest.group.acceptedUsers|count-1}} members</button>
+	                    			      					    		<button class="btn btn-info" id="hideAllGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other {{housingRequest.group.acceptedUsers|count-1}} members</button>
+	                    			      					    		<script type="text/javascript">
+	                    			      					    			//Show/hide members of group
+	                    			      					    			$("#allGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").click(function(){
+	                    			      					    			    $("#allGroupMembersListingAccepted{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").toggle();
+	                    			      					    			    $("#allGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").hide();
+	                    			      					    			    $("#hideAllGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").show();   	
+	                    			      					    			});
 
-			                    			      					    			$("#hideAllGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").click(function(){
-			                    			      					    			    $("#allGroupMembersListingAccepted{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").toggle();
-			                    			      					    			    $("#allGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").show();
-			                    			      					    			    $("#hideAllGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").hide();   	
-			                    			      					    			});
-			                    			      					    		</script>
-			        								                    		<br>
-			        								                    		<br>
-			        								                    	</div>
-			        								                    </div>
+	                    			      					    			$("#hideAllGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").click(function(){
+	                    			      					    			    $("#allGroupMembersListingAccepted{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").toggle();
+	                    			      					    			    $("#allGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").show();
+	                    			      					    			    $("#hideAllGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").hide();   	
+	                    			      					    			});
+	                    			      					    		</script>
+	        								                    		<br>
+	        								                    		<br>
 	        								                    	</div>
 	        								                    </div>
 	        							                    </div>
 	        							                </div>
 			            							<br>
+			            							<div class="row" id="undoConfirmRequest{{housingRequest.id}}" style="display: none;">
+			            								<div class="col-xl-1"></div>
+			            								<div class="col-xl-10">
+			            									<div class="alert alert-info" role="alert">
+			            									    You have just confirmed a group for this listing <a href="#!" class="alert-link" onclick="undoConfirmGroup({{housingRequest.id}})">Undo?</a>
+			            									</div>
+			            								</div>
+			            							</div>
 			            						{% endfor %}
 		            						{% endif %}
 		        	                    </div>
@@ -1076,7 +1081,7 @@
 						        	                    	            				</div>
 					        	                    	            				</div>
 					        	                    	            				<div class="col-xl-2" style="text-align: right;">
-					        	                    	            					<a class="btn btn-primary" href="{{ url_for('houses.maintenanceRequestView', id=request.id) }}">View Request</a>
+					        	                    	            					<a class="btn btn-primary" href="{{ url_for('houses.maintenanceRequestView', id=request.id) }}">More Info</a>
 					        	                    	            				</div>
 					        	                    	            			</div>
 					        	                    	            		</div>
@@ -1167,7 +1172,7 @@
 						        	                    	            				</div>
 					        	                    	            				</div>
 					        	                    	            				<div class="col-xl-2" style="text-align: right;">
-					        	                    	            					<a class="btn btn-primary" href="{{ url_for('houses.maintenanceRequestView', id=request.id) }}">View Request</a>
+					        	                    	            					<a class="btn btn-primary" href="{{ url_for('houses.maintenanceRequestView', id=request.id) }}">More Info</a>
 					        	                    	            				</div>
 					        	                    	            			</div>
 					        	                    	            		</div>
@@ -1238,7 +1243,7 @@
 					        	                    	            					<br><br>
 					        	                    	            				</div>
 					        	                    	            				<div class="col-xl-2" style="text-align: right;">
-					        	                    	            					<a class="btn btn-primary" href="{{ url_for('houses.maintenanceRequestView', id=request.id) }}">View Request</a>
+					        	                    	            					<a class="btn btn-primary" href="{{ url_for('houses.maintenanceRequestView', id=request.id) }}">More Info</a>
 					        	                    	            				</div>
 					        	                    	            			</div>
 					        	                    	            		</div>
@@ -1335,6 +1340,7 @@
 	var acceptGroupChangeDivTimeoutTimer;
 	var denyGroupUndoTimeoutTimer;
 	var denyGroupChangeDivTimeoutTimer;
+	var confirmGroupUndoTimeoutTimer;
 
 	function acceptTour(id, surroundingID, listing){
 		var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
@@ -1958,6 +1964,108 @@
     	$("#noRequestedTours").hide();
     }
 
+    function paidToUnpaid(userID, requestID){
+    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+    	$("#depositPaid"+requestID+"Z"+userID).hide();
+    	$("#markDepositUnpaid"+requestID+"Z"+userID).show();
+    	setTimeout(function () {
+        	$("#markDepositUnpaid"+requestID+"Z"+userID).hide();
+        	$("#depositMarkedUnPaid"+requestID+"Z"+userID).show();
+        	$("#numDeposits"+requestID).html(depositsPaid-1);
+        }, 1200);        
+    }
+
+    function paidToPaid(userID, requestID){
+    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+    	$("#depositMarkedUnPaid"+requestID+"Z"+userID).hide();
+    	$("#markDepositUnpaid"+requestID+"Z"+userID).show();
+    	setTimeout(function () {
+        	$("#markDepositUnpaid"+requestID+"Z"+userID).hide();
+        	$("#depositPaid"+requestID+"Z"+userID).show();
+        	$("#numDeposits"+requestID).html(depositsPaid+1);
+        }, 1200);    	 	
+    }
+
+    function unpaidToPaid(userID, requestID){
+    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+    	$("#depositUnpaid"+requestID+"Z"+userID).hide();
+    	$("#markDepositPaid"+requestID+"Z"+userID).show();
+    	setTimeout(function () {
+        	$("#markDepositPaid"+requestID+"Z"+userID).hide();
+        	$("#depositMarkedPaid"+requestID+"Z"+userID).show();
+        	$("#numDeposits"+requestID).html(depositsPaid+1);
+        }, 1200);    	 	
+    }
+
+    function unpaidToUnpaid(userID, requestID){
+    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+    	$("#depositMarkedPaid"+requestID+"Z"+userID).hide();
+    	$("#markDepositPaid"+requestID+"Z"+userID).show();
+    	setTimeout(function () {
+        	$("#markDepositPaid"+requestID+"Z"+userID).hide();
+        	$("#depositUnpaid"+requestID+"Z"+userID).show();
+        	$("#numDeposits"+requestID).html(depositsPaid-1);
+        }, 1200);    	 	
+    }
+
+    function markLeasesCollected(requestID){
+    	$("#markAllCollected"+requestID).hide();
+    	$("#markAllCollectedLoading"+requestID).show();
+    	setTimeout(function () {
+        	$("#markAllCollectedLoading"+requestID).hide();
+        	$("#markAllUncollected"+requestID).show();
+        }, 1200);    	 	
+    }
+
+    function markLeasesUncollected(requestID){
+    	$("#markAllUncollected"+requestID).hide();
+    	$("#markAllCollectedLoading"+requestID).show();
+    	setTimeout(function () {
+        	$("#markAllCollectedLoading"+requestID).hide();
+        	$("#markAllCollected"+requestID).show();
+        }, 1200);    	 	
+    }
+
+    function confirmGroup(requestID){		
+        $("#confirmGroupButton"+requestID).hide();
+        $("#confirmGroupLoading"+requestID).show();        
+        setTimeout(function () {
+        	$("#confirmRequest"+requestID).fadeOut(300);
+        	$("#undoConfirmRequest"+requestID).show();
+        	confirmGroupUndoTimeoutTimer = setTimeout(function () {
+        		$("#undoConfirmRequest"+requestID).fadeOut(300);
+        	}, 8000);
+        }, 1200);
+        // requestURL = '/tour/' + requestID + '/confirm/ajax';
+        // $.getJSON(requestURL, function(data) {
+        //     results = data['results'];
+        //     // alert(data['results'].success);
+        //     if (results.success == true){ 
+        //         //alert("Tour accepted now we need to move this element to 'Scheduled Tours'... make sure to make the button think toO!");
+        //     } else {
+        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+        //     }
+        // });
+    }
+
+    function undoConfirmGroup(requestID){
+    	clearTimeout(confirmGroupUndoTimeoutTimer);    	
+    	$("#confirmGroupLoading"+requestID).hide();
+        $("#confirmGroupButton"+requestID).show();
+        $("#undoConfirmRequest"+requestID).hide();
+        $("#confirmRequest"+requestID).show();        
+        // requestURL = '/tour/' + id + '/unConfirm/ajax';
+        // $.getJSON(requestURL, function(data) {
+        //     results = data['results'];
+        //     // alert(data['results'].success);
+        //     if (results.success == true){ 
+        //         //alert("Tour has been un-accepted now we need to move this element to 'Requested Tours'");
+        //     } else {
+        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+        //     }
+        // });
+    }
+
 	$(document).ready(function() {
 	    flatpickr(".flatpickr", {
 	        enableTime: true,
@@ -1991,7 +2099,11 @@
         $("#input_id").val(id);
         $("#requestedDateTime").val($("#tourRequestTime").val());
         $("#request_tour_time_change").submit()
-    }   
+    }
+
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
 
 </script>
 {% endblock %}

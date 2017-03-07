@@ -346,6 +346,7 @@ gl6 = GroupListingFactory(group=group6, listing=listing4)
 gl7 = GroupListingFactory(group=group7, listing=listing6)
 
 gl1.accepted = True
+gl6.accepted = True
 gl7.accepted = True
 
 session.commit()
@@ -381,12 +382,33 @@ glm12 = GroupListingMessageFactory(groupListing=gl2, user=user4)
 glm13 = GroupListingMessageFactory(groupListing=gl2, user=user3)
 glm14 = GroupListingMessageFactory(groupListing=gl2, user=user2)
 
-session.commit()
+for i in range(5):
+    user = random.choice(group4AcceptedUsers)
+    glm = GroupListingMessageFactory(groupListing=gl4, user=user)
+    session.commit()
+
+for i in range(5):
+    user = random.choice(group6AcceptedUsers)
+    glm = GroupListingMessageFactory(groupListing=gl6, user=user)
+    session.commit()
 
 # SECURITY DEPOSITS
 # gl1 (group 1)
 for user in group1AcceptedUsers:
     sd = SecurityDepositFactory(user=user, groupListing=gl1)
+
+    if random.randint(0, 1) == 0:
+        sd.completed = True
+        session.commit()
+
+        sdn = NotificationFactory(target_user=landlord,
+                                  notif_type='security_deposit',
+                                  target_model_id=sd.id)
+    session.commit()
+
+# gl6 (group 6)
+for user in group6AcceptedUsers:
+    sd = SecurityDepositFactory(user=user, groupListing=gl6)
 
     if random.randint(0, 1) == 0:
         sd.completed = True
