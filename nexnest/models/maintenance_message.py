@@ -33,14 +33,20 @@ class MaintenanceMessage(Message):
     def genNotifications(self):
         for user in self.maintenance.house.tenants:
             if user is not self.user:
-                newNotif = Notification(notif_type='maintenance_messsage',
+                newNotif = Notification(notif_type='maintenance_message',
                                         target_user=user,
                                         target_model_id=self.id)
 
                 session.add(newNotif)
                 session.commit()
 
-        for landlord in self.
+        for landlord in self.maintenance.house.listing.landLordsAsUsers():
+            newNotif = Notification(notif_type='maintenance_message',
+                                    target_user=landlord,
+                                    target_model_id=self.id)
+
+            session.add(newNotif)
+            session.commit()
 
     def __repr__(self):
         return '<MaintenanceMessage ~ Message %r | Maintenance %r>' % \

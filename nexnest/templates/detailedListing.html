@@ -279,7 +279,7 @@
 		      					    			    {% endfor %}
 			      					    		</div>
 			      					    	</p>
-			      					    	<form id="suggest_listing" action="{{url_for('groups.suggestListing')}}" method="POST">
+			      					    	<form id="suggest_listing" action="{{url_for('housingRequests.create')}}" method="POST">
 			      					    	    {{ suggestListingForm.csrf_token }}
 			      					    	    {{ suggestListingForm.group_id }}
 			      					    	    {{ suggestListingForm.listing_id(value=listing.id) }}

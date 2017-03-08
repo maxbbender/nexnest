@@ -60,10 +60,6 @@ def createGroup():
             session.add(newGroup)
             session.commit()
 
-            newGroupUser = GroupUser(newGroup, current_user)
-
-            session.add(newGroupUser)
-            session.commit()
             flash('Group Created', 'success')
 
             return redirect(url_for('groups.viewGroup', group_id=newGroup.id))
@@ -119,9 +115,8 @@ def viewGroup(group_id):
         flash("You are not a part of %s" % group.name, 'warning')
         return redirect(url_for('indexs.index'))
 
+
 # NOTIFICATIONS IMPLEMENTED
-
-
 @groups.route('/group/invite', methods=['POST'])
 @login_required
 def invite():
@@ -323,6 +318,8 @@ def requestListing():
                                          listing=listing)
                     session.add(newGL)
                     session.commit()
+
+                    newGL.genNotifications()
 
                     newGLM = GroupListingMessage(groupListing=newGL,
                                                  user=current_user,
