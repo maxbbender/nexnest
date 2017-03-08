@@ -57,7 +57,7 @@ def create():
                     session.add(newGLM)
                     session.commit()
                     # print('yo')
-                    # flash("You have requested to live at this listing!", 'success')
+                    flash("You have requested to live at this listing!", 'success')
 
                     # Invalidate all open group invitations
                     newGL.group.invalidateOpenInvitations()

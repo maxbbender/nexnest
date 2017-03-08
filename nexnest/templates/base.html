@@ -143,10 +143,10 @@
 			  	</div>
 			</ul>
 		</nav>
-		{% with messages = get_flashed_messages() %}
-		  {% if messages %}
+		{% with flashedMessages = get_flashed_messages() %}
+		  {% if flashedMessages %}
 		    <ul>
-		    {% for message in notificationMessages %}
+		    {% for flashedMessage in flashedMessages %}
 		        {% include 'flash.html' %}
 		    {% endfor %}
 		    </ul>
