@@ -15,7 +15,14 @@
                 <strong class="notification-title">{{ message.message }}</strong>
                 <p class="notification-desc"><b>{{ message.returnObject.user.fname }} {{ message.returnObject.user.fname }}: </b> {{ message.returnObject.brief }}</p>
                 <div class="notification-meta">
-                    <small class="timestamp">{{ message.date_created }}</small>
+                    <div class="row">
+                        <div class="col-xs-8">
+                            <small class="timestamp">{{ message.date_created }}</small>
+                        </div>
+                        <div class="col-xs-4" style="text-align: right;">
+                            <small>Mark Read</small>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
