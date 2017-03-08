@@ -119,13 +119,14 @@ def maintenanceRequestCreate():
     form.redirect()
 
 
+# NOTIFICATIONS IMPLEMENTED
 @houses.route('/house/maintenanceRequest/message', methods=['POST'])
 @login_required
 def maintenanceRequestMessage():
     form = MaintenanceRequestMessageForm(request.form)
 
     if form.validate():
-        maintenance = session.uery(Maintenance).filter_by(id=form.maintenanceID.data).first()
+        maintenance = session.query(Maintenance).filter_by(id=form.maintenanceID.data).first()
 
         if maintenance is not None:
             if maintenance.house.isViewableBy(current_user):
@@ -134,10 +135,15 @@ def maintenanceRequestMessage():
                                               user=current_user)
                 session.add(newMRMsg)
                 session.commit()
+
+                newMRMsg.genNotifications()
                 # RETURN BACKTO MAINTENNANCE VIEW
+                return redirect(url_for('houses.maintenanceRequestView', id=maintenance.id))
 
         else:
             flash("Invalid Request", 'warning')
+
+    return form.redirect()
 
 
 @houses.route('/house/maintenanceRequest/<id>/view', methods=['GET'])
@@ -169,6 +175,7 @@ def maintenanceRequestView(id):
                                    messages=messages)
 
 
+# NOTIFICATIONS IMPLEMENTED
 @houses.route('/house/maintenanceRequest/<id>/inProgress', methods=['GET'])
 @login_required
 def maintenanceRequestInProgress(id):
@@ -178,12 +185,15 @@ def maintenanceRequestInProgress(id):
         if maintenanceRequest.isEditableBy(current_user):
             maintenanceRequest.status = 'inprogress'
             session.commit()
+
+            maintenanceRequest.genInProgressNotifications()
     else:
         flash('Invalid Request', 'warning')
 
     return redirect(url_for('houses.maintenanceRequestView', id=id))
 
 
+# NOTIFICATIONS IMPLEMENTED
 @houses.route('/house/maintenanceRequest/<id>/completed', methods=['GET'])
 @login_required
 def maintenanceRequestCompleted(id):
@@ -193,12 +203,15 @@ def maintenanceRequestCompleted(id):
         if maintenanceRequest.isEditableBy(current_user):
             maintenanceRequest.status = 'completed'
             session.commit()
+
+            maintenanceRequest.genCompletedNotifications()
     else:
         flash('Invalid Request', 'warning')
 
     return redirect(url_for('houses.maintenanceRequestView', id=id))
 
 
+# NOTIFICATIONS IMPLEMENTED
 @houses.route('/house/maintenanceRequest/<id>/inProgress/ajax', methods=['GET'])
 @login_required
 def maintenanceRequestInProgressAJAX(id):
@@ -211,6 +224,8 @@ def maintenanceRequestInProgressAJAX(id):
             maintenanceRequest.status = 'inprogress'
             session.commit()
 
+            maintenanceRequest.genInProgressNotifications()
+
             return jsonify(results={'success': True})
         else:
             errorMessage = 'Permissions Error'
@@ -220,6 +235,7 @@ def maintenanceRequestInProgressAJAX(id):
     return jsonify(results={'success': False, 'message': errorMessage})
 
 
+# NOTIFICATIONS IMPLEMENTED
 @houses.route('/house/maintenanceRequest/<id>/undoInProgress/ajax/<target>', methods=['GET'])
 @login_required
 def maintenanceRequestUndoInProgressAJAX(id, target):
@@ -232,6 +248,8 @@ def maintenanceRequestUndoInProgressAJAX(id, target):
             maintenanceRequest.status = target
             session.commit()
 
+            maintenanceRequest.removeInProgressNotifications()
+
             return jsonify(results={'success': True})
         else:
             errorMessage = 'Permissions Error'
@@ -241,6 +259,7 @@ def maintenanceRequestUndoInProgressAJAX(id, target):
     return jsonify(results={'success': False, 'message': errorMessage})
 
 
+# NOTIFICATIONS IMPLEMENTED
 @houses.route('/house/maintenanceRequest/<id>/completed/ajax', methods=['GET'])
 @login_required
 def maintenanceRequestCompletedAJAX(id):
@@ -253,6 +272,8 @@ def maintenanceRequestCompletedAJAX(id):
             maintenanceRequest.status = 'completed'
             session.commit()
 
+            maintenanceRequest.genCompletedNotifications()
+
             return jsonify(results={'success': True})
         else:
             errorMessage = 'Permissions Error'
@@ -262,6 +283,7 @@ def maintenanceRequestCompletedAJAX(id):
     return jsonify(results={'success': False, 'message': errorMessage})
 
 
+# NOTIFICATIONS IMPLEMENTED
 @houses.route('/house/maintenanceRequest/<id>/undoCompleted/ajax/<target>', methods=['GET'])
 @login_required
 def maintenanceRequestUndoCompletedAJAX(id, target):
@@ -273,6 +295,8 @@ def maintenanceRequestUndoCompletedAJAX(id, target):
         if maintenanceRequest.isEditableBy(current_user):
             maintenanceRequest.status = target
             session.commit()
+
+            maintenanceRequest.removeCompletedNotifications()
 
             return jsonify(results={'success': True})
         else:

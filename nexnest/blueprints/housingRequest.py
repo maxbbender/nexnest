@@ -28,48 +28,50 @@ housingRequests = Blueprint(
 @housingRequests.route('/houseRequest/create', methods=['POST'])
 @login_required
 def create():
-    form = GroupListingForm(request.form)
-
-    if form.validate():
-
-        # Get the Group
+    rLForm = GroupListingForm(request.form)
+    if rLForm.validate():
         group = session.query(Group) \
-            .filter_by(id=form.groupID.data) \
+            .filter_by(id=rLForm.groupID.data) \
             .first()
 
         if group is not None:
 
+            # Can the current user take actions on the group?
             if group.isEditableBy(current_user):
-
-                # Get the listing
-                listing = session.query(Listing).filter_by(
-                    id=form.listingID.data).first()
+                listing = session.query(Listing) \
+                    .filter_by(id=rLForm.listingID.data) \
+                    .first()
 
                 if listing is not None:
-
-                    # Lets create a new group listing!
-                    newGL = GroupListing(group,
-                                         listing)
-
+                    newGL = GroupListing(group=group,
+                                         listing=listing)
                     session.add(newGL)
                     session.commit()
 
+                    newGL.genNotifications()
+
                     newGLM = GroupListingMessage(groupListing=newGL,
-                                                 content=form.reqDescription.data,
-                                                 user=current_user)
+                                                 user=current_user,
+                                                 content=rLForm.reqDescription.data)
 
                     session.add(newGLM)
                     session.commit()
+                    # print('yo')
+                    # flash("You have requested to live at this listing!", 'success')
+
+                    # Invalidate all open group invitations
+                    newGL.group.invalidateOpenInvitations()
 
                     return redirect(url_for('housingRequests.view', id=newGL.id))
                 else:
-                    flash("Listing does not exist")
+                    flash("Listing does not exist", 'warning')
         else:
-            flash("Group does not exist")
-    else:
-        flash_errors(form)
+            flash("Group does not exist", 'warning')
 
-    return form.redirect()
+    else:
+        flash_errors(rLForm)
+
+    return rLForm.redirect()
 
 
 @housingRequests.route('/houseRequest/view/<id>', methods=['GET'])
