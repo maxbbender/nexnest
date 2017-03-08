@@ -23,9 +23,10 @@ class Notification(Base):
     # | group_listing_favorite| maintenance   | platform_report  | report_group
     # | report_landlord       | report_listing| security_deposit | tour
     # | maintenance_message   | rent_reminder | new_tour_time    | tour_message
-    #----------------------------------------------------------------#
+    # ----------------------------------------------------------------b#
     # NEW ONES (need category):
     # | user_leave_group | maintenance_inprogress | maintenance_completed
+    # | group_listing_accept | group_listing_deny | 
     notif_type = db.Column(db.String(128))
     redirect_url = db.Column(db.String(128))
 
@@ -349,6 +350,18 @@ class Notification(Base):
                 message = "Your landlord has marked your maintenance request as Completed!"
 
                 redirectURL = '/house/maintenanceRequest/%d/view' % returnObject.id
+
+                return message, returnObject, redirectURL
+
+        elif self.notif_type == 'group_listing_accept':
+            returnObject = session.query(GroupListing) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "Your house request has been accepted!"
+
+                redirectURL = '/houseRequest/view/%d' % returnObject.id
 
                 return message, returnObject, redirectURL
 

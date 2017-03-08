@@ -2,7 +2,7 @@ import unittest
 
 from nexnest.application import session
 
-from nexnest.data_gen.factories import UserFactory, GroupFactory, GroupUserFactory, ListingFactory, LandlordListingFactory, LandlordFactory
+from nexnest.data_gen.factories import UserFactory, GroupFactory, GroupUserFactory, ListingFactory, LandlordListingFactory, LandlordFactory, GroupListingMessageFactory
 
 from nexnest.models.notification import Notification
 # from nexnest.models.user import User
@@ -58,6 +58,32 @@ class TestGroupListing(unittest.TestCase):
                 .filter_by(notif_type='group_listing',
                            target_model_id=self.gl.id,
                            target_user_id=landlord.id) \
+                .count()
+
+            self.assertEqual(notifCount, 1)
+
+    def testGroupListingMessageNotifications(self):
+        newGLM = GroupListingMessageFactory(groupListing=self.gl,
+                                            user=self.leader)
+        session.commit()
+
+        newGLM.genNotifications()
+
+        for user in self.gl.group.acceptedUsers:
+            if user is not self.leader:
+                notifCount = session.query(Notification) \
+                    .filter_by(notif_type='group_listing_message',
+                               target_model_id=newGLM.id,
+                               target_user_id=user.id) \
+                    .count()
+
+                self.assertEqual(notifCount, 1)
+
+        for user in self.gl.listing.landLordsAsUsers():
+            notifCount = session.query(Notification) \
+                .filter_by(notif_type='group_listing_message',
+                           target_model_id=newGLM.id,
+                           target_user_id=user.id) \
                 .count()
 
             self.assertEqual(notifCount, 1)

@@ -106,6 +106,7 @@ def view(id):
     return redirect(url_for('indexs.index'))
 
 
+# NOTIFICATIONS IMPLEMENTED
 @housingRequests.route('/houseRequest/message', methods=['POST'])
 @login_required
 def messageCreate():
@@ -125,6 +126,8 @@ def messageCreate():
                                              user=current_user)
                 session.add(newGLM)
                 session.commit()
+
+                newGLM.genNotifications()
 
         else:
             flash("House Request does not exist", 'info')
