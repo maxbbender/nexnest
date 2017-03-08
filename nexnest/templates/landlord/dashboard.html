@@ -124,7 +124,7 @@
 		        	            <div class="card-block">
 		        	                <ul class="nav nav-tabs">
 		        	                    <li class="nav-item">
-		        	                        <a class="nav-link tab-selector active" id="currentlyOccupiedTab2" data-toggle="tab" href="#currentlyOccupiedTab" role="tab">Currently Occupied</a>
+		        	                        <a class="nav-link tab-selector first-tab active" id="currentlyOccupiedTab2" data-toggle="tab" href="#currentlyOccupiedTab" role="tab">Currently Occupied</a>
 		        	                    </li>
 		        	                    <li class="nav-item">
 		        	                        <a class="nav-link tab-selector" id="willBeOccupiedTab2"  data-toggle="tab" href="#willBeOccupiedTab" role="tab">Booked For Future</a>
@@ -132,7 +132,7 @@
 		        	                </ul>
 		        	                <br>
 		        	                <div class="tab-content">
-		        	                    <div class="tab-pane selected-tab active" id="currentlyOccupiedTab" role="tabpanel" style="padding: 0px;">
+		        	                    <div class="tab-pane selected-tab first-tab active" id="currentlyOccupiedTab" role="tabpanel" style="padding: 0px;">
 		        	                    	{% if currentHouses|length > 0 %}
 		        	                            {% for house in currentHouses %}
 		        	                            	<div class="row">
@@ -371,7 +371,7 @@
 		        	            <div class="card-block">
 		        	                <ul class="nav nav-tabs">
 		        	                    <li class="nav-item">
-		        	                        <a class="nav-link tab-selector active" id="requestedToursTab2" data-toggle="tab" href="#requestedToursTab" role="tab">Requested Tours</a>
+		        	                        <a class="nav-link tab-selector first-tab active" id="requestedToursTab2" data-toggle="tab" href="#requestedToursTab" role="tab">Requested Tours</a>
 		        	                    </li>
 		        	                    <li class="nav-item">
 		        	                        <a class="nav-link tab-selector"  id="scheduledToursTab2" data-toggle="tab" href="#scheduledToursTab" role="tab">Scheduled Tours</a>
@@ -379,7 +379,7 @@
 		        	                </ul>
 		        	                <br>
 		        	                <div class="tab-content">
-		        	                    <div class="tab-pane selected-tab active" id="requestedToursTab" role="tabpanel" style="padding: 0px;">
+		        	                    <div class="tab-pane selected-tab first-tab active" id="requestedToursTab" role="tabpanel" style="padding: 0px;">
 		        	                        {% if requestedTours %}
 		        	                            {% for tourObject in requestedTours %}
 		        	                            	<div id="numberOfRequestedTours{{tourObject.listing.id}}" style="display: none;">{{tourObject.tours|length }}</div>
@@ -735,7 +735,7 @@
 		        	            <div class="card-block">
 		        	                <ul class="nav nav-tabs">
 		        	                    <li class="nav-item">
-		        	                        <a class="nav-link tab-selector active" id="unacceptedTab2" data-toggle="tab" href="#unacceptedTab" role="tab">Unaccepted</a>
+		        	                        <a class="nav-link tab-selector first-tab active" id="unacceptedTab2" data-toggle="tab" href="#unacceptedTab" role="tab">Unaccepted</a>
 		        	                    </li>
 		        	                    <li class="nav-item">
 		        	                        <a class="nav-link tab-selector" id="acceptedTab2" data-toggle="tab" href="#acceptedTab" role="tab">Accepted</a>
@@ -743,7 +743,7 @@
 		        	                </ul>
 		        	                <br>
 		        	                <div class="tab-content">
-		        	                    <div class="tab-pane selected-tab active" id="unacceptedTab" role="tabpanel" style="padding: 0px;">
+		        	                    <div class="tab-pane selected-tab first-tab active" id="unacceptedTab" role="tabpanel" style="padding: 0px;">
 		        	                    	{% if unAcceptedHousingRequests %}		        	                    	
 		        	                    	    {% for housingRequestObject in unAcceptedHousingRequests %}
 		        	                    	    	<div id="numberOfUnacceptedRequests{{housingRequestObject.listing.id}}" style="display: none;">{{housingRequestObject.houseRequests|length }}</div>
@@ -1021,7 +1021,7 @@
 		        	            <div class="card-block">
 		        	                <ul class="nav nav-tabs">
 		        	                    <li class="nav-item">
-		        	                        <a class="nav-link tab-selector active" id="newMaintenanceTab2" data-toggle="tab" href="#newMaintenanceTab" role="tab">New Requests</a>
+		        	                        <a class="nav-link tab-selector first-tab active" id="newMaintenanceTab2" data-toggle="tab" href="#newMaintenanceTab" role="tab">New Requests</a>
 		        	                    </li>
 		        	                    <li class="nav-item">
 		        	                        <a class="nav-link tab-selector" id="inProgressMaintenanceTab2" data-toggle="tab" href="#inProgressMaintenanceTab" role="tab">In-Progress</a>
@@ -1032,7 +1032,7 @@
 		        	                </ul>
 		        	                <br>
 		        	                <div class="tab-content">
-		        	                    <div class="tab-pane selected-tab active" id="newMaintenanceTab" role="tabpanel" style="padding: 0px;">
+		        	                    <div class="tab-pane selected-tab first-tab active" id="newMaintenanceTab" role="tabpanel" style="padding: 0px;">
 		        	                    	{% if openMaintenanceRequests|length > 0 %}
 		        	                            {% for requestObject in openMaintenanceRequests %}		        	                            
 		        	                            	<div id="numberOfOpenRequests{{requestObject.house.listing.id}}" style="display: none;">{{requestObject.maintenanceRequests|length }}</div>
@@ -1326,6 +1326,9 @@
 {% endblock %}
 {% block scripts %}
 <script>
+	var validMainTabs = ["occupiedListingsTab", "unbookedListingsTab", "toursTab", "requestsTab", "maintenanceTab", "paymentTab"];
+	var validSecondTabs = ["currentlyOccupiedTab", "willBeOccupiedTab", "scheduledToursTab", "requestedToursTab", "unacceptedTab", "acceptedTab", 
+	"newMaintenanceTab", "inProgressMaintenanceTab", "completedMaintenanceTab"];
 	var hash = document.location.hash;
 	hash = hash.substr(1);
 	if(!hash){
@@ -1339,8 +1342,7 @@
 	}else{
 		var mainTab = hash;
 	}	
-	if (mainTab) {		
-		//alert('hi');
+	if ($.inArray(mainTab, validMainTabs) > -1) {	
 		$("#occupiedListingsTab").removeClass('active');
 		$("#unbookedListingsTab").removeClass('active');
 		$("#toursTab").removeClass('active');
@@ -1361,19 +1363,22 @@
 			currentHash = currentHash.split('-')[0];
 		    window.location.hash = currentHash+"-"+newtab;
 		});
-	   	if (secondTab) {
-	   		alert(mainTab);	   		
+	   	if ($.inArray(secondTab, validSecondTabs) > -1) {	   		
 	   		$(".selected-tab").removeClass('active');
 	   		$("#"+secondTab+'2').addClass('active');
 			$("#"+secondTab).addClass('active');
 		}
-	} 
+	}
+	else{
+		alert("hi");
+		$("#occupiedListingsTab").addClass('active');
+	}
 	//Any time a tab is clicked on left panel update the url to show that
 	$(".left-panel").click(function () {
 		var newHash = this.id;
 		newHash = newHash.slice(0, -1);
 	    window.location.hash = newHash;
-	    $("#"+newHash).
+	    $('.first-tab').addClass('active');
 	});
 
 	
