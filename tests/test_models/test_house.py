@@ -67,6 +67,15 @@ class TestHouse(unittest.TestCase):
 
                 self.assertEqual(notifCount, 1)
 
+        for user in self.house.listing.landLordsAsUsers():
+            notifCount = session.query(Notification) \
+                .filter_by(notif_type='house_message',
+                           target_model_id=newHM.id,
+                           target_user_id=user.id) \
+                .count()
+
+            self.assertEqual(notifCount, 1)
+
     def testMaintenanceNotifications(self):
         newMaintenance = MaintenanceFactory(house=self.house, user=self.leader)
         session.commit()
