@@ -29,6 +29,8 @@ li,ul{
 
 #navigation {
     background: #0e1a35;
+    height: inherit;
+    min-height: 100vh;
 }
 
 #navigation {

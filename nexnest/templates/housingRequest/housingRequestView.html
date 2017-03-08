@@ -83,7 +83,15 @@
                                                     		<strong style="padding-right: 5px;">Leases Signed: </strong>
                                                     	</div>
                                                     	<div class="col-xl-1">
-                                                    		<button type="button" id="pending" class="btn btn-warning btn-circle pending"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                    		{% if housingRequest.all_leases_submitted %}
+							                    				<button id="undoMarkAllCollected{{housingRequest.id}}" type="button" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" onclick="undoMarkLeasesCollected({{housingRequest.id}})"><i class="fa fa-check" aria-hidden="true"></i></button>
+							                    				<button type="button" id="undoMarkAllCollectedLoading{{housingRequest.id}}" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+							                    				<button type="button" id="undoMarkAllUncollected{{housingRequest.id}}" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" style="display: none;" onclick="undoMarkLeasesUncollected({{housingRequest.id}})"><i class="fa fa-times" aria-hidden="true"></i></button>
+							                    			{% else %}
+							                    				<button id="markAllCollected{{housingRequest.id}}" type="button" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" onclick="markLeasesCollected({{housingRequest.id}})"><i class="fa fa-times" aria-hidden="true"></i></button>
+							                    				<button type="button" id="markAllCollectedLoading{{housingRequest.id}}" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+							                    				<button type="button" id="markAllUncollected{{housingRequest.id}}" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" style="display: none;" onclick="markLeasesUncollected({{housingRequest.id}})"><i class="fa fa-check" aria-hidden="true"></i></button>
+							                    			{% endif %}
                                                     	</div>
                                                     </div>
                                                     <hr>
@@ -93,24 +101,22 @@
                                                     		<strong style="padding-right: 5px;">Deposits Collected: </strong>
                                                     	</div>
                                                     	<div class="col-xl-1">
-                                                    		<button type="button" id="pending" class="btn btn-warning btn-circle pending"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                    		<span id="numDeposits{{housingRequest.id}}">{{housingRequest.numSecurityDepositsPaid}}</span>/{{housingRequest.group.acceptedUsers|count}}
                                                     	</div>
                                                     </div>
                                                     <hr>
-						    	                	<br>
 						    	                	{% if current_user in landlords %}
-						    	                		<span>You have accepted <strong>{{ housingRequest.group.name }}</strong> to live at this property. Now you must arrange to collect signed leases from all tenants and security deposits if you require them. To make it easier for you, you can upload the blank lease here for the tenants to print out and get back to you in the method you agree upon. After everything has been collected click the "process completed button" to confirm the group for this property.</span>
-						    	                		<br>
+						    	                		<span>You have accepted <strong>{{ housingRequest.group.name }}</strong> to live at this property. Now you must arrange to collect signed leases from all tenants and security deposits if you require them. After everything has been collected click the "process completed button" to confirm the group for this property.</span>
                                                         <hr>
-                                                        <div class="row">
+                                                        <!-- <div class="row">
                                                             <div class="col-xs-8">
                                                                 <h3><strong>Leases Collected:</strong></h3>
                                                             </div>
                                                             <div class="col-xs-4" style="text-align: right">
                                                                 <a href="#" class="btn btn-primary">Mark Collected</a>
                                                             </div>
-                                                        </div>
-                                                        {% if not hasLease %}
+                                                        </div> -->
+                                                        <!-- {% if not hasLease %}
                                                             <form method='POST' action="{{url_for('housingRequests.uploadLease')}}" enctype="multipart/form-data">
                                                                 {{leaseUploadForm.csrf_token}}
                                                                 {{leaseUploadForm.lease}}
@@ -121,13 +127,13 @@
                                                             <a href="#">View Lease</a>
                                                         {% endif %}
                                                         <br>
-						    	                		<hr>
+						    	                		<hr> -->
                                                         <div class="row">
                                                             <div class="col-xs-8">
                                                                 <h3><strong>Security Deposits:</strong></h3>
                                                             </div>
                                                             <div class="col-xs-4" style="text-align: right">
-                                                                <button class="btn btn-primary" onclick="markAllDepositsPaid()">All Collected</button>
+                                                                <h3><span id="numDeposits{{housingRequest.id}}">{{housingRequest.numSecurityDepositsPaid}}</span>/{{housingRequest.group.acceptedUsers|count}} Collected</h3>
                                                             </div>
                                                         </div>
                                                         <hr>
@@ -147,11 +153,15 @@
                                                                     </a>
                                                                 </div>
                                                                 <div class="col-xs-4" style="text-align: right">
-                                                                    {% if not deposit.completed %}
-                                                                        <button id="markPaidButton{{deposit.user.id}}" class="btn btn-success securityDepositButton" onclick="markDepositPaid({{ deposit.user.id }})">Mark Paid</button>
-                                                                    {% else %}
-                                                                        <button id="markPaidButton{{deposit.user.id}}" class="btn btn-danger securityDepositButton" onclick="markDepositPaid({{ deposit.user.id }})">Mark Unpaid</button>
-                                                                    {% endif %}
+                                                                    {% if deposit.completed %}
+											                            <button id="depositPaid{{housingRequest.id}}Z{{deposit.user.id}}" type="button" onclick="paidToUnpaid({{deposit.user.id}}, {{housingRequest.id}})" class="btn btn-success btn-circle" data-tooltip="Click here to mark deposit as NOT paid"><i class="fa fa-check" aria-hidden="true"></i></button>
+											                            <button id="markDepositUnpaid{{housingRequest.id}}Z{{deposit.user.id}}" type="button" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+											                            <button id="depositMarkedUnPaid{{housingRequest.id}}Z{{deposit.user.id}}" type="button" onclick="paidToPaid({{deposit.user.id}}, {{housingRequest.id}})" class="btn btn-danger btn-circle" style="display: none;" data-tooltip="Click here to mark deposit as paid"><i class="fa fa-times" aria-hidden="true"></i></button>
+											                        {% else %}
+											                            <button id="depositUnpaid{{housingRequest.id}}Z{{deposit.user.id}}" type="button" onclick="unpaidToPaid({{deposit.user.id}}, {{housingRequest.id}})" class="btn btn-danger btn-circle" data-tooltip="Click here to mark deposit as paid"><i class="fa fa-times" aria-hidden="true"></i></button>
+											                            <button id="markDepositPaid{{housingRequest.id}}Z{{deposit.user.id}}" type="button" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+											                            <button id="depositMarkedPaid{{housingRequest.id}}Z{{deposit.user.id}}" type="button" onclick="unpaidToUnpaid({{deposit.user.id}}, {{housingRequest.id}})" class="btn btn-success btn-circle" style="display: none;" data-tooltip="Click here to mark deposit as NOT paid"><i class="fa fa-check" aria-hidden="true"></i></button>
+											                        {% endif %}
                                                                 </div>
                                                             </div>
                                                             <hr>
@@ -438,5 +448,125 @@
     		$('.securityDepositButton').addClass("btn-danger")
 		});
 	}
+
+	function markLeasesCollected(requestID){
+    	$("#markAllCollected"+requestID).hide();
+    	$("#markAllCollectedLoading"+requestID).show();
+    	setTimeout(function () {
+        	$("#markAllCollectedLoading"+requestID).hide();
+        	$("#markAllUncollected"+requestID).show();
+        }, 1200);    	 	
+    }
+
+    function markLeasesUncollected(requestID){
+    	$("#markAllUncollected"+requestID).hide();
+    	$("#markAllCollectedLoading"+requestID).show();
+    	setTimeout(function () {
+        	$("#markAllCollectedLoading"+requestID).hide();
+        	$("#markAllCollected"+requestID).show();
+        }, 1200);    	 	
+    }
+
+    function undoMarkLeasesCollected(requestID){
+    	$("#undoMarkAllCollected"+requestID).hide();
+    	$("#undoMarkAllCollectedLoading"+requestID).show();
+    	setTimeout(function () {
+        	$("#undoMarkAllCollectedLoading"+requestID).hide();
+        	$("#undoMarkAllUncollected"+requestID).show();
+        }, 1200);    	 	
+    }
+
+    function undoMarkLeasesUncollected(requestID){
+    	$("#undoMarkAllUncollected"+requestID).hide();
+    	$("#undoMarkAllCollectedLoading"+requestID).show();
+    	setTimeout(function () {
+        	$("#undoMarkAllCollectedLoading"+requestID).hide();
+        	$("#undoMarkAllCollected"+requestID).show();
+        }, 1200);    	 	
+    }
+
+    function paidToUnpaid(userID, requestID){
+    	requestURL = '/houseRequest/{{housingRequest.id}}/securityDeposit/' + userID + '/unPaid'
+    	$.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+		    	$("#depositPaid"+requestID+"Z"+userID).hide();
+		    	$("#markDepositUnpaid"+requestID+"Z"+userID).show();
+		    	setTimeout(function () {
+		        	$("#markDepositUnpaid"+requestID+"Z"+userID).hide();
+		        	$("#depositMarkedUnPaid"+requestID+"Z"+userID).show();
+		        	$("#numDeposits"+requestID).html(depositsPaid-1);
+		        }, 1200);
+		    }
+		    else{
+		    	alert("Something went wrong, try again later");
+		    }
+		});
+    }
+
+    function paidToPaid(userID, requestID){
+    	requestURL = '/houseRequest/{{housingRequest.id}}/securityDeposit/' + userID + '/paid'
+    	$.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+		    	$("#depositMarkedUnPaid"+requestID+"Z"+userID).hide();
+		    	$("#markDepositUnpaid"+requestID+"Z"+userID).show();
+		    	setTimeout(function () {
+		        	$("#markDepositUnpaid"+requestID+"Z"+userID).hide();
+		        	$("#depositPaid"+requestID+"Z"+userID).show();
+		        	$("#numDeposits"+requestID).html(depositsPaid+1);
+		        }, 1200);
+		    }
+		    else{
+		    	alert("Something went wrong, try again later");
+		    }
+		});
+    }
+
+    function unpaidToPaid(userID, requestID){
+    	requestURL = '/houseRequest/{{housingRequest.id}}/securityDeposit/' + userID + '/paid'
+    	$.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+		    	$("#depositUnpaid"+requestID+"Z"+userID).hide();
+		    	$("#markDepositPaid"+requestID+"Z"+userID).show();
+		    	setTimeout(function () {
+		        	$("#markDepositPaid"+requestID+"Z"+userID).hide();
+		        	$("#depositMarkedPaid"+requestID+"Z"+userID).show();
+		        	$("#numDeposits"+requestID).html(depositsPaid+1);
+		        }, 1200);
+		    }
+		    else{
+		    	alert("Something went wrong, try again later");
+		    }
+		});
+    }
+
+    function unpaidToUnpaid(userID, requestID){
+    	requestURL = '/houseRequest/{{housingRequest.id}}/securityDeposit/' + userID + '/unPaid'
+    	$.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+		    	$("#depositMarkedPaid"+requestID+"Z"+userID).hide();
+		    	$("#markDepositPaid"+requestID+"Z"+userID).show();
+		    	setTimeout(function () {
+		        	$("#markDepositPaid"+requestID+"Z"+userID).hide();
+		        	$("#depositUnpaid"+requestID+"Z"+userID).show();
+		        	$("#numDeposits"+requestID).html(depositsPaid-1);
+		        }, 1200);
+		    }
+		    else{
+		    	alert("Something went wrong, try again later");
+		    }
+		});
+    }
 </script>
 {% endblock %}
