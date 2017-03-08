@@ -1,6 +1,7 @@
-from nexnest.application import db
+from nexnest.application import db, session
 
-from .message import Message
+from nexnest.models.notification import Notification
+from nexnest.models.message import Message
 
 
 class MaintenanceMessage(Message):
@@ -28,6 +29,18 @@ class MaintenanceMessage(Message):
         )
 
         self.maintenance_id = maintenance.id
+
+    def genNotifications(self):
+        for user in self.maintenance.house.tenants:
+            if user is not self.user:
+                newNotif = Notification(notif_type='maintenance_messsage',
+                                        target_user=user,
+                                        target_model_id=self.id)
+
+                session.add(newNotif)
+                session.commit()
+
+        for landlord in self.
 
     def __repr__(self):
         return '<MaintenanceMessage ~ Message %r | Maintenance %r>' % \
