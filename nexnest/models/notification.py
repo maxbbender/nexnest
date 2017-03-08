@@ -281,7 +281,7 @@ class Notification(Base):
                 .first()
 
             if returnObject is not None:
-                message = "A revised tour time has been requested for a tour. Click to view"
+                message = "A revised tour time has been requested for a tour."
 
                 redirectURL = '/tour/view/%d' % returnObject.id
 

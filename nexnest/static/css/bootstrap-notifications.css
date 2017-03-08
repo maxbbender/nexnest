@@ -197,7 +197,7 @@ small.dropmenu-item-content {
 .notification {
   display: block;
   padding: 9.6px 12px;
-  border-bottom: 1px solid #eeeeee;
+  border-bottom: 3px solid #eeeeee;
   color: #333333;
   text-decoration: none;
 }

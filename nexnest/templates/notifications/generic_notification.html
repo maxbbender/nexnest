@@ -1,16 +1,46 @@
 <a href="{{ notification.redirectURL }}">
+    {% if not notification.viewed %}
+    <li class="notification" style="background-color: aliceblue;">
+    {% else %}
     <li class="notification">
+    {% endif %}
         <div class="media">
-            <div class="media-left vertical-center" style="text-align: center">
+            <div class="media-left vertical-center" style="text-align: center;">
                 <div class="media-object">
-                    <i class="fa fa-users fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>
-                    <!-- <img src="{{current_user.profile_image}}" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle" alt="Name" /> -->
+                    {% if notification.notif_type == 'maintenance' %}
+                        <i class="fa fa-wrench fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>
+                    {% elif notification.notif_type == 'tour' %}
+                        <i class="fa fa-calendar fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>
+                    {% elif notification.notif_type == 'security_deposit' %}
+                        <i class="fa fa-usd fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>
+                    {% elif notification.notif_type == 'group_listing' %}
+                        <i class="fa fa-home fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>
+                    {% elif notification.notif_type == 'house' %}
+                        <i class="fa fa-handshake-o fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>
+                    {% elif notification.notif_type == 'group_user' %}
+                        <i class="fa fa-user fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>
+                    {% elif notification.notif_type == 'group_listing_favorite' %}
+                        <i class="fa fa-star fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>
+                        {% elif notification.notif_type == 'new_tour_time' %}
+                        <i class="fa fa-clock-o fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>
+                    {% elif notification.notif_type == 'rent_reminder' %}
+                        <i class="fa fa-usd fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>
+                    {% else %}
+                        <i class="fa fa-bell fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>
+                    {% endif %}
                 </div>
             </div>
             <div class="media-body">
                 <strong class="notification-title">{{ notification.message }}</strong>
                 <div class="notification-meta">
-                    <small class="timestamp">{{ notification.date_created }}</small>
+                    <div class="row">
+                        <div class="col-xs-8">
+                            <small class="timestamp">{{ notification.date_created }}</small>
+                        </div>
+                        <div class="col-xs-4" style="text-align: right;">
+                            <small>Mark Read</small>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

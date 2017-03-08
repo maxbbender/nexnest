@@ -1,5 +1,9 @@
 <a href="{{ message.redirectURL }}">
+    {% if not message.viewed %}
+    <li class="notification" style="background-color: aliceblue;">
+    {% else %}
     <li class="notification">
+    {% endif %}
         <div class="media">
             <div class="media-left vertical-center" style="text-align: center">
                 <div class="media-object">
