@@ -907,9 +907,16 @@
         								                    		<div class="row">
         								                    			<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
 	        								                    			<strong style="padding-right: 16px;">All Leases Collected: </strong>
-	        								                    			<button id="markAllCollected{{housingRequest.id}}" type="button" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" onclick="markLeasesCollected({{housingRequest.id}})"><i class="fa fa-times" aria-hidden="true"></i></button>
-	        								                    			<button type="button" id="markAllCollectedLoading{{housingRequest.id}}" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
-	        								                    			<button type="button" id="markAllUncollected{{housingRequest.id}}" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" style="display: none;" onclick="markLeasesUncollected({{housingRequest.id}})"><i class="fa fa-check" aria-hidden="true"></i></button>
+	        								                    			{% if housingRequest.all_leases_submitted %}
+	        								                    				<button id="undoMarkAllCollected{{housingRequest.id}}" type="button" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" onclick="undoMarkLeasesCollected({{housingRequest.id}})"><i class="fa fa-check" aria-hidden="true"></i></button>
+	        								                    				<button type="button" id="undoMarkAllCollectedLoading{{housingRequest.id}}" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+	        								                    				<button type="button" id="undoMarkAllUncollected{{housingRequest.id}}" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" style="display: none;" onclick="undoMarkLeasesUncollected({{housingRequest.id}})"><i class="fa fa-times" aria-hidden="true"></i></button>
+	        								                    			{% else %}
+	        								                    				<button id="markAllCollected{{housingRequest.id}}" type="button" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" onclick="markLeasesCollected({{housingRequest.id}})"><i class="fa fa-times" aria-hidden="true"></i></button>
+	        								                    				<button type="button" id="markAllCollectedLoading{{housingRequest.id}}" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+	        								                    				<button type="button" id="markAllUncollected{{housingRequest.id}}" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" style="display: none;" onclick="markLeasesUncollected({{housingRequest.id}})"><i class="fa fa-check" aria-hidden="true"></i></button>
+	        								                    			{% endif %}
+	        								                    			
 	        								                    		</div>
 	        								                    		<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
 	        								                    			<strong>Security Deposits Collected: </strong> 
@@ -2025,6 +2032,24 @@
     	setTimeout(function () {
         	$("#markAllCollectedLoading"+requestID).hide();
         	$("#markAllCollected"+requestID).show();
+        }, 1200);    	 	
+    }
+
+    function undoMarkLeasesCollected(requestID){
+    	$("#undoMarkAllCollected"+requestID).hide();
+    	$("#undoMarkAllCollectedLoading"+requestID).show();
+    	setTimeout(function () {
+        	$("#undoMarkAllCollectedLoading"+requestID).hide();
+        	$("#undoMarkAllUncollected"+requestID).show();
+        }, 1200);    	 	
+    }
+
+    function undoMarkLeasesUncollected(requestID){
+    	$("#undoMarkAllUncollected"+requestID).hide();
+    	$("#undoMarkAllCollectedLoading"+requestID).show();
+    	setTimeout(function () {
+        	$("#undoMarkAllCollectedLoading"+requestID).hide();
+        	$("#undoMarkAllCollected"+requestID).show();
         }, 1200);    	 	
     }
 

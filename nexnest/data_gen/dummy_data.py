@@ -348,6 +348,8 @@ gl7 = GroupListingFactory(group=group7, listing=listing6)
 gl1.accepted = True
 gl6.accepted = True
 gl7.accepted = True
+gl7.all_leases_submitted = True
+
 
 session.commit()
 
