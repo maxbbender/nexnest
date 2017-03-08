@@ -3,30 +3,6 @@
 	<div class="row">
 		<div class="col-xs-1 col-md-3 col-lg-3"></div>
 		<div class="col-xs-10 col-md-6 col-lg-6">
-			<!-- <div class="gallery" align="center">
-				<div class="preview" align="center">
-                    {% if pictures|length > 0 %}
-                        <img name="preview" src="{{pictures[0]}}" style="height: 300px; width: 100%;" alt=""/>
-                    {% else %}
-					<img name="preview" src="/static/img/testHouse.jpg" style="height: 300px; width: 100%;" alt=""/>
-                    
-                    {% endif %}
-				</div>
-				<br>
-				<div class="thumbnails">
-                    {% if pictures|length > 0 %}
-                        {% for picture in pictures %}
-                            <img onmouseover="preview.src=img{{loop.index}}.src" name="img{{loop.index}}" src="{{picture}}" style="width: 100px; height: 100px;" alt=""/>
-                        {% endfor %}
-                    {% else %}
-                        <img onmouseover="preview.src=img1.src" name="img1" src="/static/img/testHouse.jpg" style="width: 100px; height: 100px;" alt=""/>
-                        <img onmouseover="preview.src=img2.src" name="img2" src="/static/img/testLivingRoom.jpg" style="width: 100px; height: 100px;" alt=""/>
-                        <img onmouseover="preview.src=img3.src" name="img3" src="/static/img/testKitchen.jpg" style="width: 100px; height: 100px;" alt=""/>
-                        <img onmouseover="preview.src=img4.src" name="img4" src="/static/img/testBathroom.jpg" style="width: 100px; height: 100px;" alt=""/>
-                        <img onmouseover="preview.src=img5.src" name="img5" src="/static/img/testBedroom.jpg" style="width: 100px; height: 100px;" alt=""/>
-                    {% endif %}
-				</div>
-			</div> -->
 			<div class="row">
 				<a class="test-popup-link" href="/static/img/testHouse.jpg">
 					<img src="/static/img/testHouse.jpg" style="height: 300px; width: 100%;">
@@ -319,6 +295,7 @@
 		  	<div class="modal-dialog" role="document">
 		    	<div class="modal-content">
 		      		<div class="modal-header">
+		      			<strong>Select Which Group You're Requesting this Tour for:</strong>
 		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		          			<span aria-hidden="true">&times;</span>
 		        		</button>
@@ -371,7 +348,7 @@
 		<div class="modal fade" id="requestTourModal" tabindex="-1" role="dialog" aria-labelledby="requestTour" aria-hidden="true">
 		  	<div class="modal-dialog" role="document">
 		    	<div class="modal-content">
-		      		<div class="modal-header">
+		      		<div class="modal-header">		      		
 		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		          			<span aria-hidden="true">&times;</span>
 		        		</button>
@@ -410,6 +387,7 @@
 		  	<div class="modal-dialog" role="document">
 		    	<div class="modal-content">
 		      		<div class="modal-header">
+		      			<strong>Select Which Group You're Requesting this {{listing.property_type}} for:</strong>
 		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		          			<span aria-hidden="true">&times;</span>
 		        		</button>
@@ -430,8 +408,8 @@
 			      					    		<strong>Intended Lease Period:</strong> {{ group.start_date }} - {{ group.end_date }}
 			      					    	</p>
 			      					    	<p class="card-text">
-			      					    		<strong><a href=# id="allTourMembersToggle{{group.id}}">See all members</a></strong>
-			      					    		<div id="allTourMembers{{group.id}}" style="display: none;">
+			      					    		<strong><a href=# id="allHouseRequestMembersToggle{{group.id}}">See all members</a></strong>
+			      					    		<div id="allHouseRequestMembers{{group.id}}" style="display: none;">
 		      					    				{% for user in group.acceptedUsers %}
 		      					    			    	<li>{{ user.fname }} {{ user.lname }}</li>
 		      					    			    {% endfor %}
@@ -443,8 +421,8 @@
 			      					</div>
 			      					<script>
 			      						//Show/hide all members of group
-			      						$("#allTourMembersToggle{{group.id}}").click(function(){
-			      						    $("#allTourMembers{{group.id}}").toggle();
+			      						$("#allHouseRequestMembersToggle{{group.id}}").click(function(){
+			      						    $("#allHouseRequestMembers{{group.id}}").toggle();
 			      						});
 			      					</script>
 		      					{% endfor %}
@@ -520,7 +498,7 @@
       var button = $(event.relatedTarget);
       var modal = $(this);
       var group = $(event.relatedTarget).data('group');
-      modal.find('.modal-title').text('Request a Tour');
+      modal.find('.modal-title').text('Request to live at this {{listing.property_type}}');
       modal.find('#groupNumberHouse').text(group);
     })
 
