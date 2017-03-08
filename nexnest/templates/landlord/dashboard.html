@@ -72,32 +72,32 @@
                     </a>
                 </li>
         		<li class="nav-item">
-        	        <a class="nav-link active" data-toggle="tab" href="#occupiedListingsTab" role="tab">
+        	        <a class="nav-link active" id="occupiedListingsTab2" data-toggle="tab" href="#occupiedListingsTab" role="tab">
         	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Occupied Listings</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
-        	        <a class="nav-link" data-toggle="tab" href="#unbookedListingsTab" role="tab">
+        	        <a class="nav-link" id="unbookedListingsTab2" data-toggle="tab" href="#unbookedListingsTab" role="tab">
         	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Unbooked Listings</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
-        	        <a class="nav-link" data-toggle="tab" href="#toursTab" role="tab">
+        	        <a class="nav-link" id="toursTab2" data-toggle="tab" href="#toursTab" role="tab">
         	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Tours</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
-        	        <a class="nav-link" data-toggle="tab" href="#requestsTab" role="tab">
+        	        <a class="nav-link" id="requestsTab2" data-toggle="tab" href="#requestsTab" role="tab">
         	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Listing Requests</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
-        	        <a class="nav-link" data-toggle="tab" href="#maintenanceTab" role="tab">
+        	        <a class="nav-link" id="maintenanceTab2" data-toggle="tab" href="#maintenanceTab" role="tab">
         	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Maintenance Requests</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
-        	        <a class="nav-link" data-toggle="tab" href="#paymentTab" role="tab">
+        	        <a class="nav-link" id="paymentTab2" data-toggle="tab" href="#paymentTab" role="tab">
         	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Payment Portal</span>
         	        </a>
         	    </li>
@@ -1326,6 +1326,22 @@
 {% endblock %}
 {% block scripts %}
 <script>
+	// var hash = document.location.hash;
+	// hash = hash.substr(1);
+	// alert(hash);
+	// var prefix = "tab_";
+	// if (hash) {
+	// 	$(".nav-link").removeClass('active');
+	// 	$(".tab-pane").removeClass('active');
+	//     $('#'+hash+'2').addClass('active');
+	//     $('#'+hash).addClass('active');
+	// } 
+
+	// // Change hash for page-reload
+	// $('#'+hash+' a').on('shown.bs.tab', function (e) {
+	//     window.location.hash = e.target.hash.replace("#", "#" + prefix);
+	// });
+
 	/**
 	 * Returns a random integer between min (inclusive) and max (inclusive)
 	 * Using Math.round() will give you a non-uniform distribution!
@@ -1974,47 +1990,87 @@
     }
 
     function paidToUnpaid(userID, requestID){
-    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
-    	$("#depositPaid"+requestID+"Z"+userID).hide();
-    	$("#markDepositUnpaid"+requestID+"Z"+userID).show();
-    	setTimeout(function () {
-        	$("#markDepositUnpaid"+requestID+"Z"+userID).hide();
-        	$("#depositMarkedUnPaid"+requestID+"Z"+userID).show();
-        	$("#numDeposits"+requestID).html(depositsPaid-1);
-        }, 1200);        
+    	requestURL = '/houseRequest/'+ requestID +'/securityDeposit/' + userID + '/unPaid'
+    	$.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+		    	$("#depositPaid"+requestID+"Z"+userID).hide();
+		    	$("#markDepositUnpaid"+requestID+"Z"+userID).show();
+		    	setTimeout(function () {
+		        	$("#markDepositUnpaid"+requestID+"Z"+userID).hide();
+		        	$("#depositMarkedUnPaid"+requestID+"Z"+userID).show();
+		        	$("#numDeposits"+requestID).html(depositsPaid-1);
+		        }, 1200);
+		    }
+		    else{
+		    	alert("Something went wrong, try again later");
+		    }
+		});
     }
 
     function paidToPaid(userID, requestID){
-    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
-    	$("#depositMarkedUnPaid"+requestID+"Z"+userID).hide();
-    	$("#markDepositUnpaid"+requestID+"Z"+userID).show();
-    	setTimeout(function () {
-        	$("#markDepositUnpaid"+requestID+"Z"+userID).hide();
-        	$("#depositPaid"+requestID+"Z"+userID).show();
-        	$("#numDeposits"+requestID).html(depositsPaid+1);
-        }, 1200);    	 	
+    	requestURL = '/houseRequest/'+ requestID +'/securityDeposit/' + userID + '/paid'
+    	$.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+		    	$("#depositMarkedUnPaid"+requestID+"Z"+userID).hide();
+		    	$("#markDepositUnpaid"+requestID+"Z"+userID).show();
+		    	setTimeout(function () {
+		        	$("#markDepositUnpaid"+requestID+"Z"+userID).hide();
+		        	$("#depositPaid"+requestID+"Z"+userID).show();
+		        	$("#numDeposits"+requestID).html(depositsPaid+1);
+		        }, 1200);
+		    }
+		    else{
+		    	alert("Something went wrong, try again later");
+		    }
+		});
     }
 
     function unpaidToPaid(userID, requestID){
-    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
-    	$("#depositUnpaid"+requestID+"Z"+userID).hide();
-    	$("#markDepositPaid"+requestID+"Z"+userID).show();
-    	setTimeout(function () {
-        	$("#markDepositPaid"+requestID+"Z"+userID).hide();
-        	$("#depositMarkedPaid"+requestID+"Z"+userID).show();
-        	$("#numDeposits"+requestID).html(depositsPaid+1);
-        }, 1200);    	 	
+    	requestURL = '/houseRequest/'+ requestID +'/securityDeposit/' + userID + '/paid'
+    	$.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+		    	$("#depositUnpaid"+requestID+"Z"+userID).hide();
+		    	$("#markDepositPaid"+requestID+"Z"+userID).show();
+		    	setTimeout(function () {
+		        	$("#markDepositPaid"+requestID+"Z"+userID).hide();
+		        	$("#depositMarkedPaid"+requestID+"Z"+userID).show();
+		        	$("#numDeposits"+requestID).html(depositsPaid+1);
+		        }, 1200);
+		    }
+		    else{
+		    	alert("Something went wrong, try again later");
+		    }
+		});
     }
 
     function unpaidToUnpaid(userID, requestID){
-    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
-    	$("#depositMarkedPaid"+requestID+"Z"+userID).hide();
-    	$("#markDepositPaid"+requestID+"Z"+userID).show();
-    	setTimeout(function () {
-        	$("#markDepositPaid"+requestID+"Z"+userID).hide();
-        	$("#depositUnpaid"+requestID+"Z"+userID).show();
-        	$("#numDeposits"+requestID).html(depositsPaid-1);
-        }, 1200);    	 	
+    	requestURL = '/houseRequest/'+ requestID +'/securityDeposit/' + userID + '/unPaid'
+    	$.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+		    	$("#depositMarkedPaid"+requestID+"Z"+userID).hide();
+		    	$("#markDepositPaid"+requestID+"Z"+userID).show();
+		    	setTimeout(function () {
+		        	$("#markDepositPaid"+requestID+"Z"+userID).hide();
+		        	$("#depositUnpaid"+requestID+"Z"+userID).show();
+		        	$("#numDeposits"+requestID).html(depositsPaid-1);
+		        }, 1200);
+		    }
+		    else{
+		    	alert("Something went wrong, try again later");
+		    }
+		}); 	
     }
 
     function markLeasesCollected(requestID){

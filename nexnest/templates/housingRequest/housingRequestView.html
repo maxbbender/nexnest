@@ -403,51 +403,51 @@
       modal.find('.modal-title').text('Back Out');
     })
 
-	function markDepositPaid(userID) {
-		if($("#markPaidButton"+userID).text() == "Mark Paid"){
-            requestURL = '/houseRequest/{{housingRequest.id}}/securityDeposit/' + userID + '/paid'
+	// function markDepositPaid(userID) {
+	// 	if($("#markPaidButton"+userID).text() == "Mark Paid"){
+ //            requestURL = '/houseRequest/{{housingRequest.id}}/securityDeposit/' + userID + '/paid'
 
-            $.getJSON(requestURL, function(data) {
-                results = data['results'];
-                // alert(data['results'].success);
-                if (results.success == true){ 
-                    $("#markDepositPaid"+userID).html('<i class="fa fa-check-circle" aria-hidden="true"></i>');
-                    $("#markDepositPaid"+userID).css("color", "green")
-                    $("#markPaidButton"+userID).text("Mark Unpaid")
-                    $('#markPaidButton'+userID).removeClass("btn-success")
-                    $('#markPaidButton'+userID).addClass("btn-danger")
-                } else {
-                    alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
-                }
-            });
+ //            $.getJSON(requestURL, function(data) {
+ //                results = data['results'];
+ //                // alert(data['results'].success);
+ //                if (results.success == true){ 
+ //                    $("#markDepositPaid"+userID).html('<i class="fa fa-check-circle" aria-hidden="true"></i>');
+ //                    $("#markDepositPaid"+userID).css("color", "green")
+ //                    $("#markPaidButton"+userID).text("Mark Unpaid")
+ //                    $('#markPaidButton'+userID).removeClass("btn-success")
+ //                    $('#markPaidButton'+userID).addClass("btn-danger")
+ //                } else {
+ //                    alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+ //                }
+ //            });
 			
-		}
-		else if($("#markPaidButton"+userID).text() == "Mark Unpaid"){
-            requestURL = '/houseRequest/{{housingRequest.id}}/securityDeposit/' + userID + '/unPaid'
-            $.getJSON(requestURL, function(data) {
-                results = data['results'];
-                // alert(data['results'].success);
-                if (results.success == true){ 
-                    $("#markDepositPaid"+userID).html('<i class="fa fa-times-circle" aria-hidden="true"></i>');
-                    $("#markDepositPaid"+userID).css("color", "red")
-                    $("#markPaidButton"+userID).text("Mark Paid")
-                    $('#markPaidButton'+userID).removeClass("btn-danger")
-                    $('#markPaidButton'+userID).addClass("btn-success")
-                } else {
-                    alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
-                }
-            });
-		}		
-	}
-	function markAllDepositsPaid() {
-		$('.securityDeposit').each(function(i, obj) {
-    		$('.securityDeposit').html('<i class="fa fa-check-circle" aria-hidden="true"></i>');
-    		$('.securityDeposit').css("color", "green")
-    		$('.securityDepositButton').text("Mark Unpaid")
-    		$('.securityDepositButton').removeClass("btn-success")
-    		$('.securityDepositButton').addClass("btn-danger")
-		});
-	}
+	// 	}
+	// 	else if($("#markPaidButton"+userID).text() == "Mark Unpaid"){
+ //            requestURL = '/houseRequest/{{housingRequest.id}}/securityDeposit/' + userID + '/unPaid'
+ //            $.getJSON(requestURL, function(data) {
+ //                results = data['results'];
+ //                // alert(data['results'].success);
+ //                if (results.success == true){ 
+ //                    $("#markDepositPaid"+userID).html('<i class="fa fa-times-circle" aria-hidden="true"></i>');
+ //                    $("#markDepositPaid"+userID).css("color", "red")
+ //                    $("#markPaidButton"+userID).text("Mark Paid")
+ //                    $('#markPaidButton'+userID).removeClass("btn-danger")
+ //                    $('#markPaidButton'+userID).addClass("btn-success")
+ //                } else {
+ //                    alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+ //                }
+ //            });
+	// 	}		
+	// }
+	// function markAllDepositsPaid() {
+	// 	$('.securityDeposit').each(function(i, obj) {
+ //    		$('.securityDeposit').html('<i class="fa fa-check-circle" aria-hidden="true"></i>');
+ //    		$('.securityDeposit').css("color", "green")
+ //    		$('.securityDepositButton').text("Mark Unpaid")
+ //    		$('.securityDepositButton').removeClass("btn-success")
+ //    		$('.securityDepositButton').addClass("btn-danger")
+	// 	});
+	// }
 
 	function markLeasesCollected(requestID){
     	$("#markAllCollected"+requestID).hide();
