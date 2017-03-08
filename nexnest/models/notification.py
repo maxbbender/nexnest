@@ -223,7 +223,7 @@ class Notification(Base):
 
             if returnObject is not None:
                 message = "%s has favorited a new listing in %s" % \
-                    (returnObject.user, returnObject.group.name)
+                    (returnObject.user.name, returnObject.group.name)
 
                 redirectURL = '/group/view/%d' % returnObject.group.id
 

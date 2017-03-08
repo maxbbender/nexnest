@@ -25,6 +25,7 @@ housingRequests = Blueprint(
     'housingRequests', __name__, template_folder='../templates/housingRequest')
 
 
+# NOTIFICATIONS IMPLEMENTED
 @housingRequests.route('/houseRequest/create', methods=['POST'])
 @login_required
 def create():
@@ -56,8 +57,7 @@ def create():
 
                     session.add(newGLM)
                     session.commit()
-                    # print('yo')
-                    # flash("You have requested to live at this listing!", 'success')
+                    flash("You have requested to live at this listing!", 'success')
 
                     # Invalidate all open group invitations
                     newGL.group.invalidateOpenInvitations()

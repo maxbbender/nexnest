@@ -295,53 +295,54 @@ def removeMember(groupID, userID):
     return redirect(url_for('groups.viewGroup', group_id=groupID))
 
 
+# THIS IS DONE IN THE HOUSE REQUEST BLUEPRINT
 # NOTIFICATIONS IMPLEMENTED
-@groups.route('/group/requestListing', methods=['POST'])
-@login_required
-def requestListing():
-    rLForm = GroupListingForm(request.form)
-    if rLForm.validate():
-        group = session.query(Group) \
-            .filter_by(id=rLForm.groupID.data) \
-            .first()
+# @groups.route('/group/requestListing', methods=['POST'])
+# @login_required
+# def requestListing():
+#     rLForm = GroupListingForm(request.form)
+#     if rLForm.validate():
+#         group = session.query(Group) \
+#             .filter_by(id=rLForm.groupID.data) \
+#             .first()
 
-        if group is not None:
+#         if group is not None:
 
-            # Can the current user take actions on the group?
-            if group.isEditableBy(current_user):
-                listing = session.query(Listing) \
-                    .filter_by(id=rLForm.listingID.data) \
-                    .first()
+#             # Can the current user take actions on the group?
+#             if group.isEditableBy(current_user):
+#                 listing = session.query(Listing) \
+#                     .filter_by(id=rLForm.listingID.data) \
+#                     .first()
 
-                if listing is not None:
-                    newGL = GroupListing(group=group,
-                                         listing=listing)
-                    session.add(newGL)
-                    session.commit()
+#                 if listing is not None:
+#                     newGL = GroupListing(group=group,
+#                                          listing=listing)
+#                     session.add(newGL)
+#                     session.commit()
 
-                    newGL.genNotifications()
+#                     newGL.genNotifications()
 
-                    newGLM = GroupListingMessage(groupListing=newGL,
-                                                 user=current_user,
-                                                 content=rLForm.reqDescription.data)
+#                     newGLM = GroupListingMessage(groupListing=newGL,
+#                                                  user=current_user,
+#                                                  content=rLForm.reqDescription.data)
 
-                    session.add(newGLM)
-                    session.commit()
-                    flash("You have requested to live at this listing!", 'success')
+#                     session.add(newGLM)
+#                     session.commit()
+#                     flash("You have requested to live at this listing!", 'success')
 
-                    # Invalidate all open group invitations
-                    newGL.group.invalidateOpenInvitations()
+#                     # Invalidate all open group invitations
+#                     newGL.group.invalidateOpenInvitations()
 
-                    return redirect(url_for('housingRequests.view', id=newGL.id))
-                else:
-                    flash("Listing does not exist", 'warning')
-        else:
-            flash("Group does not exist", 'warning')
+#                     return redirect(url_for('housingRequests.view', id=newGL.id))
+#                 else:
+#                     flash("Listing does not exist", 'warning')
+#         else:
+#             flash("Group does not exist", 'warning')
 
-    else:
-        flash_errors(rLForm)
+#     else:
+#         flash_errors(rLForm)
 
-    return rLForm.redirect()
+#     return rLForm.redirect()
 
 
 # NOTIFICATIONS IMPLEMENTED
