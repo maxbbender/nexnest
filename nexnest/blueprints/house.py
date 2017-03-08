@@ -1,4 +1,4 @@
-from flask import Blueprint, request, redirect, flash, render_template, url_for
+from flask import Blueprint, request, redirect, flash, render_template, url_for, jsonify
 
 from flask_login import login_required, current_user
 
@@ -54,6 +54,7 @@ def view(id):
     return redirect(url_for('indexs.index'))
 
 
+# NOTIFICATIONS IMPLEMENTED
 @houses.route('/house/message', methods=['POST'])
 @login_required
 def messageCreate():
@@ -73,6 +74,8 @@ def messageCreate():
                 session.add(newHM)
                 session.commit()
 
+                newHM.genNotifications()
+
         else:
             flash("Invalid Request", 'warning')
     else:
@@ -81,6 +84,7 @@ def messageCreate():
     return form.redirect()
 
 
+# NOTIFICATIONS IMPLEMENTED
 @houses.route('/house/maintenanceRequest', methods=['POST'])
 @login_required
 def maintenanceRequestCreate():
@@ -98,6 +102,8 @@ def maintenanceRequestCreate():
                                     user=current_user)
                 session.add(newMR)
                 session.commit()
+
+                newMR.genNotifications()
 
                 flash("Maintenance Request Created", 'success')
                 # TODO Redirect to ViewMaintenance Page
@@ -191,3 +197,87 @@ def maintenanceRequestCompleted(id):
         flash('Invalid Request', 'warning')
 
     return redirect(url_for('houses.maintenanceRequestView', id=id))
+
+
+@houses.route('/house/maintenanceRequest/<id>/inProgress/ajax', methods=['GET'])
+@login_required
+def maintenanceRequestInProgressAJAX(id):
+    errorMessage = None
+
+    maintenanceRequest = session.query(Maintenance).filter_by(id=id).first()
+
+    if maintenanceRequest is not None:
+        if maintenanceRequest.isEditableBy(current_user):
+            maintenanceRequest.status = 'inprogress'
+            session.commit()
+
+            return jsonify(results={'success': True})
+        else:
+            errorMessage = 'Permissions Error'
+    else:
+        errorMessage = 'Invalid Reqeuest'
+
+    return jsonify(results={'success': False, 'message': errorMessage})
+
+
+@houses.route('/house/maintenanceRequest/<id>/undoInProgress/ajax/<target>', methods=['GET'])
+@login_required
+def maintenanceRequestUndoInProgressAJAX(id, target):
+    errorMessage = None
+
+    maintenanceRequest = session.query(Maintenance).filter_by(id=id).first()
+
+    if maintenanceRequest is not None:
+        if maintenanceRequest.isEditableBy(current_user):
+            maintenanceRequest.status = target
+            session.commit()
+
+            return jsonify(results={'success': True})
+        else:
+            errorMessage = 'Permissions Error'
+    else:
+        errorMessage = 'Invalid Reqeuest'
+
+    return jsonify(results={'success': False, 'message': errorMessage})
+
+
+@houses.route('/house/maintenanceRequest/<id>/completed/ajax', methods=['GET'])
+@login_required
+def maintenanceRequestCompletedAJAX(id):
+    errorMessage = None
+
+    maintenanceRequest = session.query(Maintenance).filter_by(id=id).first()
+
+    if maintenanceRequest is not None:
+        if maintenanceRequest.isEditableBy(current_user):
+            maintenanceRequest.status = 'completed'
+            session.commit()
+
+            return jsonify(results={'success': True})
+        else:
+            errorMessage = 'Permissions Error'
+    else:
+        errorMessage = 'Invalid Reqeuest'
+
+    return jsonify(results={'success': False, 'message': errorMessage})
+
+
+@houses.route('/house/maintenanceRequest/<id>/undoCompleted/ajax/<target>', methods=['GET'])
+@login_required
+def maintenanceRequestUndoCompletedAJAX(id, target):
+    errorMessage = None
+
+    maintenanceRequest = session.query(Maintenance).filter_by(id=id).first()
+
+    if maintenanceRequest is not None:
+        if maintenanceRequest.isEditableBy(current_user):
+            maintenanceRequest.status = target
+            session.commit()
+
+            return jsonify(results={'success': True})
+        else:
+            errorMessage = 'Permissions Error'
+    else:
+        errorMessage = 'Invalid Reqeuest'
+
+    return jsonify(results={'success': False, 'message': errorMessage})

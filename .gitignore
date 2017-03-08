@@ -9,4 +9,6 @@ nexnest/uploads/*
 nosetests.xml
 coverage.xml
 pylint.out
+coverage.py
 .coverage/
+.coverage

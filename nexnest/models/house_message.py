@@ -1,9 +1,9 @@
-from nexnest.application import db
+from nexnest.application import db, session
 
-from .message import Message
+from nexnest.models.message import Message
+from nexnest.models.notification import Notification
 
 
-# class PostReport(Base):
 class HouseMessage(Message):
     __tablename__ = 'house_messages'
     house_id = db.Column(db.Integer,
@@ -30,6 +30,16 @@ class HouseMessage(Message):
         )
 
         self.house_id = house.id
+
+    def genNotifications(self):
+        for user in self.house.tenants:
+            if user is not self.user:
+                newNotification = Notification(target_user=user,
+                                               target_model_id=self.id,
+                                               notif_type='house_message')
+
+                session.add(newNotification)
+                session.commit()
 
     def __repr__(self):
         return '<HouseMessage ~ House %r | Message %r>' % \

@@ -50,16 +50,16 @@
 <hr>
 
 <hr>
-{% if maintenanceRequests %}
+{% if openMaintenanceRequests %}
     <h1>Maintenance Requests</h1>
-    {% for maintenanceRequestObject in maintenanceRequests %}
-        <strong>{{maintenanceRequestObject.house}}</strong><br>
+    {% for maintenanceRequestObject in openMaintenanceRequests %}
+        <strong>{{maintenanceRequestObject.house.listing.street}}</strong><br>
         {% for maintenanceRequest in maintenanceRequestObject.maintenanceRequests %}
             {{maintenanceRequest}}<br>
         {% endfor %}
     {% endfor %}
-{% endif %}
-<hr> -->
+{% endif %}-->
+
 
 <link href="{{url_for('static', filename='css/landlord/dashboardStyling.css')}}" rel="stylesheet">
 <div class="row">
@@ -109,94 +109,203 @@
 		    <div class="tab-pane active" id="occupiedListingsTab" role="tabpanel" style="padding: 0px;">
 		    	<div class="row">
 			    	<div class="col-xs-1"></div>
-			    	<div class="col-xs-10">
+			    	<div class="col-xs-10" style="width: 100%">
 				    	<div class="callout-block text-center fade-in-b">
-				    		<h1>Occupied Listings</h1>
+				    		<h1>Booked Listings</h1>
 				    	</div>
 			    	</div>
 			    </div>
 		    	<br>
-		    	{% if houses %}
-		    	    {% for house in houses %}
-		    	        <div class="row">
-			            		<div class="col-xs-1"></div>
-			            		<div class="col-xs-10" style="width: 100%">
-					                <div class="card">
-					                    <div class="card-header">
-						                    <div class="row">
-						                    	<div class="col-xs-10">
-						                    		<a href="{{ url_for('houses.view', id=house.listing.id) }}">
-						                    			<h3><strong>{{ house.listing.street }}, {{ house.listing.city }} {{ house.listing.state }}</strong></h3>
-						                    			<small>Lease Period: {{ house.listing.start_date }} - {{ house.listing.end_date }}</small>
-						                    		</a>
-						                    	</div>
-						                    </div>			                    
-					                    </div>
-					                    <div class="card-block">
-						                    <div class="row">
-						                    	<div class="col-xs-4">
-						                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
-						                    	</div>
-						                    	<div class="col-xs-8">
-						                    		<h3><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ house.listing.price }}</strong> per bedroom per semester</h3>
-						                    		<h3><strong>{{ house.listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
-						                    		&nbsp;
-						                    		{{ house.listing.num_full_baths }}<i class="fa fa-bath" aria-hidden="true"></i></strong></h3>
-						                    		<br>
-						                    		<h3><strong>Occupied By: {{house.group.name}}</strong>({{house.group.acceptedUsers|count}} Members)</h3>
-						                    		<strong>Group Leader:</strong>
-						                    		{% for user in house.group.acceptedUsers %}
-						                    			{% with group=house.group %}         
-						                    				<div class="row">
-						                    					<div class="col-xs-8">
-						                    						{% if group.leader_id == user.id %}
-						                    		    				{% include 'landlord/smallMember.html' %}
-						                    						{% endif %}
-						                    		    		</div>
-						                    		    	</div>
-						                    		    {% endwith %}
-						                    		{% endfor %}
-    			      					    		<div id="allGroupMembers{{house.group.id}}" style="display: none;">
-    		      					    				{% for user in house.group.acceptedUsers %}
-    		      					    					{% with group=house.group %}         
-    		      					    						<div class="row">
-    		      					    							<div class="col-xs-8">
-    		      					    								{% if not group.leader_id == user.id %}
-    		      					    				    				{% include 'landlord/smallMember.html' %}
-    		      					    				    			{% endif %}
-    		      					    				    		</div>
-    		      					    				    	</div>
-    		      					    				    {% endwith %}
-    		      					    				{% endfor %}
-    			      					    		</div>
-    			      					    		<button class="btn btn-info" id="allGroupMembersToggle{{house.group.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{house.group.acceptedUsers|count-1}} members</button>
-    			      					    		<button class="btn btn-info" id="hideAllGroupMembersToggle{{house.group.id}}" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other {{house.group.acceptedUsers|count-1}} members</button>
+		    	<div class="row">
+		        	<div class="col-xs-1"></div>
+		        	<div class="col-md-10 col-lg-10 col-xl-10">
+		        	    <div class="row">
+		        	        <div class="card" style="width:100%; border: none;">
+		        	            <div class="card-block">
+		        	                <ul class="nav nav-tabs">
+		        	                    <li class="nav-item">
+		        	                        <a class="nav-link active" data-toggle="tab" href="#currentlyOccupiedTab" role="tab">Currently Occupied</a>
+		        	                    </li>
+		        	                    <li class="nav-item">
+		        	                        <a class="nav-link" data-toggle="tab" href="#willBeOccupiedTab" role="tab">Booked For Future</a>
+		        	                    </li>
+		        	                </ul>
+		        	                <br>
+		        	                <div class="tab-content">
+		        	                    <div class="tab-pane active" id="currentlyOccupiedTab" role="tabpanel" style="padding: 0px;">
+		        	                    	{% if currentHouses|length > 0 %}
+		        	                            {% for house in currentHouses %}
+		        	                            	<div class="row">
+		        	                            		<div class="col-xs-1"></div>
+		        	                            		<div class="col-xs-10" style="width: 100%;">
+		        	                            			<div class="card">
+		        	                            				<div class="card-header">
+		        	                            					<div class="row">
+		        	                            						<div class="col-xs-10">
+		        	                            							<a href="{{ url_for('houses.view', id=house.listing.id) }}">
+												                    			<h3><strong>{{ house.listing.street }}, {{ house.listing.city }} {{ house.listing.state }}</strong></h3>
+												                    			<small>Lease Period: {{ house.listing.start_date }} - {{ house.listing.end_date }}</small>
+											                    			</a>
+											                    		</div>
+											                    	</div>
+											                    </div>
+											                    <div class="card-block">
+												                    <div class="row">
+												                    	<div class="col-xs-4">
+												                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
+												                    	</div>
+												                    	<div class="col-xs-8">
+												                    		<h3><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ house.listing.price }}</strong> per bedroom per semester</h3>
+												                    		<h3><strong>{{ house.listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
+												                    		&nbsp;
+												                    		{{ house.listing.num_full_baths }}<i class="fa fa-bath" aria-hidden="true"></i></strong></h3>
+												                    		<br>
+												                    		<h3><strong>Occupied By: {{house.group.name}}</strong>({{house.group.acceptedUsers|count}} Members)</h3>
+												                    		<strong>Group Leader:</strong>
+												                    		{% for user in house.group.acceptedUsers %}
+												                    			{% with group=house.group %}         
+												                    				<div class="row">
+												                    					<div class="col-xs-8">
+												                    						{% if group.leader_id == user.id %}
+												                    		    				{% include 'landlord/smallMember.html' %}
+												                    						{% endif %}
+												                    		    		</div>
+												                    		    	</div>
+												                    		    {% endwith %}
+												                    		{% endfor %}
+						    			      					    		<div id="allGroupMembersCurrentlyOccupied{{house.group.id}}" style="display: none;">
+						    		      					    				{% for user in house.group.acceptedUsers %}
+						    		      					    					{% with group=house.group %}         
+						    		      					    						<div class="row">
+						    		      					    							<div class="col-xs-8">
+						    		      					    								{% if not group.leader_id == user.id %}
+						    		      					    				    				{% include 'landlord/smallMember.html' %}
+						    		      					    				    			{% endif %}
+						    		      					    				    		</div>
+						    		      					    				    	</div>
+						    		      					    				    {% endwith %}
+						    		      					    				{% endfor %}
+						    			      					    		</div>
+						    			      					    		<button class="btn btn-info" id="allGroupMembersCurrentlyOccupiedToggle{{house.group.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{house.group.acceptedUsers|count-1}} members</button>
+						    			      					    		<button class="btn btn-info" id="hideAllGroupMembersCurrentlyOccupiedToggle{{house.group.id}}" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other {{house.group.acceptedUsers|count-1}} members</button>
 
-    			      					    		<script type="text/javascript">
-    			      					    			//Show/hide members of group
-    			      					    			$("#allGroupMembersToggle{{house.group.id}}").click(function(){
-    			      					    			    $("#allGroupMembers{{house.group.id}}").toggle();
-    			      					    			    $("#allGroupMembersToggle{{house.group.id}}").hide();
-    			      					    			    $("#hideAllGroupMembersToggle{{house.group.id}}").show();   	
-    			      					    			});
+						    			      					    		<script type="text/javascript">
+						    			      					    			//Show/hide members of group
+						    			      					    			$("#allGroupMembersCurrentlyOccupiedToggle{{house.group.id}}").click(function(){
+						    			      					    			    $("#allGroupMembersCurrentlyOccupied{{house.group.id}}").toggle();
+						    			      					    			    $("#allGroupMembersCurrentlyOccupiedToggle{{house.group.id}}").hide();
+						    			      					    			    $("#hideAllGroupMembersCurrentlyOccupiedToggle{{house.group.id}}").show();   	
+						    			      					    			});
+						    			      					    			$("#hideAllGroupMembersCurrentlyOccupiedToggle{{house.group.id}}").click(function(){
+						    			      					    			    $("#allGroupMembersCurrentlyOccupied{{house.group.id}}").toggle();
+						    			      					    			    $("#allGroupMembersCurrentlyOccupiedToggle{{house.group.id}}").show();
+						    			      					    			    $("#hideAllGroupMembersCurrentlyOccupiedToggle{{house.group.id}}").hide();   	
+						    			      					    			});
+						    			      					    		</script>
+												                    		<br>
+												                    	</div>
+												                    </div>
+											                    </div>
+											                </div>
+										                </div>
+									                </div>
+			            						{% endfor %}
+		            						{% else %}
+		            							<div class="alert alert-info" role="alert">
+		            								<strong>No Currently Booked Listings</strong>
+		            							</div>
+		            						{% endif %}
+		        	                    </div>
+		        	                    <div class="tab-pane" id="willBeOccupiedTab" role="tabpanel" style="padding: 0px;">
+		        	                    	{% if futureHouses|length > 0 %}
+		        	                            {% for house in futureHouses %}
+		        	                            	<div class="row">
+		        	                            		<div class="col-xs-1"></div>
+		        	                            		<div class="col-xs-10" style="width: 100%;">
+		        	                            			<div class="card">
+		        	                            				<div class="card-header">
+		        	                            					<div class="row">
+		        	                            						<div class="col-xs-10">
+		        	                            							<a href="{{ url_for('houses.view', id=house.listing.id) }}">
+												                    			<h3><strong>{{ house.listing.street }}, {{ house.listing.city }} {{ house.listing.state }}</strong></h3>
+												                    			<small>Lease Period: {{ house.listing.start_date }} - {{ house.listing.end_date }}</small>
+											                    			</a>
+											                    		</div>
+											                    	</div>
+											                    </div>
+											                    <div class="card-block">
+												                    <div class="row">
+												                    	<div class="col-xs-4">
+												                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
+												                    	</div>
+												                    	<div class="col-xs-8">
+												                    		<h3><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ house.listing.price }}</strong> per bedroom per semester</h3>
+												                    		<h3><strong>{{ house.listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
+												                    		&nbsp;
+												                    		{{ house.listing.num_full_baths }}<i class="fa fa-bath" aria-hidden="true"></i></strong></h3>
+												                    		<br>
+												                    		<h3><strong>Occupied By: {{house.group.name}}</strong>({{house.group.acceptedUsers|count}} Members)</h3>
+												                    		<strong>Group Leader:</strong>
+												                    		{% for user in house.group.acceptedUsers %}
+												                    			{% with group=house.group %}         
+												                    				<div class="row">
+												                    					<div class="col-xs-8">
+												                    						{% if group.leader_id == user.id %}
+												                    		    				{% include 'landlord/smallMember.html' %}
+												                    						{% endif %}
+												                    		    		</div>
+												                    		    	</div>
+												                    		    {% endwith %}
+												                    		{% endfor %}
+						    			      					    		<div id="allGroupMembersWillBeOccupied{{house.group.id}}" style="display: none;">
+						    		      					    				{% for user in house.group.acceptedUsers %}
+						    		      					    					{% with group=house.group %}         
+						    		      					    						<div class="row">
+						    		      					    							<div class="col-xs-8">
+						    		      					    								{% if not group.leader_id == user.id %}
+						    		      					    				    				{% include 'landlord/smallMember.html' %}
+						    		      					    				    			{% endif %}
+						    		      					    				    		</div>
+						    		      					    				    	</div>
+						    		      					    				    {% endwith %}
+						    		      					    				{% endfor %}
+						    			      					    		</div>
+						    			      					    		<button class="btn btn-info" id="allGroupMembersWillBeOccupiedToggle{{house.group.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{house.group.acceptedUsers|count-1}} members</button>
+						    			      					    		<button class="btn btn-info" id="hideAllGroupMembersWillBeOccupiedToggle{{house.group.id}}" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other {{house.group.acceptedUsers|count-1}} members</button>
 
-    			      					    			$("#hideAllGroupMembersToggle{{house.group.id}}").click(function(){
-    			      					    			    $("#allGroupMembers{{house.group.id}}").toggle();
-    			      					    			    $("#allGroupMembersToggle{{house.group.id}}").show();
-    			      					    			    $("#hideAllGroupMembersToggle{{house.group.id}}").hide();   	
-    			      					    			});
-    			      					    		</script>
-						                    		<br>
-						                    	</div>
-						                    </div>
-					                    </div>
-					                </div>
-				                </div>
-			                </div>
-		    	    {% endfor %}
-		    	{% else %}
-		    		No House For you	
-		    	{% endif %}
+						    			      					    		<script type="text/javascript">
+						    			      					    			//Show/hide members of group
+						    			      					    			$("#allGroupMembersWillBeOccupiedToggle{{house.group.id}}").click(function(){
+						    			      					    			    $("#allGroupMembersWillBeOccupied{{house.group.id}}").toggle();
+						    			      					    			    $("#allGroupMembersWillBeOccupiedToggle{{house.group.id}}").hide();
+						    			      					    			    $("#hideAllGroupMembersWillBeOccupiedToggle{{house.group.id}}").show();   	
+						    			      					    			});
+						    			      					    			$("#hideAllGroupMembersWillBeOccupiedToggle{{house.group.id}}").click(function(){
+						    			      					    			    $("#allGroupMembersWillBeOccupied{{house.group.id}}").toggle();
+						    			      					    			    $("#allGroupMembersWillBeOccupiedToggle{{house.group.id}}").show();
+						    			      					    			    $("#hideAllGroupMembersWillBeOccupiedToggle{{house.group.id}}").hide();   	
+						    			      					    			});
+						    			      					    		</script>
+												                    		<br>
+												                    	</div>
+												                    </div>
+											                    </div>
+											                </div>
+										                </div>
+									                </div>
+			            						{% endfor %}
+		            						{% else %}
+		            							<div class="alert alert-info" role="alert">
+		            								<strong>No Booked Listings for the Future</strong>
+		            							</div>
+		            						{% endif %}
+		        	                    </div>
+		        	                </div>
+		        	            </div>
+		        	        </div>
+		        	   	</div>
+		        	</div>
+		       	</div>
 		    </div>
 	        <div class="tab-pane" id="unbookedListingsTab" role="tabpanel" style="padding: 0px;">
 	        	<div class="row">
@@ -273,11 +382,13 @@
 		        	                    <div class="tab-pane active" id="requestedToursTab" role="tabpanel" style="padding: 0px;">
 		        	                        {% if requestedTours %}
 		        	                            {% for tourObject in requestedTours %}
-		        	                            	<div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+		        	                            	<div id="numberOfRequestedTours{{tourObject.listing.id}}" style="display: none;">{{tourObject.tours|length }}</div>
+		        	                            	<div id="doIShowDiv{{tourObject.listing.id}}" style="display: none;">show</div>
+		        	                            	<div class="card" id="requestedTourListing{{tourObject.listing.id}}" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
         							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
         								                    <div class="row">
         								                    	<div class="col-xl-12">
-        								                    		<h3><strong>
+        								                    		<h3 id="requestedToursCount{{tourObject.listing.id}}"><strong>
         								                    		{{tourObject.tours|length }} Request(s) to tour {{tourObject.listing.street}}</strong></h3>
         								                    		<small>Lease Period: {{ tourObject.listing.start_date }} - {{ tourObject.listing.end_date }}</small>
         								                    	</div>
@@ -299,7 +410,7 @@
         							                    		</div>
         							                    	</div>
 	        	                    	        			{% for tour in tourObject.tours %}
-	        	                    	        				<div class="row">
+	        	                    	        				<div class="row" id="requestedTour{{tour.id}}">
 	        	                    	        					<div class="col-xl-1"></div>
 	        	                    	        					<div class="col-xl-10">
 			        	                    	        				<div class="card">
@@ -313,14 +424,16 @@
 					        	                    	            						{% if tour.last_requested == 'group' %}
 						        	                    	            						<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
 								        	                    	            					<div id="acceptTourButton{{tour.id}}">
-								        	                    	            						<button class="btn btn-success" onclick="acceptTour({{tour.id}})">Accept Tour</button>
+								        	                    	            						<button id="acceptTourBtn{{tour.id}}" class="btn btn-success" onclick="acceptTour({{tour.id}}, {{tourObject.listing.id}}, '{{tourObject.listing.street}}')">Accept Tour</button>
 								        	                    	            					</div>
-								        	                    	            					<div id="acceptTourUndo{{tour.id}}" style="display: none; padding-top: 6px;">	
-								        	                    	            						<a href="#!" class="alert-link" onclick="undoAcceptTour({{tour.id}})">Undo</a>
+								        	                    	            					<div id="acceptTourLoading{{tour.id}}" style="display: none;">
+								        	                    	            						<button class="btn btn-success" style="width: 117.5px;">
+								        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+								        	                    	            						</button>
 								        	                    	            					</div>
 								        	                    	            				</div>
 								        	                    	            				<div class="col-12 col-md-auto" style="padding-right: 15px;">
-								        	                    	            					<a href="#!" class="btn btn-info" data-toggle="modal" data-target="#suggestTimeTourModal" data-tourid="{{tour.id}}" data-groupid="{{tour.group.id}}">Request Date/Time Change</a>
+								        	                    	            					<a href="#!" id="tourTimeChangeBtn{{tour.id}}" class="btn btn-info" data-toggle="modal" data-target="#suggestTimeTourModal" data-tourid="{{tour.id}}" data-groupid="{{tour.group.id}}">Request Date/Time Change</a>
 								        	                    	            				</div>
 								        	                    	            			{% else %}
 								        	                    	            				<div class="col-12 col-md-auto" style="padding-left: 15px; padding-right: 15px;">
@@ -329,16 +442,18 @@
 							        	                    	            				{% endif %}
 							        	                    	            				<div class="col-12 col-md-auto">
 							        	                    	            					<div id="declineTourButton{{tour.id}}">
-							        	                    	            						<button class="btn btn-danger" onclick="declineTour({{tour.id}})">Decline Tour</button>
+							        	                    	            						<button id="declineTourBtn{{tour.id}}" class="btn btn-danger" onclick="declineTour({{tour.id}}, {{tourObject.listing.id}}, '{{tourObject.listing.street}}')">Decline Tour</button>
 							        	                    	            					</div>
-							        	                    	            					<div id="declineTourUndo{{tour.id}}" style="display: none; padding-top: 6px;">
-							        	                    	            						<a href="#!" class="alert-link" onclick="undoDeclineTour({{tour.id}})">Undo</a>
+							        	                    	            					<div id="declineTourLoading{{tour.id}}" style="display: none;">
+							        	                    	            						<button class="btn btn-danger" style="width: 117.5px;">
+							        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+							        	                    	            						</button>
 							        	                    	            					</div>
 							        	                    	            				</div>
 						        	                    	            				</div>
 					        	                    	            				</div>
 					        	                    	            				<div class="col-xl-2" style="text-align: right;">
-					        	                    	            					<a class="btn btn-primary" href="{{ url_for('tours.viewTour', tourID=tour.id) }}">View Request</a>
+					        	                    	            					<a class="btn btn-primary" href="{{ url_for('tours.viewTour', tourID=tour.id) }}">More Info</a>
 					        	                    	            				</div>
 					        	                    	            			</div>
 					        	                    	            		</div>
@@ -417,21 +532,46 @@
 					                    			      				</div>
 					                    			      			</div>
 					                    			      		</div>
+					                    			      		<div class="row" id="undoAcceptTourDiv{{tour.id}}" style="display: none;">
+					                    			      			<div class="col-xl-1"></div>
+					                    			      			<div class="col-xl-10">
+					                    			      				<div class="alert alert-info" role="alert">
+					                    			      				    You have just accepted a tour for {{ tour.time_requested }} <a href="#!" class="alert-link" onclick="undoAcceptTour({{tour.id}}, {{tourObject.listing.id}})">Undo?</a>
+					                    			      				</div>
+					                    			      			</div>
+					                    			      		</div>
+					                    			      		<div class="row" id="undoDeclineTourDiv{{tour.id}}" style="display: none;">
+					                    			      			<div class="col-xl-1"></div>
+					                    			      			<div class="col-xl-10">
+					                    			      				<div class="alert alert-info" role="alert">
+					                    			      				    You have just declined a tour for {{ tour.time_requested }} <a href="#!" class="alert-link" onclick="undoDeclineTour({{tour.id}}, {{tourObject.listing.id}})">Undo?</a>
+					                    			      				</div>
+					                    			      			</div>
+					                    			      		</div>
 	        	                    	        			{% endfor %}
 					        	                        </div>
 					        	                    </div>
 			            						{% endfor %}
+			            						<div id="noRequestedTours" style="display: none;" class="alert alert-info" role="alert">
+			            							<strong>No Requested Tours</strong>
+			            						</div>
+		            						{% else %}
+		            							<div class="alert alert-info" role="alert">
+		            								<strong>No Requested Tours</strong>
+		            							</div>
 		            						{% endif %}
 		        	                    </div>
 		        	                    <div class="tab-pane" id="scheduledToursTab" role="tabpanel" style="padding: 0px;">
-		        	                         {% if scheduledTours %}
+		        	                        {% if scheduledTours %}
 		        	                            {% for tourObject in scheduledTours %}
-		        	                            	<div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+		        	                            	<div id="numberOfScheduledTours{{tourObject.listing.id}}" style="display: none;">{{tourObject.tours|length }}</div>
+		        	                            	<div id="doIShowScheduledDiv{{tourObject.listing.id}}" style="display: none;">show</div>
+		        	                            	<div class="card" id="scheduledTourListing{{tourObject.listing.id}}" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
         							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
         								                    <div class="row">
         								                    	<div class="col-xl-12">
-        								                    		<h3><strong>
-        								                    		{{tourObject.tours|length }} Request(s) to tour {{tourObject.listing.street}}</strong></h3>
+        								                    		<h3 id="requestedToursCount{{tourObject.listing.id}}"><strong>
+        								                    		{{tourObject.tours|length }} Scheduled tour(s) of {{tourObject.listing.street}}</strong></h3>
         								                    		<small>Lease Period: {{ tourObject.listing.start_date }} - {{ tourObject.listing.end_date }}</small>
         								                    	</div>
         								                    </div>			                    
@@ -452,7 +592,7 @@
         							                    		</div>
         							                    	</div>
 	        	                    	        			{% for tour in tourObject.tours %}
-	        	                    	        				<div class="row">
+	        	                    	        				<div class="row" id="scheduledTour{{tour.id}}">
 	        	                    	        					<div class="col-xl-1"></div>
 	        	                    	        					<div class="col-xl-10">
 			        	                    	        				<div class="card">
@@ -465,16 +605,18 @@
 					        	                    	            					<div class="row">
 					        	                    	            						<div class="col-12 col-md-auto">
 							        	                    	            					<div id="cancelTourButton{{tour.id}}" style="padding-left: 15px;">
-							        	                    	            						<button class="btn btn-danger" onclick="cancelTour({{tour.id}})">Cancel Tour</button>
+							        	                    	            						<button class="btn btn-danger" onclick="cancelTour({{tour.id}}, {{tourObject.listing.id}}, '{{tourObject.listing.street}}')">Cancel Tour</button>
 							        	                    	            					</div>
-							        	                    	            					<div id="cancelTourUndo{{tour.id}}" style="display: none; padding-left: 15px;">
-							        	                    	            						<a href="#!" class="alert-link" onclick="undoCancelTour({{tour.id}})">Undo</a>
+							        	                    	            					<div id="cancelTourLoading{{tour.id}}" style="display: none; padding-left: 15px;">
+							        	                    	            						<button class="btn btn-danger" style="width: 117.5px;">
+							        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+							        	                    	            						</button>
 							        	                    	            					</div>
 							        	                    	            				</div>
 					        	                    	            					</div>
 					        	                    	            				</div>
 					        	                    	            				<div class="col-xl-2" style="text-align: right;">
-					        	                    	            					<a class="btn btn-primary" href="{{ url_for('tours.viewTour', tourID=tour.id) }}">View Request</a>
+					        	                    	            					<a class="btn btn-primary" href="{{ url_for('tours.viewTour', tourID=tour.id) }}">More Info</a>
 					        	                    	            				</div>
 					        	                    	            			</div>
 					        	                    	            		</div>
@@ -547,20 +689,26 @@
 					                    			      				</div>
 					                    			      			</div>
 					                    			      		</div>
+					                    			      		<div class="row" id="undoCancelTourDiv{{tour.id}}" style="display: none;">
+					                    			      			<div class="col-xl-1"></div>
+					                    			      			<div class="col-xl-10">
+					                    			      				<div class="alert alert-info" role="alert">
+					                    			      				    You have just canceled a tour for {{ tour.time_requested }} <a href="#!" class="alert-link" onclick="undoCancelTour({{tour.id}}, {{tourObject.listing.id}})">Undo?</a>
+					                    			      				</div>
+					                    			      			</div>
+					                    			      		</div>
 	        	                    	        			{% endfor %}
 					        	                        </div>
 					        	                    </div>
 			            						{% endfor %}
+			            						<div id="noScheduledTours" style="display: none;" class="alert alert-info" role="alert">
+			            							<strong>No Scheduled Tours</strong>
+			            						</div>
+		            						{% else %}
+		            							<div class="alert alert-info" role="alert">
+		            								<strong>No Scheduled Tours</strong>
+		            							</div>
 		            						{% endif %}
-		        	                    </div>
-		        	                    <div class="tab-pane" id="completedToursTab" role="tabpanel" style="padding: 0px;">
-		        	                        {% for listing in listings %}
-			            						{% for tour in listing.tours %}
-			            							{% if tour.tour_confirmed %}
-			            								
-			            							{% endif %}
-			            						{% endfor %}
-		            						{% endfor %}
 		        	                    </div>
 		        	                </div>
 		        	            </div>
@@ -592,37 +740,33 @@
 		        	                    <li class="nav-item">
 		        	                        <a class="nav-link" data-toggle="tab" href="#acceptedTab" role="tab">Accepted</a>
 		        	                    </li>
-		        	                    <li class="nav-item">
-		        	                        <a class="nav-link" data-toggle="tab" href="#completedTab" role="tab">Completed</a>
-		        	                    </li>
-		        	                    <li class="nav-item">
-		        	                        <a class="nav-link" data-toggle="tab" href="#deniedTab" role="tab">Denied</a>
-		        	                    </li>
 		        	                </ul>
 		        	                <br>
 		        	                <div class="tab-content">
 		        	                    <div class="tab-pane active" id="unacceptedTab" role="tabpanel" style="padding: 0px;">
 		        	                    	{% if unAcceptedHousingRequests %}		        	                    	
 		        	                    	    {% for housingRequestObject in unAcceptedHousingRequests %}
-		        	                    	    	<div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+		        	                    	    	<div id="numberOfUnacceptedRequests{{housingRequestObject.listing.id}}" style="display: none;">{{housingRequestObject.houseRequests|length }}</div>
+		        	                            	<div id="doIShowUnacceptedRequestsDiv{{housingRequestObject.listing.id}}" style="display: none;">show</div>
+		        	                    	    	<div class="card" id="unacceptedRequestsListing{{housingRequestObject.listing.id}}" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
         							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
         								                    <div class="row">
         								                    	<div class="col-xl-12">
-        								                    		<h3><strong>
+        								                    		<h3 id="unacceptedRequestsCount{{housingRequestObject.listing.id}}"><strong>
         								                    		{{housingRequestObject.houseRequests|length }} Request(s) for {{housingRequestObject.listing.street}}</strong></h3>
         								                    		<small>Lease Period: {{ housingRequestObject.listing.start_date }} - {{ housingRequestObject.listing.end_date }}</small>
         								                    	</div>
         								                    </div>			                    
         							                    </div>
         							                    <div class="card-block">
-        							                    	<div class="row">
+        							                    	<!-- <div class="row">
         							                    		<div class="col-xl-1"></div>
         							                    		<div class="col-xl-10">
 	        							                    	    {% with listing=housingRequestObject.listing %}
 	        							                    	        {% include 'listing.html' %}
 	        							                    	    {% endwith %}
 	        							                    	</div>
-        							                    	</div>
+        							                    	</div> -->
         							                    	<div class="row">
         							                    		<div class="col-xl-1"></div>
         							                    		<div class="col-xl-10">
@@ -630,7 +774,7 @@
         							                    		</div>
         							                    	</div>
 	        	                    	        			{% for housingRequest in housingRequestObject.houseRequests %}
-	        	                    	        				<div class="row">
+	        	                    	        				<div class="row" id="unAcceptedRequest{{housingRequest.id}}">
 	        	                    	        					<div class="col-xl-1"></div>
 	        	                    	        					<div class="col-xl-10">
 			        	                    	        				<div class="card">
@@ -638,15 +782,41 @@
 		        							                    				<div class="row">
 		        								                    				<div class="col-xl-10">
 					        	                    	            					<h3><strong>{{housingRequest.group.name}}</strong>({{housingRequest.group.acceptedUsers|count}} Members)</h3>
+					        	                    	            					<br>
+					        	                    	            					<div class="row">
+						        	                    	            					<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+							        	                    	            					<div id="acceptHouseRequest{{housingRequest.id}}">
+							        	                    	            						<button id="acceptHouseRequestButton{{housingRequest.id}}" class="btn btn-success acceptHouseRequest{{housingRequestObject.listing.id}}" onclick="acceptHouseRequest({{housingRequest.id}}, {{housingRequestObject.listing.id}}, '{{housingRequestObject.listing.street}}')">Accept Group</button>
+							        	                    	            					</div>
+							        	                    	            					<div id="acceptHouseRequestLoading{{housingRequest.id}}" style="display: none;">
+							        	                    	            						<button class="btn btn-success" style="width: 131.06px;">
+							        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+							        	                    	            						</button>
+							        	                    	            					</div>
+						        	                    	            					</div>
+						        	                    	            					<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+							        	                    	            					<div id="denyHouseRequest{{housingRequest.id}}">
+							        	                    	            						<button id="denyHouseRequestButton{{housingRequest.id}}" class="btn btn-danger denyHouseRequest{{housingRequestObject.listing.id}}" onclick="denyHouseRequest({{housingRequest.id}}, {{housingRequestObject.listing.id}}, '{{housingRequestObject.listing.street}}')">Reject Group</button>
+							        	                    	            					</div>
+							        	                    	            					<div id="denyHouseRequestLoading{{housingRequest.id}}" style="display: none;">
+							        	                    	            						<button class="btn btn-danger" style="width: 125.28px;">
+							        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+							        	                    	            						</button>
+							        	                    	            					</div>
+						        	                    	            					</div>
+					        	                    	            					</div>
 					        	                    	            				</div>
 					        	                    	            				<div class="col-xl-2" style="text-align: right;">
-					        	                    	            					<a class="btn btn-primary" href="{{ url_for('housingRequests.view', id=housingRequest.id) }}">View Request</a>
+					        	                    	            					<a class="btn btn-primary" href="{{ url_for('housingRequests.view', id=housingRequest.id) }}">More Info</a>
 					        	                    	            				</div>
 					        	                    	            			</div>
 					        	                    	            		</div>
 					        	                    	            		<div class="card-block">
 		        							                    				<div class="row">
 		        							                    					<div class="col-xs-12">
+		        							                    						<strong>The Group's Initial Message to You: </strong>
+		        							                    						{{ housingRequest.firstMessage.content }}
+		        							                    						<br><br>
 						    								                    		<strong>Group Leader:</strong>
 						    								                    		{% for user in housingRequest.group.acceptedUsers %}
 						    								                    			{% with group=housingRequest.group %}         
@@ -694,106 +864,128 @@
 		                    			      					    	</div>
 		                    			      					    </div>
 		                    			      					</div>
+		                    			      					<div class="row" id="undoAcceptedRequest{{housingRequest.id}}" style="display: none;">
+					                    			      			<div class="col-xl-1"></div>
+					                    			      			<div class="col-xl-10">
+					                    			      				<div class="alert alert-info" role="alert">
+					                    			      				    You have just accpeted a group for this listing <a href="#!" class="alert-link" onclick="undoAcceptHouseRequest({{housingRequest.id}}, {{housingRequestObject.listing.id}}, '{{housingRequestObject.listing.street}}')">Undo?</a>
+					                    			      				</div>
+					                    			      			</div>
+					                    			      		</div>
+					                    			      		<div class="row" id="undoDeniedRequest{{housingRequest.id}}" style="display: none;">
+					                    			      			<div class="col-xl-1"></div>
+					                    			      			<div class="col-xl-10">
+					                    			      				<div class="alert alert-info" role="alert">
+					                    			      				    You have just denied a group for this listing <a href="#!" class="alert-link" onclick="undoDeniedHouseRequest({{housingRequest.id}}, {{housingRequestObject.listing.id}}, '{{housingRequestObject.listing.street}}')">Undo?</a>
+					                    			      				</div>
+					                    			      			</div>
+					                    			      		</div>
 	        	                    	        			{% endfor %}		        	                    	        		
 		        	                    	        	</div>
 		        	                    	        </div>
-		        	                    	        <hr>
 		        	                    	    {% endfor %}
-		        	                    	{% else %}
-		        	                    		Nothing to display
+    		            						<div id="noUnacceptedRequests" style="display: none;" class="alert alert-info" role="alert">
+    		            							<strong>No Unaccepted Requests</strong>
+    		            						</div>
+    	            						{% else %}
+    	            							<div class="alert alert-info" role="alert">
+    	            								<strong>No Unaccepted Requests</strong>
+    	            							</div>
 		        	                    	{% endif %}
 		        	                    </div>
 		        	                    <div class="tab-pane" id="acceptedTab" role="tabpanel" style="padding: 0px;">
 		        	                    	{% if acceptedHousingRequests %}
 		        	                        	{% for housingRequest in acceptedHousingRequests %}
-        							                <div class="card">
+        							                <div class="card" id="confirmRequest{{housingRequest.id}}">
         							                    <div class="card-header">
         								                    <div class="row">
-        								                    	<div class="col-xl-12">
-        								                    		<h3><strong>{{ housingRequest.listing.street }} </strong></h3>
+        								                    	<div class="col-xl-10">
+        								                    		<h3><strong>{{ housingRequest.group.name }} for {{ housingRequest.listing.street }}
+        								                    		</strong></h3>
         								                    		<small>Lease Period: {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}</small>
+        								                    		<br><br>
+        								                    		<div class="row">
+        								                    			<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+	        								                    			<strong style="padding-right: 16px;">All Leases Collected: </strong>
+	        								                    			<button id="markAllCollected{{housingRequest.id}}" type="button" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" onclick="markLeasesCollected({{housingRequest.id}})"><i class="fa fa-times" aria-hidden="true"></i></button>
+	        								                    			<button type="button" id="markAllCollectedLoading{{housingRequest.id}}" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+	        								                    			<button type="button" id="markAllUncollected{{housingRequest.id}}" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" style="display: none;" onclick="markLeasesUncollected({{housingRequest.id}})"><i class="fa fa-check" aria-hidden="true"></i></button>
+	        								                    		</div>
+	        								                    		<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+	        								                    			<strong>Security Deposits Collected: </strong> 
+	        								                    			<span id="numDeposits{{housingRequest.id}}">{{housingRequest.numSecurityDepositsPaid}}</span>/{{housingRequest.group.acceptedUsers|count}}
+	        								                    		</div>
+	        								                    		<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+	        								                    			<button id="confirmGroupButton{{housingRequest.id}}" class="btn btn-success" onclick="confirmGroup({{housingRequest.id}})">Confirm Group</button>
+	        								                    			<button id="confirmGroupLoading{{housingRequest.id}}" class="btn btn-success" style="display: none; width: 139.33px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+	        								                    		</div>
+        								                    		</div>
+        								                    	</div>
+        								                    	<div class="col-xl-2" style="text-align: right;">
+        								                    		<a class="btn btn-primary" href="{{ url_for('housingRequests.view', id=housingRequest.id) }}">More Info</a>
         								                    	</div>
         								                    </div>			                    
         							                    </div>
-        							                    <div class="card-block">
+        							                    <div class="card-block">        								                    
         								                    <div class="row">
-        								                    	<div class="col-xs-4">
-        								                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
-        								                    		<br><br>
-        								                    		<a href="{{ url_for('housingRequests.view', id=housingRequest.id) }}" class="btn btn-primary">View Request</a>
-        								                    	</div>
-        								                    	<div class="col-xs-8">
-        								                    		<div class="row">
-        								                    			<div class="col-xl-12">
-		        								                    		<h3><strong>Group requesting the listing: {{housingRequest.group.name}}</strong>({{housingRequest.group.acceptedUsers|count}} Members)</h3>		 
-		        								                    	</div>
-		        								                    </div>
-		        								                    <div class="row">
-		        								                    	<div class="col-xl-12">
-		        								                    		<strong style="padding-right: 16px;">All Leases Collected: </strong>
-		        								                    		<button type="button" id="pending" class="btn btn-danger btn-circle pending"><i class="fa fa-times" aria-hidden="true"></i></button>
-		        								                    	</div>
-		        								                    </div>
-		        								                    <br>
-		        								                    <div class="row">
-		        								                    	<div class="col-xl-12">
-		        								                    		<strong>All Deposits Collected: </strong>
-		        								                    		<button type="button" id="pending" class="btn btn-danger btn-circle pending"><i class="fa fa-times" aria-hidden="true"></i></button>
-		        								                    	</div>
-		        								                    </div>
-		        								                    <br>
-		        								                    <div class="row">
-		        								                    	<div class="col-xl-12">
-		        								                    		<strong>Group Leader:</strong>
-			        								                    		{% for deposit in housingRequest.securityDeposits %}
-			        								                    			{% with group=housingRequest.group %}         
-			        								                    				<div class="row">
-			        								                    					<div class="col-xs-10">
-			        								                    						{% if group.leader_id == deposit.user.id %}
-			        								                    		    				{% include 'landlord/acceptedMember.html' %}
-			        								                    						{% endif %}
-			        								                    		    		</div>
-			        								                    		    	</div>
-			        								                    		    {% endwith %}
-			        								                    		{% endfor %}
-			                    			      					    		<div id="allGroupMembersListingAccepted{{housingRequest.group.id}}Z{{housingRequest.listing.id}}" style="display: none;">
-			                    		      					    				{% for deposit in housingRequest.securityDeposits %}
-			                    		      					    					{% with group=housingRequest.group %}         
-			                    		      					    						<div class="row">
-			                    		      					    							<div class="col-xs-10">
-			                    		      					    								{% if not group.leader_id == deposit.user.id %}
-			                    		      					    				    				{% include 'landlord/acceptedMember.html' %}
-			                    		      					    				    			{% endif %}
-			                    		      					    				    		</div>
-			                    		      					    				    	</div>
-			                    		      					    				    {% endwith %}
-			                    		      					    				{% endfor %}
-			                    			      					    		</div>
-			                    			      					    		<button class="btn btn-info" id="allGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{housingRequest.group.acceptedUsers|count-1}} members</button>
-			                    			      					    		<button class="btn btn-info" id="hideAllGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other {{housingRequest.group.acceptedUsers|count-1}} members</button>
-			                    			      					    		<script type="text/javascript">
-			                    			      					    			//Show/hide members of group
-			                    			      					    			$("#allGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").click(function(){
-			                    			      					    			    $("#allGroupMembersListingAccepted{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").toggle();
-			                    			      					    			    $("#allGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").hide();
-			                    			      					    			    $("#hideAllGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").show();   	
-			                    			      					    			});
+        								                    	<div class="col-xl-2"></div>
+        								                    	<div class="col-xl-8">
+        								                    		<strong>Security Deposits Collected:</strong>
+	        								                    		{% for deposit in housingRequest.securityDeposits %}
+	        								                    			{% with group=housingRequest.group %}         
+	        								                    				<div class="row">
+	        								                    					<div class="col-xs-12">
+	        								                    						{% if group.leader_id == deposit.user.id %}
+	        								                    		    				{% include 'landlord/acceptedMember.html' %}
+	        								                    						{% endif %}
+	        								                    		    		</div>
+	        								                    		    	</div>
+	        								                    		    {% endwith %}
+	        								                    		{% endfor %}
+	                    			      					    		<div id="allGroupMembersListingAccepted{{housingRequest.group.id}}Z{{housingRequest.listing.id}}" style="display: none;">
+	                    		      					    				{% for deposit in housingRequest.securityDeposits %}
+	                    		      					    					{% with group=housingRequest.group %}         
+	                    		      					    						<div class="row">
+	                    		      					    							<div class="col-xs-12">
+	                    		      					    								{% if not group.leader_id == deposit.user.id %}
+	                    		      					    				    				{% include 'landlord/acceptedMember.html' %}
+	                    		      					    				    			{% endif %}
+	                    		      					    				    		</div>
+	                    		      					    				    	</div>
+	                    		      					    				    {% endwith %}
+	                    		      					    				{% endfor %}
+	                    			      					    		</div>
+	                    			      					    		<button class="btn btn-info" id="allGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{housingRequest.group.acceptedUsers|count-1}} members</button>
+	                    			      					    		<button class="btn btn-info" id="hideAllGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other {{housingRequest.group.acceptedUsers|count-1}} members</button>
+	                    			      					    		<script type="text/javascript">
+	                    			      					    			//Show/hide members of group
+	                    			      					    			$("#allGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").click(function(){
+	                    			      					    			    $("#allGroupMembersListingAccepted{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").toggle();
+	                    			      					    			    $("#allGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").hide();
+	                    			      					    			    $("#hideAllGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").show();   	
+	                    			      					    			});
 
-			                    			      					    			$("#hideAllGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").click(function(){
-			                    			      					    			    $("#allGroupMembersListingAccepted{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").toggle();
-			                    			      					    			    $("#allGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").show();
-			                    			      					    			    $("#hideAllGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").hide();   	
-			                    			      					    			});
-			                    			      					    		</script>
-			        								                    		<br>
-			        								                    		<br>
-			        								                    	</div>
-			        								                    </div>
+	                    			      					    			$("#hideAllGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").click(function(){
+	                    			      					    			    $("#allGroupMembersListingAccepted{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").toggle();
+	                    			      					    			    $("#allGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").show();
+	                    			      					    			    $("#hideAllGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").hide();   	
+	                    			      					    			});
+	                    			      					    		</script>
+	        								                    		<br>
+	        								                    		<br>
 	        								                    	</div>
 	        								                    </div>
 	        							                    </div>
 	        							                </div>
 			            							<br>
+			            							<div class="row" id="undoConfirmRequest{{housingRequest.id}}" style="display: none;">
+			            								<div class="col-xl-1"></div>
+			            								<div class="col-xl-10">
+			            									<div class="alert alert-info" role="alert">
+			            									    You have just confirmed a group for this listing <a href="#!" class="alert-link" onclick="undoConfirmGroup({{housingRequest.id}})">Undo?</a>
+			            									</div>
+			            								</div>
+			            							</div>
 			            						{% endfor %}
 		            						{% endif %}
 		        	                    </div>
@@ -834,13 +1026,248 @@
 		        	                <br>
 		        	                <div class="tab-content">
 		        	                    <div class="tab-pane active" id="newMaintenanceTab" role="tabpanel" style="padding: 0px;">
-		        	                    	New
+		        	                    	{% if openMaintenanceRequests|length > 0 %}
+		        	                            {% for requestObject in openMaintenanceRequests %}		        	                            
+		        	                            	<div id="numberOfOpenRequests{{requestObject.house.listing.id}}" style="display: none;">{{requestObject.maintenanceRequests|length }}</div>
+		        	                            	<div id="doIShowOpenRequestsDiv{{requestObject.house.listing.id}}" style="display: none;">show</div>
+		        	                            	<div class="card" id="openRequestListing{{requestObject.house.listing.id}}" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+        							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
+        								                    <div class="row">
+        								                    	<div class="col-xl-12">
+        								                    		<h3 id="openRequestsCount{{requestObject.house.listing.id}}"><strong>
+        								                    		{{requestObject.maintenanceRequests|length }} New Maintenance Request(s) for {{requestObject.house.listing.street}}</strong></h3>
+        								                    	</div>
+        								                    </div>			                    
+        							                    </div>
+        							                    <div class="card-block">
+        							                    	<div class="row">
+        							                    		<div class="col-xl-1"></div>
+        							                    		<div class="col-xl-10">
+        							                    			<strong><h2>Maintenance Requests for this listing: </h2></strong>
+        							                    		</div>
+        							                    	</div>
+	        	                    	        			{% for request in requestObject.maintenanceRequests %}
+	        	                    	        				<div class="row" id="openRequest{{request.id}}">
+	        	                    	        					<div class="col-xl-1"></div>
+	        	                    	        					<div class="col-xl-10">
+			        	                    	        				<div class="card">
+		        							                    			<div class="card-header">
+		        							                    				<div class="row">
+		        								                    				<div class="col-xl-10">
+					        	                    	            					<h3><strong>{{request.request_type}} </strong></h3>
+					        	                    	            					Reported on: {{request.date_created}}
+					        	                    	            					<br><br>
+					        	                    	            					<div class="row">   
+					        	                    	            						<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+							        	                    	            					<div id="markInProgressButton{{request.id}}">
+							        	                    	            						<button id="inProgressButton{{request.id}}" class="btn btn-warning" onclick="markInProgress({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.listing.street}}')">Mark In Progress</button>
+							        	                    	            					</div>
+							        	                    	            					<div id="markInProgressLoading{{request.id}}" style="display: none;">
+							        	                    	            						<button class="btn btn-warning" style="width: 152.94px;">
+							        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+							        	                    	            						</button>
+							        	                    	            					</div>
+							        	                    	            				</div>
+							        	                    	            				<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+							        	                    	            					<div id="markCompletedButton{{request.id}}">
+							        	                    	            						<button id="completedButton{{request.id}}" class="btn btn-success" onclick="markCompleted({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.listing.street}}')">Mark Completed</button>
+							        	                    	            					</div>
+							        	                    	            					<div id="markCompletedLoading{{request.id}}" style="display: none;">
+							        	                    	            						<button class="btn btn-success" style="width: 152.33px;">
+							        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+							        	                    	            						</button>
+							        	                    	            					</div>
+							        	                    	            				</div>
+						        	                    	            				</div>
+					        	                    	            				</div>
+					        	                    	            				<div class="col-xl-2" style="text-align: right;">
+					        	                    	            					<a class="btn btn-primary" href="{{ url_for('houses.maintenanceRequestView', id=request.id) }}">More Info</a>
+					        	                    	            				</div>
+					        	                    	            			</div>
+					        	                    	            		</div>
+					        	                    	            		<div class="card-block">
+		        							                    				<div class="row">
+		        							                    					<div class="col-xs-12">
+		        							                    						<strong>Reported by:</strong> {{request.user.name}}
+		        							                    						<br><br>
+		        							                    						<strong>Details: </strong>{{request.details}}
+					                    			      					    	</div>
+					                    			      					    </div>
+					                    			      					</div>
+					                    			      				</div>
+					                    			      			</div>
+					                    			      		</div>
+					                    			      		<div class="row" id="undoInProgressDiv{{request.id}}" style="display: none;">
+					                    			      			<div class="col-xl-1"></div>
+					                    			      			<div class="col-xl-10">
+					                    			      				<div class="alert alert-info" role="alert">
+					                    			      				    Marked as In Progress <a href="#!" class="alert-link" onclick="undoMarkInProgress({{request.id}}, {{request.house.listing.id}}, '{{requestObject.house.listing.street}}')">Undo?</a>
+					                    			      				</div>
+					                    			      			</div>
+					                    			      		</div>
+					                    			      		<div class="row" id="undoMarkCompleted{{request.id}}" style="display: none;">
+					                    			      			<div class="col-xl-1"></div>
+					                    			      			<div class="col-xl-10">
+					                    			      				<div class="alert alert-info" role="alert">
+					                    			      				    Marked as Completed <a href="#!" class="alert-link" onclick="undoMarkCompleted({{request.id}}, {{request.house.listing.id}}, '{{requestObject.house.listing.street}}')">Undo?</a>
+					                    			      				</div>
+					                    			      			</div>
+					                    			      		</div>
+	        	                    	        			{% endfor %}
+					        	                        </div>
+					        	                    </div>
+			            						{% endfor %}
+			            						<div id="noNewMaintenanceRequests" style="display: none;" class="alert alert-info" role="alert">
+			            							<strong>No New Maintenance Requests</strong>
+			            						</div>
+		            						{% else %}
+		            							<div class="alert alert-info" role="alert">
+		            								<strong>No New Maintenance Requests</strong>
+		            							</div>
+		            						{% endif %}
 		        	                    </div>
 		        	                    <div class="tab-pane" id="inProgressMaintenanceTab" role="tabpanel" style="padding: 0px;">
-		        	                    	In-Progress
+		        	                    	{% if inProgressMaintenanceRequests|length > 0 %}
+		        	                            {% for requestObject in inProgressMaintenanceRequests %}		        	                            
+		        	                            	<div id="numberOfInProgressRequests{{requestObject.house.listing.id}}" style="display: none;">{{requestObject.maintenanceRequests|length }}</div>
+		        	                            	<div id="doIShowInProgressRequestsDiv{{requestObject.house.listing.id}}" style="display: none;">show</div>
+		        	                            	<div class="card" id="inProgressRequestListing{{requestObject.house.listing.id}}" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+        							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
+        								                    <div class="row">
+        								                    	<div class="col-xl-12">
+        								                    		<h3 id="inProgressRequestsCount{{requestObject.house.listing.id}}"><strong>
+        								                    		{{requestObject.maintenanceRequests|length }} In Progress Maintenance Request(s) for {{requestObject.house.listing.street}}</strong></h3>
+        								                    	</div>
+        								                    </div>			                    
+        							                    </div>
+        							                    <div class="card-block">
+        							                    	<div class="row">
+        							                    		<div class="col-xl-1"></div>
+        							                    		<div class="col-xl-10">
+        							                    			<strong><h2>Maintenance Requests for this listing: </h2></strong>
+        							                    		</div>
+        							                    	</div>
+	        	                    	        			{% for request in requestObject.maintenanceRequests %}
+	        	                    	        				<div class="row" id="inProgress{{request.id}}">
+	        	                    	        					<div class="col-xl-1"></div>
+	        	                    	        					<div class="col-xl-10">
+			        	                    	        				<div class="card">
+		        							                    			<div class="card-header">
+		        							                    				<div class="row">
+		        								                    				<div class="col-xl-10">
+					        	                    	            					<h3><strong>{{request.request_type}} </strong></h3>
+					        	                    	            					Reported on: {{request.date_created}}
+					        	                    	            					<br><br>
+					        	                    	            					<div class="row">
+							        	                    	            				<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+							        	                    	            					<div id="inProgressToCompletedButton{{request.id}}">
+							        	                    	            						<button class="btn btn-success" onclick="inProgressToCompleted({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.listing.street}}')">Mark Completed</button>
+							        	                    	            					</div>
+							        	                    	            					<div id="inProgressToCompletedLoading{{request.id}}" style="display: none;">
+							        	                    	            						<button class="btn btn-success" style="width: 152.33px;">
+							        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+							        	                    	            						</button>
+							        	                    	            					</div>
+							        	                    	            				</div>
+						        	                    	            				</div>
+					        	                    	            				</div>
+					        	                    	            				<div class="col-xl-2" style="text-align: right;">
+					        	                    	            					<a class="btn btn-primary" href="{{ url_for('houses.maintenanceRequestView', id=request.id) }}">More Info</a>
+					        	                    	            				</div>
+					        	                    	            			</div>
+					        	                    	            		</div>
+					        	                    	            		<div class="card-block">
+		        							                    				<div class="row">
+		        							                    					<div class="col-xs-12">
+		        							                    						<strong>Reported by:</strong> {{request.user.name}}
+		        							                    						<br><br>
+		        							                    						<strong>Details: </strong>{{request.details}}
+					                    			      					    	</div>
+					                    			      					    </div>
+					                    			      					</div>
+					                    			      				</div>
+					                    			      			</div>
+					                    			      		</div>
+					                    			      		<div class="row" id="undoInProgressToCompleted{{request.id}}" style="display: none;">
+					                    			      			<div class="col-xl-1"></div>
+					                    			      			<div class="col-xl-10">
+					                    			      				<div class="alert alert-info" role="alert">
+					                    			      				    Marked as Completed <a href="#!" class="alert-link" onclick="undoInProgressToCompleted({{request.id}}, {{request.house.listing.id}}, '{{requestObject.house.listing.street}}')">Undo?</a>
+					                    			      				</div>
+					                    			      			</div>
+					                    			      		</div>
+	        	                    	        			{% endfor %}
+					        	                        </div>
+					        	                    </div>
+			            						{% endfor %}
+			            						<div id="noInProgressMaintenanceRequests" style="display: none;" class="alert alert-info" role="alert">
+			            							<strong>No In Progress Maintenance Requests</strong>
+			            						</div>
+		            						{% else %}
+		            							<div class="alert alert-info" role="alert">
+		            								<strong>No In Progress Maintenance Requests</strong>
+		            							</div>
+		            						{% endif %}
 		        	                    </div>
 		        	                    <div class="tab-pane" id="completedMaintenanceTab" role="tabpanel" style="padding: 0px;">
-		        	                    	Completed
+		        	                    	{% if completedMaintenanceRequests|length > 0 %}
+		        	                            {% for requestObject in completedMaintenanceRequests %}	
+		        	                            	<div class="card" id="completedRequestListing{{requestObject.house.listing.id}}" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+        							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
+        								                    <div class="row">
+        								                    	<div class="col-xl-12">
+        								                    		<h3 id="completedRequestsCount{{requestObject.house.listing.id}}"><strong>
+        								                    		{{requestObject.maintenanceRequests|length }} Completed Maintenance Request(s) for {{requestObject.house.listing.street}}</strong></h3>
+        								                    	</div>
+        								                    </div>			                    
+        							                    </div>
+        							                    <div class="card-block">
+        							                    	<div class="row">
+        							                    		<div class="col-xl-1"></div>
+        							                    		<div class="col-xl-10">
+        							                    			<strong><h2>Completed Maintenance for this listing: </h2></strong>
+        							                    		</div>
+        							                    	</div>
+	        	                    	        			{% for request in requestObject.maintenanceRequests %}
+	        	                    	        				<div class="row" id="completed{{request.id}}">
+	        	                    	        					<div class="col-xl-1"></div>
+	        	                    	        					<div class="col-xl-10">
+			        	                    	        				<div class="card">
+		        							                    			<div class="card-header">
+		        							                    				<div class="row">
+		        								                    				<div class="col-xl-10">
+					        	                    	            					<h3><strong>{{request.request_type}} </strong></h3>
+					        	                    	            					Reported on: {{request.date_created}}
+					        	                    	            					<br><br>
+					        	                    	            					Completed on: {{request.date_modified}}
+					        	                    	            					<br><br>
+					        	                    	            				</div>
+					        	                    	            				<div class="col-xl-2" style="text-align: right;">
+					        	                    	            					<a class="btn btn-primary" href="{{ url_for('houses.maintenanceRequestView', id=request.id) }}">More Info</a>
+					        	                    	            				</div>
+					        	                    	            			</div>
+					        	                    	            		</div>
+					        	                    	            		<div class="card-block">
+		        							                    				<div class="row">
+		        							                    					<div class="col-xs-12">
+		        							                    						<strong>Reported by:</strong> {{request.user.name}}
+		        							                    						<br><br>
+		        							                    						<strong>Details: </strong>{{request.details}}
+					                    			      					    	</div>
+					                    			      					    </div>
+					                    			      					</div>
+					                    			      				</div>
+					                    			      			</div>
+					                    			      		</div>
+	        	                    	        			{% endfor %}
+					        	                        </div>
+					        	                    </div>
+			            						{% endfor %}
+		            						{% else %}
+		            							<div class="alert alert-info" role="alert">
+		            								<strong>No Completed Maintenance Requests</strong>
+		            							</div>
+		            						{% endif %}
 		        	                    </div>
 		        	                </div>
 		        	            </div>
@@ -892,34 +1319,753 @@
 {% endblock %}
 {% block scripts %}
 <script>
-	function acceptTour(id){
+	/**
+	 * Returns a random integer between min (inclusive) and max (inclusive)
+	 * Using Math.round() will give you a non-uniform distribution!
+	 */
+	function getRandomInt(min, max) {
+	    return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+
+	//Tour timers
+	var acceptTourUndoTimeoutTimer;
+	var acceptTourChangeDivTimeoutTimer;
+	var declineTourUndoTimeoutTimer;
+	var declineTourChangeDivTimeoutTimer;
+	var cancelTourUndoTimeoutTimer;
+	var cancelTourChangeDivTimeoutTimer;
+
+	//Maintenance Timers
+	var setInProgressUndoTimeoutTimer;
+	var setInProgressChangeDivTimeoutTimer;
+	var setCompletedUndoTimeoutTimer;
+	var setCompletedChangeDivTimeoutTimer;
+	var markCompletedUndoTimeoutTimer;
+	var markCompletedChangeDivTimeoutTimer;
+
+	//Listing Requests Timers
+	var acceptGroupUndoTimeoutTimer;
+	var acceptGroupChangeDivTimeoutTimer;
+	var denyGroupUndoTimeoutTimer;
+	var denyGroupChangeDivTimeoutTimer;
+	var confirmGroupUndoTimeoutTimer;
+
+	function acceptTour(id, surroundingID, listing){
+		var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
+
+		// Display loading gif
         $("#acceptTourButton"+id).hide();
-        $("#acceptTourUndo"+id).show();
+        $("#acceptTourLoading"+id).show();
+        $("#declineTourBtn"+id).addClass("disabled");
+        $("#tourTimeChangeBtn"+id).addClass("disabled"); 
+
+        // Load for a random amount of time       
+        setTimeout(function () {
+        	$("#requestedTour"+id).fadeOut(300);
+        	$("#undoAcceptTourDiv"+id).show();
+        	acceptTourUndoTimeoutTimer = setTimeout(function () {
+        		$("#undoAcceptTourDiv"+id).fadeOut(300);
+        	}, 8000);
+        }, getRandomInt(1000, 3000));
+
+        // Send AJAX request to backend
+        requestURL = '/tour/' + id + '/confirm/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+                //alert("Tour accepted now we need to move this element to 'Scheduled Tours'... make sure to make the button think toO!");
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
+        $("#doIShowDiv"+surroundingID).html("hide");
+        $("#numberOfRequestedTours"+surroundingID).html(count-1);
+        acceptTourChangeDivTimeoutTimer = setTimeout(function () {
+        	count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
+        	if(count == 0){
+        		if($("#doIShowDiv"+surroundingID).html() == "hide"){
+        			$("#requestedTourListing"+surroundingID).fadeOut(300);
+        			$("#noRequestedTours").show();
+        		}
+        	}
+        	else if(count == 1){
+        		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+        		$("#noRequestedTours").hide();
+        	}
+        	else if(count > 1){
+        		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+        		$("#noRequestedTours").hide();
+        	}        	
+        }, 10000);
     }
 
-    function undoAcceptTour(id){
+    function undoAcceptTour(id, surroundingID){
+    	clearTimeout(acceptTourUndoTimeoutTimer);
+    	clearTimeout(acceptTourChangeDivTimeoutTimer);
+    	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
+    	$("#numberOfRequestedTours"+surroundingID).html(count+1);
+    	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
+    	$("#acceptTourLoading"+id).hide();
         $("#acceptTourButton"+id).show();
-        $("#acceptTourUndo"+id).hide();
+        $("#undoAcceptTourDiv"+id).hide();
+        $("#requestedTour"+id).show();
+        $("#declineTourBtn"+id).removeClass("disabled");
+        $("#tourTimeChangeBtn"+id).removeClass("disabled");  
+        requestURL = '/tour/' + id + '/unConfirm/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+                //alert("Tour has been un-accepted now we need to move this element to 'Requested Tours'");
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
+        $("#doIShowDiv"+surroundingID).html("show");
+        if(count-1 == 0){
+    		$("#requestedTourListing"+surroundingID).fadeIn(300);
+    	}
+    	else if(count-1 == 1){
+    		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+    	}
+    	else if(count-1 > 1){
+    		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+    	}    	
+    	$("#noRequestedTours").hide();
     }
 
-    function declineTour(id){
-        $("#declineTourButton"+id).hide();
-        $("#declineTourUndo"+id).show();
+    function declineTour(id, surroundingID, listing){
+    	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
+    	$("#declineTourButton"+id).hide();
+        $("#declineTourLoading"+id).show();
+        $("#acceptTourBtn"+id).addClass("disabled");
+        $("#tourTimeChangeBtn"+id).addClass("disabled");  
+        setTimeout(function () {
+        	$("#requestedTour"+id).fadeOut(300);
+        	$("#undoDeclineTourDiv"+id).show();
+        	declineTourUndoTimeoutTimer = setTimeout(function () {
+        		$("#undoDeclineTourDiv"+id).fadeOut(300);
+        	}, 8000);
+        }, getRandomInt(1000, 3000));
+        requestURL = '/tour/' + id + '/decline/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+                //alert("Tour has been declined, just hide element after 5 seconds or so along with the undo button'");
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
+        $("#doIShowDiv"+surroundingID).html("hide");
+        $("#numberOfRequestedTours"+surroundingID).html(count-1);
+        declineTourChangeDivTimeoutTimer = setTimeout(function () {
+        	count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
+        	if(count == 0){
+        		if($("#doIShowDiv"+surroundingID).html() == "hide"){
+        			$("#requestedTourListing"+surroundingID).fadeOut(300);
+        			$("#noRequestedTours").show();
+        		}
+        	}
+        	else if(count == 1){
+        		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+        		$("#noRequestedTours").hide();
+        	}
+        	else if(count > 1){
+        		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+        		$("#noRequestedTours").hide();
+        	}        	
+        }, 10000);
     }
 
-    function undoDeclineTour(id){
+    function undoDeclineTour(id, surroundingID){
+    	clearTimeout(declineTourUndoTimeoutTimer);
+    	clearTimeout(declineTourChangeDivTimeoutTimer);
+    	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
+    	$("#numberOfRequestedTours"+surroundingID).html(count+1);
+    	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
+    	$("#declineTourLoading"+id).hide();
         $("#declineTourButton"+id).show();
-        $("#declineTourUndo"+id).hide();
+        $("#undoDeclineTourDiv"+id).hide();
+        $("#requestedTour"+id).show();
+        $("#acceptTourBtn"+id).removeClass("disabled");
+        $("#tourTimeChangeBtn"+id).removeClass("disabled");
+        requestURL = '/tour/' + id + '/unDecline/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+                //alert("Tour has been unDeclined, Don't hide it!");
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
+        $("#doIShowDiv"+surroundingID).html("show");
+        if(count-1 == 0){
+    		$("#requestedTourListing"+surroundingID).fadeIn(300);    		
+    	}
+    	else if(count-1 == 1){
+    		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+    	}
+    	else if(count-1 > 1){
+    		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+    	}    	
+    	$("#noRequestedTours").hide();
     }
 
-    function cancelTour(id){
-        $("#cancelTourButton"+id).hide();
-        $("#cancelTourUndo"+id).show();
+    function cancelTour(id, surroundingID, listing){
+    	var count = parseFloat($("#numberOfScheduledTours"+surroundingID).html()) || 0;
+    	$("#cancelTourButton"+id).hide();
+        $("#cancelTourLoading"+id).show();
+        setTimeout(function () {
+        	$("#scheduledTour"+id).fadeOut(300);
+        	$("#undoCancelTourDiv"+id).show();
+        	cancelTourUndoTimeoutTimer = setTimeout(function () {
+        		 $("#undoCancelTourDiv"+id).fadeOut(300);
+        	}, 8000);
+        }, getRandomInt(1000, 3000));
+        requestURL = '/tour/' + id + '/decline/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+                //alert("Tour has been declined, just hide element after 5 seconds or so along with the undo button'");
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
+        $("#doIShowScheduledDiv"+surroundingID).html("hide");
+        $("#numberOfScheduledTours"+surroundingID).html(count-1);
+        cancelTourChangeDivTimeoutTimer = setTimeout(function () {
+        	count = parseFloat($("#numberOfScheduledTours"+surroundingID).html()) || 0;
+        	if(count == 0){
+        		if($("#doIShowScheduledDiv"+surroundingID).html() == "hide"){
+        			$("#scheduledTourListing"+surroundingID).fadeOut(300);
+        			$("#noScheduledTours").show();
+        		}
+        	}
+        	else if(count == 1){
+        		$("#scheduledToursCount"+surroundingID).html("<h3><strong>" + count + " Scheduled tour(s) of " + listing + "</h3></strong>");
+        		$("#noScheduledTours").hide();
+        	}
+        	else if(count > 1){
+        		$("#scheduledToursCount"+surroundingID).html("<h3><strong>" + count + " Scheduled tour(s) of " + listing + "</h3></strong>");
+        		$("#noScheduledTours").hide();
+        	}        	
+        }, 10000);
     }
 
-    function undoCancelTour(id){
+    function undoCancelTour(id, surroundingID){
+    	clearTimeout(cancelTourUndoTimeoutTimer);
+    	clearTimeout(cancelTourChangeDivTimeoutTimer);
+    	var count = parseFloat($("#numberOfScheduledTours"+surroundingID).html()) || 0;
+    	$("#numberOfScheduledTours"+surroundingID).html(count+1);
+    	var count = parseFloat($("#numberOfScheduledTours"+surroundingID).html()) || 0;
+    	$("#cancelTourLoading"+id).hide();
         $("#cancelTourButton"+id).show();
         $("#cancelTourUndo"+id).hide();
+        $("#undoCancelTourDiv"+id).hide();
+        $("#scheduledTour"+id).show();
+        requestURL = '/tour/' + id + '/unDecline/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+                //alert("Tour has been unDeclined, Don't hide it!");
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
+        $("#doIShowScheduledDiv"+surroundingID).html("show");
+        if(count-1 == 0){
+    		$("#scheduledTourListing"+surroundingID).fadeIn(300);
+    	}
+    	else if(count-1 == 1){
+    		$("#scheduledToursCount"+surroundingID).html("<h3><strong>" + count + " Scheduled tour(s) of " + listing + "</h3></strong>");
+    	}
+    	else if(count-1 > 1){
+    		$("#scheduledToursCount"+surroundingID).html("<h3><strong>" + count + " Scheduled tour(s) of " + listing + "</h3></strong>");
+    	}    	
+    	$("#noScheduledTours").hide();
+    }
+
+    function markInProgress(id, surroundingID, listing){
+		var count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
+
+		// Lets simulate loading
+        $("#markInProgressButton"+id).hide();
+        $("#markInProgressLoading"+id).show();
+        $("#completedButton"+id).addClass("disabled");
+
+        //  After random time show undo bar
+        setTimeout(function () {
+        	$("#openRequest"+id).fadeOut(300);
+        	$("#undoInProgressDiv"+id).show();
+
+        	// Don't hide the undo bar for 8 sec
+        	setInProgressUndoTimeoutTimer = setTimeout(function () {
+        		$("#undoInProgressDiv"+id).fadeOut(300);
+        	}, 8000);
+
+        }, getRandomInt(1000, 3000));
+
+        requestURL = '/house/maintenanceRequest/' + id + '/inProgress/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            if (results.success == true){ 
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
+        $("#doIShowOpenRequestsDiv"+surroundingID).html("hide");
+        $("#numberOfOpenRequests"+surroundingID).html(count-1);        
+        setInProgressChangeDivTimeoutTimer = setTimeout(function () {
+        	count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
+        	if(count == 0){
+        		if($("#doIShowOpenRequestsDiv"+surroundingID).html() == "hide"){
+        			$("#openRequestListing"+surroundingID).fadeOut(300);
+        			$("#noNewMaintenanceRequests").show();
+        		}
+        	}
+        	else if(count == 1){
+        		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+        		$("#noNewMaintenanceRequests").hide();
+        	}
+        	else if(count > 1){
+        		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+        		$("#noNewMaintenanceRequests").hide();
+        	}        	
+        }, 10000);
+    }
+
+    function undoMarkInProgress(id, surroundingID, listing){    	
+    	clearTimeout(setInProgressUndoTimeoutTimer);
+    	clearTimeout(setInProgressChangeDivTimeoutTimer);
+    	var count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
+    	$("#numberOfOpenRequests"+surroundingID).html(count+1);
+    	var count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
+    	$("#markInProgressLoading"+id).hide();
+        $("#markInProgressButton"+id).show();
+        $("#completedButton"+id).removeClass("disabled");
+        $("#undoInProgressDiv"+id).hide();
+        alert(id);
+        $("#openRequest"+id).show();
+        requestURL = '/house/maintenanceRequest/' + id + '/undoInProgress/ajax/open';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            if (results.success == true){ 
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
+        $("#doIShowOpenRequestsDiv"+surroundingID).html("show");
+        if(count-1 == 0){
+    		$("#openRequestListing"+surroundingID).fadeIn(300);
+    	}
+    	else if(count-1 == 1){
+    		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+    	}
+    	else if(count-1 > 1){
+    		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+    	}    	
+    	$("#noNewMaintenanceRequests").hide();
+    }
+
+    function markCompleted(id, surroundingID, listing){
+		var count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;		
+        $("#markCompletedButton"+id).hide();
+        $("#markCompletedLoading"+id).show();
+        $("#inProgressButton"+id).addClass("disabled");
+        setTimeout(function () {
+        	$("#openRequest"+id).fadeOut(300);
+        	$("#undoMarkCompleted"+id).show();
+        	markCompletedUndoTimeoutTimer = setTimeout(function () {
+	        	$("#undoMarkCompleted"+id).fadeOut(300);
+        	}, 8000);
+        }, getRandomInt(1000,3000));
+        requestURL = '/house/maintenanceRequest/' + id + '/completed/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            if (results.success == true){ 
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
+        $("#doIShowOpenRequestsDiv"+surroundingID).html("hide");
+        $("#numberOfOpenRequests"+surroundingID).html(count-1);
+        setCompletedChangeDivTimeoutTimer = setTimeout(function () {
+        	count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
+        	if(count == 0){
+        		if($("#doIShowOpenRequestsDiv"+surroundingID).html() == "hide"){
+        			$("#openRequestListing"+surroundingID).fadeOut(300);
+        			$("#noNewMaintenanceRequests").show();
+        		}
+        	}
+        	else if(count == 1){
+        		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+        		$("#noNewMaintenanceRequests").hide();
+        	}
+        	else if(count > 1){
+        		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+        		$("#noNewMaintenanceRequests").hide();
+        	}        	
+        }, 10000);
+    }
+
+    function undoMarkCompleted(id, surroundingID, listing){    	
+    	clearTimeout(setCompletedUndoTimeoutTimer);
+    	clearTimeout(setCompletedChangeDivTimeoutTimer);
+    	var count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
+    	$("#numberOfOpenRequests"+surroundingID).html(count+1);
+    	count = parseFloat($("#numberOfOpenRequests"+surroundingID).html()) || 0;
+    	$("#markCompletedLoading"+id).hide();
+        $("#markCompletedButton"+id).show();
+        $("#undoMarkCompleted"+id).hide();
+        $("#openRequest"+id).show();
+        $("#inProgressButton"+id).removeClass("disabled");
+        requestURL = '/house/maintenanceRequest/' + id + '/undoCompleted/ajax/open';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            if (results.success == true){ 
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
+        $("#doIShowOpenRequestsDiv"+surroundingID).html("show");
+        if(count == 0){
+    		$("#openRequestListing"+surroundingID).fadeIn(300);
+    	}
+    	else if(count == 1){
+    		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+    	}
+    	else if(count > 1){
+    		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+    	}    	
+    	$("#noNewMaintenanceRequests").hide();
+    }
+
+    function inProgressToCompleted(id, surroundingID, listing){
+		var count = parseFloat($("#numberOfInProgressRequests"+surroundingID).html()) || 0;		
+        $("#inProgressToCompletedButton"+id).hide();
+        $("#inProgressToCompletedLoading"+id).show();
+        setTimeout(function () {
+        	$("#inProgress"+id).fadeOut(300);
+        	$("#undoInProgressToCompleted"+id).show();
+        	markCompletedUndoTimeoutTimer = setTimeout(function () {
+	        	$("#undoInProgressToCompleted"+id).fadeOut(300);
+        	}, 8000);
+        	$("#undoMarkCompleted"+id).delay(8000).fadeOut(300);
+        }, getRandomInt(1000,3000));
+        requestURL = '/house/maintenanceRequest/' + id + '/completed/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            if (results.success == true){ 
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
+        $("#doIShowInProgressRequestsDiv"+surroundingID).html("hide");
+        $("#numberOfInProgressRequests"+surroundingID).html(count-1);
+        markCompletedChangeDivTimeoutTimer = setTimeout(function () {
+        	count = parseFloat($("#numberOfInProgressRequests"+surroundingID).html()) || 0;
+        	if(count == 0){
+        		if($("#doIShowInProgressRequestsDiv"+surroundingID).html() == "hide"){
+        			$("#inProgressRequestListing"+surroundingID).fadeOut(300);
+        			$("#noInProgressMaintenanceRequests").show();
+        		}
+        	}
+        	else if(count == 1){
+        		$("#inProgressRequestsCount"+surroundingID).html("<h3><strong>" + count + ' In Progress Maintenance Request(s) for ' + listing + "</strong></h3>");
+        		$("#noInProgressMaintenanceRequests").hide();
+        	}
+        	else if(count > 1){
+        		$("#inProgressRequestsCount"+surroundingID).html("<h3><strong>" + count + ' In Progress Maintenance Request(s) for ' + listing + "</strong></h3>");
+        		$("#noInProgressMaintenanceRequests").hide();
+        	}        	
+        }, 10000);
+    }
+
+    function undoInProgressToCompleted(id, surroundingID, listing){    	
+    	clearTimeout(markCompletedUndoTimeoutTimer);
+    	clearTimeout(markCompletedChangeDivTimeoutTimer);
+    	var count = parseFloat($("#numberOfInProgressRequests"+surroundingID).html()) || 0;
+    	$("#numberOfInProgressRequests"+surroundingID).html(count+1);
+    	count = parseFloat($("#numberOfInProgressRequests"+surroundingID).html()) || 0;
+    	$("#inProgressToCompletedLoading"+id).hide();
+        $("#inProgressToCompletedButton"+id).show();
+        $("#undoInProgressToCompleted"+id).hide();
+        $("#inProgress"+id).show();
+        requestURL = '/house/maintenanceRequest/' + id + '/undoCompleted/ajax/inprogress';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            if (results.success == true){ 
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
+        $("#doIShowInProgressRequestsDiv"+surroundingID).html("show");
+        if(count == 0){
+    		$("#inProgressRequestListing"+surroundingID).fadeIn(300);
+    	}
+    	else if(count == 1){
+    		$("#inProgressRequestsCount"+surroundingID).html("<h3><strong>" + count + ' In Progress Maintenance Request(s) for ' + listing + "</strong></h3>");
+    	}
+    	else if(count > 1){
+    		$("#inProgressRequestsCount"+surroundingID).html("<h3><strong>" + count + ' In Progress Maintenance Request(s) for ' + listing + "</strong></h3>");
+    	}    	
+    	$("#noInProgressMaintenanceRequests").hide();
+    }
+
+    function acceptHouseRequest(id, surroundingID, listing){
+    	var count = parseFloat($("#numberOfUnacceptedRequests"+surroundingID).html()) || 0;
+    	$("#acceptHouseRequest"+id).hide();
+        $("#acceptHouseRequestLoading"+id).show();
+        $(".denyHouseRequest"+surroundingID).addClass("disabled");
+        $(".acceptHouseRequest"+surroundingID).addClass('disabled');
+        setTimeout(function () {
+        	$("#unAcceptedRequest"+id).fadeOut(300);
+        	$("#undoAcceptedRequest"+id).show();
+        	acceptGroupUndoTimeoutTimer = setTimeout(function () {
+        		$("#undoAcceptedRequest"+id).fadeOut(300);
+        		$("#unacceptedRequestsListing"+surroundingID).fadeOut(300);
+        	}, 8000);
+        }, getRandomInt(1000,3000));
+        requestURL = '/houseRequest/' + id + '/accept/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            if (results.success == true){ 
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
+        $("#doIShowUnacceptedRequestsDiv"+surroundingID).html("hide");
+        $("#numberOfUnacceptedRequests"+surroundingID).html(count-1);
+        acceptGroupChangeDivTimeoutTimer = setTimeout(function () {
+        	count = parseFloat($("#numberOfUnacceptedRequests"+surroundingID).html()) || 0;
+        	if(count == 0){
+        		if($("#doIShowUnacceptedRequestsDiv"+surroundingID).html() == "hide"){
+        			$("#unacceptedRequestsListing"+surroundingID).fadeOut(300);
+        			$("#noUnacceptedRequests").show();
+        		}
+        	}
+        	else if(count == 1){
+        		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
+        		$("#noUnacceptedRequests").hide();
+        	}
+        	else if(count > 1){
+        		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
+        		$("#noUnacceptedRequests").hide();
+        	}        	
+        }, 10000);
+    }
+
+    function undoAcceptHouseRequest(id, surroundingID, listing){
+    	clearTimeout(acceptGroupUndoTimeoutTimer);
+    	clearTimeout(acceptGroupChangeDivTimeoutTimer);
+    	var count = parseFloat($("#numberOfUnacceptedRequests"+surroundingID).html()) || 0;
+    	$("#numberOfUnacceptedRequests"+surroundingID).html(count+1);
+    	var count = parseFloat($("#numberOfUnacceptedRequests"+surroundingID).html()) || 0;
+    	$("#acceptHouseRequestLoading"+id).hide();
+        $("#unAcceptedRequest"+id).show();
+        $("#undoAcceptedRequest"+id).hide();
+        $("#acceptHouseRequest"+id).show();
+        $(".denyHouseRequest"+surroundingID).removeClass("disabled");
+        $(".acceptHouseRequest"+surroundingID).removeClass('disabled');
+        requestURL = '/houseRequest/' + id + '/undoAccept/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            if (results.success == true){ 
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
+        $("#doIShowUnacceptedRequestsDiv"+surroundingID).html("show");
+        if(count-1 == 0){
+    		$("#unacceptedRequestsListing"+surroundingID).fadeIn(300);    		
+    	}
+    	else if(count-1 == 1){
+    		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
+    	}
+    	else if(count-1 > 1){
+    		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
+    	}    	
+    	$("#noRequestedTours").hide();
+    }
+
+    function denyHouseRequest(id, surroundingID, listing){
+    	var count = parseFloat($("#numberOfUnacceptedRequests"+surroundingID).html()) || 0;
+    	$("#denyHouseRequest"+id).hide();
+        $("#denyHouseRequestLoading"+id).show();
+        $("#acceptHouseRequestButton"+id).addClass("disabled");
+        setTimeout(function () {
+        	$("#unAcceptedRequest"+id).fadeOut(300);
+        	$("#undoDeniedRequest"+id).show();
+        	denyGroupUndoTimeoutTimer = setTimeout(function () {
+        		$("#undoDeniedRequest"+id).fadeOut(300);
+        	}, 8000);
+        }, getRandomInt(1000,3000));
+        requestURL = '/houseRequest/' + id + '/deny/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            if (results.success == true){ 
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
+        $("#doIShowUnacceptedRequestsDiv"+surroundingID).html("hide");
+        $("#numberOfUnacceptedRequests"+surroundingID).html(count-1);
+        denyGroupChangeDivTimeoutTimer = setTimeout(function () {
+        	count = parseFloat($("#numberOfUnacceptedRequests"+surroundingID).html()) || 0;
+        	if(count == 0){
+        		if($("#doIShowUnacceptedRequestsDiv"+surroundingID).html() == "hide"){
+        			$("#unacceptedRequestsListing"+surroundingID).fadeOut(300);
+        			$("#noUnacceptedRequests").show();
+        		}
+        	}
+        	else if(count == 1){
+        		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
+        		$("#noUnacceptedRequests").hide();
+        	}
+        	else if(count > 1){
+        		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
+        		$("#noUnacceptedRequests").hide();
+        	}        	
+        }, 10000);
+    }
+
+    function undoDeniedHouseRequest(id, surroundingID, listing){
+    	clearTimeout(denyGroupUndoTimeoutTimer);
+    	clearTimeout(denyGroupChangeDivTimeoutTimer);
+    	var count = parseFloat($("#numberOfUnacceptedRequests"+surroundingID).html()) || 0;
+    	$("#numberOfUnacceptedRequests"+surroundingID).html(count+1);
+    	var count = parseFloat($("#numberOfUnacceptedRequests"+surroundingID).html()) || 0;
+    	$("#denyHouseRequestLoading"+id).hide();
+        $("#unAcceptedRequest"+id).show();
+        $("#undoDeniedRequest"+id).hide();
+        $("#denyHouseRequest"+id).show();
+        $("#acceptHouseRequestButton"+id).removeClass("disabled");
+        requestURL = '/houseRequest/' + id + '/undoDeny/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            if (results.success == true){ 
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
+        $("#doIShowUnacceptedRequestsDiv"+surroundingID).html("show");
+        if(count-1 == 0){
+    		$("#unacceptedRequestsListing"+surroundingID).fadeIn(300);    		
+    	}
+    	else if(count-1 == 1){
+    		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
+    	}
+    	else if(count-1 > 1){
+    		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
+    	}    	
+    	$("#noRequestedTours").hide();
+    }
+
+    function paidToUnpaid(userID, requestID){
+    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+    	$("#depositPaid"+requestID+"Z"+userID).hide();
+    	$("#markDepositUnpaid"+requestID+"Z"+userID).show();
+    	setTimeout(function () {
+        	$("#markDepositUnpaid"+requestID+"Z"+userID).hide();
+        	$("#depositMarkedUnPaid"+requestID+"Z"+userID).show();
+        	$("#numDeposits"+requestID).html(depositsPaid-1);
+        }, 1200);        
+    }
+
+    function paidToPaid(userID, requestID){
+    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+    	$("#depositMarkedUnPaid"+requestID+"Z"+userID).hide();
+    	$("#markDepositUnpaid"+requestID+"Z"+userID).show();
+    	setTimeout(function () {
+        	$("#markDepositUnpaid"+requestID+"Z"+userID).hide();
+        	$("#depositPaid"+requestID+"Z"+userID).show();
+        	$("#numDeposits"+requestID).html(depositsPaid+1);
+        }, 1200);    	 	
+    }
+
+    function unpaidToPaid(userID, requestID){
+    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+    	$("#depositUnpaid"+requestID+"Z"+userID).hide();
+    	$("#markDepositPaid"+requestID+"Z"+userID).show();
+    	setTimeout(function () {
+        	$("#markDepositPaid"+requestID+"Z"+userID).hide();
+        	$("#depositMarkedPaid"+requestID+"Z"+userID).show();
+        	$("#numDeposits"+requestID).html(depositsPaid+1);
+        }, 1200);    	 	
+    }
+
+    function unpaidToUnpaid(userID, requestID){
+    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+    	$("#depositMarkedPaid"+requestID+"Z"+userID).hide();
+    	$("#markDepositPaid"+requestID+"Z"+userID).show();
+    	setTimeout(function () {
+        	$("#markDepositPaid"+requestID+"Z"+userID).hide();
+        	$("#depositUnpaid"+requestID+"Z"+userID).show();
+        	$("#numDeposits"+requestID).html(depositsPaid-1);
+        }, 1200);    	 	
+    }
+
+    function markLeasesCollected(requestID){
+    	$("#markAllCollected"+requestID).hide();
+    	$("#markAllCollectedLoading"+requestID).show();
+    	setTimeout(function () {
+        	$("#markAllCollectedLoading"+requestID).hide();
+        	$("#markAllUncollected"+requestID).show();
+        }, 1200);    	 	
+    }
+
+    function markLeasesUncollected(requestID){
+    	$("#markAllUncollected"+requestID).hide();
+    	$("#markAllCollectedLoading"+requestID).show();
+    	setTimeout(function () {
+        	$("#markAllCollectedLoading"+requestID).hide();
+        	$("#markAllCollected"+requestID).show();
+        }, 1200);    	 	
+    }
+
+    function confirmGroup(requestID){		
+        $("#confirmGroupButton"+requestID).hide();
+        $("#confirmGroupLoading"+requestID).show();        
+        setTimeout(function () {
+        	$("#confirmRequest"+requestID).fadeOut(300);
+        	$("#undoConfirmRequest"+requestID).show();
+        	confirmGroupUndoTimeoutTimer = setTimeout(function () {
+        		$("#undoConfirmRequest"+requestID).fadeOut(300);
+        	}, 8000);
+        }, 1200);
+        // requestURL = '/tour/' + requestID + '/confirm/ajax';
+        // $.getJSON(requestURL, function(data) {
+        //     results = data['results'];
+        //     // alert(data['results'].success);
+        //     if (results.success == true){ 
+        //         //alert("Tour accepted now we need to move this element to 'Scheduled Tours'... make sure to make the button think toO!");
+        //     } else {
+        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+        //     }
+        // });
+    }
+
+    function undoConfirmGroup(requestID){
+    	clearTimeout(confirmGroupUndoTimeoutTimer);    	
+    	$("#confirmGroupLoading"+requestID).hide();
+        $("#confirmGroupButton"+requestID).show();
+        $("#undoConfirmRequest"+requestID).hide();
+        $("#confirmRequest"+requestID).show();        
+        // requestURL = '/tour/' + id + '/unConfirm/ajax';
+        // $.getJSON(requestURL, function(data) {
+        //     results = data['results'];
+        //     // alert(data['results'].success);
+        //     if (results.success == true){ 
+        //         //alert("Tour has been un-accepted now we need to move this element to 'Requested Tours'");
+        //     } else {
+        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+        //     }
+        // });
     }
 
 	$(document).ready(function() {
@@ -956,6 +2102,10 @@
         $("#requestedDateTime").val($("#tourRequestTime").val());
         $("#request_tour_time_change").submit()
     }
+
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
 
 </script>
 {% endblock %}

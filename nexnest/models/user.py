@@ -62,6 +62,7 @@ class User(Base):
     notifications = relationship(
         "Notification", backref='user', lazy="dynamic")
     messages = relationship('Message', backref='user')
+    groupListingFavorites = relationship('GroupListingFavorite', backref='user')
 
     def __init__(self,
                  email,
@@ -213,7 +214,7 @@ class User(Base):
         else:
             groupListings = session.query(GroupListing) \
                 .filter_by(group_id=group.id,
-                           show=True,
+                           group_show=True,
                            completed=True) \
                 .count()
 
@@ -227,6 +228,14 @@ class User(Base):
                 groupUser.show = False
 
                 session.commit()
+
+                for user in groupUser.group.acceptedUsers:
+                    newNotif = Notification(notif_type='user_leave_group',
+                                            target_model_id=groupUser.id,
+                                            target_user=user)
+                    session.add(newNotif)
+                    session.commit()
+
                 return True
             else:
                 flash(
@@ -247,13 +256,26 @@ class User(Base):
     #     return mySentMessages
 
     def unreadNotifications(self):
-        return self.notifications \
+        allNotifications = self.notifications \
             .filter_by(viewed=False) \
-            .group_by(Notification.id, Notification.notif_type, Notification.target_model_id) \
-            .all()
-        # return session.query(Notification) \
-        #     .filter_by(target_user_id=self.id, viewed=False) \
-        #     .all()
+            .group_by(Notification.id, Notification.notif_type, Notification.redirect_url).all()
+
+        # print(allNotifications)
+
+        messages = []
+        notifications = []
+
+        messageTypes = ['group_listing_message', 'group_message',
+                        'house_message', 'tour_message',
+                        'maintenance_message', 'direct_message']
+
+        for notification in allNotifications:
+            if notification.notif_type in messageTypes:
+                messages.append(notification)
+            else:
+                notifications.append(notification)
+
+        return messages, notifications
 
     @property
     def name(self):

@@ -5,11 +5,11 @@ from migrate import *
 meta = MetaData()
 # Column('XXXX', String(120)),
 group_users = Table('group_users', meta,
+                    Column('id', Integer(),
+                           primary_key=True),
                     Column('group_id', Integer(),
-                           primary_key=True,
                            nullable=False),
                     Column('user_id', Integer(),
-                           primary_key=True,
                            nullable=False))
 
 

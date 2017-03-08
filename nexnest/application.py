@@ -69,10 +69,12 @@ def insert_login_form():
     if current_user.is_authenticated:
         passwordChangeForm = PasswordChangeForm()
         avatarChangeForm = ProfilePictureForm()
+        messages, notifications = current_user.unreadNotifications()
         # notifications = current_user.notifications
         return dict(passwordChangeForm=passwordChangeForm,
                     avatarChangeForm=avatarChangeForm,
-                    notifications=current_user.unreadNotifications())
+                    notifications=notifications,
+                    notificationMessages=messages)
     else:
         login_form = LoginForm()
         return dict(login_form=login_form)

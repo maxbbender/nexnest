@@ -63,13 +63,17 @@ class House(Base):
         completedMR = []
 
         for mr in self.maintenanceRequests:
-            if mr.status is 'open':
+            # print('Maintenance Request %r ~ Status %s' % (mr, mr.status))
+            if mr.status == 'open':
                 openMR.append(mr)
-            elif mr.status is 'inprogress':
+            elif mr.status == 'inprogress':
                 inProgressMR.append(mr)
             else:
                 completedMR.append(mr)
 
+        # print(openMR)
+        # print(inProgressMR)
+        # print(completedMR)
         return openMR, inProgressMR, completedMR
 
 

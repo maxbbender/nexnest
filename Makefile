@@ -10,16 +10,8 @@ sync:
 	# nexnest_development ~~ Drop->Create->Version Control->InitDB->[INIT DATA]
 	dropdb -U nexnest_development nexnest_development --if-exists
 	createdb -U nexnest_development -O nexnest_development -h localhost -p 5432 nexnest_development
-	python db/manage.py version_control
-	python db/manage.py upgrade
-
-	# nexnest_test ~~ Drop->Create->Version Control->InitDB->[INIT DATA]
-	dropdb -U nexnest_test nexnest_test --if-exists
-	createdb -U nexnest_test -O nexnest_test -h localhost -p 5432 nexnest_test
-	NEXNEST_ENV=test python db/manage.py version_control
-	NEXNEST_ENV=test python db/manage.py upgrade
-
-
+	NEXNEST_ENV=development python db/manage.py version_control
+	NEXNEST_ENV=development python db/manage.py upgrade
 	NEXNEST_ENV=development python data_create.py
 
 user_setup:
@@ -45,9 +37,17 @@ server:
 psql:
 	psql -U nexnest_development
 
-test:
-	NEXNEST_ENV=test nosetests --with-xcoverage --with-xunit --cover-package=nexnest --cover-erase
+lint:
 	NEXNEST_ENV=test pylint -f parseable nexnest/ | tee pylint.out
+
+all_tests:
+	make test
+	make lint
+
+test:
+	make test_setup
+	NEXNEST_ENV=test nosetests --nologcapture --with-xcoverage --with-xunit --cover-package=nexnest --cover-erase
+
 
 test_setup:
 	# nexnest_test ~~ Drop->Create->Version Control->InitDB->[INIT DATA]

@@ -3,6 +3,8 @@ from datetime import datetime as dt
 from sqlalchemy import event
 from sqlalchemy.orm import relationship
 
+from flask import flash
+
 from nexnest.application import db
 
 from .base import Base
@@ -18,6 +20,7 @@ class Tour(Base):
     date_modified = db.Column(db.DateTime)
     tour_confirmed = db.Column(db.Boolean)
     last_requested = db.Column(db.String(8))
+    declined = db.Column(db.Boolean)
     messages = relationship('TourMessage', backref='tour')
 
     def __init__(
@@ -33,6 +36,7 @@ class Tour(Base):
 
         self.last_requested = 'group'
         self.tour_confirmed = False
+        self.declined = False
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
@@ -42,15 +46,19 @@ class Tour(Base):
     def __repr__(self):
         return '<Tour %r>' % self.id
 
-    def isViewableBy(self, user):
+    def isViewableBy(self, user, toFlash=True):
         if user in self.group.getUsers() or user in self.listing.landLordsAsUsers():
             return True
+        elif toFlash:
+            flash("Permissions Error")
 
         return False
 
-    def isEditableBy(self, user):
+    def isEditableBy(self, user, toFlash=True):
         if user == self.group.leader or user in self.listing.landLordsAsUsers():
             return True
+        elif toFlash:
+            flash("Permissions Error")
 
         return False
 

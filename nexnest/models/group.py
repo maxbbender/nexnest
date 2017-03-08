@@ -9,7 +9,7 @@ from .base import Base
 from sqlalchemy import event
 from sqlalchemy.orm import relationship
 
-from .group_user import GroupUser
+from nexnest.models.group_user import GroupUser
 
 
 class Group(Base):
@@ -47,8 +47,15 @@ class Group(Base):
         self.date_created = now
         self.date_modified = now
 
+        # Group User
+        newGU = GroupUser(group=self, user=leader)
+        newGU.accepted = True
+
+        session.add(newGU)
+        session.commit()
+
     def __repr__(self):
-        return '<Group %r>' % self.name
+        return '<Group %r - %r>' % (self.id, self.name)
 
     def addUserToGroup(self, user):
         # First we want to check how many users are a part
@@ -130,6 +137,13 @@ class Group(Base):
                 favorites.append(favorite)
 
         return favorites
+
+    def invalidateOpenInvitations(self):
+        for groupUser in self.users:
+            if not groupUser.accepted and groupUser.show:
+                groupUser.show = False
+
+        session.commit()
 
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument

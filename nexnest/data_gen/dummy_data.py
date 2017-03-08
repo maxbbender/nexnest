@@ -19,20 +19,20 @@ user5 = UserFactory(school=s)
 user6 = UserFactory(school=s)
 user7 = UserFactory(school=s)
 user8 = UserFactory(school=s)
-#group 4
+# group 4
 user9 = UserFactory(school=s)
 user10 = UserFactory(school=s)
 user11 = UserFactory(school=s)
 user12 = UserFactory(school=s)
-#group 5
+# group 5
 user13 = UserFactory(school=s)
 user14 = UserFactory(school=s)
 user15 = UserFactory(school=s)
-#group 6
+# group 6
 user16 = UserFactory(school=s)
 user17 = UserFactory(school=s)
 user18 = UserFactory(school=s)
-#group 7
+# group 7
 user19 = UserFactory(school=s)
 user20 = UserFactory(school=s)
 user21 = UserFactory(school=s)
@@ -49,9 +49,11 @@ landlord1 = LandlordFactory(user=landlord)
 session.commit()
 
 # LISTINGS
-listing1 = ListingFactory()
-listing2 = ListingFactory()
-listing3 = ListingFactory()
+start_date = fake.date_time_this_year(before_now=True)
+end_date = fake.date_time_this_year(before_now=False, after_now=True)
+listing1 = ListingFactory(start_date=start_date, end_date=end_date, num_bedrooms=4)
+listing2 = ListingFactory(start_date=fake.date_time_this_year(before_now=False, after_now=True))
+listing3 = ListingFactory(start_date=start_date, end_date=end_date, num_bedrooms=5)
 listing4 = ListingFactory()
 listing5 = ListingFactory()
 listing6 = ListingFactory()
@@ -109,7 +111,7 @@ groupuser11 = GroupUserFactory(group=group3, user=user5)
 
 group3Users = [user2, user8, user3, user4, user5]
 
-#group 4
+# group 4
 groupuser12 = GroupUserFactory(group=group4, user=user9)
 groupuser13 = GroupUserFactory(group=group4, user=user10)
 groupuser14 = GroupUserFactory(group=group4, user=user11)
@@ -118,7 +120,7 @@ groupuser15 = GroupUserFactory(group=group4, user=user12)
 group4Users = [user9, user10, user11, user12]
 group4AcceptedUsers = [user9, user10, user11, user12]
 
-#group 5
+# group 5
 groupuser16 = GroupUserFactory(group=group5, user=user13)
 groupuser17 = GroupUserFactory(group=group5, user=user14)
 groupuser18 = GroupUserFactory(group=group5, user=user15)
@@ -126,7 +128,7 @@ groupuser18 = GroupUserFactory(group=group5, user=user15)
 group5Users = [user13, user14, user15]
 group5AcceptedUsers = [user13, user14, user15]
 
-#group 6
+# group 6
 groupuser19 = GroupUserFactory(group=group6, user=user16)
 groupuser20 = GroupUserFactory(group=group6, user=user17)
 groupuser21 = GroupUserFactory(group=group6, user=user18)
@@ -134,7 +136,7 @@ groupuser21 = GroupUserFactory(group=group6, user=user18)
 group6Users = [user16, user17, user18]
 group6AcceptedUsers = [user16, user17, user18]
 
-#group 7
+# group 7
 groupuser22 = GroupUserFactory(group=group7, user=user19)
 groupuser23 = GroupUserFactory(group=group7, user=user20)
 groupuser24 = GroupUserFactory(group=group7, user=user21)
@@ -205,24 +207,24 @@ glfn6 = NotificationFactory(target_user=user8,
 
 
 # GROUP USER NOTIFICATIONS
-gun1 = NotificationFactory(target_user=groupuser4.user,
-                           notif_type='group_user',
-                           target_model_id=groupuser4.group.id)
-gun2 = NotificationFactory(target_user=groupuser5.user,
-                           notif_type='group_user',
-                           target_model_id=groupuser5.group.id)
-gun3 = NotificationFactory(target_user=groupuser8.user,
-                           notif_type='group_user',
-                           target_model_id=groupuser8.group.id)
-gun4 = NotificationFactory(target_user=groupuser9.user,
-                           notif_type='group_user',
-                           target_model_id=groupuser9.group.id)
-gun5 = NotificationFactory(target_user=groupuser10.user,
-                           notif_type='group_user',
-                           target_model_id=groupuser10.group.id)
-gun6 = NotificationFactory(target_user=groupuser11.user,
-                           notif_type='group_user',
-                           target_model_id=groupuser11.group.id)
+# gun1 = NotificationFactory(target_user=groupuser4.user,
+#                            notif_type='group_user',
+#                            target_model_id=groupuser4.group.id)
+# gun2 = NotificationFactory(target_user=groupuser5.user,
+#                            notif_type='group_user',
+#                            target_model_id=groupuser5.group.id)
+# gun3 = NotificationFactory(target_user=groupuser8.user,
+#                            notif_type='group_user',
+#                            target_model_id=groupuser8.group.id)
+# gun4 = NotificationFactory(target_user=groupuser9.user,
+#                            notif_type='group_user',
+#                            target_model_id=groupuser9.group.id)
+# gun5 = NotificationFactory(target_user=groupuser10.user,
+#                            notif_type='group_user',
+#                            target_model_id=groupuser10.group.id)
+# gun6 = NotificationFactory(target_user=groupuser11.user,
+#                            notif_type='group_user',
+#                            target_model_id=groupuser11.group.id)
 
 session.commit()
 
@@ -340,10 +342,11 @@ gl3 = GroupListingFactory(group=group3, listing=listing3)
 
 gl4 = GroupListingFactory(group=group4, listing=listing4)
 gl5 = GroupListingFactory(group=group5, listing=listing2)
-gl6 = GroupListingFactory(group=group6, listing=listing5)
+gl6 = GroupListingFactory(group=group6, listing=listing4)
 gl7 = GroupListingFactory(group=group7, listing=listing6)
 
 gl1.accepted = True
+gl6.accepted = True
 gl7.accepted = True
 
 session.commit()
@@ -379,12 +382,33 @@ glm12 = GroupListingMessageFactory(groupListing=gl2, user=user4)
 glm13 = GroupListingMessageFactory(groupListing=gl2, user=user3)
 glm14 = GroupListingMessageFactory(groupListing=gl2, user=user2)
 
-session.commit()
+for i in range(5):
+    user = random.choice(group4AcceptedUsers)
+    glm = GroupListingMessageFactory(groupListing=gl4, user=user)
+    session.commit()
+
+for i in range(5):
+    user = random.choice(group6AcceptedUsers)
+    glm = GroupListingMessageFactory(groupListing=gl6, user=user)
+    session.commit()
 
 # SECURITY DEPOSITS
 # gl1 (group 1)
 for user in group1AcceptedUsers:
     sd = SecurityDepositFactory(user=user, groupListing=gl1)
+
+    if random.randint(0, 1) == 0:
+        sd.completed = True
+        session.commit()
+
+        sdn = NotificationFactory(target_user=landlord,
+                                  notif_type='security_deposit',
+                                  target_model_id=sd.id)
+    session.commit()
+
+# gl6 (group 6)
+for user in group6AcceptedUsers:
+    sd = SecurityDepositFactory(user=user, groupListing=gl6)
 
     if random.randint(0, 1) == 0:
         sd.completed = True
@@ -409,9 +433,10 @@ for user in group7AcceptedUsers:
     session.commit()
 
 
-
 # House
 h1 = HouseFactory(listing=listing1, group=group1)
+h2 = HouseFactory(listing=listing2, group=group2)
+h3 = HouseFactory(listing=listing3, group=group3)
 
 session.commit()
 
@@ -451,9 +476,15 @@ for user in group1AcceptedUsers:
 m1 = MaintenanceFactory(house=h1, user=user2)
 m2 = MaintenanceFactory(house=h1, user=user3)
 m3 = MaintenanceFactory(house=h1, user=user4)
+m4 = MaintenanceFactory(house=h1, user=user4)
+m5 = MaintenanceFactory(house=h1, user=user3)
+m6 = MaintenanceFactory(house=h3, user=user2)
+m7 = MaintenanceFactory(house=h3, user=user4)
 
 m2.status = 'inprogress'
 m3.status = 'completed'
+m6.status = 'inprogress'
+m7.status = 'inprogress'
 
 session.commit()
 
