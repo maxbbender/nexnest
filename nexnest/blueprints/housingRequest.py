@@ -340,3 +340,131 @@ def allLeasesSubmitted():
         flash('Invalid Request', 'warning')
 
     return redirect(url_for('indexs.index'))
+
+
+@housingRequests.route('/houseRequest/<id>/accept/ajax', methods=['GET'])
+@login_required
+def acceptHousingRequestAJAX(id):
+    errorMessage = None
+
+    groupListing = session.query(GroupListing).filter_by(id=id).first()
+
+    if groupListing is not None:
+        if groupListing.isEditableBy(current_user):
+            groupListing.accepted = True
+            session.commit()
+
+            return jsonify(results={'success': True})
+        else:
+            errorMessage = 'Permissions Error'
+    else:
+        errorMessage = 'Invalid Reqeuest'
+
+    return jsonify(results={'success': False, 'message': errorMessage})
+
+
+@housingRequests.route('/houseRequest/<id>/undoAccept/ajax', methods=['GET'])
+@login_required
+def acceptHousingRequestAJAXUndo(id):
+    errorMessage = None
+
+    groupListing = session.query(GroupListing).filter_by(id=id).first()
+
+    if groupListing is not None:
+        if groupListing.isEditableBy(current_user):
+            groupListing.accepted = False
+            session.commit()
+
+            return jsonify(results={'success': True})
+        else:
+            errorMessage = 'Permissions Error'
+    else:
+        errorMessage = 'Invalid Reqeuest'
+
+    return jsonify(results={'success': False, 'message': errorMessage})
+
+
+@housingRequests.route('/houseRequest/<id>/complete/ajax', methods=['GET'])
+@login_required
+def completeHousingRequestAJAX(id):
+    errorMessage = None
+
+    groupListing = session.query(GroupListing).filter_by(id=id).first()
+
+    if groupListing is not None:
+        if groupListing.isEditableBy(current_user):
+            groupListing.completed = True
+            session.commit()
+
+            return jsonify(results={'success': True})
+        else:
+            errorMessage = 'Permissions Error'
+    else:
+        errorMessage = 'Invalid Reqeuest'
+
+    return jsonify(results={'success': False, 'message': errorMessage})
+
+
+@housingRequests.route('/houseRequest/<id>/undoComplete/ajax', methods=['GET'])
+@login_required
+def completeHousingRequestAJAXUndo(id):
+    errorMessage = None
+
+    groupListing = session.query(GroupListing).filter_by(id=id).first()
+
+    if groupListing is not None:
+        if groupListing.isEditableBy(current_user):
+            groupListing.completed = False
+            session.commit()
+
+            return jsonify(results={'success': True})
+        else:
+            errorMessage = 'Permissions Error'
+    else:
+        errorMessage = 'Invalid Reqeuest'
+
+    return jsonify(results={'success': False, 'message': errorMessage})
+
+
+@housingRequests.route('/houseRequest/<id>/deny/ajax', methods=['GET'])
+@login_required
+def denyHousingRequestAJAX(id):
+    errorMessage = None
+
+    groupListing = session.query(GroupListing).filter_by(id=id).first()
+
+    if groupListing is not None:
+        if groupListing.isEditableBy(current_user):
+            groupListing.group_show = False
+            groupListing.landlord_show = False
+            session.commit()
+
+            return jsonify(results={'success': True})
+        else:
+            errorMessage = 'Permissions Error'
+    else:
+        errorMessage = 'Invalid Reqeuest'
+
+    return jsonify(results={'success': False, 'message': errorMessage})
+
+
+@housingRequests.route('/houseRequest/<id>/undoDeny/ajax', methods=['GET'])
+@login_required
+def denyHousingRequestAJAXUndo(id):
+    errorMessage = None
+
+    groupListing = session.query(GroupListing).filter_by(id=id).first()
+
+    if groupListing is not None:
+        if groupListing.isEditableBy(current_user):
+            groupListing.group_show = True
+            groupListing.landlord_show = True
+            session.commit()
+
+            return jsonify(results={'success': True})
+        else:
+            errorMessage = 'Permissions Error'
+    else:
+        errorMessage = 'Invalid Reqeuest'
+
+    return jsonify(results={'success': False, 'message': errorMessage})

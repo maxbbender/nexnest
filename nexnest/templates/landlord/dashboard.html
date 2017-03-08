@@ -1830,17 +1830,15 @@
         		$("#undoAcceptedRequest"+id).fadeOut(300);
         		$("#unacceptedRequestsListing"+surroundingID).fadeOut(300);
         	}, 8000);
-        }, 1200);
-        // requestURL = '/tour/' + id + '/decline/ajax';
-        // $.getJSON(requestURL, function(data) {
-        //     results = data['results'];
-        //     // alert(data['results'].success);
-        //     if (results.success == true){ 
-        //         //alert("Tour has been declined, just hide element after 5 seconds or so along with the undo button'");
-        //     } else {
-        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
-        //     }
-        // });
+        }, getRandomInt(1000,3000));
+        requestURL = '/houseRequest/' + id + '/accept/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            if (results.success == true){ 
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
         $("#doIShowUnacceptedRequestsDiv"+surroundingID).html("hide");
         $("#numberOfUnacceptedRequests"+surroundingID).html(count-1);
         acceptGroupChangeDivTimeoutTimer = setTimeout(function () {
@@ -1874,16 +1872,14 @@
         $("#acceptHouseRequest"+id).show();
         $(".denyHouseRequest"+surroundingID).removeClass("disabled");
         $(".acceptHouseRequest"+surroundingID).removeClass('disabled');
-        // requestURL = '/tour/' + id + '/unDecline/ajax';
-        // $.getJSON(requestURL, function(data) {
-        //     results = data['results'];
-        //     // alert(data['results'].success);
-        //     if (results.success == true){ 
-        //         //alert("Tour has been unDeclined, Don't hide it!");
-        //     } else {
-        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
-        //     }
-        // });
+        requestURL = '/houseRequest/' + id + '/undoAccept/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            if (results.success == true){ 
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
         $("#doIShowUnacceptedRequestsDiv"+surroundingID).html("show");
         if(count-1 == 0){
     		$("#unacceptedRequestsListing"+surroundingID).fadeIn(300);    		
@@ -1908,17 +1904,15 @@
         	denyGroupUndoTimeoutTimer = setTimeout(function () {
         		$("#undoDeniedRequest"+id).fadeOut(300);
         	}, 8000);
-        }, 1200);
-        // requestURL = '/tour/' + id + '/decline/ajax';
-        // $.getJSON(requestURL, function(data) {
-        //     results = data['results'];
-        //     // alert(data['results'].success);
-        //     if (results.success == true){ 
-        //         //alert("Tour has been declined, just hide element after 5 seconds or so along with the undo button'");
-        //     } else {
-        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
-        //     }
-        // });
+        }, getRandomInt(1000,3000));
+        requestURL = '/houseRequest/' + id + '/deny/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            if (results.success == true){ 
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
         $("#doIShowUnacceptedRequestsDiv"+surroundingID).html("hide");
         $("#numberOfUnacceptedRequests"+surroundingID).html(count-1);
         denyGroupChangeDivTimeoutTimer = setTimeout(function () {
@@ -1951,16 +1945,14 @@
         $("#undoDeniedRequest"+id).hide();
         $("#denyHouseRequest"+id).show();
         $("#acceptHouseRequestButton"+id).removeClass("disabled");
-        // requestURL = '/tour/' + id + '/unDecline/ajax';
-        // $.getJSON(requestURL, function(data) {
-        //     results = data['results'];
-        //     // alert(data['results'].success);
-        //     if (results.success == true){ 
-        //         //alert("Tour has been unDeclined, Don't hide it!");
-        //     } else {
-        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
-        //     }
-        // });
+        requestURL = '/houseRequest/' + id + '/undoDeny/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            if (results.success == true){ 
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
         $("#doIShowUnacceptedRequestsDiv"+surroundingID).html("show");
         if(count-1 == 0){
     		$("#unacceptedRequestsListing"+surroundingID).fadeIn(300);    		
