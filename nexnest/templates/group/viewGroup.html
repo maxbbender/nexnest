@@ -2,51 +2,56 @@
 {% block content %}
 <link href="{{url_for('static', filename='css/landlord/dashboardStyling.css')}}" rel="stylesheet">
 <div class="row">
-    <div class="col-md-2 col-sm-1 hidden-xs display-table-cell v-align box" id="navigation" style="height: inherit;">
+    <div class="col-md-2 col-sm-2 col-xs-2 display-table-cell v-align box" id="navigation" style="height: inherit;">
         <div class="navi navbar">
             <ul>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#maintenanceTab" role="tab" style="pointer-events: none;">
-                        </i><h4 class="hidden-xs hidden-sm"><strong>My Group</strong></h4>
+                    <a class="nav-link" data-toggle="tab" href="#" role="tab" style="pointer-events: none;">
+                        </i><h4 class="hidden-md-down"><strong>My Group</strong></h4>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#membersTab" role="tab">
-                        <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Members</span>
+                    <a class="nav-link active" data-toggle="tab" href="#membersTab" role="tab" style="padding-left: 10px;"">
+                        <i class="fa fa-users" aria-hidden="true"></i><span class="hidden-md-down">Members</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#suggestedListingsTab" role="tab">
-                        <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Suggested Listings</span>
+                    <a class="nav-link" data-toggle="tab" href="#suggestedListingsTab" role="tab" style="padding-left: 10px;"">
+                        <i class="fa fa-star" aria-hidden="true"></i><span class="hidden-md-down">Suggested Listings</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#toursTab" role="tab">
-                        <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Tours</span>
+                    <a class="nav-link" data-toggle="tab" href="#toursTab" role="tab" style="padding-left: 10px;"">
+                        <i class="fa fa-calendar" aria-hidden="true"></i><span class="hidden-md-down">Tours</span>
+                    </a>
+                </li>
+                <li class="nav-item hidden-lg-up">
+                    <a class="nav-link" style="padding-left: 10px;" data-toggle="tab" href="#messagesTab" role="tab">
+                        <i class="fa fa-comments-o" aria-hidden="true"></i><span class="hidden-md-down">Messages</span>
                     </a>
                 </li>
                 {% if housingRequests %}
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#listingRequestsTab" role="tab">
-                            <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Listing Requests</span>
+                        <a class="nav-link" data-toggle="tab" href="#listingRequestsTab" role="tab" style="padding-left: 10px;"">
+                            <i class="fa fa-plus-square-o" aria-hidden="true"></i><span class="hidden-md-down">Listing Requests</span>
                         </a>
                     </li>
                 {% endif %}
                 {% if house %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('houses.view', id=house.id) }}">
-                            <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">My House</span>
+                        <a class="nav-link" href="{{ url_for('houses.view', id=house.id) }}" style="padding-left: 10px;">
+                            <i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">My House</span>
                         </a>
                     </li>
                 {% endif %}
             </ul>
         </div>
     </div>
-    <div class="col-sm-10 col-md-9">
+    <div class="col-sm-10 col-md-10 col-xs-10">
         <div class="row m-x-auto">
             <div class="col-xs-12">
                 <div class="callout-block text-center fade-in-b">
-                    <h1>
+                    <h1 style="font-size: 3.0vh">
                         <b>{{ group.name }}</b>({{ group.acceptedUsers|length }} Members)
                     </h1>
                     <p><small>Intended Lease Period: {{ group.start_date }} - {{ group.end_date }}</small></p>
@@ -55,15 +60,15 @@
         </div>
         <br>
         <div class="row">
-            <div class="col-xs-7" style="padding-left: 35px;">
+            <div class="col-xs-12 col-lg-7" style="padding-left: 35px;">
                 <div class="tab-content">
                     <div class="tab-pane active" id="membersTab" role="tabpanel" style="padding: 0px;">
                         <div class="row">
                             <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">Members</h3>
+                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); font-size: 3.5vh;">Members</h3>
                                 <div class="card-block">
                                     <div class="row">
-                                        <div class="col-xs-12">
+                                        <div class="col-xl-12">
                                             <!-- Group Leader Actions -->
                                             {% if group.leader_id == current_user.id %}
                                             <br>
@@ -123,7 +128,7 @@
                                                     {% endif %}
                                                     {% for favorite in favoritedListings %}
                                                         <div class="row m-x-auto" id="favoritedListing{{favorite.listing.id}}">
-                                                            <div class="col-md-12" style="padding-left: 30px; padding-right: 30px;">
+                                                            <div class="col-md-12">
                                                                 <div class="card" style="width: 100%;">                       
                                                                     <div class="card-block" style="padding-top: 0px; padding-left: 15px; padding-right: 15px;">
                                                                         <div class="row">
@@ -140,6 +145,7 @@
                                                                                 {% endif %}
                                                                             </div>
                                                                         </div>
+                                                                        <span style="font-size: 2.0vh;">
                                                                         <div class="row">
                                                                             <div class="col-xs-6">
                                                                                 {{ favorite.listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
@@ -159,15 +165,15 @@
                                                                                 <br>
                                                                                 <strong> Property Description: </strong> {{ favorite.listing.description }}
                                                                             </div>
-                                                                        </div>
-                                                                        <br>
-                                                                        <div class="row">
+                                                                        </div>                                                                        
+                                                                        <div class="row hidden-xs-down">
+                                                                            <br>
                                                                             <div class="col-xl-4">
                                                                                 <strong>Time Period of Rental:</strong> {{ favorite.listing.time_period }}
                                                                             </div>
-                                                                        </div>
-                                                                        <br>
-                                                                        <div class="row">                                                         
+                                                                        </div>                                                                        
+                                                                        <div class="row hidden-xs-down">
+                                                                            <br>                                                     
                                                                             <div class="col-xl-5">
                                                                                 <strong>Lease Start Date:</strong> {{ favorite.listing.start_date }}
                                                                             </div>
@@ -175,7 +181,7 @@
                                                                                 <strong>Lease End Date:</strong> {{ favorite.listing.end_date }}
                                                                             </div>
                                                                         </div>
-                                                                        <div class="row">
+                                                                        <div class="row hidden-xs-down">
                                                                             {% if favorite.listing.rent_due == "semester" %}
                                                                                 <div class="col-xl-5">
                                                                                     <strong>First Semester Rent Due:</strong> {{ favorite.listing.first_semester_rent_due_date }}
@@ -189,6 +195,7 @@
                                                                                 </div>
                                                                             {% endif %}
                                                                         </div>
+                                                                        </span>
                                                                     </div>
                                                                 </div>
                                                             </div>     
@@ -233,7 +240,7 @@
                                                 <div class="card">
                                                     <div class="card-block">
                                                         <div class="row">
-                                                            <div class="col-xs-5">
+                                                            <div class="col-xs-12 col-sm-12 col-md-5">
                                                                 <strong>Tour For:</strong>
                                                                 <br>
                                                                 {{ tour.listing.street }}
@@ -289,7 +296,7 @@
                                                                 {% endif %}
                                                                 <a href="{{ url_for('tours.viewTour', tourID=tour.id) }}" class="btn btn-primary">View Tour</a>
                                                             </div>
-                                                            <div class="col-xs-7">
+                                                            <div class="hidden-sm-down col-md-7">
                                                                 <div class="card" style="width: 100%;">
                                                                     <a href="{{ url_for('listings.viewListing', listingID=tour.listing.id) }}">
                                                                         <img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg card-img-top">
@@ -346,6 +353,7 @@
                                                                 <img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg card-img-top">
                                                             </a>
                                                             <div class="card-block">
+                                                                <span style="font-size: 2.0vh;">
                                                                 <div class="row">
                                                                     <div class="col-xs-6">
                                                                         {{ request.listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
@@ -360,6 +368,7 @@
                                                                         {{ request.listing.city }}, {{ request.listing.state }}
                                                                     </div>
                                                                 </div>
+                                                                </span>
                                                             </div>
                                                         </div>
                                                         {% if not request.landlord_show %}
@@ -373,31 +382,35 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
-                                                                    <div class="col-xl-10">                                          
+                                                                    <div class="col-xs-10 col-xl-10">                                          
                                                                         <strong style="padding-right: 5px;">Application Accepted: </strong>
                                                                     </div>
-                                                                    <div class="col-xl-1">
+                                                                    <div class="col-xs-1 col-xl-1">
                                                                         <button type="button" id="confirmed" class="btn btn-success btn-circle" style="pointer-events: none;"><i class="fa fa-check" aria-hidden="true"></i></button>
                                                                     </div>
                                                                 </div>
                                                                 <hr>
                                                                 <br>
                                                                 <div class="row">
-                                                                    <div class="col-xl-10">
+                                                                    <div class=" col-xs-10 col-xl-10">
                                                                         <strong style="padding-right: 5px;">Leases Signed: </strong>
                                                                     </div>
-                                                                    <div class="col-xl-1">
-                                                                        <button type="button" id="pending" class="btn btn-warning btn-circle pending" style="pointer-events: none;"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                                    <div class="col-xs-1 col-xl-1">
+                                                                        {% if not request.all_leases_submitted %}
+                                                                            <button type="button" class="btn btn-danger btn-circle" style="pointer-events: none;"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                                                        {% else %}
+                                                                            <button type="button" class="btn btn-success btn-circle pending" style="pointer-events: none;"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                                                        {% endif %}
                                                                     </div>
                                                                 </div>
                                                                 <hr>
                                                                 <br>
                                                                 <div class="row">
-                                                                    <div class="col-xl-10">
+                                                                    <div class="col-xs-10 col-xl-10">
                                                                         <strong style="padding-right: 5px;">Deposits Collected: </strong>
                                                                     </div>
-                                                                    <div class="col-xl-1">
-                                                                        <button type="button" id="pending" class="btn btn-warning btn-circle pending" style="pointer-events: none;"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                                    <div class="col-xs-1 col-xl-1">
+                                                                        {{request.numSecurityDepositsPaid}}/{{group.acceptedUsers|count}}
                                                                     </div>
                                                                 </div>
                                                                 <hr>
@@ -438,12 +451,39 @@
                             </div>
                         </div>
                     </div>
+                    <div class="tab-pane hidden-lg-up" id="messagesTab" role="tabpanel" style="padding: 0px;">
+                        <div class="card" style="width:100%;">
+                            <h3 class="card-header" style="font-size: 3.5vh;">Group Message:</h3>
+                            <div class="card-block">
+                                <!-- Add new message -->
+                                <div class="form-group">
+                                    <form action="{{url_for('groups.createMessage')}}" method='POST'>
+                                        {{message_form.group_id}}
+                                        {{message_form.csrf_token}}
+                                        {{message_form.next}}
+                                        <div class="row">
+                                            {{message_form.content(class="form-control", rows=5)}}
+                                        </div>
+                                        <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
+                                            <div class="col-xs-12">
+                                                <input class="btn btn-primary" type="submit" value="Respond">
+                                            </div>                                    
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Messages -->
+                        {% for message in messages %}
+                            {% include 'group/message.html' %}
+                        {% endfor %}
+                    </div>
                     <div class="tab-pane" id="leaseTab" role="tabpanel">
                         Lease
                     </div>
                 </div>
             </div>
-            <div class="col-xs-5">
+            <div class="col-md-5 hidden-md-down">
                 <div class="card" style="width:100%;">
                     <h3 class="card-header">Type your message:</h3>
                     <div class="card-block">
@@ -600,12 +640,12 @@
             $.each(data.users, function(key, user) {
                 userString = '<hr>'+
                             '<div id="' + user.id + '" class="row">'+
-                                '<div class=col-xs-10>' +
+                                '<div class=col-xs-8>' +
                                     '<a href="/user/view/' + user.id + '">' + 
                                         user.username + ' (' + user.fname + ' ' + user.lname + ')' +
                                     '</a>' +
                                 '</div>'+
-                                '<div class="col-xs-1">' +
+                                '<div class="col-xs-4">' +
                                     '<span onClick="submitForm(this.id)" class="invite btn btn-primary" id="' + user.id + '">Invite</span>'+
                                 '</div>' +
                             '</div><br>';
