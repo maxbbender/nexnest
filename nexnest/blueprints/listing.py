@@ -118,11 +118,13 @@ def createListing():
                         filename = secure_filename(request.files['floor_plan'].filename)
 
                         if file and allowed_file(filename):
-                            request.files['floor_plan'].save(os.path.join(folderPath, filename))
+                            # print('Trying to save file in %s' % os.path.join(folderPath, 'floorplan.pdf'))
+                            file.save(os.path.join(folderPath, 'floorplan.pdf'))
 
-                newListing.floor_plan_url = os.path.join(folderPath, filename)
+                    newListing.floor_plan_url = os.path.join(folderPath, 'floorplan.pdf')
+                    newListing.floor_plan_url = '/uploads/listings/%s/floorplan.pdf' % str(newListing.id)
 
-                session.commit()
+                    session.commit()
 
                 return redirect(url_for('listings.viewListing', listingID=newListing.id))
             else:

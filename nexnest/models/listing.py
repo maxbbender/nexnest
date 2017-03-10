@@ -197,6 +197,8 @@ class Listing(Base):
                 photoURLs.append("/uploads/listings/%r/%s" % (self.id, filename.replace("\'", "")))
         return photoURLs
 
+
+
     def hasHouse(self):
         return len(self.house) > 0
 
