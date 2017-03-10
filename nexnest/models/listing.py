@@ -189,16 +189,12 @@ class Listing(Base):
 
     def getPhotoURLs(self):
         photoURLs = []
-        folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(self.id))
+        folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(self.id), 'pictures')
 
         if os.path.exists(folderPath):
-
             for filename in os.listdir(folderPath):
-                if filename is not 'floorplan.pdf':
-                    photoURLs.append("/uploads/listings/%r/%s" % (self.id, filename.replace("\'", "")))
+                photoURLs.append("/uploads/listings/%r/pictures/%s" % (self.id, filename.replace("\'", "")))
         return photoURLs
-
-
 
     def hasHouse(self):
         return len(self.house) > 0

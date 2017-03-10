@@ -97,6 +97,10 @@ def createListing():
                 if not os.path.exists(folderPath):
                     os.makedirs(folderPath)
 
+                folderPicturesPath = os.path.join(folderPath, 'pictures')
+                if not os.path.exists(folderPicturesPath):
+                    os.makedirs(folderPicturesPath)
+
                 # Lets add the photos
                 uploadedFiles = request.files.getlist("pictures")
                 filenames = []
@@ -104,7 +108,7 @@ def createListing():
                     if file and allowed_file(file.filename):
                         filename = secure_filename(file.filename)
 
-                        file.save(os.path.join(folderPath, filename))
+                        file.save(os.path.join(folderPicturesPath, filename))
                         filenames.append(filename)
                     else:
                         flash("Error saving file %s" % file.filename, 'error')
