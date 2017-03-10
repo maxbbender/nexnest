@@ -194,7 +194,8 @@ class Listing(Base):
         if os.path.exists(folderPath):
 
             for filename in os.listdir(folderPath):
-                photoURLs.append("/uploads/listings/%r/%s" % (self.id, filename.replace("\'", "")))
+                if filename is not 'floorplan.pdf':
+                    photoURLs.append("/uploads/listings/%r/%s" % (self.id, filename.replace("\'", "")))
         return photoURLs
 
 
