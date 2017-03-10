@@ -9,7 +9,7 @@ from nexnest.models.listing import Listing
 from nexnest.models.landlord_listing import LandlordListing
 
 from nexnest.utils.flash import flash_errors
-from nexnest.utils.file import allowed_file
+from nexnest.utils.file import allowed_file, isPDF
 
 import os
 
@@ -114,8 +114,7 @@ def createListing():
                 if 'floor_plan' in request.files:
                     file = request.files['floor_plan']
 
-                    if file.filename != '':
-
+                    if file and isPDF(file.filename):
                         filename = secure_filename(request.files['floor_plan'].filename)
 
                         if file and allowed_file(filename):

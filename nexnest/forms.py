@@ -116,7 +116,8 @@ class ListingForm(RedirectForm):
                           choices=valid_parking_types)
     cats = BooleanField('Are Cats Allowed?')
     dogs = BooleanField('Are Dogs Allowed?')
-    other_pets = BooleanField('Are Other Pets Allowed?')
+    other_pets = TextAreaField('Are Other Pets Allowed?', [
+        Length(min=0, max=160)])
     washer = BooleanField('Is there a Washing Machine?')
     dryer = BooleanField('Is there a Dryer?')
     dishwasher = BooleanField('Is there a Dishwasher?')

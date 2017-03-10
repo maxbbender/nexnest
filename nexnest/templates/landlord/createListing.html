@@ -209,19 +209,7 @@
                             		</div>
                             	</div>
                             </div>
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <div class="form-group">
-                                        <label class="control-label form-control-feedback" id="utilities_label">Are Utilities Included in This price?</label>
-                                        <div class="checkbox">
-                                            <label style="font-size: 1.5em">
-                                                {{form.utilities_included(class='form-control form-check-input')}}
-                                                <!-- <input id="washer" class="form-check-input" type="checkbox"> -->
-                                                <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="row">                                
                                 <div class="col-xs-6">
                                 	<div class="form-group">
                                 	    <label class="control-label form-control-feedback" id="furnished_label">Is the property furnished?</label>
@@ -265,7 +253,7 @@
                                     <div class="form-group">
                                         <label class="control-label form-control-feedback">Square Footage of Property</label>
                                         <div class="input-group">
-                                        	{{form.square_footage(class='form-control', required='required', type="number")}}
+                                        	{{form.square_footage(class='form-control', type="number")}}
                                         	<span class="input-group-addon">FT</span>
                                         </div>
                                         <!-- <input id="footage" maxlength="100" type="number" name="square_footage" required="required" class="form-control" /> -->
@@ -290,7 +278,67 @@
                             <h3> Step 4: Utilities</h3>
                             <br>
                             <p><strong>Please select which utilites are included in this price</strong></p>
-                            
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        <label class="control-label form-control-feedback" id="electricity_label">Electricity</label>
+                                        <div class="checkbox">
+                                            <label style="font-size: 1.5em">
+                                                {{form.electricity(class='form-control form-check-input')}}
+                                                <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        <label class="control-label form-control-feedback" id="water_label">Water</label>
+                                        <div class="checkbox">
+                                            <label style="font-size: 1.5em">
+                                                {{form.water(class='form-control form-check-input')}}
+                                                <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        <label class="control-label form-control-feedback" id="heat_label">Heat/Gas</label>
+                                        <div class="checkbox">
+                                            <label style="font-size: 1.5em">
+                                                {{form.heat_gas(class='form-control form-check-input')}}
+                                                <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        <label class="control-label form-control-feedback" id="internet_label">Internet</label>
+                                        <div class="checkbox">
+                                            <label style="font-size: 1.5em">
+                                                {{form.internet(class='form-control form-check-input')}}
+                                                <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        <label class="control-label form-control-feedback" id="cable_label">Cable</label>
+                                        <div class="checkbox">
+                                            <label style="font-size: 1.5em">
+                                                {{form.cable(class='form-control form-check-input')}}
+                                                <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>                                
+                            </div>
                             <button class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
                         </div>
                     </div>
@@ -477,14 +525,8 @@
                             <div class="row">
                                 <div class="col-xs-6">
                                     <div class="form-group">
-                                        <label class="control-label form-control-feedback" id="other_pets_label">Other Pets</label>
-                                        <div class="checkbox">
-                                            <label style="font-size: 1.5em">
-                                                {{form.other_pets(class='form-control form-check-input')}}
-                                                <!-- <input id="garbage_service" class="form-check-input" type="checkbox"> -->
-                                                <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-                                            </label>
-                                        </div>
+                                        <label class="control-label form-control-feedback">Anything else to say about pets?(100 characters max)</label>
+                                        {{form.other_pets(class='form-control', rows='3', maxlength="150")}}                                        
                                     </div>
                                 </div>
                             </div>
@@ -519,9 +561,25 @@
                             <h3>Step 9: Photos</h3>
                             <br>
                             <p><strong>Photos</strong></p>
-                            <div class="form-group">
-                                <label class="control-label form-control-feedback">Description</label>
-                                {{form.pictures(class='form-control', multiple='')}}
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="control-label form-control-feedback">Description</label>
+                                    {{form.pictures(class='form-control', multiple='')}}
+                                </div>                                
+                            </div>
+                            <p><strong>Floor Plan</strong></p>
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="control-label form-control-feedback">Upload a PDF of the floor plan if you have one</label>
+                                    {{form.floor_plan(class='form-control')}}
+                                </div>                                
+                            </div>
+                            <p><strong>Youtube video of the property</strong></p>
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="control-label form-control-feedback">Paste the URL of the video</label>
+                                    {{form.youtube_url(class='form-control', type="url")}}
+                                </div>                                
                             </div>
                             <button onclick="submitListingForm()" class="btn btn-primary btn-lg pull-right" type="button">Create Listing</button>
                         </div>
