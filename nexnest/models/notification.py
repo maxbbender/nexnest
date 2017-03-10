@@ -26,9 +26,10 @@ class Notification(Base):
     # ----------------------------------------------------------------b#
     # NEW ONES (need category):
     # | user_leave_group | maintenance_inprogress | maintenance_completed
-    # | group_listing_accept | group_listing_deny | 
+    # | group_listing_accept | group_listing_denied |
     notif_type = db.Column(db.String(128))
     redirect_url = db.Column(db.String(128))
+    message = db.Column
 
     def __init__(
             self,
@@ -362,6 +363,37 @@ class Notification(Base):
                 message = "Your house request has been accepted!"
 
                 redirectURL = '/houseRequest/view/%d' % returnObject.id
+
+                return message, returnObject, redirectURL
+
+        elif self.notif_type == 'group_listing_denied':
+            returnObject = session.query(GroupListing) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "Your house request for %s has been denied" % returnObject.listing.street
+
+                redirectURL = '/'
+
+                return message, returnObject, redirectURL
+
+        elif self.notif_type == 'group_listing_completed':
+            returnObject = session.query(GroupListing) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "Your house request for %s has been completed : Click to go to your new House!" % returnObject.listing.street
+
+                newHouse = session.query(House) \
+                    .filter_by(group_id=returnObject.group.id) \
+                    .first()
+
+                if newHouse is not None:
+                    redirectURL = '/house/view/%d' % newHouse.id
+                else:
+                    redirectURL = '/'
 
                 return message, returnObject, redirectURL
 

@@ -137,6 +137,7 @@ def messageCreate():
     return form.redirect()
 
 
+# NOTIFICATIONS IMPLEMENTED
 @housingRequests.route('/houseRequest/<id>/accept', methods=['GET'])
 @login_required
 def acceptRequest(id):
@@ -159,6 +160,8 @@ def acceptRequest(id):
                 session.add(newSecurityDeposit)
                 session.commit()
 
+            groupListing.genAcceptedNotifications()
+
             flash("Group Accepted", 'success')
             return redirect(url_for('housingRequests.view', id=groupListing.id))
     else:
@@ -166,6 +169,7 @@ def acceptRequest(id):
         return redirect(url_for('indexs.index'))
 
 
+# NOTIFICATIONS IMPLEMENTED
 @housingRequests.route('/houseRequest/<id>/deny', methods=['GET'])
 @login_required
 def denyRequest(id):
@@ -175,7 +179,10 @@ def denyRequest(id):
 
         if groupListing.isEditableBy(current_user):
             groupListing.landlord_show = False
+            groupListing.group_show = False
             session.commit()
+
+            groupListing.genDeniedNotifications()
 
             flash('Request Denied', 'success')
             return redirect(url_for('landlords.landlordDashboard'))
@@ -185,6 +192,7 @@ def denyRequest(id):
         return redirect(url_for('indexs.index'))
 
 
+# NOTIFICATIONS IMPLEMENTED
 @housingRequests.route('/houseRequest/<id>/confirm', methods=['GET'])
 @login_required
 def confirmRequest(id):
@@ -196,7 +204,7 @@ def confirmRequest(id):
             groupListing.completed = True
             session.commit()
 
-            flash('House Confirmed ~ Congrats!', 'success')
+            flash('Your House Request for %s has been completed! Welcome to your new house!' % groupListing.listing.street, 'success')
 
             # Create the House Object
             house = House(listing=groupListing.listing,
@@ -204,6 +212,8 @@ def confirmRequest(id):
 
             session.add(house)
             session.commit()
+
+            groupListing.genCompletedNotifications()
 
             return redirect(url_for('houses.view', id=house.id))
     else:

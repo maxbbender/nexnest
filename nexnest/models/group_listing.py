@@ -150,3 +150,34 @@ class GroupListing(Base):
                                     target_user=landlord)
             session.add(newNotif)
             session.commit()
+
+    def genAcceptedNotifications(self):
+        for user in self.group.acceptedUsers:
+            newNotif = Notification(notif_type='group_listing_accept',
+                                    target_user=user,
+                                    target_model_id=self.id)
+            session.add(newNotif)
+            session.commit()
+
+    def genDeniedNotifications(self):
+        for user in self.group.acceptedUsers:
+            newNotif = Notification(notif_type='group_listing_denied',
+                                    target_user=user,
+                                    target_model_id=self.id)
+            session.add(newNotif)
+            session.commit()
+
+    def genCompletedNotifications(self):
+        for user in self.group.acceptedUsers:
+            newNotif = Notification(notif_type='group_listing_completed',
+                                    target_user=user,
+                                    target_model_id=self.id)
+            session.add(newNotif)
+            session.commit()
+
+        for landlord in self.listing.landLordsAsUsers():
+            newNotif = Notification(notif_type='group_listing_completed',
+                                    target_user=landlord,
+                                    target_model_id=self.id)
+            session.add(newNotif)
+            session.commit()
