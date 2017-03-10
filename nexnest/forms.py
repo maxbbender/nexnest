@@ -111,12 +111,13 @@ class ListingForm(RedirectForm):
     num_half_baths = IntegerField(
         'Number of Half Bathrooms', [InputRequired()])
     price = IntegerField('Price per Bedroom per Semester', [InputRequired()])
-    square_footage = IntegerField('Square Footage of House', [InputRequired()])
+    square_footage = IntegerField('Square Footage of House')
     parking = SelectField('What Parking is Available',
                           choices=valid_parking_types)
     cats = BooleanField('Are Cats Allowed?')
     dogs = BooleanField('Are Dogs Allowed?')
-    other_pets = BooleanField('Are Other Pets Allowed?')
+    other_pets = TextAreaField('Are Other Pets Allowed?', [
+                                Length(min=0, max=160)])
     washer = BooleanField('Is there a Washing Machine?')
     dryer = BooleanField('Is there a Dryer?')
     dishwasher = BooleanField('Is there a Dishwasher?')
