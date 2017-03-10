@@ -89,4 +89,77 @@ class TestGroupListing(unittest.TestCase):
             self.assertEqual(notifCount, 1)
 
     def testAcceptNotifications(self):
-        
+        self.gl.genAcceptedNotifications()
+
+        allAcceptNotifications = session.query(Notification).filter_by(notif_type='group_listing_accept', target_model_id=self.gl.id).all()
+        print(allAcceptNotifications)
+
+        for user in self.gl.group.acceptedUsers:
+            print("Looking at user %r" % user)
+            notifCount = session.query(Notification) \
+                .filter_by(notif_type='group_listing_accept',
+                           target_model_id=self.gl.id,
+                           target_user_id=user.id) \
+                .count()
+
+            self.assertEqual(notifCount, 1)
+
+        self.gl.undoAcceptedNotifications()
+
+        notifCount = session.query(Notification) \
+            .filter_by(notif_type='group_listing_accept',
+                       target_model_id=self.gl.id) \
+            .count()
+
+        self.assertEqual(notifCount, 0)
+
+    def testDeniedNotifications(self):
+        self.gl.genDeniedNotifications()
+
+        for user in self.gl.group.acceptedUsers:
+            notifCount = session.query(Notification) \
+                .filter_by(notif_type='group_listing_denied',
+                           target_model_id=self.gl.id,
+                           target_user_id=user.id) \
+                .count()
+
+            self.assertEqual(notifCount, 1)
+
+        self.gl.undoDeniedNotifications()
+
+        notifCount = session.query(Notification) \
+            .filter_by(notif_type='group_listing_denied',
+                       target_model_id=self.gl.id) \
+            .count()
+
+        self.assertEqual(notifCount, 0)
+
+    def testCompletedNotifications(self):
+        self.gl.genCompletedNotifications()
+
+        for user in self.gl.group.acceptedUsers:
+            notifCount = session.query(Notification) \
+                .filter_by(notif_type='group_listing_completed',
+                           target_model_id=self.gl.id,
+                           target_user_id=user.id) \
+                .count()
+
+            self.assertEqual(notifCount, 1)
+
+        for user in self.gl.listing.landLordsAsUsers():
+            notifCount = session.query(Notification) \
+                .filter_by(notif_type='group_listing_completed',
+                           target_model_id=self.gl.id,
+                           target_user_id=user.id) \
+                .count()
+
+            self.assertEqual(notifCount, 1)
+
+        self.gl.undoCompletedNotifications()
+
+        notifCount = session.query(Notification) \
+            .filter_by(notif_type='group_listing_denied',
+                       target_model_id=self.gl.id) \
+            .count()
+
+        self.assertEqual(notifCount, 0)

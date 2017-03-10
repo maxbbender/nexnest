@@ -357,6 +357,7 @@ def allLeasesSubmitted():
     return redirect(url_for('indexs.index'))
 
 
+# NOTIFICATIONS IMPLEMENTED
 @housingRequests.route('/houseRequest/<id>/accept/ajax', methods=['GET'])
 @login_required
 def acceptHousingRequestAJAX(id):
@@ -380,6 +381,7 @@ def acceptHousingRequestAJAX(id):
     return jsonify(results={'success': False, 'message': errorMessage})
 
 
+# NOTIFICATIONS IMPLEMENTED
 @housingRequests.route('/houseRequest/<id>/undoAccept/ajax', methods=['GET'])
 @login_required
 def acceptHousingRequestAJAXUndo(id):
@@ -392,6 +394,8 @@ def acceptHousingRequestAJAXUndo(id):
             groupListing.accepted = False
             session.commit()
 
+            groupListing.undoAcceptedNotifications()
+
             return jsonify(results={'success': True})
         else:
             errorMessage = 'Permissions Error'
@@ -401,6 +405,7 @@ def acceptHousingRequestAJAXUndo(id):
     return jsonify(results={'success': False, 'message': errorMessage})
 
 
+# NOTIFICATIONS IMPLEMENTED
 @housingRequests.route('/houseRequest/<id>/complete/ajax', methods=['GET'])
 @login_required
 def completeHousingRequestAJAX(id):
@@ -413,6 +418,8 @@ def completeHousingRequestAJAX(id):
             groupListing.completed = True
             session.commit()
 
+            groupListing.genCompletedNotifications()
+
             return jsonify(results={'success': True})
         else:
             errorMessage = 'Permissions Error'
@@ -422,6 +429,7 @@ def completeHousingRequestAJAX(id):
     return jsonify(results={'success': False, 'message': errorMessage})
 
 
+# NOTIFICATIONS IMPLEMENTED
 @housingRequests.route('/houseRequest/<id>/undoComplete/ajax', methods=['GET'])
 @login_required
 def completeHousingRequestAJAXUndo(id):
@@ -434,6 +442,8 @@ def completeHousingRequestAJAXUndo(id):
             groupListing.completed = False
             session.commit()
 
+            groupListing.undoCompletedNotifications()
+
             return jsonify(results={'success': True})
         else:
             errorMessage = 'Permissions Error'
@@ -443,6 +453,7 @@ def completeHousingRequestAJAXUndo(id):
     return jsonify(results={'success': False, 'message': errorMessage})
 
 
+# NOTIFICATIONS IMPLEMENTED
 @housingRequests.route('/houseRequest/<id>/deny/ajax', methods=['GET'])
 @login_required
 def denyHousingRequestAJAX(id):
@@ -456,6 +467,8 @@ def denyHousingRequestAJAX(id):
             groupListing.landlord_show = False
             session.commit()
 
+            groupListing.genDeniedNotifications()
+
             return jsonify(results={'success': True})
         else:
             errorMessage = 'Permissions Error'
@@ -465,6 +478,7 @@ def denyHousingRequestAJAX(id):
     return jsonify(results={'success': False, 'message': errorMessage})
 
 
+# NOTIFICATIONS IMPLEMENTED
 @housingRequests.route('/houseRequest/<id>/undoDeny/ajax', methods=['GET'])
 @login_required
 def denyHousingRequestAJAXUndo(id):
@@ -477,6 +491,8 @@ def denyHousingRequestAJAXUndo(id):
             groupListing.group_show = True
             groupListing.landlord_show = True
             session.commit()
+
+            groupListing.undoDeniedNotifications()
 
             return jsonify(results={'success': True})
         else:

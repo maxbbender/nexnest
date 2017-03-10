@@ -200,7 +200,7 @@ class GroupListing(Base):
 
     def undoCompletedNotifications(self):
         session.query(Notification) \
-            .filter_by(notif_type='group_listing_accept',
+            .filter_by(notif_type='group_listing_completed',
                        target_model_id=self.id) \
             .delete()
 
