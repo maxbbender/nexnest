@@ -87,3 +87,6 @@ class TestGroupListing(unittest.TestCase):
                 .count()
 
             self.assertEqual(notifCount, 1)
+
+    def testAcceptNotifications(self):
+        

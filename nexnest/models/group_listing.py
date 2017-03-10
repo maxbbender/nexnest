@@ -159,6 +159,14 @@ class GroupListing(Base):
             session.add(newNotif)
             session.commit()
 
+    def undoAcceptedNotifications(self):
+        session.query(Notification) \
+            .filter_by(notif_type='group_listing_accept',
+                       target_model_id=self.id) \
+            .delete()
+
+        session.commit()
+
     def genDeniedNotifications(self):
         for user in self.group.acceptedUsers:
             newNotif = Notification(notif_type='group_listing_denied',
@@ -166,6 +174,14 @@ class GroupListing(Base):
                                     target_model_id=self.id)
             session.add(newNotif)
             session.commit()
+
+    def undoDeniedNotifications(self):
+        session.query(Notification) \
+            .filter_by(notif_type='group_listing_denied',
+                       target_model_id=self.id) \
+            .delete()
+
+        session.commit()
 
     def genCompletedNotifications(self):
         for user in self.group.acceptedUsers:
@@ -181,3 +197,11 @@ class GroupListing(Base):
                                     target_model_id=self.id)
             session.add(newNotif)
             session.commit()
+
+    def undoCompletedNotifications(self):
+        session.query(Notification) \
+            .filter_by(notif_type='group_listing_accept',
+                       target_model_id=self.id) \
+            .delete()
+
+        session.commit()

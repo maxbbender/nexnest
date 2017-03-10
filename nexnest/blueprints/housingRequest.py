@@ -369,6 +369,8 @@ def acceptHousingRequestAJAX(id):
             groupListing.accepted = True
             session.commit()
 
+            groupListing.genAcceptedNotifications()
+
             return jsonify(results={'success': True})
         else:
             errorMessage = 'Permissions Error'
