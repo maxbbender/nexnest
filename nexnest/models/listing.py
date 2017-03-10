@@ -27,14 +27,13 @@ class Listing(Base):
     parking = db.Column(db.String)
     cats = db.Column(db.Boolean)
     dogs = db.Column(db.Boolean)
-    other_pets = db.Column(db.Boolean)
+    other_pets = db.Column(db.Text)
     washer = db.Column(db.Boolean)
     dryer = db.Column(db.Boolean)
     dishwasher = db.Column(db.Boolean)
     air_conditioning = db.Column(db.Boolean)
     handicap = db.Column(db.Boolean)
     furnished = db.Column(db.Boolean)
-    utilities_included = db.Column(db.Boolean)
     emergency_maintenance = db.Column(db.Boolean)
     snow_plowing = db.Column(db.Boolean)
     garbage_service = db.Column(db.Boolean)
@@ -49,6 +48,15 @@ class Listing(Base):
     rent_due = db.Column(db.String(20))
     first_semester_rent_due_date = db.Column(db.Date)
     second_semester_rent_due_date = db.Column(db.Date)
+    electricity = db.Column(db.Boolean)
+    internet = db.Column(db.Boolean)
+    water = db.Column(db.Boolean)
+    heat_gas = db.Column(db.Boolean)
+    cable = db.Column(db.Boolean)
+    washer_free = db.Column(db.Boolean)
+    youtube_url = db.Column(db.String(256))
+    floor_plan_url = db.Column(db.String(256))
+
     # monthly_rent_due_date = db.Column(db.Date)
 
     # This is for whether or not the landlord has deleted
@@ -82,26 +90,32 @@ class Listing(Base):
             price,
             square_footage,
             parking,
-            cats,
-            dogs,
-            other_pets,
-            washer,
-            dryer,
-            dishwasher,
-            air_conditioning,
-            handicap,
-            furnished,
-            utilities_included,
-            emergency_maintenance,
-            snow_plowing,
-            garbage_service,
-            security_service,
             description,
             num_half_baths,
             num_full_baths,
             time_period,
             property_type,
             rent_due,
+            other_pets,
+            cats=False,
+            dogs=False,
+            washer=False,
+            dryer=False,
+            dishwasher=False,
+            air_conditioning=False,
+            handicap=False,
+            furnished=False,
+            emergency_maintenance=False,
+            snow_plowing=False,
+            garbage_service=False,
+            security_service=False,
+            electricity=False,
+            internet=False,
+            water=False,
+            heat_gas=False,
+            cable=False,
+            washer_free=False,
+            youtube_url=None,
             apartment_number=None,
             first_semester_rent_due_date=None,
             second_semester_rent_due_date=None):
@@ -124,7 +138,6 @@ class Listing(Base):
         self.air_conditioning = air_conditioning
         self.handicap = handicap
         self.furnished = furnished
-        self.utilities_included = utilities_included
         self.emergency_maintenance = emergency_maintenance
         self.snow_plowing = snow_plowing
         self.garbage_service = garbage_service
@@ -142,6 +155,13 @@ class Listing(Base):
         self.rent_due = rent_due
         self.first_semester_rent_due_date = first_semester_rent_due_date
         self.second_semester_rent_due_date = second_semester_rent_due_date
+        self.electricity = electricity
+        self.heat_gas = heat_gas
+        self.internet = internet
+        self.water = water
+        self.cable = cable
+        self.washer_free = washer_free
+        self.youtube_url = youtube_url
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels

@@ -6,7 +6,7 @@ from flask_wtf.file import FileField, FileRequired
 
 from wtforms.fields import StringField, PasswordField, SubmitField, BooleanField, IntegerField, TextAreaField, SelectField, DateField, HiddenField
 
-from wtforms.validators import InputRequired, Length, Email, EqualTo, Optional
+from wtforms.validators import InputRequired, Length, Email, EqualTo, Optional, URL
 
 from nexnest.static.dataSets import *
 
@@ -123,7 +123,6 @@ class ListingForm(RedirectForm):
     air_conditioning = BooleanField('Is there Air Conditioning?')
     handicap = BooleanField('Is the property handicap accessible?')
     furnished = BooleanField('Is the property furnished?')
-    utilities_included = BooleanField('Are utilities included in the price?')
     emergency_maintenance = BooleanField(
         'Do you provide emergency maintenance?')
     snow_plowing = BooleanField('Do you provide snow removal?')
@@ -140,6 +139,14 @@ class ListingForm(RedirectForm):
         'What date is rent due for the second semester?', [Optional()])
     monthly_rent_due_date = DateField(
         'What day of month is rent due?', [Optional()])
+    electricity = BooleanField('Electricity')
+    internet = BooleanField('Internet')
+    water = BooleanField('Water')
+    heat_gas = BooleanField('Heat/Gas')
+    cable = BooleanField('Cable')
+    washer_free = BooleanField('Is the Washer Free?')
+    floor_plan = FileField('Floor Plan')
+    youtube_url = StringField('Listing Video', [URL()])
 
 
 class CreateGroupForm(RedirectForm):

@@ -61,7 +61,6 @@ def createListing():
                                      air_conditioning=form.air_conditioning.data,
                                      handicap=form.handicap.data,
                                      furnished=form.furnished.data,
-                                     utilities_included=form.utilities_included.data,
                                      emergency_maintenance=form.emergency_maintenance.data,
                                      snow_plowing=form.snow_plowing.data,
                                      garbage_service=form.garbage_service.data,
@@ -71,7 +70,15 @@ def createListing():
                                      num_half_baths=form.num_half_baths.data,
                                      time_period=form.time_period.data,
                                      rent_due=form.rent_due.data,
-                                     property_type=form.property_type.data)
+                                     property_type=form.property_type.data,
+                                     electricity=form.electricity.data,
+                                     internet=form.internet.data,
+                                     water=form.water.data,
+                                     heat_gas=form.heat_gas.data,
+                                     cable=form.cable.data,
+                                     washer_free=form.washer_free.data,
+                                     youtube_url=form.youtube_url.data)
+
                 session.add(newListing)
                 session.commit()
 
@@ -103,6 +110,21 @@ def createListing():
                         flash("Error saving file %s" % file.filename, 'error')
 
                 flash('Listing Created', 'success')
+
+                if 'floor_plan' in request.files:
+                    file = request.files['floor_plan']
+
+                    if file.filename != '':
+
+                        filename = secure_filename(request.files['floor_plan'].filename)
+
+                        if file and allowed_file(filename):
+                            request.files['floor_plan'].save(os.path.join(folderPath, filename))
+
+                newListing.floor_plan_url = os.path.join(folderPath, filename)
+
+                session.commit()
+
                 return redirect(url_for('listings.viewListing', listingID=newListing.id))
             else:
                 flash_errors(form)
