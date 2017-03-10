@@ -26,7 +26,7 @@ class Notification(Base):
     # ----------------------------------------------------------------b#
     # NEW ONES (need category):
     # | user_leave_group | maintenance_inprogress | maintenance_completed
-    # | group_listing_accept | group_listing_denied |
+    # | group_listing_accept | group_listing_denied | tour_confirm
     notif_type = db.Column(db.String(128))
     redirect_url = db.Column(db.String(128))
     message = db.Column
@@ -394,6 +394,18 @@ class Notification(Base):
                     redirectURL = '/house/view/%d' % newHouse.id
                 else:
                     redirectURL = '/'
+
+                return message, returnObject, redirectURL
+
+        elif self.notif_type == 'tour_confirmed':
+            returnObject = session.query(Tour) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = 'Your tour has been confirmed!'
+
+                redirectURL = '/tour/view/%d' % returnObject.id
 
                 return message, returnObject, redirectURL
 

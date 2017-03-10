@@ -18,6 +18,7 @@ from sqlalchemy import desc
 tours = Blueprint('tours', __name__, template_folder='../templates/tour')
 
 
+# NOTIFICATIONS IMPLEMENTED
 @tours.route('/tour/create', methods=['POST'])
 @login_required
 def createTour():
@@ -47,6 +48,8 @@ def createTour():
                     session.add(newTour)
                     session.commit()
 
+                    newTour.genNotifications()
+
                     # Create the first tour message
                     newTourMessage = TourMessage(tour=newTour,
                                                  content=tourForm.description.data,
@@ -54,6 +57,8 @@ def createTour():
 
                     session.add(newTourMessage)
                     session.commit()
+
+                    newTour.genNotifications()
 
                     flash('Tour Request Created', 'info')
                     return redirect(url_for('tours.viewTour', tourID=newTour.id))
@@ -100,6 +105,7 @@ def viewTour(tourID):
     else:
         flash("You are not a part of this tour", 'info')
         return redirect(url_for('indexs.index'))
+
 
 
 @tours.route('/tour/<tourID>/confirm')
