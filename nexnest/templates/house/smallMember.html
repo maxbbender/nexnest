@@ -1,0 +1,28 @@
+<div class="card" style="width: 100%">
+    <div class="card-block">
+        <div class="row">
+            <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
+                <img src="{{user.profile_image}}" alt="Profile Image" class="img-responsive" style="height: 100%; max-width: 75px;" />
+            </div>
+            <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-10">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="row">                           
+                            <a href="{{ url_for('users.viewUser', userID=user.id) }}">
+                                <h2 style="font-size: 3.0vh">{{ user.fname }} {{ user.lname }}</h2>
+                            </a>
+                            {% if current_user in landlords %}
+                                {% if group.leader_id == user.id %}
+                                    <h6 class="hidden-sm-down" style="padding-top: 8px; padding-left: 5px;"><span class="tag tag-primary">Group Leader</span></h6>
+                                    <h6 class="hidden-md-up" style="padding-top: 8px; padding-left: 5px;"><span class="tag tag-primary">Leader</span></h6>
+                                {% endif %}
+                            {% else %}
+                                <h6  style="padding-top: 15px; padding-left: 5px; "><span class="tag tag-success">Landlord</span></h6>
+                            {% endif %}                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
