@@ -111,7 +111,7 @@ class ListingForm(RedirectForm):
     num_half_baths = IntegerField(
         'Number of Half Bathrooms', [InputRequired()])
     price = IntegerField('Price per Bedroom per Semester', [InputRequired()])
-    square_footage = IntegerField('Square Footage of House', [InputRequired()])
+    square_footage = IntegerField('Square Footage of House', [Optional()])
     parking = SelectField('What Parking is Available',
                           choices=valid_parking_types)
     cats = BooleanField('Are Cats Allowed?')
@@ -146,7 +146,7 @@ class ListingForm(RedirectForm):
     cable = BooleanField('Cable')
     washer_free = BooleanField('Is the Washer Free?')
     floor_plan = FileField('Floor Plan')
-    youtube_url = StringField('Listing Video', [URL()])
+    youtube_url = StringField('Listing Video', [Optional(), URL()])
 
 
 class CreateGroupForm(RedirectForm):
