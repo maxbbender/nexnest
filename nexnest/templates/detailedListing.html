@@ -1,42 +1,92 @@
 {% extends "base.html" %}
 {% block content %}
-{% for photo in listing.getPhotoURLs() %}
-{{photo}}
-{% endfor %}
-	<div class="row">
-		<div class="col-xs-1 col-md-3 col-lg-3"></div>
-		<div class="col-xs-10 col-md-6 col-lg-6">
+	<div class="row" style="width: 100%;">
+		<div class="col-xs-1 col-md-2 col-lg-2"></div>
+		<div class="col-xs-10 col-md-8 col-lg-8">
 			<div class="row">
-				<a class="test-popup-link" href="/static/img/testHouse.jpg">
-					<img src="/static/img/testHouse.jpg" style="height: 300px; width: 100%;">
-				</a>
+				{% if pictures|length > 0 %}
+					<a class="hidden-xs-down test-popup-link" href="{{pictures[0]}}">
+						<img src="{{pictures[0]}}" style="height: 45vh; width: 100%;">
+					</a>
+					<a class="hidden-sm-up test-popup-link" href="{{pictures[0]}}">
+						<img src="{{pictures[0]}}" style="height: 30vh; width: 100%;">
+					</a>
+				 {% else %}
+					<a class="test-popup-link" href="/static/img/testHouse.jpg">
+						<img src="/static/img/testHouse.jpg" style="height: 350px; width: 100%;">
+					</a>
+				 {% endif %}
 			</div>
 			<br>
-			<div class="row">
-				<div class="col-xs-12" style="text-align: center;">
-					<div class="popup-gallery">
-						<a href="/static/img/testKitchen.jpg" data-group="1" class="galleryItem">
-							<img src="/static/img/testKitchen.jpg" width="150" height="150">
-						</a>
-						<a href="/static/img/testLivingRoom.jpg" data-group="1" class="galleryItem"">
-							<img src="/static/img/testLivingRoom.jpg" width="150" height="150">
-						</a>
-						<a href="/static/img/testBathroom.jpg" data-group="1" class="galleryItem"">
-							<img src="/static/img/testBathroom.jpg" width="150" height="150">
-						</a>
-						<a href="/static/img/testBedroom.jpg" data-group="1" class="galleryItem">
-							<img src="/static/img/testBedroom.jpg" width="150" height="150">
-						</a>
+			{% if pictures|length > 0 %}
+				<div class="row">
+					<div class="col-xs-12" style="text-align: center;">
+						<div class="popup-gallery">
+							<div class="row">
+							{% for picture in pictures %}
+								{% if loop.index < 3 %}
+									<div class="col-xs-6 col-md-4 col-lg-3 col-xl-2">
+										<a href="{{picture}}" data-group="1" class="galleryItem">
+											<img src="{{picture}}" style="width:20vh; height: 20vh; padding: 5px;">
+										</a>
+									</div>
+								{% elif loop.index < 4 %}
+									<div class="hidden-sm-down col-md-4 col-lg-3 col-xl-2">
+										<a href="{{picture}}" data-group="1" class="galleryItem">
+											<img src="{{picture}}" style="width:20vh; height: 20vh; padding: 5px;">
+										</a>
+									</div>
+								{% elif loop.index < 5 %}
+									<div class="hidden-md-down col-lg-3 col-xl-2">
+										<a href="{{picture}}" data-group="1" class="galleryItem">
+											<img src="{{picture}}" style="width:20vh; height: 20vh; padding: 5px;">
+										</a>
+									</div>
+								{% elif loop.index < 7 %}
+									<div class="hidden-lg-down col-xl-2">
+										<a href="{{picture}}" data-group="1" class="galleryItem">
+											<img src="{{picture}}" style="width:20vh; height: 20vh; padding: 5px;">
+										</a>
+									</div>
+								{% else %}
+									<div style="display: none;">
+										<a href="{{picture}}" data-group="1" class="galleryItem">
+											<img src="{{picture}}" width="150" height="150">
+										</a>
+									</div>
+								{% endif %}
+							{% endfor %}
+							</div>
+						</div>
 					</div>
 				</div>
-			</div>
+			{% else %}
+				<div class="row">
+					<div class="col-xs-12" style="text-align: center;">
+						<div class="popup-gallery">
+							<a href="/static/img/testKitchen.jpg" data-group="1" class="galleryItem">
+								<img src="/static/img/testKitchen.jpg" width="150" height="150">
+							</a>
+							<a href="/static/img/testLivingRoom.jpg" data-group="1" class="galleryItem"">
+								<img src="/static/img/testLivingRoom.jpg" width="150" height="150">
+							</a>
+							<a href="/static/img/testBathroom.jpg" data-group="1" class="galleryItem"">
+								<img src="/static/img/testBathroom.jpg" width="150" height="150">
+							</a>
+							<a href="/static/img/testBedroom.jpg" data-group="1" class="galleryItem">
+								<img src="/static/img/testBedroom.jpg" width="150" height="150">
+							</a>
+						</div>
+					</div>
+				</div>
+			{% endif %}
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-xs-1 col-md-3 col-lg-3"></div>
-		<div class="col-xs-10 col-md-6 col-lg-6">
+		<div class="col-xs-1 col-md-2 col-lg-2"></div>
+		<div class="col-xs-10 col-md-8 col-lg-8">
 			<div class="row">
-				<div class="col-xs-7">
+				<div class="col-xs-12">
 					<br>
 					<h4>{{ listing.street }},
 					<br>
@@ -44,185 +94,239 @@
 					<h5>${{ listing.price }} Per Bedroom Per {{ listing.rent_due }}</h5>
 				</div>
 			</div>
+			{% if not current_user in listing.landLordsAsUsers() %}
+			<hr>
+			<div class="row hidden-md-down">
+				<div class="col-xs-12 col-lg-3" style="text-align:left">
+					<a href="{{ url_for('indexs.index') }}" class="btn btn-primary">Contact Landlord</a>
+				</div>
+				<div class="col-xs-12 col-lg-3 col-centered">					
+		            <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#selectGroupForTourModal">Request Tour</a>
+				</div>
+				<div class="col-xs-12 col-lg-3 col-centered">
+					<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#selectGroupForHouseModal">Request House</a>
+				</div>
+				<div class="col-xs-12 col-lg-3" style="text-align:right">
+					<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestListingModal">Suggest To Group</a>
+				</div>
+			</div>
+			<div class="row hidden-lg-up">
+				<div class="col-xs-12 col-md-6 col-lg-3 col-centered">
+					<a href="{{ url_for('indexs.index') }}" class="btn btn-primary" style="width: 160.31px;">Contact Landlord</a>
+				</div>
+				<br><br>
+				<div class="col-xs-12 col-md-6 col-lg-3 col-centered">					
+		            <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#selectGroupForTourModal" style="width: 160.31px;">Request Tour</a>
+				</div>
+				<br><br>
+				<div class="col-xs-12 col-md-6 col-lg-3 col-centered">
+					<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#selectGroupForHouseModal" style="width: 160.31px;">Request House</a>
+				</div>
+				<br><br>
+				<div class="col-xs-12 col-md-6 col-lg-3 col-centered">
+					<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestListingModal" style="width: 160.31px;">Suggest To Group</a>
+				</div>
+			</div>
+			{% endif %}
 			<hr>
 			<div class="row">
-				<div class="col-lg-3" style="text-align:left">
-					<a href="{{ url_for('indexs.index') }}" class="btn btn-info">Contact Landlord</a>
-				</div>
-				<div class="col-lg-3 col-centered">					
-		            <a href='#' class="btn btn-info" data-toggle="modal" data-target="#selectGroupForTourModal">Request Tour</a>
-				</div>
-				<div class="col-lg-3 col-centered">
-					<a href='#' class="btn btn-info" data-toggle="modal" data-target="#selectGroupForHouseModal">Request House</a>
-				</div>
-				<div class="col-lg-3" style="text-align:right">
-					<a href='#' class="btn btn-info" data-toggle="modal" data-target="#suggestListingModal">Suggest To Group</a>
+				<div class="col-xl-12">
+					<strong style="padding-right: 5px;">Property Description: </strong> {{ listing.description }}
 				</div>
 			</div>
 			<hr>
 			<div class="row">
-				<strong>Property Description:</strong> {{ listing.description }}
+				<div class="col-sm-4">
+					<h2>Lease:</h2>
+				</div>
+				<div class="col-sm-8">
+					<div class="row">
+						<div class="col-xs-12 col-md-6 col-xl-4">
+							<strong>Time Period:</strong> {{ listing.time_period }}
+						</div>
+						<div class="col-xs-12 col-md-6 col-xl-4">
+							<strong>Start Date:</strong> {{ listing.start_date }}
+						</div>
+						<div class="col-xs-12 col-md-6 col-xl-4">
+							<strong>End Date:</strong> {{ listing.end_date }}
+						</div>
+						{% if listing.rent_due == "semester" %}	
+							<div class="col-xs-12 col-md-6 col-xl-4">				
+								<strong>First Semester Rent Due:</strong> {{ listing.first_semester_rent_due_date }}
+							</div>
+							<div class="col-xs-12 col-md-6 col-xl-4">
+								<strong>Second Semester Rent Due:</strong> {{ listing.second_semester_rent_due_date }}
+							</div>
+						{% elif listing.rent_due == "monthly" %}
+							<div class="col-xs-12 col-md-6 col-xl-4">
+								<strong>Rent Due: </strong>1st of each month
+							</div>
+						{% endif %}
+					</div>
+				</div>
 			</div>
+			<hr style="padding-bottom: 15px;">
 			<div class="row">
-				<div class="col-xl-4" style="padding-top: 25px;">
-					<h2><strong>Lease:</strong></h2>
-					<strong>Time Period:</strong> {{ listing.time_period }}
-					<br>
-					<strong>Start Date:</strong> {{ listing.start_date }}
-					<br>
-					<strong>End Date:</strong> {{ listing.end_date }}
-					<br>
-					{% if listing.rent_due == "semester" %}					
-						<strong>First Semester Rent Due:</strong> {{ listing.first_semester_rent_due_date }}
-						<strong>Second Semester Rent Due:</strong> {{ listing.second_semester_rent_due_date }}
-					{% elif listing.rent_due == "monthly" %}
-						<strong>Rent Due: </strong>1st of each month
-					{% endif %}
-
+				<div class="col-sm-4">
+					<h2>Property:</h2>
 				</div>
-				<div class="col-xl-4" style="padding-top: 25px;">
-					<h2><strong>Property:</strong></h2>
-					Property Type: {{ listing.property_type }}
-					<br>
-					<i class="fa fa-bed" aria-hidden="true"></i> {{ listing.num_bedrooms }} Beds
-					<br>
-					<i class="fa fa-bath" aria-hidden="true"></i>{{ listing.num_full_baths }} Full Baths
-					<br>
-					{% if listing.num_half_baths > 0 %}
-						<i class="fa fa-bath" aria-hidden="true"></i>{{ listing.num_half_baths }} Half Baths
-						<br>
-					{% endif %}
-					{{ listing.square_footage }} SQFT
-					<br>
-					{% if listing.utilities_included %}
-						Utilities Included
-						<br>
-					{% endif %}
-					{% if listing.furnished %}
-						Property Furnished
-						<br>
-					{% endif %}
-					{% if listing.handicap %}
-						Handicap Accessible
-						<br>
-					{% endif %}
-					Parking: {{ listing.parking }}
-				</div>
-				<div class="col-xl-4" style="padding-top: 25px;">
-					<h2><strong>Appliances:</strong></h2>
-					{% if listing.air_conditioning %}
-						<li>Air Conditioning</li>
-					{% endif %}
-					{% if listing.washer %}
-						<li>Washing Machine</li>
-					{% endif %}					
-					{% if listing.dryer %}
-						<li>Dryer</li>
-					{% endif %}
-					{% if listing.dishwasher %}
-						<li>Dishwasher</li>
-					{% endif %}
-				</div>
-				<div class="col-xl-4" style="padding-top: 25px;">
-					<h2><strong>Services Included:</strong></h2>
-					{% if listing.snow_plowing %}
-						<li>Snow Plowing</li>
-					{% endif %}
-					{% if listing.garbage_service %}
-						<li>Garbage Removal</li>
-					{% endif %}
-					{% if listing.security_service %}
-						<li>Security Services</li>
-					{% endif %}
-					{% if listing.emergency_maintenance %}
-						<li>Emergency Maintenance</li>
-					{% endif %}
-				</div>
-				<div class="col-xl-4" style="padding-top: 25px;">
-					<h2><strong>Pets Allowed:</strong></h2>
-					{% if listing.dogs %}
-						<li>Dogs</li>
-					{% endif %}
-					{% if listing.cats %}
-						<li>Cats</li>
-					{% endif %}
-					{% if listing.other_pets %}
-						<li>Other Pets</li>
-					{% endif %}
+				<div class="col-sm-8">
+					<div class="row">
+						<div class="col-xs-12 col-md-6 col-xl-4">
+							<strong>Property Type:</strong> {{ listing.property_type }}
+						</div>
+						<div class="col-xs-12 col-md-6 col-xl-4">
+							<i class="fa fa-bed" aria-hidden="true"></i> {{ listing.num_bedrooms }} Beds
+						</div>
+						<div class="col-xs-12 col-md-6 col-xl-4">
+							<i class="fa fa-bath" aria-hidden="true"></i>{{ listing.num_full_baths }} Full Baths
+						</div>
+						{% if listing.num_half_baths > 0 %}
+							<div class="col-xs-12 col-md-6 col-xl-4">
+								<i class="fa fa-bath" aria-hidden="true"></i>{{ listing.num_half_baths }} Half Baths
+							</div>
+						{% endif %}
+						{% if listing.square_footage %}
+							<div class="col-xs-12 col-md-6 col-xl-4">
+								{{ listing.square_footage }} SQFT
+							</div>
+						{% endif %}
+						{% if listing.furnished %}
+							<div class="col-xs-12 col-md-6 col-xl-4">
+								Property Furnished
+							</div>							
+						{% endif %}
+						{% if listing.handicap %}
+							<div class="col-xs-12 col-md-6 col-xl-4">
+								Handicap Accessible
+							</div>							
+						{% endif %}
+						<div class="col-xs-12 col-md-6 col-xl-4">
+							Parking: {{ listing.parking }}
+						</div>
+					</div>
 				</div>
 			</div>
-			<br><br>
-
-			<!-- <div class="row">
-				<h4><u>Details:</u></h4>
-				<br>	
-			</div>
+			<hr style="padding-bottom: 15px;">
 			<div class="row">
-				<div class="col-lg-4">
-					<strong>Lease Start:</strong> {{ listing.start_date }}
+				<div class="col-sm-4">
+					<h2>Appliances:</h2>
 				</div>
-				<div class="col-lg-4">
-					<strong>Lease End:</strong> {{ listing.end_date }}
-				</div>
-				<div class="col-lg-4">
-					<strong>Unit Type:</strong> {{ listing.property_type }}
+				<div class="col-sm-8">
+					<div class="row">						
+						{% if listing.air_conditioning %}
+							<div class="col-xs-12 col-md-6 col-xl-4">
+								<li>Air Conditioning</li>
+							</div>
+						{% endif %}
+						{% if listing.washer %}
+							<div class="col-xs-12 col-md-6 col-xl-4">
+								<li>Washing Machine</li>
+							</div>
+						{% endif %}
+						{% if listing.dryer %}
+							<div class="col-xs-12 col-md-6 col-xl-4">
+								<li>Dryer</li>
+							</div>							
+						{% endif %}
+						{% if listing.dishwasher %}
+							<div class="col-xs-12 col-md-6 col-xl-4">
+								<li>Dishwasher</li>
+							</div>							
+						{% endif %}						
+					</div>
 				</div>
 			</div>
+			<hr style="padding-bottom: 15px;">
 			<div class="row">
-				<div class="col-lg-4">
-					<strong>Furnished:</strong> {% if listing.furnished %} Yes {% else %} No {% endif %}
+				<div class="col-sm-4">
+					<h2>Utilities Included in Rent:</h2>
 				</div>
-				<div class="col-lg-4">
-					<strong>Utilities Included:</strong> {% if listing.utilities_included %} Yes {% else %} No {% endif %}
+				<div class="col-sm-8">
+					<div class="row">						
+						{% if listing.electricity %}
+							<div class="col-xs-12 col-md-6 col-xl-4">
+								<li>Electricity</li>
+							</div>
+						{% endif %}
+						{% if listing.heat_gas %}
+							<div class="col-xs-12 col-md-6 col-xl-4">
+								<li>Heat/Gas</li>
+							</div>
+						{% endif %}
+						{% if listing.water %}
+							<div class="col-xs-12 col-md-6 col-xl-4">
+								<li>Water</li>
+							</div>							
+						{% endif %}
+						{% if listing.internet %}
+							<div class="col-xs-12 col-md-6 col-xl-4">
+								<li>Internet</li>
+							</div>							
+						{% endif %}
+						{% if listing.cable %}
+							<div class="col-xs-12 col-md-6 col-xl-4">
+								<li>Cable</li>
+							</div>							
+						{% endif %}					
+					</div>
 				</div>
-				<div class="col-lg-4">
-					<strong>Emergency Maintenance:</strong> {% if listing.emergency_maintenance %} Yes {% else %} No {% endif %}
+			</div>
+			<hr style="padding-bottom: 15px;">
+			<div class="row">
+				<div class="col-sm-4">
+					<h2>Services Included:</h2>
+				</div>
+				<div class="col-sm-8">
+					<div class="row">						
+						{% if listing.snow_plowing %}
+							<div class="col-xs-12 col-md-6 col-xl-4">
+								<li>Snow Removal</li>
+							</div>
+						{% endif %}
+						{% if listing.garbage_service %}
+							<div class="col-xs-12 col-md-6 col-xl-4">
+								<li>Garbage Removal</li>
+							</div>
+						{% endif %}
+						{% if listing.security_service %}
+							<div class="col-xs-12 col-md-6 col-xl-4">
+								<li>Security Service</li>
+							</div>							
+						{% endif %}
+						{% if listing.emergency_maintenance %}
+							<div class="col-xs-12 col-md-6 col-xl-4">
+								<li>Emergency Maintenance</li>
+							</div>							
+						{% endif %}				
+					</div>
+				</div>
+			</div>
+			<hr style="padding-bottom: 15px;">
+			<div class="row">
+				<div class="col-sm-4">
+					<h2>Pets Allowed:</h2>
+				</div>
+				<div class="col-sm-8">
+					<div class="row">						
+						{% if listing.dogs %}
+							<div class="col-xs-12 col-md-6 col-xl-4">
+								<li>Dogs</li>
+							</div>
+						{% endif %}
+						{% if listing.cats %}
+							<div class="col-xs-12 col-md-6 col-xl-4">
+								<li>Cats</li>
+							</div>
+						{% endif %}
+						{% if listing.other_pets %}
+							<div class="col-xs-12 col-md-6 col-xl-4">
+								{{listing.other_pets}}
+							</div>							
+						{% endif %}		
+					</div>
 				</div>
 			</div>			
-			<div class="row">
-				<div class="col-lg-4">
-					<strong>Cats:</strong> {% if listing.cats %} Yes {% else %} No {% endif %}
-				</div>
-				<div class="col-lg-4">
-					<strong>Dogs:</strong> {% if listing.dogs %} Yes {% else %} No {% endif %}
-				</div>
-				<div class="col-lg-4">
-					<strong>Other Pets:</strong> {% if listing.other_pets %} Yes {% else %} No {% endif %}
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-lg-4">
-					<strong>Washer:</strong> {% if listing.washer %} Yes {% else %} No {% endif %}
-				</div>
-				<div class="col-lg-4">
-					<strong>Dryer:</strong> {% if listing.dryer %} Yes {% else %} No {% endif %}
-				</div>
-				<div class="col-lg-4">
-					<strong>DishWasher:</strong> {% if listing.dishwasher %} Yes {% else %} No {% endif %}
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-lg-4">
-					<strong>A/C:</strong> {% if listing.air_conditioning %} Yes {% else %} No {% endif %}
-				</div>
-				<div class="col-lg-4">
-					<strong>Parking:</strong> {{ listing.parking }}
-				</div>
-				<div class="col-lg-4">
-					<strong>Handicap Accessible:</strong> {% if listing.handicap %} Yes {% else %} No {% endif %}
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-lg-4">
-					<strong>Snow Plowing:</strong> {% if listing.snow_plowing %} Yes {% else %} No {% endif %}
-				</div>
-				<div class="col-lg-4">
-					<strong>Garbage Service:</strong> {% if listing.garbage_service %} Yes {% else %} No {% endif %}
-				</div>
-				<div class="col-lg-4">
-					<strong>Security Service:</strong> {% if listing.security_service %} Yes {% else %} No {% endif %}
-				</div>
-			</div> -->
 		</div>
 	</div>
 

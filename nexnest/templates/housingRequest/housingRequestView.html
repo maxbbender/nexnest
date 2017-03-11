@@ -148,12 +148,12 @@
                                                                     <a href="{{ url_for('users.viewUser', userID=deposit.user.id) }}">
                                                                         <h4>
                                                                             <img src="{{deposit.user.profile_image}}" alt="Profile Image" class="img-responsive" style="height: 50px; width: 50px;" />
-                                                                            {{ deposit.user.fname }} {{ deposit.user.lname }}
-                                                                            {% if deposit.completed %}
+                                                                            <span style="font-size: 2.5vh;">{{ deposit.user.fname }} {{ deposit.user.lname }}</span>
+                                                                            <!-- {% if deposit.completed %}
                                                                                 <span class="securityDeposit" id="markDepositPaid{{deposit.user.id}}" style="color: green"><i class="fa fa-check-circle" aria-hidden="true"></i></span>
                                                                             {% else %}
                                                                                 <span class="securityDeposit" id="markDepositPaid{{deposit.user.id}}" style="color: red"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
-                                                                            {% endif %}
+                                                                            {% endif %} -->
                                                                         </h4>
                                                                     </a>
                                                                 </div>
@@ -213,7 +213,7 @@
 			        	                                <p class="card-text"><strong>The group requesting the property: </strong>{{ housingRequest.group.name }}</p>
 			        	                                {% with group=housingRequest.group %}
 			        	                                    {% for user in group.acceptedUsers %}                                    
-			        	                                        {% include 'house/member.html' %}
+			        	                                        {% include 'house/smallMember.html' %}
 			        	                                    {% endfor %}
 			        	                                {% endwith %}
 			        	                            {% endif %}
