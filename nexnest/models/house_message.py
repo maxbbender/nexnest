@@ -32,9 +32,27 @@ class HouseMessage(Message):
         self.house_id = house.id
 
     def genNotifications(self):
-        for user in self.house.tenants:
-            if user is not self.user:
+        # If the landlords sends the message
+        if self.user in self.house.listing.landLordsAsUsers():
+            for user in self.house.tenants:
                 newNotification = Notification(target_user=user,
+                                               target_model_id=self.id,
+                                               notif_type='house_message')
+
+                session.add(newNotification)
+                session.commit()
+        else:
+            for user in self.house.tenants:
+                if user is not self.user:
+                    newNotification = Notification(target_user=user,
+                                                   target_model_id=self.id,
+                                                   notif_type='house_message')
+
+                    session.add(newNotification)
+                    session.commit()
+
+            for landlord in self.house.listing.landLordsAsUsers():
+                newNotification = Notification(target_user=landlord,
                                                target_model_id=self.id,
                                                notif_type='house_message')
 

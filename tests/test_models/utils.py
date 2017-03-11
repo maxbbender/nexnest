@@ -15,9 +15,18 @@ from nexnest.models.house import House
 from nexnest.models.house_message import HouseMessage
 from nexnest.models.maintenance import Maintenance
 from nexnest.models.maintenance_message import MaintenanceMessage
+from nexnest.models.group_listing_message import GroupListingMessage
+from nexnest.models.tour import Tour
+from nexnest.models.tour_message import TourMessage
 
 
 def dropAllRows():
+    session.query(TourMessage).delete()
+    session.commit()
+    session.query(Tour).delete()
+    session.commit()
+    session.query(GroupListingMessage).delete()
+    session.commit()
     session.query(MaintenanceMessage).delete()
     session.commit()
     session.query(Maintenance).delete()

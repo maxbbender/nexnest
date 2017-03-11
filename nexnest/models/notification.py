@@ -23,11 +23,13 @@ class Notification(Base):
     # | group_listing_favorite| maintenance   | platform_report  | report_group
     # | report_landlord       | report_listing| security_deposit | tour
     # | maintenance_message   | rent_reminder | new_tour_time    | tour_message
-    #----------------------------------------------------------------#
+    # ----------------------------------------------------------------b#
     # NEW ONES (need category):
     # | user_leave_group | maintenance_inprogress | maintenance_completed
+    # | group_listing_accept | group_listing_denied | tour_confirm
     notif_type = db.Column(db.String(128))
     redirect_url = db.Column(db.String(128))
+    message = db.Column
 
     def __init__(
             self,
@@ -223,7 +225,7 @@ class Notification(Base):
 
             if returnObject is not None:
                 message = "%s has favorited a new listing in %s" % \
-                    (returnObject.user, returnObject.group.name)
+                    (returnObject.user.name, returnObject.group.name)
 
                 redirectURL = '/group/view/%d' % returnObject.group.id
 
@@ -349,6 +351,61 @@ class Notification(Base):
                 message = "Your landlord has marked your maintenance request as Completed!"
 
                 redirectURL = '/house/maintenanceRequest/%d/view' % returnObject.id
+
+                return message, returnObject, redirectURL
+
+        elif self.notif_type == 'group_listing_accept':
+            returnObject = session.query(GroupListing) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "Your house request has been accepted!"
+
+                redirectURL = '/houseRequest/view/%d' % returnObject.id
+
+                return message, returnObject, redirectURL
+
+        elif self.notif_type == 'group_listing_denied':
+            returnObject = session.query(GroupListing) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "Your house request for %s has been denied" % returnObject.listing.street
+
+                redirectURL = '/'
+
+                return message, returnObject, redirectURL
+
+        elif self.notif_type == 'group_listing_completed':
+            returnObject = session.query(GroupListing) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "Your house request for %s has been completed : Click to go to your new House!" % returnObject.listing.street
+
+                newHouse = session.query(House) \
+                    .filter_by(group_id=returnObject.group.id) \
+                    .first()
+
+                if newHouse is not None:
+                    redirectURL = '/house/view/%d' % newHouse.id
+                else:
+                    redirectURL = '/'
+
+                return message, returnObject, redirectURL
+
+        elif self.notif_type == 'tour_confirmed':
+            returnObject = session.query(Tour) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = 'Your tour has been confirmed!'
+
+                redirectURL = '/tour/view/%d' % returnObject.id
 
                 return message, returnObject, redirectURL
 

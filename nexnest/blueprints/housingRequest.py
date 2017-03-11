@@ -25,6 +25,7 @@ housingRequests = Blueprint(
     'housingRequests', __name__, template_folder='../templates/housingRequest')
 
 
+# NOTIFICATIONS IMPLEMENTED
 @housingRequests.route('/houseRequest/create', methods=['POST'])
 @login_required
 def create():
@@ -56,7 +57,7 @@ def create():
 
                     session.add(newGLM)
                     session.commit()
-                    # print('yo')
+
                     flash("You have requested to live at this listing!", 'success')
 
                     # Invalidate all open group invitations
@@ -106,6 +107,7 @@ def view(id):
     return redirect(url_for('indexs.index'))
 
 
+# NOTIFICATIONS IMPLEMENTED
 @housingRequests.route('/houseRequest/message', methods=['POST'])
 @login_required
 def messageCreate():
@@ -126,6 +128,8 @@ def messageCreate():
                 session.add(newGLM)
                 session.commit()
 
+                newGLM.genNotifications()
+
         else:
             flash("House Request does not exist", 'info')
     else:
@@ -134,6 +138,7 @@ def messageCreate():
     return form.redirect()
 
 
+# NOTIFICATIONS IMPLEMENTED
 @housingRequests.route('/houseRequest/<id>/accept', methods=['GET'])
 @login_required
 def acceptRequest(id):
@@ -156,6 +161,8 @@ def acceptRequest(id):
                 session.add(newSecurityDeposit)
                 session.commit()
 
+            groupListing.genAcceptedNotifications()
+
             flash("Group Accepted", 'success')
             return redirect(url_for('housingRequests.view', id=groupListing.id))
     else:
@@ -163,6 +170,7 @@ def acceptRequest(id):
         return redirect(url_for('indexs.index'))
 
 
+# NOTIFICATIONS IMPLEMENTED
 @housingRequests.route('/houseRequest/<id>/deny', methods=['GET'])
 @login_required
 def denyRequest(id):
@@ -172,7 +180,10 @@ def denyRequest(id):
 
         if groupListing.isEditableBy(current_user):
             groupListing.landlord_show = False
+            groupListing.group_show = False
             session.commit()
+
+            groupListing.genDeniedNotifications()
 
             flash('Request Denied', 'success')
             return redirect(url_for('landlords.landlordDashboard'))
@@ -182,6 +193,7 @@ def denyRequest(id):
         return redirect(url_for('indexs.index'))
 
 
+# NOTIFICATIONS IMPLEMENTED
 @housingRequests.route('/houseRequest/<id>/confirm', methods=['GET'])
 @login_required
 def confirmRequest(id):
@@ -193,7 +205,7 @@ def confirmRequest(id):
             groupListing.completed = True
             session.commit()
 
-            flash('House Confirmed ~ Congrats!', 'success')
+            flash('Your House Request for %s has been completed! Welcome to your new house!' % groupListing.listing.street, 'success')
 
             # Create the House Object
             house = House(listing=groupListing.listing,
@@ -201,6 +213,8 @@ def confirmRequest(id):
 
             session.add(house)
             session.commit()
+
+            groupListing.genCompletedNotifications()
 
             return redirect(url_for('houses.view', id=house.id))
     else:
@@ -344,6 +358,7 @@ def allLeasesSubmitted():
     return redirect(url_for('indexs.index'))
 
 
+# NOTIFICATIONS IMPLEMENTED
 @housingRequests.route('/houseRequest/<id>/accept/ajax', methods=['GET'])
 @login_required
 def acceptHousingRequestAJAX(id):
@@ -356,6 +371,8 @@ def acceptHousingRequestAJAX(id):
             groupListing.accepted = True
             session.commit()
 
+            groupListing.genAcceptedNotifications()
+
             return jsonify(results={'success': True})
         else:
             errorMessage = 'Permissions Error'
@@ -365,6 +382,7 @@ def acceptHousingRequestAJAX(id):
     return jsonify(results={'success': False, 'message': errorMessage})
 
 
+# NOTIFICATIONS IMPLEMENTED
 @housingRequests.route('/houseRequest/<id>/undoAccept/ajax', methods=['GET'])
 @login_required
 def acceptHousingRequestAJAXUndo(id):
@@ -377,6 +395,8 @@ def acceptHousingRequestAJAXUndo(id):
             groupListing.accepted = False
             session.commit()
 
+            groupListing.undoAcceptedNotifications()
+
             return jsonify(results={'success': True})
         else:
             errorMessage = 'Permissions Error'
@@ -386,6 +406,7 @@ def acceptHousingRequestAJAXUndo(id):
     return jsonify(results={'success': False, 'message': errorMessage})
 
 
+# NOTIFICATIONS IMPLEMENTED
 @housingRequests.route('/houseRequest/<id>/complete/ajax', methods=['GET'])
 @login_required
 def completeHousingRequestAJAX(id):
@@ -398,6 +419,8 @@ def completeHousingRequestAJAX(id):
             groupListing.completed = True
             session.commit()
 
+            groupListing.genCompletedNotifications()
+
             return jsonify(results={'success': True})
         else:
             errorMessage = 'Permissions Error'
@@ -407,6 +430,7 @@ def completeHousingRequestAJAX(id):
     return jsonify(results={'success': False, 'message': errorMessage})
 
 
+# NOTIFICATIONS IMPLEMENTED
 @housingRequests.route('/houseRequest/<id>/undoComplete/ajax', methods=['GET'])
 @login_required
 def completeHousingRequestAJAXUndo(id):
@@ -419,6 +443,8 @@ def completeHousingRequestAJAXUndo(id):
             groupListing.completed = False
             session.commit()
 
+            groupListing.undoCompletedNotifications()
+
             return jsonify(results={'success': True})
         else:
             errorMessage = 'Permissions Error'
@@ -428,6 +454,7 @@ def completeHousingRequestAJAXUndo(id):
     return jsonify(results={'success': False, 'message': errorMessage})
 
 
+# NOTIFICATIONS IMPLEMENTED
 @housingRequests.route('/houseRequest/<id>/deny/ajax', methods=['GET'])
 @login_required
 def denyHousingRequestAJAX(id):
@@ -441,6 +468,8 @@ def denyHousingRequestAJAX(id):
             groupListing.landlord_show = False
             session.commit()
 
+            groupListing.genDeniedNotifications()
+
             return jsonify(results={'success': True})
         else:
             errorMessage = 'Permissions Error'
@@ -450,6 +479,7 @@ def denyHousingRequestAJAX(id):
     return jsonify(results={'success': False, 'message': errorMessage})
 
 
+# NOTIFICATIONS IMPLEMENTED
 @housingRequests.route('/houseRequest/<id>/undoDeny/ajax', methods=['GET'])
 @login_required
 def denyHousingRequestAJAXUndo(id):
@@ -462,6 +492,8 @@ def denyHousingRequestAJAXUndo(id):
             groupListing.group_show = True
             groupListing.landlord_show = True
             session.commit()
+
+            groupListing.undoDeniedNotifications()
 
             return jsonify(results={'success': True})
         else:
