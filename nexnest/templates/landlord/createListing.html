@@ -367,17 +367,17 @@
                                 </div>
                                 <div class="col-xs-6">
                                     <div class="form-group">
-                                        <label class="control-label form-control-feedback" id="washer_label">Washing Machine</label>
+                                        <label class="control-label form-control-feedback" id="dishwasher_label">Dishwasher</label>
                                         <div class="checkbox">
                                             <label style="font-size: 1.5em">
-                                                {{form.washer(class='form-control form-check-input')}}
-                                                <!-- <input id="washer" class="form-check-input" type="checkbox"> -->
+                                                {{form.dishwasher(class='form-control form-check-input')}}
+                                                <!-- <input id="dishwasher" class="form-check-input" type="checkbox"> -->
                                                 <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
                                             </label>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>                            
                             <div class="row">
                                 <div class="col-xs-6">
                                     <div class="form-group">
@@ -393,11 +393,24 @@
                                 </div>
                                 <div class="col-xs-6">
                                     <div class="form-group">
-                                        <label class="control-label form-control-feedback" id="dishwasher_label">Dishwasher</label>
+                                        <label class="control-label form-control-feedback" id="washer_label">Washing Machine</label>
                                         <div class="checkbox">
                                             <label style="font-size: 1.5em">
-                                                {{form.dishwasher(class='form-control form-check-input')}}
-                                                <!-- <input id="dishwasher" class="form-check-input" type="checkbox"> -->
+                                                {{form.washer(class='form-control form-check-input')}}
+                                                <!-- <input id="washer" class="form-check-input" type="checkbox"> -->
+                                                <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>                                
+                            </div>
+                            <div class="row" style="display: none;" id="freeLaundry">
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        <label class="control-label form-control-feedback" id="freeLaundry_label">Are The Laundry Machines Free to Use?</label>
+                                        <div class="checkbox">
+                                            <label style="font-size: 1.5em">
+                                                {{form.washer_free(class='form-check-input form-check-input')}}
                                                 <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
                                             </label>
                                         </div>
@@ -625,6 +638,30 @@ $(document).ready(function() {
             $('#apartment_number').removeAttr('required');
         }
     });
+
+    $('#washer').change(function() {
+        var washerCheck = $("#washer").prop("checked");
+        var dryerCheck = $("#dryer").prop("checked");
+        if(washerCheck || dryerCheck){
+            $("#freeLaundry").show();
+        }
+        else{
+            $("#freeLaundry").hide();
+        }        
+    });
+
+    $('#dryer').change(function() {
+        var washerCheck = $("#washer").prop("checked");
+        var dryerCheck = $("#dryer").prop("checked");
+        if(washerCheck || dryerCheck){
+            $("#freeLaundry").show();
+        }
+        else{
+            $("#freeLaundry").hide();
+        }        
+    });
+
+
     var navListItems = $('div.setup-panel div a'),
         allWells = $('.setup-content'),
         allNextBtn = $('.nextBtn'),
