@@ -46,10 +46,10 @@ class TestTour(unittest.TestCase):
     def testTourCreateNotifications(self):
         self.tour.genNotifications()
 
-        for landlord in self.tour.listing.landLordsAsUsers(self):
+        for landlord in self.tour.listing.landLordsAsUsers():
             notifCount = session.query(Notification) \
                 .filter_by(notif_type='tour',
-                           target_model_id=self.tour,
+                           target_model_id=self.tour.id,
                            target_user_id=landlord.id) \
                 .count()
 

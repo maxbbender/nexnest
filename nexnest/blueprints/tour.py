@@ -107,7 +107,6 @@ def viewTour(tourID):
         return redirect(url_for('indexs.index'))
 
 
-
 @tours.route('/tour/<tourID>/confirm')
 @login_required
 def confirmTour(tourID):
