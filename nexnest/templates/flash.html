@@ -1,9 +1,9 @@
-{% with messages = get_flashed_messages(with_categories=true) %}
-{% if messages %}
-{%- for category, message in messages %}
+{% with flashedMessages = get_flashed_messages(with_categories=true) %}
+{% if flashedMessages %}
+{%- for category, flashedMessage in flashedMessages %}
 <div class="alert alert-{{ category }}">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
-    {{ message }}
+    {{ flashedMessage }}
 </div>
 {% endfor %}
 {% endif %}

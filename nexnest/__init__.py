@@ -21,7 +21,7 @@ if env is None:
 
 # File Uploads
 UPLOAD_FOLDER = dirname(__file__) + '/uploads'
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'pdf'])
 
 # App setup
 app = Flask(__name__, static_folder="static")

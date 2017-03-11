@@ -52,7 +52,7 @@
 			    	</li>
                         {% else %}
                     <!-- LOGGED IN -->
-                    <li class="nav-item dropdown">                        
+                    <li class="nav-item dropdown hidden-xs-down">                        
                         <a id="accountDropdown" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" style="padding: 0px;">
                             <strong>My Account</strong>
                             <div class="gavatar">
@@ -135,6 +135,9 @@
                                 {% endif %}
 				                <a class="dropdown-item" href="{{ url_for('users.viewUser', userID=current_user.id) }}">My Account</a>
                                 <a class="dropdown-item" href="{{ url_for('users.directMessagesAll') }}">My Messages</a>
+                                <div class="dropdown-divider hidden-sm-up"></div>
+                                <a class="dropdown-item hidden-sm-up" href="{{url_for('users.logout')}}">Logout</a>
+
 		                	</div>
 		               </div>
 	               </li>
@@ -143,16 +146,16 @@
 			  	</div>
 			</ul>
 		</nav>
-		{% with messages = get_flashed_messages() %}
-		  {% if messages %}
+		{% with flashedMessages = get_flashed_messages() %}
+		  {% if flashedMessages %}
 		    <ul>
-		    {% for message in notificationMessages %}
+		    {% for flashedMessage in flashedMessages %}
 		        {% include 'flash.html' %}
 		    {% endfor %}
 		    </ul>
 		  {% endif %}
 		{% endwith %}
-        <div class="row" style="width: 100%">
+        <div class="row" style="width: 100%;">
             <div class="col-xs-12">
 		        {% block content %}{% endblock %}
             </div>

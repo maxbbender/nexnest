@@ -60,10 +60,6 @@ def createGroup():
             session.add(newGroup)
             session.commit()
 
-            newGroupUser = GroupUser(newGroup, current_user)
-
-            session.add(newGroupUser)
-            session.commit()
             flash('Group Created', 'success')
 
             return redirect(url_for('groups.viewGroup', group_id=newGroup.id))
@@ -119,9 +115,8 @@ def viewGroup(group_id):
         flash("You are not a part of %s" % group.name, 'warning')
         return redirect(url_for('indexs.index'))
 
+
 # NOTIFICATIONS IMPLEMENTED
-
-
 @groups.route('/group/invite', methods=['POST'])
 @login_required
 def invite():
@@ -300,51 +295,54 @@ def removeMember(groupID, userID):
     return redirect(url_for('groups.viewGroup', group_id=groupID))
 
 
+# THIS IS DONE IN THE HOUSE REQUEST BLUEPRINT
 # NOTIFICATIONS IMPLEMENTED
-@groups.route('/group/requestListing', methods=['POST'])
-@login_required
-def requestListing():
-    rLForm = GroupListingForm(request.form)
-    if rLForm.validate():
-        group = session.query(Group) \
-            .filter_by(id=rLForm.groupID.data) \
-            .first()
+# @groups.route('/group/requestListing', methods=['POST'])
+# @login_required
+# def requestListing():
+#     rLForm = GroupListingForm(request.form)
+#     if rLForm.validate():
+#         group = session.query(Group) \
+#             .filter_by(id=rLForm.groupID.data) \
+#             .first()
 
-        if group is not None:
+#         if group is not None:
 
-            # Can the current user take actions on the group?
-            if group.isEditableBy(current_user):
-                listing = session.query(Listing) \
-                    .filter_by(id=rLForm.listingID.data) \
-                    .first()
+#             # Can the current user take actions on the group?
+#             if group.isEditableBy(current_user):
+#                 listing = session.query(Listing) \
+#                     .filter_by(id=rLForm.listingID.data) \
+#                     .first()
 
-                if listing is not None:
-                    newGL = GroupListing(group=group,
-                                         listing=listing)
-                    session.add(newGL)
-                    session.commit()
+#                 if listing is not None:
+#                     newGL = GroupListing(group=group,
+#                                          listing=listing)
+#                     session.add(newGL)
+#                     session.commit()
 
-                    newGLM = GroupListingMessage(groupListing=newGL,
-                                                 user=current_user,
-                                                 content=rLForm.reqDescription.data)
+#                     newGL.genNotifications()
 
-                    session.add(newGLM)
-                    session.commit()
-                    flash("You have requested to live at this listing!", 'success')
+#                     newGLM = GroupListingMessage(groupListing=newGL,
+#                                                  user=current_user,
+#                                                  content=rLForm.reqDescription.data)
 
-                    # Invalidate all open group invitations
-                    newGL.group.invalidateOpenInvitations()
+#                     session.add(newGLM)
+#                     session.commit()
+#                     flash("You have requested to live at this listing!", 'success')
 
-                    return redirect(url_for('housingRequests.view', id=newGL.id))
-                else:
-                    flash("Listing does not exist", 'warning')
-        else:
-            flash("Group does not exist", 'warning')
+#                     # Invalidate all open group invitations
+#                     newGL.group.invalidateOpenInvitations()
 
-    else:
-        flash_errors(rLForm)
+#                     return redirect(url_for('housingRequests.view', id=newGL.id))
+#                 else:
+#                     flash("Listing does not exist", 'warning')
+#         else:
+#             flash("Group does not exist", 'warning')
 
-    return rLForm.redirect()
+#     else:
+#         flash_errors(rLForm)
+
+#     return rLForm.redirect()
 
 
 # NOTIFICATIONS IMPLEMENTED

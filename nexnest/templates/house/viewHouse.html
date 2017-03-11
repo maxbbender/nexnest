@@ -2,38 +2,43 @@
 {% block content %}
 <link href="{{url_for('static', filename='css/landlord/dashboardStyling.css')}}" rel="stylesheet">
 <div class="row">
-    <div class="col-md-2 col-sm-1 hidden-xs display-table-cell v-align box" id="navigation" style="height: inherit;">
+    <div class="col-md-2 col-sm-2 col-xs-2 display-table-cell v-align box" id="navigation" style="height: inherit;">
         <div class="navi navbar">
         	<ul>
         		<li class="nav-item">
-        	        <a class="nav-link" data-toggle="tab" href="#maintenanceTab" role="tab" style="pointer-events: none;">
-        	        	</i><h4 class="hidden-xs hidden-sm"><strong>My House</strong></h4>
+        	        <a class="nav-link" style="padding-left: 10px; pointer-events: none;" data-toggle="tab" href="#" role="tab">
+        	        	<h4 class="hidden-md-down"><strong>My House</strong></h4>
         	        </a>
         	    </li>
         		<li class="nav-item">
-        	        <a class="nav-link active" data-toggle="tab" href="#maintenanceTab" role="tab">
-        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Maintenance Requests</span>
+        	        <a class="nav-link active" style="padding-left: 10px;" data-toggle="tab" href="#maintenanceTab" role="tab">
+        	        	<i class="fa fa-wrench" aria-hidden="true"></i><span class="hidden-md-down">Maintenance Requests</span>
         	        </a>
         	    </li>
         	    {% if current_user in landlords %}
         	    <li class="nav-item">
-        	        <a class="nav-link" data-toggle="tab" href="#membersTab" role="tab">
-        	        	<i class="fa fa-tasks" aria-hidden="true"></i>
-        	        	<span class="hidden-xs hidden-sm">
+        	        <a class="nav-link" style="padding-left: 10px;" data-toggle="tab" href="#membersTab" role="tab">
+        	        	<i class="fa fa-users" aria-hidden="true"></i>
+        	        	<span class="hidden-md-down">
         	        		Group Members
         	        	</span>
         	        </a>
         	    </li>
         	    {% endif %}
         	    <li class="nav-item">
-        	        <a class="nav-link" data-toggle="tab" href="#propertyTab" role="tab">
-        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Property</span>
+        	        <a class="nav-link" style="padding-left: 10px;" data-toggle="tab" href="#propertyTab" role="tab">
+        	        	<i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">Property</span>
+        	        </a>
+        	    </li>
+        	    <li class="nav-item hidden-lg-up">
+        	        <a class="nav-link" style="padding-left: 10px;" data-toggle="tab" href="#messagesTab" role="tab">
+        	        	<i class="fa fa-comments-o" aria-hidden="true"></i><span class="hidden-md-down">Messages</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
-        	        <a class="nav-link" data-toggle="tab" href="#rentTab" role="tab">
-        	        	<i class="fa fa-tasks" aria-hidden="true"></i>
-        	        	<span class="hidden-xs hidden-sm">
+        	        <a class="nav-link" style="padding-left: 15px;" data-toggle="tab" href="#rentTab" role="tab">
+        	        	<i class="fa fa-usd" aria-hidden="true"></i>
+        	        	<span class="hidden-md-down">
         	        		{% if current_user in landlords %}
         	        			Rent Collected
         	        		{% else %}
@@ -45,32 +50,32 @@
         	</ul>
         </div>
     </div>
-    <div class="col-sm-10 col-md-9">
+    <div class="col-sm-10 col-md-10 col-xs-10">
     	<div class="row m-x-auto">
 	        <div class="col-xs-12">
 	            <div class="callout-block text-center fade-in-b">
-	                <h1>
-	                    <strong>{{ house.group.name }}</strong> Occupy:
-	                    <br>
-	                    {{ house.listing.street }} 
-	                    for {{ house.listing.start_date }} to {{ house.listing.end_date }}
+	                <h1 style="font-size: 3.0vh">
+	                    <span class="hidden-xs-down"><strong>{{ house.group.name }}</strong> Occupy:</span>
+	                    <br class="hidden-xs-down">
+	                    <span>{{ house.listing.street }}<br>
+	                    <small>{{ house.listing.start_date }} to {{ house.listing.end_date }}<small></span>
 	                </h1>
 	            </div>
 	        </div>
     	</div>
     	<br>
     	<div class="row">    		
-    		<div class="col-xs-7" style="padding-left: 35px;">
+    		<div class="col-xs-12 col-lg-7" style="padding-left: 35px;">
 			    <div class="tab-content">
 				    <div class="tab-pane active" id="maintenanceTab" role="tabpanel" style="padding: 0px;">
 				    	<div class="row">
 				    	    <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
 				    	        <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
 				    	        	<div class="row">
-				    	        		<div class="col-xs-7">
-				    	        			<h3>Maintence Requests</h3>
+				    	        		<div class="col-md-7 col-xs-12">
+				    	        			<h3 style="font-size: 3.5vh;">Maintence Requests</h3>
 				    	        		</div>
-				    	        		<div class="col-xs-5" style="text-align: right;">
+				    	        		<div class="col-md-5 col-xs-12" style="text-align: right;">
 				    	        			{% if not current_user in landlords %}
 				    	        				<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#maintenanceRequestModal">New Request</a>
 				    	        			{% endif %}
@@ -84,11 +89,11 @@
 			    	            				<div class="card">
 			    	            					<div class="card-block">
 					    	            				<div class="row">
-					    	            					<div class="col-xs-7">
-					    	            						<strong><h3>Request Type: {{ request.request_type }}</h3></strong>
+					    	            					<div class="col-xl-7 col-lg-12 col-xs-12">
+					    	            						<strong><h3 style="font-size: 3.0vh">Request Type: {{ request.request_type }}</h3></strong>
 					    	            					</div>
-					    	            					<div class="col-xs-5" style="text-align: right;">
-					    	            						Status: 
+					    	            					<div class="col-xl-5 col-lg-12 col-xs-12">
+					    	            						<span style="font-size: 2.0vh;">Status: </span>
 					    	            						{% if request.status == 'open' %}
 					    	            							<button class="btn btn-info" style="width: 125px; pointer-events: none;">New Request </button>
 					    	            						{% elif request.status == 'inprogress' %}
@@ -97,14 +102,17 @@
 					    	            							<button class="btn btn-success" style="width: 125px; pointer-events: none;">Completed</button>
 					    	            						{% endif %}
 					    	            					</div>
-					    	            				</div> 
+					    	            				</div>
+					    	            				<br>
 					    	            				<div class="row">
 					    	            					<div class="col-xs-12">
-					    	            						<strong>Date Submitted:</strong> {{ request.date_created }}
-					    	            						<br>
-					    	            						<strong>Submitted By:</strong> {{ request.user.fname }} {{ request.user.lname }}
-					    	            						<br><br>
-					    	            						{{ request.details }}
+					    	            						<span style="font-size: 2.0vh;">
+						    	            						<strong>Date Submitted:</strong> {{ request.date_created }}
+						    	            						<br>
+						    	            						<strong>Submitted By:</strong> {{ request.user.fname }} {{ request.user.lname }}
+						    	            						<br><br>
+						    	            						{{ request.details }}
+					    	            						</span>
 					    	            						<br><br>
 					    	            						<a href="{{url_for('houses.maintenanceRequestView', id=request.id)}}" class="btn btn-primary">View Request</a>
 					    	            					</div>
@@ -133,10 +141,10 @@
 			        	                    <div class="row">
 			        	                        <div class="col-xs-12">
 			        	                            {% if current_user in landlords %}
-			        	                                <p class="card-text"><strong>The group at this property: </strong>{{ house.group.name }}</p>
+			        	                                <p class="card-text" style="font-size: 3.0vh;"><strong>{{ house.group.name }}</strong></p>
 			        	                                {% with group=house.group %}
 			        	                                    {% for user in group.acceptedUsers %}                                    
-			        	                                        {% include 'tour/member.html' %}
+			        	                                        {% include 'house/smallMember.html' %}
 			        	                                    {% endfor %}
 			        	                                {% endwith %}
 			        	                            {% endif %}
@@ -162,6 +170,34 @@
 				    	    </div>
 				    	</div>
 				    </div>
+				    <div class="tab-pane hidden-lg-up" id="messagesTab" role="tabpanel" style="padding: 0px;">
+				    	<div class="row">
+				    	    <div class="card" style="width:100%;">
+    	    			        <h3 class="card-header" style="font-size: 3.5vh;">Group Message with Landlord:</h3>
+    	    			        <div class="card-block">
+    	    			            <!-- Add new message -->
+    	    			            <div class="form-group">
+    	    			                <form action="{{url_for('houses.messageCreate')}}" method='POST'>
+    	    			                    {{messageForm.houseID(value=house.id)}}
+    	    			                    {{messageForm.csrf_token}}
+    	    			                    <div class="row">
+    	    			                        {{messageForm.content(class="form-control", rows=5)}}
+    	    			                    </div>
+    	    			                    <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
+    	    			                        <div class="col-xs-12">
+    	    			                            <input class="btn btn-primary" type="submit" value="Respond">
+    	    			                        </div>                                    
+    	    			                    </div>
+    	    			                </form>
+    	    			            </div>
+    	    			        </div>
+    	    			    </div>
+    	    			    <!-- Messages -->
+						    {% for message in messages %}
+						        {% include 'house/message.html' %}
+						    {% endfor %}
+				    	</div>
+				    </div>
 				    <div class="tab-pane" id="rentTab" role="tabpanel" style="padding: 0px;">
 				    	<div class="row">
 				    	    <div class="card" style="width:100%;">
@@ -176,9 +212,9 @@
 				    </div>
 				</div>
     		</div>
-    		<div class="col-xs-5">
+    		<div class="col-md-5 hidden-md-down">
 			    <div class="card" style="width:100%;">
-			        <h3 class="card-header">Group Message with Landlord:</h3>
+			        <h3 class="card-header" style="font-size: 3.0vh">Group Message with Landlord:</h3>
 			        <div class="card-block">
 			            <!-- Add new message -->
 			            <div class="form-group">

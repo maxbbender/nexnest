@@ -61,6 +61,44 @@ class Maintenance(Base):
                 session.add(newNotif)
                 session.commit()
 
+    def genInProgressNotifications(self):
+        for user in self.house.tenants:
+            newNotif = Notification(notif_type='maintenance_inprogress',
+                                    target_model_id=self.id,
+                                    target_user=user)
+            session.add(newNotif)
+            session.commit()
+
+    def genCompletedNotifications(self):
+        for user in self.house.tenants:
+            newNotif = Notification(notif_type='maintenance_completed',
+                                    target_model_id=self.id,
+                                    target_user=user)
+            session.add(newNotif)
+            session.commit()
+
+    def removeInProgressNotifications(self):
+        # notifs = session.query(Notification).filter_by(notif_type='maintenance_inprogress',
+        #                                                target_model_id=self.id)
+        # session.delete(notifs)
+        # session.commit()
+        session.query(Notification).filter_by(notif_type='maintenance_inprogress',
+                                              target_model_id=self.id) \
+            .delete()
+
+        session.commit()
+
+    def removeCompletedNotifications(self):
+        # notifs = session.query(Notification).filter_by(notif_type='maintenance_completed',
+        #                                                target_model_id=self.id)
+        # session.delete(notifs)
+        # session.commit()
+        session.query(Notification).filter_by(notif_type='maintenance_completed',
+                                              target_model_id=self.id) \
+            .delete()
+
+        session.commit()
+
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument
     # 'target' is the inserted object

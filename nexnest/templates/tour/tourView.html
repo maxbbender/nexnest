@@ -1,27 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
     <br>
-    <div class="row m-x-auto">
+    <div class="row">
         <div class="col-xs-1">
         </div>
         <div class="col-xs-10">
             <div class="callout-block text-center fade-in-b">
-                <h1>
+                <h2 style="font-size: 3.5vh;">
                     {% if tour.tour_confirmed %}
                     <b>Tour of {{ tour.listing.street }}, {{ tour.listing.city }} {{ tour.listing.state }} {{ tour.listing.zip_code }}</b>
                     {% else %}
                         <b>Tour requested for {{ tour.listing.street }}, {{ tour.listing.city }} {{ tour.listing.state }} {{ tour.listing.zip_code }}</b>
                     {% endif %}
-                </h1>
+                </h2>
             </div>
         </div>
     </div>
     <br>
-    <div class="row m-x-auto">
+    <div class="row">
         <div class="col-xs-1">
         </div>        
         <!--Info Pane-->
-        <div class="col-md-6 col-lg-6 col-xl-6">
+        <div class="col-xs-11 col-md-11 col-lg-6 col-xl-6">
             <div class="row">
                 <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
                     <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">The Tour</h3>
@@ -38,18 +38,30 @@
                                         {% if tour.group.leader_id == current_user.id %}
                                             {% if tour.last_requested == 'landlord' %}
                                                 <strong>Tour Status:</strong>
-                                                {% if tour.tour_confirmed %}
+                                                {% if tour.tour_confirmed %}                                                    
                                                     <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
                                                     <br>
                                                     Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour<br><br>
-                                                    <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour</a>
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-md-6 col-lg-4">
+                                                                <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour</a>
+                                                            </div>
+                                                        </div>
                                                 {% else %}
                                                     <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the you to confrim the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                     <br><br>
                                                     Waiting for the you to confirm the requested time or suggest a different one<br>
-                                                    <a href='#' class="btn btn-success" data-toggle="modal" data-target="#confirmTourModal">Confirm Time</a>
-                                                    <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestTimeTourModal">Suggest Different Time</a>
-                                                    <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour Request</a>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-xl-4" style="padding-bottom: 5px;">
+                                                            <a href='#' class="btn btn-success" data-toggle="modal" data-target="#confirmTourModal" style="width: 196px;">Confirm Time</a>
+                                                        </div>
+                                                        <div class="col-xs-12 col-xl-4" style="padding-bottom: 5px;">
+                                                            <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestTimeTourModal" style="width: 196px;">Suggest Different Time</a>
+                                                        </div>
+                                                        <div class="col-xs-12 col-xl-4" style="padding-bottom: 5px;">
+                                                            <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal" style="width: 196px;">Cancel Tour Request</a>
+                                                        </div>
+                                                    </div>
                                                 {% endif %}
                                             {% else %}
                                                 <p class="card-text">
@@ -59,13 +71,21 @@
                                                         <br>
                                                         Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour
                                                         <br><br>
-                                                        <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour Request</a>
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-md-6 col-lg-4">
+                                                                <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour Request</a>
+                                                            </div>
+                                                        </div>
                                                     {% else %}
                                                         <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the landlord to confrim your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                         <br>
                                                         Waiting for the landlord to confirm your requested time or suggest a different one
                                                         <br><br>
-                                                        <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour Request</a>
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-md-6 col-lg-4">
+                                                                <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour Request</a>
+                                                            </div>
+                                                        </div>
                                                     {% endif %}
                                                 </p>
                                             {% endif %}
@@ -77,15 +97,27 @@
                                                     <br>
                                                     Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour
                                                     <br><br>
-                                                    <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour</a>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-md-6 col-lg-4">
+                                                            <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour</a>
+                                                        </div>
+                                                    </div>
                                                 {% else %}
                                                     <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the you to confirm the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                     <br>
                                                     Waiting for the you to confirm the requested time or suggest a different one
                                                     <br><br>
-                                                    <a href='#' class="btn btn-success" data-toggle="modal" data-target="#confirmTourModal">Confirm Time</a>
-                                                    <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestTimeTourModal">Suggest Different Time</a>
-                                                    <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#declineTourModal">Decline Tour</a>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-lg-6 col-xl-4" style="padding-bottom: 5px;">
+                                                            <a href='#' class="btn btn-success" data-toggle="modal" data-target="#confirmTourModal" style="width: 196px;">Confirm Time</a>
+                                                        </div>
+                                                        <div class="col-xs-12 col-lg-6 col-xl-4" style="padding-bottom: 5px;">
+                                                            <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestTimeTourModal" style="width: 196px;">Suggest Different Time</a>
+                                                        </div>
+                                                        <div class="col-xs-12 col-lg-6 col-xl-4" style="padding-bottom: 5px;">
+                                                            <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#declineTourModal" style="width: 196px;">Decline Tour</a>
+                                                        </div>
+                                                    </div>
                                                 {% endif %}
                                             {% else %}
                                                 <strong>Tour Status:</strong>
@@ -97,7 +129,11 @@
                                                     <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the group leader to confirm your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                     <br><br>
                                                     Waiting for the group leader to confirm your requested time or suggest a different one<br>
-                                                    <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour Request</a>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-md-6 col-lg-4">
+                                                            <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour Request</a>
+                                                        </div>
+                                                    </div>
                                                 {% endif %}
                                             {% endif %}
                                             <br><br>
@@ -157,10 +193,10 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4 col-lg-4 col-xl-4" style="padding-left: 5%;">
+        <div class="col-xs-12 col-md-11 col-lg-5 col-xl-5" style="padding-left: 10%;">
             <div class="row">
                 <div class="card" style="width:100%;">
-                    <h3 class="card-header">Group Message with Landlord:</h3>
+                    <h3 class="card-header" style="font-size: 3.0vh;">Group Message with Landlord:</h3>
                     <div class="card-block">
                         <!-- Add new message -->
                         <div class="form-group">

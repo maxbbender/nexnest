@@ -6,7 +6,7 @@ from flask_wtf.file import FileField, FileRequired
 
 from wtforms.fields import StringField, PasswordField, SubmitField, BooleanField, IntegerField, TextAreaField, SelectField, DateField, HiddenField
 
-from wtforms.validators import InputRequired, Length, Email, EqualTo, Optional
+from wtforms.validators import InputRequired, Length, Email, EqualTo, Optional, URL
 
 from nexnest.static.dataSets import *
 
@@ -111,19 +111,19 @@ class ListingForm(RedirectForm):
     num_half_baths = IntegerField(
         'Number of Half Bathrooms', [InputRequired()])
     price = IntegerField('Price per Bedroom per Semester', [InputRequired()])
-    square_footage = IntegerField('Square Footage of House', [InputRequired()])
+    square_footage = IntegerField('Square Footage of House', [Optional()])
     parking = SelectField('What Parking is Available',
                           choices=valid_parking_types)
     cats = BooleanField('Are Cats Allowed?')
     dogs = BooleanField('Are Dogs Allowed?')
-    other_pets = BooleanField('Are Other Pets Allowed?')
+    other_pets = TextAreaField('Are Other Pets Allowed?', [
+        Length(min=0, max=160)])
     washer = BooleanField('Is there a Washing Machine?')
     dryer = BooleanField('Is there a Dryer?')
     dishwasher = BooleanField('Is there a Dishwasher?')
     air_conditioning = BooleanField('Is there Air Conditioning?')
     handicap = BooleanField('Is the property handicap accessible?')
     furnished = BooleanField('Is the property furnished?')
-    utilities_included = BooleanField('Are utilities included in the price?')
     emergency_maintenance = BooleanField(
         'Do you provide emergency maintenance?')
     snow_plowing = BooleanField('Do you provide snow removal?')
@@ -140,6 +140,14 @@ class ListingForm(RedirectForm):
         'What date is rent due for the second semester?', [Optional()])
     monthly_rent_due_date = DateField(
         'What day of month is rent due?', [Optional()])
+    electricity = BooleanField('Electricity')
+    internet = BooleanField('Internet')
+    water = BooleanField('Water')
+    heat_gas = BooleanField('Heat/Gas')
+    cable = BooleanField('Cable')
+    washer_free = BooleanField('Is the Washer Free?')
+    floor_plan = FileField('Floor Plan')
+    youtube_url = StringField('Listing Video', [Optional(), URL()])
 
 
 class CreateGroupForm(RedirectForm):

@@ -5,7 +5,8 @@ from sqlalchemy.orm import relationship
 
 from flask import flash
 
-from nexnest.application import db
+from nexnest.application import db, session
+from nexnest.models.notification import Notification
 
 from .base import Base
 
@@ -61,6 +62,18 @@ class Tour(Base):
             flash("Permissions Error")
 
         return False
+
+    def genNotifications(self):
+        for landlord in self.listing.landLordsAsUsers():
+            newNotif = Notification(notif_type='tour',
+                                    target_user=landlord,
+                                    target_model_id=self.id)
+            session.add(newNotif)
+            session.commit()
+
+    # def genConfirmNotifications(self):
+    #     for user in self.group.accep
+
 
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument

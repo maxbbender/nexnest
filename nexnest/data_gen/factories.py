@@ -56,20 +56,19 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     price = 6000
     square_footage = 3500
     parking = 'onstreet'
-    cats = False
-    dogs = True
-    other_pets = False
-    washer = True
-    dryer = True
-    dishwasher = True
-    air_conditioning = True
-    handicap = True
-    furnished = False
-    utilities_included = False
-    emergency_maintenance = False
-    snow_plowing = True
-    garbage_service = True
-    security_service = True
+    cats = bool(random.getrandbits(1))
+    dogs = bool(random.getrandbits(1))
+    other_pets = factory.LazyAttribute(lambda x: fake.paragraph())
+    washer = bool(random.getrandbits(1))
+    dryer = bool(random.getrandbits(1))
+    dishwasher = bool(random.getrandbits(1))
+    air_conditioning = bool(random.getrandbits(1))
+    handicap = bool(random.getrandbits(1))
+    furnished = bool(random.getrandbits(1))
+    emergency_maintenance = bool(random.getrandbits(1))
+    snow_plowing = bool(random.getrandbits(1))
+    garbage_service = bool(random.getrandbits(1))
+    security_service = bool(random.getrandbits(1))
     description = factory.LazyAttribute(lambda x: fake.paragraph())
     num_half_baths = 4
     num_full_baths = 3
@@ -82,6 +81,13 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     second_semester_rent_due_date = factory.LazyAttribute(
         lambda x: fake.date(pattern="%Y-%m-%d"))
     # monthly_rent_due_date = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
+    electricity = bool(random.getrandbits(1))
+    internet = bool(random.getrandbits(1))
+    water = bool(random.getrandbits(1))
+    heat_gas = bool(random.getrandbits(1))
+    cable = bool(random.getrandbits(1))
+    washer_free = bool(random.getrandbits(1))
+    youtube_url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
 
 
 class LandlordFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -90,8 +96,8 @@ class LandlordFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session = session
 
     user = factory.SubFactory(UserFactory)
-    online_pay = True
-    check_pay = True
+    online_pay = bool(random.getrandbits(1))
+    check_pay = bool(random.getrandbits(1))
     street = factory.LazyAttribute(lambda x: fake.street_address())
     city = factory.LazyAttribute(lambda x: fake.city())
     state = factory.LazyAttribute(lambda x: fake.state_abbr())

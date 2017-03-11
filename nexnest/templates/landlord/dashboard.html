@@ -63,41 +63,41 @@
 
 <link href="{{url_for('static', filename='css/landlord/dashboardStyling.css')}}" rel="stylesheet">
 <div class="row">
-    <div class="col-md-2 col-sm-1 hidden-xs display-table-cell v-align box" id="navigation" style="height: inherit;">
+    <div class="col-md-2 col-sm-1 hidden-xs display-table-cell v-align box" id="navigation">
         <div class="navi navbar">
         	<ul>
         		<li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#" role="tab" style="pointer-events: none;">
+                    <a class="nav-link left-panel" data-toggle="tab" href="#" role="tab" style="pointer-events: none;">
                         </i><h4 class="hidden-xs hidden-sm"><strong>My Dashboard</strong></h4>
                     </a>
                 </li>
         		<li class="nav-item">
-        	        <a class="nav-link active" data-toggle="tab" href="#occupiedListingsTab" role="tab">
+        	        <a class="nav-link left-panel active" id="occupiedListingsTab2" data-toggle="tab" href="#occupiedListingsTab" role="tab">
         	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Occupied Listings</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
-        	        <a class="nav-link" data-toggle="tab" href="#unbookedListingsTab" role="tab">
+        	        <a class="nav-link left-panel" id="unbookedListingsTab2" data-toggle="tab" href="#unbookedListingsTab" role="tab">
         	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Unbooked Listings</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
-        	        <a class="nav-link" data-toggle="tab" href="#toursTab" role="tab">
+        	        <a class="nav-link left-panel" id="toursTab2" data-toggle="tab" href="#toursTab" role="tab">
         	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Tours</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
-        	        <a class="nav-link" data-toggle="tab" href="#requestsTab" role="tab">
+        	        <a class="nav-link left-panel" id="requestsTab2" data-toggle="tab" href="#requestsTab" role="tab">
         	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Listing Requests</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
-        	        <a class="nav-link" data-toggle="tab" href="#maintenanceTab" role="tab">
+        	        <a class="nav-link left-panel" id="maintenanceTab2" data-toggle="tab" href="#maintenanceTab" role="tab">
         	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Maintenance Requests</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
-        	        <a class="nav-link" data-toggle="tab" href="#paymentTab" role="tab">
+        	        <a class="nav-link left-panel" id="paymentTab2" data-toggle="tab" href="#paymentTab" role="tab">
         	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Payment Portal</span>
         	        </a>
         	    </li>
@@ -124,15 +124,15 @@
 		        	            <div class="card-block">
 		        	                <ul class="nav nav-tabs">
 		        	                    <li class="nav-item">
-		        	                        <a class="nav-link active" data-toggle="tab" href="#currentlyOccupiedTab" role="tab">Currently Occupied</a>
+		        	                        <a class="nav-link tab-selector first-tab active" id="currentlyOccupiedTab2" data-toggle="tab" href="#currentlyOccupiedTab" role="tab">Currently Occupied</a>
 		        	                    </li>
 		        	                    <li class="nav-item">
-		        	                        <a class="nav-link" data-toggle="tab" href="#willBeOccupiedTab" role="tab">Booked For Future</a>
+		        	                        <a class="nav-link tab-selector" id="willBeOccupiedTab2"  data-toggle="tab" href="#willBeOccupiedTab" role="tab">Booked For Future</a>
 		        	                    </li>
 		        	                </ul>
 		        	                <br>
 		        	                <div class="tab-content">
-		        	                    <div class="tab-pane active" id="currentlyOccupiedTab" role="tabpanel" style="padding: 0px;">
+		        	                    <div class="tab-pane selected-tab first-tab active" id="currentlyOccupiedTab" role="tabpanel" style="padding: 0px;">
 		        	                    	{% if currentHouses|length > 0 %}
 		        	                            {% for house in currentHouses %}
 		        	                            	<div class="row">
@@ -216,7 +216,7 @@
 		            							</div>
 		            						{% endif %}
 		        	                    </div>
-		        	                    <div class="tab-pane" id="willBeOccupiedTab" role="tabpanel" style="padding: 0px;">
+		        	                    <div class="tab-pane selected-tab" id="willBeOccupiedTab" role="tabpanel" style="padding: 0px;">
 		        	                    	{% if futureHouses|length > 0 %}
 		        	                            {% for house in futureHouses %}
 		        	                            	<div class="row">
@@ -371,15 +371,15 @@
 		        	            <div class="card-block">
 		        	                <ul class="nav nav-tabs">
 		        	                    <li class="nav-item">
-		        	                        <a class="nav-link active" data-toggle="tab" href="#requestedToursTab" role="tab">Requested Tours</a>
+		        	                        <a class="nav-link tab-selector first-tab active" id="requestedToursTab2" data-toggle="tab" href="#requestedToursTab" role="tab">Requested Tours</a>
 		        	                    </li>
 		        	                    <li class="nav-item">
-		        	                        <a class="nav-link" data-toggle="tab" href="#scheduledToursTab" role="tab">Scheduled Tours</a>
+		        	                        <a class="nav-link tab-selector"  id="scheduledToursTab2" data-toggle="tab" href="#scheduledToursTab" role="tab">Scheduled Tours</a>
 		        	                    </li>
 		        	                </ul>
 		        	                <br>
 		        	                <div class="tab-content">
-		        	                    <div class="tab-pane active" id="requestedToursTab" role="tabpanel" style="padding: 0px;">
+		        	                    <div class="tab-pane selected-tab first-tab active" id="requestedToursTab" role="tabpanel" style="padding: 0px;">
 		        	                        {% if requestedTours %}
 		        	                            {% for tourObject in requestedTours %}
 		        	                            	<div id="numberOfRequestedTours{{tourObject.listing.id}}" style="display: none;">{{tourObject.tours|length }}</div>
@@ -561,7 +561,7 @@
 		            							</div>
 		            						{% endif %}
 		        	                    </div>
-		        	                    <div class="tab-pane" id="scheduledToursTab" role="tabpanel" style="padding: 0px;">
+		        	                    <div class="tab-pane selected-tab" id="scheduledToursTab" role="tabpanel" style="padding: 0px;">
 		        	                        {% if scheduledTours %}
 		        	                            {% for tourObject in scheduledTours %}
 		        	                            	<div id="numberOfScheduledTours{{tourObject.listing.id}}" style="display: none;">{{tourObject.tours|length }}</div>
@@ -735,15 +735,15 @@
 		        	            <div class="card-block">
 		        	                <ul class="nav nav-tabs">
 		        	                    <li class="nav-item">
-		        	                        <a class="nav-link active" data-toggle="tab" href="#unacceptedTab" role="tab">Unaccepted</a>
+		        	                        <a class="nav-link tab-selector first-tab active" id="unacceptedTab2" data-toggle="tab" href="#unacceptedTab" role="tab">Unaccepted</a>
 		        	                    </li>
 		        	                    <li class="nav-item">
-		        	                        <a class="nav-link" data-toggle="tab" href="#acceptedTab" role="tab">Accepted</a>
+		        	                        <a class="nav-link tab-selector" id="acceptedTab2" data-toggle="tab" href="#acceptedTab" role="tab">Accepted</a>
 		        	                    </li>
 		        	                </ul>
 		        	                <br>
 		        	                <div class="tab-content">
-		        	                    <div class="tab-pane active" id="unacceptedTab" role="tabpanel" style="padding: 0px;">
+		        	                    <div class="tab-pane selected-tab first-tab active" id="unacceptedTab" role="tabpanel" style="padding: 0px;">
 		        	                    	{% if unAcceptedHousingRequests %}		        	                    	
 		        	                    	    {% for housingRequestObject in unAcceptedHousingRequests %}
 		        	                    	    	<div id="numberOfUnacceptedRequests{{housingRequestObject.listing.id}}" style="display: none;">{{housingRequestObject.houseRequests|length }}</div>
@@ -893,7 +893,7 @@
     	            							</div>
 		        	                    	{% endif %}
 		        	                    </div>
-		        	                    <div class="tab-pane" id="acceptedTab" role="tabpanel" style="padding: 0px;">
+		        	                    <div class="tab-pane selected-tab" id="acceptedTab" role="tabpanel" style="padding: 0px;">
 		        	                    	{% if acceptedHousingRequests %}
 		        	                        	{% for housingRequest in acceptedHousingRequests %}
         							                <div class="card" id="confirmRequest{{housingRequest.id}}">
@@ -907,9 +907,16 @@
         								                    		<div class="row">
         								                    			<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
 	        								                    			<strong style="padding-right: 16px;">All Leases Collected: </strong>
-	        								                    			<button id="markAllCollected{{housingRequest.id}}" type="button" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" onclick="markLeasesCollected({{housingRequest.id}})"><i class="fa fa-times" aria-hidden="true"></i></button>
-	        								                    			<button type="button" id="markAllCollectedLoading{{housingRequest.id}}" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
-	        								                    			<button type="button" id="markAllUncollected{{housingRequest.id}}" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" style="display: none;" onclick="markLeasesUncollected({{housingRequest.id}})"><i class="fa fa-check" aria-hidden="true"></i></button>
+	        								                    			{% if housingRequest.all_leases_submitted %}
+	        								                    				<button id="undoMarkAllCollected{{housingRequest.id}}" type="button" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" onclick="undoMarkLeasesCollected({{housingRequest.id}})"><i class="fa fa-check" aria-hidden="true"></i></button>
+	        								                    				<button type="button" id="undoMarkAllCollectedLoading{{housingRequest.id}}" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+	        								                    				<button type="button" id="undoMarkAllUncollected{{housingRequest.id}}" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" style="display: none;" onclick="undoMarkLeasesUncollected({{housingRequest.id}})"><i class="fa fa-times" aria-hidden="true"></i></button>
+	        								                    			{% else %}
+	        								                    				<button id="markAllCollected{{housingRequest.id}}" type="button" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" onclick="markLeasesCollected({{housingRequest.id}})"><i class="fa fa-times" aria-hidden="true"></i></button>
+	        								                    				<button type="button" id="markAllCollectedLoading{{housingRequest.id}}" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+	        								                    				<button type="button" id="markAllUncollected{{housingRequest.id}}" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" style="display: none;" onclick="markLeasesUncollected({{housingRequest.id}})"><i class="fa fa-check" aria-hidden="true"></i></button>
+	        								                    			{% endif %}
+	        								                    			
 	        								                    		</div>
 	        								                    		<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
 	        								                    			<strong>Security Deposits Collected: </strong> 
@@ -1014,18 +1021,18 @@
 		        	            <div class="card-block">
 		        	                <ul class="nav nav-tabs">
 		        	                    <li class="nav-item">
-		        	                        <a class="nav-link active" data-toggle="tab" href="#newMaintenanceTab" role="tab">New Requests</a>
+		        	                        <a class="nav-link tab-selector first-tab active" id="newMaintenanceTab2" data-toggle="tab" href="#newMaintenanceTab" role="tab">New Requests</a>
 		        	                    </li>
 		        	                    <li class="nav-item">
-		        	                        <a class="nav-link" data-toggle="tab" href="#inProgressMaintenanceTab" role="tab">In-Progress</a>
+		        	                        <a class="nav-link tab-selector" id="inProgressMaintenanceTab2" data-toggle="tab" href="#inProgressMaintenanceTab" role="tab">In-Progress</a>
 		        	                    </li>
 		        	                    <li class="nav-item">
-		        	                        <a class="nav-link" data-toggle="tab" href="#completedMaintenanceTab" role="tab">Completed</a>
+		        	                        <a class="nav-link tab-selector" id="completedMaintenanceTab2" data-toggle="tab" href="#completedMaintenanceTab" role="tab">Completed</a>
 		        	                    </li>
 		        	                </ul>
 		        	                <br>
 		        	                <div class="tab-content">
-		        	                    <div class="tab-pane active" id="newMaintenanceTab" role="tabpanel" style="padding: 0px;">
+		        	                    <div class="tab-pane selected-tab first-tab active" id="newMaintenanceTab" role="tabpanel" style="padding: 0px;">
 		        	                    	{% if openMaintenanceRequests|length > 0 %}
 		        	                            {% for requestObject in openMaintenanceRequests %}		        	                            
 		        	                            	<div id="numberOfOpenRequests{{requestObject.house.listing.id}}" style="display: none;">{{requestObject.maintenanceRequests|length }}</div>
@@ -1126,7 +1133,7 @@
 		            							</div>
 		            						{% endif %}
 		        	                    </div>
-		        	                    <div class="tab-pane" id="inProgressMaintenanceTab" role="tabpanel" style="padding: 0px;">
+		        	                    <div class="tab-pane selected-tab" id="inProgressMaintenanceTab" role="tabpanel" style="padding: 0px;">
 		        	                    	{% if inProgressMaintenanceRequests|length > 0 %}
 		        	                            {% for requestObject in inProgressMaintenanceRequests %}		        	                            
 		        	                            	<div id="numberOfInProgressRequests{{requestObject.house.listing.id}}" style="display: none;">{{requestObject.maintenanceRequests|length }}</div>
@@ -1209,7 +1216,7 @@
 		            							</div>
 		            						{% endif %}
 		        	                    </div>
-		        	                    <div class="tab-pane" id="completedMaintenanceTab" role="tabpanel" style="padding: 0px;">
+		        	                    <div class="tab-pane selected-tab" id="completedMaintenanceTab" role="tabpanel" style="padding: 0px;">
 		        	                    	{% if completedMaintenanceRequests|length > 0 %}
 		        	                            {% for requestObject in completedMaintenanceRequests %}	
 		        	                            	<div class="card" id="completedRequestListing{{requestObject.house.listing.id}}" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
@@ -1319,6 +1326,66 @@
 {% endblock %}
 {% block scripts %}
 <script>
+	var validMainTabs = ["occupiedListingsTab", "unbookedListingsTab", "toursTab", "requestsTab", "maintenanceTab", "paymentTab"];
+	var validSecondTabs = ["currentlyOccupiedTab", "willBeOccupiedTab", "scheduledToursTab", "requestedToursTab", "unacceptedTab", "acceptedTab", 
+	"newMaintenanceTab", "inProgressMaintenanceTab", "completedMaintenanceTab"];
+	var hash = document.location.hash;
+	hash = hash.substr(1);
+	if(!hash){
+		hash = "occupiedListingsTab-currentlyOccupiedTab";
+		window.location.hash = hash;
+	}
+	//alert(hash);
+	if (hash.indexOf('-') > -1){
+		var mainTab = hash.split('-')[0];
+		var secondTab = hash.split('-')[1];
+	}else{
+		var mainTab = hash;
+	}	
+	if ($.inArray(mainTab, validMainTabs) > -1) {	
+		$("#occupiedListingsTab").removeClass('active');
+		$("#unbookedListingsTab").removeClass('active');
+		$("#toursTab").removeClass('active');
+		$("#requestsTab").removeClass('active');
+		$("#maintenanceTab").removeClass('active');
+		$("#paymentTab").removeClass('active');
+		//remove content from current left tab
+		$(".nav-link").removeClass('active');
+		//set highlight left tab
+	    $('#'+mainTab+'2').addClass('active');
+	    //set main content
+	    $('#'+mainTab).addClass('active');
+
+	    $(".tab-selector").click(function () {
+			var newtab = this.id;
+			newtab = newtab.slice(0, -1);
+			var currentHash = window.location.hash;
+			currentHash = currentHash.split('-')[0];
+		    window.location.hash = currentHash+"-"+newtab;
+		});
+	   	if ($.inArray(secondTab, validSecondTabs) > -1) {	   		
+	   		$(".selected-tab").removeClass('active');
+	   		$("#"+secondTab+'2').addClass('active');
+			$("#"+secondTab).addClass('active');
+		}
+	}
+	else{
+		alert("hi");
+		$("#occupiedListingsTab").addClass('active');
+	}
+	//Any time a tab is clicked on left panel update the url to show that
+	$(".left-panel").click(function () {
+		var newHash = this.id;
+		newHash = newHash.slice(0, -1);
+	    window.location.hash = newHash;
+	    $('.first-tab').addClass('active');
+	});
+
+	
+
+	
+	
+
 	/**
 	 * Returns a random integer between min (inclusive) and max (inclusive)
 	 * Using Math.round() will give you a non-uniform distribution!
@@ -1967,47 +2034,87 @@
     }
 
     function paidToUnpaid(userID, requestID){
-    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
-    	$("#depositPaid"+requestID+"Z"+userID).hide();
-    	$("#markDepositUnpaid"+requestID+"Z"+userID).show();
-    	setTimeout(function () {
-        	$("#markDepositUnpaid"+requestID+"Z"+userID).hide();
-        	$("#depositMarkedUnPaid"+requestID+"Z"+userID).show();
-        	$("#numDeposits"+requestID).html(depositsPaid-1);
-        }, 1200);        
+    	requestURL = '/houseRequest/'+ requestID +'/securityDeposit/' + userID + '/unPaid'
+    	$.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+		    	$("#depositPaid"+requestID+"Z"+userID).hide();
+		    	$("#markDepositUnpaid"+requestID+"Z"+userID).show();
+		    	setTimeout(function () {
+		        	$("#markDepositUnpaid"+requestID+"Z"+userID).hide();
+		        	$("#depositMarkedUnPaid"+requestID+"Z"+userID).show();
+		        	$("#numDeposits"+requestID).html(depositsPaid-1);
+		        }, 1200);
+		    }
+		    else{
+		    	alert("Something went wrong, try again later");
+		    }
+		});
     }
 
     function paidToPaid(userID, requestID){
-    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
-    	$("#depositMarkedUnPaid"+requestID+"Z"+userID).hide();
-    	$("#markDepositUnpaid"+requestID+"Z"+userID).show();
-    	setTimeout(function () {
-        	$("#markDepositUnpaid"+requestID+"Z"+userID).hide();
-        	$("#depositPaid"+requestID+"Z"+userID).show();
-        	$("#numDeposits"+requestID).html(depositsPaid+1);
-        }, 1200);    	 	
+    	requestURL = '/houseRequest/'+ requestID +'/securityDeposit/' + userID + '/paid'
+    	$.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+		    	$("#depositMarkedUnPaid"+requestID+"Z"+userID).hide();
+		    	$("#markDepositUnpaid"+requestID+"Z"+userID).show();
+		    	setTimeout(function () {
+		        	$("#markDepositUnpaid"+requestID+"Z"+userID).hide();
+		        	$("#depositPaid"+requestID+"Z"+userID).show();
+		        	$("#numDeposits"+requestID).html(depositsPaid+1);
+		        }, 1200);
+		    }
+		    else{
+		    	alert("Something went wrong, try again later");
+		    }
+		});
     }
 
     function unpaidToPaid(userID, requestID){
-    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
-    	$("#depositUnpaid"+requestID+"Z"+userID).hide();
-    	$("#markDepositPaid"+requestID+"Z"+userID).show();
-    	setTimeout(function () {
-        	$("#markDepositPaid"+requestID+"Z"+userID).hide();
-        	$("#depositMarkedPaid"+requestID+"Z"+userID).show();
-        	$("#numDeposits"+requestID).html(depositsPaid+1);
-        }, 1200);    	 	
+    	requestURL = '/houseRequest/'+ requestID +'/securityDeposit/' + userID + '/paid'
+    	$.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+		    	$("#depositUnpaid"+requestID+"Z"+userID).hide();
+		    	$("#markDepositPaid"+requestID+"Z"+userID).show();
+		    	setTimeout(function () {
+		        	$("#markDepositPaid"+requestID+"Z"+userID).hide();
+		        	$("#depositMarkedPaid"+requestID+"Z"+userID).show();
+		        	$("#numDeposits"+requestID).html(depositsPaid+1);
+		        }, 1200);
+		    }
+		    else{
+		    	alert("Something went wrong, try again later");
+		    }
+		});
     }
 
     function unpaidToUnpaid(userID, requestID){
-    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
-    	$("#depositMarkedPaid"+requestID+"Z"+userID).hide();
-    	$("#markDepositPaid"+requestID+"Z"+userID).show();
-    	setTimeout(function () {
-        	$("#markDepositPaid"+requestID+"Z"+userID).hide();
-        	$("#depositUnpaid"+requestID+"Z"+userID).show();
-        	$("#numDeposits"+requestID).html(depositsPaid-1);
-        }, 1200);    	 	
+    	requestURL = '/houseRequest/'+ requestID +'/securityDeposit/' + userID + '/unPaid'
+    	$.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+		    	$("#depositMarkedPaid"+requestID+"Z"+userID).hide();
+		    	$("#markDepositPaid"+requestID+"Z"+userID).show();
+		    	setTimeout(function () {
+		        	$("#markDepositPaid"+requestID+"Z"+userID).hide();
+		        	$("#depositUnpaid"+requestID+"Z"+userID).show();
+		        	$("#numDeposits"+requestID).html(depositsPaid-1);
+		        }, 1200);
+		    }
+		    else{
+		    	alert("Something went wrong, try again later");
+		    }
+		}); 	
     }
 
     function markLeasesCollected(requestID){
@@ -2025,6 +2132,24 @@
     	setTimeout(function () {
         	$("#markAllCollectedLoading"+requestID).hide();
         	$("#markAllCollected"+requestID).show();
+        }, 1200);    	 	
+    }
+
+    function undoMarkLeasesCollected(requestID){
+    	$("#undoMarkAllCollected"+requestID).hide();
+    	$("#undoMarkAllCollectedLoading"+requestID).show();
+    	setTimeout(function () {
+        	$("#undoMarkAllCollectedLoading"+requestID).hide();
+        	$("#undoMarkAllUncollected"+requestID).show();
+        }, 1200);    	 	
+    }
+
+    function undoMarkLeasesUncollected(requestID){
+    	$("#undoMarkAllUncollected"+requestID).hide();
+    	$("#undoMarkAllCollectedLoading"+requestID).show();
+    	setTimeout(function () {
+        	$("#undoMarkAllCollectedLoading"+requestID).hide();
+        	$("#undoMarkAllCollected"+requestID).show();
         }, 1200);    	 	
     }
 

@@ -1,12 +1,16 @@
 import unittest
 
+import pprint
+
 from nexnest.application import session
 
-from nexnest.data_gen.factories import UserFactory, GroupFactory, GroupUserFactory, ListingFactory, LandlordListingFactory, LandlordFactory, HouseFactory, HouseMessageFactory, MaintenanceFactory
+from nexnest.data_gen.factories import UserFactory, GroupFactory, GroupUserFactory, ListingFactory, LandlordListingFactory, LandlordFactory, MaintenanceMessageFactory, HouseFactory, HouseMessageFactory, MaintenanceFactory
 
 from nexnest.models.notification import Notification
 
 from .utils import dropAllRows
+
+pp = pprint.PrettyPrinter(indent=4)
 
 
 class TestHouse(unittest.TestCase):
@@ -63,6 +67,15 @@ class TestHouse(unittest.TestCase):
 
                 self.assertEqual(notifCount, 1)
 
+        for user in self.house.listing.landLordsAsUsers():
+            notifCount = session.query(Notification) \
+                .filter_by(notif_type='house_message',
+                           target_model_id=newHM.id,
+                           target_user_id=user.id) \
+                .count()
+
+            self.assertEqual(notifCount, 1)
+
     def testMaintenanceNotifications(self):
         newMaintenance = MaintenanceFactory(house=self.house, user=self.leader)
         session.commit()
@@ -78,3 +91,90 @@ class TestHouse(unittest.TestCase):
                     .count()
 
                 self.assertEqual(notifCount, 1)
+
+    def testMaintenanceMessageNotifications(self):
+        newMaintenance = MaintenanceFactory(house=self.house, user=self.leader)
+        session.commit()
+
+        newMaintenanceMessage = MaintenanceMessageFactory(maintenance=newMaintenance, user=self.leader)
+        session.commit()
+
+        newMaintenanceMessage.genNotifications()
+
+        notifications = session.query(Notification).filter_by(notif_type='maintenance_message', target_model_id=newMaintenanceMessage.id).all()
+
+        pp.pprint(notifications)
+        print(notifications)
+
+        for user in self.house.tenants:
+            if user is not self.leader:
+                notifCount = session.query(Notification) \
+                    .filter_by(notif_type='maintenance_message',
+                               target_model_id=newMaintenanceMessage.id,
+                               target_user_id=user.id) \
+                    .count()
+
+                self.assertEqual(notifCount, 1)
+
+        for landlord in self.house.listing.landLordsAsUsers():
+            notifCount = session.query(Notification) \
+                .filter_by(notif_type='maintenance_message',
+                           target_model_id=newMaintenanceMessage.id,
+                           target_user_id=landlord.id) \
+                .count()
+
+            self.assertEqual(notifCount, 1)
+
+    def testMaintenanceInProgressNotifications(self):
+        newMaintenance = MaintenanceFactory(house=self.house, user=self.leader)
+        session.commit()
+
+        newMaintenance.genInProgressNotifications()
+
+        for user in self.house.tenants:
+            notifCount = session.query(Notification) \
+                .filter_by(notif_type='maintenance_inprogress',
+                           target_model_id=newMaintenance.id,
+                           target_user_id=user.id) \
+                .count()
+
+            self.assertEqual(notifCount, 1)
+
+        # Now we undo them as if an ajax request came in
+        newMaintenance.removeInProgressNotifications()
+
+        for user in self.house.tenants:
+            notifCount = session.query(Notification) \
+                .filter_by(notif_type='maintenance_inprogress',
+                           target_model_id=newMaintenance.id,
+                           target_user_id=user.id) \
+                .count()
+
+            self.assertEqual(notifCount, 0)
+
+    def testMaintenanceCompletedNotifications(self):
+        newMaintenance = MaintenanceFactory(house=self.house, user=self.leader)
+        session.commit()
+
+        newMaintenance.genCompletedNotifications()
+
+        for user in self.house.tenants:
+            notifCount = session.query(Notification) \
+                .filter_by(notif_type='maintenance_completed',
+                           target_model_id=newMaintenance.id,
+                           target_user_id=user.id) \
+                .count()
+
+            self.assertEqual(notifCount, 1)
+
+        # Now we undo them as if an ajax request came in
+        newMaintenance.removeCompletedNotifications()
+        for user in self.house.tenants:
+            notifCount = session.query(Notification) \
+                .filter_by(notif_type='maintenance_completed',
+                           target_model_id=newMaintenance.id,
+                           target_user_id=user.id) \
+                .count()
+
+            self.assertEqual(notifCount, 0)
+

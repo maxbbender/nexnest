@@ -88,7 +88,7 @@ listings = [listing1, listing2, listing3, listing4, listing5, listing6]
 
 # GROUP USERS
 # Group 1
-groupuser1 = GroupUserFactory(group=group1, user=user2)
+# groupuser1 = GroupUserFactory(group=group1, user=user2)
 groupuser2 = GroupUserFactory(group=group1, user=user3)
 groupuser3 = GroupUserFactory(group=group1, user=user4)
 groupuser4 = GroupUserFactory(group=group1, user=user5)
@@ -97,7 +97,7 @@ group1Users = [user2, user3, user4, user5]
 group1AcceptedUsers = [user2, user3, user4]
 
 # Group 2
-groupuser5 = GroupUserFactory(group=group2, user=user3)
+# groupuser5 = GroupUserFactory(group=group2, user=user3)
 groupuser6 = GroupUserFactory(group=group2, user=user2)
 
 group2Users = [user2, user3]
@@ -106,13 +106,13 @@ group2Users = [user2, user3]
 groupuser7 = GroupUserFactory(group=group3, user=user2)
 groupuser8 = GroupUserFactory(group=group3, user=user8)
 groupuser9 = GroupUserFactory(group=group3, user=user3)
-groupuser10 = GroupUserFactory(group=group3, user=user4)
+# groupuser10 = GroupUserFactory(group=group3, user=user4)
 groupuser11 = GroupUserFactory(group=group3, user=user5)
 
 group3Users = [user2, user8, user3, user4, user5]
 
 # group 4
-groupuser12 = GroupUserFactory(group=group4, user=user9)
+# groupuser12 = GroupUserFactory(group=group4, user=user9)
 groupuser13 = GroupUserFactory(group=group4, user=user10)
 groupuser14 = GroupUserFactory(group=group4, user=user11)
 groupuser15 = GroupUserFactory(group=group4, user=user12)
@@ -121,7 +121,7 @@ group4Users = [user9, user10, user11, user12]
 group4AcceptedUsers = [user9, user10, user11, user12]
 
 # group 5
-groupuser16 = GroupUserFactory(group=group5, user=user13)
+# groupuser16 = GroupUserFactory(group=group5, user=user13)
 groupuser17 = GroupUserFactory(group=group5, user=user14)
 groupuser18 = GroupUserFactory(group=group5, user=user15)
 
@@ -129,7 +129,7 @@ group5Users = [user13, user14, user15]
 group5AcceptedUsers = [user13, user14, user15]
 
 # group 6
-groupuser19 = GroupUserFactory(group=group6, user=user16)
+# groupuser19 = GroupUserFactory(group=group6, user=user16)
 groupuser20 = GroupUserFactory(group=group6, user=user17)
 groupuser21 = GroupUserFactory(group=group6, user=user18)
 
@@ -137,7 +137,7 @@ group6Users = [user16, user17, user18]
 group6AcceptedUsers = [user16, user17, user18]
 
 # group 7
-groupuser22 = GroupUserFactory(group=group7, user=user19)
+# groupuser22 = GroupUserFactory(group=group7, user=user19)
 groupuser23 = GroupUserFactory(group=group7, user=user20)
 groupuser24 = GroupUserFactory(group=group7, user=user21)
 groupuser25 = GroupUserFactory(group=group7, user=user22)
@@ -146,23 +146,23 @@ groupuser26 = GroupUserFactory(group=group7, user=user23)
 group7Users = [user19, user20, user21, user22, user23]
 group7AcceptedUsers = [user19, user20, user21, user22, user23]
 
-groupuser1.accepted = True
+# groupuser1.accepted = True
 groupuser2.accepted = True
 groupuser3.accepted = True
-groupuser5.accepted = True
+# groupuser5.accepted = True
 groupuser7.accepted = True
 
-groupuser12.accepted = True
+# groupuser12.accepted = True
 groupuser13.accepted = True
 groupuser14.accepted = True
 groupuser15.accepted = True
-groupuser16.accepted = True
+# groupuser16.accepted = True
 groupuser17.accepted = True
 groupuser18.accepted = True
-groupuser19.accepted = True
+# groupuser19.accepted = True
 groupuser20.accepted = True
 groupuser21.accepted = True
-groupuser22.accepted = True
+# groupuser22.accepted = True
 groupuser23.accepted = True
 groupuser24.accepted = True
 groupuser25.accepted = True
@@ -180,53 +180,7 @@ for listing in listings:
                                      user=user)
     session.commit()
 
-    # for tempUser in group1AcceptedUsers:
-    #     if tempUser is not
-
-session.commit()
-
-# GROUP FAVORITE NOTIFICATIONS
-glfn1 = NotificationFactory(target_user=user3,
-                            notif_type='group_listing_favorite',
-                            target_model_id=group1.id)
-glfn2 = NotificationFactory(target_user=user4,
-                            notif_type='group_listing_favorite',
-                            target_model_id=group1.id)
-glfn3 = NotificationFactory(target_user=user5,
-                            notif_type='group_listing_favorite',
-                            target_model_id=group1.id)
-glfn4 = NotificationFactory(target_user=user3,
-                            notif_type='group_listing_favorite',
-                            target_model_id=group1.id)
-glfn5 = NotificationFactory(target_user=user6,
-                            notif_type='group_listing_favorite',
-                            target_model_id=group2.id)
-glfn6 = NotificationFactory(target_user=user8,
-                            notif_type='group_listing_favorite',
-                            target_model_id=group3.id)
-
-
-# GROUP USER NOTIFICATIONS
-# gun1 = NotificationFactory(target_user=groupuser4.user,
-#                            notif_type='group_user',
-#                            target_model_id=groupuser4.group.id)
-# gun2 = NotificationFactory(target_user=groupuser5.user,
-#                            notif_type='group_user',
-#                            target_model_id=groupuser5.group.id)
-# gun3 = NotificationFactory(target_user=groupuser8.user,
-#                            notif_type='group_user',
-#                            target_model_id=groupuser8.group.id)
-# gun4 = NotificationFactory(target_user=groupuser9.user,
-#                            notif_type='group_user',
-#                            target_model_id=groupuser9.group.id)
-# gun5 = NotificationFactory(target_user=groupuser10.user,
-#                            notif_type='group_user',
-#                            target_model_id=groupuser10.group.id)
-# gun6 = NotificationFactory(target_user=groupuser11.user,
-#                            notif_type='group_user',
-#                            target_model_id=groupuser11.group.id)
-
-session.commit()
+    gf.genNotifications()
 
 # GROUP MESSAGES
 # Group 1
@@ -238,12 +192,7 @@ for i in range(10):
 
     session.commit()
 
-    for user in group1AcceptedUsers:
-        if user is not source_user:
-            gmn = NotificationFactory(target_user=user,
-                                      notif_type='group_message',
-                                      target_model_id=gmsg.id)
-            session.commit()
+    gmsg.genNotifications()
 
 
 # DIRECT MESSAGES
@@ -348,6 +297,8 @@ gl7 = GroupListingFactory(group=group7, listing=listing6)
 gl1.accepted = True
 gl6.accepted = True
 gl7.accepted = True
+gl7.all_leases_submitted = True
+
 
 session.commit()
 
