@@ -409,6 +409,18 @@ class Notification(Base):
 
                 return message, returnObject, redirectURL
 
+        elif self.notif_type == 'tour_denied':
+            returnObject = session.query(Tour) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = 'Your request for a tour at %s has been denied' % returnObject.listing.street
+
+                redirectURL = '/group/view/%d' % returnObject.group.id
+
+                return message, returnObject, redirectURL
+
         return None, None, None
 
 

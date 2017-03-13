@@ -54,3 +54,72 @@ class TestTour(unittest.TestCase):
                 .count()
 
             self.assertEqual(notifCount, 1)
+
+    def testTourConfirmNotifications(self):
+        self.tour.genConfirmNotifications()
+
+        for user in self.tour.group.acceptedUsers:
+            notifCount = session.query(Notification) \
+                .filter_by(notif_type='tour_confirmed',
+                           target_model_id=self.tour.id,
+                           target_user_id=user.id) \
+                .count()
+
+            self.assertEqual(notifCount, 1)
+
+        self.tour.undoConfirmNotifications()
+
+        notifCount = session.query(Notification) \
+            .filter_by(notif_type='tour_confirmed',
+                       target_model_id=self.tour.id) \
+            .count()
+
+        self.assertEqual(notifCount, 0)
+
+    def testTourDeniedNotifications(self):
+        self.tour.genDeniedNotifications()
+
+        for user in self.tour.group.acceptedUsers:
+            notifCount = session.query(Notification) \
+                .filter_by(notif_type='tour_denied',
+                           target_model_id=self.tour.id,
+                           target_user_id=user.id) \
+                .count()
+
+            self.assertEqual(notifCount, 1)
+
+        self.tour.undoDeniedNotifications()
+
+        notifCount = session.query(Notification) \
+            .filter_by(notif_type='tour_denied',
+                       target_model_id=self.tour.id) \
+            .count()
+
+        self.assertEqual(notifCount, 0)
+
+    def testTourTimeChangeNotifications(self):
+        self.tour.last_requested = 'landlord'
+        session.commit()
+
+        self.tour.genTimeChangeNotifications()
+
+        newTourTimeNotifs = session.query(Notification).filter_by(notif_type='new_tour_time').all()
+        print(newTourTimeNotifs)
+
+        for user in self.tour.group.acceptedUsers:
+            notifCount = session.query(Notification) \
+                .filter_by(notif_type='new_tour_time',
+                           target_model_id=self.tour.id,
+                           target_user_id=user.id) \
+                .count()
+
+            self.assertEqual(notifCount, 1)
+
+        self.tour.undoTimeChangeNotifications()
+
+        notifCount = session.query(Notification) \
+            .filter_by(notif_type='new_tour_time',
+                       target_model_id=self.tour.id) \
+            .count()
+
+        self.assertEqual(notifCount, 0)
