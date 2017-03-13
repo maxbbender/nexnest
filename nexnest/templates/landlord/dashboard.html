@@ -1,124 +1,63 @@
 {% extends 'base.html' %}
 {% block content %}
-<!-- {
-{% if requestedTours %}
-    <h1>Requested Tours</h1>
-    {% for tourObject in requestedTours %}
-        <strong>{{tourObject.listing}}</strong><br>
-        {% for tour in tourObject.tours %}
-            {{tour}}<br>
-        {% endfor %}
-        <hr>
-    {% endfor %}
-{% endif %}
-
-{% if scheduledTours %}
-    <h1>Suggested Tours</h1>
-    {% for tourObject in scheduledTours %}
-        <strong>{{tourObject.listing}}</strong><br>
-        {% for tour in tourObject.tours %}
-            {{tour}}<br>
-        {% endfor %}
-        <hr>
-    {% endfor %}
-{% endif %}
-
-{% if unAcceptedHousingRequests %}
-    <h1>Unaccepted Housing Requests</h1>
-    {% for housingRequestObject in unAcceptedHousingRequests %}
-        <strong>{{housingRequestObject.listing}}</strong><br>
-        {% for housingRequest in housingRequestObject.houseRequests %}
-            {{housingRequest}}<br>
-        {% endfor %}
-        <hr>
-    {% endfor %}
-{% endif %}
-<hr>
-{% if acceptedHousingRequests %}
-    <h1>Accepted Housing Requests</h1>
-    {% for housingRequest in acceptedHousingRequests %}
-        {{housingRequest}}<br>
-    {% endfor %}
-{% endif %}
-<hr>
-{% if completedHousingRequests %}
-    <h1>Completed Housing Requests</h1>
-    {% for housingRequest in completedHousingRequests %}
-        {{housingRequest}}<br>
-    {% endfor %}
-{% endif %}
-<hr>
-
-<hr>
-{% if openMaintenanceRequests %}
-    <h1>Maintenance Requests</h1>
-    {% for maintenanceRequestObject in openMaintenanceRequests %}
-        <strong>{{maintenanceRequestObject.house.listing.street}}</strong><br>
-        {% for maintenanceRequest in maintenanceRequestObject.maintenanceRequests %}
-            {{maintenanceRequest}}<br>
-        {% endfor %}
-    {% endfor %}
-{% endif %}-->
-
-
 <link href="{{url_for('static', filename='css/landlord/dashboardStyling.css')}}" rel="stylesheet">
 <div class="row">
-    <div class="col-md-2 col-sm-1 hidden-xs display-table-cell v-align box" id="navigation">
+    <div class="col-md-2 col-sm-2 col-xs-2 display-table-cell v-align box" id="navigation" style="height: inherit;">
         <div class="navi navbar">
         	<ul>
-        		<li class="nav-item">
-                    <a class="nav-link left-panel" data-toggle="tab" href="#" role="tab" style="pointer-events: none;">
-                        </i><h4 class="hidden-xs hidden-sm"><strong>My Dashboard</strong></h4>
+        		<li class="nav-item hidden-md-down">
+                    <a class="nav-link left-panel" data-toggle="tab" href="#" role="tab" style="pointer-events: none; padding-left: 10px;">
+                        </i><h4 class="hidden-md-down"><strong>My Dashboard</strong></h4>
                     </a>
                 </li>
         		<li class="nav-item">
-        	        <a class="nav-link left-panel active" id="occupiedListingsTab2" data-toggle="tab" href="#occupiedListingsTab" role="tab">
-        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Occupied Listings</span>
+        	        <a class="nav-link left-panel active" style="padding-left: 10px;" id="occupiedListingsTab2" data-toggle="tab" href="#occupiedListingsTab" role="tab">
+        	        	<i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">Occupied Listings</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
-        	        <a class="nav-link left-panel" id="unbookedListingsTab2" data-toggle="tab" href="#unbookedListingsTab" role="tab">
-        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Unbooked Listings</span>
+        	        <a class="nav-link left-panel" style="padding-left: 10px;" id="unbookedListingsTab2" data-toggle="tab" href="#unbookedListingsTab" role="tab">
+        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-md-down">Unbooked Listings</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
-        	        <a class="nav-link left-panel" id="toursTab2" data-toggle="tab" href="#toursTab" role="tab">
-        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Tours</span>
+        	        <a class="nav-link left-panel" style="padding-left: 10px;" id="toursTab2" data-toggle="tab" href="#toursTab" role="tab">
+        	        	<i class="fa fa-calendar" aria-hidden="true"></i><span class="hidden-md-down">Tours</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
-        	        <a class="nav-link left-panel" id="requestsTab2" data-toggle="tab" href="#requestsTab" role="tab">
-        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Listing Requests</span>
+        	        <a class="nav-link left-panel" style="padding-left: 10px;" id="requestsTab2" data-toggle="tab" href="#requestsTab" role="tab">
+        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-md-down">Listing Requests</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
-        	        <a class="nav-link left-panel" id="maintenanceTab2" data-toggle="tab" href="#maintenanceTab" role="tab">
-        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Maintenance Requests</span>
+        	        <a class="nav-link left-panel" style="padding-left: 10px;" id="maintenanceTab2" data-toggle="tab" href="#maintenanceTab" role="tab">
+        	        	<i class="fa fa-wrench" aria-hidden="true"></i><span class="hidden-md-down">Maintenance Requests</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
-        	        <a class="nav-link left-panel" id="paymentTab2" data-toggle="tab" href="#paymentTab" role="tab">
-        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Payment Portal</span>
+        	        <a class="nav-link left-panel" style="padding-left: 10px;" id="paymentTab2" data-toggle="tab" href="#paymentTab" role="tab">
+        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-md-down">Payment Portal</span>
         	        </a>
         	    </li>
         	</ul>
         </div>
     </div>
-    <div class="col-sm-11 col-md-10">
+    <div class="col-sm-10 col-md-10 col-xs-10">
 	    <div class="tab-content">
 		    <div class="tab-pane active" id="occupiedListingsTab" role="tabpanel" style="padding: 0px;">
 		    	<div class="row">
-			    	<div class="col-xs-1"></div>
-			    	<div class="col-xs-10" style="width: 100%">
+			    	<div class="col-xs-0 col-md-1"></div>
+			    	<div class="col-xs-12 col-md-10" style="width: 100%">
 				    	<div class="callout-block text-center fade-in-b">
-				    		<h1>Booked Listings</h1>
+				    		<h1 style="font-size: 3.5vh;">Booked Listings</h1>
 				    	</div>
 			    	</div>
 			    </div>
 		    	<br>
 		    	<div class="row">
-		        	<div class="col-xs-1"></div>
-		        	<div class="col-md-10 col-lg-10 col-xl-10">
+		        	<div class="col-xs-0 col-md-1"></div>
+		        	<div class="col-xs-12 col-md-10 col-lg-10 col-xl-10">
 		        	    <div class="row">
 		        	        <div class="card" style="width:100%; border: none;">
 		        	            <div class="card-block">
@@ -136,36 +75,36 @@
 		        	                    	{% if currentHouses|length > 0 %}
 		        	                            {% for house in currentHouses %}
 		        	                            	<div class="row">
-		        	                            		<div class="col-xs-1"></div>
-		        	                            		<div class="col-xs-10" style="width: 100%;">
+		        	                            		<div class="col-xs-0 col-md-1"></div>
+		        	                            		<div class="col-xs-12 col-md-10" style="width: 100%;">
 		        	                            			<div class="card">
 		        	                            				<div class="card-header">
 		        	                            					<div class="row">
-		        	                            						<div class="col-xs-10">
+		        	                            						<div class="col-xs-12">
 		        	                            							<a href="{{ url_for('houses.view', id=house.listing.id) }}">
-												                    			<h3><strong>{{ house.listing.street }}, {{ house.listing.city }} {{ house.listing.state }}</strong></h3>
-												                    			<small>Lease Period: {{ house.listing.start_date }} - {{ house.listing.end_date }}</small>
+												                    			<h3 style="font-size: 2.5vh;"><strong>{{ house.listing.street }}, {{ house.listing.city }} {{ house.listing.state }}</strong></h3>
+												                    			<small style="font-size: 1.5vh;">Lease Period: {{ house.listing.start_date }} - {{ house.listing.end_date }}</small>
 											                    			</a>
 											                    		</div>
 											                    	</div>
 											                    </div>
 											                    <div class="card-block">
 												                    <div class="row">
-												                    	<div class="col-xs-4">
+												                    	<div class="hidden-md-down col-lg-4">
 												                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
 												                    	</div>
-												                    	<div class="col-xs-8">
-												                    		<h3><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ house.listing.price }}</strong> per bedroom per semester</h3>
-												                    		<h3><strong>{{ house.listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
+												                    	<div class="col-xs-12 col-lg-8">
+												                    		<h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ house.listing.price }}</strong> per bed per semester</h3>
+												                    		<h3 style="font-size: 3.0vh;"><strong>{{ house.listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
 												                    		&nbsp;
 												                    		{{ house.listing.num_full_baths }}<i class="fa fa-bath" aria-hidden="true"></i></strong></h3>
 												                    		<br>
-												                    		<h3><strong>Occupied By: {{house.group.name}}</strong>({{house.group.acceptedUsers|count}} Members)</h3>
+												                    		<h3 style="font-size: 3.0vh;"><strong>Occupied By: {{house.group.name}}</strong>({{house.group.acceptedUsers|count}} Members)</h3>
 												                    		<strong>Group Leader:</strong>
 												                    		{% for user in house.group.acceptedUsers %}
 												                    			{% with group=house.group %}         
 												                    				<div class="row">
-												                    					<div class="col-xs-8">
+												                    					<div class="col-sm-12" style="padding: 0px;">
 												                    						{% if group.leader_id == user.id %}
 												                    		    				{% include 'landlord/smallMember.html' %}
 												                    						{% endif %}
@@ -177,7 +116,7 @@
 						    		      					    				{% for user in house.group.acceptedUsers %}
 						    		      					    					{% with group=house.group %}         
 						    		      					    						<div class="row">
-						    		      					    							<div class="col-xs-8">
+						    		      					    							<div class="col-sm-12" style="padding: 0px;">
 						    		      					    								{% if not group.leader_id == user.id %}
 						    		      					    				    				{% include 'landlord/smallMember.html' %}
 						    		      					    				    			{% endif %}
@@ -220,36 +159,36 @@
 		        	                    	{% if futureHouses|length > 0 %}
 		        	                            {% for house in futureHouses %}
 		        	                            	<div class="row">
-		        	                            		<div class="col-xs-1"></div>
-		        	                            		<div class="col-xs-10" style="width: 100%;">
+		        	                            		<div class="col-xs-0 col-md-1"></div>
+		        	                            		<div class="col-xs-12 col-md-10" style="width: 100%;">
 		        	                            			<div class="card">
 		        	                            				<div class="card-header">
 		        	                            					<div class="row">
-		        	                            						<div class="col-xs-10">
+		        	                            						<div class="col-xs-12">
 		        	                            							<a href="{{ url_for('houses.view', id=house.listing.id) }}">
-												                    			<h3><strong>{{ house.listing.street }}, {{ house.listing.city }} {{ house.listing.state }}</strong></h3>
-												                    			<small>Lease Period: {{ house.listing.start_date }} - {{ house.listing.end_date }}</small>
+												                    			<h3 style="font-size: 2.5vh;"><strong>{{ house.listing.street }}, {{ house.listing.city }} {{ house.listing.state }}</strong></h3>
+												                    			<small style="font-size: 1.5vh;">Lease Period: {{ house.listing.start_date }} - {{ house.listing.end_date }}</small>
 											                    			</a>
 											                    		</div>
 											                    	</div>
 											                    </div>
 											                    <div class="card-block">
 												                    <div class="row">
-												                    	<div class="col-xs-4">
+												                    	<div class="hidden-md-down col-lg-4">
 												                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
 												                    	</div>
-												                    	<div class="col-xs-8">
-												                    		<h3><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ house.listing.price }}</strong> per bedroom per semester</h3>
-												                    		<h3><strong>{{ house.listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
+												                    	<div class="col-xs-12 col-lg-8">
+												                    		<h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ house.listing.price }}</strong> per bedroom per semester</h3>
+												                    		<h3 style="font-size: 3.0vh;"><strong>{{ house.listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
 												                    		&nbsp;
 												                    		{{ house.listing.num_full_baths }}<i class="fa fa-bath" aria-hidden="true"></i></strong></h3>
 												                    		<br>
-												                    		<h3><strong>Occupied By: {{house.group.name}}</strong>({{house.group.acceptedUsers|count}} Members)</h3>
+												                    		<h3 style="font-size: 3.0vh;"><strong>Occupied By: {{house.group.name}}</strong>({{house.group.acceptedUsers|count}} Members)</h3>
 												                    		<strong>Group Leader:</strong>
 												                    		{% for user in house.group.acceptedUsers %}
 												                    			{% with group=house.group %}         
 												                    				<div class="row">
-												                    					<div class="col-xs-8">
+												                    					<div class="col-sm-12" style="padding: 0px;">
 												                    						{% if group.leader_id == user.id %}
 												                    		    				{% include 'landlord/smallMember.html' %}
 												                    						{% endif %}
@@ -261,7 +200,7 @@
 						    		      					    				{% for user in house.group.acceptedUsers %}
 						    		      					    					{% with group=house.group %}         
 						    		      					    						<div class="row">
-						    		      					    							<div class="col-xs-8">
+						    		      					    							<div class="col-sm-12" style="padding: 0px;">
 						    		      					    								{% if not group.leader_id == user.id %}
 						    		      					    				    				{% include 'landlord/smallMember.html' %}
 						    		      					    				    			{% endif %}
@@ -309,40 +248,40 @@
 		    </div>
 	        <div class="tab-pane" id="unbookedListingsTab" role="tabpanel" style="padding: 0px;">
 	        	<div class="row">
-			    	<div class="col-xs-1"></div>
-			    	<div class="col-xs-10">
+			    	<div class="col-xs-0 col-md-1"></div>
+			    	<div class="col-xs-12 col-md-10">
 				    	<div class="callout-block text-center fade-in-b">
-				    		<h1>Unbooked Listings</h1>
+				    		<h1 style="font-size: 3.5vh;">Unbooked Listings</h1>
 				    	</div>
 			    	</div>
 			    </div>
 		    	<br>
 	            {% for listing in listings %}
 	            	<div class="row">
-	            		<div class="col-xs-1"></div>
-	            		<div class="col-xs-10" style="width: 100%">
+	            		<div class="col-xs-0 col-md-1"></div>
+	            		<div class="col-xs-12 col-md-10" style="width: 100%">
 			                <div class="card">
 			                    <div class="card-header">
 				                    <div class="row">
-				                    	<div class="col-xs-10">
+				                    	<div class="col-xs-12 col-md-8 col-lg-10">
 				                    		<a href="{{ url_for('listings.viewListing', listingID=listing.id) }}">
-				                    			<h3><strong>{{ listing.street }}, {{ listing.city }} {{ listing.state }}</strong></h3>
-				                    			<small>Lease Period: {{ listing.start_date }} - {{ listing.end_date }}</small>
+				                    			<h3 style="font-size: 2.5vh;"><strong>{{ listing.street }}, {{ listing.city }} {{ listing.state }}</strong></h3>
+				                    			<small style="font-size: 1.5vh;">Lease Period: {{ listing.start_date }} - {{ listing.end_date }}</small>
 				                    		</a>
 				                    	</div>
-				                    	<div class="col-xs-2" style="text-align: right;">
+				                    	<div class="col-xs-2 col-md-4 col-lg-2" style="text-align: right;">
 				                    		<a href="#" class="btn btn-primary">Edit Listing</a>
 				                    	</div>
 				                    </div>			                    
 			                    </div>
 			                    <div class="card-block">
 				                    <div class="row">
-				                    	<div class="col-xs-4">
+				                    	<div class="hidden-md-down col-lg-4">
 				                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
 				                    	</div>
-				                    	<div class="col-xs-8">
-				                    		<h3><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ listing.price }}</strong> per bedroom per semester</h3>
-				                    		<h3><strong>{{ listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
+				                    	<div class="col-xs-12 col-lg-8">
+				                    		<h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ listing.price }}</strong> per bedroom per semester</h3>
+				                    		<h3 style="font-size: 3.0vh;"><strong>{{ listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
 				                    		&nbsp;
 				                    		{{ listing.num_full_baths }}<i class="fa fa-bath" aria-hidden="true"></i></strong></h3>
 				                    	</div>
@@ -358,7 +297,7 @@
 			    	<div class="col-xs-1"></div>
 			    	<div class="col-xs-10" style="width: 100%">
 				    	<div class="callout-block text-center fade-in-b">
-				    		<h1>Tours</h1>
+				    		<h1 style="font-size: 3.5vh;">Tours</h1>
 				    	</div>
 			    	</div>
 			    </div>
@@ -388,9 +327,9 @@
         							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
         								                    <div class="row">
         								                    	<div class="col-xl-12">
-        								                    		<h3 id="requestedToursCount{{tourObject.listing.id}}"><strong>
+        								                    		<h3 style="font-size: 2.5vh;" id="requestedToursCount{{tourObject.listing.id}}"><strong>
         								                    		{{tourObject.tours|length }} Request(s) to tour {{tourObject.listing.street}}</strong></h3>
-        								                    		<small>Lease Period: {{ tourObject.listing.start_date }} - {{ tourObject.listing.end_date }}</small>
+        								                    		<small style="font-size: 1.5vh;">Lease Period: {{ tourObject.listing.start_date }} - {{ tourObject.listing.end_date }}</small>
         								                    	</div>
         								                    </div>			                    
         							                    </div>
@@ -406,23 +345,23 @@
         							                    	<div class="row">
         							                    		<div class="col-xl-1"></div>
         							                    		<div class="col-xl-10">
-        							                    			<strong><h2>Group(s) Requesting This Tour: </h2></strong>
+        							                    			<strong><h2 style="font-size: 2.5vh;">Group(s) Requesting This Tour: </h2></strong>
         							                    		</div>
         							                    	</div>
 	        	                    	        			{% for tour in tourObject.tours %}
 	        	                    	        				<div class="row" id="requestedTour{{tour.id}}">
-	        	                    	        					<div class="col-xl-1"></div>
-	        	                    	        					<div class="col-xl-10">
+	        	                    	        					<div class="col-xs-0 col-xl-1"></div>
+	        	                    	        					<div class="col-xs-12 col-xl-10"  style="padding-left:  10px;">
 			        	                    	        				<div class="card">
 		        							                    			<div class="card-header">
 		        							                    				<div class="row">
 		        								                    				<div class="col-xl-10">
-					        	                    	            					<h3><strong>{{tour.group.name}} </strong>({{tour.group.acceptedUsers|count}} Members)</h3>
+					        	                    	            					<h3 style="font-size: 3.5vh;"><strong>{{tour.group.name}} </strong>({{tour.group.acceptedUsers|count}} Members)</h3>
 					        	                    	            					Requested Date and Time: {{tour.time_requested}}
 					        	                    	            					<br><br>
 					        	                    	            					<div class="row">
 					        	                    	            						{% if tour.last_requested == 'group' %}
-						        	                    	            						<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+						        	                    	            						<div class="col-12 col-xs-auto" style="padding-right: 15px; padding-bottom: 5px; ">
 								        	                    	            					<div id="acceptTourButton{{tour.id}}">
 								        	                    	            						<button id="acceptTourBtn{{tour.id}}" class="btn btn-success" onclick="acceptTour({{tour.id}}, {{tourObject.listing.id}}, '{{tourObject.listing.street}}')">Accept Tour</button>
 								        	                    	            					</div>
@@ -432,15 +371,15 @@
 								        	                    	            						</button>
 								        	                    	            					</div>
 								        	                    	            				</div>
-								        	                    	            				<div class="col-12 col-md-auto" style="padding-right: 15px;">
+								        	                    	            				<div class="col-12 col-xs-auto" style="padding-right: 15px; padding-bottom: 5px;">
 								        	                    	            					<a href="#!" id="tourTimeChangeBtn{{tour.id}}" class="btn btn-info" data-toggle="modal" data-target="#suggestTimeTourModal" data-tourid="{{tour.id}}" data-groupid="{{tour.group.id}}">Request Date/Time Change</a>
 								        	                    	            				</div>
 								        	                    	            			{% else %}
-								        	                    	            				<div class="col-12 col-md-auto" style="padding-left: 15px; padding-right: 15px;">
+								        	                    	            				<div class="col-12 col-md-auto" style="padding-left: 15px; padding-right: 15px; padding-bottom: 5px;">
 								        	                    	            					<button class="btn btn-secondary" disabled>Waiting For Group</button>
 								        	                    	            				</div>
 							        	                    	            				{% endif %}
-							        	                    	            				<div class="col-12 col-md-auto">
+							        	                    	            				<div class="col-12 col-xs-auto">
 							        	                    	            					<div id="declineTourButton{{tour.id}}">
 							        	                    	            						<button id="declineTourBtn{{tour.id}}" class="btn btn-danger" onclick="declineTour({{tour.id}}, {{tourObject.listing.id}}, '{{tourObject.listing.street}}')">Decline Tour</button>
 							        	                    	            					</div>
@@ -459,8 +398,9 @@
 					        	                    	            		</div>
 					        	                    	            		<div class="card-block">
 		        							                    				<div class="row">
-		        							                    					<div class="col-xs-12">
-					        								                    		<strong>Tour Status: </strong>		
+		        							                    					<div class="col-sm-12">
+					        								                    		<strong>Tour Status: </strong>
+					        								                    		<br>		
 					        								                    		{% if tour.last_requested == 'landlord' %}
 					        								                    			Pending The Group's Decision
 					        								                    			<br>
@@ -475,9 +415,9 @@
 					        								                    		{% for user in tour.group.acceptedUsers %}
 					        								                    			{% with group=tour.group %}
 					        								                    				<div class="row">
-					        								                    					<div class="col-xs-12">
+					        								                    					<div class="col-sm-12" style="padding: 0px;">
 					        								                    						{% if group.leader_id == user.id %}
-					        								                    		    				{% include 'landlord/member.html' %}
+					        								                    		    				{% include 'landlord/smallMember.html' %}
 					        								                    						{% endif %}
 					        								                    		    		</div>
 					        								                    		    	</div>
@@ -487,9 +427,9 @@
 					                    		      					    				{% for user in tour.group.acceptedUsers %}
 					                    		      					    					{% with group=tour.group %}         
 					                    		      					    						<div class="row">
-					                    		      					    							<div class="col-xs-12">
+					                    		      					    							<div class="col-sm-12" style="padding: 0px;">
 					                    		      					    								{% if not group.leader_id == user.id %}
-					                    		      					    				    				{% include 'landlord/member.html' %}
+					                    		      					    				    				{% include 'landlord/smallMember.html' %}
 					                    		      					    				    			{% endif %}
 					                    		      					    				    		</div>
 					                    		      					    				    	</div>
@@ -570,9 +510,9 @@
         							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
         								                    <div class="row">
         								                    	<div class="col-xl-12">
-        								                    		<h3 id="requestedToursCount{{tourObject.listing.id}}"><strong>
+        								                    		<h3 style="font-size: 2.5vh;" id="requestedToursCount{{tourObject.listing.id}}"><strong>
         								                    		{{tourObject.tours|length }} Scheduled tour(s) of {{tourObject.listing.street}}</strong></h3>
-        								                    		<small>Lease Period: {{ tourObject.listing.start_date }} - {{ tourObject.listing.end_date }}</small>
+        								                    		<small style="font-size: 1.5vh;">Lease Period: {{ tourObject.listing.start_date }} - {{ tourObject.listing.end_date }}</small>
         								                    	</div>
         								                    </div>			                    
         							                    </div>
@@ -588,26 +528,26 @@
         							                    	<div class="row">
         							                    		<div class="col-xl-1"></div>
         							                    		<div class="col-xl-10">
-        							                    			<strong><h2>Group(s) Requesting This Tour: </h2></strong>
+        							                    			<strong><h2 style="font-size: 2.5vh;">Group(s) Requesting This Tour: </h2></strong>
         							                    		</div>
         							                    	</div>
 	        	                    	        			{% for tour in tourObject.tours %}
 	        	                    	        				<div class="row" id="scheduledTour{{tour.id}}">
-	        	                    	        					<div class="col-xl-1"></div>
-	        	                    	        					<div class="col-xl-10">
+	        	                    	        					<div class="col-xs-0 col-xl-1"></div>
+	        	                    	        					<div class="col-xs-12 col-xl-10" style="padding-left: 10px;">
 			        	                    	        				<div class="card">
 		        							                    			<div class="card-header">
 		        							                    				<div class="row">
-		        								                    				<div class="col-xl-10">
-					        	                    	            					<h3><strong>{{tour.group.name}}</strong>({{tour.group.acceptedUsers|count}} Members)</h3>
+		        								                    				<div class="col-xs-12 col-xl-10">
+					        	                    	            					<h3 style="font-size: 3.5vh;"><strong>{{tour.group.name}}</strong>({{tour.group.acceptedUsers|count}} Members)</h3>
 					        	                    	            					Confirmed Date and Time: {{tour.time_requested}}
 					        	                    	            					<br><br>
 					        	                    	            					<div class="row">
 					        	                    	            						<div class="col-12 col-md-auto">
-							        	                    	            					<div id="cancelTourButton{{tour.id}}" style="padding-left: 15px;">
+							        	                    	            					<div id="cancelTourButton{{tour.id}}" style="padding-bottom: 5px;">
 							        	                    	            						<button class="btn btn-danger" onclick="cancelTour({{tour.id}}, {{tourObject.listing.id}}, '{{tourObject.listing.street}}')">Cancel Tour</button>
 							        	                    	            					</div>
-							        	                    	            					<div id="cancelTourLoading{{tour.id}}" style="display: none; padding-left: 15px;">
+							        	                    	            					<div id="cancelTourLoading{{tour.id}}" style="display: none; padding-bottom: 5px;">
 							        	                    	            						<button class="btn btn-danger" style="width: 117.5px;">
 							        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
 							        	                    	            						</button>
@@ -615,7 +555,7 @@
 							        	                    	            				</div>
 					        	                    	            					</div>
 					        	                    	            				</div>
-					        	                    	            				<div class="col-xl-2" style="text-align: right;">
+					        	                    	            				<div class="col-xs-2 col-xl-2" style="text-align: right;">
 					        	                    	            					<a class="btn btn-primary" href="{{ url_for('tours.viewTour', tourID=tour.id) }}">More Info</a>
 					        	                    	            				</div>
 					        	                    	            			</div>
@@ -632,9 +572,9 @@
 					        								                    		{% for user in tour.group.acceptedUsers %}
 					        								                    			{% with group=tour.group %}
 					        								                    				<div class="row">
-					        								                    					<div class="col-xs-12">
+					        								                    					<div class="col-sm-12" style="padding: 0px;">
 					        								                    						{% if group.leader_id == user.id %}
-					        								                    		    				{% include 'landlord/member.html' %}
+					        								                    		    				{% include 'landlord/smallMember.html' %}
 					        								                    						{% endif %}
 					        								                    		    		</div>
 					        								                    		    	</div>
@@ -644,9 +584,9 @@
 					                    		      					    				{% for user in tour.group.acceptedUsers %}
 					                    		      					    					{% with group=tour.group %}         
 					                    		      					    						<div class="row">
-					                    		      					    							<div class="col-xs-12">
+					                    		      					    							<div class="col-sm-12" style="padding: 0px;">
 					                    		      					    								{% if not group.leader_id == user.id %}
-					                    		      					    				    				{% include 'landlord/member.html' %}
+					                    		      					    				    				{% include 'landlord/smallMember.html' %}
 					                    		      					    				    			{% endif %}
 					                    		      					    				    		</div>
 					                    		      					    				    	</div>
@@ -719,17 +659,17 @@
 	        </div>
 	        <div class="tab-pane" id="requestsTab" role="tabpanel" style="padding: 0px;">
 	        	<div class="row">
-			    	<div class="col-xs-1"></div>
-			    	<div class="col-xs-10" style="width: 100%">
+			    	<div class="col-xs-0 col-md-1"></div>
+			    	<div class="col-xs-12 col-md-10" style="width: 100%">
 				    	<div class="callout-block text-center fade-in-b">
-				    		<h1>Listing Requests</h1>
+				    		<h1 style="font-size: 3.5vh;">Listing Requests</h1>
 				    	</div>
 			    	</div>
 			    </div>
 		    	<br>
 		    	<div class="row">
-		        	<div class="col-xs-1"></div>
-		        	<div class="col-md-10 col-lg-10 col-xl-10">
+		        	<div class="col-xs-0 col-md-1"></div>
+		        	<div class="col-xs-12 col-md-10 col-lg-10 col-xl-10">
 		        	    <div class="row">
 		        	        <div class="card" style="width:100%; border: none;">
 		        	            <div class="card-block">
@@ -752,7 +692,7 @@
         							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
         								                    <div class="row">
         								                    	<div class="col-xl-12">
-        								                    		<h3 id="unacceptedRequestsCount{{housingRequestObject.listing.id}}"><strong>
+        								                    		<h3 style="font-size: 3.5vh;" id="unacceptedRequestsCount{{housingRequestObject.listing.id}}"><strong>
         								                    		{{housingRequestObject.houseRequests|length }} Request(s) for {{housingRequestObject.listing.street}}</strong></h3>
         								                    		<small>Lease Period: {{ housingRequestObject.listing.start_date }} - {{ housingRequestObject.listing.end_date }}</small>
         								                    	</div>
@@ -768,23 +708,23 @@
 	        							                    	</div>
         							                    	</div> -->
         							                    	<div class="row">
-        							                    		<div class="col-xl-1"></div>
-        							                    		<div class="col-xl-10">
-        							                    			<strong><h2>Group(s) Requesting This Listing: </h2></strong>
+        							                    		<div class="col-xs-0 col-md-1"></div>
+        							                    		<div class="col-xs-12 col-md-10">
+        							                    			<strong><h2 style="font-size: 2.5vh;">Group(s) Requesting This Listing: </h2></strong>
         							                    		</div>
         							                    	</div>
 	        	                    	        			{% for housingRequest in housingRequestObject.houseRequests %}
 	        	                    	        				<div class="row" id="unAcceptedRequest{{housingRequest.id}}">
-	        	                    	        					<div class="col-xl-1"></div>
-	        	                    	        					<div class="col-xl-10">
+	        	                    	        					<div class="col-xs-0 col-md-1"></div>
+	        	                    	        					<div class="col-xs-12 col-md-10">
 			        	                    	        				<div class="card">
 		        							                    			<div class="card-header">
 		        							                    				<div class="row">
-		        								                    				<div class="col-xl-10">
-					        	                    	            					<h3><strong>{{housingRequest.group.name}}</strong>({{housingRequest.group.acceptedUsers|count}} Members)</h3>
+		        								                    				<div class="col-xs-10">
+					        	                    	            					<h3 style="font-size: 3.0vh;"><strong>{{housingRequest.group.name}}</strong>({{housingRequest.group.acceptedUsers|count}} Members)</h3>
 					        	                    	            					<br>
 					        	                    	            					<div class="row">
-						        	                    	            					<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+						        	                    	            					<div class="col-12 col-md-auto" style="padding-bottom: 5px;padding-right: 15px;">
 							        	                    	            					<div id="acceptHouseRequest{{housingRequest.id}}">
 							        	                    	            						<button id="acceptHouseRequestButton{{housingRequest.id}}" class="btn btn-success acceptHouseRequest{{housingRequestObject.listing.id}}" onclick="acceptHouseRequest({{housingRequest.id}}, {{housingRequestObject.listing.id}}, '{{housingRequestObject.listing.street}}')">Accept Group</button>
 							        	                    	            					</div>
@@ -794,7 +734,7 @@
 							        	                    	            						</button>
 							        	                    	            					</div>
 						        	                    	            					</div>
-						        	                    	            					<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+						        	                    	            					<div class="col-12 col-md-auto" style="padding-right: 15px;">
 							        	                    	            					<div id="denyHouseRequest{{housingRequest.id}}">
 							        	                    	            						<button id="denyHouseRequestButton{{housingRequest.id}}" class="btn btn-danger denyHouseRequest{{housingRequestObject.listing.id}}" onclick="denyHouseRequest({{housingRequest.id}}, {{housingRequestObject.listing.id}}, '{{housingRequestObject.listing.street}}')">Reject Group</button>
 							        	                    	            					</div>
@@ -821,9 +761,9 @@
 						    								                    		{% for user in housingRequest.group.acceptedUsers %}
 						    								                    			{% with group=housingRequest.group %}         
 						    								                    				<div class="row">
-						    								                    					<div class="col-xs-12">
+						    								                    					<div class="col-sm-12" style="padding: 0px;">
 						    								                    						{% if group.leader_id == user.id %}
-						    								                    		    				{% include 'landlord/member.html' %}
+						    								                    		    				{% include 'landlord/smallMember.html' %}
 						    								                    						{% endif %}
 						    								                    		    		</div>
 						    								                    		    	</div>
@@ -833,9 +773,9 @@
 						                		      					    				{% for user in housingRequest.group.acceptedUsers %}
 						                		      					    					{% with group=housingRequest.group %}         
 						                		      					    						<div class="row">
-						                		      					    							<div class="col-xs-12">
+						                		      					    							<div class="col-sm-12" style="padding: 0px;">
 						                		      					    								{% if not group.leader_id == user.id %}
-						                		      					    				    				{% include 'landlord/member.html' %}
+						                		      					    				    				{% include 'landlord/smallMember.html' %}
 						                		      					    				    			{% endif %}
 						                		      					    				    		</div>
 						                		      					    				    	</div>
@@ -900,7 +840,7 @@
         							                    <div class="card-header">
         								                    <div class="row">
         								                    	<div class="col-xl-10">
-        								                    		<h3><strong>{{ housingRequest.group.name }} for {{ housingRequest.listing.street }}
+        								                    		<h3 style="font-size: 2.5vh;"><strong>{{ housingRequest.group.name }} for {{ housingRequest.listing.street }}
         								                    		</strong></h3>
         								                    		<small>Lease Period: {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}</small>
         								                    		<br><br>
@@ -941,7 +881,7 @@
 	        								                    		{% for deposit in housingRequest.securityDeposits %}
 	        								                    			{% with group=housingRequest.group %}         
 	        								                    				<div class="row">
-	        								                    					<div class="col-xs-12">
+	        								                    					<div class="col-sm-12" style="padding: 0px;">
 	        								                    						{% if group.leader_id == deposit.user.id %}
 	        								                    		    				{% include 'landlord/acceptedMember.html' %}
 	        								                    						{% endif %}
@@ -953,7 +893,7 @@
 	                    		      					    				{% for deposit in housingRequest.securityDeposits %}
 	                    		      					    					{% with group=housingRequest.group %}         
 	                    		      					    						<div class="row">
-	                    		      					    							<div class="col-xs-12">
+	                    		      					    							<div class="col-sm-12" style="padding: 0px;">
 	                    		      					    								{% if not group.leader_id == deposit.user.id %}
 	                    		      					    				    				{% include 'landlord/acceptedMember.html' %}
 	                    		      					    				    			{% endif %}
@@ -1008,26 +948,27 @@
 			    	<div class="col-xs-1"></div>
 			    	<div class="col-xs-10" style="width: 100%">
 				    	<div class="callout-block text-center fade-in-b">
-				    		<h1>Maintenance Requests</h1>
+				    		<h1 style="font-size: 3.5vh;" class="hidden-xs-down">Maintenance Requests</h1>
+				    		<h1 style="font-size: 3.5vh;" class="hidden-sm-up">Maintenance</h1>
 				    	</div>
 			    	</div>
 			    </div>
 		    	<br>
 		    	<div class="row">
-		        	<div class="col-xs-1"></div>
-		        	<div class="col-md-10 col-lg-10 col-xl-10">
+		        	<div class="col-xs-0 col-md-1"></div>
+		        	<div class="col-xs-12 col-md-10 col-lg-10 col-xl-10" style="padding-left: 15px;">
 		        	    <div class="row">
 		        	        <div class="card" style="width:100%; border: none;">
 		        	            <div class="card-block">
 		        	                <ul class="nav nav-tabs">
 		        	                    <li class="nav-item">
-		        	                        <a class="nav-link tab-selector first-tab active" id="newMaintenanceTab2" data-toggle="tab" href="#newMaintenanceTab" role="tab">New Requests</a>
+		        	                        <a class="nav-link tab-selector first-tab active" id="newMaintenanceTab2" data-toggle="tab" href="#newMaintenanceTab" role="tab" style="font-size: 2.0vh;">New</a>
 		        	                    </li>
 		        	                    <li class="nav-item">
-		        	                        <a class="nav-link tab-selector" id="inProgressMaintenanceTab2" data-toggle="tab" href="#inProgressMaintenanceTab" role="tab">In-Progress</a>
+		        	                        <a class="nav-link tab-selector" id="inProgressMaintenanceTab2" data-toggle="tab" href="#inProgressMaintenanceTab" role="tab" style="font-size: 2.0vh;">In-Progress</a>
 		        	                    </li>
 		        	                    <li class="nav-item">
-		        	                        <a class="nav-link tab-selector" id="completedMaintenanceTab2" data-toggle="tab" href="#completedMaintenanceTab" role="tab">Completed</a>
+		        	                        <a class="nav-link tab-selector" id="completedMaintenanceTab2" data-toggle="tab" href="#completedMaintenanceTab" role="tab" style="font-size: 2.0vh;">Completed</a>
 		        	                    </li>
 		        	                </ul>
 		        	                <br>
@@ -1041,16 +982,16 @@
         							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
         								                    <div class="row">
         								                    	<div class="col-xl-12">
-        								                    		<h3 id="openRequestsCount{{requestObject.house.listing.id}}"><strong>
+        								                    		<h3 style="font-size: 2.5vh;" id="openRequestsCount{{requestObject.house.listing.id}}"><strong>
         								                    		{{requestObject.maintenanceRequests|length }} New Maintenance Request(s) for {{requestObject.house.listing.street}}</strong></h3>
         								                    	</div>
         								                    </div>			                    
         							                    </div>
         							                    <div class="card-block">
         							                    	<div class="row">
-        							                    		<div class="col-xl-1"></div>
-        							                    		<div class="col-xl-10">
-        							                    			<strong><h2>Maintenance Requests for this listing: </h2></strong>
+        							                    		<div class="col-xs-0 col-md-1"></div>
+        							                    		<div class="col-xs-12 col-md-10">
+        							                    			<strong><h2 style="font-size: 2.5vh;">Maintenance Requests for this listing: </h2></strong>
         							                    		</div>
         							                    	</div>
 	        	                    	        			{% for request in requestObject.maintenanceRequests %}
@@ -1061,11 +1002,11 @@
 		        							                    			<div class="card-header">
 		        							                    				<div class="row">
 		        								                    				<div class="col-xl-10">
-					        	                    	            					<h3><strong>{{request.request_type}} </strong></h3>
+					        	                    	            					<h3 style="font-size: 3.0vh;"><strong>{{request.request_type}} </strong></h3>
 					        	                    	            					Reported on: {{request.date_created}}
 					        	                    	            					<br><br>
 					        	                    	            					<div class="row">   
-					        	                    	            						<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+					        	                    	            						<div class="col-12 col-md-auto" style="padding-bottom: 5px;padding-right: 15px;">
 							        	                    	            					<div id="markInProgressButton{{request.id}}">
 							        	                    	            						<button id="inProgressButton{{request.id}}" class="btn btn-warning" onclick="markInProgress({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.listing.street}}')">Mark In Progress</button>
 							        	                    	            					</div>
@@ -1075,7 +1016,7 @@
 							        	                    	            						</button>
 							        	                    	            					</div>
 							        	                    	            				</div>
-							        	                    	            				<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+							        	                    	            				<div class="col-12 col-md-auto" style="padding-right: 15px;">
 							        	                    	            					<div id="markCompletedButton{{request.id}}">
 							        	                    	            						<button id="completedButton{{request.id}}" class="btn btn-success" onclick="markCompleted({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.listing.street}}')">Mark Completed</button>
 							        	                    	            					</div>
@@ -1142,7 +1083,7 @@
         							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
         								                    <div class="row">
         								                    	<div class="col-xl-12">
-        								                    		<h3 id="inProgressRequestsCount{{requestObject.house.listing.id}}"><strong>
+        								                    		<h3 style="font-size: 2.5vh;" id="inProgressRequestsCount{{requestObject.house.listing.id}}"><strong>
         								                    		{{requestObject.maintenanceRequests|length }} In Progress Maintenance Request(s) for {{requestObject.house.listing.street}}</strong></h3>
         								                    	</div>
         								                    </div>			                    
@@ -1151,7 +1092,7 @@
         							                    	<div class="row">
         							                    		<div class="col-xl-1"></div>
         							                    		<div class="col-xl-10">
-        							                    			<strong><h2>Maintenance Requests for this listing: </h2></strong>
+        							                    			<strong><h2 style="font-size: 2.5vh;">Maintenance Requests for this listing: </h2></strong>
         							                    		</div>
         							                    	</div>
 	        	                    	        			{% for request in requestObject.maintenanceRequests %}
@@ -1162,11 +1103,11 @@
 		        							                    			<div class="card-header">
 		        							                    				<div class="row">
 		        								                    				<div class="col-xl-10">
-					        	                    	            					<h3><strong>{{request.request_type}} </strong></h3>
+					        	                    	            					<h3 style="font-size: 3.0vh;"><strong>{{request.request_type}} </strong></h3>
 					        	                    	            					Reported on: {{request.date_created}}
 					        	                    	            					<br><br>
 					        	                    	            					<div class="row">
-							        	                    	            				<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+							        	                    	            				<div class="col-12 col-md-auto" style="padding-bottom: 5px;padding-right: 15px;">
 							        	                    	            					<div id="inProgressToCompletedButton{{request.id}}">
 							        	                    	            						<button class="btn btn-success" onclick="inProgressToCompleted({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.listing.street}}')">Mark Completed</button>
 							        	                    	            					</div>
@@ -1223,7 +1164,7 @@
         							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
         								                    <div class="row">
         								                    	<div class="col-xl-12">
-        								                    		<h3 id="completedRequestsCount{{requestObject.house.listing.id}}"><strong>
+        								                    		<h3 style="font-size: 2.5vh;" id="completedRequestsCount{{requestObject.house.listing.id}}"><strong>
         								                    		{{requestObject.maintenanceRequests|length }} Completed Maintenance Request(s) for {{requestObject.house.listing.street}}</strong></h3>
         								                    	</div>
         								                    </div>			                    
@@ -1232,7 +1173,7 @@
         							                    	<div class="row">
         							                    		<div class="col-xl-1"></div>
         							                    		<div class="col-xl-10">
-        							                    			<strong><h2>Completed Maintenance for this listing: </h2></strong>
+        							                    			<strong><h2 style="font-size: 2.5vh;">Completed Maintenance for this listing: </h2></strong>
         							                    		</div>
         							                    	</div>
 	        	                    	        			{% for request in requestObject.maintenanceRequests %}
@@ -1243,7 +1184,7 @@
 		        							                    			<div class="card-header">
 		        							                    				<div class="row">
 		        								                    				<div class="col-xl-10">
-					        	                    	            					<h3><strong>{{request.request_type}} </strong></h3>
+					        	                    	            					<h3 style="font-size: 3.0vh;"><strong>{{request.request_type}} </strong></h3>
 					        	                    	            					Reported on: {{request.date_created}}
 					        	                    	            					<br><br>
 					        	                    	            					Completed on: {{request.date_modified}}
@@ -1370,7 +1311,6 @@
 		}
 	}
 	else{
-		alert("hi");
 		$("#occupiedListingsTab").addClass('active');
 	}
 	//Any time a tab is clicked on left panel update the url to show that

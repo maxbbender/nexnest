@@ -1,9 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-    Listing has utilities : {{listing.hasUtilities}}<br>
-    Listing has services : {{listing.hasServices}}<br>
-    Listing has appliances : {{listing.hasAppliances}}<br>
-    Listing has pets : {{listing.hasPets}}<br>
 	<div class="row" style="width: 100%;">
 		<div class="col-xs-1 col-md-2 col-lg-2"></div>
 		<div class="col-xs-10 col-md-8 col-lg-8">
@@ -97,10 +93,12 @@
 					{{ listing.city }}, {{ listing.state }}, {{ listing.zip_code }}</h4>
 					<h5>${{ listing.price }} Per Bedroom Per {{ listing.rent_due }}</h5>
 				</div>
-				<div class="col-xs-3" style="text-align: right;">
-					<br>
-					<a class="btn btn-primary" href="{{listing.floor_plan_url}}">Floor Plan</a>
-				</div>
+				{% if listing.floor_plan_url %}
+					<div class="col-xs-3" style="text-align: right;">
+						<br>
+						<a class="btn btn-primary" href="{{listing.floor_plan_url}}">Floor Plan</a>
+					</div>
+				{% endif %}
 			</div>
 			{% if not current_user in listing.landLordsAsUsers() %}
 			<hr>
@@ -115,7 +113,7 @@
 					<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#selectGroupForHouseModal">Request House</a>
 				</div>
 				<div class="col-xs-12 col-lg-3" style="text-align:right">
-					<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestListingModal">Suggest To Group</a>
+					<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestListingModal">Favorite For Group</a>
 				</div>
 			</div>
 			<div class="row hidden-lg-up">
@@ -132,7 +130,7 @@
 				</div>
 				<br><br>
 				<div class="col-xs-12 col-md-6 col-lg-3 col-centered">
-					<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestListingModal" style="width: 160.31px;">Suggest To Group</a>
+					<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestListingModal" style="width: 160.31px;">Favorite For Group</a>
 				</div>
 			</div>
 			{% endif %}
@@ -216,106 +214,115 @@
 				</div>
 			</div>
 			<hr style="padding-bottom: 15px;">
-			<div class="row">
-				<div class="col-sm-4">
-					<h2>Appliances:</h2>
-				</div>
-				<div class="col-sm-8">
-					<div class="row">						
-						{% if listing.air_conditioning %}
-							<div class="col-xs-12 col-md-6 col-xl-4">
-								<li>Air Conditioning</li>
-							</div>
-						{% endif %}
-						{% if listing.dishwasher %}
-							<div class="col-xs-12 col-md-6 col-xl-4">
-								<li>Dishwasher</li>
-							</div>							
-						{% endif %}	
-						{% if listing.washer %}
-							<div class="col-xs-12 col-md-6 col-xl-4">
-								<li>Washing Machine</li>
-							</div>
-						{% endif %}
-						{% if listing.dryer %}
-							<div class="col-xs-12 col-md-6 col-xl-4">
-								<li>Dryer</li>
-							</div>							
-						{% endif %}
-						{% if listing.washer_free %}
-							<div class="col-xs-12 col-md-6 col-xl-4">
-								<li>Laundry is Free to use</li>
-							</div>							
-						{% endif %}	
+			{% if listing.hasAppliances %}
+				<div class="row">
+					<div class="col-sm-4">
+						<h2>Appliances:</h2>
+					</div>
+					<div class="col-sm-8">
+						<div class="row">						
+							{% if listing.air_conditioning %}
+								<div class="col-xs-12 col-md-6 col-xl-4">
+									<li>Air Conditioning</li>
+								</div>
+							{% endif %}
+							{% if listing.dishwasher %}
+								<div class="col-xs-12 col-md-6 col-xl-4">
+									<li>Dishwasher</li>
+								</div>							
+							{% endif %}	
+							{% if listing.washer %}
+								<div class="col-xs-12 col-md-6 col-xl-4">
+									<li>Washing Machine</li>
+								</div>
+							{% endif %}
+							{% if listing.dryer %}
+								<div class="col-xs-12 col-md-6 col-xl-4">
+									<li>Dryer</li>
+								</div>							
+							{% endif %}
+							{% if listing.washer or listing.dryer %}
+								{% if listing.washer_free %}
+									<div class="col-xs-12 col-md-6 col-xl-4">
+										<li>Laundry is Free to use</li>
+									</div>							
+								{% endif %}
+							{% endif %}
+						</div>
 					</div>
 				</div>
-			</div>
-			<hr style="padding-bottom: 15px;">
-			<div class="row">
-				<div class="col-sm-4">
-					<h2>Utilities Included in Rent:</h2>
-				</div>
-				<div class="col-sm-8">
-					<div class="row">						
-						{% if listing.electricity %}
-							<div class="col-xs-12 col-md-6 col-xl-4">
-								<li>Electricity</li>
-							</div>
-						{% endif %}
-						{% if listing.heat_gas %}
-							<div class="col-xs-12 col-md-6 col-xl-4">
-								<li>Heat/Gas</li>
-							</div>
-						{% endif %}
-						{% if listing.water %}
-							<div class="col-xs-12 col-md-6 col-xl-4">
-								<li>Water</li>
-							</div>							
-						{% endif %}
-						{% if listing.internet %}
-							<div class="col-xs-12 col-md-6 col-xl-4">
-								<li>Internet</li>
-							</div>							
-						{% endif %}
-						{% if listing.cable %}
-							<div class="col-xs-12 col-md-6 col-xl-4">
-								<li>Cable</li>
-							</div>							
-						{% endif %}					
+				<hr style="padding-bottom: 15px;">
+			{% endif %}
+			{% if listing.hasUtilities %}
+				<div class="row">
+					<div class="col-sm-4">
+						<h2>Utilities Included in Rent:</h2>
+					</div>
+					<div class="col-sm-8">
+						<div class="row">						
+							{% if listing.electricity %}
+								<div class="col-xs-12 col-md-6 col-xl-4">
+									<li>Electricity</li>
+								</div>
+							{% endif %}
+							{% if listing.heat_gas %}
+								<div class="col-xs-12 col-md-6 col-xl-4">
+									<li>Heat/Gas</li>
+								</div>
+							{% endif %}
+							{% if listing.water %}
+								<div class="col-xs-12 col-md-6 col-xl-4">
+									<li>Water</li>
+								</div>							
+							{% endif %}
+							{% if listing.internet %}
+								<div class="col-xs-12 col-md-6 col-xl-4">
+									<li>Internet</li>
+								</div>							
+							{% endif %}
+							{% if listing.cable %}
+								<div class="col-xs-12 col-md-6 col-xl-4">
+									<li>Cable</li>
+								</div>							
+							{% endif %}					
+						</div>
 					</div>
 				</div>
-			</div>
-			<hr style="padding-bottom: 15px;">
-			<div class="row">
-				<div class="col-sm-4">
-					<h2>Services Included:</h2>
-				</div>
-				<div class="col-sm-8">
-					<div class="row">						
-						{% if listing.snow_plowing %}
-							<div class="col-xs-12 col-md-6 col-xl-4">
-								<li>Snow Removal</li>
-							</div>
-						{% endif %}
-						{% if listing.garbage_service %}
-							<div class="col-xs-12 col-md-6 col-xl-4">
-								<li>Garbage Removal</li>
-							</div>
-						{% endif %}
-						{% if listing.security_service %}
-							<div class="col-xs-12 col-md-6 col-xl-4">
-								<li>Security Service</li>
-							</div>							
-						{% endif %}
-						{% if listing.emergency_maintenance %}
-							<div class="col-xs-12 col-md-6 col-xl-4">
-								<li>Emergency Maintenance</li>
-							</div>							
-						{% endif %}				
+				<hr style="padding-bottom: 15px;">
+			{% endif %}
+			{% if listing.hasServices %}
+				<div class="row">
+					<div class="col-sm-4">
+						<h2>Services Included:</h2>
+					</div>
+					<div class="col-sm-8">
+						<div class="row">						
+							{% if listing.snow_plowing %}
+								<div class="col-xs-12 col-md-6 col-xl-4">
+									<li>Snow Removal</li>
+								</div>
+							{% endif %}
+							{% if listing.garbage_service %}
+								<div class="col-xs-12 col-md-6 col-xl-4">
+									<li>Garbage Removal</li>
+								</div>
+							{% endif %}
+							{% if listing.security_service %}
+								<div class="col-xs-12 col-md-6 col-xl-4">
+									<li>Security Service</li>
+								</div>							
+							{% endif %}
+							{% if listing.emergency_maintenance %}
+								<div class="col-xs-12 col-md-6 col-xl-4">
+									<li>Emergency Maintenance</li>
+								</div>							
+							{% endif %}				
+						</div>
 					</div>
 				</div>
-			</div>
-			<hr style="padding-bottom: 15px;">
+				<hr style="padding-bottom: 15px;">
+			{% endif %}
+			{% if listing.hasPets %}
 			<div class="row">
 				<div class="col-sm-4">
 					<h2>Pets Allowed:</h2>
@@ -333,13 +340,14 @@
 							</div>
 						{% endif %}
 						{% if listing.other_pets %}
-							<div class="col-xs-12 col-md-6 col-xl-4">
+							<div class="col-xs-12 col-md-12 col-xl-12">
 								{{listing.other_pets}}
 							</div>							
 						{% endif %}		
 					</div>
 				</div>
-			</div>			
+			</div>
+			{% endif %}			
 		</div>
 	</div>
 
@@ -374,21 +382,11 @@
 		      					    			    	<li>{{ user.fname }} {{ user.lname }}</li>
 		      					    			    {% endfor %}
 			      					    		</div>
-			      					    	</p>
-			      					    	<!--TODO: FIX THIS-->
-			      					    	<form id="suggest_listing" action="{{url_for('housingRequests.create')}}" method="POST">
-			      					    	    {{ suggestListingForm.csrf_token }}
-			      					    	    {{ suggestListingForm.group_id }}
-			      					    	    {{ suggestListingForm.listing_id(value=listing.id) }}
-			      					    	</form>  
-					      					<a href='#' onClick="submitForm({{group.id}})" class="btn btn-primary" id="group.id">Suggest Listing</a>	
+			      					    	</p>	      					    	
+					      					<button class="btn btn-primary" onClick="favoriteLisitng({{group.id}}, {{listing.id}})" data-dismiss="modal">Favorite Listing</button>
 			      					    </div>
 			      					</div>
 			      					<script>
-			      						function submitForm(id) {
-			      							$("#group_id").val(id);
-			      						    $("#suggest_listing").submit()
-			      						}
 			      						//Suggest Listing Modal
 			      						$('#suggestListingModal').on('show.bs.modal', function (event) {
 			      						  var button = $(event.relatedTarget)
@@ -632,6 +630,10 @@
     function submitHouseForm() {
     	$("#groupID").val($("#groupNumberHouse").text());
         $("#request_house").submit();
+    }
+
+    function favoriteLisitng(groupID, listingID){
+
     }
 
     var groups = {};
