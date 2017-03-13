@@ -57,16 +57,16 @@
 		    	<br>
 		    	<div class="row">
 		        	<div class="col-xs-0 col-md-1"></div>
-		        	<div class="col-xs-12 col-md-10 col-lg-10 col-xl-10">
+		        	<div class="col-xs-12 col-md-10 col-lg-10 col-xl-10" style="padding-left: 15px;">
 		        	    <div class="row">
 		        	        <div class="card" style="width:100%; border: none;">
 		        	            <div class="card-block">
 		        	                <ul class="nav nav-tabs">
 		        	                    <li class="nav-item">
-		        	                        <a class="nav-link tab-selector first-tab active" id="currentlyOccupiedTab2" data-toggle="tab" href="#currentlyOccupiedTab" role="tab">Currently Occupied</a>
+		        	                        <a class="nav-link tab-selector first-tab active" id="currentlyOccupiedTab2" data-toggle="tab" href="#currentlyOccupiedTab" role="tab" style="font-size: 2.0vh;">Current</a>
 		        	                    </li>
 		        	                    <li class="nav-item">
-		        	                        <a class="nav-link tab-selector" id="willBeOccupiedTab2"  data-toggle="tab" href="#willBeOccupiedTab" role="tab">Booked For Future</a>
+		        	                        <a class="nav-link tab-selector" id="willBeOccupiedTab2"  data-toggle="tab" href="#willBeOccupiedTab" role="tab" style="font-size: 2.0vh;">Future</a>
 		        	                    </li>
 		        	                </ul>
 		        	                <br>
@@ -303,17 +303,17 @@
 			    </div>
 		    	<br>
 		    	<div class="row">
-		        	<div class="col-xs-1"></div>
-		        	<div class="col-md-10 col-lg-10 col-xl-10">
+		        	<div class="col-xs-0 col-md-1"></div>
+		        	<div class="col-xs-12 col-md-10 col-lg-10 col-xl-10" style="padding-left: 15px;">
 		        	    <div class="row">
 		        	        <div class="card" style="width:100%; border: none;">
 		        	            <div class="card-block">
 		        	                <ul class="nav nav-tabs">
 		        	                    <li class="nav-item">
-		        	                        <a class="nav-link tab-selector first-tab active" id="requestedToursTab2" data-toggle="tab" href="#requestedToursTab" role="tab">Requested Tours</a>
+		        	                        <a class="nav-link tab-selector first-tab active" id="requestedToursTab2" data-toggle="tab" href="#requestedToursTab" role="tab" style="font-size: 2.0vh;">Requested Tours</a>
 		        	                    </li>
 		        	                    <li class="nav-item">
-		        	                        <a class="nav-link tab-selector"  id="scheduledToursTab2" data-toggle="tab" href="#scheduledToursTab" role="tab">Scheduled Tours</a>
+		        	                        <a class="nav-link tab-selector"  id="scheduledToursTab2" data-toggle="tab" href="#scheduledToursTab" role="tab" style="font-size: 2.0vh;">Scheduled Tours</a>
 		        	                    </li>
 		        	                </ul>
 		        	                <br>
@@ -327,25 +327,20 @@
         							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
         								                    <div class="row">
         								                    	<div class="col-xl-12">
-        								                    		<h3 style="font-size: 2.5vh;" id="requestedToursCount{{tourObject.listing.id}}"><strong>
-        								                    		{{tourObject.tours|length }} Request(s) to tour {{tourObject.listing.street}}</strong></h3>
-        								                    		<small style="font-size: 1.5vh;">Lease Period: {{ tourObject.listing.start_date }} - {{ tourObject.listing.end_date }}</small>
+        								                    		<h3 style="font-size: 3.5vh;" id="requestedToursCount{{tourObject.listing.id}}"><strong>
+        								                    		{{tourObject.listing.street}} ({{tourObject.tours|length }} Requests)</strong></h3>
+        								                    		<small style="font-size: 2.5vh;">Lease Period: {{ tourObject.listing.start_date }} - {{ tourObject.listing.end_date }}</small>
         								                    	</div>
         								                    </div>			                    
         							                    </div>
         							                    <div class="card-block">
-					        	                            <!-- <div class="row">
-        							                    		<div class="col-xl-1"></div>
-        							                    		<div class="col-xl-10">
-	        							                    	    {% with listing=tourObject.listing %}
-	        							                    	        {% include 'listing.html' %}
-	        							                    	    {% endwith %}
-	        							                    	</div>
-        							                    	</div> -->
         							                    	<div class="row">
         							                    		<div class="col-xl-1"></div>
         							                    		<div class="col-xl-10">
-        							                    			<strong><h2 style="font-size: 2.5vh;">Group(s) Requesting This Tour: </h2></strong>
+        							                    			<strong>
+        							                    				<h2 class="hidden-sm-up" style="font-size: 2.5vh;">Group(s) Requesting This Tour: </h2>
+        							                    				<h2 class="hidden-xs-down" style="font-size: 3.5vh;">Group(s) Requesting This Tour: </h2>
+        							                    			</strong>
         							                    		</div>
         							                    	</div>
 	        	                    	        			{% for tour in tourObject.tours %}
@@ -355,45 +350,55 @@
 			        	                    	        				<div class="card">
 		        							                    			<div class="card-header">
 		        							                    				<div class="row">
-		        								                    				<div class="col-xl-10">
-					        	                    	            					<h3 style="font-size: 3.5vh;"><strong>{{tour.group.name}} </strong>({{tour.group.acceptedUsers|count}} Members)</h3>
+		        								                    				<div class="col-12 col-xl-12">
+					        	                    	            					<h3 style="font-size: 3.5vh;"><strong>{{tour.group.name}} </strong>({{tour.group.acceptedUsers|count}} Members)
+					        	                    	            					<a class="btn btn-primary hidden-sm-down" href="{{ url_for('tours.viewTour', tourID=tour.id) }}" style="float: right;">More Info</a></h3>
+					        	                    	            				</div>
+					        	                    	            			</div>
+					        	                    	            			<div class="row">
+					        	                    	            				<div class="col-xl-12">
 					        	                    	            					Requested Date and Time: {{tour.time_requested}}
-					        	                    	            					<br><br>
+					        	                    	            				</div>
+					        	                    	            			</div>
+					        	                    	            			<br>
+					        	                    	            			<div class="row">
+					        	                    	            				<div class="col-xs-12">
 					        	                    	            					<div class="row">
 					        	                    	            						{% if tour.last_requested == 'group' %}
-						        	                    	            						<div class="col-12 col-xs-auto" style="padding-right: 15px; padding-bottom: 5px; ">
+						        	                    	            						<div class="col-lg-4" style="padding-right: 15px; padding-bottom: 5px; ">
 								        	                    	            					<div id="acceptTourButton{{tour.id}}">
-								        	                    	            						<button id="acceptTourBtn{{tour.id}}" class="btn btn-success" onclick="acceptTour({{tour.id}}, {{tourObject.listing.id}}, '{{tourObject.listing.street}}')">Accept Tour</button>
+								        	                    	            						<button id="acceptTourBtn{{tour.id}}" class="btn btn-success" style="width: 166.5px;" onclick="acceptTour({{tour.id}}, {{tourObject.listing.id}}, '{{tourObject.listing.street}}')">Accept Tour</button>
 								        	                    	            					</div>
 								        	                    	            					<div id="acceptTourLoading{{tour.id}}" style="display: none;">
-								        	                    	            						<button class="btn btn-success" style="width: 117.5px;">
+								        	                    	            						<button class="btn btn-success" style="width: 166.5px;">
 								        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
 								        	                    	            						</button>
 								        	                    	            					</div>
-								        	                    	            				</div>
-								        	                    	            				<div class="col-12 col-xs-auto" style="padding-right: 15px; padding-bottom: 5px;">
-								        	                    	            					<a href="#!" id="tourTimeChangeBtn{{tour.id}}" class="btn btn-info" data-toggle="modal" data-target="#suggestTimeTourModal" data-tourid="{{tour.id}}" data-groupid="{{tour.group.id}}">Request Date/Time Change</a>
+								        	                    	            				</div>						
+								        	                    	            				<div class="col-lg-4" style="padding-right: 15px; padding-bottom: 5px;">
+								        	                    	            					<a href="#!" id="tourTimeChangeBtn{{tour.id}}" class="btn btn-info" data-toggle="modal" data-target="#suggestTimeTourModal" data-tourid="{{tour.id}}" data-groupid="{{tour.group.id}}">Date/Time Change</a>
 								        	                    	            				</div>
 								        	                    	            			{% else %}
-								        	                    	            				<div class="col-12 col-md-auto" style="padding-left: 15px; padding-right: 15px; padding-bottom: 5px;">
-								        	                    	            					<button class="btn btn-secondary" disabled>Waiting For Group</button>
+								        	                    	            				<div class="col-lg-4" style="padding-left: 15px; padding-right: 15px; padding-bottom: 5px;">
+								        	                    	            					<button class="btn btn-secondary" style="width: 166.5px;" disabled>Waiting For Group</button>
 								        	                    	            				</div>
 							        	                    	            				{% endif %}
-							        	                    	            				<div class="col-12 col-xs-auto">
+							        	                    	            				<div class="col-lg-4" style="padding-right: 15px; padding-bottom: 5px;">
 							        	                    	            					<div id="declineTourButton{{tour.id}}">
-							        	                    	            						<button id="declineTourBtn{{tour.id}}" class="btn btn-danger" onclick="declineTour({{tour.id}}, {{tourObject.listing.id}}, '{{tourObject.listing.street}}')">Decline Tour</button>
+							        	                    	            						<button id="declineTourBtn{{tour.id}}" style="width: 166.5px;" class="btn btn-danger" onclick="declineTour({{tour.id}}, {{tourObject.listing.id}}, '{{tourObject.listing.street}}')">Decline Tour</button>
 							        	                    	            					</div>
 							        	                    	            					<div id="declineTourLoading{{tour.id}}" style="display: none;">
-							        	                    	            						<button class="btn btn-danger" style="width: 117.5px;">
+							        	                    	            						<button class="btn btn-danger" style="width: 166.5px;">
 							        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
 							        	                    	            						</button>
 							        	                    	            					</div>
 							        	                    	            				</div>
+							        	                    	            				<br>
+							        	                    	            				<div class="col-sm-12 hidden-md-up" style="padding-left: 15px;">
+							        	                    	            					<a class="btn btn-primary" style="width: 166.5px;" href="{{ url_for('tours.viewTour', tourID=tour.id) }}">More Info</a>
+							        	                    	            				</div>
 						        	                    	            				</div>
-					        	                    	            				</div>
-					        	                    	            				<div class="col-xl-2" style="text-align: right;">
-					        	                    	            					<a class="btn btn-primary" href="{{ url_for('tours.viewTour', tourID=tour.id) }}">More Info</a>
-					        	                    	            				</div>
+					        	                    	            				</div>	        	                    	            				
 					        	                    	            			</div>
 					        	                    	            		</div>
 					        	                    	            		<div class="card-block">
@@ -510,25 +515,20 @@
         							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
         								                    <div class="row">
         								                    	<div class="col-xl-12">
-        								                    		<h3 style="font-size: 2.5vh;" id="requestedToursCount{{tourObject.listing.id}}"><strong>
-        								                    		{{tourObject.tours|length }} Scheduled tour(s) of {{tourObject.listing.street}}</strong></h3>
-        								                    		<small style="font-size: 1.5vh;">Lease Period: {{ tourObject.listing.start_date }} - {{ tourObject.listing.end_date }}</small>
+        								                    		<h3 style="font-size: 3.5vh;" id="requestedToursCount{{tourObject.listing.id}}"><strong>
+        								                    		{{tourObject.listing.street}} ({{tourObject.tours|length }} Tours)</strong></h3>
+        								                    		<small style="font-size: 2.5vh;">Lease Period: {{ tourObject.listing.start_date }} - {{ tourObject.listing.end_date }}</small>
         								                    	</div>
         								                    </div>			                    
         							                    </div>
         							                    <div class="card-block">
-					        	                            <!-- <div class="row">
-        							                    		<div class="col-xl-1"></div>
-        							                    		<div class="col-xl-10">
-	        							                    	    {% with listing=tourObject.listing %}
-	        							                    	        {% include 'listing.html' %}
-	        							                    	    {% endwith %}
-	        							                    	</div>
-        							                    	</div> -->
         							                    	<div class="row">
         							                    		<div class="col-xl-1"></div>
         							                    		<div class="col-xl-10">
-        							                    			<strong><h2 style="font-size: 2.5vh;">Group(s) Requesting This Tour: </h2></strong>
+        							                    			<strong>
+        							                    				<h2 class="hidden-sm-up" style="font-size: 2.5vh;">Group(s) Touring This Property: </h2>
+        							                    				<h2 class="hidden-xs-down" style="font-size: 3.5vh;">Group(s) Touring This Property: </h2>
+        							                    			</strong>
         							                    		</div>
         							                    	</div>
 	        	                    	        			{% for tour in tourObject.tours %}
@@ -669,7 +669,7 @@
 		    	<br>
 		    	<div class="row">
 		        	<div class="col-xs-0 col-md-1"></div>
-		        	<div class="col-xs-12 col-md-10 col-lg-10 col-xl-10">
+		        	<div class="col-xs-12 col-md-10 col-lg-10 col-xl-10" style="padding-left: 15px;">
 		        	    <div class="row">
 		        	        <div class="card" style="width:100%; border: none;">
 		        	            <div class="card-block">
@@ -693,20 +693,12 @@
         								                    <div class="row">
         								                    	<div class="col-xl-12">
         								                    		<h3 style="font-size: 3.5vh;" id="unacceptedRequestsCount{{housingRequestObject.listing.id}}"><strong>
-        								                    		{{housingRequestObject.houseRequests|length }} Request(s) for {{housingRequestObject.listing.street}}</strong></h3>
+        								                    		{{housingRequestObject.listing.street}} ({{housingRequestObject.houseRequests|length }} Requests)</strong></h3>
         								                    		<small>Lease Period: {{ housingRequestObject.listing.start_date }} - {{ housingRequestObject.listing.end_date }}</small>
         								                    	</div>
         								                    </div>			                    
         							                    </div>
         							                    <div class="card-block">
-        							                    	<!-- <div class="row">
-        							                    		<div class="col-xl-1"></div>
-        							                    		<div class="col-xl-10">
-	        							                    	    {% with listing=housingRequestObject.listing %}
-	        							                    	        {% include 'listing.html' %}
-	        							                    	    {% endwith %}
-	        							                    	</div>
-        							                    	</div> -->
         							                    	<div class="row">
         							                    		<div class="col-xs-0 col-md-1"></div>
         							                    		<div class="col-xs-12 col-md-10">
@@ -716,40 +708,42 @@
 	        	                    	        			{% for housingRequest in housingRequestObject.houseRequests %}
 	        	                    	        				<div class="row" id="unAcceptedRequest{{housingRequest.id}}">
 	        	                    	        					<div class="col-xs-0 col-md-1"></div>
-	        	                    	        					<div class="col-xs-12 col-md-10">
+	        	                    	        					<div class="col-xs-12 col-md-10" style="padding-left: 0px; padding-right: 0px;">
 			        	                    	        				<div class="card">
 		        							                    			<div class="card-header">
 		        							                    				<div class="row">
-		        								                    				<div class="col-xs-10">
-					        	                    	            					<h3 style="font-size: 3.0vh;"><strong>{{housingRequest.group.name}}</strong>({{housingRequest.group.acceptedUsers|count}} Members)</h3>
-					        	                    	            					<br>
-					        	                    	            					<div class="row">
-						        	                    	            					<div class="col-12 col-md-auto" style="padding-bottom: 5px;padding-right: 15px;">
-							        	                    	            					<div id="acceptHouseRequest{{housingRequest.id}}">
-							        	                    	            						<button id="acceptHouseRequestButton{{housingRequest.id}}" class="btn btn-success acceptHouseRequest{{housingRequestObject.listing.id}}" onclick="acceptHouseRequest({{housingRequest.id}}, {{housingRequestObject.listing.id}}, '{{housingRequestObject.listing.street}}')">Accept Group</button>
-							        	                    	            					</div>
-							        	                    	            					<div id="acceptHouseRequestLoading{{housingRequest.id}}" style="display: none;">
-							        	                    	            						<button class="btn btn-success" style="width: 131.06px;">
-							        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-							        	                    	            						</button>
-							        	                    	            					</div>
-						        	                    	            					</div>
-						        	                    	            					<div class="col-12 col-md-auto" style="padding-right: 15px;">
-							        	                    	            					<div id="denyHouseRequest{{housingRequest.id}}">
-							        	                    	            						<button id="denyHouseRequestButton{{housingRequest.id}}" class="btn btn-danger denyHouseRequest{{housingRequestObject.listing.id}}" onclick="denyHouseRequest({{housingRequest.id}}, {{housingRequestObject.listing.id}}, '{{housingRequestObject.listing.street}}')">Reject Group</button>
-							        	                    	            					</div>
-							        	                    	            					<div id="denyHouseRequestLoading{{housingRequest.id}}" style="display: none;">
-							        	                    	            						<button class="btn btn-danger" style="width: 125.28px;">
-							        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-							        	                    	            						</button>
-							        	                    	            					</div>
-						        	                    	            					</div>
-					        	                    	            					</div>
-					        	                    	            				</div>
-					        	                    	            				<div class="col-xl-2" style="text-align: right;">
-					        	                    	            					<a class="btn btn-primary" href="{{ url_for('housingRequests.view', id=housingRequest.id) }}">More Info</a>
+		        								                    				<div class="col-xl-12">
+					        	                    	            					<h3 style="font-size: 3.0vh;"><strong>{{housingRequest.group.name}}</strong>({{housingRequest.group.acceptedUsers|count}} Members)
+					        	                    	            					<a class="btn btn-primary hidden-sm-down" style="float: right;" href="{{ url_for('housingRequests.view', id=housingRequest.id) }}">More Info</a></h3>	
 					        	                    	            				</div>
 					        	                    	            			</div>
+					        	                    	            			<br>
+			        	                    	            					<div class="row">
+				        	                    	            					<div class="col-12 col-md-auto" style="padding-bottom: 5px;padding-right: 15px;">
+					        	                    	            					<div id="acceptHouseRequest{{housingRequest.id}}">
+					        	                    	            						<button id="acceptHouseRequestButton{{housingRequest.id}}" style="width: 131.06px;" class="btn btn-success acceptHouseRequest{{housingRequestObject.listing.id}}" onclick="acceptHouseRequest({{housingRequest.id}}, {{housingRequestObject.listing.id}}, '{{housingRequestObject.listing.street}}')">Accept Group</button>
+					        	                    	            					</div>
+					        	                    	            					<div id="acceptHouseRequestLoading{{housingRequest.id}}" style="display: none;">
+					        	                    	            						<button class="btn btn-success" style="width: 131.06px;">
+					        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+					        	                    	            						</button>
+					        	                    	            					</div>
+				        	                    	            					</div>
+				        	                    	            					<div class="col-12 col-md-auto" style="padding-right: 15px; padding-bottom: 5px;">
+					        	                    	            					<div id="denyHouseRequest{{housingRequest.id}}">
+					        	                    	            						<button id="denyHouseRequestButton{{housingRequest.id}}" style="width: 131.06px;" class="btn btn-danger denyHouseRequest{{housingRequestObject.listing.id}}" onclick="denyHouseRequest({{housingRequest.id}}, {{housingRequestObject.listing.id}}, '{{housingRequestObject.listing.street}}')">Reject Group</button>
+					        	                    	            					</div>
+					        	                    	            					<div id="denyHouseRequestLoading{{housingRequest.id}}" style="display: none;">
+					        	                    	            						<button class="btn btn-danger" style="width: 131.06px;">
+					        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+					        	                    	            						</button>
+					        	                    	            					</div>
+				        	                    	            					</div>
+				        	                    	            					<br>
+				        	                    	            					<div class="col-sm-12 hidden-md-up" style="padding-left: 0px;">
+				        	                    	            						<a class="btn btn-primary" style="width: 131.06px;" href="{{ url_for('housingRequests.view', id=housingRequest.id) }}">More Info</a>
+				        	                    	            					</div>
+			        	                    	            					</div>
 					        	                    	            		</div>
 					        	                    	            		<div class="card-block">
 		        							                    				<div class="row">
@@ -839,39 +833,43 @@
         							                <div class="card" id="confirmRequest{{housingRequest.id}}">
         							                    <div class="card-header">
         								                    <div class="row">
-        								                    	<div class="col-xl-10">
+        								                    	<div class="col-xl-12">
         								                    		<h3 style="font-size: 2.5vh;"><strong>{{ housingRequest.group.name }} for {{ housingRequest.listing.street }}
-        								                    		</strong></h3>
+        								                    		</strong>        								                    		
+        								                    		<a class="btn btn-primary hidden-sm-down" style="float: right;" href="{{ url_for('housingRequests.view', id=housingRequest.id) }}">More Info</a></h3>
+        								                    	</div>
+        								                    </div>
+        								                    <div class="row">
+        								                    	<div class="col-xl-12">
         								                    		<small>Lease Period: {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}</small>
-        								                    		<br><br>
-        								                    		<div class="row">
-        								                    			<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
-	        								                    			<strong style="padding-right: 16px;">All Leases Collected: </strong>
-	        								                    			{% if housingRequest.all_leases_submitted %}
-	        								                    				<button id="undoMarkAllCollected{{housingRequest.id}}" type="button" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" onclick="undoMarkLeasesCollected({{housingRequest.id}})"><i class="fa fa-check" aria-hidden="true"></i></button>
-	        								                    				<button type="button" id="undoMarkAllCollectedLoading{{housingRequest.id}}" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
-	        								                    				<button type="button" id="undoMarkAllUncollected{{housingRequest.id}}" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" style="display: none;" onclick="undoMarkLeasesUncollected({{housingRequest.id}})"><i class="fa fa-times" aria-hidden="true"></i></button>
-	        								                    			{% else %}
-	        								                    				<button id="markAllCollected{{housingRequest.id}}" type="button" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" onclick="markLeasesCollected({{housingRequest.id}})"><i class="fa fa-times" aria-hidden="true"></i></button>
-	        								                    				<button type="button" id="markAllCollectedLoading{{housingRequest.id}}" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
-	        								                    				<button type="button" id="markAllUncollected{{housingRequest.id}}" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" style="display: none;" onclick="markLeasesUncollected({{housingRequest.id}})"><i class="fa fa-check" aria-hidden="true"></i></button>
-	        								                    			{% endif %}
-	        								                    			
-	        								                    		</div>
-	        								                    		<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
-	        								                    			<strong>Security Deposits Collected: </strong> 
-	        								                    			<span id="numDeposits{{housingRequest.id}}">{{housingRequest.numSecurityDepositsPaid}}</span>/{{housingRequest.group.acceptedUsers|count}}
-	        								                    		</div>
-	        								                    		<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
-	        								                    			<button id="confirmGroupButton{{housingRequest.id}}" class="btn btn-success" onclick="confirmGroup({{housingRequest.id}})">Confirm Group</button>
-	        								                    			<button id="confirmGroupLoading{{housingRequest.id}}" class="btn btn-success" style="display: none; width: 139.33px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
-	        								                    		</div>
-        								                    		</div>
         								                    	</div>
-        								                    	<div class="col-xl-2" style="text-align: right;">
-        								                    		<a class="btn btn-primary" href="{{ url_for('housingRequests.view', id=housingRequest.id) }}">More Info</a>
-        								                    	</div>
-        								                    </div>			                    
+        								                    </div>        								                    		<br>
+								                    		<div class="row">
+								                    			<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+    								                    			<strong style="padding-right: 16px;">All Leases Collected: </strong>
+    								                    			{% if housingRequest.all_leases_submitted %}
+    								                    				<button id="undoMarkAllCollected{{housingRequest.id}}" type="button" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" onclick="undoMarkLeasesCollected({{housingRequest.id}})"><i class="fa fa-check" aria-hidden="true"></i></button>
+    								                    				<button type="button" id="undoMarkAllCollectedLoading{{housingRequest.id}}" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+    								                    				<button type="button" id="undoMarkAllUncollected{{housingRequest.id}}" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" style="display: none;" onclick="undoMarkLeasesUncollected({{housingRequest.id}})"><i class="fa fa-times" aria-hidden="true"></i></button>
+    								                    			{% else %}
+    								                    				<button id="markAllCollected{{housingRequest.id}}" type="button" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" onclick="markLeasesCollected({{housingRequest.id}})"><i class="fa fa-times" aria-hidden="true"></i></button>
+    								                    				<button type="button" id="markAllCollectedLoading{{housingRequest.id}}" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+    								                    				<button type="button" id="markAllUncollected{{housingRequest.id}}" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" style="display: none;" onclick="markLeasesUncollected({{housingRequest.id}})"><i class="fa fa-check" aria-hidden="true"></i></button>
+    								                    			{% endif %}    								                    			
+    								                    		</div>
+    								                    		<div class="col-12 col-md-auto" style="padding-left: 15px; padding-right: 15px;">
+    								                    			<strong>Deposits Collected: </strong> 
+    								                    			<span id="numDeposits{{housingRequest.id}}">{{housingRequest.numSecurityDepositsPaid}}</span>/{{housingRequest.group.acceptedUsers|count}}
+    								                    		</div>
+    								                    		<div class="col-12 col-md-auto" style="padding-left: 15px; padding-right: 15px; padding-bottom: 5px;">
+    								                    			<button id="confirmGroupButton{{housingRequest.id}}" class="btn btn-success" onclick="confirmGroup({{housingRequest.id}})">Confirm Group</button>
+    								                    			<button id="confirmGroupLoading{{housingRequest.id}}" class="btn btn-success" style="display: none; width: 139.33px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+    								                    		</div>
+    								                    		<br>
+    								                    		<div class="col-xs-12" style="padding-left: 15px;">
+        								                    		<a class="btn btn-primary" style="width: 139.33px;" href="{{ url_for('housingRequests.view', id=housingRequest.id) }}">More Info</a>
+    								                    		</div>
+								                    		</div>		                    
         							                    </div>
         							                    <div class="card-block">        								                    
         								                    <div class="row">
@@ -982,8 +980,8 @@
         							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
         								                    <div class="row">
         								                    	<div class="col-xl-12">
-        								                    		<h3 style="font-size: 2.5vh;" id="openRequestsCount{{requestObject.house.listing.id}}"><strong>
-        								                    		{{requestObject.maintenanceRequests|length }} New Maintenance Request(s) for {{requestObject.house.listing.street}}</strong></h3>
+        								                    		<h3 style="font-size: 3.0vh;" id="openRequestsCount{{requestObject.house.listing.id}}"><strong>
+        								                    		{{requestObject.house.listing.street}} ({{requestObject.maintenanceRequests|length }} New)</strong></h3>
         								                    	</div>
         								                    </div>			                    
         							                    </div>
@@ -1001,37 +999,40 @@
 			        	                    	        				<div class="card">
 		        							                    			<div class="card-header">
 		        							                    				<div class="row">
-		        								                    				<div class="col-xl-10">
-					        	                    	            					<h3 style="font-size: 3.0vh;"><strong>{{request.request_type}} </strong></h3>
+		        								                    				<div class="col-xl-12">
+					        	                    	            					<h3 style="font-size: 3.0vh;">
+						        	                    	            					<strong>{{request.request_type}} </strong>
+						        	                    	            					<a style="float: right;" class="btn btn-primary hidden-sm-down" href="{{ url_for('houses.maintenanceRequestView', id=request.id) }}">More Info</a>
+					        	                    	            					</h3>
 					        	                    	            					Reported on: {{request.date_created}}
 					        	                    	            					<br><br>
-					        	                    	            					<div class="row">   
-					        	                    	            						<div class="col-12 col-md-auto" style="padding-bottom: 5px;padding-right: 15px;">
-							        	                    	            					<div id="markInProgressButton{{request.id}}">
-							        	                    	            						<button id="inProgressButton{{request.id}}" class="btn btn-warning" onclick="markInProgress({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.listing.street}}')">Mark In Progress</button>
-							        	                    	            					</div>
-							        	                    	            					<div id="markInProgressLoading{{request.id}}" style="display: none;">
-							        	                    	            						<button class="btn btn-warning" style="width: 152.94px;">
-							        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-							        	                    	            						</button>
-							        	                    	            					</div>
-							        	                    	            				</div>
-							        	                    	            				<div class="col-12 col-md-auto" style="padding-right: 15px;">
-							        	                    	            					<div id="markCompletedButton{{request.id}}">
-							        	                    	            						<button id="completedButton{{request.id}}" class="btn btn-success" onclick="markCompleted({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.listing.street}}')">Mark Completed</button>
-							        	                    	            					</div>
-							        	                    	            					<div id="markCompletedLoading{{request.id}}" style="display: none;">
-							        	                    	            						<button class="btn btn-success" style="width: 152.33px;">
-							        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-							        	                    	            						</button>
-							        	                    	            					</div>
-							        	                    	            				</div>
-						        	                    	            				</div>
-					        	                    	            				</div>
-					        	                    	            				<div class="col-xl-2" style="text-align: right;">
-					        	                    	            					<a class="btn btn-primary" href="{{ url_for('houses.maintenanceRequestView', id=request.id) }}">More Info</a>
 					        	                    	            				</div>
 					        	                    	            			</div>
+			        	                    	            					<div class="row">   
+			        	                    	            						<div class="col-12 col-md-auto" style="padding-bottom: 5px;padding-right: 15px;">
+					        	                    	            					<div id="markInProgressButton{{request.id}}">
+					        	                    	            						<button id="inProgressButton{{request.id}}" class="btn btn-warning" onclick="markInProgress({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.listing.street}}')">Mark In Progress</button>
+					        	                    	            					</div>
+					        	                    	            					<div id="markInProgressLoading{{request.id}}" style="display: none;">
+					        	                    	            						<button class="btn btn-warning" style="width: 152.94px;">
+					        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+					        	                    	            						</button>
+					        	                    	            					</div>
+					        	                    	            				</div>
+					        	                    	            				<div class="col-12 col-md-auto" style="padding-right: 15px; padding-bottom: 5px;">
+					        	                    	            					<div id="markCompletedButton{{request.id}}">
+					        	                    	            						<button id="completedButton{{request.id}}" class="btn btn-success" onclick="markCompleted({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.listing.street}}')">Mark Completed</button>
+					        	                    	            					</div>
+					        	                    	            					<div id="markCompletedLoading{{request.id}}" style="display: none;">
+					        	                    	            						<button class="btn btn-success" style="width: 152.33px;">
+					        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+					        	                    	            						</button>
+					        	                    	            					</div>				
+					        	                    	            				</div>
+					        	                    	            				<div class="col-xs-12" style="padding-left: 0px;">
+					        	                    	            					<a class="btn btn-primary hidden-md-up" style="width: 152.94px;" href="{{ url_for('houses.maintenanceRequestView', id=request.id) }}">More Info</a>
+					        	                    	            				</div>
+				        	                    	            				</div>
 					        	                    	            		</div>
 					        	                    	            		<div class="card-block">
 		        							                    				<div class="row">
@@ -1084,7 +1085,7 @@
         								                    <div class="row">
         								                    	<div class="col-xl-12">
         								                    		<h3 style="font-size: 2.5vh;" id="inProgressRequestsCount{{requestObject.house.listing.id}}"><strong>
-        								                    		{{requestObject.maintenanceRequests|length }} In Progress Maintenance Request(s) for {{requestObject.house.listing.street}}</strong></h3>
+        								                    		 {{requestObject.house.listing.street}} ({{requestObject.maintenanceRequests|length }} In Progress)</strong></h3>
         								                    	</div>
         								                    </div>			                    
         							                    </div>
@@ -1102,27 +1103,36 @@
 			        	                    	        				<div class="card">
 		        							                    			<div class="card-header">
 		        							                    				<div class="row">
-		        								                    				<div class="col-xl-10">
-					        	                    	            					<h3 style="font-size: 3.0vh;"><strong>{{request.request_type}} </strong></h3>
-					        	                    	            					Reported on: {{request.date_created}}
-					        	                    	            					<br><br>
-					        	                    	            					<div class="row">
-							        	                    	            				<div class="col-12 col-md-auto" style="padding-bottom: 5px;padding-right: 15px;">
-							        	                    	            					<div id="inProgressToCompletedButton{{request.id}}">
-							        	                    	            						<button class="btn btn-success" onclick="inProgressToCompleted({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.listing.street}}')">Mark Completed</button>
-							        	                    	            					</div>
-							        	                    	            					<div id="inProgressToCompletedLoading{{request.id}}" style="display: none;">
-							        	                    	            						<button class="btn btn-success" style="width: 152.33px;">
-							        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-							        	                    	            						</button>
-							        	                    	            					</div>
-							        	                    	            				</div>
-						        	                    	            				</div>
-					        	                    	            				</div>
-					        	                    	            				<div class="col-xl-2" style="text-align: right;">
-					        	                    	            					<a class="btn btn-primary" href="{{ url_for('houses.maintenanceRequestView', id=request.id) }}">More Info</a>
+		        								                    				<div class="col-xl-12">
+					        	                    	            					<h3 style="font-size: 3.0vh;">
+						        	                    	            					<strong>{{request.request_type}} </strong>
+						        	                    	            					<a style="float: right;" class="btn btn-primary hidden-sm-down" href="{{ url_for('houses.maintenanceRequestView', id=request.id) }}">More Info</a>
+					        	                    	            					</h3>
 					        	                    	            				</div>
 					        	                    	            			</div>
+					        	                    	            			<div class="row">
+					        	                    	            				<div class="col-xl-12">
+					        	                    	            					Reported on: {{request.date_created}}
+					        	                    	            					<br><br>
+					        	                    	            				</div>
+					        	                    	            			</div>
+			        	                    	            					<div class="row">
+					        	                    	            				<div class="col-12 col-md-auto" style="padding-bottom: 5px;padding-right: 15px;">
+					        	                    	            					<div id="inProgressToCompletedButton{{request.id}}">
+					        	                    	            						<button class="btn btn-success" onclick="inProgressToCompleted({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.listing.street}}')">Mark Completed</button>
+					        	                    	            					</div>
+					        	                    	            					<div id="inProgressToCompletedLoading{{request.id}}" style="display: none;">
+					        	                    	            						<button class="btn btn-success" style="width: 152.33px;">
+					        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+					        	                    	            						</button>
+					        	                    	            					</div>				
+					        	                    	            				</div>
+					        	                    	            			</div>
+				        	                    	            				<div class="row hidden-md-up">
+				        	                    	            					<div>
+				        	                    	            						<a class="btn btn-primary" style="width: 153.33px;" href="{{ url_for('houses.maintenanceRequestView', id=request.id) }}">More Info</a>
+				        	                    	            					</div>
+				        	                    	            				</div>
 					        	                    	            		</div>
 					        	                    	            		<div class="card-block">
 		        							                    				<div class="row">
@@ -1165,7 +1175,7 @@
         								                    <div class="row">
         								                    	<div class="col-xl-12">
         								                    		<h3 style="font-size: 2.5vh;" id="completedRequestsCount{{requestObject.house.listing.id}}"><strong>
-        								                    		{{requestObject.maintenanceRequests|length }} Completed Maintenance Request(s) for {{requestObject.house.listing.street}}</strong></h3>
+        								                    		{{requestObject.house.listing.street}} ({{requestObject.maintenanceRequests|length }} Completed)</strong></h3>
         								                    	</div>
         								                    </div>			                    
         							                    </div>
@@ -1980,12 +1990,12 @@
             // alert(data['results'].success);
             if (results.success == true){ 
 		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+		    	$("#numDeposits"+requestID).html(depositsPaid-1);
 		    	$("#depositPaid"+requestID+"Z"+userID).hide();
 		    	$("#markDepositUnpaid"+requestID+"Z"+userID).show();
 		    	setTimeout(function () {
 		        	$("#markDepositUnpaid"+requestID+"Z"+userID).hide();
-		        	$("#depositMarkedUnPaid"+requestID+"Z"+userID).show();
-		        	$("#numDeposits"+requestID).html(depositsPaid-1);
+		        	$("#depositMarkedUnPaid"+requestID+"Z"+userID).show();		        	
 		        }, 1200);
 		    }
 		    else{
@@ -2001,12 +2011,12 @@
             // alert(data['results'].success);
             if (results.success == true){ 
 		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+		    	$("#numDeposits"+requestID).html(depositsPaid+1);
 		    	$("#depositMarkedUnPaid"+requestID+"Z"+userID).hide();
 		    	$("#markDepositUnpaid"+requestID+"Z"+userID).show();
 		    	setTimeout(function () {
 		        	$("#markDepositUnpaid"+requestID+"Z"+userID).hide();
-		        	$("#depositPaid"+requestID+"Z"+userID).show();
-		        	$("#numDeposits"+requestID).html(depositsPaid+1);
+		        	$("#depositPaid"+requestID+"Z"+userID).show();		        	
 		        }, 1200);
 		    }
 		    else{
@@ -2022,12 +2032,12 @@
             // alert(data['results'].success);
             if (results.success == true){ 
 		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+		    	$("#numDeposits"+requestID).html(depositsPaid+1);
 		    	$("#depositUnpaid"+requestID+"Z"+userID).hide();
 		    	$("#markDepositPaid"+requestID+"Z"+userID).show();
 		    	setTimeout(function () {
 		        	$("#markDepositPaid"+requestID+"Z"+userID).hide();
-		        	$("#depositMarkedPaid"+requestID+"Z"+userID).show();
-		        	$("#numDeposits"+requestID).html(depositsPaid+1);
+		        	$("#depositMarkedPaid"+requestID+"Z"+userID).show();		        	
 		        }, 1200);
 		    }
 		    else{
@@ -2043,12 +2053,12 @@
             // alert(data['results'].success);
             if (results.success == true){ 
 		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+		    	$("#numDeposits"+requestID).html(depositsPaid-1);
 		    	$("#depositMarkedPaid"+requestID+"Z"+userID).hide();
 		    	$("#markDepositPaid"+requestID+"Z"+userID).show();
 		    	setTimeout(function () {
 		        	$("#markDepositPaid"+requestID+"Z"+userID).hide();
-		        	$("#depositUnpaid"+requestID+"Z"+userID).show();
-		        	$("#numDeposits"+requestID).html(depositsPaid-1);
+		        	$("#depositUnpaid"+requestID+"Z"+userID).show();		        	
 		        }, 1200);
 		    }
 		    else{
