@@ -1319,6 +1319,9 @@
 	   		$("#"+secondTab+'2').addClass('active');
 			$("#"+secondTab).addClass('active');
 		}
+		else{
+			$('.first-tab').addClass('active');
+		}
 	}
 	else{
 		$("#occupiedListingsTab").addClass('active');
@@ -1407,11 +1410,11 @@
         		}
         	}
         	else if(count == 1){
-        		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+        		$("#requestedToursCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ("+count+ " Requests) </h3></strong>");
         		$("#noRequestedTours").hide();
         	}
         	else if(count > 1){
-        		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+        		$("#requestedToursCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ("+count+ " Requests) </h3></strong>");
         		$("#noRequestedTours").hide();
         	}        	
         }, 10000);
@@ -1444,10 +1447,10 @@
     		$("#requestedTourListing"+surroundingID).fadeIn(300);
     	}
     	else if(count-1 == 1){
-    		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+    		$("#requestedToursCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ("+count+ " Requests) </h3></strong>");
     	}
     	else if(count-1 > 1){
-    		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+    		$("#requestedToursCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ("+count+ " Requests) </h3></strong>");
     	}    	
     	$("#noRequestedTours").hide();
     }
@@ -1486,11 +1489,11 @@
         		}
         	}
         	else if(count == 1){
-        		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+        		$("#requestedToursCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ("+count+ " Requests) </h3></strong>");
         		$("#noRequestedTours").hide();
         	}
         	else if(count > 1){
-        		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+        		$("#requestedToursCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ("+count+ " Requests) </h3></strong>");
         		$("#noRequestedTours").hide();
         	}        	
         }, 10000);
@@ -1523,10 +1526,10 @@
     		$("#requestedTourListing"+surroundingID).fadeIn(300);    		
     	}
     	else if(count-1 == 1){
-    		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+    		$("#requestedToursCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " "+count+ " Requests) </h3></strong>");
     	}
     	else if(count-1 > 1){
-    		$("#requestedToursCount"+surroundingID).html("<h3><strong>" + count + " Request(s) to tour  " + listing + "</h3></strong>");
+    		$("#requestedToursCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " Requests) </h3></strong>");
     	}    	
     	$("#noRequestedTours").hide();
     }
@@ -1563,11 +1566,11 @@
         		}
         	}
         	else if(count == 1){
-        		$("#scheduledToursCount"+surroundingID).html("<h3><strong>" + count + " Scheduled tour(s) of " + listing + "</h3></strong>");
+        		$("#scheduledToursCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " Tours) </h3></strong>");
         		$("#noScheduledTours").hide();
         	}
         	else if(count > 1){
-        		$("#scheduledToursCount"+surroundingID).html("<h3><strong>" + count + " Scheduled tour(s) of " + listing + "</h3></strong>");
+        		$("#scheduledToursCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " Tours) </h3></strong>");
         		$("#noScheduledTours").hide();
         	}        	
         }, 10000);
@@ -1599,10 +1602,10 @@
     		$("#scheduledTourListing"+surroundingID).fadeIn(300);
     	}
     	else if(count-1 == 1){
-    		$("#scheduledToursCount"+surroundingID).html("<h3><strong>" + count + " Scheduled tour(s) of " + listing + "</h3></strong>");
+    		$("#scheduledToursCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " Tours) </h3></strong>");
     	}
     	else if(count-1 > 1){
-    		$("#scheduledToursCount"+surroundingID).html("<h3><strong>" + count + " Scheduled tour(s) of " + listing + "</h3></strong>");
+    		$("#scheduledToursCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " Tours) </h3></strong>");
     	}    	
     	$("#noScheduledTours").hide();
     }
@@ -1646,11 +1649,11 @@
         		}
         	}
         	else if(count == 1){
-        		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+        		$("#openRequestsCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " New) </h3></strong>");
         		$("#noNewMaintenanceRequests").hide();
         	}
         	else if(count > 1){
-        		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+        		$("#openRequestsCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " New) </h3></strong>");
         		$("#noNewMaintenanceRequests").hide();
         	}        	
         }, 10000);
@@ -1681,10 +1684,10 @@
     		$("#openRequestListing"+surroundingID).fadeIn(300);
     	}
     	else if(count-1 == 1){
-    		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+    		$("#openRequestsCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " New) </h3></strong>");
     	}
     	else if(count-1 > 1){
-    		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+    		$("#openRequestsCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " New) </h3></strong>");
     	}    	
     	$("#noNewMaintenanceRequests").hide();
     }
@@ -1720,11 +1723,11 @@
         		}
         	}
         	else if(count == 1){
-        		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+        		$("#openRequestsCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " New) </h3></strong>");
         		$("#noNewMaintenanceRequests").hide();
         	}
         	else if(count > 1){
-        		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+        		$("#openRequestsCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " New) </h3></strong>");
         		$("#noNewMaintenanceRequests").hide();
         	}        	
         }, 10000);
@@ -1754,10 +1757,10 @@
     		$("#openRequestListing"+surroundingID).fadeIn(300);
     	}
     	else if(count == 1){
-    		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+    		$("#openRequestsCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " New) </h3></strong>");
     	}
     	else if(count > 1){
-    		$("#openRequestsCount"+surroundingID).html("<h3><strong>" + count + ' New Maintenance Request(s) for ' + listing + "</strong></h3>");
+    		$("#openRequestsCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " New) </h3></strong>");
     	}    	
     	$("#noNewMaintenanceRequests").hide();
     }
@@ -1793,11 +1796,11 @@
         		}
         	}
         	else if(count == 1){
-        		$("#inProgressRequestsCount"+surroundingID).html("<h3><strong>" + count + ' In Progress Maintenance Request(s) for ' + listing + "</strong></h3>");
+        		$("#inProgressRequestsCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " In Progress) </h3></strong>");
         		$("#noInProgressMaintenanceRequests").hide();
         	}
         	else if(count > 1){
-        		$("#inProgressRequestsCount"+surroundingID).html("<h3><strong>" + count + ' In Progress Maintenance Request(s) for ' + listing + "</strong></h3>");
+        		$("#inProgressRequestsCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " In Progress) </h3></strong>");
         		$("#noInProgressMaintenanceRequests").hide();
         	}        	
         }, 10000);
@@ -1826,10 +1829,10 @@
     		$("#inProgressRequestListing"+surroundingID).fadeIn(300);
     	}
     	else if(count == 1){
-    		$("#inProgressRequestsCount"+surroundingID).html("<h3><strong>" + count + ' In Progress Maintenance Request(s) for ' + listing + "</strong></h3>");
+    		$("#inProgressRequestsCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " In Progress) </h3></strong>");
     	}
     	else if(count > 1){
-    		$("#inProgressRequestsCount"+surroundingID).html("<h3><strong>" + count + ' In Progress Maintenance Request(s) for ' + listing + "</strong></h3>");
+    		$("#inProgressRequestsCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " In Progress) </h3></strong>");
     	}    	
     	$("#noInProgressMaintenanceRequests").hide();
     }
@@ -1867,11 +1870,11 @@
         		}
         	}
         	else if(count == 1){
-        		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
+        		$("#unacceptedRequestsCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " Requests) </h3></strong>");
         		$("#noUnacceptedRequests").hide();
         	}
         	else if(count > 1){
-        		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
+        		$("#unacceptedRequestsCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " Requests) </h3></strong>");
         		$("#noUnacceptedRequests").hide();
         	}        	
         }, 10000);
@@ -1902,10 +1905,10 @@
     		$("#unacceptedRequestsListing"+surroundingID).fadeIn(300);    		
     	}
     	else if(count-1 == 1){
-    		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
+    		$("#unacceptedRequestsCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " Requests) </h3></strong>");
     	}
     	else if(count-1 > 1){
-    		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
+    		$("#unacceptedRequestsCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " Requests) </h3></strong>");
     	}    	
     	$("#noRequestedTours").hide();
     }
@@ -1941,11 +1944,11 @@
         		}
         	}
         	else if(count == 1){
-        		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
+        		$("#unacceptedRequestsCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " Requests) </h3></strong>");
         		$("#noUnacceptedRequests").hide();
         	}
         	else if(count > 1){
-        		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
+        		$("#unacceptedRequestsCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " Requests) </h3></strong>");
         		$("#noUnacceptedRequests").hide();
         	}        	
         }, 10000);
@@ -1975,10 +1978,10 @@
     		$("#unacceptedRequestsListing"+surroundingID).fadeIn(300);    		
     	}
     	else if(count-1 == 1){
-    		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
+    		$("#unacceptedRequestsCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " Requests) </h3></strong>");
     	}
     	else if(count-1 > 1){
-    		$("#unacceptedRequestsCount"+surroundingID).html("<h3><strong>" + count + " Request(s) for  " + listing + "</h3></strong>");
+    		$("#unacceptedRequestsCount"+surroundingID).html("<h3 style='font-size: 3.5vh;'><strong>" + listing + " ( "+count+ " Requests) </h3></strong>");
     	}    	
     	$("#noRequestedTours").hide();
     }
