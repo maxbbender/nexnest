@@ -481,7 +481,7 @@
 					                    			      			<div class="col-xl-1"></div>
 					                    			      			<div class="col-xl-10">
 					                    			      				<div class="alert alert-info" role="alert">
-					                    			      				    You have just accepted a tour for {{ tour.time_requested }} <a href="#!" class="alert-link" onclick="undoAcceptTour({{tour.id}}, {{tourObject.listing.id}})">Undo?</a>
+					                    			      				    You have just accepted a tour for {{ tour.time_requested }} <button class="link" onclick="undoAcceptTour({{tour.id}}, {{tourObject.listing.id}})">Undo?</button>
 					                    			      				</div>
 					                    			      			</div>
 					                    			      		</div>
@@ -489,7 +489,7 @@
 					                    			      			<div class="col-xl-1"></div>
 					                    			      			<div class="col-xl-10">
 					                    			      				<div class="alert alert-info" role="alert">
-					                    			      				    You have just declined a tour for {{ tour.time_requested }} <a href="#!" class="alert-link" onclick="undoDeclineTour({{tour.id}}, {{tourObject.listing.id}})">Undo?</a>
+					                    			      				    You have just declined a tour for {{ tour.time_requested }} <button class="link" onclick="undoDeclineTour({{tour.id}}, {{tourObject.listing.id}})">Undo?</button>
 					                    			      				</div>
 					                    			      			</div>
 					                    			      		</div>
@@ -633,7 +633,7 @@
 					                    			      			<div class="col-xl-1"></div>
 					                    			      			<div class="col-xl-10">
 					                    			      				<div class="alert alert-info" role="alert">
-					                    			      				    You have just canceled a tour for {{ tour.time_requested }} <a href="#!" class="alert-link" onclick="undoCancelTour({{tour.id}}, {{tourObject.listing.id}})">Undo?</a>
+					                    			      				    You have just canceled a tour for {{ tour.time_requested }} <button class="link" onclick="undoCancelTour({{tour.id}}, {{tourObject.listing.id}})">Undo?</button>
 					                    			      				</div>
 					                    			      			</div>
 					                    			      		</div>
@@ -802,7 +802,7 @@
 					                    			      			<div class="col-xl-1"></div>
 					                    			      			<div class="col-xl-10">
 					                    			      				<div class="alert alert-info" role="alert">
-					                    			      				    You have just accpeted a group for this listing <a href="#!" class="alert-link" onclick="undoAcceptHouseRequest({{housingRequest.id}}, {{housingRequestObject.listing.id}}, '{{housingRequestObject.listing.street}}')">Undo?</a>
+					                    			      				    You have just accpeted a group for this listing <button class="link" onclick="undoAcceptHouseRequest({{housingRequest.id}}, {{housingRequestObject.listing.id}}, '{{housingRequestObject.listing.street}}')">Undo?</button>
 					                    			      				</div>
 					                    			      			</div>
 					                    			      		</div>
@@ -810,7 +810,7 @@
 					                    			      			<div class="col-xl-1"></div>
 					                    			      			<div class="col-xl-10">
 					                    			      				<div class="alert alert-info" role="alert">
-					                    			      				    You have just denied a group for this listing <a href="#!" class="alert-link" onclick="undoDeniedHouseRequest({{housingRequest.id}}, {{housingRequestObject.listing.id}}, '{{housingRequestObject.listing.street}}')">Undo?</a>
+					                    			      				    You have just denied a group for this listing <button class="link" onclick="undoDeniedHouseRequest({{housingRequest.id}}, {{housingRequestObject.listing.id}}, '{{housingRequestObject.listing.street}}')">Undo?</button>
 					                    			      				</div>
 					                    			      			</div>
 					                    			      		</div>
@@ -927,7 +927,7 @@
 			            								<div class="col-xl-1"></div>
 			            								<div class="col-xl-10">
 			            									<div class="alert alert-info" role="alert">
-			            									    You have just confirmed a group for this listing <a href="#!" class="alert-link" onclick="undoConfirmGroup({{housingRequest.id}})">Undo?</a>
+			            									    You have just confirmed a group for this listing <button class="link" onclick="undoConfirmGroup({{housingRequest.id}})">Undo?</button>
 			            									</div>
 			            								</div>
 			            							</div>
@@ -1050,7 +1050,7 @@
 					                    			      			<div class="col-xl-1"></div>
 					                    			      			<div class="col-xl-10">
 					                    			      				<div class="alert alert-info" role="alert">
-					                    			      				    Marked as In Progress <a href="#!" class="alert-link" onclick="undoMarkInProgress({{request.id}}, {{request.house.listing.id}}, '{{requestObject.house.listing.street}}')">Undo?</a>
+					                    			      				    Marked as In Progress <button class="link" onclick="undoMarkInProgress({{request.id}}, {{request.house.listing.id}}, '{{requestObject.house.listing.street}}')">Undo?</button>
 					                    			      				</div>
 					                    			      			</div>
 					                    			      		</div>
@@ -1058,7 +1058,7 @@
 					                    			      			<div class="col-xl-1"></div>
 					                    			      			<div class="col-xl-10">
 					                    			      				<div class="alert alert-info" role="alert">
-					                    			      				    Marked as Completed <a href="#!" class="alert-link" onclick="undoMarkCompleted({{request.id}}, {{request.house.listing.id}}, '{{requestObject.house.listing.street}}')">Undo?</a>
+					                    			      				    Marked as Completed <button class="link" onclick="undoMarkCompleted({{request.id}}, {{request.house.listing.id}}, '{{requestObject.house.listing.street}}')">Undo?</button>
 					                    			      				</div>
 					                    			      			</div>
 					                    			      		</div>
@@ -1150,7 +1150,7 @@
 					                    			      			<div class="col-xl-1"></div>
 					                    			      			<div class="col-xl-10">
 					                    			      				<div class="alert alert-info" role="alert">
-					                    			      				    Marked as Completed <a href="#!" class="alert-link" onclick="undoInProgressToCompleted({{request.id}}, {{request.house.listing.id}}, '{{requestObject.house.listing.street}}')">Undo?</a>
+					                    			      				    Marked as Completed <button class="link" onclick="undoInProgressToCompleted({{request.id}}, {{request.house.listing.id}}, '{{requestObject.house.listing.street}}')">Undo?</button>
 					                    			      				</div>
 					                    			      			</div>
 					                    			      		</div>
