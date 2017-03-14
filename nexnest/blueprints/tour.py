@@ -218,6 +218,7 @@ def updateTime(tourID):
     return redirect(url_for('tours.viewTour', tourID=tourID))
 
 
+# NOTIFICATIONS IMPLEMENTED
 @tours.route('/tour/createMessage', methods=['POST'])
 @login_required
 def createMessage():
@@ -233,6 +234,8 @@ def createMessage():
                                     user=current_user)
                 session.add(newTM)
                 session.commit()
+
+                newTM.genNotifications()
 
                 return redirect(url_for('tours.viewTour', tourID=tour.id))
         else:

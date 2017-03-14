@@ -87,14 +87,14 @@ class Tour(Base):
         session.commit()
 
     def genTimeChangeNotifications(self):
-        if self.last_requested is 'landlord':
+        if self.last_requested == 'landlord':
             for user in self.group.acceptedUsers:
                 newNotif = Notification(notif_type='new_tour_time',
                                         target_user=user,
                                         target_model_id=self.id)
                 session.add(newNotif)
                 session.commit()
-        elif self.last_requested is 'group':
+        else:
             for user in self.listing.landLordsAsUsers():
                 newNotif = Notification(notif_type='new_tour_time',
                                         target_user=user,

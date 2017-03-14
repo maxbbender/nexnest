@@ -90,7 +90,7 @@ class Notification(Base):
         return self.redirect_url
 
     def getNotification(self):
-        ########TODODOOOO#########
+        # #######TODODOOOO######## #
         # report_group | report_landlord | report_listing | rent_reminder
         ##########################
         # So this is super hacky, and not good to do....

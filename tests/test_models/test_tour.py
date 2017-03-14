@@ -2,7 +2,7 @@ import unittest
 
 from nexnest.application import session
 
-from nexnest.data_gen.factories import UserFactory, GroupFactory, GroupUserFactory, ListingFactory, LandlordListingFactory, LandlordFactory, TourFactory
+from nexnest.data_gen.factories import UserFactory, GroupFactory, GroupUserFactory, ListingFactory, LandlordListingFactory, LandlordFactory, TourFactory, TourMessageFactory
 
 from nexnest.models.notification import Notification
 
@@ -101,6 +101,7 @@ class TestTour(unittest.TestCase):
         self.tour.last_requested = 'landlord'
         session.commit()
 
+        print("Last Requested : %s" % self.tour.last_requested)
         self.tour.genTimeChangeNotifications()
 
         newTourTimeNotifs = session.query(Notification).filter_by(notif_type='new_tour_time').all()
@@ -123,3 +124,59 @@ class TestTour(unittest.TestCase):
             .count()
 
         self.assertEqual(notifCount, 0)
+
+    def testTourMessageNotifications(self):
+        newTM = TourMessageFactory(user=self.leader,
+                                   tour=self.tour)
+        session.add(newTM)
+        session.commit()
+
+        newTM.genNotifications()
+
+        allTMNotifs = session.query(Notification).filter_by(notif_type='tour_message').all()
+        print("All TM Notifications %r" % allTMNotifs)
+
+        for user in self.tour.group.acceptedUsers:
+            if user is not self.leader:
+                notifCount = session.query(Notification) \
+                    .filter_by(notif_type='tour_message',
+                               target_model_id=newTM.id,
+                               target_user_id=user.id) \
+                    .count()
+
+                self.assertEqual(notifCount, 1)
+
+        for user in self.tour.listing.landLordsAsUsers():
+            notifCount = session.query(Notification) \
+                .filter_by(notif_type='tour_message',
+                           target_model_id=newTM.id,
+                           target_user_id=user.id) \
+                .count()
+
+            self.assertEqual(notifCount, 1)
+
+        newLandlordTM = TourMessageFactory(user=self.landlordUser,
+                                           tour=self.tour)
+        session.add(newLandlordTM)
+        session.commit()
+
+        newLandlordTM.genNotifications()
+
+        for user in self.tour.group.acceptedUsers:
+            notifCount = session.query(Notification) \
+                .filter_by(notif_type='tour_message',
+                           target_model_id=newLandlordTM.id,
+                           target_user_id=user.id) \
+                .count()
+
+            self.assertEqual(notifCount, 1)
+
+        for user in self.tour.listing.landLordsAsUsers():
+            if user is not self.landlordUser:
+                notifCount = session.query(Notification) \
+                    .filter_by(notif_type='tour_message',
+                               target_model_id=newLandlordTM.id,
+                               target_user_id=user.id) \
+                    .count()
+
+                self.assertEqual(notifCount, 1)
