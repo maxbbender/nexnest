@@ -90,7 +90,7 @@ class Notification(Base):
         return self.redirect_url
 
     def getNotification(self):
-        ########TODODOOOO#########
+        # #######TODODOOOO######## #
         # report_group | report_landlord | report_listing | rent_reminder
         ##########################
         # So this is super hacky, and not good to do....
@@ -406,6 +406,18 @@ class Notification(Base):
                 message = 'Your tour has been confirmed!'
 
                 redirectURL = '/tour/view/%d' % returnObject.id
+
+                return message, returnObject, redirectURL
+
+        elif self.notif_type == 'tour_denied':
+            returnObject = session.query(Tour) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = 'Your request for a tour at %s has been denied' % returnObject.listing.street
+
+                redirectURL = '/group/view/%d' % returnObject.group.id
 
                 return message, returnObject, redirectURL
 

@@ -71,9 +71,58 @@ class Tour(Base):
             session.add(newNotif)
             session.commit()
 
-    # def genConfirmNotifications(self):
-    #     for user in self.group.accep
+    def genConfirmNotifications(self):
+        for user in self.group.acceptedUsers:
+            newNotif = Notification(notif_type='tour_confirmed',
+                                    target_user=user,
+                                    target_model_id=self.id)
+            session.add(newNotif)
+            session.commit()
 
+    def undoConfirmNotifications(self):
+        session.query(Notification) \
+            .filter_by(notif_type='tour_confirmed',
+                       target_model_id=self.id) \
+            .delete()
+        session.commit()
+
+    def genTimeChangeNotifications(self):
+        if self.last_requested == 'landlord':
+            for user in self.group.acceptedUsers:
+                newNotif = Notification(notif_type='new_tour_time',
+                                        target_user=user,
+                                        target_model_id=self.id)
+                session.add(newNotif)
+                session.commit()
+        else:
+            for user in self.listing.landLordsAsUsers():
+                newNotif = Notification(notif_type='new_tour_time',
+                                        target_user=user,
+                                        target_model_id=self.id)
+                session.add(newNotif)
+                session.commit()
+
+    def undoTimeChangeNotifications(self):
+        session.query(Notification) \
+            .filter_by(notif_type='new_tour_time',
+                       target_model_id=self.id) \
+            .delete()
+        session.commit()
+
+    def genDeniedNotifications(self):
+        for user in self.group.acceptedUsers:
+            newNotif = Notification(notif_type='tour_denied',
+                                    target_user=user,
+                                    target_model_id=self.id)
+            session.add(newNotif)
+            session.commit()
+
+    def undoDeniedNotifications(self):
+        session.query(Notification) \
+            .filter_by(notif_type='tour_denied',
+                       target_model_id=self.id) \
+            .delete()
+        session.commit()
 
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument
