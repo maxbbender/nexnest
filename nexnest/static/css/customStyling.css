@@ -310,10 +310,10 @@ select.form-control:not([size]):not([multiple]) {
     background-color: #fff;
 }
 
-.col-xs-12{
+/*.col-xs-12{
     padding-left: 20px;
 }
-
+*/
 .imageContainer {
     float:left;
     position:relative
