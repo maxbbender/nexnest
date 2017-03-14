@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
-	<div class="row" style="width: 100%;">
-		<div class="col-xs-1 col-md-2 col-lg-2"></div>
-		<div class="col-xs-10 col-md-8 col-lg-8">
+	<div class="row">
+		<div class="col-xs-0 col-md-2 col-lg-2"></div>
+		<div class="col-xs-12 col-md-8 col-lg-8" style="padding-left: 40px;">
 			<div class="row">
 				{% if pictures|length > 0 %}
 					<a class="hidden-xs-down test-popup-link" href="{{pictures[0]}}">
-						<img src="{{pictures[0]}}" style="height: 45vh; width: 100%;">
+						<img src="{{pictures[0]}}" style="height: 40vh; width: 90%; margin-left: 5%;">
 					</a>
 					<a class="hidden-sm-up test-popup-link" href="{{pictures[0]}}">
 						<img src="{{pictures[0]}}" style="height: 30vh; width: 100%;">
@@ -20,43 +20,25 @@
 			<br>
 			{% if pictures|length > 0 %}
 				<div class="row">
-					<div class="col-xs-12" style="text-align: center;">
-						<div class="popup-gallery">
-							<div class="row">
-							{% for picture in pictures %}
-								{% if loop.index < 3 %}
-									<div class="col-xs-6 col-md-4 col-lg-3 col-xl-2">
-										<a href="{{picture}}" data-group="1" class="galleryItem">
-											<img src="{{picture}}" style="width:20vh; height: 20vh; padding: 5px;">
-										</a>
-									</div>
-								{% elif loop.index < 4 %}
-									<div class="hidden-sm-down col-md-4 col-lg-3 col-xl-2">
-										<a href="{{picture}}" data-group="1" class="galleryItem">
-											<img src="{{picture}}" style="width:20vh; height: 20vh; padding: 5px;">
-										</a>
-									</div>
-								{% elif loop.index < 5 %}
-									<div class="hidden-md-down col-lg-3 col-xl-2">
-										<a href="{{picture}}" data-group="1" class="galleryItem">
-											<img src="{{picture}}" style="width:20vh; height: 20vh; padding: 5px;">
-										</a>
-									</div>
-								{% elif loop.index < 7 %}
-									<div class="hidden-lg-down col-xl-2">
-										<a href="{{picture}}" data-group="1" class="galleryItem">
-											<img src="{{picture}}" style="width:20vh; height: 20vh; padding: 5px;">
-										</a>
-									</div>
-								{% else %}
-									<div style="display: none;">
-										<a href="{{picture}}" data-group="1" class="galleryItem">
-											<img src="{{picture}}" width="150" height="150">
-										</a>
-									</div>
-								{% endif %}
-							{% endfor %}
-							</div>
+					<div class="col-xs-12">
+						<div class="wrap">
+							<div class="scrollbar">
+							    <div class="handle">
+							      <div class="mousearea"></div>
+							    </div>
+							  </div>
+
+							  <div class="frame" id="basic">
+							    <ul class="clearfix">
+							      	{% for picture in pictures %}
+							      		<li>
+											<a href="{{picture}}" data-group="1" class="galleryItem">
+												<img src="{{picture}}" style="width: 100%;">
+											</a>
+										</li>
+									{% endfor %}
+							    </ul>
+							  </div>
 						</div>
 					</div>
 				</div>
@@ -662,6 +644,360 @@
     $('.test-popup-link').magnificPopup({
       type: 'image'
       // other options
+    });
+
+    jQuery(function($) {
+      'use strict';
+
+      // -------------------------------------------------------------
+      //   Basic Navigation
+      // -------------------------------------------------------------
+      (function() {
+        var $frame = $('#basic');
+        var $slidee = $frame.children('ul').eq(0);
+        var $wrap = $frame.parent();
+
+        // Call Sly on frame
+        $frame.sly({
+          horizontal: 1,
+          itemNav: 'basic',
+          smart: 1,
+          activateOn: 'click',
+          mouseDragging: 1,
+          touchDragging: 1,
+          releaseSwing: 1,
+          startAt: 3,
+          scrollBar: $wrap.find('.scrollbar'),
+          scrollBy: 1,
+          pagesBar: $wrap.find('.pages'),
+          activatePageOn: 'click',
+          speed: 300,
+          elasticBounds: 1,
+          easing: 'easeOutExpo',
+          dragHandle: 1,
+          dynamicHandle: 1,
+          clickBar: 1,
+
+          // Buttons
+          forward: $wrap.find('.forward'),
+          backward: $wrap.find('.backward'),
+          prev: $wrap.find('.prev'),
+          next: $wrap.find('.next'),
+          prevPage: $wrap.find('.prevPage'),
+          nextPage: $wrap.find('.nextPage')
+        });
+
+        // To Start button
+        $wrap.find('.toStart').on('click', function() {
+          var item = $(this).data('item');
+          // Animate a particular item to the start of the frame.
+          // If no item is provided, the whole content will be animated.
+          $frame.sly('toStart', item);
+        });
+
+        // To Center button
+        $wrap.find('.toCenter').on('click', function() {
+          var item = $(this).data('item');
+          // Animate a particular item to the center of the frame.
+          // If no item is provided, the whole content will be animated.
+          $frame.sly('toCenter', item);
+        });
+
+        // To End button
+        $wrap.find('.toEnd').on('click', function() {
+          var item = $(this).data('item');
+          // Animate a particular item to the end of the frame.
+          // If no item is provided, the whole content will be animated.
+          $frame.sly('toEnd', item);
+        });
+
+        // Add item
+        $wrap.find('.add').on('click', function() {
+          $frame.sly('add', '<li>' + $slidee.children().length + '</li>');
+        });
+
+        // Remove item
+        $wrap.find('.remove').on('click', function() {
+          $frame.sly('remove', -1);
+        });
+      }());
+
+      // -------------------------------------------------------------
+      //   Centered Navigation
+      // -------------------------------------------------------------
+      (function() {
+        var $frame = $('#centered');
+        var $wrap = $frame.parent();
+
+        // Call Sly on frame
+        $frame.sly({
+          horizontal: 1,
+          itemNav: 'centered',
+          smart: 1,
+          activateOn: 'click',
+          mouseDragging: 1,
+          touchDragging: 1,
+          releaseSwing: 1,
+          startAt: 4,
+          scrollBar: $wrap.find('.scrollbar'),
+          scrollBy: 1,
+          speed: 300,
+          elasticBounds: 1,
+          easing: 'easeOutExpo',
+          dragHandle: 1,
+          dynamicHandle: 1,
+          clickBar: 1,
+
+          // Buttons
+          prev: $wrap.find('.prev'),
+          next: $wrap.find('.next')
+        });
+      }());
+
+      // -------------------------------------------------------------
+      //   Force Centered Navigation
+      // -------------------------------------------------------------
+      (function() {
+        var $frame = $('#forcecentered');
+        var $wrap = $frame.parent();
+
+        // Call Sly on frame
+        $frame.sly({
+          horizontal: 1,
+          itemNav: 'forceCentered',
+          smart: 1,
+          activateMiddle: 1,
+          activateOn: 'click',
+          mouseDragging: 1,
+          touchDragging: 1,
+          releaseSwing: 1,
+          startAt: 0,
+          scrollBar: $wrap.find('.scrollbar'),
+          scrollBy: 1,
+          speed: 300,
+          elasticBounds: 1,
+          easing: 'easeOutExpo',
+          dragHandle: 1,
+          dynamicHandle: 1,
+          clickBar: 1,
+
+          // Buttons
+          prev: $wrap.find('.prev'),
+          next: $wrap.find('.next')
+        });
+      }());
+
+      // -------------------------------------------------------------
+      //   Cycle By Items
+      // -------------------------------------------------------------
+      (function() {
+        var $frame = $('#cycleitems');
+        var $wrap = $frame.parent();
+
+        // Call Sly on frame
+        $frame.sly({
+          horizontal: 1,
+          itemNav: 'basic',
+          smart: 1,
+          activateOn: 'click',
+          mouseDragging: 1,
+          touchDragging: 1,
+          releaseSwing: 1,
+          startAt: 0,
+          scrollBar: $wrap.find('.scrollbar'),
+          scrollBy: 1,
+          speed: 300,
+          elasticBounds: 1,
+          easing: 'easeOutExpo',
+          dragHandle: 1,
+          dynamicHandle: 1,
+          clickBar: 1,
+
+          // Cycling
+          cycleBy: 'items',
+          cycleInterval: 1000,
+          pauseOnHover: 1,
+
+          // Buttons
+          prev: $wrap.find('.prev'),
+          next: $wrap.find('.next')
+        });
+
+        // Pause button
+        $wrap.find('.pause').on('click', function() {
+          $frame.sly('pause');
+        });
+
+        // Resume button
+        $wrap.find('.resume').on('click', function() {
+          $frame.sly('resume');
+        });
+
+        // Toggle button
+        $wrap.find('.toggle').on('click', function() {
+          $frame.sly('toggle');
+        });
+      }());
+
+      // -------------------------------------------------------------
+      //   Cycle By Pages
+      // -------------------------------------------------------------
+      (function() {
+        var $frame = $('#cyclepages');
+        var $wrap = $frame.parent();
+
+        // Call Sly on frame
+        $frame.sly({
+          horizontal: 1,
+          itemNav: 'basic',
+          smart: 1,
+          activateOn: 'click',
+          mouseDragging: 1,
+          touchDragging: 1,
+          releaseSwing: 1,
+          startAt: 0,
+          scrollBar: $wrap.find('.scrollbar'),
+          scrollBy: 1,
+          pagesBar: $wrap.find('.pages'),
+          activatePageOn: 'click',
+          speed: 300,
+          elasticBounds: 1,
+          easing: 'easeOutExpo',
+          dragHandle: 1,
+          dynamicHandle: 1,
+          clickBar: 1,
+
+          // Cycling
+          cycleBy: 'pages',
+          cycleInterval: 1000,
+          pauseOnHover: 1,
+          startPaused: 1,
+
+          // Buttons
+          prevPage: $wrap.find('.prevPage'),
+          nextPage: $wrap.find('.nextPage')
+        });
+
+        // Pause button
+        $wrap.find('.pause').on('click', function() {
+          $frame.sly('pause');
+        });
+
+        // Resume button
+        $wrap.find('.resume').on('click', function() {
+          $frame.sly('resume');
+        });
+
+        // Toggle button
+        $wrap.find('.toggle').on('click', function() {
+          $frame.sly('toggle');
+        });
+      }());
+
+      // -------------------------------------------------------------
+      //   One Item Per Frame
+      // -------------------------------------------------------------
+      (function() {
+        var $frame = $('#oneperframe');
+        var $wrap = $frame.parent();
+
+        // Call Sly on frame
+        $frame.sly({
+          horizontal: 1,
+          itemNav: 'forceCentered',
+          smart: 1,
+          activateMiddle: 1,
+          mouseDragging: 1,
+          touchDragging: 1,
+          releaseSwing: 1,
+          startAt: 0,
+          scrollBar: $wrap.find('.scrollbar'),
+          scrollBy: 1,
+          speed: 300,
+          elasticBounds: 1,
+          easing: 'easeOutExpo',
+          dragHandle: 1,
+          dynamicHandle: 1,
+          clickBar: 1,
+
+          // Buttons
+          prev: $wrap.find('.prev'),
+          next: $wrap.find('.next')
+        });
+      }());
+
+      // -------------------------------------------------------------
+      //   Crazy
+      // -------------------------------------------------------------
+      (function() {
+        var $frame = $('#crazy');
+        var $slidee = $frame.children('ul').eq(0);
+        var $wrap = $frame.parent();
+
+        // Call Sly on frame
+        $frame.sly({
+          horizontal: 1,
+          itemNav: 'basic',
+          smart: 1,
+          activateOn: 'click',
+          mouseDragging: 1,
+          touchDragging: 1,
+          releaseSwing: 1,
+          startAt: 3,
+          scrollBar: $wrap.find('.scrollbar'),
+          scrollBy: 1,
+          pagesBar: $wrap.find('.pages'),
+          activatePageOn: 'click',
+          speed: 300,
+          elasticBounds: 1,
+          easing: 'easeOutExpo',
+          dragHandle: 1,
+          dynamicHandle: 1,
+          clickBar: 1,
+
+          // Buttons
+          forward: $wrap.find('.forward'),
+          backward: $wrap.find('.backward'),
+          prev: $wrap.find('.prev'),
+          next: $wrap.find('.next'),
+          prevPage: $wrap.find('.prevPage'),
+          nextPage: $wrap.find('.nextPage')
+        });
+
+        // To Start button
+        $wrap.find('.toStart').on('click', function() {
+          var item = $(this).data('item');
+          // Animate a particular item to the start of the frame.
+          // If no item is provided, the whole content will be animated.
+          $frame.sly('toStart', item);
+        });
+
+        // To Center button
+        $wrap.find('.toCenter').on('click', function() {
+          var item = $(this).data('item');
+          // Animate a particular item to the center of the frame.
+          // If no item is provided, the whole content will be animated.
+          $frame.sly('toCenter', item);
+        });
+
+        // To End button
+        $wrap.find('.toEnd').on('click', function() {
+          var item = $(this).data('item');
+          // Animate a particular item to the end of the frame.
+          // If no item is provided, the whole content will be animated.
+          $frame.sly('toEnd', item);
+        });
+
+        // Add item
+        $wrap.find('.add').on('click', function() {
+          $frame.sly('add', '<li>' + $slidee.children().length + '</li>');
+        });
+
+        // Remove item
+        $wrap.find('.remove').on('click', function() {
+          $frame.sly('remove', -1);
+        });
+      }());
     });
 </script>
 {% endblock %}
