@@ -2366,7 +2366,7 @@
     	var selectedItem = {};
     	$(".checkoutListingSelect").each(function(i, obj){
     		if($(obj).is(":checked")){
-    			var id =  thenum = obj.id.match(/\d+/)[0]
+    			var id = obj.id.match(/\d+/)[0]
     			//console.log(id);
     			if($("#standardLabel"+id).hasClass("active")){
     				selectedItem = {
@@ -2384,6 +2384,7 @@
     			}
     		}    		
     	});
+    	cart = JSON.stringify(cart);
     	console.log(cart);
     }
 
