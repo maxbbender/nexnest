@@ -47,6 +47,24 @@ class Tour(Base):
     def __repr__(self):
         return '<Tour %r>' % self.id
 
+    def serialize(self):
+        group_users = []
+        for user in self.group.acceptedUsers:
+            group_users.append(user.shortSerialize())
+
+        tour = {
+            'id': self.id,
+            'lastRequested': self.last_requested,
+            'tourConfirmed': self.tour_confirmed,
+            'url': '/tour/view/%d' % self.id,
+            'timeRequested': self.time_requested.strftime("%B %d, %Y %I:%M %p"),
+            'leaderID': self.group.leader_id,
+            'users': group_users,
+            'userCount': len(group_users)
+        }
+
+        return tour
+
     def isViewableBy(self, user, toFlash=True):
         if user in self.group.getUsers() or user in self.listing.landLordsAsUsers():
             return True

@@ -11,7 +11,6 @@ from sqlalchemy.orm import relationship, backref
 import os
 
 
-# class PostReport(Base):
 class Listing(Base):
     __tablename__ = 'listings'
     id = db.Column(db.Integer, primary_key=True)
@@ -171,6 +170,13 @@ class Listing(Base):
     def __repr__(self):
         return '<Listing %r>' % self.id
 
+    def shortSerialize(self):
+        return {
+            'street': self.street,
+            'startDate': self.start_date.strftime("%B %d, %Y"),
+            'endDate': self.end_date.strftime("%B %d, %Y")
+        }
+
     def landLords(self):
         landlords = []
 
@@ -214,6 +220,14 @@ class Listing(Base):
     @property
     def hasPets(self):
         return self.dogs or self.cats or (len(self.other_pets) > 0)
+
+    @property
+    def hasTours(self):
+        if not self.hasHouse():
+            if len(self.tours):
+                return True
+        else:
+            return False
 
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument

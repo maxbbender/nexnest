@@ -84,6 +84,26 @@ class GroupListing(Base):
         else:
             return 'Not Accepted'
 
+    @property
+    def serialize(self):
+        group_users = []
+        for user in self.group.acceptedUsers:
+            group_users.append(user.shortSerialize())
+
+        groupListing = {
+            'id': self.id,
+            'accepted': self.accepted,
+            'completed': self.completed,
+            'userCount': len(group_users),
+            'users': group_users,
+            'url': '/houseRequest/view/%d' % self.id
+        }
+
+        if self.firstMessage is not None:
+            groupListing['message'] = self.firstMessage.content
+
+        return groupListing
+
     def isViewableBy(self, user, toFlash=True):
         if user in self.group.getUsers():
             return True

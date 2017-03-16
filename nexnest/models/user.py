@@ -111,6 +111,12 @@ class User(Base):
     def __repr__(self):
         return '<User %r>' % self.username
 
+    def shortSerialize(self):
+        return {
+            'name': self.name,
+            'id': self.id,
+        }
+
     def set_password(self, __password__):
         if __password__ == "":
             return self

@@ -1,4 +1,4 @@
-from datetime import datetime as dt
+ # open | inprogress | completedfrom datetime import datetime as dt
 
 from sqlalchemy import event
 from sqlalchemy.orm import relationship
@@ -14,7 +14,7 @@ from nexnest.models.notification import Notification
 class Maintenance(Base):
     __tablename__ = 'maintenances'
     id = db.Column(db.Integer, primary_key=True)
-    status = db.Column(db.String(10))
+    status = db.Column(db.String(10)) # open | inprogress | completed
     request_type = db.Column(db.String(20))
     details = db.Column(db.Text())
     house_id = db.Column(db.Integer, db.ForeignKey('houses.id'))
@@ -44,6 +44,34 @@ class Maintenance(Base):
 
     def __repr__(self):
         return '<Maintenance %r>' % self.id
+
+    @property
+    def serialize(self):
+        return {
+            'status': self.status,
+            'details': self.details,
+            'requestType': self.humanRequestType,
+            'date': self.date_created.strftime("%B %d, %Y"),
+        }
+
+    @property
+    def humanRequestType(self):
+        if self.request_type == 'heatingCooling':
+            return 'Heating | Cooling'
+        elif self.request_type == 'internet':
+            return 'Internet'
+        elif self.request_type == 'yardDriveway':
+            return 'Yard | Driveway'
+        elif self.request_type == 'appliance':
+            return 'Appliance'
+        elif self.request_type == 'plumbing':
+            return 'Plumbing'
+        elif self.request_type == 'electrical':
+            return 'Electrical'
+        elif self.request_type == 'furnishing':
+            return 'Furnishing'
+        elif self.request_type == 'other':
+            return 'Other'
 
     def isEditableBy(self, user):
         if user in self.house.listing.landLordsAsUsers():
