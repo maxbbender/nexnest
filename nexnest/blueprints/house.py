@@ -106,8 +106,7 @@ def maintenanceRequestCreate():
                 newMR.genNotifications()
 
                 flash("Maintenance Request Created", 'success')
-                # TODO Redirect to ViewMaintenance Page
-                return redirect(url_for('houses.view', id=house.id))
+                return redirect(url_for('houses.maintenanceRequestView', id=newMR.id))
             else:
                 flash("You are not a part of this house", 'warning')
 
