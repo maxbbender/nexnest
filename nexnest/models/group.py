@@ -87,10 +87,21 @@ class Group(Base):
 
     @property
     def acceptedUsers(self):
+        leaderFound = False
         acceptedUsers = []
-        for groupUser in self.users:
+        for idx, groupUser in enumerate(self.users):
             if groupUser.accepted:
-                acceptedUsers.append(groupUser.user)
+                if groupUser.user.id == self.leader_id and not leaderFound:
+                    leaderFound = True
+
+                    # If this is the first time through don't do anything
+                    if idx > 0:
+                        tempUser = acceptedUsers[0]
+                        acceptedUsers[0] = groupUser.user
+                        acceptedUsers.append(tempUser)
+                        continue
+                else:
+                    acceptedUsers.append(groupUser.user)
 
         return acceptedUsers
 
