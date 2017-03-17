@@ -91,6 +91,7 @@ class ProfilePictureForm(RedirectForm):
 class LoginForm(RedirectForm):
     email = StringField('Email Address', [Length(min=6, max=35)])
     password = PasswordField('Password', [InputRequired()])
+    nextURL = HiddenField('Next', [Optional()])
 
 
 class ListingForm(RedirectForm):

@@ -63,7 +63,13 @@ def register():
 @users.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        return render_template('login.html', login_form=LoginForm())
+        # print(request.args['next'])
+        # print(request.args.get['next'])
+        loginForm = LoginForm()
+        if request.args.get('next') is not None:
+            loginForm.nextURL.data = request.args['next']
+
+        return render_template('login.html', login_form=loginForm)
     else:  # POST
         login_form = LoginForm(request.form)
 
@@ -91,7 +97,10 @@ def login():
         else:
             flash_errors(login_form)
 
-        return login_form.redirect()
+        if login_form.nextURL.data != '':
+            return redirect(login_form.nextURL.data)
+        else:
+            return login_form.redirect()
 
 
 @users.route('/logout')
