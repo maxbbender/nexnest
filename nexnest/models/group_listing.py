@@ -162,6 +162,14 @@ class GroupListing(Base):
 
         return numPaid
 
+    @property
+    def allSecurityDepositsPaid(self):
+        for deposit in self.securityDeposits:
+            if not deposit.completed:
+                return False
+
+        return True
+
     def genNotifications(self):
         for landlord in self.listing.landLordsAsUsers():
 
