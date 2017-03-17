@@ -26,7 +26,7 @@ def upgrade(migrate_engine):
     accepted = Column("accepted", Boolean())
     completed = Column("completed", Boolean())
     show = Column("show", Boolean())
-    date_created = Column('date_created', String(length=128), nullable=False)
+    date_created = Column('date_created', DateTime(), nullable=False)
 
     # password.create(users)
     accepted.create(group_listings)
