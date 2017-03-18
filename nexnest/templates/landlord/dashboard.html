@@ -224,22 +224,8 @@
 						    		      					    				    {% endwith %}
 						    		      					    				{% endfor %}
 						    			      					    		</div>
-						    			      					    		<button class="btn btn-info" id="allGroupMembersCurrentlyOccupiedToggle{{house.group.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{house.group.acceptedUsers|count-1}} members</button>
-						    			      					    		<button class="btn btn-info" id="hideAllGroupMembersCurrentlyOccupiedToggle{{house.group.id}}" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other {{house.group.acceptedUsers|count-1}} members</button>
-
-						    			      					    		<script type="text/javascript">
-						    			      					    			//Show/hide members of group
-						    			      					    			$("#allGroupMembersCurrentlyOccupiedToggle{{house.group.id}}").click(function(){
-						    			      					    			    $("#allGroupMembersCurrentlyOccupied{{house.group.id}}").toggle();
-						    			      					    			    $("#allGroupMembersCurrentlyOccupiedToggle{{house.group.id}}").hide();
-						    			      					    			    $("#hideAllGroupMembersCurrentlyOccupiedToggle{{house.group.id}}").show();   	
-						    			      					    			});
-						    			      					    			$("#hideAllGroupMembersCurrentlyOccupiedToggle{{house.group.id}}").click(function(){
-						    			      					    			    $("#allGroupMembersCurrentlyOccupied{{house.group.id}}").toggle();
-						    			      					    			    $("#allGroupMembersCurrentlyOccupiedToggle{{house.group.id}}").show();
-						    			      					    			    $("#hideAllGroupMembersCurrentlyOccupiedToggle{{house.group.id}}").hide();   	
-						    			      					    			});
-						    			      					    		</script>
+						    			      					    		<button class="btn btn-info" id="allGroupMembersCurrentlyOccupiedToggle{{house.group.id}}" onClick="showOccupiedHouseMembers({{house.group.id}})"><i class='fa fa-users' aria-hidden='true'></i> See other {{house.group.acceptedUsers|count-1}} members</button>
+						    			      					    		<button class="btn btn-info" id="hideAllGroupMembersCurrentlyOccupiedToggle{{house.group.id}}" onClick="hideOccupiedHouseMembers({{house.group.id}})" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other {{house.group.acceptedUsers|count-1}} members</button>
 												                    		<br>
 												                    	</div>
 												                    </div>
@@ -295,7 +281,7 @@
 												                    		    	</div>
 												                    		    {% endwith %}
 												                    		{% endfor %}
-						    			      					    		<div id="allGroupMembersWillBeOccupied{{house.group.id}}" style="display: none;">
+						    			      					    		<div id="allGroupMembersWillBeOccupied{{house.id}}" style="display: none;">
 						    		      					    				{% for user in house.group.acceptedUsers %}
 						    		      					    					{% with group=house.group %}         
 						    		      					    						<div class="row">
@@ -308,22 +294,8 @@
 						    		      					    				    {% endwith %}
 						    		      					    				{% endfor %}
 						    			      					    		</div>
-						    			      					    		<button class="btn btn-info" id="allGroupMembersWillBeOccupiedToggle{{house.group.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{house.group.acceptedUsers|count-1}} members</button>
-						    			      					    		<button class="btn btn-info" id="hideAllGroupMembersWillBeOccupiedToggle{{house.group.id}}" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other {{house.group.acceptedUsers|count-1}} members</button>
-
-						    			      					    		<script type="text/javascript">
-						    			      					    			//Show/hide members of group
-						    			      					    			$("#allGroupMembersWillBeOccupiedToggle{{house.group.id}}").click(function(){
-						    			      					    			    $("#allGroupMembersWillBeOccupied{{house.group.id}}").toggle();
-						    			      					    			    $("#allGroupMembersWillBeOccupiedToggle{{house.group.id}}").hide();
-						    			      					    			    $("#hideAllGroupMembersWillBeOccupiedToggle{{house.group.id}}").show();   	
-						    			      					    			});
-						    			      					    			$("#hideAllGroupMembersWillBeOccupiedToggle{{house.group.id}}").click(function(){
-						    			      					    			    $("#allGroupMembersWillBeOccupied{{house.group.id}}").toggle();
-						    			      					    			    $("#allGroupMembersWillBeOccupiedToggle{{house.group.id}}").show();
-						    			      					    			    $("#hideAllGroupMembersWillBeOccupiedToggle{{house.group.id}}").hide();   	
-						    			      					    			});
-						    			      					    		</script>
+						    			      					    		<button class="btn btn-info" id="allGroupMembersWillBeOccupiedToggle{{house.id}}" onClick="showWillBeOccupiedHouseMembers({{house.id}})"><i class='fa fa-users' aria-hidden='true'></i> See other {{house.group.acceptedUsers|count-1}} members</button>
+						    			      					    		<button class="btn btn-info" id="hideAllGroupMembersWillBeOccupiedToggle{{house.id}}" onClick="hideWillBeOccupiedHouseMembers({{house.id}})" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other {{house.group.acceptedUsers|count-1}} members</button>
 												                    		<br>
 												                    	</div>
 												                    </div>
@@ -516,7 +488,10 @@
 					        								                    		{% endif %}
 					        								                    		<br><br>
 					        								                    		<strong>Group Leader:</strong>
+					        								                    		Accepted USers: {{tour.group.acceptedUsers}}<br>
+					        								                    		{{tour.group.leader_id}}<br>
 					        								                    		{% for user in tour.group.acceptedUsers %}
+					        								                    		{{user.id}}
 					        								                    			{% with group=tour.group %}
 					        								                    				<div class="row">
 					        								                    					<div class="col-sm-12" style="padding: 0px;">
@@ -527,7 +502,7 @@
 					        								                    		    	</div>
 					        								                    		    {% endwith %}
 					        								                    		{% endfor %}
-					                    			      					    		<div id="allMembersRequestedTour{{tour.group.id}}Z{{tour.listing.id}}" style="display: none;">
+					                    			      					    		<div id="allMembersRequestedTour{{tour.id}}" style="display: none;">
 					                    		      					    				{% for user in tour.group.acceptedUsers %}
 					                    		      					    					{% with group=tour.group %}         
 					                    		      					    						<div class="row">
@@ -540,36 +515,8 @@
 					                    		      					    				    {% endwith %}
 					                    		      					    				{% endfor %}
 					                    			      					    		</div>
-					                    			      					    		<button class="btn btn-info" id="allMembersRequestedTourToggle{{tour.group.id}}Z{{tour.listing.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{tour.group.acceptedUsers|count-1}} members</button>
-					                    			      					    		<button class="btn btn-info" id="hideAllMembersRequestedTourToggle{{tour.group.id}}Z{{tour.listing.id}}" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other {{tour.group.acceptedUsers|count-1}} members</button>
-					                    			      					    		<script type="text/javascript">
-					                    			      					    			//Show/hide members of group
-					                    			      					    			$("#allMembersRequestedTourToggle{{tour.group.id}}Z{{tour.listing.id}}").click(function(){
-					                    			      					    			    $("#allMembersRequestedTour{{tour.group.id}}Z{{tour.listing.id}}").toggle();
-					                    			      					    			    $("#allMembersRequestedTourToggle{{tour.group.id}}Z{{tour.listing.id}}").hide();
-					                    			      					    			    $("#hideAllMembersRequestedTourToggle{{tour.group.id}}Z{{tour.listing.id}}").show();   	
-					                    			      					    			});
-
-					                    			      					    			$("#hideAllMembersRequestedTourToggle{{tour.group.id}}Z{{tour.listing.id}}").click(function(){
-					                    			      					    			    $("#allMembersRequestedTour{{tour.group.id}}Z{{tour.listing.id}}").toggle();
-					                    			      					    			    $("#hideAllMembersRequestedTourToggle{{tour.group.id}}Z{{tour.listing.id}}").hide();
-					                    			      					    			    $("#allMembersRequestedTourToggle{{tour.group.id}}Z{{tour.listing.id}}").show();   	
-					                    			      					    			});
-
-					                    			      					    			$(document).ready(function(){
-					                    			      					    			    $('#confirmed{{tour.group.id}}Z{{tour.listing.id}}').popover({
-					                    			      					    			        html: true,
-					                    			      					    			        trigger: 'focus',
-					                    			      					    			        template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title" style="background-color: #449d44; text-align: center; color: #ffffff;"></h3><div class="popover-content"></div></div>'
-					                    			      					    			    });
-
-					                    			      					    			    $('#pending{{tour.group.id}}Z{{tour.listing.id}}').popover({
-					                    			      					    			        html: true,
-					                    			      					    			        trigger: 'focus',
-					                    			      					    			        template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title" style="background-color: #ec971f; text-align: center; color: #ffffff;"></h3><div class="popover-content"></div></div>'
-					                    			      					    			    });
-					                    			      					    			});
-					                    			      					    		</script>
+					                    			      					    		<button class="btn btn-info" id="allMembersRequestedTourToggle{{tour.id}}" onClick="showRequestedTourMembers({{tour.id}})"><i class='fa fa-users' aria-hidden='true'></i> See other {{tour.group.acceptedUsers|count-1}} members</button>
+					                    			      					    		<button class="btn btn-info" id="hideAllMembersRequestedTourToggle{{tour.id}}" onClick="hideRequestedTourMembers({{tour.id}})" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other {{tour.group.acceptedUsers|count-1}} members</button>	  		
 					                    			      					    	</div>
 					                    			      					    </div>
 					                    			      					</div>
@@ -679,7 +626,7 @@
 					        								                    		    	</div>
 					        								                    		    {% endwith %}
 					        								                    		{% endfor %}
-					                    			      					    		<div id="allMembersRequestedTour{{tour.group.id}}Z{{tour.listing.id}}" style="display: none;">
+					                    			      					    		<div id="allMembersScheduledTour{{tour.id}}" style="display: none;">
 					                    		      					    				{% for user in tour.group.acceptedUsers %}
 					                    		      					    					{% with group=tour.group %}         
 					                    		      					    						<div class="row">
@@ -692,36 +639,8 @@
 					                    		      					    				    {% endwith %}
 					                    		      					    				{% endfor %}
 					                    			      					    		</div>
-					                    			      					    		<button class="btn btn-info" id="allMembersRequestedTourToggle{{tour.group.id}}Z{{tour.listing.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{tour.group.acceptedUsers|count-1}} members</button>
-					                    			      					    		<button class="btn btn-info" id="hideAllMembersRequestedTourToggle{{tour.group.id}}Z{{tour.listing.id}}" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other {{tour.group.acceptedUsers|count-1}} members</button>
-					                    			      					    		<script type="text/javascript">
-					                    			      					    			//Show/hide members of group
-					                    			      					    			$("#allMembersRequestedTourToggle{{tour.group.id}}Z{{tour.listing.id}}").click(function(){
-					                    			      					    			    $("#allMembersRequestedTour{{tour.group.id}}Z{{tour.listing.id}}").toggle();
-					                    			      					    			    $("#allMembersRequestedTourToggle{{tour.group.id}}Z{{tour.listing.id}}").hide();
-					                    			      					    			    $("#hideAllMembersRequestedTourToggle{{tour.group.id}}Z{{tour.listing.id}}").show();   	
-					                    			      					    			});
-
-					                    			      					    			$("#hideAllMembersRequestedTourToggle{{tour.group.id}}Z{{tour.listing.id}}").click(function(){
-					                    			      					    			    $("#allMembersRequestedTour{{tour.group.id}}Z{{tour.listing.id}}").toggle();
-					                    			      					    			    $("#hideAllMembersRequestedTourToggle{{tour.group.id}}Z{{tour.listing.id}}").hide();
-					                    			      					    			    $("#allMembersRequestedTourToggle{{tour.group.id}}Z{{tour.listing.id}}").show();   	
-					                    			      					    			});
-
-					                    			      					    			$(document).ready(function(){
-					                    			      					    			    $('#confirmed{{tour.group.id}}Z{{tour.listing.id}}').popover({
-					                    			      					    			        html: true,
-					                    			      					    			        trigger: 'focus',
-					                    			      					    			        template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title" style="background-color: #449d44; text-align: center; color: #ffffff;"></h3><div class="popover-content"></div></div>'
-					                    			      					    			    });
-
-					                    			      					    			    $('#pending{{tour.group.id}}Z{{tour.listing.id}}').popover({
-					                    			      					    			        html: true,
-					                    			      					    			        trigger: 'focus',
-					                    			      					    			        template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title" style="background-color: #ec971f; text-align: center; color: #ffffff;"></h3><div class="popover-content"></div></div>'
-					                    			      					    			    });
-					                    			      					    			});
-					                    			      					    		</script>
+					                    			      					    		<button class="btn btn-info" id="allMembersScheduledTourToggle{{tour.id}}" onClick="showScheduledTourMembers({{tour.id}})"><i class='fa fa-users' aria-hidden='true'></i> See other {{tour.group.acceptedUsers|count-1}} members</button>
+					                    			      					    		<button class="btn btn-info" id="hideAllMembersScheduledTourToggle{{tour.id}}" onClick="hideScheduledTourMembers({{tour.id}})" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other {{tour.group.acceptedUsers|count-1}} members</button>
 					                    			      					    	</div>
 					                    			      					    </div>
 					                    			      					</div>
@@ -865,7 +784,7 @@
 						    								                    		    	</div>
 						    								                    		    {% endwith %}
 						    								                    		{% endfor %}
-						                			      					    		<div id="allGroupMembersListingUnaccepted{{housingRequest.group.id}}Z{{housingRequest.listing.id}}" style="display: none;">
+						                			      					    		<div id="allGroupMembersListingUnaccepted{{housingRequest.id}}" style="display: none;">
 						                		      					    				{% for user in housingRequest.group.acceptedUsers %}
 						                		      					    					{% with group=housingRequest.group %}         
 						                		      					    						<div class="row">
@@ -878,22 +797,8 @@
 						                		      					    				    {% endwith %}
 						                		      					    				{% endfor %}
 						                			      					    		</div>
-						                			      					    		<button class="btn btn-info" id="allGroupMembersListingUnacceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{housingRequest.group.acceptedUsers|count-1}} members</button>
-						                			      					    		<button class="btn btn-info" id="hideAllGroupMembersListingUnacceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}" style="display: none"><i class='fa fa-users' aria-hidden='true'></i> Hide other {{housingRequest.group.acceptedUsers|count-1}} members</button>
-						                			      					    		<script type="text/javascript">
-						                			      					    			//Show/hide members of group
-						                			      					    			$("#allGroupMembersListingUnacceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").click(function(){
-						                			      					    			    $("#allGroupMembersListingUnaccepted{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").toggle();
-						                			      					    			    $("#allGroupMembersListingUnacceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").hide();
-						                			      					    			    $("#hideAllGroupMembersListingUnacceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").show();   	
-						                			      					    			});
-
-						                			      					    			$("#hideAllGroupMembersListingUnacceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").click(function(){
-						                			      					    			    $("#allGroupMembersListingUnaccepted{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").toggle();
-						                			      					    			    $("#allGroupMembersListingUnacceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").show();
-						                			      					    			    $("#hideAllGroupMembersListingUnacceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").hide();   	
-						                			      					    			});
-						                			      					    		</script>
+						                			      					    		<button class="btn btn-info" id="allGroupMembersListingUnacceptedToggle{{housingRequest.id}}" onClick="showUnacceptedHousingRequestMembers({{housingRequest.id}})"><i class='fa fa-users' aria-hidden='true'></i> See other {{housingRequest.group.acceptedUsers|count-1}} members</button>
+						                			      					    		<button class="btn btn-info" id="hideAllGroupMembersListingUnacceptedToggle{{housingRequest.id}}" style="display: none" onClick="hideUnacceptedHousingRequestMembers({{housingRequest.id}})"><i class='fa fa-users' aria-hidden='true'></i> Hide other {{housingRequest.group.acceptedUsers|count-1}} members</button>	
 						                			      					    	</div>
 						                			      					    </div>
 				                			      					    	</div>
@@ -989,7 +894,7 @@
 	        								                    		    	</div>
 	        								                    		    {% endwith %}
 	        								                    		{% endfor %}
-	                    			      					    		<div id="allGroupMembersListingAccepted{{housingRequest.group.id}}Z{{housingRequest.listing.id}}" style="display: none;">
+	                    			      					    		<div id="allGroupMembersListingAccepted{{housingRequest.id}}" style="display: none;">
 	                    		      					    				{% for deposit in housingRequest.securityDeposits %}
 	                    		      					    					{% with group=housingRequest.group %}         
 	                    		      					    						<div class="row">
@@ -1002,22 +907,8 @@
 	                    		      					    				    {% endwith %}
 	                    		      					    				{% endfor %}
 	                    			      					    		</div>
-	                    			      					    		<button class="btn btn-info" id="allGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}"><i class='fa fa-users' aria-hidden='true'></i> See other {{housingRequest.group.acceptedUsers|count-1}} members</button>
-	                    			      					    		<button class="btn btn-info" id="hideAllGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other {{housingRequest.group.acceptedUsers|count-1}} members</button>
-	                    			      					    		<script type="text/javascript">
-	                    			      					    			//Show/hide members of group
-	                    			      					    			$("#allGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").click(function(){
-	                    			      					    			    $("#allGroupMembersListingAccepted{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").toggle();
-	                    			      					    			    $("#allGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").hide();
-	                    			      					    			    $("#hideAllGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").show();   	
-	                    			      					    			});
-
-	                    			      					    			$("#hideAllGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").click(function(){
-	                    			      					    			    $("#allGroupMembersListingAccepted{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").toggle();
-	                    			      					    			    $("#allGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").show();
-	                    			      					    			    $("#hideAllGroupMembersListingAcceptedToggle{{housingRequest.group.id}}Z{{housingRequest.listing.id}}").hide();   	
-	                    			      					    			});
-	                    			      					    		</script>
+	                    			      					    		<button class="btn btn-info" id="allGroupMembersListingAcceptedToggle{{housingRequest.id}}" onClick="showAcceptedHousingRequestMembers({{housingRequest.id}})"><i class='fa fa-users' aria-hidden='true'></i> See other {{housingRequest.group.acceptedUsers|count-1}} members</button>
+	                    			      					    		<button class="btn btn-info" id="hideAllGroupMembersListingAcceptedToggle{{housingRequest.id}}" onClick="hideAcceptedHousingRequestMembers({{housingRequest.id}})" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other {{housingRequest.group.acceptedUsers|count-1}} members</button>
 	        								                    		<br>
 	        								                    		<br>
 	        								                    	</div>
@@ -1074,269 +965,13 @@
 		        	                <br>
 		        	                <div class="tab-content">
 		        	                    <div class="tab-pane selected-tab first-tab active" id="newMaintenanceTab" role="tabpanel" style="padding: 0px;">
-		        	                    	{% if openMaintenanceRequests|length > 0 %}
-		        	                            {% for requestObject in openMaintenanceRequests %}		        	                            
-		        	                            	<div id="numberOfOpenRequests{{requestObject.house.listing.id}}" style="display: none;">{{requestObject.maintenanceRequests|length }}</div>
-		        	                            	<div id="doIShowOpenRequestsDiv{{requestObject.house.listing.id}}" style="display: none;">show</div>
-		        	                            	<div class="card" id="openRequestListing{{requestObject.house.listing.id}}" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-        							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
-        								                    <div class="row">
-        								                    	<div class="col-xl-12">
-        								                    		<h3 style="font-size: 3.5vh;" id="openRequestsCount{{requestObject.house.listing.id}}"><strong>
-        								                    		{{requestObject.house.listing.street}} ({{requestObject.maintenanceRequests|length }} New)</strong></h3>
-        								                    	</div>
-        								                    </div>			                    
-        							                    </div>
-        							                    <div class="card-block">
-        							                    	<div class="row">
-        							                    		<div class="col-xs-0 col-md-1"></div>
-        							                    		<div class="col-xs-12 col-md-10">
-        							                    			<strong>
-        							                    				<h2 class="hidden-sm-up" style="font-size: 2.5vh;">New Maintenance Requests for this listing: </h2>
-        							                    				<h2 class="hidden-xs-down" style="font-size: 3.5vh;">New Maintenance Requests for this listing: </h2>
-        							                    			</strong>
-        							                    		</div>
-        							                    	</div>
-	        	                    	        			{% for request in requestObject.maintenanceRequests %}
-	        	                    	        				<div class="row" id="openRequest{{request.id}}">
-	        	                    	        					<div class="col-xl-1"></div>
-	        	                    	        					<div class="col-xl-10">
-			        	                    	        				<div class="card">
-		        							                    			<div class="card-header">
-		        							                    				<div class="row">
-		        								                    				<div class="col-xl-12">
-					        	                    	            					<h3 style="font-size: 3.0vh;">
-						        	                    	            					<strong>{{request.request_type}} </strong>
-						        	                    	            					<a style="float: right;" class="btn btn-primary hidden-sm-down" href="{{ url_for('houses.maintenanceRequestView', id=request.id) }}">More Info</a>
-					        	                    	            					</h3>
-					        	                    	            					Reported on: {{request.date_created}}
-					        	                    	            					<br><br>
-					        	                    	            				</div>
-					        	                    	            			</div>
-			        	                    	            					<div class="row">   
-			        	                    	            						<div class="col-12 col-md-auto" style="padding-bottom: 5px;padding-right: 15px;">
-					        	                    	            					<div id="markInProgressButton{{request.id}}">
-					        	                    	            						<button id="inProgressButton{{request.id}}" class="btn btn-warning" onclick="markInProgress({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.listing.street}}')">Mark In Progress</button>
-					        	                    	            					</div>
-					        	                    	            					<div id="markInProgressLoading{{request.id}}" style="display: none;">
-					        	                    	            						<button class="btn btn-warning" style="width: 152.94px;">
-					        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-					        	                    	            						</button>
-					        	                    	            					</div>
-					        	                    	            				</div>
-					        	                    	            				<div class="col-12 col-md-auto" style="padding-right: 15px; padding-bottom: 5px;">
-					        	                    	            					<div id="markCompletedButton{{request.id}}">
-					        	                    	            						<button id="completedButton{{request.id}}" class="btn btn-success" onclick="markCompleted({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.listing.street}}')">Mark Completed</button>
-					        	                    	            					</div>
-					        	                    	            					<div id="markCompletedLoading{{request.id}}" style="display: none;">
-					        	                    	            						<button class="btn btn-success" style="width: 152.33px;">
-					        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-					        	                    	            						</button>
-					        	                    	            					</div>				
-					        	                    	            				</div>
-					        	                    	            				<div class="col-xs-12" style="padding-left: 0px;">
-					        	                    	            					<a class="btn btn-primary hidden-md-up" style="width: 152.94px;" href="{{ url_for('houses.maintenanceRequestView', id=request.id) }}">More Info</a>
-					        	                    	            				</div>
-				        	                    	            				</div>
-					        	                    	            		</div>
-					        	                    	            		<div class="card-block">
-		        							                    				<div class="row">
-		        							                    					<div class="col-xs-12">
-		        							                    						<strong>Reported by:</strong> {{request.user.name}}
-		        							                    						<br><br>
-		        							                    						<strong>Details: </strong>{{request.details}}
-					                    			      					    	</div>
-					                    			      					    </div>
-					                    			      					</div>
-					                    			      				</div>
-					                    			      			</div>
-					                    			      		</div>
-					                    			      		<div class="row" id="undoInProgressDiv{{request.id}}" style="display: none;">
-					                    			      			<div class="col-xl-1"></div>
-					                    			      			<div class="col-xl-10">
-					                    			      				<div class="alert alert-info" role="alert">
-					                    			      				    Marked as In Progress <button class="link" onclick="undoMarkInProgress({{request.id}}, {{request.house.listing.id}}, '{{requestObject.house.listing.street}}')">Undo?</button>
-					                    			      				</div>
-					                    			      			</div>
-					                    			      		</div>
-					                    			      		<div class="row" id="undoMarkCompleted{{request.id}}" style="display: none;">
-					                    			      			<div class="col-xl-1"></div>
-					                    			      			<div class="col-xl-10">
-					                    			      				<div class="alert alert-info" role="alert">
-					                    			      				    Marked as Completed <button class="link" onclick="undoMarkCompleted({{request.id}}, {{request.house.listing.id}}, '{{requestObject.house.listing.street}}')">Undo?</button>
-					                    			      				</div>
-					                    			      			</div>
-					                    			      		</div>
-	        	                    	        			{% endfor %}
-					        	                        </div>
-					        	                    </div>
-			            						{% endfor %}
-			            						<div id="noNewMaintenanceRequests" style="display: none;" class="alert alert-info" role="alert">
-			            							<strong>No New Maintenance Requests</strong>
-			            						</div>
-		            						{% else %}
-		            							<div class="alert alert-info" role="alert">
-		            								<strong>No New Maintenance Requests</strong>
-		            							</div>
-		            						{% endif %}
+		        	                    	<!-- Content will be Loaded here from Ajax -->
 		        	                    </div>
 		        	                    <div class="tab-pane selected-tab" id="inProgressMaintenanceTab" role="tabpanel" style="padding: 0px;">
-		        	                    	{% if inProgressMaintenanceRequests|length > 0 %}
-		        	                            {% for requestObject in inProgressMaintenanceRequests %}		        	                            
-		        	                            	<div id="numberOfInProgressRequests{{requestObject.house.listing.id}}" style="display: none;">{{requestObject.maintenanceRequests|length }}</div>
-		        	                            	<div id="doIShowInProgressRequestsDiv{{requestObject.house.listing.id}}" style="display: none;">show</div>
-		        	                            	<div class="card" id="inProgressRequestListing{{requestObject.house.listing.id}}" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-        							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
-        								                    <div class="row">
-        								                    	<div class="col-xl-12">
-        								                    		<h3 style="font-size: 3.5vh;" id="inProgressRequestsCount{{requestObject.house.listing.id}}"><strong>
-        								                    		 {{requestObject.house.listing.street}} ({{requestObject.maintenanceRequests|length }} In Progress)</strong></h3>
-        								                    	</div>
-        								                    </div>			                    
-        							                    </div>
-        							                    <div class="card-block">
-        							                    	<div class="row">
-        							                    		<div class="col-xl-1"></div>
-        							                    		<div class="col-xl-10">
-        							                    			<strong>
-        							                    				<h2 class="hidden-sm-up" style="font-size: 2.5vh;">In-progress Maintenance Requests for this listing: </h2>
-        							                    				<h2 class="hidden-xs-down" style="font-size: 3.5vh;">In-Progress Maintenance Requests for this listing: </h2>
-        							                    			</strong>
-        							                    		</div>
-        							                    	</div>
-	        	                    	        			{% for request in requestObject.maintenanceRequests %}
-	        	                    	        				<div class="row" id="inProgress{{request.id}}">
-	        	                    	        					<div class="col-xl-1"></div>
-	        	                    	        					<div class="col-xl-10">
-			        	                    	        				<div class="card">
-		        							                    			<div class="card-header">
-		        							                    				<div class="row">
-		        								                    				<div class="col-xl-12">
-					        	                    	            					<h3 style="font-size: 3.0vh;">
-						        	                    	            					<strong>{{request.request_type}} </strong>
-						        	                    	            					<a style="float: right;" class="btn btn-primary hidden-sm-down" href="{{ url_for('houses.maintenanceRequestView', id=request.id) }}">More Info</a>
-					        	                    	            					</h3>
-					        	                    	            				</div>
-					        	                    	            			</div>
-					        	                    	            			<div class="row">
-					        	                    	            				<div class="col-xl-12">
-					        	                    	            					Reported on: {{request.date_created}}
-					        	                    	            					<br><br>
-					        	                    	            				</div>
-					        	                    	            			</div>
-			        	                    	            					<div class="row">
-					        	                    	            				<div class="col-12 col-md-auto" style="padding-bottom: 5px;padding-right: 15px;">
-					        	                    	            					<div id="inProgressToCompletedButton{{request.id}}">
-					        	                    	            						<button class="btn btn-success" onclick="inProgressToCompleted({{request.id}}, {{requestObject.house.listing.id}}, '{{requestObject.house.listing.street}}')">Mark Completed</button>
-					        	                    	            					</div>
-					        	                    	            					<div id="inProgressToCompletedLoading{{request.id}}" style="display: none;">
-					        	                    	            						<button class="btn btn-success" style="width: 152.33px;">
-					        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-					        	                    	            						</button>
-					        	                    	            					</div>				
-					        	                    	            				</div>
-					        	                    	            			</div>
-				        	                    	            				<div class="row hidden-md-up">
-				        	                    	            					<div>
-				        	                    	            						<a class="btn btn-primary" style="width: 153.33px;" href="{{ url_for('houses.maintenanceRequestView', id=request.id) }}">More Info</a>
-				        	                    	            					</div>
-				        	                    	            				</div>
-					        	                    	            		</div>
-					        	                    	            		<div class="card-block">
-		        							                    				<div class="row">
-		        							                    					<div class="col-xs-12">
-		        							                    						<strong>Reported by:</strong> {{request.user.name}}
-		        							                    						<br><br>
-		        							                    						<strong>Details: </strong>{{request.details}}
-					                    			      					    	</div>
-					                    			      					    </div>
-					                    			      					</div>
-					                    			      				</div>
-					                    			      			</div>
-					                    			      		</div>
-					                    			      		<div class="row" id="undoInProgressToCompleted{{request.id}}" style="display: none;">
-					                    			      			<div class="col-xl-1"></div>
-					                    			      			<div class="col-xl-10">
-					                    			      				<div class="alert alert-info" role="alert">
-					                    			      				    Marked as Completed <button class="link" onclick="undoInProgressToCompleted({{request.id}}, {{request.house.listing.id}}, '{{requestObject.house.listing.street}}')">Undo?</button>
-					                    			      				</div>
-					                    			      			</div>
-					                    			      		</div>
-	        	                    	        			{% endfor %}
-					        	                        </div>
-					        	                    </div>
-			            						{% endfor %}
-			            						<div id="noInProgressMaintenanceRequests" style="display: none;" class="alert alert-info" role="alert">
-			            							<strong>No In Progress Maintenance Requests</strong>
-			            						</div>
-		            						{% else %}
-		            							<div class="alert alert-info" role="alert">
-		            								<strong>No In Progress Maintenance Requests</strong>
-		            							</div>
-		            						{% endif %}
+		        	                    	<!-- Content will be loaded here from Ajax -->
 		        	                    </div>
 		        	                    <div class="tab-pane selected-tab" id="completedMaintenanceTab" role="tabpanel" style="padding: 0px;">
-		        	                    	{% if completedMaintenanceRequests|length > 0 %}
-		        	                            {% for requestObject in completedMaintenanceRequests %}	
-		        	                            	<div class="card" id="completedRequestListing{{requestObject.house.listing.id}}" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-        							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
-        								                    <div class="row">
-        								                    	<div class="col-xl-12">
-        								                    		<h3 style="font-size: 3.5vh;" id="completedRequestsCount{{requestObject.house.listing.id}}"><strong>
-        								                    		{{requestObject.house.listing.street}} ({{requestObject.maintenanceRequests|length }} Completed)</strong></h3>
-        								                    	</div>
-        								                    </div>			                    
-        							                    </div>
-        							                    <div class="card-block">
-        							                    	<div class="row">
-        							                    		<div class="col-xl-1"></div>
-        							                    		<div class="col-xl-10">
-        							                    			<strong>
-        							                    				<h2 class="hidden-sm-up" style="font-size: 2.5vh;">Completed Maintenance Requests for this listing: </h2>
-        							                    				<h2 class="hidden-xs-down" style="font-size: 3.5vh;">Completed Maintenance Requests for this listing: </h2>
-        							                    			</strong>
-        							                    		</div>
-        							                    	</div>
-	        	                    	        			{% for request in requestObject.maintenanceRequests %}
-	        	                    	        				<div class="row" id="completed{{request.id}}">
-	        	                    	        					<div class="col-xl-1"></div>
-	        	                    	        					<div class="col-xl-10">
-			        	                    	        				<div class="card">
-		        							                    			<div class="card-header">
-		        							                    				<div class="row">
-		        								                    				<div class="col-xl-10">
-					        	                    	            					<h3 style="font-size: 3.0vh;"><strong>{{request.request_type}} </strong></h3>
-					        	                    	            					Reported on: {{request.date_created}}
-					        	                    	            					<br><br>
-					        	                    	            					Completed on: {{request.date_modified}}
-					        	                    	            					<br><br>
-					        	                    	            				</div>
-					        	                    	            				<div class="col-xl-2" style="text-align: right;">
-					        	                    	            					<a class="btn btn-primary" href="{{ url_for('houses.maintenanceRequestView', id=request.id) }}">More Info</a>
-					        	                    	            				</div>
-					        	                    	            			</div>
-					        	                    	            		</div>
-					        	                    	            		<div class="card-block">
-		        							                    				<div class="row">
-		        							                    					<div class="col-xs-12">
-		        							                    						<strong>Reported by:</strong> {{request.user.name}}
-		        							                    						<br><br>
-		        							                    						<strong>Details: </strong>{{request.details}}
-					                    			      					    	</div>
-					                    			      					    </div>
-					                    			      					</div>
-					                    			      				</div>
-					                    			      			</div>
-					                    			      		</div>
-	        	                    	        			{% endfor %}
-					        	                        </div>
-					        	                    </div>
-			            						{% endfor %}
-		            						{% else %}
-		            							<div class="alert alert-info" role="alert">
-		            								<strong>No Completed Maintenance Requests</strong>
-		            							</div>
-		            						{% endif %}
+		        	                    	<!-- Content will be loaded here by Francis -->
 		        	                    </div>
 		        	                </div>
 		        	            </div>
@@ -1425,11 +1060,37 @@
 			var currentHash = window.location.hash;
 			currentHash = currentHash.split('-')[0];
 		    window.location.hash = currentHash+"-"+newtab;
+		    //reload the content for the tabs
+		    if(newtab == 'newMaintenanceTab'){
+		    	getOpenMaintenanceRequestsJSON();
+		    }
+		    else if(newtab == 'inProgressMaintenanceTab'){
+		    	getInProgressMaintenanceRequestsJSON();
+		    }
+		    else if(newtab == 'completedMaintenanceTab'){
+		    	getCompletedMaintenanceRequestsJSON();
+		    }
+		    else if(newtab == 'unacceptedTab'){
+		    	getUnAcceptedGroupListingsRequestsJSON();
+		    }		    
 		});
 	   	if ($.inArray(secondTab, validSecondTabs) > -1) {	   		
 	   		$(".selected-tab").removeClass('active');
 	   		$("#"+secondTab+'2').addClass('active');
 			$("#"+secondTab).addClass('active');
+			//Call the function to populate the div with content from json
+			if(secondTab == "newMaintenanceTab"){
+				getOpenMaintenanceRequestsJSON();
+			}
+			else if(secondTab == 'inProgressMaintenanceTab'){
+		    	getInProgressMaintenanceRequestsJSON();
+		    }
+		    else if(secondTab == 'completedMaintenanceTab'){
+		    	getCompletedMaintenanceRequestsJSON();
+		    }
+		    else if(secondTab == 'unacceptedTab'){
+		    	getUnAcceptedGroupListingsRequestsJSON();
+		    }
 		}
 		else{
 			$('.first-tab').addClass('active');
@@ -1442,6 +1103,16 @@
 	$(".left-panel").click(function () {
 		var newHash = this.id;
 		newHash = newHash.slice(0, -1);
+		//ensure we default to the first tab if it has one
+		//and reload the content of the first tab
+		if(newHash == 'maintenanceTab'){
+			newHash += '-newMaintenanceTab';
+			getOpenMaintenanceRequestsJSON();
+		}
+		else if(newHash == 'requestsTab'){
+			newHash += '-unacceptedTab';
+			getUnAcceptedGroupListingsRequestsJSON();
+		}
 	    window.location.hash = newHash;
 	    $('.first-tab').addClass('active');
 	});
@@ -1481,6 +1152,78 @@
 	var denyGroupUndoTimeoutTimer;
 	var denyGroupChangeDivTimeoutTimer;
 	var confirmGroupUndoTimeoutTimer;
+
+	function showOccupiedHouseMembers(id){
+		$("#allGroupMembersCurrentlyOccupied"+id).show();
+		$("#allGroupMembersCurrentlyOccupiedToggle"+id).hide();
+		$("#hideAllGroupMembersCurrentlyOccupiedToggle"+id).show();
+	}
+
+	function hideOccupiedHouseMembers(id){
+		$("#allGroupMembersCurrentlyOccupied"+id).hide();
+	    $("#allGroupMembersCurrentlyOccupiedToggle"+id).show();
+	    $("#hideAllGroupMembersCurrentlyOccupiedToggle"+id).hide();
+	}
+
+	function showWillBeOccupiedHouseMembers(id){
+		$("#allGroupMembersWillBeOccupied").toggle();
+	    $("#allGroupMembersWillBeOccupiedToggle").hide();
+	    $("#hideAllGroupMembersWillBeOccupiedToggle").show();
+	}
+
+	function hideWillBeOccupiedHouseMembers(id){
+		$("#allGroupMembersWillBeOccupied"+id).toggle();
+		$("#allGroupMembersWillBeOccupiedToggle"+id).show();
+		$("#hideAllGroupMembersWillBeOccupiedToggle"+id).hide();
+	}
+
+	function showRequestedTourMembers(id){
+		$("#allMembersRequestedTour"+id).show();
+		$("#allMembersRequestedTourToggle"+id).hide();
+		$("#hideAllMembersRequestedTourToggle"+id).show();
+	}
+
+	function hideRequestedTourMembers(id){
+		$("#allMembersRequestedTour"+id).hide();
+	    $("#hideAllMembersRequestedTourToggle"+id).hide();
+	    $("#allMembersRequestedTourToggle"+id).show();
+	}
+
+	function showScheduledTourMembers(id){
+		$("#allMembersScheduledTour"+id).show();
+		$("#allMembersScheduledTourToggle"+id).hide();
+		$("#hideAllMembersScheduledTourToggle"+id).show();
+	}
+
+	function hideScheduledTourMembers(id){
+		$("#allMembersScheduledTour"+id).hide();
+	    $("#hideAllMembersScheduledTourToggle"+id).hide();
+	    $("#allMembersScheduledTourToggle"+id).show();
+	}
+
+	function showUnacceptedHousingRequestMembers(id){
+	    $("#allGroupMembersListingUnaccepted"+id).show();
+	    $("#allGroupMembersListingUnacceptedToggle"+id).hide();
+	    $("#hideAllGroupMembersListingUnacceptedToggle"+id).show();
+	}
+
+	function hideUnacceptedHousingRequestMembers(id){		
+	    $("#allGroupMembersListingUnaccepted"+id).hide();
+	    $("#allGroupMembersListingUnacceptedToggle"+id).show();
+	    $("#hideAllGroupMembersListingUnacceptedToggle"+id).hide();
+	}
+
+	function showAcceptedHousingRequestMembers(id){
+	    $("#allGroupMembersListingAccepted"+id).show();
+	    $("#allGroupMembersListingAcceptedToggle"+id).hide();
+	    $("#hideAllGroupMembersListingAcceptedToggle"+id).show();   	
+	}
+
+	function hideAcceptedHousingRequestMembers(id){		
+	    $("#allGroupMembersListingAccepted"+id).hide();
+	    $("#allGroupMembersListingAcceptedToggle"+id).show();
+	    $("#hideAllGroupMembersListingAcceptedToggle"+id).hide();
+	}
 
 	function acceptTour(id, surroundingID, listing){
 		var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
@@ -2429,31 +2172,447 @@
         $('[data-toggle="tooltip"]').tooltip()
     })
 
-    function getJSON() {
+    function getOpenMaintenanceRequestsJSON() {
     	// requestURL = '/landlord/openMaintenanceRequests/JSON'
-    	requestURL = '/landlord/inProgressMaintenanceRequests/JSON'
-    	$("#poopNugget").empty();
+    	requestURL = '/landlord/openMaintenanceRequests/JSON'
+    	$("#newMaintenanceTab").empty();
 
     	$.getJSON(requestURL, function(data) {
     		console.log(data)
-            inProgressMaintenanceRequests = data['inProgressMaintenanceRequests']
+            openMaintenanceRequests = data['openMaintenanceRequests'];
             // alert(openMaintenanceRequests)
-            console.log(inProgressMaintenanceRequests)
-            
+            console.log(openMaintenanceRequests);
+            $.each(openMaintenanceRequests, function(index, maintenanceRequestObject) {
+            	console.log(maintenanceRequestObject);
+            	console.log(maintenanceRequestObject.listing.street);
 
-            $.each(inProgressMaintenanceRequests, function(index, maintenanceRequestObject) {
-            	console.log(maintenanceRequestObject)
-            	console.log(maintenanceRequestObject.listing.street)
-            	headingElement = '<h1>' + maintenanceRequestObject.listing.street + '</h1><br>'
+            var outerDiv =`
+            <div id="numberOfOpenRequests1" style="display: none;">3</div>
+		    <div id="doIShowOpenRequestsDiv1" style="display: none;">show</div>
+            <div class="card" id="openRequestListing1" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+                <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
+                    <div class="row">
+                    	<div class="col-xl-12">
+                    		<h3 style="font-size: 3.5vh;" id="openRequestsCount1"><strong>
+                    		`+maintenanceRequestObject.listing.street+` (3 New)</strong></h3>
+                    	</div>
+                    </div>			                    
+                </div>
+                <div class="card-block">
+                	<div class="row">
+                		<div class="col-xs-0 col-md-1"></div>
+                		<div class="col-xs-12 col-md-10">
+                			<strong>
+                				<h2 class="hidden-sm-up" style="font-size: 2.5vh;">New Maintenance Requests for this listing: </h2>
+                				<h2 class="hidden-xs-down" style="font-size: 3.5vh;">New Maintenance Requests for this listing: </h2>
+                			</strong>
+                		</div>
+                	</div>`;
 
-            	maintenanceRequestElements = "<div>" + headingElement
+            	maintenanceRequestElements = outerDiv;
 
             	$.each(maintenanceRequestObject.maintenanceRequests, function(index, maintenanceRequest) {
-            		individualElement = "<div><h2>" + maintenanceRequest.requestType + "</h2><br>Reported On: " + maintenanceRequest.date + "<br>Details: " + maintenanceRequest.details + "</div><br>"
+            		individualElement = `
+            		<div class="row" id="openRequest1">
+    					<div class="col-xl-1"></div>
+    					<div class="col-xl-10">
+	        				<div class="card">
+                    			<div class="card-header">
+                    				<div class="row">
+	                    				<div class="col-xl-12">
+        	            					<h3 style="font-size: 3.0vh;">
+            	            					<strong>`+ maintenanceRequest.requestType +`</strong>
+            	            					<a style="float: right;" class="btn btn-primary hidden-sm-down" href="/house/maintenanceRequest/1/view">More Info</a>
+        	            					</h3>
+        	            					Reported on: `+ maintenanceRequest.date +`
+        	            					<br><br>
+        	            				</div>
+        	            			</div>
+	            					<div class="row">   
+	            						<div class="col-12 col-md-auto" style="padding-bottom: 5px;padding-right: 15px;">
+        	            					<div id="markInProgressButton1">
+        	            						<button id="inProgressButton1" class="btn btn-warning" onclick="markInProgress(1, 1, '`+maintenanceRequestObject.listing.street+`')">Mark In Progress</button>
+        	            					</div>
+        	            					<div id="markInProgressLoading1" style="display: none;">
+        	            						<button class="btn btn-warning" style="width: 152.94px;">
+        	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+        	            						</button>
+        	            					</div>
+        	            				</div>
+        	            				<div class="col-12 col-md-auto" style="padding-right: 15px; padding-bottom: 5px;">
+        	            					<div id="markCompletedButton1">
+        	            						<button id="completedButton1" class="btn btn-success" onclick="markCompleted(1, 1, '`+maintenanceRequestObject.listing.street+`')">Mark Completed</button>
+        	            					</div>
+        	            					<div id="markCompletedLoading1" style="display: none;">
+        	            						<button class="btn btn-success" style="width: 152.33px;">
+        	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+        	            						</button>
+        	            					</div>				
+        	            				</div>
+        	            				<div class="col-xs-12" style="padding-left: 0px;">
+        	            					<a class="btn btn-primary hidden-md-up" style="width: 152.94px;" href="/house/maintenanceRequest/1/view">More Info</a>
+        	            				</div>
+    	            				</div>
+        	            		</div>
+        	            		<div class="card-block">
+                    				<div class="row">
+                    					<div class="col-xs-12">
+                    						<strong>Reported by:</strong> Jennifer Gonzales
+                    						<br><br>
+                    						<strong>Details: </strong>`+ maintenanceRequest.details +`
+		      					    	</div>
+		      					    </div>
+		      					</div>
+		      				</div>
+		      			</div>
+		      		</div>
+		      		<div class="row" id="undoInProgressDiv1" style="display: none;">
+		      			<div class="col-xl-1"></div>
+		      			<div class="col-xl-10">
+		      				<div class="alert alert-info" role="alert">
+		      				    Marked as In Progress <button class="link" onclick="undoMarkInProgress(1, 1, '`+maintenanceRequestObject.listing.street+`')">Undo?</button>
+		      				</div>
+		      			</div>
+		      		</div>
+		      		<div class="row" id="undoMarkCompleted1" style="display: none;">
+		      			<div class="col-xl-1"></div>
+		      			<div class="col-xl-10">
+		      				<div class="alert alert-info" role="alert">
+		      				    Marked as Completed <button class="link" onclick="undoMarkCompleted(1, 1, '`+maintenanceRequestObject.listing.street+`')">Undo?</button>
+		      				</div>
+		      			</div>
+		      		</div>`;
+            		maintenanceRequestElements += individualElement;
+            	})
+
+            	$("#newMaintenanceTab").append(maintenanceRequestElements + "</div></div>");
+            })
+        })
+    }
+
+    function getInProgressMaintenanceRequestsJSON() {
+    	requestURL = '/landlord/inProgressMaintenanceRequests/JSON'
+    	$("#inProgressMaintenanceTab").empty();
+
+    	$.getJSON(requestURL, function(data) {
+    		console.log(data)
+            inProgressMaintenanceRequests = data['inProgressMaintenanceRequests'];
+            console.log(inProgressMaintenanceRequests);
+            $.each(inProgressMaintenanceRequests, function(index, maintenanceRequestObject) {
+            	console.log(maintenanceRequestObject);
+            	console.log(maintenanceRequestObject.listing.street);
+
+            var outerDiv =`
+            	<div id="numberOfInProgressRequests1" style="display: none;">1</div>
+            	<div id="doIShowInProgressRequestsDiv1" style="display: none;">show</div>
+            	<div class="card" id="inProgressRequestListing1" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
+	                    <div class="row">
+	                    	<div class="col-xl-12">
+	                    		<h3 style="font-size: 3.5vh;" id="inProgressRequestsCount1"><strong>
+	                    		 `+maintenanceRequestObject.listing.street+` (1 In Progress)</strong></h3>
+	                    	</div>
+	                    </div>			                    
+                    </div>
+                    <div class="card-block">
+                    	<div class="row">
+                    		<div class="col-xl-1"></div>
+                    		<div class="col-xl-10">
+                    			<strong>
+                    				<h2 class="hidden-sm-up" style="font-size: 2.5vh;">In-progress Maintenance Requests for this listing: </h2>
+                    				<h2 class="hidden-xs-down" style="font-size: 3.5vh;">In-Progress Maintenance Requests for this listing: </h2>
+                    			</strong>
+                    		</div>
+                    	</div>
+            `;
+
+            	maintenanceRequestElements = outerDiv;
+
+            	$.each(maintenanceRequestObject.maintenanceRequests, function(index, maintenanceRequest) {
+            		individualElement = `
+            		<div class="row" id="inProgress1">
+    					<div class="col-xl-1"></div>
+    					<div class="col-xl-10">
+	        				<div class="card">
+                    			<div class="card-header">
+                    				<div class="row">
+	                    				<div class="col-xl-12">
+        	            					<h3 style="font-size: 3.0vh;">
+            	            					<strong>`+ maintenanceRequest.requestType +` </strong>
+            	            					<a style="float: right;" class="btn btn-primary hidden-sm-down" href="/house/maintenanceRequest/1/view">More Info</a>
+        	            					</h3>
+        	            				</div>
+        	            			</div>
+        	            			<div class="row">
+        	            				<div class="col-xl-12">
+        	            					Reported on: `+ maintenanceRequest.date +`
+        	            					<br><br>
+        	            				</div>
+        	            			</div>
+	            					<div class="row">
+        	            				<div class="col-12 col-md-auto" style="padding-bottom: 5px;padding-right: 15px;">
+        	            					<div id="inProgressToCompletedButton1">
+        	            						<button class="btn btn-success" onclick="inProgressToCompleted(1, 1, '`+maintenanceRequestObject.listing.street+`')">Mark Completed</button>
+        	            					</div>
+        	            					<div id="inProgressToCompletedLoading1" style="display: none;">
+        	            						<button class="btn btn-success" style="width: 152.33px;">
+        	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+        	            						</button>
+        	            					</div>				
+        	            				</div>
+        	            			</div>
+    	            				<div class="row hidden-md-up">
+    	            					<div>
+    	            						<a class="btn btn-primary" style="width: 153.33px;" href="/house/maintenanceRequest/1/view">More Info</a>
+    	            					</div>
+    	            				</div>
+        	            		</div>
+        	            		<div class="card-block">
+                    				<div class="row">
+                    					<div class="col-xs-12">
+                    						<strong>Reported by:</strong> Jonathon Joesph
+                    						<br><br>
+                    						<strong>Details: </strong>`+ maintenanceRequest.details +`
+		      					    	</div>
+		      					    </div>
+		      					</div>
+		      				</div>
+		      			</div>
+		      		</div>
+		      		<div class="row" id="undoInProgressToCompleted1" style="display: none;">
+		      			<div class="col-xl-1"></div>
+		      			<div class="col-xl-10">
+		      				<div class="alert alert-info" role="alert">
+		      				    Marked as Completed <button class="link" onclick="undoInProgressToCompleted(1, 2, '`+maintenanceRequestObject.listing.street+`')">Undo?</button>
+		      				</div>
+		      			</div>
+		      		</div>`;
             		maintenanceRequestElements += individualElement
             	})
 
-            	$("#poopNugget").append(maintenanceRequestElements + "</div>")
+            	$("#inProgressMaintenanceTab").append(maintenanceRequestElements + "</div></div>")
+            })
+        })
+    }
+
+    function getCompletedMaintenanceRequestsJSON() {
+    	requestURL = '/landlord/completedMaintenanceRequests/JSON'
+    	$("#completedMaintenanceTab").empty();
+
+    	$.getJSON(requestURL, function(data) {
+    		console.log(data)
+            completedMaintenanceRequests = data['completedMaintenanceRequests'];
+            console.log(completedMaintenanceRequests);
+            $.each(completedMaintenanceRequests, function(index, maintenanceRequestObject) {
+            	console.log(maintenanceRequestObject);
+            	console.log(maintenanceRequestObject.listing.street);
+
+            var outerDiv =`
+            	<div class="card" id="completedRequestListing1" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+	                <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
+	                    <div class="row">
+	                    	<div class="col-xl-12">
+	                    		<h3 style="font-size: 3.5vh;" id="completedRequestsCount1"><strong>
+	                    		`+maintenanceRequestObject.listing.street+` (2 Completed)</strong></h3>
+	                    	</div>
+	                    </div>			                    
+	                </div>
+	                <div class="card-block">
+	                	<div class="row">
+	                		<div class="col-xl-1"></div>
+	                		<div class="col-xl-10">
+	                			<strong>
+	                				<h2 class="hidden-sm-up" style="font-size: 2.5vh;">Completed Maintenance Requests for this listing: </h2>
+	                				<h2 class="hidden-xs-down" style="font-size: 3.5vh;">Completed Maintenance Requests for this listing: </h2>
+	                			</strong>
+	                		</div>
+	                	</div>
+            `;
+
+            	maintenanceRequestElements = outerDiv;
+
+            	$.each(maintenanceRequestObject.maintenanceRequests, function(index, maintenanceRequest) {
+            		individualElement = `
+            		<div class="row" id="completed1">
+    					<div class="col-xl-1"></div>
+    					<div class="col-xl-10">
+	        				<div class="card">
+                    			<div class="card-header">
+                    				<div class="row">
+	                    				<div class="col-xl-10">
+        	            					<h3 style="font-size: 3.0vh;"><strong>`+ maintenanceRequest.requestType +` </strong></h3>
+        	            					Reported on: `+ maintenanceRequest.date +`
+        	            					<br><br>
+        	            					Completed on: date modified
+        	            					<br><br>
+        	            				</div>
+        	            				<div class="col-xl-2" style="text-align: right;">
+        	            					<a class="btn btn-primary" href="/house/maintenanceRequest/1/view"">More Info</a>
+        	            				</div>
+        	            			</div>
+        	            		</div>
+        	            		<div class="card-block">
+                    				<div class="row">
+                    					<div class="col-xs-12">
+                    						<strong>Reported by:</strong> Jonathon Joesph
+                    						<br><br>
+                    						<strong>Details: </strong>`+ maintenanceRequest.details +`
+		      					    	</div>
+		      					    </div>
+		      					</div>
+		      				</div>
+		      			</div>
+		      		</div>`;
+            		maintenanceRequestElements += individualElement
+            	})
+
+            	$("#completedMaintenanceTab").append(maintenanceRequestElements + "</div></div>")
+            })
+        })
+    }
+
+    function getUnAcceptedGroupListingsRequestsJSON() {
+    	requestURL = '/landlord/unAcceptedGroupListings/JSON'
+    	$("#unacceptedTab").empty();
+
+    	$.getJSON(requestURL, function(data) {
+    		console.log(data)
+            unAcceptedGroupListings = data['unAcceptedGroupListings'];
+            console.log(unAcceptedGroupListings);
+           $.each(unAcceptedGroupListings, function(index, housingRequestObject) {
+            	console.log(housingRequestObject);
+            	console.log(housingRequestObject.listing.street);
+
+            var outerDiv =`
+            	<div class="card" id="unacceptedRequestsListing4" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+	                <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
+	                    <div class="row">
+	                    	<div class="col-xl-12">
+	                    		<h3 style="font-size: 3.5vh;" id="unacceptedRequestsCount4"><strong>
+	                    		`+ housingRequestObject.listing.street +` (1 Requests)</strong></h3>
+	                    		<small>Lease Period: `+ housingRequestObject.listing.startDate +` - `+ housingRequestObject.listing.endDate +`</small>
+	                    	</div>
+	                    </div>			                    
+	                </div>
+	                <div class="card-block">
+	                	<div class="row">
+	                		<div class="col-xs-0 col-md-1"></div>
+	                		<div class="col-xs-12 col-md-10">
+	                			<strong>
+	                				<h2 class="hidden-sm-up" style="font-size: 2.5vh;">Group(s) Requesting This Listing: </h2>
+	                				<h2 class="hidden-xs-down" style="font-size: 3.5vh;">Group(s) Requesting This Listing: </h2>
+	                			</strong>
+	                		</div>
+	                	</div>
+            `;
+
+            	listingRequestElements = outerDiv;
+
+            	$.each(housingRequestObject.groupListings, function(index, houseRequest) {
+            		individualElement = `
+            		<div class="row" id="unAcceptedRequest`+ houseRequest.id +`">
+    					<div class="col-xs-0 col-md-1"></div>
+    					<div class="col-xs-12 col-md-10" style="padding-left: 0px; padding-right: 0px;">
+	        				<div class="card">
+                    			<div class="card-header">
+                    				<div class="row">
+	                    				<div class="col-xl-12">
+        	            					<h3 style="font-size: 3.0vh;"><strong>Group Name</strong>(`+ houseRequest.userCount +` Members)
+        	            					<a class="btn btn-primary hidden-sm-down" style="float: right;" href="`+ houseRequest.url +`">More Info</a></h3>
+        	            				</div>
+        	            			</div>
+        	            			<br>
+	            					<div class="row">
+    	            					<div class="col-12 col-md-auto" style="padding-bottom: 5px;padding-right: 15px;">
+        	            					<div id="acceptHouseRequest`+ houseRequest.id +`">
+        	            						<button id="acceptHouseRequestButton`+ houseRequest.id +`" style="width: 131.06px;" class="btn btn-success acceptHouseRequest`+ houseRequest.id +`" onclick="acceptHouseRequest(`+ houseRequest.id +`, 4, '`+ housingRequestObject.listing.street +`')">Accept Group</button>
+        	            					</div>
+        	            					<div id="acceptHouseRequestLoading`+ houseRequest.id +`" style="display: none;">
+        	            						<button class="btn btn-success" style="width: 131.06px;">
+        	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+        	            						</button>
+        	            					</div>
+    	            					</div>
+    	            					<div class="col-12 col-md-auto" style="padding-right: 15px; padding-bottom: 5px;">
+        	            					<div id="denyHouseRequest`+ houseRequest.id +`">
+        	            						<button id="denyHouseRequestButton`+ houseRequest.id +`" style="width: 131.06px;" class="btn btn-danger denyHouseRequest`+ houseRequest.id +`" onclick="denyHouseRequest(`+ houseRequest.id +`, 4, '`+ housingRequestObject.listing.street +`')">Reject Group</button>
+        	            					</div>
+        	            					<div id="denyHouseRequestLoading`+ houseRequest.id +`" style="display: none;">
+        	            						<button class="btn btn-danger" style="width: 131.06px;">
+        	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+        	            						</button>
+        	            					</div>
+    	            					</div>
+    	            					<br>
+    	            					<div class="col-sm-12 hidden-md-up" style="padding-left: 0px;">
+    	            						<a class="btn btn-primary" style="width: 131.06px;" href="`+ houseRequest.url +`">More Info</a>
+    	            					</div>
+	            					</div>
+        	            		</div>
+        	            		<div class="card-block">
+                    				<div class="row">
+                    					<div class="col-xs-12">
+                    						<strong>The Group's Initial Message to You: </strong>
+                    						`+ houseRequest.message +`
+                    						<br><br>
+                    						<strong>Group Leader: </strong>
+                    						<div id="allGroupMembersListingUnaccepted`+ houseRequest.id +`" style="display:none">
+            								`;	
+            								$.each(houseRequest.users, function(index, user) {
+            								individualElement += `
+            									<div class="row">
+            										<div class="col-sm-12" style="padding: 0px;">                  											
+        							    				<div class="card" style="width: 100%">
+        							    					<div class="card-block">
+        							    					    <div class="row">
+        							    					        <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
+        							    					            <img src="https://api.adorable.io/avatars/120/fake9" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;">
+        							    					        </div>
+        							    					        <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-10">
+        							    					            <div class="row">
+        							    					                <div class="col-xs-12">                           
+        							    					                    <a href="/user/view/`+ user.id +`">
+        							    					                        <h4 style="font-size: 3.0vh;">`+ user.name +`</h4>
+        							    					                    </a>
+        							    					                </div>
+        							    					            </div>
+        							    					        </div>
+        							    					    </div>
+        							    					</div>
+        							    				</div>
+        							    			</div>
+        							    		</div>
+        							    		`;
+        							    	})
+        							    	individualElement += `
+        							    	</div>
+        							    	<button class="btn btn-info" id="allGroupMembersListingUnacceptedToggle`+ houseRequest.id +`" onClick="showUnacceptedHousingRequestMembers(`+ houseRequest.id +`)"><i class='fa fa-users' aria-hidden='true'></i> See other `+ houseRequest.userCount +` members</button>
+		      					    		<button class="btn btn-info" id="hideAllGroupMembersListingUnacceptedToggle`+ houseRequest.id +`" style="display: none" onClick="hideUnacceptedHousingRequestMembers(`+ houseRequest.id +`)"><i class='fa fa-users' aria-hidden='true'></i> Hide other `+ houseRequest.userCount +` members</button>
+        							    	`;
+        			individualElement += "</div></div></div></div></div></div>";
+        			individualElement += `
+      					<div class="row" id="undoAcceptedRequest`+ houseRequest.id +`" style="display: none;">
+			      			<div class="col-xl-1"></div>
+			      			<div class="col-xl-10">
+			      				<div class="alert alert-info" role="alert">
+			      				    You have just accpeted a group for this listing <button class="link" onclick="undoAcceptHouseRequest(`+ houseRequest.id +`, 1, '`+ housingRequestObject.listing.street +`')">Undo?</button>
+			      				</div>
+			      			</div>
+			      		</div>
+			      		<div class="row" id="undoDeniedRequest`+ houseRequest.id +`" style="display: none;">
+			      			<div class="col-xl-1"></div>
+			      			<div class="col-xl-10">
+			      				<div class="alert alert-info" role="alert">
+			      				    You have just denied a group for this listing <button class="link" onclick="undoDeniedHouseRequest(`+ houseRequest.id +`, 1, '`+ housingRequestObject.listing.street +`')">Undo?</button>
+			      				</div>
+			      			</div>
+			      		</div>
+        			`;
+            		listingRequestElements += individualElement;
+
+            	})
+
+            	$("#unacceptedTab").append(listingRequestElements + "</div></div></div></div>")
             })
         })
     }
