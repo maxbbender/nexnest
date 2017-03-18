@@ -1076,6 +1076,9 @@
 		    else if(newtab == 'requestedToursTab'){
 		    	getTourRequestsJSON();
 		    }
+		    else if(newtab == 'scheduledToursTab'){
+		    	getScheduledToursJSON();
+		    }
 		});
 	   	if ($.inArray(secondTab, validSecondTabs) > -1) {	   		
 	   		$(".selected-tab").removeClass('active');
@@ -1096,6 +1099,9 @@
 		    }
 		    else if(secondTab == 'requestedToursTab'){
 		    	getTourRequestsJSON();
+		    }
+		    else if(secondTab == 'scheduledToursTab'){
+		    	getScheduledToursJSON();
 		    }
 		}
 		else{
@@ -2806,6 +2812,136 @@
             	})
 
             	$("#requestedToursTab").append(requestedToursElements + "</div></div>")
+            })
+        })
+    }
+
+    function getScheduledToursJSON() {
+    	requestURL = '/landlord/scheduledTours/JSON'
+    	$("#scheduledToursTab").empty();
+
+    	$.getJSON(requestURL, function(data) {
+    		console.log(data)
+            scheduledTours = data['scheduledTours'];
+            console.log(scheduledTours);
+            $.each(scheduledTours, function(index, scheduledTourObject) {
+            	console.log(scheduledTourObject);
+            	console.log(scheduledTourObject.listing.street);
+
+            var outerDiv =`
+            	<div id="numberOfScheduledTourstourObject.listing.id" style="display: none;">tourObject.tours|length </div>
+		        	<div id="doIShowScheduledDivtourObject.listing.id" style="display: none;">show</div>
+		        	<div class="card" id="scheduledTourListingtourObject.listing.id" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+		                <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
+		                    <div class="row">
+		                    	<div class="col-xl-12">
+		                    		<h3 style="font-size: 3.5vh;" id="requestedToursCounttourObject.listing.id"><strong>
+		                    		`+ scheduledTourObject.listing.street +` (tourObject.tours|length  Tours)</strong></h3>
+		                    		<small style="font-size: 2.5vh;">Lease Period: `+ scheduledTourObject.listing.startDate +` - `+ scheduledTourObject.listing.endDate +`</small>
+		                    	</div>
+		                    </div>			                    
+		                </div>
+		                <div class="card-block">
+		                	<div class="row">
+		                		<div class="col-xl-1"></div>
+		                		<div class="col-xl-10">
+		                			<strong>
+		                				<h2 class="hidden-sm-up" style="font-size: 2.5vh;">Group(s) Touring This Property: </h2>
+		                				<h2 class="hidden-xs-down" style="font-size: 3.5vh;">Group(s) Touring This Property: </h2>
+		                			</strong>
+		                		</div>
+		                	</div>
+            `;
+
+            	scheduledToursElements = outerDiv;
+
+            	$.each(scheduledTourObject.tours, function(index, tour) {
+            		individualElement = `
+            		<div class="row" id="scheduledTour`+ tour.id +`">
+    					<div class="col-xs-0 col-xl-1"></div>
+    					<div class="col-xs-12 col-xl-10" style="padding-left: 10px;">
+	        				<div class="card">
+                    			<div class="card-header">
+                    				<div class="row">
+	                    				<div class="col-xs-12 col-xl-10">
+        	            					<h3 style="font-size: 3.5vh;"><strong>tour.group.name</strong>(`+ tour.userCount +` Members)</h3>
+        	            					Confirmed Date and Time: `+ tour.timeRequested +`
+        	            					<br><br>
+        	            					<div class="row">
+        	            						<div class="col-12 col-md-auto">
+                	            					<div id="cancelTourButton`+ tour.id +`" style="padding-bottom: 5px;">
+                	            						<button class="btn btn-danger" onclick="cancelTour(`+ tour.id +`, tourObject.listing.id, '`+ scheduledTourObject.listing.street +`')">Cancel Tour</button>
+                	            					</div>
+                	            					<div id="cancelTourLoading`+ tour.id +`" style="display: none; padding-bottom: 5px;">
+                	            						<button class="btn btn-danger" style="width: 117.5px;">
+                	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                	            						</button>
+                	            					</div>
+                	            				</div>
+        	            					</div>
+        	            				</div>
+        	            				<div class="col-xs-2 col-xl-2" style="text-align: right;">
+        	            					<a class="btn btn-primary" href="`+ tour.url +`">More Info</a>
+        	            				</div>
+        	            			</div>
+        	            		</div>
+        	            		<div class="card-block">
+                    				<div class="row">
+                    					<div class="col-xs-12">
+				                    		<strong>Tour Status: </strong>
+				                    		Confirmed
+				                    		<br>
+				                    		Please Arrive at the property on `+ tour.timeRequested +` to meet for this tour
+				                    		<br><br>
+				                    		<strong>Group Leader:</strong>
+											<div id="allMembersScheduledTour`+ tour.id +`" style="display: none;">`;
+				                    		$.each(tour.users, function(index, user) {
+            								individualElement += `
+            									<div class="row">
+            										<div class="col-sm-12" style="padding: 0px;">                  											
+        							    				<div class="card" style="width: 100%">
+        							    					<div class="card-block">
+        							    					    <div class="row">
+        							    					        <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
+        							    					            <img src="https://api.adorable.io/avatars/120/fake9" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;">
+        							    					        </div>
+        							    					        <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-10">
+        							    					            <div class="row">
+        							    					                <div class="col-xs-12">                           
+        							    					                    <a href="/user/view/`+ user.id +`">
+        							    					                        <h4 style="font-size: 3.0vh;">`+ user.name +`</h4>
+        							    					                    </a>
+        							    					                </div>
+        							    					            </div>
+        							    					        </div>
+        							    					    </div>
+        							    					</div>
+        							    				</div>
+        							    			</div>
+        							    		</div>
+        							    		`;
+        							    	})
+        							    	individualElement += `
+		      					    		</div></div>
+		      					    		<button class="btn btn-info" id="allMembersScheduledTourToggle`+ tour.id +`" onClick="showScheduledTourMembers(`+ tour.id +`)"><i class='fa fa-users' aria-hidden='true'></i> See other `+ tour.userCount +` members</button>
+		      					    		<button class="btn btn-info" id="hideAllMembersScheduledTourToggle`+ tour.id +`" onClick="hideScheduledTourMembers(`+ tour.id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other `+ tour.userCount +` members</button>	  		
+		      					    	</div>
+		      					    </div>
+		      					</div>
+		      				</div>
+		      			</div>
+		      		<div class="row" id="undoCancelTourDiv`+ tour.id +`" style="display: none;">
+	      			<div class="col-xl-1"></div>
+	      			<div class="col-xl-10">
+	      				<div class="alert alert-info" role="alert">
+	      				    You have just canceled a tour for `+ tour.timeRequested +` <button class="link" onclick="undoCancelTour(`+ tour.id +`, tourObject.listing.id)">Undo?</button>
+	      				</div>
+	      			</div>
+	      		</div>`;
+            		scheduledToursElements += individualElement
+            	})
+
+            	$("#scheduledToursTab").append(scheduledToursElements + "</div></div>")
             })
         })
     }
