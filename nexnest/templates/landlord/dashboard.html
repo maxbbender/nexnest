@@ -1072,7 +1072,10 @@
 		    }
 		    else if(newtab == 'unacceptedTab'){
 		    	getUnAcceptedGroupListingsRequestsJSON();
-		    }		    
+		    }
+		    else if(newtab == 'requestedToursTab'){
+		    	getTourRequestsJSON();
+		    }
 		});
 	   	if ($.inArray(secondTab, validSecondTabs) > -1) {	   		
 	   		$(".selected-tab").removeClass('active');
@@ -1090,6 +1093,9 @@
 		    }
 		    else if(secondTab == 'unacceptedTab'){
 		    	getUnAcceptedGroupListingsRequestsJSON();
+		    }
+		    else if(secondTab == 'requestedToursTab'){
+		    	getTourRequestsJSON();
 		    }
 		}
 		else{
@@ -1112,6 +1118,10 @@
 		else if(newHash == 'requestsTab'){
 			newHash += '-unacceptedTab';
 			getUnAcceptedGroupListingsRequestsJSON();
+		}
+		else if(newHash == 'toursTab'){
+			newHash += '-requestedToursTab';
+			getTourRequestsJSON();
 		}
 	    window.location.hash = newHash;
 	    $('.first-tab').addClass('active');
@@ -2613,6 +2623,189 @@
             	})
 
             	$("#unacceptedTab").append(listingRequestElements + "</div></div></div></div>")
+            })
+        })
+    }
+
+    function getTourRequestsJSON() {
+    	requestURL = '/landlord/requestedTours/JSON'
+    	$("#requestedToursTab").empty();
+
+    	$.getJSON(requestURL, function(data) {
+    		console.log(data)
+            requestedTours = data['requestedTours'];
+            console.log(requestedTours);
+            $.each(requestedTours, function(index, requestedTourObject) {
+            	console.log(requestedTourObject);
+            	console.log(requestedTourObject.listing.street);
+
+            var outerDiv =`
+            	<div id="numberOfRequestedTours1" style="display: none;">2</div>
+                	<div id="doIShowDiv1" style="display: none;">show</div>
+                	<div class="card" id="requestedTourListing1" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+	                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
+		                    <div class="row">
+		                    	<div class="col-xl-12">
+		                    		<h3 style="font-size: 3.5vh;" id="requestedToursCount1"><strong>
+		                    		`+ requestedTourObject.listing.street +` (2 Requests)</strong></h3>
+		                    		<small style="font-size: 2.5vh;">Lease Period: `+ requestedTourObject.listing.startDate +` - `+ requestedTourObject.listing.endDate +`</small>
+		                    	</div>
+		                    </div>			                    
+	                    </div>
+	                    <div class="card-block">
+	                    	<div class="row">
+	                    		<div class="col-xl-1"></div>
+	                    		<div class="col-xl-10">
+	                    			<strong>
+	                    				<h2 class="hidden-sm-up" style="font-size: 2.5vh;">Group(s) Requesting This Tour: </h2>
+	                    				<h2 class="hidden-xs-down" style="font-size: 3.5vh;">Group(s) Requesting This Tour: </h2>
+	                    			</strong>
+	                    		</div>
+	                    	</div>
+            `;
+
+            	requestedToursElements = outerDiv;
+
+            	$.each(requestedTourObject.tours, function(index, tour) {
+            		individualElement = `
+            		<div class="row" id="requestedTour`+ tour.id +`">
+    					<div class="col-xs-0 col-xl-1"></div>
+    					<div class="col-xs-12 col-xl-10"  style="padding-left:  10px;">
+	        				<div class="card">
+                    			<div class="card-header">
+                    				<div class="row">
+	                    				<div class="col-12 col-xl-12">
+        	            					<h3 style="font-size: 3.5vh;"><strong>Group Name </strong>(`+ tour.userCount +` Members)
+        	            					<a class="btn btn-primary hidden-sm-down" href="`+ tour.url +`" style="float: right;">More Info</a></h3>
+        	            				</div>
+        	            			</div>
+        	            			<div class="row">
+        	            				<div class="col-xl-12">
+        	            					Requested Date and Time: `+ tour.timeRequested +`
+        	            				</div>
+        	            			</div>
+        	            			<br>
+        	            			<div class="row">
+        	            				<div class="col-xs-12">
+        	            					<div class="row">`;
+        	            						if(tour.lastRequested == "group"){
+        	            							individualElement += `
+        	            								<div class="col-lg-4 col-centered" style="padding-right: 15px; padding-bottom: 5px; ">
+                    	            					<div id="acceptTourButton`+ tour.id +`">
+                    	            						<button id="acceptTourBtn`+ tour.id +`" class="btn btn-success" style="width: 166.5px;" onclick="acceptTour(`+ tour.id +`, tourObject.listing.id, '`+ requestedTourObject.listing.street +`')">Accept Tour</button>
+                    	            					</div>
+                    	            					<div id="acceptTourLoading`+ tour.id +`" style="display: none;">
+                    	            						<button class="btn btn-success" style="width: 166.5px;">
+                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                    	            						</button>
+                    	            					</div>
+                    	            				</div>						
+                    	            				<div class="col-lg-4 col-centered" style="padding-right: 15px; padding-bottom: 5px;">
+                    	            					<a href="#!" id="tourTimeChangeBtn`+ tour.id +`" class="btn btn-info" data-toggle="modal" data-target="#suggestTimeTourModal" data-tourid="`+ tour.id +`" data-groupid="tour.group.id">Date/Time Change</a>
+                    	            				</div>`;
+        	            						}
+        	            						else{
+        	            							individualElement += `
+        	            								<div class="col-lg-4 col-centered" style="padding-left: 15px; padding-right: 15px; padding-bottom: 5px;">
+        	            									<button class="btn btn-secondary" style="width: 166.5px;" disabled>Waiting For Group</button>
+        	            								</div>
+        	            							`;
+        	            						}
+        	            						individualElement += `
+                	            				<div class="col-lg-4 col-centered" style="padding-right: 15px; padding-bottom: 5px;">
+                	            					<div id="declineTourButton`+ tour.id +`">
+                	            						<button id="declineTourBtn`+ tour.id +`" style="width: 166.5px;" class="btn btn-danger" onclick="declineTour(`+ tour.id +`, tourObject.listing.id, '`+ requestedTourObject.listing.street +`')">Decline Tour</button>
+                	            					</div>
+                	            					<div id="declineTourLoading`+ tour.id +`" style="display: none;">
+                	            						<button class="btn btn-danger" style="width: 166.5px;">
+                	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                	            						</button>
+                	            					</div>
+                	            				</div>
+                	            				<br>
+                	            				<div class="col-sm-12 hidden-md-up" style="padding-left: 15px;">
+                	            					<a class="btn btn-primary" style="width: 166.5px;" href="`+ tour.url +`">More Info</a>
+                	            				</div>
+            	            				</div>
+        	            				</div>	        	                    	            				
+        	            			</div>
+        	            		</div>
+        	            		<div class="card-block">
+                    				<div class="row">
+                    					<div class="col-sm-12">
+				                    		<strong>Tour Status: </strong>
+				                    		<br>`;
+				                    		if(tour.lastRequested == "landlord"){
+        	            						individualElement += `
+				                    			Pending The Group's Decision
+				                    			<br>
+				                    			Waiting for the group leader, tour.group.leader.name to confirm the requested time or suggest a different one`;
+				                    		}
+				                    		else{
+				                    			individualElement += `
+				                    			Pending Your Decision
+				                    			<br>
+				                    			Waiting for the you to confrim the requested time or suggest a different one`;
+				                    		}
+				                    		individualElement += `
+				                    		<br><br>
+				                    		<strong>Group Leader:</strong>
+				                    		<div id="allMembersRequestedTour`+ tour.id +`" style="display: none;">`;
+				                    		$.each(tour.users, function(index, user) {
+            								individualElement += `
+            									<div class="row">
+            										<div class="col-sm-12" style="padding: 0px;">                  											
+        							    				<div class="card" style="width: 100%">
+        							    					<div class="card-block">
+        							    					    <div class="row">
+        							    					        <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
+        							    					            <img src="https://api.adorable.io/avatars/120/fake9" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;">
+        							    					        </div>
+        							    					        <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-10">
+        							    					            <div class="row">
+        							    					                <div class="col-xs-12">                           
+        							    					                    <a href="/user/view/`+ user.id +`">
+        							    					                        <h4 style="font-size: 3.0vh;">`+ user.name +`</h4>
+        							    					                    </a>
+        							    					                </div>
+        							    					            </div>
+        							    					        </div>
+        							    					    </div>
+        							    					</div>
+        							    				</div>
+        							    			</div>
+        							    		</div>
+        							    		`;
+        							    	})
+        							    	individualElement += `
+		      					    		</div></div>
+		      					    		<button class="btn btn-info" id="allMembersRequestedTourToggle`+ tour.id +`" onClick="showRequestedTourMembers(`+ tour.id +`)"><i class='fa fa-users' aria-hidden='true'></i> See other `+ tour.userCount +` members</button>
+		      					    		<button class="btn btn-info" id="hideAllMembersRequestedTourToggle`+ tour.id +`" onClick="hideRequestedTourMembers(`+ tour.id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other `+ tour.userCount +` members</button>	  		
+		      					    	</div>
+		      					    </div>
+		      					</div>
+		      				</div>
+		      			</div>
+		      		<div class="row" id="undoAcceptTourDiv`+ tour.id +`" style="display: none;">
+		      			<div class="col-xl-1"></div>
+		      			<div class="col-xl-10">
+		      				<div class="alert alert-info" role="alert">
+		      				    You have just accepted a tour for `+ tour.timeRequested +` <button class="link" onclick="undoAcceptTour(`+ tour.id +`, tourObject.listing.id)">Undo?</button>
+		      				</div>
+		      			</div>
+		      		</div>
+		      		<div class="row" id="undoDeclineTourDiv`+ tour.id +`" style="display: none;">
+		      			<div class="col-xl-1"></div>
+		      			<div class="col-xl-10">
+		      				<div class="alert alert-info" role="alert">
+		      				    You have just declined a tour for `+ tour.timeRequested +` <button class="link" onclick="undoDeclineTour(`+ tour.id +`, tourObject.listing.id)">Undo?</button>
+		      				</div>
+		      			</div>
+		      		</div>`;
+            		requestedToursElements += individualElement
+            	})
+
+            	$("#requestedToursTab").append(requestedToursElements + "</div></div>")
             })
         })
     }
