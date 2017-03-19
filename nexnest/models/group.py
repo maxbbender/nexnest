@@ -77,6 +77,17 @@ class Group(Base):
         return True
 
     @property
+    def serialize(self):
+        return {
+            'leader': self.leader.shortSerialize(),
+            'id': self.id,
+            'name': self.name,
+            'startDate': self.start_date,
+            'endDate': self.end_date,
+            'url': '/group/view/%d' % self.id
+        }
+
+    @property
     def unAcceptedUsers(self):
         unAcceptedUsers = []
         for groupUser in self.users:

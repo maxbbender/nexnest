@@ -115,6 +115,8 @@ class User(Base):
         return {
             'name': self.name,
             'id': self.id,
+            'profileImageURL': self.profile_image,
+            'url': '/user/view/%d' % self.id
         }
 
     def set_password(self, __password__):

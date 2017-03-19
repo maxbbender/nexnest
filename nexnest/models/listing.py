@@ -172,9 +172,11 @@ class Listing(Base):
 
     def shortSerialize(self):
         return {
+            'id': self.id,
             'street': self.street,
             'startDate': self.start_date.strftime("%B %d, %Y"),
-            'endDate': self.end_date.strftime("%B %d, %Y")
+            'endDate': self.end_date.strftime("%B %d, %Y"),
+            'url': '/listing/view/%d' % self.id
         }
 
     def landLords(self):

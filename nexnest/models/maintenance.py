@@ -1,4 +1,4 @@
- # open | inprogress | completedfrom datetime import datetime as dt
+# open | inprogress | completedfrom datetime import datetime as dt
 from datetime import datetime as dt
 
 from sqlalchemy import event
@@ -15,7 +15,7 @@ from nexnest.models.notification import Notification
 class Maintenance(Base):
     __tablename__ = 'maintenances'
     id = db.Column(db.Integer, primary_key=True)
-    status = db.Column(db.String(10)) # open | inprogress | completed
+    status = db.Column(db.String(10))  # open | inprogress | completed
     request_type = db.Column(db.String(20))
     details = db.Column(db.Text())
     house_id = db.Column(db.Integer, db.ForeignKey('houses.id'))
@@ -49,10 +49,14 @@ class Maintenance(Base):
     @property
     def serialize(self):
         return {
+            'id': self.id,
             'status': self.status,
             'details': self.details,
             'requestType': self.humanRequestType,
             'date': self.date_created.strftime("%B %d, %Y"),
+            'requestedBy': self.user.shortSerialize(),
+            'dateCompleted': self.date_modified.strftime("%B %d, %Y"),
+            'url': '/house/maintenanceRequest/%d/view' % self.id
         }
 
     @property

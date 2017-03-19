@@ -96,7 +96,8 @@ class GroupListing(Base):
             'completed': self.completed,
             'userCount': len(group_users),
             'users': group_users,
-            'url': '/houseRequest/view/%d' % self.id
+            'url': '/houseRequest/view/%d' % self.id,
+            'group': self.group.serialize
         }
 
         if self.firstMessage is not None:
