@@ -2203,14 +2203,14 @@
             	console.log(maintenanceRequestObject.listing.street);
 
             var outerDiv =`
-            <div id="numberOfOpenRequests1" style="display: none;">3</div>
-		    <div id="doIShowOpenRequestsDiv1" style="display: none;">show</div>
-            <div class="card" id="openRequestListing1" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+            <div id="numberOfOpenRequests`+maintenanceRequestObject.listing.id+`" style="display: none;">Number of Requests</div>
+		    <div id="doIShowOpenRequestsDiv`+maintenanceRequestObject.listing.id+`" style="display: none;">show</div>
+            <div class="card" id="openRequestListing`+maintenanceRequestObject.listing.id+`" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
                 <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
                     <div class="row">
                     	<div class="col-xl-12">
-                    		<h3 style="font-size: 3.5vh;" id="openRequestsCount1"><strong>
-                    		`+maintenanceRequestObject.listing.street+` (3 New)</strong></h3>
+                    		<h3 style="font-size: 3.5vh;" id="openRequestsCount`+maintenanceRequestObject.listing.id+`"><strong>
+                    		`+maintenanceRequestObject.listing.street+` (Number of Requests New)</strong></h3>
                     	</div>
                     </div>			                    
                 </div>
@@ -2229,7 +2229,7 @@
 
             	$.each(maintenanceRequestObject.maintenanceRequests, function(index, maintenanceRequest) {
             		individualElement = `
-            		<div class="row" id="openRequest1">
+            		<div class="row" id="openRequest`+maintenanceRequest.id+`">
     					<div class="col-xl-1"></div>
     					<div class="col-xl-10">
 	        				<div class="card">
@@ -2238,7 +2238,7 @@
 	                    				<div class="col-xl-12">
         	            					<h3 style="font-size: 3.0vh;">
             	            					<strong>`+ maintenanceRequest.requestType +`</strong>
-            	            					<a style="float: right;" class="btn btn-primary hidden-sm-down" href="/house/maintenanceRequest/1/view">More Info</a>
+            	            					<a style="float: right;" class="btn btn-primary hidden-sm-down" href="`+ maintenanceRequest.url +`">More Info</a>
         	            					</h3>
         	            					Reported on: `+ maintenanceRequest.date +`
         	            					<br><br>
@@ -2246,34 +2246,34 @@
         	            			</div>
 	            					<div class="row">   
 	            						<div class="col-12 col-md-auto" style="padding-bottom: 5px;padding-right: 15px;">
-        	            					<div id="markInProgressButton1">
-        	            						<button id="inProgressButton1" class="btn btn-warning" onclick="markInProgress(1, 1, '`+maintenanceRequestObject.listing.street+`')">Mark In Progress</button>
+        	            					<div id="markInProgressButton`+maintenanceRequest.id+`">
+        	            						<button id="inProgressButton`+maintenanceRequest.id+`" class="btn btn-warning" onclick="markInProgress(`+maintenanceRequest.id+`, `+maintenanceRequestObject.listing.id+`, '`+maintenanceRequestObject.listing.street+`')">Mark In Progress</button>
         	            					</div>
-        	            					<div id="markInProgressLoading1" style="display: none;">
+        	            					<div id="markInProgressLoading`+maintenanceRequest.id+`" style="display: none;">
         	            						<button class="btn btn-warning" style="width: 152.94px;">
         	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
         	            						</button>
         	            					</div>
         	            				</div>
         	            				<div class="col-12 col-md-auto" style="padding-right: 15px; padding-bottom: 5px;">
-        	            					<div id="markCompletedButton1">
-        	            						<button id="completedButton1" class="btn btn-success" onclick="markCompleted(1, 1, '`+maintenanceRequestObject.listing.street+`')">Mark Completed</button>
+        	            					<div id="markCompletedButton`+maintenanceRequest.id+`">
+        	            						<button id="completedButton`+maintenanceRequest.id+`" class="btn btn-success" onclick="markCompleted(`+maintenanceRequest.id+`, `+maintenanceRequestObject.listing.id+`, '`+maintenanceRequestObject.listing.street+`')">Mark Completed</button>
         	            					</div>
-        	            					<div id="markCompletedLoading1" style="display: none;">
+        	            					<div id="markCompletedLoading`+maintenanceRequest.id+`" style="display: none;">
         	            						<button class="btn btn-success" style="width: 152.33px;">
         	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
         	            						</button>
         	            					</div>				
         	            				</div>
         	            				<div class="col-xs-12" style="padding-left: 0px;">
-        	            					<a class="btn btn-primary hidden-md-up" style="width: 152.94px;" href="/house/maintenanceRequest/1/view">More Info</a>
+        	            					<a class="btn btn-primary hidden-md-up" style="width: 152.94px;" href="`+ maintenanceRequest.url +`">More Info</a>
         	            				</div>
     	            				</div>
         	            		</div>
         	            		<div class="card-block">
                     				<div class="row">
                     					<div class="col-xs-12">
-                    						<strong>Reported by:</strong> Jennifer Gonzales
+                    						<strong>Reported by:</strong> `+ maintenanceRequest.requestedBy.name +`
                     						<br><br>
                     						<strong>Details: </strong>`+ maintenanceRequest.details +`
 		      					    	</div>
@@ -2282,19 +2282,19 @@
 		      				</div>
 		      			</div>
 		      		</div>
-		      		<div class="row" id="undoInProgressDiv1" style="display: none;">
+		      		<div class="row" id="undoInProgressDiv`+maintenanceRequest.id+`" style="display: none;">
 		      			<div class="col-xl-1"></div>
 		      			<div class="col-xl-10">
 		      				<div class="alert alert-info" role="alert">
-		      				    Marked as In Progress <button class="link" onclick="undoMarkInProgress(1, 1, '`+maintenanceRequestObject.listing.street+`')">Undo?</button>
+		      				    Marked as In Progress <button class="link" onclick="undoMarkInProgress(`+maintenanceRequest.id+`, `+maintenanceRequestObject.listing.id+`, '`+maintenanceRequestObject.listing.street+`')">Undo?</button>
 		      				</div>
 		      			</div>
 		      		</div>
-		      		<div class="row" id="undoMarkCompleted1" style="display: none;">
+		      		<div class="row" id="undoMarkCompleted`+maintenanceRequest.id+`" style="display: none;">
 		      			<div class="col-xl-1"></div>
 		      			<div class="col-xl-10">
 		      				<div class="alert alert-info" role="alert">
-		      				    Marked as Completed <button class="link" onclick="undoMarkCompleted(1, 1, '`+maintenanceRequestObject.listing.street+`')">Undo?</button>
+		      				    Marked as Completed <button class="link" onclick="undoMarkCompleted(`+maintenanceRequest.id+`, `+maintenanceRequestObject.listing.id+`, '`+maintenanceRequestObject.listing.street+`')">Undo?</button>
 		      				</div>
 		      			</div>
 		      		</div>`;
@@ -2319,14 +2319,14 @@
             	console.log(maintenanceRequestObject.listing.street);
 
             var outerDiv =`
-            	<div id="numberOfInProgressRequests1" style="display: none;">1</div>
-            	<div id="doIShowInProgressRequestsDiv1" style="display: none;">show</div>
-            	<div class="card" id="inProgressRequestListing1" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+            	<div id="numberOfInProgressRequests`+maintenanceRequestObject.listing.id+`" style="display: none;">Number of Requests</div>
+            	<div id="doIShowInProgressRequestsDiv`+maintenanceRequestObject.listing.id+`" style="display: none;">show</div>
+            	<div class="card" id="inProgressRequestListing`+maintenanceRequestObject.listing.id+`" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
                     <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
 	                    <div class="row">
 	                    	<div class="col-xl-12">
-	                    		<h3 style="font-size: 3.5vh;" id="inProgressRequestsCount1"><strong>
-	                    		 `+maintenanceRequestObject.listing.street+` (1 In Progress)</strong></h3>
+	                    		<h3 style="font-size: 3.5vh;" id="inProgressRequestsCount`+maintenanceRequestObject.listing.id+`"><strong>
+	                    		 `+maintenanceRequestObject.listing.street+` (Number of Requests In Progress)</strong></h3>
 	                    	</div>
 	                    </div>			                    
                     </div>
@@ -2346,7 +2346,7 @@
 
             	$.each(maintenanceRequestObject.maintenanceRequests, function(index, maintenanceRequest) {
             		individualElement = `
-            		<div class="row" id="inProgress1">
+            		<div class="row" id="inProgress`+ maintenanceRequest.id +`">
     					<div class="col-xl-1"></div>
     					<div class="col-xl-10">
 	        				<div class="card">
@@ -2355,7 +2355,7 @@
 	                    				<div class="col-xl-12">
         	            					<h3 style="font-size: 3.0vh;">
             	            					<strong>`+ maintenanceRequest.requestType +` </strong>
-            	            					<a style="float: right;" class="btn btn-primary hidden-sm-down" href="/house/maintenanceRequest/1/view">More Info</a>
+            	            					<a style="float: right;" class="btn btn-primary hidden-sm-down" href="`+ maintenanceRequest.url +`">More Info</a>
         	            					</h3>
         	            				</div>
         	            			</div>
@@ -2367,10 +2367,10 @@
         	            			</div>
 	            					<div class="row">
         	            				<div class="col-12 col-md-auto" style="padding-bottom: 5px;padding-right: 15px;">
-        	            					<div id="inProgressToCompletedButton1">
-        	            						<button class="btn btn-success" onclick="inProgressToCompleted(1, 1, '`+maintenanceRequestObject.listing.street+`')">Mark Completed</button>
+        	            					<div id="inProgressToCompletedButton`+ maintenanceRequest.id +`">
+        	            						<button class="btn btn-success" onclick="inProgressToCompleted(`+ maintenanceRequest.id +`, 1, '`+maintenanceRequestObject.listing.street+`')">Mark Completed</button>
         	            					</div>
-        	            					<div id="inProgressToCompletedLoading1" style="display: none;">
+        	            					<div id="inProgressToCompletedLoading`+ maintenanceRequest.id +`" style="display: none;">
         	            						<button class="btn btn-success" style="width: 152.33px;">
         	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
         	            						</button>
@@ -2379,14 +2379,14 @@
         	            			</div>
     	            				<div class="row hidden-md-up">
     	            					<div>
-    	            						<a class="btn btn-primary" style="width: 153.33px;" href="/house/maintenanceRequest/1/view">More Info</a>
+    	            						<a class="btn btn-primary" style="width: 153.33px;" href="`+ maintenanceRequest.url +`">More Info</a>
     	            					</div>
     	            				</div>
         	            		</div>
         	            		<div class="card-block">
                     				<div class="row">
                     					<div class="col-xs-12">
-                    						<strong>Reported by:</strong> Jonathon Joesph
+                    						<strong>Reported by:</strong> `+ maintenanceRequest.requestedBy.name +`
                     						<br><br>
                     						<strong>Details: </strong>`+ maintenanceRequest.details +`
 		      					    	</div>
@@ -2395,11 +2395,11 @@
 		      				</div>
 		      			</div>
 		      		</div>
-		      		<div class="row" id="undoInProgressToCompleted1" style="display: none;">
+		      		<div class="row" id="undoInProgressToCompleted`+ maintenanceRequest.id +`" style="display: none;">
 		      			<div class="col-xl-1"></div>
 		      			<div class="col-xl-10">
 		      				<div class="alert alert-info" role="alert">
-		      				    Marked as Completed <button class="link" onclick="undoInProgressToCompleted(1, 2, '`+maintenanceRequestObject.listing.street+`')">Undo?</button>
+		      				    Marked as Completed <button class="link" onclick="undoInProgressToCompleted(`+ maintenanceRequest.id +`, `+maintenanceRequestObject.listing.id+`, '`+maintenanceRequestObject.listing.street+`')">Undo?</button>
 		      				</div>
 		      			</div>
 		      		</div>`;
@@ -2424,12 +2424,12 @@
             	console.log(maintenanceRequestObject.listing.street);
 
             var outerDiv =`
-            	<div class="card" id="completedRequestListing1" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+            	<div class="card" id="completedRequestListing`+maintenanceRequestObject.listing.id+`" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
 	                <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
 	                    <div class="row">
 	                    	<div class="col-xl-12">
-	                    		<h3 style="font-size: 3.5vh;" id="completedRequestsCount1"><strong>
-	                    		`+maintenanceRequestObject.listing.street+` (2 Completed)</strong></h3>
+	                    		<h3 style="font-size: 3.5vh;" id="completedRequestsCount`+maintenanceRequestObject.listing.id+`"><strong>
+	                    		`+maintenanceRequestObject.listing.street+` (Number Here Completed)</strong></h3>
 	                    	</div>
 	                    </div>			                    
 	                </div>
@@ -2449,7 +2449,7 @@
 
             	$.each(maintenanceRequestObject.maintenanceRequests, function(index, maintenanceRequest) {
             		individualElement = `
-            		<div class="row" id="completed1">
+            		<div class="row" id="completed`+ maintenanceRequest.id +`">
     					<div class="col-xl-1"></div>
     					<div class="col-xl-10">
 	        				<div class="card">
@@ -2459,18 +2459,18 @@
         	            					<h3 style="font-size: 3.0vh;"><strong>`+ maintenanceRequest.requestType +` </strong></h3>
         	            					Reported on: `+ maintenanceRequest.date +`
         	            					<br><br>
-        	            					Completed on: date modified
+        	            					Completed on: `+ maintenanceRequest.dateCompleted +`
         	            					<br><br>
         	            				</div>
         	            				<div class="col-xl-2" style="text-align: right;">
-        	            					<a class="btn btn-primary" href="/house/maintenanceRequest/1/view"">More Info</a>
+        	            					<a class="btn btn-primary" href="`+ maintenanceRequest.url +`">More Info</a>
         	            				</div>
         	            			</div>
         	            		</div>
         	            		<div class="card-block">
                     				<div class="row">
                     					<div class="col-xs-12">
-                    						<strong>Reported by:</strong> Jonathon Joesph
+                    						<strong>Reported by:</strong> `+ maintenanceRequest.requestedBy.name +`
                     						<br><br>
                     						<strong>Details: </strong>`+ maintenanceRequest.details +`
 		      					    	</div>
@@ -2500,11 +2500,11 @@
             	console.log(housingRequestObject.listing.street);
 
             var outerDiv =`
-            	<div class="card" id="unacceptedRequestsListing4" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+            	<div class="card" id="unacceptedRequestsListing`+ housingRequestObject.listing.id +`" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
 	                <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
 	                    <div class="row">
 	                    	<div class="col-xl-12">
-	                    		<h3 style="font-size: 3.5vh;" id="unacceptedRequestsCount4"><strong>
+	                    		<h3 style="font-size: 3.5vh;" id="unacceptedRequestsCount`+ housingRequestObject.listing.id +`"><strong>
 	                    		`+ housingRequestObject.listing.street +` (1 Requests)</strong></h3>
 	                    		<small>Lease Period: `+ housingRequestObject.listing.startDate +` - `+ housingRequestObject.listing.endDate +`</small>
 	                    	</div>
@@ -2533,7 +2533,7 @@
                     			<div class="card-header">
                     				<div class="row">
 	                    				<div class="col-xl-12">
-        	            					<h3 style="font-size: 3.0vh;"><strong>Group Name</strong>(`+ houseRequest.userCount +` Members)
+        	            					<h3 style="font-size: 3.0vh;"><strong>`+ houseRequest.group.name +`</strong>(`+ houseRequest.userCount+1 +` Members)
         	            					<a class="btn btn-primary hidden-sm-down" style="float: right;" href="`+ houseRequest.url +`">More Info</a></h3>
         	            				</div>
         	            			</div>
@@ -2541,7 +2541,7 @@
 	            					<div class="row">
     	            					<div class="col-12 col-md-auto" style="padding-bottom: 5px;padding-right: 15px;">
         	            					<div id="acceptHouseRequest`+ houseRequest.id +`">
-        	            						<button id="acceptHouseRequestButton`+ houseRequest.id +`" style="width: 131.06px;" class="btn btn-success acceptHouseRequest`+ houseRequest.id +`" onclick="acceptHouseRequest(`+ houseRequest.id +`, 4, '`+ housingRequestObject.listing.street +`')">Accept Group</button>
+        	            						<button id="acceptHouseRequestButton`+ houseRequest.id +`" style="width: 131.06px;" class="btn btn-success acceptHouseRequest`+ houseRequest.id +`" onclick="acceptHouseRequest(`+ houseRequest.id +`, `+ housingRequestObject.listing.id +`, '`+ housingRequestObject.listing.street +`')">Accept Group</button>
         	            					</div>
         	            					<div id="acceptHouseRequestLoading`+ houseRequest.id +`" style="display: none;">
         	            						<button class="btn btn-success" style="width: 131.06px;">
@@ -2551,7 +2551,7 @@
     	            					</div>
     	            					<div class="col-12 col-md-auto" style="padding-right: 15px; padding-bottom: 5px;">
         	            					<div id="denyHouseRequest`+ houseRequest.id +`">
-        	            						<button id="denyHouseRequestButton`+ houseRequest.id +`" style="width: 131.06px;" class="btn btn-danger denyHouseRequest`+ houseRequest.id +`" onclick="denyHouseRequest(`+ houseRequest.id +`, 4, '`+ housingRequestObject.listing.street +`')">Reject Group</button>
+        	            						<button id="denyHouseRequestButton`+ houseRequest.id +`" style="width: 131.06px;" class="btn btn-danger denyHouseRequest`+ houseRequest.id +`" onclick="denyHouseRequest(`+ houseRequest.id +`, `+ housingRequestObject.listing.id +`, '`+ housingRequestObject.listing.street +`')">Reject Group</button>
         	            					</div>
         	            					<div id="denyHouseRequestLoading`+ houseRequest.id +`" style="display: none;">
         	            						<button class="btn btn-danger" style="width: 131.06px;">
@@ -2572,6 +2572,28 @@
                     						`+ houseRequest.message +`
                     						<br><br>
                     						<strong>Group Leader: </strong>
+                    						<div class="row">
+        										<div class="col-sm-12" style="padding: 0px;">                  											
+    							    				<div class="card" style="width: 100%">
+    							    					<div class="card-block">
+    							    					    <div class="row">
+    							    					        <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
+    							    					            <img src="`+ houseRequest.group.leader.profileImageURL +`" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;">
+    							    					        </div>
+    							    					        <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-10">
+    							    					            <div class="row">
+    							    					                <div class="col-xs-12">                           
+    							    					                    <a href="`+ houseRequest.group.leader.url +`">
+    							    					                        <h4 style="font-size: 3.0vh;">`+ houseRequest.group.leader.name +`</h4>
+    							    					                    </a>
+    							    					                </div>
+    							    					            </div>
+    							    					        </div>
+    							    					    </div>
+    							    					</div>
+    							    				</div>
+    							    			</div>
+    							    		</div>
                     						<div id="allGroupMembersListingUnaccepted`+ houseRequest.id +`" style="display:none">
             								`;	
             								$.each(houseRequest.users, function(index, user) {
@@ -2582,12 +2604,12 @@
         							    					<div class="card-block">
         							    					    <div class="row">
         							    					        <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
-        							    					            <img src="https://api.adorable.io/avatars/120/fake9" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;">
+        							    					            <img src="`+ user.profileImageURL +`" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;">
         							    					        </div>
         							    					        <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-10">
         							    					            <div class="row">
         							    					                <div class="col-xs-12">                           
-        							    					                    <a href="/user/view/`+ user.id +`">
+        							    					                    <a href="`+ user.url +`">
         							    					                        <h4 style="font-size: 3.0vh;">`+ user.name +`</h4>
         							    					                    </a>
         							    					                </div>
@@ -2611,7 +2633,7 @@
 			      			<div class="col-xl-1"></div>
 			      			<div class="col-xl-10">
 			      				<div class="alert alert-info" role="alert">
-			      				    You have just accpeted a group for this listing <button class="link" onclick="undoAcceptHouseRequest(`+ houseRequest.id +`, 1, '`+ housingRequestObject.listing.street +`')">Undo?</button>
+			      				    You have just accpeted a group for this listing <button class="link" onclick="undoAcceptHouseRequest(`+ houseRequest.id +`, `+ housingRequestObject.listing.id +`, '`+ housingRequestObject.listing.street +`')">Undo?</button>
 			      				</div>
 			      			</div>
 			      		</div>
@@ -2619,7 +2641,7 @@
 			      			<div class="col-xl-1"></div>
 			      			<div class="col-xl-10">
 			      				<div class="alert alert-info" role="alert">
-			      				    You have just denied a group for this listing <button class="link" onclick="undoDeniedHouseRequest(`+ houseRequest.id +`, 1, '`+ housingRequestObject.listing.street +`')">Undo?</button>
+			      				    You have just denied a group for this listing <button class="link" onclick="undoDeniedHouseRequest(`+ houseRequest.id +`, `+ housingRequestObject.listing.id +`, '`+ housingRequestObject.listing.street +`')">Undo?</button>
 			      				</div>
 			      			</div>
 			      		</div>
@@ -2646,13 +2668,13 @@
             	console.log(requestedTourObject.listing.street);
 
             var outerDiv =`
-            	<div id="numberOfRequestedTours1" style="display: none;">2</div>
-                	<div id="doIShowDiv1" style="display: none;">show</div>
-                	<div class="card" id="requestedTourListing1" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+            	<div id="numberOfRequestedTours`+ requestedTourObject.listing.id +`" style="display: none;">Number of Requested Tours</div>
+                	<div id="doIShowDiv`+ requestedTourObject.listing.id +`" style="display: none;">show</div>
+                	<div class="card" id="requestedTourListing`+ requestedTourObject.listing.id +`" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
 	                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
 		                    <div class="row">
 		                    	<div class="col-xl-12">
-		                    		<h3 style="font-size: 3.5vh;" id="requestedToursCount1"><strong>
+		                    		<h3 style="font-size: 3.5vh;" id="requestedToursCount`+ requestedTourObject.listing.id +`"><strong>
 		                    		`+ requestedTourObject.listing.street +` (2 Requests)</strong></h3>
 		                    		<small style="font-size: 2.5vh;">Lease Period: `+ requestedTourObject.listing.startDate +` - `+ requestedTourObject.listing.endDate +`</small>
 		                    	</div>
@@ -2698,7 +2720,7 @@
         	            							individualElement += `
         	            								<div class="col-lg-4 col-centered" style="padding-right: 15px; padding-bottom: 5px; ">
                     	            					<div id="acceptTourButton`+ tour.id +`">
-                    	            						<button id="acceptTourBtn`+ tour.id +`" class="btn btn-success" style="width: 166.5px;" onclick="acceptTour(`+ tour.id +`, tourObject.listing.id, '`+ requestedTourObject.listing.street +`')">Accept Tour</button>
+                    	            						<button id="acceptTourBtn`+ tour.id +`" class="btn btn-success" style="width: 166.5px;" onclick="acceptTour(`+ tour.id +`, `+ requestedTourObject.listing.id +`, '`+ requestedTourObject.listing.street +`')">Accept Tour</button>
                     	            					</div>
                     	            					<div id="acceptTourLoading`+ tour.id +`" style="display: none;">
                     	            						<button class="btn btn-success" style="width: 166.5px;">
@@ -2720,7 +2742,7 @@
         	            						individualElement += `
                 	            				<div class="col-lg-4 col-centered" style="padding-right: 15px; padding-bottom: 5px;">
                 	            					<div id="declineTourButton`+ tour.id +`">
-                	            						<button id="declineTourBtn`+ tour.id +`" style="width: 166.5px;" class="btn btn-danger" onclick="declineTour(`+ tour.id +`, tourObject.listing.id, '`+ requestedTourObject.listing.street +`')">Decline Tour</button>
+                	            						<button id="declineTourBtn`+ tour.id +`" style="width: 166.5px;" class="btn btn-danger" onclick="declineTour(`+ tour.id +`, `+ requestedTourObject.listing.id +`, '`+ requestedTourObject.listing.street +`')">Decline Tour</button>
                 	            					</div>
                 	            					<div id="declineTourLoading`+ tour.id +`" style="display: none;">
                 	            						<button class="btn btn-danger" style="width: 166.5px;">
@@ -2765,12 +2787,12 @@
         							    					<div class="card-block">
         							    					    <div class="row">
         							    					        <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
-        							    					            <img src="https://api.adorable.io/avatars/120/fake9" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;">
+        							    					            <img src="`+ user.profileImageURL +`" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;">
         							    					        </div>
         							    					        <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-10">
         							    					            <div class="row">
         							    					                <div class="col-xs-12">                           
-        							    					                    <a href="/user/view/`+ user.id +`">
+        							    					                    <a href="`+ user.url +`">
         							    					                        <h4 style="font-size: 3.0vh;">`+ user.name +`</h4>
         							    					                    </a>
         							    					                </div>
@@ -2796,7 +2818,7 @@
 		      			<div class="col-xl-1"></div>
 		      			<div class="col-xl-10">
 		      				<div class="alert alert-info" role="alert">
-		      				    You have just accepted a tour for `+ tour.timeRequested +` <button class="link" onclick="undoAcceptTour(`+ tour.id +`, tourObject.listing.id)">Undo?</button>
+		      				    You have just accepted a tour for `+ tour.timeRequested +` <button class="link" onclick="undoAcceptTour(`+ tour.id +`, `+ requestedTourObject.listing.id +`)">Undo?</button>
 		      				</div>
 		      			</div>
 		      		</div>
@@ -2804,7 +2826,7 @@
 		      			<div class="col-xl-1"></div>
 		      			<div class="col-xl-10">
 		      				<div class="alert alert-info" role="alert">
-		      				    You have just declined a tour for `+ tour.timeRequested +` <button class="link" onclick="undoDeclineTour(`+ tour.id +`, tourObject.listing.id)">Undo?</button>
+		      				    You have just declined a tour for `+ tour.timeRequested +` <button class="link" onclick="undoDeclineTour(`+ tour.id +`, `+ requestedTourObject.listing.id +`)">Undo?</button>
 		      				</div>
 		      			</div>
 		      		</div>`;
