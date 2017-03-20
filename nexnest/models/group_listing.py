@@ -86,18 +86,25 @@ class GroupListing(Base):
 
     @property
     def serialize(self):
-        group_users = []
-        for user in self.group.acceptedUsers:
-            group_users.append(user.shortSerialize)
+        group = self.group.serialize
+
+        for user in group['users']:
+            # Find the security deposit record
+            for deposit in self.securityDeposits:
+                if deposit.user_id == user['id']:
+                    if deposit.completed:
+                        user['securityDepositPaid'] = True
+                    else:
+                        user['securityDepositPaid'] = False
+                    break
 
         groupListing = {
             'id': self.id,
             'accepted': self.accepted,
             'completed': self.completed,
-            'userCount': len(group_users),
-            'users': group_users,
             'url': '/houseRequest/view/%d' % self.id,
-            'group': self.group.serialize
+            'group': group,
+            'leasesCollected': self.all_leases_submitted
         }
 
         if self.firstMessage is not None:
