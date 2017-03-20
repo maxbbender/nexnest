@@ -225,14 +225,6 @@ class Landlord(Base):
                 if not groupListing.accepted:
                     groupListingDict = groupListing.serialize
 
-                    securityDeposit = session.query(SecurityDeposit) \
-                        .filter_by(
-                        group_listing_id=int(groupListingDict['id']),
-                        user_id=int(groupListingDict['group']['leader']['id'])) \
-                        .first()
-
-                    groupListingDict['group']['leader']['securityDepositPaid'] = securityDeposit.completed
-
                     numSecurityDepositsPaid = session.query(SecurityDeposit) \
                         .filter_by(
                         group_listing_id=int(groupListingDict['id']),
