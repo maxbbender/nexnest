@@ -109,8 +109,9 @@ class User(Base):
         self.active = True
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<User %r | %s>' % (self.username, self.name)
 
+    @property
     def shortSerialize(self):
         return {
             'name': self.name,

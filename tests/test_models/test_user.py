@@ -17,7 +17,7 @@ class TestUser(unittest.TestCase):
         dropAllRows()
 
     def testShortSerialize(self):
-        serializedDict = self.user.shortSerialize()
+        serializedDict = self.user.shortSerialize
 
         self.assertEqual(serializedDict['name'], self.user.name)
         self.assertEqual(serializedDict['id'], self.user.id)

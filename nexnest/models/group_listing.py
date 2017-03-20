@@ -88,7 +88,7 @@ class GroupListing(Base):
     def serialize(self):
         group_users = []
         for user in self.group.acceptedUsers:
-            group_users.append(user.shortSerialize())
+            group_users.append(user.shortSerialize)
 
         groupListing = {
             'id': self.id,

@@ -50,7 +50,7 @@ class Tour(Base):
     def serialize(self):
         group_users = []
         for user in self.group.acceptedUsers:
-            group_users.append(user.shortSerialize())
+            group_users.append(user.shortSerialize)
 
         tour = {
             'id': self.id,
@@ -58,9 +58,7 @@ class Tour(Base):
             'tourConfirmed': self.tour_confirmed,
             'url': '/tour/view/%d' % self.id,
             'timeRequested': self.time_requested.strftime("%B %d, %Y %I:%M %p"),
-            'leaderID': self.group.leader_id,
-            'users': group_users,
-            'userCount': len(group_users)
+            'group': self.group.serialize
         }
 
         return tour

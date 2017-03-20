@@ -54,7 +54,7 @@ class Maintenance(Base):
             'details': self.details,
             'requestType': self.humanRequestType,
             'date': self.date_created.strftime("%B %d, %Y"),
-            'requestedBy': self.user.shortSerialize(),
+            'requestedBy': self.user.shortSerialize,
             'dateCompleted': self.date_modified.strftime("%B %d, %Y"),
             'url': '/house/maintenanceRequest/%d/view' % self.id
         }

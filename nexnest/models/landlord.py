@@ -52,7 +52,7 @@ class Landlord(Base):
 
         for listing in self.getListings():
             if listing.hasTours:
-                requestedToursObject = {'listing': listing.shortSerialize()}
+                requestedToursObject = {'listing': listing.shortSerialize}
 
                 tourList = []
 
@@ -64,9 +64,9 @@ class Landlord(Base):
                         if not tour.tour_confirmed:
                             tourList.append(tour.serialize())
 
-                requestedToursObject['tours'] = tourList
-
                 if len(tourList) > 0:
+                    requestedToursObject['tours'] = tourList
+                    requestedToursObject['tourCount'] = len(tourList)
                     requestedTours.append(requestedToursObject)
 
         return requestedTours
@@ -76,7 +76,7 @@ class Landlord(Base):
 
         for listing in self.getListings():
             if listing.hasTours:
-                scheduledToursObject = {'listing': listing.shortSerialize()}
+                scheduledToursObject = {'listing': listing.shortSerialize}
 
                 tourList = []
 
@@ -88,9 +88,9 @@ class Landlord(Base):
                         if tour.tour_confirmed:
                             tourList.append(tour.serialize())
 
-                scheduledToursObject['tours'] = tourList
-
                 if len(tourList) > 0:
+                    scheduledToursObject['tours'] = tourList
+                    scheduledToursObject['tourCount'] = len(tourList)
                     scheduledTours.append(scheduledToursObject)
 
         return scheduledTours
@@ -216,7 +216,7 @@ class Landlord(Base):
             if len(listing.groups) == 0:
                 continue
 
-            groupListingObject = {'listing': listing.shortSerialize()}
+            groupListingObject = {'listing': listing.shortSerialize}
             groupListings = []
 
             for groupListing in listing.groups:
@@ -225,6 +225,7 @@ class Landlord(Base):
 
             if len(groupListings) > 0:
                 groupListingObject['groupListings'] = groupListings
+                groupListingObject['requestCount'] = len(groupListings)
                 unAcceptedGroupListings.append(groupListingObject)
 
         return unAcceptedGroupListings
@@ -236,7 +237,7 @@ class Landlord(Base):
             if len(listing.groups) == 0:
                 continue
 
-            groupListingObject = {'listing': listing.shortSerialize()}
+            groupListingObject = {'listing': listing.shortSerialize}
             groupListings = []
 
             for groupListing in listing.groups:
@@ -245,6 +246,7 @@ class Landlord(Base):
 
             if len(groupListings) > 0:
                 groupListingObject['groupListings'] = groupListings
+                groupListingObject['requestCount'] = len(groupListings)
                 acceptedGroupListings.append(groupListingObject)
 
         return acceptedGroupListings
@@ -261,7 +263,7 @@ class Landlord(Base):
             if len(house.maintenanceRequests) == 0:
                 continue
 
-            maintenanceObject = {'listing': listing.shortSerialize()}
+            maintenanceObject = {'listing': listing.shortSerialize}
             maintenanceList = []
 
             for maintenanceRequest in house.maintenanceRequests:
@@ -270,6 +272,7 @@ class Landlord(Base):
 
             if len(maintenanceList) > 0:
                 maintenanceObject['maintenanceRequests'] = maintenanceList
+                maintenanceObject['requestCount'] = len(maintenanceList)
                 openMaintenance.append(maintenanceObject)
 
         return openMaintenance
@@ -286,7 +289,7 @@ class Landlord(Base):
             if len(house.maintenanceRequests) == 0:
                 continue
 
-            maintenanceObject = {'listing': listing.shortSerialize()}
+            maintenanceObject = {'listing': listing.shortSerialize}
             maintenanceList = []
 
             for maintenanceRequest in house.maintenanceRequests:
@@ -295,6 +298,7 @@ class Landlord(Base):
 
             if len(maintenanceList) > 0:
                 maintenanceObject['maintenanceRequests'] = maintenanceList
+                maintenanceObject['requestCount'] = len(maintenanceList)
                 inProgressMaintenance.append(maintenanceObject)
 
         return inProgressMaintenance
@@ -311,7 +315,7 @@ class Landlord(Base):
             if len(house.maintenanceRequests) == 0:
                 continue
 
-            maintenanceObject = {'listing': listing.shortSerialize()}
+            maintenanceObject = {'listing': listing.shortSerialize}
             maintenanceList = []
 
             for maintenanceRequest in house.maintenanceRequests:
@@ -320,6 +324,7 @@ class Landlord(Base):
 
             if len(maintenanceList) > 0:
                 maintenanceObject['maintenanceRequests'] = maintenanceList
+                maintenanceObject['requestCount'] = len(maintenanceList)
                 completedMaintenance.append(maintenanceObject)
 
         return completedMaintenance

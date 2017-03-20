@@ -170,6 +170,7 @@ class Listing(Base):
     def __repr__(self):
         return '<Listing %r>' % self.id
 
+    @property
     def shortSerialize(self):
         return {
             'id': self.id,
