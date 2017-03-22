@@ -78,7 +78,7 @@
 						    	                			<strong style="padding-right: 5px; font-size: 3.0vh;">Application: </strong>
 						    	                		</div>
 						    	                		<div class="col-xs-2 col-xl-1">
-						    	                			<button type="button" id="confirmed" class="btn btn-success btn-circle"><i class="fa fa-check" aria-hidden="true"></i></button>
+						    	                			<button type="button" id="confirmed" class="btn btn-success btn-circle" style="pointer-events: none;"><i class="fa fa-check" aria-hidden="true"></i></button>
 						    	                		</div>
 						    	                	</div>
 						    	                	<hr>
@@ -88,15 +88,23 @@
                                                     		<strong style="padding-right: 5px; font-size: 3.0vh;">Leases Signed: </strong>
                                                     	</div>
                                                     	<div class="col-xs-2 col-xl-1">
-                                                    		{% if housingRequest.all_leases_submitted %}
-							                    				<button id="undoMarkAllCollected{{housingRequest.id}}" type="button" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" onclick="undoMarkLeasesCollected({{housingRequest.id}})"><i class="fa fa-check" aria-hidden="true"></i></button>
-							                    				<button type="button" id="undoMarkAllCollectedLoading{{housingRequest.id}}" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
-							                    				<button type="button" id="undoMarkAllUncollected{{housingRequest.id}}" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" style="display: none;" onclick="undoMarkLeasesUncollected({{housingRequest.id}})"><i class="fa fa-times" aria-hidden="true"></i></button>
-							                    			{% else %}
-							                    				<button id="markAllCollected{{housingRequest.id}}" type="button" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" onclick="markLeasesCollected({{housingRequest.id}})"><i class="fa fa-times" aria-hidden="true"></i></button>
-							                    				<button type="button" id="markAllCollectedLoading{{housingRequest.id}}" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
-							                    				<button type="button" id="markAllUncollected{{housingRequest.id}}" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" style="display: none;" onclick="markLeasesUncollected({{housingRequest.id}})"><i class="fa fa-check" aria-hidden="true"></i></button>
-							                    			{% endif %}
+                                                            {% if current_user in landlords %}
+                                                        		{% if housingRequest.all_leases_submitted %}
+    							                    				<button id="undoMarkAllCollected{{housingRequest.id}}" type="button" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" onclick="undoMarkLeasesCollected({{housingRequest.id}})"><i class="fa fa-check" aria-hidden="true"></i></button>
+    							                    				<button type="button" id="undoMarkAllCollectedLoading{{housingRequest.id}}" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+    							                    				<button type="button" id="undoMarkAllUncollected{{housingRequest.id}}" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" style="display: none;" onclick="undoMarkLeasesUncollected({{housingRequest.id}})"><i class="fa fa-times" aria-hidden="true"></i></button>
+    							                    			{% else %}
+    							                    				<button id="markAllCollected{{housingRequest.id}}" type="button" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" onclick="markLeasesCollected({{housingRequest.id}})"><i class="fa fa-times" aria-hidden="true"></i></button>
+    							                    				<button type="button" id="markAllCollectedLoading{{housingRequest.id}}" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+    							                    				<button type="button" id="markAllUncollected{{housingRequest.id}}" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" style="display: none;" onclick="markLeasesUncollected({{housingRequest.id}})"><i class="fa fa-check" aria-hidden="true"></i></button>
+    							                    			{% endif %}
+                                                            {% else %}
+                                                                {% if housingRequest.all_leases_submitted %}
+                                                                    <button type="button" class="btn btn-success btn-circle" style="pointer-events: none;"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                                                {% else %}
+                                                                    <button type="button" class="btn btn-danger btn-circle" style="pointer-events: none;"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                                                {% endif %}
+                                                            {% endif %}
                                                     	</div>
                                                     </div>
                                                     <hr>
