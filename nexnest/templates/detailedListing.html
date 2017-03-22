@@ -5,7 +5,7 @@
 		<div class="col-xs-12 col-md-8 col-lg-8" style="padding-left: 40px;">
 			<div class="row">
 				{% if pictures|length > 0 %}
-					<a class="hidden-xs-down test-popup-link" href="{{pictures[0]}}">
+					<a class="hidden-xs-down test-popup-link" href="{{pictures[0]}}" style="width: 100%;">
 						<img src="{{pictures[0]}}" style="height: 40vh; width: 90%; margin-left: 5%;">
 					</a>
 					<a class="hidden-sm-up test-popup-link" href="{{pictures[0]}}">
@@ -26,19 +26,22 @@
 							    <div class="handle">
 							      <div class="mousearea"></div>
 							    </div>
-							  </div>
-
-							  <div class="frame" id="basic">
-							    <ul class="clearfix">
-							      	{% for picture in pictures %}
-							      		<li>
-											<a href="{{picture}}" data-group="1" class="galleryItem">
-												<img src="{{picture}}" style="width: 100%;">
-											</a>
-										</li>
-									{% endfor %}
-							    </ul>
-							  </div>
+							</div>
+							<div>
+								<div class="frame" id="basic">								
+								  	<ul class="clearfix">
+								      	{% for picture in pictures %}
+								      		<li>
+												<a href="{{picture}}" data-group="1" class="galleryItem">
+													<img src="{{picture}}" style="width: 100%;">
+												</a>
+											</li>
+										{% endfor %}
+								    </ul>
+								</div>
+								<i class="prevPage fa fa-5x fa-angle-left" aria-hidden="true" style="position: absolute; top: 15%; left: -2.5%"></i>
+								<i class="nextPage fa fa-5x fa-angle-right" aria-hidden="true" style="position: absolute; top: 15%; left: 100%"></i>
+							</div>
 						</div>
 					</div>
 				</div>

@@ -1023,6 +1023,18 @@
 {% endblock %}
 {% block scripts %}
 <script>
+	//populate all the divs on load
+	$( document ).ready(function() {
+		getOpenMaintenanceRequestsJSON();
+    	getInProgressMaintenanceRequestsJSON();
+    	getCompletedMaintenanceRequestsJSON();
+    	getUnAcceptedGroupListingsRequestsJSON();
+    	getAcceptedGroupListingsRequestsJSON();
+    	getTourRequestsJSON();
+    	getScheduledToursJSON();
+	});
+
+	//Code for navigating tabs
 	var validMainTabs = ["occupiedListingsTab", "allListingsTab", "toursTab", "requestsTab", "maintenanceTab", "paymentTab", "checkoutTab"];
 	var validSecondTabs = ["currentlyOccupiedTab", "willBeOccupiedTab", "scheduledToursTab", "requestedToursTab", "unacceptedTab", "acceptedTab", 
 	"newMaintenanceTab", "inProgressMaintenanceTab", "completedMaintenanceTab"];
@@ -1060,55 +1072,12 @@
 			var currentHash = window.location.hash;
 			currentHash = currentHash.split('-')[0];
 		    window.location.hash = currentHash+"-"+newtab;
-		    //reload the content for the tabs
-		    if(newtab == 'newMaintenanceTab'){
-		    	getOpenMaintenanceRequestsJSON();
-		    }
-		    else if(newtab == 'inProgressMaintenanceTab'){
-		    	getInProgressMaintenanceRequestsJSON();
-		    }
-		    else if(newtab == 'completedMaintenanceTab'){
-		    	getCompletedMaintenanceRequestsJSON();
-		    }
-		    else if(newtab == 'unacceptedTab'){
-		    	getUnAcceptedGroupListingsRequestsJSON();
-		    }
-		    else if(newtab == 'acceptedTab'){
-		    	getAcceptedGroupListingsRequestsJSON();
-		    }
-		    else if(newtab == 'requestedToursTab'){
-		    	getTourRequestsJSON();
-		    }
-		    else if(newtab == 'scheduledToursTab'){
-		    	getScheduledToursJSON();
-		    }
+		    
 		});
 	   	if ($.inArray(secondTab, validSecondTabs) > -1) {	   		
 	   		$(".selected-tab").removeClass('active');
 	   		$("#"+secondTab+'2').addClass('active');
-			$("#"+secondTab).addClass('active');
-			//Call the function to populate the div with content from json
-			if(secondTab == "newMaintenanceTab"){
-				getOpenMaintenanceRequestsJSON();
-			}
-			else if(secondTab == 'inProgressMaintenanceTab'){
-		    	getInProgressMaintenanceRequestsJSON();
-		    }
-		    else if(secondTab == 'completedMaintenanceTab'){
-		    	getCompletedMaintenanceRequestsJSON();
-		    }
-		    else if(secondTab == 'unacceptedTab'){
-		    	getUnAcceptedGroupListingsRequestsJSON();
-		    }
-		    else if(secondTab == 'acceptedTab'){
-		    	getAcceptedGroupListingsRequestsJSON();
-		    }
-		    else if(secondTab == 'requestedToursTab'){
-		    	getTourRequestsJSON();
-		    }
-		    else if(secondTab == 'scheduledToursTab'){
-		    	getScheduledToursJSON();
-		    }
+			$("#"+secondTab).addClass('active');			
 		}
 		else{
 			$('.first-tab').addClass('active');
@@ -1121,20 +1090,7 @@
 	$(".left-panel").click(function () {
 		var newHash = this.id;
 		newHash = newHash.slice(0, -1);
-		//ensure we default to the first tab if it has one
-		//and reload the content of the first tab
-		if(newHash == 'maintenanceTab'){
-			newHash += '-newMaintenanceTab';
-			getOpenMaintenanceRequestsJSON();
-		}
-		else if(newHash == 'requestsTab'){
-			newHash += '-unacceptedTab';
-			getUnAcceptedGroupListingsRequestsJSON();
-		}
-		else if(newHash == 'toursTab'){
-			newHash += '-requestedToursTab';
-			getTourRequestsJSON();
-		}
+		//ensure we default to the first tab if it has one		
 	    window.location.hash = newHash;
 	    $('.first-tab').addClass('active');
 	});
@@ -1254,7 +1210,7 @@
         $("#acceptTourButton"+id).hide();
         $("#acceptTourLoading"+id).show();
         $("#declineTourBtn"+id).addClass("disabled");
-        $("#tourTimeChangeBtn"+id).addClass("disabled"); 
+        $("#tourTimeChangeBtn"+id).addClass("disabled");       
 
         // Load for a random amount of time       
         setTimeout(function () {
@@ -1271,7 +1227,8 @@
             results = data['results'];
             // alert(data['results'].success);
             if (results.success == true){ 
-                //alert("Tour accepted now we need to move this element to 'Scheduled Tours'... make sure to make the button think toO!");
+                //refresh scheduled tours tab
+                getScheduledToursJSON();
             } else {
                 alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
@@ -1493,7 +1450,7 @@
 		// Lets simulate loading
         $("#markInProgressButton"+id).hide();
         $("#markInProgressLoading"+id).show();
-        $("#completedButton"+id).addClass("disabled");
+        $("#completedButton"+id).addClass("disabled");        
 
         //  After random time show undo bar
         setTimeout(function () {
@@ -1511,6 +1468,8 @@
         $.getJSON(requestURL, function(data) {
             results = data['results'];
             if (results.success == true){ 
+            	//refresh the listings on inprogress tab
+        		getInProgressMaintenanceRequestsJSON();
             } else {
                 alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
@@ -1551,7 +1510,8 @@
         requestURL = '/house/maintenanceRequest/' + id + '/undoInProgress/ajax/open';
         $.getJSON(requestURL, function(data) {
             results = data['results'];
-            if (results.success == true){ 
+            if (results.success == true){
+            	getInProgressMaintenanceRequestsJSON();
             } else {
                 alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
@@ -1574,6 +1534,8 @@
         $("#markCompletedButton"+id).hide();
         $("#markCompletedLoading"+id).show();
         $("#inProgressButton"+id).addClass("disabled");
+        
+
         setTimeout(function () {
         	$("#openRequest"+id).fadeOut(300);
         	$("#undoMarkCompleted"+id).show();
@@ -1585,6 +1547,8 @@
         $.getJSON(requestURL, function(data) {
             results = data['results'];
             if (results.success == true){ 
+            	//reresh completed tab
+        		getCompletedMaintenanceRequestsJSON();
             } else {
                 alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
@@ -1625,6 +1589,7 @@
         $.getJSON(requestURL, function(data) {
             results = data['results'];
             if (results.success == true){ 
+            	getCompletedMaintenanceRequestsJSON();
             } else {
                 alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
@@ -1646,6 +1611,7 @@
 		var count = parseFloat($("#numberOfInProgressRequests"+surroundingID).html()) || 0;		
         $("#inProgressToCompletedButton"+id).hide();
         $("#inProgressToCompletedLoading"+id).show();
+
         setTimeout(function () {
         	$("#inProgress"+id).fadeOut(300);
         	$("#undoInProgressToCompleted"+id).show();
@@ -1657,7 +1623,9 @@
         requestURL = '/house/maintenanceRequest/' + id + '/completed/ajax';
         $.getJSON(requestURL, function(data) {
             results = data['results'];
-            if (results.success == true){ 
+            if (results.success == true){
+            	//refresh completed tab
+            	getCompletedMaintenanceRequestsJSON(); 
             } else {
                 alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
@@ -1697,6 +1665,7 @@
         $.getJSON(requestURL, function(data) {
             results = data['results'];
             if (results.success == true){ 
+            	getCompletedMaintenanceRequestsJSON();
             } else {
                 alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
@@ -1719,7 +1688,8 @@
     	$("#acceptHouseRequest"+id).hide();
         $("#acceptHouseRequestLoading"+id).show();
         $(".denyHouseRequest"+surroundingID).addClass("disabled");
-        $(".acceptHouseRequest"+surroundingID).addClass('disabled');
+        $(".acceptHouseRequest"+surroundingID).addClass('disabled');        
+
         setTimeout(function () {
         	$("#unAcceptedRequest"+id).fadeOut(300);
         	$("#undoAcceptedRequest"+id).show();
@@ -1731,7 +1701,9 @@
         requestURL = '/houseRequest/' + id + '/accept/ajax';
         $.getJSON(requestURL, function(data) {
             results = data['results'];
-            if (results.success == true){ 
+            if (results.success == true){
+            	//refresh accepted tab
+            	getAcceptedGroupListingsRequestsJSON(); 
             } else {
                 alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
@@ -1773,6 +1745,7 @@
         $.getJSON(requestURL, function(data) {
             results = data['results'];
             if (results.success == true){ 
+            	getAcceptedGroupListingsRequestsJSON();
             } else {
                 alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
@@ -2200,13 +2173,19 @@
     	$("#newMaintenanceTab").empty();
 
     	$.getJSON(requestURL, function(data) {
-    		console.log(data)
+    		//console.log(data)
             openMaintenanceRequests = data['openMaintenanceRequests'];
+            if((openMaintenanceRequests == "") || (openMaintenanceRequests.length == 0)){
+            	var noOpenMaintenanceRequests = `<div class="alert alert-info" role="alert">
+		            						<strong>No New Maintenance Requests for any of your listings</strong>
+		            					</div>`;
+            	$("#newMaintenanceTab").append(noOpenMaintenanceRequests);
+            }
             // alert(openMaintenanceRequests)
-            console.log(openMaintenanceRequests);
+            //console.log(openMaintenanceRequests);
             $.each(openMaintenanceRequests, function(index, maintenanceRequestObject) {
-            	console.log(maintenanceRequestObject);
-            	console.log(maintenanceRequestObject.listing.street);
+            	//console.log(maintenanceRequestObject);
+            	//console.log(maintenanceRequestObject.listing.street);
 
             var outerDiv =`
             <div id="numberOfOpenRequests`+maintenanceRequestObject.listing.id+`" style="display: none;">`+maintenanceRequestObject.requestCount+`</div>
@@ -2306,8 +2285,10 @@
 		      		</div>`;
             		maintenanceRequestElements += individualElement;
             	})
-
-            	$("#newMaintenanceTab").append(maintenanceRequestElements + "</div></div>");
+				var noMoreNewMaintenance = `<div id="noNewMaintenanceRequests" style="display: none;" class="alert alert-info" role="alert">
+			            				<strong>No More New Maintenance Requests</strong>
+			            			  </div>`;
+            	$("#newMaintenanceTab").append(maintenanceRequestElements + "</div></div>" + noMoreNewMaintenance);
             })
         })
     }
@@ -2320,6 +2301,12 @@
     		console.log(data)
             inProgressMaintenanceRequests = data['inProgressMaintenanceRequests'];
             console.log(inProgressMaintenanceRequests);
+            if((inProgressMaintenanceRequests == "") || (inProgressMaintenanceRequests.length == 0)){
+            	var noInProgressMaintenanceRequests = `<div class="alert alert-info" role="alert">
+		            						<strong>No In-Progress Maintenance Requests for any of your listings</strong>
+		            					</div>`;
+            	$("#inProgressMaintenanceTab").append(noInProgressMaintenanceRequests);
+            }
             $.each(inProgressMaintenanceRequests, function(index, maintenanceRequestObject) {
             	console.log(maintenanceRequestObject);
             	console.log(maintenanceRequestObject.listing.street);
@@ -2374,7 +2361,7 @@
 	            					<div class="row">
         	            				<div class="col-12 col-md-auto" style="padding-bottom: 5px;padding-right: 15px;">
         	            					<div id="inProgressToCompletedButton`+ maintenanceRequest.id +`">
-        	            						<button class="btn btn-success" onclick="inProgressToCompleted(`+ maintenanceRequest.id +`, 1, '`+maintenanceRequestObject.listing.street+`')">Mark Completed</button>
+        	            						<button class="btn btn-success" onclick="inProgressToCompleted(`+ maintenanceRequest.id +`, `+maintenanceRequestObject.listing.id+`, '`+maintenanceRequestObject.listing.street+`')">Mark Completed</button>
         	            					</div>
         	            					<div id="inProgressToCompletedLoading`+ maintenanceRequest.id +`" style="display: none;">
         	            						<button class="btn btn-success" style="width: 152.33px;">
@@ -2411,8 +2398,10 @@
 		      		</div>`;
             		maintenanceRequestElements += individualElement
             	})
-
-            	$("#inProgressMaintenanceTab").append(maintenanceRequestElements + "</div></div>")
+				var noMoreInProgressMaintenance = `<div id="noInProgressMaintenanceRequests" style="display: none;" class="alert alert-info" role="alert">
+			            				<strong>No More In-Progress Maintenance Requests</strong>
+			            			  </div>`;
+            	$("#inProgressMaintenanceTab").append(maintenanceRequestElements + "</div></div>" + noMoreInProgressMaintenance)
             })
         })
     }
@@ -2425,6 +2414,12 @@
     		console.log(data)
             completedMaintenanceRequests = data['completedMaintenanceRequests'];
             console.log(completedMaintenanceRequests);
+            if((completedMaintenanceRequests == "") || (completedMaintenanceRequests.length == 0)){
+            	var nocompletedMaintenanceRequests = `<div class="alert alert-info" role="alert">
+		            						<strong>No Completed Maintenance Requests for any of your listings</strong>
+		            					</div>`;
+            	$("#completedMaintenanceTab").append(nocompletedMaintenanceRequests);
+            }
             $.each(completedMaintenanceRequests, function(index, maintenanceRequestObject) {
             	console.log(maintenanceRequestObject);
             	console.log(maintenanceRequestObject.listing.street);
@@ -2501,6 +2496,12 @@
     		console.log(data)
             unAcceptedGroupListings = data['unAcceptedGroupListings'];
             console.log(unAcceptedGroupListings);
+            if((unAcceptedGroupListings == "") || (unAcceptedGroupListings.length == 0)){
+            	var noUnAcceptedListings = `<div class="alert alert-info" role="alert">
+		            						<strong>No pending requests for any of your listings</strong>
+		            					</div>`;
+            	$("#unacceptedTab").append(noUnAcceptedListings);
+            }
            $.each(unAcceptedGroupListings, function(index, housingRequestObject) {
             	console.log(housingRequestObject);
             	console.log(housingRequestObject.listing.street);
@@ -2660,8 +2661,10 @@
             		listingRequestElements += individualElement;
 
             	})
-
-            	$("#unacceptedTab").append(listingRequestElements + "</div></div></div></div>")
+				var noMoreUnacceptedRequests = `<div id="noUnacceptedRequests" style="display: none;" class="alert alert-info" role="alert">
+			            				<strong>No More Pending Requests</strong>
+			            			  </div>`;
+            	$("#unacceptedTab").append(listingRequestElements + "</div></div></div></div>"+noMoreUnacceptedRequests)
             })
         })
     }
@@ -2671,12 +2674,18 @@
     	$("#acceptedTab").empty();
 
     	$.getJSON(requestURL, function(data) {
-    		console.log(data)
+    		//console.log(data)
             acceptedGroupListings = data['acceptedGroupListings'];
-            console.log(acceptedGroupListings);
+            if((acceptedGroupListings == "") || (acceptedGroupListings.length == 0)){
+            	var noAcceptedListings = `<div class="alert alert-info" role="alert">
+		            						<strong>No groups have been accepted for any of your listings yet</strong>
+		            					</div>`;
+            	$("#acceptedTab").append(noAcceptedListings);
+            }
+            //console.log(acceptedGroupListings);
            $.each(acceptedGroupListings, function(index, housingRequest) {
-            	console.log(housingRequest);
-            	console.log(housingRequest.listing.street);
+            	//console.log(housingRequest);
+            	//console.log(housingRequest.listing.street);
             	membersNotLeaderCount = parseInt(housingRequest.groupListings[0].group.userCount)-1;
 
             	var div =`
@@ -2866,7 +2875,13 @@
     	$.getJSON(requestURL, function(data) {
     		//console.log(data)
             requestedTours = data['requestedTours'];
-            console.log(requestedTours);
+            //console.log(requestedTours);            
+            if(requestedTours == ""){
+            	var noRequestedTours = `<div class="alert alert-info" role="alert">
+		            						<strong>No Requested Tours</strong>
+		            					</div>`;
+            	$("#requestedToursTab").append(noRequestedTours);
+            }
             $.each(requestedTours, function(index, requestedTourObject) {
             	//console.log(requestedTourObject);
             	//console.log(requestedTourObject.listing.street);
@@ -3061,8 +3076,10 @@
 		      		</div>`;
             		requestedToursElements += individualElement
             	})
-
-            	$("#requestedToursTab").append(requestedToursElements + "</div></div>")
+				var noMoreRequests = `<div id="noRequestedTours" style="display: none;" class="alert alert-info" role="alert">
+			            				<strong>No More Requested Tours</strong>
+			            			  </div>`;
+            	$("#requestedToursTab").append(requestedToursElements + "</div></div>" + noMoreRequests)
             })
         })
     }
@@ -3074,10 +3091,16 @@
     	$.getJSON(requestURL, function(data) {
     		console.log(data)
             scheduledTours = data['scheduledTours'];
-            console.log(scheduledTours);
+            //console.log(scheduledTours);
+            if(scheduledTours.length == 0){
+            	var noScheduledTours = `<div class="alert alert-info" role="alert">
+		            						<strong>No Scheduled Tours</strong>
+		            					</div>`;
+            	$("#scheduledToursTab").append(noScheduledTours);
+            }
             $.each(scheduledTours, function(index, scheduledTourObject) {
-            	console.log(scheduledTourObject);
-            	console.log(scheduledTourObject.listing.street);
+            	//console.log(scheduledTourObject);
+            	//console.log(scheduledTourObject.listing.street);
 
             var outerDiv =`
             	<div id="numberOfScheduledTours`+ scheduledTourObject.listing.id +`" style="display: none;">`+ scheduledTourObject.tourCount +`</div>
@@ -3216,8 +3239,10 @@
 	      		</div>`;
             		scheduledToursElements += individualElement
             	})
-
-            	$("#scheduledToursTab").append(scheduledToursElements + "</div></div>")
+				var noMoreScheduled = `<div id="noScheduledTours" style="display: none;" class="alert alert-info" role="alert">
+			            				<strong>No More Scheduled Tours</strong>
+			            			  </div>`;
+            	$("#scheduledToursTab").append(scheduledToursElements + "</div></div>" + noMoreScheduled)
             })
         })
     }
