@@ -2125,6 +2125,43 @@
     		}    		
     	});
     	cart = JSON.stringify(cart);
+    	
+
+    	$.ajax({
+    	    type: "POST",
+    	    url: '/preCheckout',
+    	    // The key needs to match your method's input parameter (case-sensitive).
+    	    data: cart,
+    	    contentType: "application/json; charset=utf-8",
+    	    dataType: "json",
+    	    beforeSend: function(xhr, settings) {
+	    	                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+	    	                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token() }}');
+	    	                }
+    	            	},
+    	    success: function(data){alert(data);},
+    	    failure: function(errMsg) {
+    	        alert(errMsg);
+    	    }
+    	});
+
+  //   	$.getJSON(requestURL, function(data) {
+  //           results = data['results'];
+  //           // alert(data['results'].success);
+  //           if (results.success == true){ 
+		//     	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+		//     	$("#numDeposits"+requestID).html(depositsPaid-1);
+		//     	$("#depositMarkedPaid"+requestID+"Z"+userID).hide();
+		//     	$("#markDepositPaid"+requestID+"Z"+userID).show();
+		//     	setTimeout(function () {
+		//         	$("#markDepositPaid"+requestID+"Z"+userID).hide();
+		//         	$("#depositUnpaid"+requestID+"Z"+userID).show();		        	
+		//         }, 1200);
+		//     }
+		//     else{
+		//     	alert("Something went wrong, try again later");
+		//     }
+		// }); 	
     	console.log(cart);
     }
 

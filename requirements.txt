@@ -31,3 +31,6 @@ pylint
 
 # Admin
 flask-admin
+
+# Payment
+braintree

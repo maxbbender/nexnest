@@ -35,4 +35,5 @@ else:
 
 app.secret_key = 'domislove'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['TRAP_BAD_REQUEST_ERRORS'] = True
 # app.config['SERVER_NAME'] = '127.0.0.1:8000' # Breaks CSRF TOKENS
