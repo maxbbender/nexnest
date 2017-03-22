@@ -55,6 +55,8 @@
 	                    {{ housingRequest.listing.street }}
 	                </h1>
 	            </div>
+                <div id="numGroupMembers" style="display: none;">{{housingRequest.group.acceptedUsers|count}}</div>
+                <div id="areLeasesCollected" style="display: none;">{{housingRequest.all_leases_submitted}}</div>
 	        </div>
     	</div>
     	<br>
@@ -387,6 +389,30 @@
     </div>
 </div>
 
+<!--Confirm Group Modal-->
+<div class="modal fade" id="everythingCollectedModal" tabindex="-1" role="dialog" aria-labelledby="everythingCollected" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <p class="card-text">You have indicated that you have recieved all leases and deposits from  <strong>{{ housingRequest.group.name }}</strong>. If so, this is the last step, once you click confirm neither party can back out from the terms of the signed leases.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="{{url_for('housingRequests.confirmRequest', id=housingRequest.id)}}" class="btn btn-primary">Confirm Group</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--Decline Group Modal-->
 <div class="modal fade" id="somethingHappenedModal" tabindex="-1" role="dialog" aria-labelledby="somethingHappened" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -436,6 +462,13 @@
       modal.find('.modal-title').text('Confirm Group');
     })
 
+    //Confirm Group Modal
+    $('#everythingCollectedModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      var modal = $(this);
+      modal.find('.modal-title').text('Everything has been collected!');
+    })
+
     //Something Happened Modal
     $('#somethingHappenedModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget);
@@ -443,64 +476,32 @@
       modal.find('.modal-title').text('Back Out');
     })
 
-	// function markDepositPaid(userID) {
-	// 	if($("#markPaidButton"+userID).text() == "Mark Paid"){
- //            requestURL = '/houseRequest/{{housingRequest.id}}/securityDeposit/' + userID + '/paid'
+    function getNumberOfTenants(){
+        return parseFloat($("#numGroupMembers").html()) || 0;
+    }
+    function getAreLeasesCollected(){
+        return $("#areLeasesCollected").html();
+    }
 
- //            $.getJSON(requestURL, function(data) {
- //                results = data['results'];
- //                // alert(data['results'].success);
- //                if (results.success == true){ 
- //                    $("#markDepositPaid"+userID).html('<i class="fa fa-check-circle" aria-hidden="true"></i>');
- //                    $("#markDepositPaid"+userID).css("color", "green")
- //                    $("#markPaidButton"+userID).text("Mark Unpaid")
- //                    $('#markPaidButton'+userID).removeClass("btn-success")
- //                    $('#markPaidButton'+userID).addClass("btn-danger")
- //                } else {
- //                    alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
- //                }
- //            });
-			
-	// 	}
-	// 	else if($("#markPaidButton"+userID).text() == "Mark Unpaid"){
- //            requestURL = '/houseRequest/{{housingRequest.id}}/securityDeposit/' + userID + '/unPaid'
- //            $.getJSON(requestURL, function(data) {
- //                results = data['results'];
- //                // alert(data['results'].success);
- //                if (results.success == true){ 
- //                    $("#markDepositPaid"+userID).html('<i class="fa fa-times-circle" aria-hidden="true"></i>');
- //                    $("#markDepositPaid"+userID).css("color", "red")
- //                    $("#markPaidButton"+userID).text("Mark Paid")
- //                    $('#markPaidButton'+userID).removeClass("btn-danger")
- //                    $('#markPaidButton'+userID).addClass("btn-success")
- //                } else {
- //                    alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
- //                }
- //            });
-	// 	}		
-	// }
-	// function markAllDepositsPaid() {
-	// 	$('.securityDeposit').each(function(i, obj) {
- //    		$('.securityDeposit').html('<i class="fa fa-check-circle" aria-hidden="true"></i>');
- //    		$('.securityDeposit').css("color", "green")
- //    		$('.securityDepositButton').text("Mark Unpaid")
- //    		$('.securityDepositButton').removeClass("btn-success")
- //    		$('.securityDepositButton').addClass("btn-danger")
-	// 	});
-	// }
+    function getNumDepositsPaid(requestID){
+        return parseFloat($("#numDeposits"+requestID).html()) || 0;
+    }
 
 	function markLeasesCollected(requestID){
     	$("#markAllCollected"+requestID).hide();
     	$("#markAllCollectedLoading"+requestID).show();
+        $("#areLeasesCollected").html("True");
     	setTimeout(function () {
         	$("#markAllCollectedLoading"+requestID).hide();
         	$("#markAllUncollected"+requestID).show();
-        }, 1200);    	 	
+            isEverythingDone(getNumDepositsPaid(requestID), getNumberOfTenants(), getAreLeasesCollected());
+        }, 1200);        
     }
 
     function markLeasesUncollected(requestID){
     	$("#markAllUncollected"+requestID).hide();
     	$("#markAllCollectedLoading"+requestID).show();
+        $("#areLeasesCollected").html("False");
     	setTimeout(function () {
         	$("#markAllCollectedLoading"+requestID).hide();
         	$("#markAllCollected"+requestID).show();
@@ -510,6 +511,7 @@
     function undoMarkLeasesCollected(requestID){
     	$("#undoMarkAllCollected"+requestID).hide();
     	$("#undoMarkAllCollectedLoading"+requestID).show();
+        $("#areLeasesCollected").html("False");
     	setTimeout(function () {
         	$("#undoMarkAllCollectedLoading"+requestID).hide();
         	$("#undoMarkAllUncollected"+requestID).show();
@@ -519,10 +521,12 @@
     function undoMarkLeasesUncollected(requestID){
     	$("#undoMarkAllUncollected"+requestID).hide();
     	$("#undoMarkAllCollectedLoading"+requestID).show();
+        $("#areLeasesCollected").html("True");
     	setTimeout(function () {
         	$("#undoMarkAllCollectedLoading"+requestID).hide();
         	$("#undoMarkAllCollected"+requestID).show();
-        }, 1200);    	 	
+            isEverythingDone(getNumDepositsPaid(requestID), getNumberOfTenants(), getAreLeasesCollected());
+        }, 1200);        
     }
 
     function paidToUnpaid(userID, requestID){
@@ -560,8 +564,9 @@
                 $("#numDeposits2"+requestID).html(depositsPaid+1);
 		    	setTimeout(function () {
 		        	$("#markDepositUnpaid"+requestID+"Z"+userID).hide();
-		        	$("#depositPaid"+requestID+"Z"+userID).show();		        	
+		        	$("#depositPaid"+requestID+"Z"+userID).show();                    		        	
 		        }, 1200);
+                isEverythingDone(getNumDepositsPaid(requestID), getNumberOfTenants(), getAreLeasesCollected());
 		    }
 		    else{
 		    	alert("Something went wrong, try again later");
@@ -582,8 +587,9 @@
                 $("#numDeposits2"+requestID).html(depositsPaid+1);
 		    	setTimeout(function () {
 		        	$("#markDepositPaid"+requestID+"Z"+userID).hide();
-		        	$("#depositMarkedPaid"+requestID+"Z"+userID).show();		        	
+		        	$("#depositMarkedPaid"+requestID+"Z"+userID).show();                    		        	
 		        }, 1200);
+                isEverythingDone(getNumDepositsPaid(requestID), getNumberOfTenants(), getAreLeasesCollected());
 		    }
 		    else{
 		    	alert("Something went wrong, try again later");
@@ -611,6 +617,14 @@
 		    	alert("Something went wrong, try again later");
 		    }
 		});
+    }
+
+    function isEverythingDone(numDeposits, numTenants, leasesCollected){
+        if(numDeposits == numTenants){
+            if(leasesCollected == "True"){
+                $("#everythingCollectedModal").modal("show");
+            }
+        }
     }
 </script>
 {% endblock %}
