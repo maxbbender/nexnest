@@ -146,7 +146,7 @@
                                                                 <h3 style="font-size: 3.0vh;"><strong>Security Deposits:</strong></h3>
                                                             </div>
                                                             <div class="col-xs-4" style="text-align: right">
-                                                                <h3 style="font-size: 3.0vh;"><span id="numDeposits{{housingRequest.id}}">{{housingRequest.numSecurityDepositsPaid}}</span>/{{housingRequest.group.acceptedUsers|count}}</h3>
+                                                                <h3 style="font-size: 3.0vh;"><span id="numDeposits2{{housingRequest.id}}">{{housingRequest.numSecurityDepositsPaid}}</span>/{{housingRequest.group.acceptedUsers|count}}</h3>
                                                             </div>
                                                         </div>
                                                         <hr>
@@ -157,11 +157,6 @@
                                                                         <h4>
                                                                             <img src="{{deposit.user.profile_image}}" alt="Profile Image" class="img-responsive" style="height: 50px; width: 50px;" />
                                                                             <span style="font-size: 2.5vh;">{{ deposit.user.fname }} {{ deposit.user.lname }}</span>
-                                                                            <!-- {% if deposit.completed %}
-                                                                                <span class="securityDeposit" id="markDepositPaid{{deposit.user.id}}" style="color: green"><i class="fa fa-check-circle" aria-hidden="true"></i></span>
-                                                                            {% else %}
-                                                                                <span class="securityDeposit" id="markDepositPaid{{deposit.user.id}}" style="color: red"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
-                                                                            {% endif %} -->
                                                                         </h4>
                                                                     </a>
                                                                 </div>
@@ -539,10 +534,11 @@
 		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
 		    	$("#depositPaid"+requestID+"Z"+userID).hide();
 		    	$("#markDepositUnpaid"+requestID+"Z"+userID).show();
+                $("#numDeposits"+requestID).html(depositsPaid-1);
+                $("#numDeposits2"+requestID).html(depositsPaid-1);
 		    	setTimeout(function () {
 		        	$("#markDepositUnpaid"+requestID+"Z"+userID).hide();
-		        	$("#depositMarkedUnPaid"+requestID+"Z"+userID).show();
-		        	$("#numDeposits"+requestID).html(depositsPaid-1);
+		        	$("#depositMarkedUnPaid"+requestID+"Z"+userID).show();		        	
 		        }, 1200);
 		    }
 		    else{
@@ -560,10 +556,11 @@
 		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
 		    	$("#depositMarkedUnPaid"+requestID+"Z"+userID).hide();
 		    	$("#markDepositUnpaid"+requestID+"Z"+userID).show();
+                $("#numDeposits"+requestID).html(depositsPaid+1);
+                $("#numDeposits2"+requestID).html(depositsPaid+1);
 		    	setTimeout(function () {
 		        	$("#markDepositUnpaid"+requestID+"Z"+userID).hide();
-		        	$("#depositPaid"+requestID+"Z"+userID).show();
-		        	$("#numDeposits"+requestID).html(depositsPaid+1);
+		        	$("#depositPaid"+requestID+"Z"+userID).show();		        	
 		        }, 1200);
 		    }
 		    else{
@@ -581,10 +578,11 @@
 		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
 		    	$("#depositUnpaid"+requestID+"Z"+userID).hide();
 		    	$("#markDepositPaid"+requestID+"Z"+userID).show();
+                $("#numDeposits"+requestID).html(depositsPaid+1);
+                $("#numDeposits2"+requestID).html(depositsPaid+1);
 		    	setTimeout(function () {
 		        	$("#markDepositPaid"+requestID+"Z"+userID).hide();
-		        	$("#depositMarkedPaid"+requestID+"Z"+userID).show();
-		        	$("#numDeposits"+requestID).html(depositsPaid+1);
+		        	$("#depositMarkedPaid"+requestID+"Z"+userID).show();		        	
 		        }, 1200);
 		    }
 		    else{
@@ -602,10 +600,11 @@
 		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
 		    	$("#depositMarkedPaid"+requestID+"Z"+userID).hide();
 		    	$("#markDepositPaid"+requestID+"Z"+userID).show();
+                $("#numDeposits"+requestID).html(depositsPaid-1);
+                $("#numDeposits2"+requestID).html(depositsPaid-1);
 		    	setTimeout(function () {
 		        	$("#markDepositPaid"+requestID+"Z"+userID).hide();
-		        	$("#depositUnpaid"+requestID+"Z"+userID).show();
-		        	$("#numDeposits"+requestID).html(depositsPaid-1);
+		        	$("#depositUnpaid"+requestID+"Z"+userID).show();		        	
 		        }, 1200);
 		    }
 		    else{
