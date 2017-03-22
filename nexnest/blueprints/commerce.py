@@ -1,8 +1,17 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, jsonify
 
 from nexnest.application import braintree, csrf
 
 commerce = Blueprint('commerce', __name__, template_folder='../templates/commerce')
+
+
+@commerce.route('/preCheckout', methods=['POST'])
+def preCheckout():
+    json = request.get_json(force=True)
+    print(json)
+    print("Items %r" % json['items'])
+    print("Landlord ID %s" % json['landlord'])
+    return jsonify({})
 
 
 @commerce.route('/client_token', methods=['GET'])
