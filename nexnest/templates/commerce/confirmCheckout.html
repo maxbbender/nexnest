@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block content %}
+	<div class="row">
+		<div class="col-xl-3"></div>
+		<div class="col-xl-6">
+			<div class="card">
+				<div class="card-header">
+					<h3>Proceed With Checkout</h3>
+				</div>
+				<div class="card-block">
+					<div class="row">
+						<div class="col-xl-5">
+							<strong>Listing</strong>
+						</div>
+						<div class="col-xl-3">
+							<strong>Plan</strong>
+						</div>
+						<div class="col-xl-3">
+							<strong>Price</strong>
+						</div>
+						<div class="col-xl-1">
+						</div>
+					</div>
+					<hr>
+					<div class="row">
+						<div class="col-xl-12" id="checkOutItems">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xl-8">
+							<div class="input-group">
+							    <span class="input-group-btn">
+							        <button class="btn btn-secondary" type="button" style="pointer-events: none;">Have a Coupon Code?</button>
+							    </span>
+							    <input type="text" class="form-control" placeholder="Enter it here!">
+							</div>
+						</div>
+						<div class="col-xl-4">
+							<button class="btn btn-primary" style="float: right;">Proceed To Checkout</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block scripts %}
+<script>
+	$( document ).ready(function() {
+		data = {"landlord":1,"items":[{"listing_id":"3","listing_street":"9078 Francisco Road","plan":"standard"},{"listing_id":"4","listing_street":"38836 Mark Branch","plan":"premium"}]};
+		items = data['items'];
+		console.log(items);
+		$.each(items, function(index, item) {
+			var checkoutItem = `<div class='row' id="itemInCart`+item.listing_id+`">
+									<div class='col-xl-5'>
+										`+ item.listing_street +`
+									</div>
+									<div class='col-xl-3'>
+										`+ item.plan +`
+									</div>
+									<div class='col-xl-3'>
+										`;
+										if(item.plan == "standard"){
+											checkoutItem += "$100";
+										}
+										else if(item.plan == "premium"){
+											checkoutItem += "$200";
+										}
+									checkoutItem +=`
+									</div>
+									<div class='col-xl-1'>
+										<button class='btn btn-danger btn-circle' style='float:right;' onClick='removeListingToPurchase(`+ item.listing_id +`)'><i class='fa fa-times' aria-hidden='true'></i></button>
+									</div>
+								</div>
+								<hr id="hrInCart`+item.listing_id+`">`;
+			$("#checkOutItems").append(checkoutItem);
+		})
+	});
+	function removeListingToPurchase(id){
+		$("#itemInCart"+id).remove();
+		$("#hrInCart"+id).remove();
+		alert("Need to remove from json object somehow");
+	}
+</script>	
+{% endblock %}
