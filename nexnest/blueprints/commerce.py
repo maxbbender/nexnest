@@ -1,6 +1,11 @@
 from flask import Blueprint, render_template, request, jsonify
 
-from nexnest.application import braintree, csrf
+from pprint import pprint
+
+from nexnest.application import braintree, csrf, session
+
+from nexnest.models.transaction import ListingTransaction
+from nexnest.models.listing import Listing
 
 commerce = Blueprint('commerce', __name__, template_folder='../templates/commerce')
 
@@ -9,8 +14,18 @@ commerce = Blueprint('commerce', __name__, template_folder='../templates/commerc
 def preCheckout():
     json = request.get_json(force=True)
     print(json)
-    print("Items %r" % json['items'])
-    print("Landlord ID %s" % json['landlord'])
+    pprint(json['items'])
+    pprint("Landlord ID %s" % json['landlord'])
+
+    for item in json['items']:
+        print("Item %r" % item)
+        listing = session.query(Listing).filter_by(int(item['listing_id'])).first()
+        newListingTransaction = ListingTransaction(plan=item['plan'],
+                                                   listing=listing,
+                                                   status='new',
+                                                   success=False
+                                                   )
+
     return jsonify({})
 
 
@@ -25,6 +40,15 @@ def clientToken():
 def checkout():
     return render_template('checkout.html',
                            clientToken=braintree.ClientToken.generate())
+
+
+# @commerce.route('/postListingCheckout', methods=['POST'])
+# def postListingCheckout():
+#     postedJSON = request.get_json(force=True)
+
+#     for item in postedJSON['items']
+#         newListingTransaction
+#     pass
 
 
 @commerce.route('/transactionGenerate', methods=['POST'])

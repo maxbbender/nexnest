@@ -25,10 +25,10 @@ class Transaction(Base):
 
     def __init__(
             self,
-            braintree_transaction_id,
             status,
             type,
             user,
+            braintree_transaction_id=None,
             success=False,
     ):
         self.user_id = user.id
@@ -67,17 +67,21 @@ class ListingTransaction(Transaction):
             self,
             listing,
             plan,
-            braintree_transaction_id,
             status,
-            success
-
+            success,
+            user,
+            braintree_transaction_id=None
     ):
 
         super().__init__(
             braintree_transaction_id=braintree_transaction_id,
             status=status,
-            success=success
+            success=success,
+            user=user
         )
 
         self.listing_id = listing.id
         self.plan = plan
+
+    def __repr__(self):
+        return 'ListingTransaction %r | %s' % (self.id, self.plan)
