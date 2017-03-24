@@ -27,18 +27,26 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-xl-8">
+						<div class="col-xl-5">
 							<div class="input-group">
 							    <span class="input-group-btn">
-							        <button class="btn btn-secondary" type="button" style="pointer-events: none;">Have a Coupon Code?</button>
+							        <button class="btn btn-secondary" type="button" style="pointer-events: none;">Coupon Code?</button>
 							    </span>
-							    <input type="text" class="form-control" placeholder="Enter it here!">
+							    <input id="couponCodeInput" type="text" class="form-control" placeholder="Enter it here!">
 							</div>
 						</div>
 						<div class="col-xl-4">
-							<button class="btn btn-primary" style="float: right;">Proceed To Checkout</button>
+							<span id="discount" style="color: green;"></span>
+						</div>
+						<div class="col-xl-3">
+								<button class="btn btn-info" id="sumbitCouponCode" onClick="validateCoupon()" style="float: right; display: none;">Submit Code</button>
 						</div>
 					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xl-12">
+					<button class="btn btn-primary" onClick="proceedToCheckout()" style="float: right;">Proceed To Checkout</button>
 				</div>
 			</div>
 		</div>
@@ -47,13 +55,16 @@
 {% block scripts %}
 <script>
 	$( document ).ready(function() {
-		data = {"landlord":1,"items":[{"listing_id":"3","listing_street":"9078 Francisco Road","plan":"standard"},{"listing_id":"4","listing_street":"38836 Mark Branch","plan":"premium"}]};
+		data = {"landlord":1,"items":[{"index":0,"listing_id":"1","listing_street":"4823 Mcdaniel Crest Suite 799","leasePeriod":"2017-01-11-2017-10-11","plan":"standard"},{"index":1,"listing_id":"2","listing_street":"721 Holly Run Apt. 437","leasePeriod":"2017-09-22-1989-11-20","plan":"premium"},{"index":2,"listing_id":"4","listing_street":"38836 Mark Branch","leasePeriod":"1976-01-17-1981-07-18","plan":"standard"},{"index":3,"listing_id":"5","listing_street":"804 Vang Knoll Suite 600","leasePeriod":"1999-06-15-2014-09-27","plan":"premium"},{"index":4,"listing_id":"6","listing_street":"168 Welch Drive","leasePeriod":"2000-02-05-1986-09-26","plan":"standard"}]};
+		landlordID = data['landlord']
 		items = data['items'];
 		console.log(items);
 		$.each(items, function(index, item) {
 			var checkoutItem = `<div class='row' id="itemInCart`+item.listing_id+`">
 									<div class='col-xl-5'>
-										`+ item.listing_street +`
+										<strong>`+ item.listing_street +`</strong>
+										<br>
+										`+ item.leasePeriod +`
 									</div>
 									<div class='col-xl-3'>
 										`+ item.plan +`
@@ -69,17 +80,52 @@
 									checkoutItem +=`
 									</div>
 									<div class='col-xl-1'>
-										<button class='btn btn-danger btn-circle' style='float:right;' onClick='removeListingToPurchase(`+ item.listing_id +`)'><i class='fa fa-times' aria-hidden='true'></i></button>
+										<button class='btn btn-danger btn-circle' style='float:right;' onClick='removeListingToPurchase(`+ item.listing_id +`, `+ item.index +`)'><i class='fa fa-times' aria-hidden='true'></i></button>
 									</div>
 								</div>
 								<hr id="hrInCart`+item.listing_id+`">`;
 			$("#checkOutItems").append(checkoutItem);
 		})
 	});
-	function removeListingToPurchase(id){
+	function removeListingToPurchase(id, index){
 		$("#itemInCart"+id).remove();
 		$("#hrInCart"+id).remove();
-		alert("Need to remove from json object somehow");
+		items.splice(index, 1);
 	}
+	function proceedToCheckout(){
+		var cart = {};
+    	cart.landlord = landlordID;
+    	cart.items = items;
+    	cart.couponCode = $('#couponCodeInput').val();
+    	console.log(cart);
+	}
+
+	function validateCoupon(){
+		//need to get the valid coupons here
+
+		var input = $('#couponCodeInput').val();
+		if(input == "henloStinky"){
+			$("#discount").html("15% Off");
+			$("#discount").css("color", "green");
+		}
+		else if(input == "rojopapi"){
+			$("#discount").html("25% Off");
+			$("#discount").css("color", "green");
+		}
+		else{
+			$("#discount").html("Not a Valid Code");
+			$("#discount").css("color", "red");
+		}
+	}
+
+	$('#couponCodeInput').on('input',function(e){
+		var input = $('#couponCodeInput').val();
+		if(input.length > 0){
+			$("#sumbitCouponCode").show();
+		}
+		else{
+			$("#sumbitCouponCode").hide();
+		}
+    });
 </script>	
 {% endblock %}
