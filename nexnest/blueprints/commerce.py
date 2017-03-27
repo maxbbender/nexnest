@@ -6,6 +6,7 @@ from nexnest.application import braintree, csrf, session
 
 from nexnest.models.transaction import ListingTransaction
 from nexnest.models.listing import Listing
+from nexnest.forms import PreCheckoutForm
 
 import json
 
@@ -42,10 +43,15 @@ def clientToken():
 def viewPreCheckout():
     # testJson = {"landlord":1,"items":[{"listing_id":"2","plan":"standard"},{"listing_id":"3","plan":"premium"}]};
     jsonData = json.loads(request.form["json"])
-    print("testJSON")
-    pprint(jsonData)
-    return render_template('confirmCheckout.html',
-                           jsonData=jsonData)
+    form = PreCheckoutForm(request.form)
+
+    if form.validate():
+        print("testJSON")
+        pprint(jsonData)
+        return render_template('confirmCheckout.html',
+                               jsonData=jsonData)
+    else:
+        return 'error'
 
 
 @commerce.route('/checkout', methods=['GET'])
