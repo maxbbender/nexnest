@@ -1,9 +1,11 @@
 from datetime import datetime, date
 from sqlalchemy.orm import relationship
 
-from nexnest.application import db
+from nexnest.application import db, session
 
 from .base import Base
+
+from nexnest.models.security_deposit import SecurityDeposit
 
 
 class Landlord(Base):
@@ -221,7 +223,17 @@ class Landlord(Base):
 
             for groupListing in listing.groups:
                 if not groupListing.accepted:
-                    groupListings.append(groupListing.serialize)
+                    groupListingDict = groupListing.serialize
+
+                    numSecurityDepositsPaid = session.query(SecurityDeposit) \
+                        .filter_by(
+                        group_listing_id=int(groupListingDict['id']),
+                        completed=True) \
+                        .count()
+
+                    groupListingDict['numSecurityDepositsPaid'] = numSecurityDepositsPaid
+
+                    groupListings.append(groupListingDict)
 
             if len(groupListings) > 0:
                 groupListingObject['groupListings'] = groupListings
@@ -242,7 +254,25 @@ class Landlord(Base):
 
             for groupListing in listing.groups:
                 if groupListing.accepted and not groupListing.completed:
-                    groupListings.append(groupListing.serialize)
+                    groupListingDict = groupListing.serialize
+
+                    securityDeposit = session.query(SecurityDeposit) \
+                        .filter_by(
+                        group_listing_id=int(groupListingDict['id']),
+                        user_id=int(groupListingDict['group']['leader']['id'])) \
+                        .first()
+
+                    groupListingDict['group']['leader']['securityDepositPaid'] = securityDeposit.completed
+
+                    numSecurityDepositsPaid = session.query(SecurityDeposit) \
+                        .filter_by(
+                        group_listing_id=int(groupListingDict['id']),
+                        completed=True) \
+                        .count()
+
+                    groupListingDict['numSecurityDepositsPaid'] = numSecurityDepositsPaid
+
+                    groupListings.append(groupListingDict)
 
             if len(groupListings) > 0:
                 groupListingObject['groupListings'] = groupListings

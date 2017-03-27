@@ -13,20 +13,20 @@
                     </a>
                 </li>
                 <li class="nav-item">
-        	        <a class="nav-link left-panel active" style="padding-left: 10px;" id="checkoutTab2" data-toggle="tab" href="#checkoutTab" role="tab">
+        	        <a class="nav-link left-panel" style="padding-left: 10px;" id="checkoutTab2" data-toggle="tab" href="#checkoutTab" role="tab">
         	        	<i class="fa fa-shopping-cart" aria-hidden="true"></i><span class="hidden-md-down">Checkout</span>
         	        </a>
         	    </li>
-        		<li class="nav-item">
-        	        <a class="nav-link left-panel active" style="padding-left: 10px;" id="occupiedListingsTab2" data-toggle="tab" href="#occupiedListingsTab" role="tab">
-        	        	<i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">Occupied Listings</span>
-        	        </a>
-        	    </li>
         	    <li class="nav-item">
-        	        <a class="nav-link left-panel" style="padding-left: 10px;" id="unbookedListingsTab2" data-toggle="tab" href="#unbookedListingsTab" role="tab">
+        	        <a class="nav-link left-panel active" style="padding-left: 10px;" id="allListingsTab2" data-toggle="tab" href="#allListingsTab" role="tab">
         	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-md-down">All Listings</span>
         	        </a>
         	    </li>
+        		<li class="nav-item">
+        	        <a class="nav-link left-panel" style="padding-left: 10px;" id="occupiedListingsTab2" data-toggle="tab" href="#occupiedListingsTab" role="tab">
+        	        	<i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">Occupied Listings</span>
+        	        </a>
+        	    </li>        	    
         	    <li class="nav-item">
         	        <a class="nav-link left-panel" style="padding-left: 10px;" id="toursTab2" data-toggle="tab" href="#toursTab" role="tab">
         	        	<i class="fa fa-calendar" aria-hidden="true"></i><span class="hidden-md-down">Tours</span>
@@ -74,7 +74,7 @@
 						                    	<div class="col-xs-1" style="align-items: center; display: flex;">
 					                    			<div class="checkbox">
 					                    			    <label style="font-size: 1.5em">
-					                    			        <input type="checkbox" id="purchaseListing{{listing.id}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', 100);"/>
+					                    			        <input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', 100);"/>
 					                    			        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
 					                    			    </label>
 					                    			</div>						                    		
@@ -317,7 +317,7 @@
 		        	</div>
 		       	</div>
 		    </div>
-	        <div class="tab-pane" id="unbookedListingsTab" role="tabpanel" style="padding: 0px;">
+	        <div class="tab-pane" id="allListingsTab" role="tabpanel" style="padding: 0px;">
 	        	<div class="row">
 			    	<div class="col-xs-0 col-md-1"></div>
 			    	<div class="col-xs-12 col-md-10">
@@ -1023,13 +1023,25 @@
 {% endblock %}
 {% block scripts %}
 <script>
-	var validMainTabs = ["occupiedListingsTab", "unbookedListingsTab", "toursTab", "requestsTab", "maintenanceTab", "paymentTab", "checkoutTab"];
+	//populate all the divs on load
+	$( document ).ready(function() {
+		getOpenMaintenanceRequestsJSON();
+    	getInProgressMaintenanceRequestsJSON();
+    	getCompletedMaintenanceRequestsJSON();
+    	getUnAcceptedGroupListingsRequestsJSON();
+    	getAcceptedGroupListingsRequestsJSON();
+    	getTourRequestsJSON();
+    	getScheduledToursJSON();
+	});
+
+	//Code for navigating tabs
+	var validMainTabs = ["occupiedListingsTab", "allListingsTab", "toursTab", "requestsTab", "maintenanceTab", "paymentTab", "checkoutTab"];
 	var validSecondTabs = ["currentlyOccupiedTab", "willBeOccupiedTab", "scheduledToursTab", "requestedToursTab", "unacceptedTab", "acceptedTab", 
 	"newMaintenanceTab", "inProgressMaintenanceTab", "completedMaintenanceTab"];
 	var hash = document.location.hash;
 	hash = hash.substr(1);
 	if(!hash){
-		hash = "occupiedListingsTab-currentlyOccupiedTab";
+		hash = "allListingsTab";
 		window.location.hash = hash;
 	}
 	//alert(hash);
@@ -1042,7 +1054,7 @@
 	if ($.inArray(mainTab, validMainTabs) > -1) {
 		$("#checkoutTab").removeClass('active');
 		$("#occupiedListingsTab").removeClass('active');
-		$("#unbookedListingsTab").removeClass('active');
+		$("#allListingsTab").removeClass('active');
 		$("#toursTab").removeClass('active');
 		$("#requestsTab").removeClass('active');
 		$("#maintenanceTab").removeClass('active');
@@ -1060,75 +1072,25 @@
 			var currentHash = window.location.hash;
 			currentHash = currentHash.split('-')[0];
 		    window.location.hash = currentHash+"-"+newtab;
-		    //reload the content for the tabs
-		    if(newtab == 'newMaintenanceTab'){
-		    	getOpenMaintenanceRequestsJSON();
-		    }
-		    else if(newtab == 'inProgressMaintenanceTab'){
-		    	getInProgressMaintenanceRequestsJSON();
-		    }
-		    else if(newtab == 'completedMaintenanceTab'){
-		    	getCompletedMaintenanceRequestsJSON();
-		    }
-		    else if(newtab == 'unacceptedTab'){
-		    	getUnAcceptedGroupListingsRequestsJSON();
-		    }
-		    else if(newtab == 'requestedToursTab'){
-		    	getTourRequestsJSON();
-		    }
-		    else if(newtab == 'scheduledToursTab'){
-		    	getScheduledToursJSON();
-		    }
+		    
 		});
 	   	if ($.inArray(secondTab, validSecondTabs) > -1) {	   		
 	   		$(".selected-tab").removeClass('active');
 	   		$("#"+secondTab+'2').addClass('active');
-			$("#"+secondTab).addClass('active');
-			//Call the function to populate the div with content from json
-			if(secondTab == "newMaintenanceTab"){
-				getOpenMaintenanceRequestsJSON();
-			}
-			else if(secondTab == 'inProgressMaintenanceTab'){
-		    	getInProgressMaintenanceRequestsJSON();
-		    }
-		    else if(secondTab == 'completedMaintenanceTab'){
-		    	getCompletedMaintenanceRequestsJSON();
-		    }
-		    else if(secondTab == 'unacceptedTab'){
-		    	getUnAcceptedGroupListingsRequestsJSON();
-		    }
-		    else if(secondTab == 'requestedToursTab'){
-		    	getTourRequestsJSON();
-		    }
-		    else if(secondTab == 'scheduledToursTab'){
-		    	getScheduledToursJSON();
-		    }
+			$("#"+secondTab).addClass('active');			
 		}
 		else{
 			$('.first-tab').addClass('active');
 		}
 	}
 	else{
-		$("#occupiedListingsTab").addClass('active');
+		$("#allListingsTab").addClass('active');
 	}
 	//Any time a tab is clicked on left panel update the url to show that
 	$(".left-panel").click(function () {
 		var newHash = this.id;
 		newHash = newHash.slice(0, -1);
-		//ensure we default to the first tab if it has one
-		//and reload the content of the first tab
-		if(newHash == 'maintenanceTab'){
-			newHash += '-newMaintenanceTab';
-			getOpenMaintenanceRequestsJSON();
-		}
-		else if(newHash == 'requestsTab'){
-			newHash += '-unacceptedTab';
-			getUnAcceptedGroupListingsRequestsJSON();
-		}
-		else if(newHash == 'toursTab'){
-			newHash += '-requestedToursTab';
-			getTourRequestsJSON();
-		}
+		//ensure we default to the first tab if it has one		
 	    window.location.hash = newHash;
 	    $('.first-tab').addClass('active');
 	});
@@ -1248,7 +1210,7 @@
         $("#acceptTourButton"+id).hide();
         $("#acceptTourLoading"+id).show();
         $("#declineTourBtn"+id).addClass("disabled");
-        $("#tourTimeChangeBtn"+id).addClass("disabled"); 
+        $("#tourTimeChangeBtn"+id).addClass("disabled");       
 
         // Load for a random amount of time       
         setTimeout(function () {
@@ -1265,7 +1227,8 @@
             results = data['results'];
             // alert(data['results'].success);
             if (results.success == true){ 
-                //alert("Tour accepted now we need to move this element to 'Scheduled Tours'... make sure to make the button think toO!");
+                //refresh scheduled tours tab
+                getScheduledToursJSON();
             } else {
                 alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
@@ -1291,7 +1254,7 @@
         }, 10000);
     }
 
-    function undoAcceptTour(id, surroundingID){
+    function undoAcceptTour(id, surroundingID, listing){
     	clearTimeout(acceptTourUndoTimeoutTimer);
     	clearTimeout(acceptTourChangeDivTimeoutTimer);
     	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
@@ -1370,7 +1333,7 @@
         }, 10000);
     }
 
-    function undoDeclineTour(id, surroundingID){
+    function undoDeclineTour(id, surroundingID, listing){
     	clearTimeout(declineTourUndoTimeoutTimer);
     	clearTimeout(declineTourChangeDivTimeoutTimer);
     	var count = parseFloat($("#numberOfRequestedTours"+surroundingID).html()) || 0;
@@ -1447,7 +1410,7 @@
         }, 10000);
     }
 
-    function undoCancelTour(id, surroundingID){
+    function undoCancelTour(id, surroundingID, listing){
     	clearTimeout(cancelTourUndoTimeoutTimer);
     	clearTimeout(cancelTourChangeDivTimeoutTimer);
     	var count = parseFloat($("#numberOfScheduledTours"+surroundingID).html()) || 0;
@@ -1487,7 +1450,7 @@
 		// Lets simulate loading
         $("#markInProgressButton"+id).hide();
         $("#markInProgressLoading"+id).show();
-        $("#completedButton"+id).addClass("disabled");
+        $("#completedButton"+id).addClass("disabled");        
 
         //  After random time show undo bar
         setTimeout(function () {
@@ -1505,6 +1468,8 @@
         $.getJSON(requestURL, function(data) {
             results = data['results'];
             if (results.success == true){ 
+            	//refresh the listings on inprogress tab
+        		getInProgressMaintenanceRequestsJSON();
             } else {
                 alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
@@ -1545,7 +1510,8 @@
         requestURL = '/house/maintenanceRequest/' + id + '/undoInProgress/ajax/open';
         $.getJSON(requestURL, function(data) {
             results = data['results'];
-            if (results.success == true){ 
+            if (results.success == true){
+            	getInProgressMaintenanceRequestsJSON();
             } else {
                 alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
@@ -1568,6 +1534,8 @@
         $("#markCompletedButton"+id).hide();
         $("#markCompletedLoading"+id).show();
         $("#inProgressButton"+id).addClass("disabled");
+        
+
         setTimeout(function () {
         	$("#openRequest"+id).fadeOut(300);
         	$("#undoMarkCompleted"+id).show();
@@ -1579,6 +1547,8 @@
         $.getJSON(requestURL, function(data) {
             results = data['results'];
             if (results.success == true){ 
+            	//reresh completed tab
+        		getCompletedMaintenanceRequestsJSON();
             } else {
                 alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
@@ -1619,6 +1589,7 @@
         $.getJSON(requestURL, function(data) {
             results = data['results'];
             if (results.success == true){ 
+            	getCompletedMaintenanceRequestsJSON();
             } else {
                 alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
@@ -1640,6 +1611,7 @@
 		var count = parseFloat($("#numberOfInProgressRequests"+surroundingID).html()) || 0;		
         $("#inProgressToCompletedButton"+id).hide();
         $("#inProgressToCompletedLoading"+id).show();
+
         setTimeout(function () {
         	$("#inProgress"+id).fadeOut(300);
         	$("#undoInProgressToCompleted"+id).show();
@@ -1651,7 +1623,9 @@
         requestURL = '/house/maintenanceRequest/' + id + '/completed/ajax';
         $.getJSON(requestURL, function(data) {
             results = data['results'];
-            if (results.success == true){ 
+            if (results.success == true){
+            	//refresh completed tab
+            	getCompletedMaintenanceRequestsJSON(); 
             } else {
                 alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
@@ -1691,6 +1665,7 @@
         $.getJSON(requestURL, function(data) {
             results = data['results'];
             if (results.success == true){ 
+            	getCompletedMaintenanceRequestsJSON();
             } else {
                 alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
@@ -1713,7 +1688,8 @@
     	$("#acceptHouseRequest"+id).hide();
         $("#acceptHouseRequestLoading"+id).show();
         $(".denyHouseRequest"+surroundingID).addClass("disabled");
-        $(".acceptHouseRequest"+surroundingID).addClass('disabled');
+        $(".acceptHouseRequest"+surroundingID).addClass('disabled');        
+
         setTimeout(function () {
         	$("#unAcceptedRequest"+id).fadeOut(300);
         	$("#undoAcceptedRequest"+id).show();
@@ -1725,7 +1701,9 @@
         requestURL = '/houseRequest/' + id + '/accept/ajax';
         $.getJSON(requestURL, function(data) {
             results = data['results'];
-            if (results.success == true){ 
+            if (results.success == true){
+            	//refresh accepted tab
+            	getAcceptedGroupListingsRequestsJSON(); 
             } else {
                 alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
@@ -1767,6 +1745,7 @@
         $.getJSON(requestURL, function(data) {
             results = data['results'];
             if (results.success == true){ 
+            	getAcceptedGroupListingsRequestsJSON();
             } else {
                 alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
             }
@@ -2040,7 +2019,7 @@
 		                			"$"+price+
 		                		"</div>"+
 		                		"<div class='col-xs-2'>"+
-		                			"<button class='btn btn-danger btn-circle' onClick='removeListingToPurchase("+id+")'><i class='fa fa-times' aria-hidden='true'></button>"+
+		                			"<button class='btn btn-danger btn-circle' onClick='removeListingToPurchase("+id+")'><i class='fa fa-times' aria-hidden='true'></i></button>"+
 		                		"</div>"+		                		
 		               		"</div>"+
 		               		"<hr id='hrInCart"+id+"'>";
@@ -2125,27 +2104,38 @@
     	cart.landlord = landlordID;
     	cart.items = [];
     	var selectedItem = {};
+    	var count = 0;
     	$(".checkoutListingSelect").each(function(i, obj){
     		if($(obj).is(":checked")){
-    			var id = obj.id.match(/\d+/)[0]
+    			var id = obj.id.match(/\d+/)[0];
+    			var street = obj.dataset.street;
+    			var leasePeriod = obj.dataset.lease;
     			//console.log(id);
     			if($("#standardLabel"+id).hasClass("active")){
     				selectedItem = {
+    					index: count,
     					listing_id: id,
+    					listing_street: street,
+    					leasePeriod: leasePeriod,
     					plan: 'standard'    					
     				}
     				cart.items.push(selectedItem);
     			}
     			else if($("#deluxeLabel"+id).hasClass("active")){
     				selectedItem = {
+    					index: count,
     					listing_id: id,
+    					listing_street: street,
+    					leasePeriod: leasePeriod,
     					plan: 'premium'    					
     				}
     				cart.items.push(selectedItem);
     			}
+    			count++;
     		}    		
     	});
     	cart = JSON.stringify(cart);
+    	console.log(cart);
     	
 
     	$.ajax({
@@ -2231,23 +2221,29 @@
     	$("#newMaintenanceTab").empty();
 
     	$.getJSON(requestURL, function(data) {
-    		console.log(data)
+    		//console.log(data)
             openMaintenanceRequests = data['openMaintenanceRequests'];
+            if((openMaintenanceRequests == "") || (openMaintenanceRequests.length == 0)){
+            	var noOpenMaintenanceRequests = `<div class="alert alert-info" role="alert">
+		            						<strong>No New Maintenance Requests for any of your listings</strong>
+		            					</div>`;
+            	$("#newMaintenanceTab").append(noOpenMaintenanceRequests);
+            }
             // alert(openMaintenanceRequests)
-            console.log(openMaintenanceRequests);
+            //console.log(openMaintenanceRequests);
             $.each(openMaintenanceRequests, function(index, maintenanceRequestObject) {
-            	console.log(maintenanceRequestObject);
-            	console.log(maintenanceRequestObject.listing.street);
+            	//console.log(maintenanceRequestObject);
+            	//console.log(maintenanceRequestObject.listing.street);
 
             var outerDiv =`
-            <div id="numberOfOpenRequests`+maintenanceRequestObject.listing.id+`" style="display: none;">Number of Requests</div>
+            <div id="numberOfOpenRequests`+maintenanceRequestObject.listing.id+`" style="display: none;">`+maintenanceRequestObject.requestCount+`</div>
 		    <div id="doIShowOpenRequestsDiv`+maintenanceRequestObject.listing.id+`" style="display: none;">show</div>
             <div class="card" id="openRequestListing`+maintenanceRequestObject.listing.id+`" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
                 <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
                     <div class="row">
                     	<div class="col-xl-12">
                     		<h3 style="font-size: 3.5vh;" id="openRequestsCount`+maintenanceRequestObject.listing.id+`"><strong>
-                    		`+maintenanceRequestObject.listing.street+` (Number of Requests New)</strong></h3>
+                    		`+maintenanceRequestObject.listing.street+` (`+maintenanceRequestObject.requestCount+` New)</strong></h3>
                     	</div>
                     </div>			                    
                 </div>
@@ -2337,8 +2333,10 @@
 		      		</div>`;
             		maintenanceRequestElements += individualElement;
             	})
-
-            	$("#newMaintenanceTab").append(maintenanceRequestElements + "</div></div>");
+				var noMoreNewMaintenance = `<div id="noNewMaintenanceRequests" style="display: none;" class="alert alert-info" role="alert">
+			            				<strong>No More New Maintenance Requests</strong>
+			            			  </div>`;
+            	$("#newMaintenanceTab").append(maintenanceRequestElements + "</div></div>" + noMoreNewMaintenance);
             })
         })
     }
@@ -2351,19 +2349,25 @@
     		console.log(data)
             inProgressMaintenanceRequests = data['inProgressMaintenanceRequests'];
             console.log(inProgressMaintenanceRequests);
+            if((inProgressMaintenanceRequests == "") || (inProgressMaintenanceRequests.length == 0)){
+            	var noInProgressMaintenanceRequests = `<div class="alert alert-info" role="alert">
+		            						<strong>No In-Progress Maintenance Requests for any of your listings</strong>
+		            					</div>`;
+            	$("#inProgressMaintenanceTab").append(noInProgressMaintenanceRequests);
+            }
             $.each(inProgressMaintenanceRequests, function(index, maintenanceRequestObject) {
             	console.log(maintenanceRequestObject);
             	console.log(maintenanceRequestObject.listing.street);
 
             var outerDiv =`
-            	<div id="numberOfInProgressRequests`+maintenanceRequestObject.listing.id+`" style="display: none;">Number of Requests</div>
+            	<div id="numberOfInProgressRequests`+maintenanceRequestObject.listing.id+`" style="display: none;">`+maintenanceRequestObject.requestCount+`</div>
             	<div id="doIShowInProgressRequestsDiv`+maintenanceRequestObject.listing.id+`" style="display: none;">show</div>
             	<div class="card" id="inProgressRequestListing`+maintenanceRequestObject.listing.id+`" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
                     <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
 	                    <div class="row">
 	                    	<div class="col-xl-12">
 	                    		<h3 style="font-size: 3.5vh;" id="inProgressRequestsCount`+maintenanceRequestObject.listing.id+`"><strong>
-	                    		 `+maintenanceRequestObject.listing.street+` (Number of Requests In Progress)</strong></h3>
+	                    		 `+maintenanceRequestObject.listing.street+` (`+maintenanceRequestObject.requestCount+` In Progress)</strong></h3>
 	                    	</div>
 	                    </div>			                    
                     </div>
@@ -2405,7 +2409,7 @@
 	            					<div class="row">
         	            				<div class="col-12 col-md-auto" style="padding-bottom: 5px;padding-right: 15px;">
         	            					<div id="inProgressToCompletedButton`+ maintenanceRequest.id +`">
-        	            						<button class="btn btn-success" onclick="inProgressToCompleted(`+ maintenanceRequest.id +`, 1, '`+maintenanceRequestObject.listing.street+`')">Mark Completed</button>
+        	            						<button class="btn btn-success" onclick="inProgressToCompleted(`+ maintenanceRequest.id +`, `+maintenanceRequestObject.listing.id+`, '`+maintenanceRequestObject.listing.street+`')">Mark Completed</button>
         	            					</div>
         	            					<div id="inProgressToCompletedLoading`+ maintenanceRequest.id +`" style="display: none;">
         	            						<button class="btn btn-success" style="width: 152.33px;">
@@ -2442,8 +2446,10 @@
 		      		</div>`;
             		maintenanceRequestElements += individualElement
             	})
-
-            	$("#inProgressMaintenanceTab").append(maintenanceRequestElements + "</div></div>")
+				var noMoreInProgressMaintenance = `<div id="noInProgressMaintenanceRequests" style="display: none;" class="alert alert-info" role="alert">
+			            				<strong>No More In-Progress Maintenance Requests</strong>
+			            			  </div>`;
+            	$("#inProgressMaintenanceTab").append(maintenanceRequestElements + "</div></div>" + noMoreInProgressMaintenance)
             })
         })
     }
@@ -2456,6 +2462,12 @@
     		console.log(data)
             completedMaintenanceRequests = data['completedMaintenanceRequests'];
             console.log(completedMaintenanceRequests);
+            if((completedMaintenanceRequests == "") || (completedMaintenanceRequests.length == 0)){
+            	var nocompletedMaintenanceRequests = `<div class="alert alert-info" role="alert">
+		            						<strong>No Completed Maintenance Requests for any of your listings</strong>
+		            					</div>`;
+            	$("#completedMaintenanceTab").append(nocompletedMaintenanceRequests);
+            }
             $.each(completedMaintenanceRequests, function(index, maintenanceRequestObject) {
             	console.log(maintenanceRequestObject);
             	console.log(maintenanceRequestObject.listing.street);
@@ -2466,7 +2478,7 @@
 	                    <div class="row">
 	                    	<div class="col-xl-12">
 	                    		<h3 style="font-size: 3.5vh;" id="completedRequestsCount`+maintenanceRequestObject.listing.id+`"><strong>
-	                    		`+maintenanceRequestObject.listing.street+` (Number Here Completed)</strong></h3>
+	                    		`+maintenanceRequestObject.listing.street+` (`+maintenanceRequestObject.requestCount+` Completed)</strong></h3>
 	                    	</div>
 	                    </div>			                    
 	                </div>
@@ -2532,17 +2544,25 @@
     		console.log(data)
             unAcceptedGroupListings = data['unAcceptedGroupListings'];
             console.log(unAcceptedGroupListings);
+            if((unAcceptedGroupListings == "") || (unAcceptedGroupListings.length == 0)){
+            	var noUnAcceptedListings = `<div class="alert alert-info" role="alert">
+		            						<strong>No pending requests for any of your listings</strong>
+		            					</div>`;
+            	$("#unacceptedTab").append(noUnAcceptedListings);
+            }
            $.each(unAcceptedGroupListings, function(index, housingRequestObject) {
             	console.log(housingRequestObject);
             	console.log(housingRequestObject.listing.street);
 
             var outerDiv =`
+            	<div id="numberOfUnacceptedRequests`+ housingRequestObject.listing.id +`" style="display: none;">`+ housingRequestObject.requestCount +`</div>
+		        <div id="doIShowUnacceptedRequestsDiv`+ housingRequestObject.listing.id +`" style="display: none;">show</div>
             	<div class="card" id="unacceptedRequestsListing`+ housingRequestObject.listing.id +`" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
 	                <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
 	                    <div class="row">
 	                    	<div class="col-xl-12">
 	                    		<h3 style="font-size: 3.5vh;" id="unacceptedRequestsCount`+ housingRequestObject.listing.id +`"><strong>
-	                    		`+ housingRequestObject.listing.street +` (1 Requests)</strong></h3>
+	                    		`+ housingRequestObject.listing.street +` (`+ housingRequestObject.requestCount +` Requests)</strong></h3>
 	                    		<small>Lease Period: `+ housingRequestObject.listing.startDate +` - `+ housingRequestObject.listing.endDate +`</small>
 	                    	</div>
 	                    </div>			                    
@@ -2562,6 +2582,7 @@
             	listingRequestElements = outerDiv;
 
             	$.each(housingRequestObject.groupListings, function(index, houseRequest) {
+            		var membersNotLeaderCount = parseInt(houseRequest.group.userCount) -1;
             		individualElement = `
             		<div class="row" id="unAcceptedRequest`+ houseRequest.id +`">
     					<div class="col-xs-0 col-md-1"></div>
@@ -2570,7 +2591,7 @@
                     			<div class="card-header">
                     				<div class="row">
 	                    				<div class="col-xl-12">
-        	            					<h3 style="font-size: 3.0vh;"><strong>`+ houseRequest.group.name +`</strong>(`+ houseRequest.userCount+1 +` Members)
+        	            					<h3 style="font-size: 3.0vh;"><strong>`+ houseRequest.group.name +`</strong>(`+ houseRequest.group.userCount +` Members)
         	            					<a class="btn btn-primary hidden-sm-down" style="float: right;" href="`+ houseRequest.url +`">More Info</a></h3>
         	            				</div>
         	            			</div>
@@ -2633,8 +2654,9 @@
     							    		</div>
                     						<div id="allGroupMembersListingUnaccepted`+ houseRequest.id +`" style="display:none">
             								`;	
-            								$.each(houseRequest.users, function(index, user) {
-            								individualElement += `
+            								$.each(houseRequest.group.users, function(index, user) {
+            								if(user.id != houseRequest.group.leader.id){
+            									individualElement += `
             									<div class="row">
             										<div class="col-sm-12" style="padding: 0px;">                  											
         							    				<div class="card" style="width: 100%">
@@ -2658,11 +2680,12 @@
         							    			</div>
         							    		</div>
         							    		`;
-        							    	})
+        							    	}
+            								})            								
         							    	individualElement += `
         							    	</div>
-        							    	<button class="btn btn-info" id="allGroupMembersListingUnacceptedToggle`+ houseRequest.id +`" onClick="showUnacceptedHousingRequestMembers(`+ houseRequest.id +`)"><i class='fa fa-users' aria-hidden='true'></i> See other `+ houseRequest.userCount +` members</button>
-		      					    		<button class="btn btn-info" id="hideAllGroupMembersListingUnacceptedToggle`+ houseRequest.id +`" style="display: none" onClick="hideUnacceptedHousingRequestMembers(`+ houseRequest.id +`)"><i class='fa fa-users' aria-hidden='true'></i> Hide other `+ houseRequest.userCount +` members</button>
+        							    	<button class="btn btn-info" id="allGroupMembersListingUnacceptedToggle`+ houseRequest.id +`" onClick="showUnacceptedHousingRequestMembers(`+ houseRequest.id +`)"><i class='fa fa-users' aria-hidden='true'></i> See other `+ membersNotLeaderCount +` members</button>
+		      					    		<button class="btn btn-info" id="hideAllGroupMembersListingUnacceptedToggle`+ houseRequest.id +`" style="display: none" onClick="hideUnacceptedHousingRequestMembers(`+ houseRequest.id +`)"><i class='fa fa-users' aria-hidden='true'></i> Hide other `+ membersNotLeaderCount +` members</button>
         							    	`;
         			individualElement += "</div></div></div></div></div></div>";
         			individualElement += `
@@ -2686,9 +2709,210 @@
             		listingRequestElements += individualElement;
 
             	})
-
-            	$("#unacceptedTab").append(listingRequestElements + "</div></div></div></div>")
+				var noMoreUnacceptedRequests = `<div id="noUnacceptedRequests" style="display: none;" class="alert alert-info" role="alert">
+			            				<strong>No More Pending Requests</strong>
+			            			  </div>`;
+            	$("#unacceptedTab").append(listingRequestElements + "</div></div></div></div>"+noMoreUnacceptedRequests)
             })
+        })
+    }
+
+    function getAcceptedGroupListingsRequestsJSON() {
+    	requestURL = '/landlord/acceptedGroupListings/JSON'
+    	$("#acceptedTab").empty();
+
+    	$.getJSON(requestURL, function(data) {
+    		//console.log(data)
+            acceptedGroupListings = data['acceptedGroupListings'];
+            if((acceptedGroupListings == "") || (acceptedGroupListings.length == 0)){
+            	var noAcceptedListings = `<div class="alert alert-info" role="alert">
+		            						<strong>No groups have been accepted for any of your listings yet</strong>
+		            					</div>`;
+            	$("#acceptedTab").append(noAcceptedListings);
+            }
+            //console.log(acceptedGroupListings);
+           $.each(acceptedGroupListings, function(index, housingRequest) {
+            	//console.log(housingRequest);
+            	//console.log(housingRequest.listing.street);
+            	membersNotLeaderCount = parseInt(housingRequest.groupListings[0].group.userCount)-1;
+
+            	var div =`
+		                <div class="card" id="confirmRequest`+ housingRequest.id +`">
+		                    <div class="card-header">
+			                    <div class="row">
+			                    	<div class="col-xl-12">
+			                    		<h3 style="font-size: 2.5vh;"><strong>`+ housingRequest.groupListings[0].group.name +` for `+ housingRequest.listing.street +`
+			                    		</strong>        								                    		
+			                    		<a class="btn btn-primary hidden-sm-down" style="float: right;" href="`+ housingRequest.url +`">More Info</a></h3>
+			                    	</div>
+			                    </div>
+			                    <div class="row">
+			                    	<div class="col-xl-12">
+			                    		<small>Lease Period: `+ housingRequest.listing.startDate +` - `+ housingRequest.listing.endDate +`</small>
+			                    	</div>
+			                    </div>        								                    		<br>
+	                    		<div class="row">
+	                    			<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+		                    			<strong style="padding-right: 16px;">All Leases Collected: </strong>
+		                    			`;
+		                    			
+		                    			if(housingRequest.groupListings[0].leasesCollected == "true"){
+		                    				div += `
+		                    				<button id="undoMarkAllCollected`+ housingRequest.id +`" type="button" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" onclick="undoMarkLeasesCollected(`+ housingRequest.id +`)"><i class="fa fa-check" aria-hidden="true"></i></button>
+		                    				<button type="button" id="undoMarkAllCollectedLoading`+ housingRequest.id +`" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+		                    				<button type="button" id="undoMarkAllUncollected`+ housingRequest.id +`" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" style="display: none;" onclick="undoMarkLeasesUncollected(`+ housingRequest.id +`)"><i class="fa fa-times" aria-hidden="true"></i></button>
+		                    				`;
+		                    			}
+		                    			else{
+		                    				div += `
+		                    				<button id="markAllCollected`+ housingRequest.id +`" type="button" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" onclick="markLeasesCollected(`+ housingRequest.id +`)"><i class="fa fa-times" aria-hidden="true"></i></button>
+		                    				<button type="button" id="markAllCollectedLoading`+ housingRequest.id +`" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+		                    				<button type="button" id="markAllUncollected`+ housingRequest.id +`" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" style="display: none;" onclick="markLeasesUncollected(`+ housingRequest.id +`)"><i class="fa fa-check" aria-hidden="true"></i></button>
+		                    				`;
+		                    			}
+		                    				
+		                    		div += `	    								                    			
+		                    		</div>
+		                    		<div class="col-12 col-md-auto" style="padding-left: 15px; padding-right: 15px;">
+		                    			<strong>Deposits Collected: </strong> 
+		                    			<span id="numDeposits`+ housingRequest.id +`">`+ housingRequest.groupListings[0].numSecurityDepositsPaid +`/`+ housingRequest.groupListings[0].group.userCount +`
+		                    		</div>
+		                    		<div class="col-12 col-md-auto" style="padding-left: 15px; padding-right: 15px; padding-bottom: 5px;">
+		                    			<button id="confirmGroupButton`+ housingRequest.id +`" class="btn btn-success" onclick="confirmGroup(`+ housingRequest.id +`)">Confirm Group</button>
+		                    			<button id="confirmGroupLoading`+ housingRequest.id +`" class="btn btn-success" style="display: none; width: 139.33px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+		                    		</div>
+		                    		<br>
+		                    		<div class="col-xs-12" style="padding-left: 15px;">
+			                    		<a class="btn btn-primary" style="width: 139.33px;" href="`+ housingRequest.groupListings[0].url +`">More Info</a>
+		                    		</div>
+	                    		</div>		                    
+		                    </div>
+		                    <div class="card-block">        								                    
+			                    <div class="row">
+			                    	<div class="col-xl-2"></div>
+			                    	<div class="col-xl-8">
+			                    		<strong>Security Deposits Collected:</strong>				                    		    
+		                    				<div class="row">
+	                    					<div class="col-sm-12" style="padding: 0px;">				                    						
+                    		    				<div class="card">
+                    		    				    <div class="card-block">
+                    		    				        <div class="row">
+                    		    				            <div class="hidden-sm-down col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
+                    		    				                <img src="`+ housingRequest.groupListings[0].group.leader.profileImageURL +`" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;" />
+                    		    				            </div>
+                    		    				            <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xl-10">
+                    		    				                <div class="row">
+                    		    				                    <div class="col-xs-12 col-md-6">
+                    		    				                        <div class="row">
+                    		    				                            <a href="`+ housingRequest.groupListings[0].group.leader.url +`">
+                    		    				                                <h4 style="font-size: 3.0vh;">`+ housingRequest.groupListings[0].group.leader.name +`</h4>
+                    		    				                            </a>
+                    		    				                            <h6 style="padding-top: 10px; padding-left: 5px;"><span class="tag tag-primary">Group Leader</span></h6>
+                    		    				                        </div>
+                    		    				                    </div>
+                    		    				                    <div class="col-xs-12 col-md-6">                            
+                    		    				                        <h4><strong style="padding-right: 10px;">Deposit Paid: </strong>
+                    		    				                        `;
+                    		    				                        
+                    		    				                        if(housingRequest.groupListings[0].group.leader.securityDepositPaid == "true"){
+                    		    				                        	div += `
+                    		    				                            <button id="depositPaid`+ housingRequest.id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" onclick="paidToUnpaid(`+ housingRequest.groupListings[0].group.leader.id +`, `+ housingRequest.id +`)" class="btn btn-success btn-circle" data-tooltip="Click here to mark deposit as NOT paid"><i class="fa fa-check" aria-hidden="true"></i></button>
+                    		    				                            <button id="markDepositUnpaid`+ housingRequest.id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+                    		    				                            <button id="depositMarkedUnPaid`+ housingRequest.id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" onclick="paidToPaid(`+ housingRequest.groupListings[0].group.leader.id +`, `+ housingRequest.id +`)" class="btn btn-danger btn-circle" style="display: none;" data-tooltip="Click here to mark deposit as paid"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    		    				                            `;
+                    		    				                        }
+                    		    				                        else{
+                    		    				                        	div += `
+                    		    				                        	<button id="depositUnpaid`+ housingRequest.id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" onclick="unpaidToPaid(`+ housingRequest.groupListings[0].group.leader.id +`, `+ housingRequest.id +`)" class="btn btn-danger btn-circle" data-tooltip="Click here to mark deposit as paid"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    		    				                            <button id="markDepositPaid`+ housingRequest.id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+                    		    				                            <button id="depositMarkedPaid`+ housingRequest.id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" onclick="unpaidToUnpaid(`+ housingRequest.groupListings[0].group.leader.id +`, `+ housingRequest.id +`)" class="btn btn-success btn-circle" style="display: none;" data-tooltip="Click here to mark deposit as NOT paid"><i class="fa fa-check" aria-hidden="true"></i></button>
+                    		    				                           	`;
+                    		    				                        }
+                    		    				                        div += `
+                    		    				                        </h4>
+                    		    				                    </div>
+                    		    				                </div>
+                    		    				            </div>
+                    		    				        </div>
+                    		    				    </div>
+                    		    				</div>
+	                    		    		</div>
+	                    		    	</div>
+		      					    		<div id="allGroupMembersListingAccepted`+ housingRequest.id +`" style="display: none;">
+		      					    		`;
+	      					    				$.each(housingRequest.groupListings[0].group.users, function(index, user) {
+	            								if(user.id != housingRequest.groupListings[0].group.leader.id){
+	            									div += `
+	            									<div class="row">
+				                    					<div class="col-sm-12" style="padding: 0px;">
+			                    		    				<div class="card">
+			                    		    				    <div class="card-block">
+			                    		    				        <div class="row">
+			                    		    				            <div class="hidden-sm-down col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
+			                    		    				                <img src="`+ user.profileImageURL +`" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;" />
+			                    		    				            </div>
+			                    		    				            <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xl-10">
+			                    		    				                <div class="row">
+			                    		    				                    <div class="col-xs-12 col-md-6">
+			                    		    				                        <div class="row">
+			                    		    				                            <a href="`+ user.url +`">
+			                    		    				                                <h4 style="font-size: 3.0vh;">`+ user.name +`</h4>
+			                    		    				                            </a>
+			                    		    				                        </div>
+			                    		    				                    </div>
+			                    		    				                    <div class="col-xs-12 col-md-6">                            
+			                    		    				                        <h4><strong style="padding-right: 10px;">Deposit Paid: </strong>
+			                    		    				                        `;
+			                    		    				                        
+			                    		    				                        if(user.securityDepositPaid == "true"){
+			                    		    				                        	div += `
+			                    		    				                            <button id="depositPaid`+ housingRequest.id +`Z`+ user.id +`" type="button" onclick="paidToUnpaid(`+ housingRequest.group.leader.id +`, `+ housingRequest.id +`)" class="btn btn-success btn-circle" data-tooltip="Click here to mark deposit as NOT paid"><i class="fa fa-check" aria-hidden="true"></i></button>
+			                    		    				                            <button id="markDepositUnpaid`+ housingRequest.id +`Z`+ user.id +`" type="button" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+			                    		    				                            <button id="depositMarkedUnPaid`+ housingRequest.id +`Z`+ user.id +`" type="button" onclick="paidToPaid(`+ user.id +`, `+ housingRequest.id +`)" class="btn btn-danger btn-circle" style="display: none;" data-tooltip="Click here to mark deposit as paid"><i class="fa fa-times" aria-hidden="true"></i></button>
+			                    		    				                            `;
+			                    		    				                        }
+			                    		    				                        else{
+			                    		    				                        	div += `
+			                    		    				                        	<button id="depositUnpaid`+ housingRequest.id +`Z`+ user.id +`" type="button" onclick="unpaidToPaid(`+ user.id +`, `+ housingRequest.id +`)" class="btn btn-danger btn-circle" data-tooltip="Click here to mark deposit as paid"><i class="fa fa-times" aria-hidden="true"></i></button>
+			                    		    				                            <button id="markDepositPaid`+ housingRequest.id +`Z`+ user.id +`" type="button" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+			                    		    				                            <button id="depositMarkedPaid`+ housingRequest.id +`Z`+ user.id +`" type="button" onclick="unpaidToUnpaid(`+ user.id +`, `+ housingRequest.id +`)" class="btn btn-success btn-circle" style="display: none;" data-tooltip="Click here to mark deposit as NOT paid"><i class="fa fa-check" aria-hidden="true"></i></button>
+			                    		    				                           	`;
+			                    		    				                        }
+			                    		    				                        div += `
+			                    		    				                        </h4>
+			                    		    				                    </div>
+			                    		    				                </div>
+			                    		    				            </div>
+			                    		    				        </div>
+			                    		    				    </div>
+			                    		    				</div>
+				                    		    		</div>
+				                    		    	</div>
+	        							    		`;
+	        							    	}
+	            								})
+											div+=`
+		      					    		</div>
+		      					    		<button class="btn btn-info" id="allGroupMembersListingAcceptedToggle`+ housingRequest.id +`" onClick="showAcceptedHousingRequestMembers(`+ housingRequest.id +`)"><i class='fa fa-users' aria-hidden='true'></i> See other `+ membersNotLeaderCount +` members</button>
+		      					    		<button class="btn btn-info" id="hideAllGroupMembersListingAcceptedToggle`+ housingRequest.id +`" onClick="hideAcceptedHousingRequestMembers(`+ housingRequest.id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other `+ membersNotLeaderCount +` members</button>
+				                    		<br>
+				                    		<br>
+				                    	</div>
+				                    </div>
+			                    </div>
+			                </div>
+						<br>
+						<div class="row" id="undoConfirmRequest`+ housingRequest.id +`" style="display: none;">
+							<div class="col-xl-1"></div>
+							<div class="col-xl-10">
+								<div class="alert alert-info" role="alert">
+								    You have just confirmed a group for this listing <button class="link" onclick="undoConfirmGroup(`+ housingRequest.id +`)">Undo?</button>
+								</div>
+							</div>
+						</div>
+						`;
+				$("#acceptedTab").append(div + "</div></div></div></div>")
+            })        
         })
     }
 
@@ -2697,22 +2921,28 @@
     	$("#requestedToursTab").empty();
 
     	$.getJSON(requestURL, function(data) {
-    		console.log(data)
+    		//console.log(data)
             requestedTours = data['requestedTours'];
-            console.log(requestedTours);
+            //console.log(requestedTours);            
+            if(requestedTours == ""){
+            	var noRequestedTours = `<div class="alert alert-info" role="alert">
+		            						<strong>No Requested Tours</strong>
+		            					</div>`;
+            	$("#requestedToursTab").append(noRequestedTours);
+            }
             $.each(requestedTours, function(index, requestedTourObject) {
-            	console.log(requestedTourObject);
-            	console.log(requestedTourObject.listing.street);
+            	//console.log(requestedTourObject);
+            	//console.log(requestedTourObject.listing.street);
 
             var outerDiv =`
-            	<div id="numberOfRequestedTours`+ requestedTourObject.listing.id +`" style="display: none;">Number of Requested Tours</div>
+            	<div id="numberOfRequestedTours`+ requestedTourObject.listing.id +`" style="display: none;">`+ requestedTourObject.tourCount +`</div>
                 	<div id="doIShowDiv`+ requestedTourObject.listing.id +`" style="display: none;">show</div>
                 	<div class="card" id="requestedTourListing`+ requestedTourObject.listing.id +`" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
 	                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
 		                    <div class="row">
 		                    	<div class="col-xl-12">
 		                    		<h3 style="font-size: 3.5vh;" id="requestedToursCount`+ requestedTourObject.listing.id +`"><strong>
-		                    		`+ requestedTourObject.listing.street +` (2 Requests)</strong></h3>
+		                    		`+ requestedTourObject.listing.street +` (`+ requestedTourObject.tourCount +` Requests)</strong></h3>
 		                    		<small style="font-size: 2.5vh;">Lease Period: `+ requestedTourObject.listing.startDate +` - `+ requestedTourObject.listing.endDate +`</small>
 		                    	</div>
 		                    </div>			                    
@@ -2732,6 +2962,7 @@
             	requestedToursElements = outerDiv;
 
             	$.each(requestedTourObject.tours, function(index, tour) {
+            		var membersNotLeaderCount = parseInt(tour.group.userCount) -1;
             		individualElement = `
             		<div class="row" id="requestedTour`+ tour.id +`">
     					<div class="col-xs-0 col-xl-1"></div>
@@ -2740,7 +2971,7 @@
                     			<div class="card-header">
                     				<div class="row">
 	                    				<div class="col-12 col-xl-12">
-        	            					<h3 style="font-size: 3.5vh;"><strong>Group Name </strong>(`+ tour.userCount +` Members)
+        	            					<h3 style="font-size: 3.5vh;"><strong>`+ tour.group.name +` </strong>(`+ tour.group.userCount +` Members)
         	            					<a class="btn btn-primary hidden-sm-down" href="`+ tour.url +`" style="float: right;">More Info</a></h3>
         	            				</div>
         	            			</div>
@@ -2766,7 +2997,7 @@
                     	            					</div>
                     	            				</div>						
                     	            				<div class="col-lg-4 col-centered" style="padding-right: 15px; padding-bottom: 5px;">
-                    	            					<a href="#!" id="tourTimeChangeBtn`+ tour.id +`" class="btn btn-info" data-toggle="modal" data-target="#suggestTimeTourModal" data-tourid="`+ tour.id +`" data-groupid="tour.group.id">Date/Time Change</a>
+                    	            					<a href="#!" id="tourTimeChangeBtn`+ tour.id +`" class="btn btn-info" data-toggle="modal" data-target="#suggestTimeTourModal" data-tourid="`+ tour.id +`" data-groupid="`+ tour.group.id +`">Date/Time Change</a>
                     	            				</div>`;
         	            						}
         	            						else{
@@ -2804,7 +3035,7 @@
         	            						individualElement += `
 				                    			Pending The Group's Decision
 				                    			<br>
-				                    			Waiting for the group leader, tour.group.leader.name to confirm the requested time or suggest a different one`;
+				                    			Waiting for the group leader, `+ tour.group.leader.name +` to confirm the requested time or suggest a different one`;
 				                    		}
 				                    		else{
 				                    			individualElement += `
@@ -2815,37 +3046,61 @@
 				                    		individualElement += `
 				                    		<br><br>
 				                    		<strong>Group Leader:</strong>
+				                    		<div class="row">
+        										<div class="col-sm-12" style="padding: 0px;">                  											
+    							    				<div class="card" style="width: 100%">
+    							    					<div class="card-block">
+    							    					    <div class="row">
+    							    					        <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
+    							    					            <img src="`+ tour.group.leader.profileImageURL +`" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;">
+    							    					        </div>
+    							    					        <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-10">
+    							    					            <div class="row">
+    							    					                <div class="col-xs-12">                           
+    							    					                    <a href="`+tour.group.leader.url +`">
+    							    					                        <h4 style="font-size: 3.0vh;">`+ tour.group.leader.name +`</h4>
+    							    					                    </a>
+    							    					                </div>
+    							    					            </div>
+    							    					        </div>
+    							    					    </div>
+    							    					</div>
+    							    				</div>
+    							    			</div>
+    							    		</div>
 				                    		<div id="allMembersRequestedTour`+ tour.id +`" style="display: none;">`;
-				                    		$.each(tour.users, function(index, user) {
-            								individualElement += `
-            									<div class="row">
-            										<div class="col-sm-12" style="padding: 0px;">                  											
-        							    				<div class="card" style="width: 100%">
-        							    					<div class="card-block">
-        							    					    <div class="row">
-        							    					        <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
-        							    					            <img src="`+ user.profileImageURL +`" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;">
-        							    					        </div>
-        							    					        <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-10">
-        							    					            <div class="row">
-        							    					                <div class="col-xs-12">                           
-        							    					                    <a href="`+ user.url +`">
-        							    					                        <h4 style="font-size: 3.0vh;">`+ user.name +`</h4>
-        							    					                    </a>
-        							    					                </div>
-        							    					            </div>
-        							    					        </div>
-        							    					    </div>
-        							    					</div>
-        							    				</div>
-        							    			</div>
-        							    		</div>
-        							    		`;
-        							    	})
+				                    		$.each(tour.group.users, function(index, user) {
+					                    		if(user.id != tour.group.leader.id){
+					                    			individualElement += `
+	            									<div class="row">
+	            										<div class="col-sm-12" style="padding: 0px;">                  											
+	        							    				<div class="card" style="width: 100%">
+	        							    					<div class="card-block">
+	        							    					    <div class="row">
+	        							    					        <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
+	        							    					            <img src="`+ user.profileImageURL +`" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;">
+	        							    					        </div>
+	        							    					        <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-10">
+	        							    					            <div class="row">
+	        							    					                <div class="col-xs-12">                           
+	        							    					                    <a href="`+ user.url +`">
+	        							    					                        <h4 style="font-size: 3.0vh;">`+ user.name +`</h4>
+	        							    					                    </a>
+	        							    					                </div>
+	        							    					            </div>
+	        							    					        </div>
+	        							    					    </div>
+	        							    					</div>
+	        							    				</div>
+	        							    			</div>
+	        							    		</div>
+	        							    		`;
+	        							    	}
+				                    		})            								
         							    	individualElement += `
 		      					    		</div></div>
-		      					    		<button class="btn btn-info" id="allMembersRequestedTourToggle`+ tour.id +`" onClick="showRequestedTourMembers(`+ tour.id +`)"><i class='fa fa-users' aria-hidden='true'></i> See other `+ tour.userCount +` members</button>
-		      					    		<button class="btn btn-info" id="hideAllMembersRequestedTourToggle`+ tour.id +`" onClick="hideRequestedTourMembers(`+ tour.id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other `+ tour.userCount +` members</button>	  		
+		      					    		<button class="btn btn-info" id="allMembersRequestedTourToggle`+ tour.id +`" onClick="showRequestedTourMembers(`+ tour.id +`)"><i class='fa fa-users' aria-hidden='true'></i> See other `+ membersNotLeaderCount +` members</button>
+		      					    		<button class="btn btn-info" id="hideAllMembersRequestedTourToggle`+ tour.id +`" onClick="hideRequestedTourMembers(`+ tour.id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other `+ membersNotLeaderCount +` members</button>	  		
 		      					    	</div>
 		      					    </div>
 		      					</div>
@@ -2855,7 +3110,7 @@
 		      			<div class="col-xl-1"></div>
 		      			<div class="col-xl-10">
 		      				<div class="alert alert-info" role="alert">
-		      				    You have just accepted a tour for `+ tour.timeRequested +` <button class="link" onclick="undoAcceptTour(`+ tour.id +`, `+ requestedTourObject.listing.id +`)">Undo?</button>
+		      				    You have just accepted a tour for `+ tour.timeRequested +` <button class="link" onclick="undoAcceptTour(`+ tour.id +`, `+ requestedTourObject.listing.id +`, '`+ requestedTourObject.listing.street +`')">Undo?</button>
 		      				</div>
 		      			</div>
 		      		</div>
@@ -2863,14 +3118,16 @@
 		      			<div class="col-xl-1"></div>
 		      			<div class="col-xl-10">
 		      				<div class="alert alert-info" role="alert">
-		      				    You have just declined a tour for `+ tour.timeRequested +` <button class="link" onclick="undoDeclineTour(`+ tour.id +`, `+ requestedTourObject.listing.id +`)">Undo?</button>
+		      				    You have just declined a tour for `+ tour.timeRequested +` <button class="link" onclick="undoDeclineTour(`+ tour.id +`, `+ requestedTourObject.listing.id +`, '`+ requestedTourObject.listing.street +`')">Undo?</button>
 		      				</div>
 		      			</div>
 		      		</div>`;
             		requestedToursElements += individualElement
             	})
-
-            	$("#requestedToursTab").append(requestedToursElements + "</div></div>")
+				var noMoreRequests = `<div id="noRequestedTours" style="display: none;" class="alert alert-info" role="alert">
+			            				<strong>No More Requested Tours</strong>
+			            			  </div>`;
+            	$("#requestedToursTab").append(requestedToursElements + "</div></div>" + noMoreRequests)
             })
         })
     }
@@ -2882,20 +3139,26 @@
     	$.getJSON(requestURL, function(data) {
     		console.log(data)
             scheduledTours = data['scheduledTours'];
-            console.log(scheduledTours);
+            //console.log(scheduledTours);
+            if(scheduledTours.length == 0){
+            	var noScheduledTours = `<div class="alert alert-info" role="alert">
+		            						<strong>No Scheduled Tours</strong>
+		            					</div>`;
+            	$("#scheduledToursTab").append(noScheduledTours);
+            }
             $.each(scheduledTours, function(index, scheduledTourObject) {
-            	console.log(scheduledTourObject);
-            	console.log(scheduledTourObject.listing.street);
+            	//console.log(scheduledTourObject);
+            	//console.log(scheduledTourObject.listing.street);
 
             var outerDiv =`
-            	<div id="numberOfScheduledTourstourObject.listing.id" style="display: none;">tourObject.tours|length </div>
-		        	<div id="doIShowScheduledDivtourObject.listing.id" style="display: none;">show</div>
-		        	<div class="card" id="scheduledTourListingtourObject.listing.id" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+            	<div id="numberOfScheduledTours`+ scheduledTourObject.listing.id +`" style="display: none;">`+ scheduledTourObject.tourCount +`</div>
+		        	<div id="doIShowScheduledDiv`+ scheduledTourObject.listing.id +`" style="display: none;">show</div>
+		        	<div class="card" id="scheduledTourListing`+ scheduledTourObject.listing.id +`" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
 		                <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
 		                    <div class="row">
 		                    	<div class="col-xl-12">
-		                    		<h3 style="font-size: 3.5vh;" id="requestedToursCounttourObject.listing.id"><strong>
-		                    		`+ scheduledTourObject.listing.street +` (tourObject.tours|length  Tours)</strong></h3>
+		                    		<h3 style="font-size: 3.5vh;" id="requestedToursCount`+ scheduledTourObject.listing.street +`"><strong>
+		                    		`+ scheduledTourObject.listing.street +` (`+ scheduledTourObject.tourCount +`  Tours)</strong></h3>
 		                    		<small style="font-size: 2.5vh;">Lease Period: `+ scheduledTourObject.listing.startDate +` - `+ scheduledTourObject.listing.endDate +`</small>
 		                    	</div>
 		                    </div>			                    
@@ -2915,6 +3178,7 @@
             	scheduledToursElements = outerDiv;
 
             	$.each(scheduledTourObject.tours, function(index, tour) {
+            		var membersNotLeaderCount = parseInt(tour.group.userCount) -1;
             		individualElement = `
             		<div class="row" id="scheduledTour`+ tour.id +`">
     					<div class="col-xs-0 col-xl-1"></div>
@@ -2923,13 +3187,13 @@
                     			<div class="card-header">
                     				<div class="row">
 	                    				<div class="col-xs-12 col-xl-10">
-        	            					<h3 style="font-size: 3.5vh;"><strong>tour.group.name</strong>(`+ tour.userCount +` Members)</h3>
+        	            					<h3 style="font-size: 3.5vh;"><strong>`+ tour.group.name +`</strong>(`+ tour.group.userCount +` Members)</h3>
         	            					Confirmed Date and Time: `+ tour.timeRequested +`
         	            					<br><br>
         	            					<div class="row">
         	            						<div class="col-12 col-md-auto">
                 	            					<div id="cancelTourButton`+ tour.id +`" style="padding-bottom: 5px;">
-                	            						<button class="btn btn-danger" onclick="cancelTour(`+ tour.id +`, tourObject.listing.id, '`+ scheduledTourObject.listing.street +`')">Cancel Tour</button>
+                	            						<button class="btn btn-danger" onclick="cancelTour(`+ tour.id +`, `+ scheduledTourObject.listing.id +`, '`+ scheduledTourObject.listing.street +`')">Cancel Tour</button>
                 	            					</div>
                 	            					<div id="cancelTourLoading`+ tour.id +`" style="display: none; padding-bottom: 5px;">
                 	            						<button class="btn btn-danger" style="width: 117.5px;">
@@ -2953,37 +3217,61 @@
 				                    		Please Arrive at the property on `+ tour.timeRequested +` to meet for this tour
 				                    		<br><br>
 				                    		<strong>Group Leader:</strong>
+				                    		<div class="row">
+        										<div class="col-sm-12" style="padding: 0px;">
+    							    				<div class="card" style="width: 100%">
+    							    					<div class="card-block">
+    							    					    <div class="row">
+    							    					        <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
+    							    					            <img src="`+ tour.group.leader.profileImageURL +`" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;">
+    							    					        </div>
+    							    					        <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-10">
+    							    					            <div class="row">
+    							    					                <div class="col-xs-12">                           
+    							    					                    <a href="`+ tour.group.leader.url +`">
+    							    					                        <h4 style="font-size: 3.0vh;">`+ tour.group.leader.name +`</h4>
+    							    					                    </a>
+    							    					                </div>
+    							    					            </div>
+    							    					        </div>
+    							    					    </div>
+    							    					</div>
+    							    				</div>
+    							    			</div>
+    							    		</div>
 											<div id="allMembersScheduledTour`+ tour.id +`" style="display: none;">`;
-				                    		$.each(tour.users, function(index, user) {
-            								individualElement += `
-            									<div class="row">
-            										<div class="col-sm-12" style="padding: 0px;">                  											
-        							    				<div class="card" style="width: 100%">
-        							    					<div class="card-block">
-        							    					    <div class="row">
-        							    					        <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
-        							    					            <img src="https://api.adorable.io/avatars/120/fake9" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;">
-        							    					        </div>
-        							    					        <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-10">
-        							    					            <div class="row">
-        							    					                <div class="col-xs-12">                           
-        							    					                    <a href="/user/view/`+ user.id +`">
-        							    					                        <h4 style="font-size: 3.0vh;">`+ user.name +`</h4>
-        							    					                    </a>
-        							    					                </div>
-        							    					            </div>
-        							    					        </div>
-        							    					    </div>
-        							    					</div>
-        							    				</div>
-        							    			</div>
-        							    		</div>
-        							    		`;
-        							    	})
+				                    		$.each(tour.group.users, function(index, user) {
+					                    		if(user.id != tour.group.leader.id){
+	            								individualElement += `
+	            									<div class="row">
+	            										<div class="col-sm-12" style="padding: 0px;">
+	        							    				<div class="card" style="width: 100%">
+	        							    					<div class="card-block">
+	        							    					    <div class="row">
+	        							    					        <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
+	        							    					            <img src="`+ user.profileImageURL +`" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;">
+	        							    					        </div>
+	        							    					        <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-10">
+	        							    					            <div class="row">
+	        							    					                <div class="col-xs-12">                           
+	        							    					                    <a href="`+ user.url +`">
+	        							    					                        <h4 style="font-size: 3.0vh;">`+ user.name +`</h4>
+	        							    					                    </a>
+	        							    					                </div>
+	        							    					            </div>
+	        							    					        </div>
+	        							    					    </div>
+	        							    					</div>
+	        							    				</div>
+	        							    			</div>
+	        							    		</div>
+	        							    		`;
+	        							    	}
+				                    		})
         							    	individualElement += `
 		      					    		</div></div>
-		      					    		<button class="btn btn-info" id="allMembersScheduledTourToggle`+ tour.id +`" onClick="showScheduledTourMembers(`+ tour.id +`)"><i class='fa fa-users' aria-hidden='true'></i> See other `+ tour.userCount +` members</button>
-		      					    		<button class="btn btn-info" id="hideAllMembersScheduledTourToggle`+ tour.id +`" onClick="hideScheduledTourMembers(`+ tour.id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other `+ tour.userCount +` members</button>	  		
+		      					    		<button class="btn btn-info" id="allMembersScheduledTourToggle`+ tour.id +`" onClick="showScheduledTourMembers(`+ tour.id +`)"><i class='fa fa-users' aria-hidden='true'></i> See other `+ membersNotLeaderCount +` members</button>
+		      					    		<button class="btn btn-info" id="hideAllMembersScheduledTourToggle`+ tour.id +`" onClick="hideScheduledTourMembers(`+ tour.id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other `+ membersNotLeaderCount +` members</button>	  		
 		      					    	</div>
 		      					    </div>
 		      					</div>
@@ -2993,15 +3281,27 @@
 	      			<div class="col-xl-1"></div>
 	      			<div class="col-xl-10">
 	      				<div class="alert alert-info" role="alert">
-	      				    You have just canceled a tour for `+ tour.timeRequested +` <button class="link" onclick="undoCancelTour(`+ tour.id +`, tourObject.listing.id)">Undo?</button>
+	      				    You have just canceled a tour for `+ tour.timeRequested +` <button class="link" onclick="undoCancelTour(`+ tour.id +`, `+ scheduledTourObject.listing.id +`, '`+ scheduledTourObject.listing.street +`')">Undo?</button>
 	      				</div>
 	      			</div>
 	      		</div>`;
             		scheduledToursElements += individualElement
             	})
-
-            	$("#scheduledToursTab").append(scheduledToursElements + "</div></div>")
+				var noMoreScheduled = `<div id="noScheduledTours" style="display: none;" class="alert alert-info" role="alert">
+			            				<strong>No More Scheduled Tours</strong>
+			            			  </div>`;
+            	$("#scheduledToursTab").append(scheduledToursElements + "</div></div>" + noMoreScheduled)
             })
+        })
+    }
+
+    function getJSON(){
+    	requestURL = '/landlord/acceptedGroupListings/JSON'
+
+    	$.getJSON(requestURL, function(data) {
+    		console.log(data)
+            acceptedGroupListings = data['acceptedGroupListings'];
+            console.log(acceptedGroupListings);
         })
     }
 

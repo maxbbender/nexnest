@@ -55,6 +55,8 @@
 	                    {{ housingRequest.listing.street }}
 	                </h1>
 	            </div>
+                <div id="numGroupMembers" style="display: none;">{{housingRequest.group.acceptedUsers|count}}</div>
+                <div id="areLeasesCollected" style="display: none;">{{housingRequest.all_leases_submitted}}</div>
 	        </div>
     	</div>
     	<br>
@@ -78,7 +80,7 @@
 						    	                			<strong style="padding-right: 5px; font-size: 3.0vh;">Application: </strong>
 						    	                		</div>
 						    	                		<div class="col-xs-2 col-xl-1">
-						    	                			<button type="button" id="confirmed" class="btn btn-success btn-circle"><i class="fa fa-check" aria-hidden="true"></i></button>
+						    	                			<button type="button" id="confirmed" class="btn btn-success btn-circle" style="pointer-events: none;"><i class="fa fa-check" aria-hidden="true"></i></button>
 						    	                		</div>
 						    	                	</div>
 						    	                	<hr>
@@ -88,15 +90,23 @@
                                                     		<strong style="padding-right: 5px; font-size: 3.0vh;">Leases Signed: </strong>
                                                     	</div>
                                                     	<div class="col-xs-2 col-xl-1">
-                                                    		{% if housingRequest.all_leases_submitted %}
-							                    				<button id="undoMarkAllCollected{{housingRequest.id}}" type="button" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" onclick="undoMarkLeasesCollected({{housingRequest.id}})"><i class="fa fa-check" aria-hidden="true"></i></button>
-							                    				<button type="button" id="undoMarkAllCollectedLoading{{housingRequest.id}}" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
-							                    				<button type="button" id="undoMarkAllUncollected{{housingRequest.id}}" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" style="display: none;" onclick="undoMarkLeasesUncollected({{housingRequest.id}})"><i class="fa fa-times" aria-hidden="true"></i></button>
-							                    			{% else %}
-							                    				<button id="markAllCollected{{housingRequest.id}}" type="button" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" onclick="markLeasesCollected({{housingRequest.id}})"><i class="fa fa-times" aria-hidden="true"></i></button>
-							                    				<button type="button" id="markAllCollectedLoading{{housingRequest.id}}" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
-							                    				<button type="button" id="markAllUncollected{{housingRequest.id}}" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" style="display: none;" onclick="markLeasesUncollected({{housingRequest.id}})"><i class="fa fa-check" aria-hidden="true"></i></button>
-							                    			{% endif %}
+                                                            {% if current_user in landlords %}
+                                                        		{% if housingRequest.all_leases_submitted %}
+    							                    				<button id="undoMarkAllCollected{{housingRequest.id}}" type="button" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" onclick="undoMarkLeasesCollected({{housingRequest.id}})"><i class="fa fa-check" aria-hidden="true"></i></button>
+    							                    				<button type="button" id="undoMarkAllCollectedLoading{{housingRequest.id}}" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+    							                    				<button type="button" id="undoMarkAllUncollected{{housingRequest.id}}" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" style="display: none;" onclick="undoMarkLeasesUncollected({{housingRequest.id}})"><i class="fa fa-times" aria-hidden="true"></i></button>
+    							                    			{% else %}
+    							                    				<button id="markAllCollected{{housingRequest.id}}" type="button" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" onclick="markLeasesCollected({{housingRequest.id}})"><i class="fa fa-times" aria-hidden="true"></i></button>
+    							                    				<button type="button" id="markAllCollectedLoading{{housingRequest.id}}" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+    							                    				<button type="button" id="markAllUncollected{{housingRequest.id}}" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" style="display: none;" onclick="markLeasesUncollected({{housingRequest.id}})"><i class="fa fa-check" aria-hidden="true"></i></button>
+    							                    			{% endif %}
+                                                            {% else %}
+                                                                {% if housingRequest.all_leases_submitted %}
+                                                                    <button type="button" class="btn btn-success btn-circle" style="pointer-events: none;"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                                                {% else %}
+                                                                    <button type="button" class="btn btn-danger btn-circle" style="pointer-events: none;"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                                                {% endif %}
+                                                            {% endif %}
                                                     	</div>
                                                     </div>
                                                     <hr>
@@ -138,7 +148,7 @@
                                                                 <h3 style="font-size: 3.0vh;"><strong>Security Deposits:</strong></h3>
                                                             </div>
                                                             <div class="col-xs-4" style="text-align: right">
-                                                                <h3 style="font-size: 3.0vh;"><span id="numDeposits{{housingRequest.id}}">{{housingRequest.numSecurityDepositsPaid}}</span>/{{housingRequest.group.acceptedUsers|count}}</h3>
+                                                                <h3 style="font-size: 3.0vh;"><span id="numDeposits2{{housingRequest.id}}">{{housingRequest.numSecurityDepositsPaid}}</span>/{{housingRequest.group.acceptedUsers|count}}</h3>
                                                             </div>
                                                         </div>
                                                         <hr>
@@ -149,11 +159,6 @@
                                                                         <h4>
                                                                             <img src="{{deposit.user.profile_image}}" alt="Profile Image" class="img-responsive" style="height: 50px; width: 50px;" />
                                                                             <span style="font-size: 2.5vh;">{{ deposit.user.fname }} {{ deposit.user.lname }}</span>
-                                                                            <!-- {% if deposit.completed %}
-                                                                                <span class="securityDeposit" id="markDepositPaid{{deposit.user.id}}" style="color: green"><i class="fa fa-check-circle" aria-hidden="true"></i></span>
-                                                                            {% else %}
-                                                                                <span class="securityDeposit" id="markDepositPaid{{deposit.user.id}}" style="color: red"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
-                                                                            {% endif %} -->
                                                                         </h4>
                                                                     </a>
                                                                 </div>
@@ -384,6 +389,30 @@
     </div>
 </div>
 
+<!--Confirm Group Modal-->
+<div class="modal fade" id="everythingCollectedModal" tabindex="-1" role="dialog" aria-labelledby="everythingCollected" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <p class="card-text">You have indicated that you have recieved all leases and deposits from  <strong>{{ housingRequest.group.name }}</strong>. If so, this is the last step, once you click confirm neither party can back out from the terms of the signed leases.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="{{url_for('housingRequests.confirmRequest', id=housingRequest.id)}}" class="btn btn-primary">Confirm Group</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--Decline Group Modal-->
 <div class="modal fade" id="somethingHappenedModal" tabindex="-1" role="dialog" aria-labelledby="somethingHappened" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -433,6 +462,13 @@
       modal.find('.modal-title').text('Confirm Group');
     })
 
+    //Confirm Group Modal
+    $('#everythingCollectedModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      var modal = $(this);
+      modal.find('.modal-title').text('Everything has been collected!');
+    })
+
     //Something Happened Modal
     $('#somethingHappenedModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget);
@@ -440,64 +476,32 @@
       modal.find('.modal-title').text('Back Out');
     })
 
-	// function markDepositPaid(userID) {
-	// 	if($("#markPaidButton"+userID).text() == "Mark Paid"){
- //            requestURL = '/houseRequest/{{housingRequest.id}}/securityDeposit/' + userID + '/paid'
+    function getNumberOfTenants(){
+        return parseFloat($("#numGroupMembers").html()) || 0;
+    }
+    function getAreLeasesCollected(){
+        return $("#areLeasesCollected").html();
+    }
 
- //            $.getJSON(requestURL, function(data) {
- //                results = data['results'];
- //                // alert(data['results'].success);
- //                if (results.success == true){ 
- //                    $("#markDepositPaid"+userID).html('<i class="fa fa-check-circle" aria-hidden="true"></i>');
- //                    $("#markDepositPaid"+userID).css("color", "green")
- //                    $("#markPaidButton"+userID).text("Mark Unpaid")
- //                    $('#markPaidButton'+userID).removeClass("btn-success")
- //                    $('#markPaidButton'+userID).addClass("btn-danger")
- //                } else {
- //                    alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
- //                }
- //            });
-			
-	// 	}
-	// 	else if($("#markPaidButton"+userID).text() == "Mark Unpaid"){
- //            requestURL = '/houseRequest/{{housingRequest.id}}/securityDeposit/' + userID + '/unPaid'
- //            $.getJSON(requestURL, function(data) {
- //                results = data['results'];
- //                // alert(data['results'].success);
- //                if (results.success == true){ 
- //                    $("#markDepositPaid"+userID).html('<i class="fa fa-times-circle" aria-hidden="true"></i>');
- //                    $("#markDepositPaid"+userID).css("color", "red")
- //                    $("#markPaidButton"+userID).text("Mark Paid")
- //                    $('#markPaidButton'+userID).removeClass("btn-danger")
- //                    $('#markPaidButton'+userID).addClass("btn-success")
- //                } else {
- //                    alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
- //                }
- //            });
-	// 	}		
-	// }
-	// function markAllDepositsPaid() {
-	// 	$('.securityDeposit').each(function(i, obj) {
- //    		$('.securityDeposit').html('<i class="fa fa-check-circle" aria-hidden="true"></i>');
- //    		$('.securityDeposit').css("color", "green")
- //    		$('.securityDepositButton').text("Mark Unpaid")
- //    		$('.securityDepositButton').removeClass("btn-success")
- //    		$('.securityDepositButton').addClass("btn-danger")
-	// 	});
-	// }
+    function getNumDepositsPaid(requestID){
+        return parseFloat($("#numDeposits"+requestID).html()) || 0;
+    }
 
 	function markLeasesCollected(requestID){
     	$("#markAllCollected"+requestID).hide();
     	$("#markAllCollectedLoading"+requestID).show();
+        $("#areLeasesCollected").html("True");
     	setTimeout(function () {
         	$("#markAllCollectedLoading"+requestID).hide();
         	$("#markAllUncollected"+requestID).show();
-        }, 1200);    	 	
+            isEverythingDone(getNumDepositsPaid(requestID), getNumberOfTenants(), getAreLeasesCollected());
+        }, 1200);        
     }
 
     function markLeasesUncollected(requestID){
     	$("#markAllUncollected"+requestID).hide();
     	$("#markAllCollectedLoading"+requestID).show();
+        $("#areLeasesCollected").html("False");
     	setTimeout(function () {
         	$("#markAllCollectedLoading"+requestID).hide();
         	$("#markAllCollected"+requestID).show();
@@ -507,6 +511,7 @@
     function undoMarkLeasesCollected(requestID){
     	$("#undoMarkAllCollected"+requestID).hide();
     	$("#undoMarkAllCollectedLoading"+requestID).show();
+        $("#areLeasesCollected").html("False");
     	setTimeout(function () {
         	$("#undoMarkAllCollectedLoading"+requestID).hide();
         	$("#undoMarkAllUncollected"+requestID).show();
@@ -516,10 +521,12 @@
     function undoMarkLeasesUncollected(requestID){
     	$("#undoMarkAllUncollected"+requestID).hide();
     	$("#undoMarkAllCollectedLoading"+requestID).show();
+        $("#areLeasesCollected").html("True");
     	setTimeout(function () {
         	$("#undoMarkAllCollectedLoading"+requestID).hide();
         	$("#undoMarkAllCollected"+requestID).show();
-        }, 1200);    	 	
+            isEverythingDone(getNumDepositsPaid(requestID), getNumberOfTenants(), getAreLeasesCollected());
+        }, 1200);        
     }
 
     function paidToUnpaid(userID, requestID){
@@ -531,10 +538,11 @@
 		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
 		    	$("#depositPaid"+requestID+"Z"+userID).hide();
 		    	$("#markDepositUnpaid"+requestID+"Z"+userID).show();
+                $("#numDeposits"+requestID).html(depositsPaid-1);
+                $("#numDeposits2"+requestID).html(depositsPaid-1);
 		    	setTimeout(function () {
 		        	$("#markDepositUnpaid"+requestID+"Z"+userID).hide();
-		        	$("#depositMarkedUnPaid"+requestID+"Z"+userID).show();
-		        	$("#numDeposits"+requestID).html(depositsPaid-1);
+		        	$("#depositMarkedUnPaid"+requestID+"Z"+userID).show();		        	
 		        }, 1200);
 		    }
 		    else{
@@ -552,11 +560,13 @@
 		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
 		    	$("#depositMarkedUnPaid"+requestID+"Z"+userID).hide();
 		    	$("#markDepositUnpaid"+requestID+"Z"+userID).show();
+                $("#numDeposits"+requestID).html(depositsPaid+1);
+                $("#numDeposits2"+requestID).html(depositsPaid+1);
 		    	setTimeout(function () {
 		        	$("#markDepositUnpaid"+requestID+"Z"+userID).hide();
-		        	$("#depositPaid"+requestID+"Z"+userID).show();
-		        	$("#numDeposits"+requestID).html(depositsPaid+1);
+		        	$("#depositPaid"+requestID+"Z"+userID).show();                    		        	
 		        }, 1200);
+                isEverythingDone(getNumDepositsPaid(requestID), getNumberOfTenants(), getAreLeasesCollected());
 		    }
 		    else{
 		    	alert("Something went wrong, try again later");
@@ -573,11 +583,13 @@
 		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
 		    	$("#depositUnpaid"+requestID+"Z"+userID).hide();
 		    	$("#markDepositPaid"+requestID+"Z"+userID).show();
+                $("#numDeposits"+requestID).html(depositsPaid+1);
+                $("#numDeposits2"+requestID).html(depositsPaid+1);
 		    	setTimeout(function () {
 		        	$("#markDepositPaid"+requestID+"Z"+userID).hide();
-		        	$("#depositMarkedPaid"+requestID+"Z"+userID).show();
-		        	$("#numDeposits"+requestID).html(depositsPaid+1);
+		        	$("#depositMarkedPaid"+requestID+"Z"+userID).show();                    		        	
 		        }, 1200);
+                isEverythingDone(getNumDepositsPaid(requestID), getNumberOfTenants(), getAreLeasesCollected());
 		    }
 		    else{
 		    	alert("Something went wrong, try again later");
@@ -594,16 +606,25 @@
 		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
 		    	$("#depositMarkedPaid"+requestID+"Z"+userID).hide();
 		    	$("#markDepositPaid"+requestID+"Z"+userID).show();
+                $("#numDeposits"+requestID).html(depositsPaid-1);
+                $("#numDeposits2"+requestID).html(depositsPaid-1);
 		    	setTimeout(function () {
 		        	$("#markDepositPaid"+requestID+"Z"+userID).hide();
-		        	$("#depositUnpaid"+requestID+"Z"+userID).show();
-		        	$("#numDeposits"+requestID).html(depositsPaid-1);
+		        	$("#depositUnpaid"+requestID+"Z"+userID).show();		        	
 		        }, 1200);
 		    }
 		    else{
 		    	alert("Something went wrong, try again later");
 		    }
 		});
+    }
+
+    function isEverythingDone(numDeposits, numTenants, leasesCollected){
+        if(numDeposits == numTenants){
+            if(leasesCollected == "True"){
+                $("#everythingCollectedModal").modal("show");
+            }
+        }
     }
 </script>
 {% endblock %}

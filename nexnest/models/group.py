@@ -12,6 +12,7 @@ from sqlalchemy import event
 from sqlalchemy.orm import relationship
 
 from nexnest.models.group_user import GroupUser
+from nexnest.models.security_deposit import SecurityDeposit
 
 
 class Group(Base):
@@ -79,7 +80,7 @@ class Group(Base):
         return True
 
     @property
-    def serialize(self):
+    def serialize(self, groupListingID=None):
         group_users = []
         for user in self.acceptedUsers:
             group_users.append(user.shortSerialize)

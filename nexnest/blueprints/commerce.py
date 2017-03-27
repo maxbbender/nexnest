@@ -35,6 +35,11 @@ def clientToken():
     print(token)
     return token
 
+@commerce.route('/preCheckout', methods=['GET', 'POST'])
+def viewPreCheckout():
+    testJson = {"landlord":1,"items":[{"listing_id":"2","plan":"standard"},{"listing_id":"3","plan":"premium"}]};
+    return render_template('confirmCheckout.html',
+                           testJson=testJson)
 
 @commerce.route('/checkout', methods=['GET'])
 def checkout():
