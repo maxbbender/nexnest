@@ -144,6 +144,11 @@
 			        </div>
 		        </div>
 	        </div>
+            {% from "_formhelpers.html" import render_field %}
+            <form id="preCheckoutForm" action="/preCheckout" method="POST">
+                {{preCheckoutForm.csrf_token}}
+                {{ render_field(preCheckoutForm.json, id="preCheckoutJSON", class="form-control", type="hidden") }}
+            </form>
 		    <div class="tab-pane active" id="occupiedListingsTab" role="tabpanel" style="padding: 0px;">
 		    	<div class="row">
 			    	<div class="col-xs-0 col-md-1"></div>
@@ -2136,25 +2141,29 @@
     	});
     	cart = JSON.stringify(cart);
     	console.log(cart);
-    	
 
-    	$.ajax({
-    	    type: "POST",
-    	    url: '/preCheckout',
-    	    // The key needs to match your method's input parameter (case-sensitive).
-    	    data: cart,
-    	    contentType: "application/json; charset=utf-8",
-    	    dataType: "json",
-    	    beforeSend: function(xhr, settings) {
-	    	                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-	    	                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token() }}');
-	    	                }
-    	            	},
-    	    success: function(data){alert(data);},
-    	    failure: function(errMsg) {
-    	        alert(errMsg);
-    	    }
-    	});
+        preCheckoutJSONElement = document.getElementById("preCheckoutJSON")
+        preCheckoutJSONElement.value = cart
+        precheckoutElement = document.getElementById("preCheckoutForm")
+        precheckoutElement.submit()
+
+    	// $.ajax({
+    	//     type: "POST",
+    	//     url: '/preCheckout',
+    	//     // The key needs to match your method's input parameter (case-sensitive).
+    	//     data: cart,
+    	//     contentType: "application/json; charset=utf-8",
+    	//     dataType: "json",
+    	//     beforeSend: function(xhr, settings) {
+	    // 	                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+	    // 	                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token() }}');
+	    // 	                }
+    	//             	},
+    	//     success: function(data){alert(data);},
+    	//     failure: function(errMsg) {
+    	//         alert(errMsg);
+    	//     }
+    	// });
 
   //   	$.getJSON(requestURL, function(data) {
   //           results = data['results'];
@@ -2173,7 +2182,7 @@
 		//     	alert("Something went wrong, try again later");
 		//     }
 		// }); 	
-    	console.log(cart);
+    	// console.log(cart);
     }
 
 	$(document).ready(function() {

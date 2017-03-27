@@ -239,3 +239,7 @@ class LeaseUploadForm(RedirectForm):
 
     groupListingID = HiddenField('groupListingID',
                                  validators=[InputRequired()])
+
+
+class PreCheckoutForm(RedirectForm):
+    json = HiddenField('Lease')
