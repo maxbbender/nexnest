@@ -1,35 +1,19 @@
 from flask import Blueprint, render_template, request, jsonify
+from flask_login import current_user
 
-from pprint import pprint
+from pprint import pprint, pformat
 
+from nexnest import logger
 from nexnest.application import braintree, csrf, session
 
 from nexnest.models.transaction import ListingTransaction
 from nexnest.models.listing import Listing
 from nexnest.forms import PreCheckoutForm
+from nexnest.utils.flash import flash_errors
 
 import json
 
 commerce = Blueprint('commerce', __name__, template_folder='../templates/commerce')
-
-
-# @commerce.route('/preCheckout', methods=['POST'])
-# def preCheckout():
-#     json = request.get_json(force=True)
-#     print(json)
-#     pprint(json['items'])
-#     pprint("Landlord ID %s" % json['landlord'])
-
-#     for item in json['items']:
-#         print("Item %r" % item)
-#         listing = session.query(Listing).filter_by(int(item['listing_id'])).first()
-#         newListingTransaction = ListingTransaction(plan=item['plan'],
-#                                                    listing=listing,
-#                                                    status='new',
-#                                                    success=False
-#                                                    )
-
-# return jsonify({})
 
 
 @commerce.route('/client_token', methods=['GET'])
@@ -41,32 +25,44 @@ def clientToken():
 
 @commerce.route('/preCheckout', methods=['GET', 'POST'])
 def viewPreCheckout():
-    # testJson = {"landlord":1,"items":[{"listing_id":"2","plan":"standard"},{"listing_id":"3","plan":"premium"}]};
-    jsonData = json.loads(request.form["json"])
     form = PreCheckoutForm(request.form)
 
     if form.validate():
-        print("testJSON")
-        pprint(jsonData)
+        jsonData = json.loads(request.form["json"])
         return render_template('confirmCheckout.html',
+                               preCheckoutForm=PreCheckoutForm(),
                                jsonData=jsonData)
     else:
         return 'error'
 
 
-@commerce.route('/checkout', methods=['GET'])
+@commerce.route('/checkout', methods=['GET', 'POST'])
 def checkout():
+    logger.debug('Checkout Route')
+    form = PreCheckoutForm(request.form)
+
+    if form.validate():
+        listingObjects = json.loads(form.json.data)
+        logger.debug('Form Validated')
+        logger.debug('RAW Form JSON %s | Type %r' % (form.json.data, type(form.json.data)))
+        logger.debug('Parsed JSON %s | Type %r' % (pformat(listingObjects), type(listingObjects)))
+
+        # Now we want to build out listing transactions
+        checkoutTotal = 0
+        for item in listingObjects['items']:
+            listing = session.query(Listing) \
+                .filter_by(id=int(item['listing_id'])) \
+                .first()
+
+            newListingTransaction = ListingTransaction(listing=listing,
+                                                       plan=item['plan'],
+                                                       user=current_user)
+    else:
+        print('invalid form')
+        flash_errors(form)
+
     return render_template('checkout.html',
                            clientToken=braintree.ClientToken.generate())
-
-
-# @commerce.route('/postListingCheckout', methods=['POST'])
-# def postListingCheckout():
-#     postedJSON = request.get_json(force=True)
-
-#     for item in postedJSON['items']
-#         newListingTransaction
-#     pass
 
 
 @commerce.route('/transactionGenerate', methods=['POST'])

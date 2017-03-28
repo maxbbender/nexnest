@@ -11,6 +11,7 @@ class Transaction(Base):
     __tablename__ = 'transactions'
     id = db.Column(db.Integer, primary_key=True)
     braintree_transaction_id = db.Column(db.Text)
+    # open | authorized | submitted| settling | settled
     status = db.Column(db.String(128))
     success = db.Column(db.Boolean)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -67,9 +68,9 @@ class ListingTransaction(Transaction):
             self,
             listing,
             plan,
-            status,
-            success,
             user,
+            status='open',
+            success=False,
             braintree_transaction_id=None
     ):
 
@@ -85,3 +86,21 @@ class ListingTransaction(Transaction):
 
     def __repr__(self):
         return 'ListingTransaction %r | %s' % (self.id, self.plan)
+
+
+class ListingTransactionListings(Base):
+    __tablename__ = 'listing_transaction_listings'
+    id = db.Column(db.Integer, primary_key=True)
+    listing_id = db.Column(db.Integer, db.ForeignKey('listings.id'))
+    listing_transactions_id = db.Column(db.Integer, db.ForeignKey('listing_transactions.id'))
+
+    def __init__(self,
+                 listing,
+                 listingTransaction):
+
+        self.listing_id = listing.id
+        self.listing_transactions_id = listingTransaction.id
+
+    def __repr__(self):
+        return 'ListingTransactionListings %d ~ ListingID %d | ListingTransactionID %d' % \
+            (self.id, self.listing_id, self.listing_transactions_id)
