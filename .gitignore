@@ -1,8 +1,6 @@
 venv/
 *.pyc
 *.swp
-*.sublime-workspace
-*.sublime*
 .vagrant/
 *.glue
 nexnest/uploads/*

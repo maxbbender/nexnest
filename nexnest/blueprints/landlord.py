@@ -6,7 +6,7 @@ from nexnest.application import session
 
 from nexnest.models.landlord import Landlord
 
-from nexnest.forms import TourDateChangeForm
+from nexnest.forms import TourDateChangeForm, PreCheckoutForm
 
 landlords = Blueprint('landlords',
                       __name__,
@@ -41,7 +41,8 @@ def landlordDashboard():
                                futureHouses=futureHouses,
                                openMaintenanceRequests=openMaintenanceRequests,
                                inProgressMaintenanceRequests=inProgressMaintenanceRequests,
-                               completedMaintenanceRequests=completedMaintenanceRequests)
+                               completedMaintenanceRequests=completedMaintenanceRequests,
+                               preCheckoutForm=PreCheckoutForm())
     else:
         flash("You are not a landlord", 'warning')
         return redirect(url_for('indexs.index'))
