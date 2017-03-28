@@ -1,0 +1,24 @@
+<div class="card" style="width: 100%;">
+	<a href="{{ url_for('listings.viewListing', listingID=featured.id) }}">
+		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg card-img-top">
+	</a>
+	<div class="card-block">
+		<div class="row">
+			<div class="col-xs-12">
+				<strong>Featured!</strong>
+			</div>
+			<div class="col-xs-6">
+				{{ featured.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
+				&nbsp;
+				{{ featured.num_full_baths }}<i class="fa fa-bath" aria-hidden="true"></i>
+				<br>
+				${{ featured.price }} per {{ featured.rent_due }}
+			</div>
+			<div class="col-xs-6" style="text-align: right;">
+				{{ featured.street }}
+				<br>
+				{{ featured.city }}, {{ featured.state }}
+			</div>
+		</div>
+	</div>
+</div>

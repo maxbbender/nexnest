@@ -1037,7 +1037,14 @@
     	getAcceptedGroupListingsRequestsJSON();
     	getTourRequestsJSON();
     	getScheduledToursJSON();
-	});
+
+    		//reset checkout boxes to unchecked
+    		$(".checkoutListingSelect").each(function(i, obj){
+	    		if($(obj).is(":checked")){
+	    			$(obj).attr('checked', false); // Unchecks it
+	    		}
+	    	});
+		});
 
 	//Code for navigating tabs
 	var validMainTabs = ["occupiedListingsTab", "allListingsTab", "toursTab", "requestsTab", "maintenanceTab", "paymentTab", "checkoutTab"];
