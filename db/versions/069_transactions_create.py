@@ -13,6 +13,7 @@ transactions = Table('transactions',
                      Column('status', String(length=128)),
                      Column('success', Boolean()),
                      Column('user_id', Integer()),
+                     Column('total', Float()),
                      Column('type', String(length=60)),
                      Column('date_created', DateTime()),
                      Column('date_modified', DateTime()))

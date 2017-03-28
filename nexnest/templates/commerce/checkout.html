@@ -2,6 +2,8 @@
 {% block content %}
 <form id="checkout-form" action="/transactionGenerate" method="post">
   <div id="error-message"></div>
+  <input type='hidden' name='csrf_token' value="{{csrf_token()}}" />
+  <input type='hidden' name='listingTransactionID' value="{{listingTransaction.id}}" />
 
   <label for="card-number">Card Number</label>
   <div class="hosted-field" id="card-number"></div>
@@ -13,7 +15,7 @@
   <div class="hosted-field" id="expiration-date"></div>
 
   <input type="hidden" name="payment_method_nonce">
-  <input type="submit" value="Pay $10" disabled>
+  <input type="submit" value="Pay ${{totalPrice}}" disabled>
 </form>
 
 <!-- Load the Client component. -->

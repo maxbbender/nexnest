@@ -9,6 +9,7 @@ ltl = Table('listing_transaction_listings', meta,
                    primary_key=True,
                    nullable=False),
             Column('listing_id', Integer()),
+            Column('plan', String(length=50)),
             Column('listing_transactions_id', Integer()))
 
 

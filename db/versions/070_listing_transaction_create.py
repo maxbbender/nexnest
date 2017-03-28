@@ -6,9 +6,9 @@ meta = MetaData()
 listingTransactions = Table('listing_transactions', meta,
                             Column('id', Integer(),
                                    primary_key=True,
-                                   nullable=False),
-                            # Column('listing_id', Integer()),
-                            Column('plan', String(length=50)))
+                                   nullable=False))
+# Column('listing_id', Integer()),
+# Column('plan', String(length=50)))
 
 
 def upgrade(migrate_engine):

@@ -3,6 +3,7 @@ venv/
 *.swp
 .vagrant/
 *.glue
+*.sublime*
 nexnest/uploads/*
 nosetests.xml
 coverage.xml
