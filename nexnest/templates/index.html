@@ -1,13 +1,264 @@
 {% extends "base.html" %}
 {% block content %}
-	<br>
-	{% if listings is not none %}
+	{% if not current_user.is_authenticated %}
+    <!-- !!NOT LOGGED IN!! -->
+    <div class="row" style="padding-left: 15px;">
+    	<div class="col-xl-12">
+	    	<div class="card" style="height: 200px;">
+	    		<div class="card-block" style="height: 200px; display: flex; flex-direction: column; justify-content: center;">
+	    			<div class="row justify-content-center" style="align-items: flex-end;">
+	    				<div class="col-xl-3" style="left: 8vw;">
+	    					<label for="where">Where</label>
+    					    <select class="form-control" id="where" style="width: 75%;">
+    					      	<option>Fredonia, NY</option>
+    					    </select>
+	    				</div>
+	    				<div class="col-xl-3" style="left: 8vw;">
+	    					<label for="when">When</label>
+    					    <select class="form-control" id="when" style="width: 75%;">
+    					    	<option disabled selected>Select Term</option>
+    					      	<option>School Year 2017-2018</option>
+    					      	<option>Summer 2018</option>
+    					      	<option>School Year 2018-2019</option>
+    					      	<option>Summer 2019</option>
+    					    </select>
+	    				</div>
+	    				<div class="col-xl-3" style="left: 8vw;">
+	    					<label for="bedrooms">Bedrooms</label>
+    					    <select class="form-control" id="bedrooms" style="width: 75%;">
+    					      	<option>1</option>
+    					      	<option>2</option>
+    					      	<option>3</option>
+    					      	<option>4+</option>
+    					    </select>
+	    				</div>
+	    				<div class="col-xl-1" style="left: 8vw;">
+	    					<button class="btn btn-primary">Search</button>
+	    				</div>
+	    			</div>
+	    		</div>
+	    	</div>
+	    </div>
+    </div>
+    <div class="row" style="margin-left: 15px;">
+	    <!-- Featured Listings -->
 		<div class="row m-x-auto">
-			{% for listing in listings %}
+			{% for featured in listings %}
 				<div class="col-md-4" style="padding-left: 30px; padding-right: 30px; padding-bottom: 30px">
-					{% include 'listing.html' %}
+					{% include 'featuredListing.html' %}
 				</div>
 			{% endfor %}
 		</div>
-	{% endif %}
+	    {% else %}
+	    	<div class="row m-x-auto">
+				<div class="col-xs-6">
+					<nav class="navbar sticky-top navbar-light bg-faded">
+						<div class="row">
+					    	<div class="col-xs-4">
+	        					    <select class="form-control filterOption" id="where2" onch>
+	        					    	<option disabled>Select Where</option>
+	        					      	<option>Fredonia, NY</option>
+	        					    </select>
+					        </div>
+					        <div class="col-xs-4">
+	        					    <select class="form-control filterOption" id="when2">
+	        					    	<option disabled>Select Term</option>
+	        					      	<option>School Year 2017-2018</option>
+	        					      	<option>Summer 2018</option>
+	        					      	<option>School Year 2018-2019</option>
+	        					      	<option>Summer 2019</option>
+	        					    </select>
+					        </div>
+					        <div class="col-xs-4">
+							        <select class="form-control filterOption" id="rooms2">
+							        	<option disabled>Bedrooms</option>
+							          	<option value="1">1 Bed</option>
+							          	<option value="2">2 Beds</option>
+							          	<option value="3">3 Beds</option>
+							          	<option value="4+">4+ Beds</option>
+							        </select>
+						    </div>
+					    </div>
+					    <div class="row" style="padding-top: 10px;">
+        					<div class="col-xs-8" style="padding-left: 30px;">
+        						Max Price
+        						<br>
+        					    <input class="filterOption" id="priceRange" type="text" data-slider-ticks="[1000, 2000, 3000, 4000, 5000]" data-slider-ticks-snap-bounds="100" data-slider-ticks-labels='["$1000", "$2000", "$3000", "$4000", "$5000"]' data-slider-value="3000" value="3000" />
+        					    <div class="btn-group" data-toggle="buttons" style="padding-left: 30px;">
+	    					      	<label class="btn btn-outline-primary filterOption active" id="priceSearchMonth">
+	    					      	<input type="radio" name="packageChoice" id="priceSearchMonthInput" checked autocomplete="off"> Month
+	    					        </label>
+	    					      	<label class="btn btn-outline-primary filterOption" id="priceSearchTerm">
+	    					      	<input type="radio" name="packageChoice" id="priceSearchMonthInput" autocomplete="off"> Term
+	    					        </label>
+    					        </div>
+        					</div>
+        					<div class="col-xs-4">        						
+        						<br>
+						        <button class="btn btn-secondary" onClick="showMoreFilters()" style="float: right;">More Filters<i class="fa fa-chevron-down" aria-hidden="true"></i></button>
+						    </div>
+					    </div>
+					    <div class="row" style="padding-top: 10px;">
+        					<div class="col-xs-8">
+        						<input type="text" class="form-control" placeholder="Search for an Address">
+        					</div>
+        					<div class="col-xs-4">
+        						<select class="form-control filterOption" id="sortBy">
+						        	<option disabled selected value="default">Sort By</option>
+						          	<option value="priceLowToHigh">Low to High</option>
+						          	<option value="priceHighToLow">High to Low</option>
+						          	<option value="mostRecent">Recent</option>
+							    </select>
+						    </div>
+					    </div>
+					</nav>
+					<div class="row" id="mainContent">
+						<div class="col-xs-12">
+							{% if listings is not none %}
+							<div class="row m-x-auto">
+							{% for listing in listings %}
+								<div class="col-md-6" style="padding-left: 30px; padding-bottom: 30px">
+									{% include 'listing.html' %}
+								</div>
+							{% endfor %}
+							</div>
+						</div>
+					{% endif %}
+					</div>
+					<div class="row" id="moreFilters" style="display: none;">
+					<br><br>
+						<div class="col-xl-3">							
+						</div>
+						<div class="col-xl-6">							
+							<h1>Amenities</h1>
+							<div class="row">
+								<div class="col-xl-4">
+									<label class="control-label form-control-feedback" id="furnished_label">Furnished?</label>
+									<div class="checkbox">
+									    <label style="font-size: 1.5em">
+									    	<input type="checkbox">
+									        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+									    </label>
+									</div>
+								</div>
+								<div class="col-xl-4">
+									<label class="control-label form-control-feedback" id="furnished_label">Furnished?</label>
+									<div class="checkbox">
+									    <label style="font-size: 1.5em">
+									    	<input type="checkbox">
+									        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+									    </label>
+									</div>
+								</div>
+								<div class="col-xl-4">
+									<label class="control-label form-control-feedback" id="furnished_label">Furnished?</label>
+									<div class="checkbox">
+									    <label style="font-size: 1.5em">
+									    	<input type="checkbox">
+									        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+									    </label>
+									</div>
+								</div>
+							</div>
+							<hr>
+							<br>
+							<h1>Amenities</h1>
+							<div class="row">
+								<div class="col-xl-4">
+									<label class="control-label form-control-feedback" id="furnished_label">Furnished?</label>
+									<div class="checkbox">
+									    <label style="font-size: 1.5em">
+									    	<input type="checkbox">
+									        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+									    </label>
+									</div>
+								</div>
+								<div class="col-xl-4">
+									<label class="control-label form-control-feedback" id="furnished_label">Furnished?</label>
+									<div class="checkbox">
+									    <label style="font-size: 1.5em">
+									    	<input type="checkbox">
+									        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+									    </label>
+									</div>
+								</div>
+								<div class="col-xl-4">
+									<label class="control-label form-control-feedback" id="furnished_label">Furnished?</label>
+									<div class="checkbox">
+									    <label style="font-size: 1.5em">
+									    	<input type="checkbox">
+									        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+									    </label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>		
+				</div>
+				<div class="col-xs-6" style="background-image: url('static/img/mapTest.png')">
+				</div>
+			</div>
+	    {% endif %}
+	</div>
+{% endblock %}
+{% block scripts %}
+<script>
+	$('input[type="range"]').rangeslider({
+
+    // Feature detection the default is `true`.
+    // Set this to `false` if you want to use
+    // the polyfill also in Browsers which support
+    // the native <input type="range"> element.
+    polyfill: false,
+
+    // Default CSS classes
+    rangeClass: 'rangeslider',
+    disabledClass: 'rangeslider--disabled',
+    horizontalClass: 'rangeslider--horizontal',
+    verticalClass: 'rangeslider--vertical',
+    fillClass: 'rangeslider__fill',
+    handleClass: 'rangeslider__handle',
+
+    // Callback function
+    onInit: function() {},
+
+    // Callback function
+    onSlide: function(position, value) {},
+
+    // Callback function
+    onSlideEnd: function(position, value) {}
+	});
+
+	var slider = new Slider("#priceRange", {
+	    ticks: [1000, 2000, 3000, 4000, 5000],
+	    ticks_labels: ["$1000", "$2000", "$3000", "$4000", "$5000"],
+	    ticks_snap_bounds: 100
+	});
+
+	function showMoreFilters(){
+		$("#moreFilters").toggle();
+		$("#mainContent").toggle();
+	}
+
+	//call buildFilters on change of any filter element
+	$( ".filterOption" ).change(function() {
+  		buildFilters();
+  	});
+
+	function buildFilters(){
+		var filters = {};
+    	filters.location = $("#where2 option:selected").text();
+    	filters.term = $("#when2 option:selected").text();
+    	filters.bedrooms = $("#rooms2").val();
+    	filters.maxPrice = $("#priceRange").val();
+    	if($("#priceSearchMonth").hasClass("active")){
+    		filters.priceTerm = "month"
+    	}
+    	else if($("#priceSearchTerm").hasClass("active")){
+    		filters.priceTerm = "term"
+    	}
+    	filters.sortBy = $("#sortBy").val();
+    	console.log(filters);
+	}
+</script>
 {% endblock %}

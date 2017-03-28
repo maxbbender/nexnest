@@ -14,6 +14,7 @@ indexs = Blueprint('indexs', __name__, template_folder='../templates')
 def index():
     form = LoginForm(request.form)
     allListings = session.query(Listing).all()
+    featuredListings = session.query(Listing).all()
 
     if request.method == 'POST' and form.validate():
         # user = User(form.username.data, form.email.data,
@@ -24,6 +25,7 @@ def index():
     return render_template('index.html',
                            form=form,
                            listings=allListings,
+                           featuredListings=featuredListings,
                            title='NexNest')
 
 
