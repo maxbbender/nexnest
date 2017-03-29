@@ -1891,10 +1891,11 @@
     }
 
     function unpaidToPaid(userID, requestID){
+    	alert(userID +"  " + requestID);
     	requestURL = '/houseRequest/'+ requestID +'/securityDeposit/' + userID + '/paid'
     	$.getJSON(requestURL, function(data) {
             results = data['results'];
-            // alert(data['results'].success);
+            alert(data['results'].success);
             if (results.success == true){ 
 		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
 		    	$("#numDeposits"+requestID).html(depositsPaid+1);
@@ -1933,39 +1934,80 @@
     }
 
     function markLeasesCollected(requestID){
-    	$("#markAllCollected"+requestID).hide();
-    	$("#markAllCollectedLoading"+requestID).show();
-    	setTimeout(function () {
-        	$("#markAllCollectedLoading"+requestID).hide();
-        	$("#markAllUncollected"+requestID).show();
-        }, 1200);    	 	
+    	console.log(requestID);
+    	requestURL = '/houseRequest/'+ requestID +'/allLeasesSubmitted/ajax'
+    	$.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+		    	$("#markAllCollected"+requestID).hide();
+		    	$("#markAllCollectedLoading"+requestID).show();
+		    	setTimeout(function () {
+		        	$("#markAllCollectedLoading"+requestID).hide();
+		        	$("#markAllUncollected"+requestID).show();
+		        }, 1200);
+		    }
+		    else{
+		    	alert("Something went wrong, try again later");
+		    }
+		}); 
     }
 
     function markLeasesUncollected(requestID){
-    	$("#markAllUncollected"+requestID).hide();
-    	$("#markAllCollectedLoading"+requestID).show();
-    	setTimeout(function () {
-        	$("#markAllCollectedLoading"+requestID).hide();
-        	$("#markAllCollected"+requestID).show();
-        }, 1200);    	 	
+    	requestURL = '/houseRequest/'+ requestID +'/allLeasesSubmitted/ajax'
+    	$.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+		    	$("#markAllUncollected"+requestID).hide();
+		    	$("#markAllCollectedLoading"+requestID).show();
+		    	setTimeout(function () {
+		        	$("#markAllCollectedLoading"+requestID).hide();
+		        	$("#markAllCollected"+requestID).show();
+		        }, 1200);
+		    }
+		    else{
+		    	alert("Something went wrong, try again later");
+		    }
+		}); 	
     }
 
     function undoMarkLeasesCollected(requestID){
-    	$("#undoMarkAllCollected"+requestID).hide();
-    	$("#undoMarkAllCollectedLoading"+requestID).show();
-    	setTimeout(function () {
-        	$("#undoMarkAllCollectedLoading"+requestID).hide();
-        	$("#undoMarkAllUncollected"+requestID).show();
-        }, 1200);    	 	
+    	requestURL = '/houseRequest/'+ requestID +'/allLeasesSubmitted/ajax'
+    	$.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+		    	$("#undoMarkAllCollected"+requestID).hide();
+		    	$("#undoMarkAllCollectedLoading"+requestID).show();
+		    	setTimeout(function () {
+		        	$("#undoMarkAllCollectedLoading"+requestID).hide();
+		        	$("#undoMarkAllUncollected"+requestID).show();
+		        }, 1200);
+		    }
+		    else{
+		    	alert("Something went wrong, try again later");
+		    }
+		}); 	 	
     }
 
     function undoMarkLeasesUncollected(requestID){
-    	$("#undoMarkAllUncollected"+requestID).hide();
-    	$("#undoMarkAllCollectedLoading"+requestID).show();
-    	setTimeout(function () {
-        	$("#undoMarkAllCollectedLoading"+requestID).hide();
-        	$("#undoMarkAllCollected"+requestID).show();
-        }, 1200);    	 	
+    	requestURL = '/houseRequest/'+ requestID +'/allLeasesSubmitted/ajax'
+    	$.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+		    	$("#undoMarkAllUncollected"+requestID).hide();
+		    	$("#undoMarkAllCollectedLoading"+requestID).show();
+		    	setTimeout(function () {
+		        	$("#undoMarkAllCollectedLoading"+requestID).hide();
+		        	$("#undoMarkAllCollected"+requestID).show();
+		        }, 1200);
+		    }
+		    else{
+		    	alert("Something went wrong, try again later");
+		    }
+		}); 	 	
     }
 
     function confirmGroup(requestID){		
@@ -2748,18 +2790,19 @@
             }
             //console.log(acceptedGroupListings);
            $.each(acceptedGroupListings, function(index, housingRequest) {
-            	//console.log(housingRequest);
-            	//console.log(housingRequest.listing.street);
+            	console.log(housingRequest);
+            	console.log(housingRequest.listing.street);
+            	console.log(housingRequest.groupListings[0].leasesCollected);
             	membersNotLeaderCount = parseInt(housingRequest.groupListings[0].group.userCount)-1;
 
             	var div =`
-		                <div class="card" id="confirmRequest`+ housingRequest.id +`">
+		                <div class="card" id="confirmRequest`+ housingRequest.groupListings[0].id +`">
 		                    <div class="card-header">
 			                    <div class="row">
 			                    	<div class="col-xl-12">
 			                    		<h3 style="font-size: 2.5vh;"><strong>`+ housingRequest.groupListings[0].group.name +` for `+ housingRequest.listing.street +`
 			                    		</strong>        								                    		
-			                    		<a class="btn btn-primary hidden-sm-down" style="float: right;" href="`+ housingRequest.url +`">More Info</a></h3>
+			                    		<a class="btn btn-primary hidden-sm-down" style="float: right;" href="`+ housingRequest.groupListings[0].url +`">More Info</a></h3>
 			                    	</div>
 			                    </div>
 			                    <div class="row">
@@ -2771,19 +2814,18 @@
 	                    			<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
 		                    			<strong style="padding-right: 16px;">All Leases Collected: </strong>
 		                    			`;
-		                    			
-		                    			if(housingRequest.groupListings[0].leasesCollected == "true"){
+		                    			if(housingRequest.groupListings[0].leasesCollected == true){
 		                    				div += `
-		                    				<button id="undoMarkAllCollected`+ housingRequest.id +`" type="button" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" onclick="undoMarkLeasesCollected(`+ housingRequest.id +`)"><i class="fa fa-check" aria-hidden="true"></i></button>
-		                    				<button type="button" id="undoMarkAllCollectedLoading`+ housingRequest.id +`" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
-		                    				<button type="button" id="undoMarkAllUncollected`+ housingRequest.id +`" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" style="display: none;" onclick="undoMarkLeasesUncollected(`+ housingRequest.id +`)"><i class="fa fa-times" aria-hidden="true"></i></button>
+		                    				<button id="undoMarkAllCollected`+ housingRequest.groupListings[0].id +`" type="button" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" onclick="undoMarkLeasesCollected(`+ housingRequest.groupListings[0].id +`)"><i class="fa fa-check" aria-hidden="true"></i></button>
+		                    				<button type="button" id="undoMarkAllCollectedLoading`+ housingRequest.groupListings[0].id +`" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+		                    				<button type="button" id="undoMarkAllUncollected`+ housingRequest.groupListings[0].id +`" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" style="display: none;" onclick="undoMarkLeasesUncollected(`+ housingRequest.groupListings[0].id +`)"><i class="fa fa-times" aria-hidden="true"></i></button>
 		                    				`;
 		                    			}
 		                    			else{
 		                    				div += `
-		                    				<button id="markAllCollected`+ housingRequest.id +`" type="button" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" onclick="markLeasesCollected(`+ housingRequest.id +`)"><i class="fa fa-times" aria-hidden="true"></i></button>
-		                    				<button type="button" id="markAllCollectedLoading`+ housingRequest.id +`" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
-		                    				<button type="button" id="markAllUncollected`+ housingRequest.id +`" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" style="display: none;" onclick="markLeasesUncollected(`+ housingRequest.id +`)"><i class="fa fa-check" aria-hidden="true"></i></button>
+		                    				<button id="markAllCollected`+ housingRequest.groupListings[0].id +`" type="button" class="btn btn-danger btn-circle" data-tooltip="Click here to mark all Leases as completed" onclick="markLeasesCollected(`+ housingRequest.groupListings[0].id +`)"><i class="fa fa-times" aria-hidden="true"></i></button>
+		                    				<button type="button" id="markAllCollectedLoading`+ housingRequest.groupListings[0].id +`" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+		                    				<button type="button" id="markAllUncollected`+ housingRequest.groupListings[0].id +`" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" style="display: none;" onclick="markLeasesUncollected(`+ housingRequest.groupListings[0].id +`)"><i class="fa fa-check" aria-hidden="true"></i></button>
 		                    				`;
 		                    			}
 		                    				
@@ -2791,15 +2833,15 @@
 		                    		</div>
 		                    		<div class="col-12 col-md-auto" style="padding-left: 15px; padding-right: 15px;">
 		                    			<strong>Deposits Collected: </strong> 
-		                    			<span id="numDeposits`+ housingRequest.id +`">`+ housingRequest.groupListings[0].numSecurityDepositsPaid +`/`+ housingRequest.groupListings[0].group.userCount +`
+		                    			<span id="numDeposits`+ housingRequest.groupListings[0].id +`">`+ housingRequest.groupListings[0].numSecurityDepositsPaid +`/`+ housingRequest.groupListings[0].group.userCount +`
 		                    		</div>
 		                    		<div class="col-12 col-md-auto" style="padding-left: 15px; padding-right: 15px; padding-bottom: 5px;">
-		                    			<button id="confirmGroupButton`+ housingRequest.id +`" class="btn btn-success" onclick="confirmGroup(`+ housingRequest.id +`)">Confirm Group</button>
-		                    			<button id="confirmGroupLoading`+ housingRequest.id +`" class="btn btn-success" style="display: none; width: 139.33px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+		                    			<button id="confirmGroupButton`+ housingRequest.groupListings[0].id +`" class="btn btn-success" onclick="confirmGroup(`+ housingRequest.groupListings[0].id +`)">Confirm Group</button>
+		                    			<button id="confirmGroupLoading`+ housingRequest.groupListings[0].id +`" class="btn btn-success" style="display: none; width: 139.33px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
 		                    		</div>
 		                    		<br>
 		                    		<div class="col-xs-12" style="padding-left: 15px;">
-			                    		<a class="btn btn-primary" style="width: 139.33px;" href="`+ housingRequest.groupListings[0].url +`">More Info</a>
+			                    		<a class="btn btn-primary hidden-md-up" style="width: 139.33px;" href="`+ housingRequest.groupListings[0].url +`">More Info</a>
 		                    		</div>
 	                    		</div>		                    
 		                    </div>
@@ -2830,18 +2872,18 @@
                     		    				                        <h4><strong style="padding-right: 10px;">Deposit Paid: </strong>
                     		    				                        `;
                     		    				                        
-                    		    				                        if(housingRequest.groupListings[0].group.leader.securityDepositPaid == "true"){
+                    		    				                        if(housingRequest.groupListings[0].group.leader.securityDepositPaid == true){
                     		    				                        	div += `
-                    		    				                            <button id="depositPaid`+ housingRequest.id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" onclick="paidToUnpaid(`+ housingRequest.groupListings[0].group.leader.id +`, `+ housingRequest.id +`)" class="btn btn-success btn-circle" data-tooltip="Click here to mark deposit as NOT paid"><i class="fa fa-check" aria-hidden="true"></i></button>
-                    		    				                            <button id="markDepositUnpaid`+ housingRequest.id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
-                    		    				                            <button id="depositMarkedUnPaid`+ housingRequest.id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" onclick="paidToPaid(`+ housingRequest.groupListings[0].group.leader.id +`, `+ housingRequest.id +`)" class="btn btn-danger btn-circle" style="display: none;" data-tooltip="Click here to mark deposit as paid"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    		    				                            <button id="depositPaid`+ housingRequest.groupListings[0].id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" onclick="paidToUnpaid(`+ housingRequest.groupListings[0].group.leader.id +`, `+ housingRequest.groupListings[0].id +`)" class="btn btn-success btn-circle" data-tooltip="Click here to mark deposit as NOT paid"><i class="fa fa-check" aria-hidden="true"></i></button>
+                    		    				                            <button id="markDepositUnpaid`+ housingRequest.groupListings[0].id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+                    		    				                            <button id="depositMarkedUnPaid`+ housingRequest.groupListings[0].id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" onclick="paidToPaid(`+ housingRequest.groupListings[0].group.leader.id +`, `+ housingRequest.groupListings[0].id +`)" class="btn btn-danger btn-circle" style="display: none;" data-tooltip="Click here to mark deposit as paid"><i class="fa fa-times" aria-hidden="true"></i></button>
                     		    				                            `;
                     		    				                        }
                     		    				                        else{
                     		    				                        	div += `
-                    		    				                        	<button id="depositUnpaid`+ housingRequest.id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" onclick="unpaidToPaid(`+ housingRequest.groupListings[0].group.leader.id +`, `+ housingRequest.id +`)" class="btn btn-danger btn-circle" data-tooltip="Click here to mark deposit as paid"><i class="fa fa-times" aria-hidden="true"></i></button>
-                    		    				                            <button id="markDepositPaid`+ housingRequest.id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
-                    		    				                            <button id="depositMarkedPaid`+ housingRequest.id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" onclick="unpaidToUnpaid(`+ housingRequest.groupListings[0].group.leader.id +`, `+ housingRequest.id +`)" class="btn btn-success btn-circle" style="display: none;" data-tooltip="Click here to mark deposit as NOT paid"><i class="fa fa-check" aria-hidden="true"></i></button>
+                    		    				                        	<button id="depositUnpaid`+ housingRequest.groupListings[0].id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" onclick="unpaidToPaid(`+ housingRequest.groupListings[0].group.leader.id +`, `+ housingRequest.groupListings[0].id +`)" class="btn btn-danger btn-circle" data-tooltip="Click here to mark deposit as paid"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    		    				                            <button id="markDepositPaid`+ housingRequest.groupListings[0].id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+                    		    				                            <button id="depositMarkedPaid`+ housingRequest.groupListings[0].id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" onclick="unpaidToUnpaid(`+ housingRequest.groupListings[0].group.leader.id +`, `+ housingRequest.groupListings[0].id +`)" class="btn btn-success btn-circle" style="display: none;" data-tooltip="Click here to mark deposit as NOT paid"><i class="fa fa-check" aria-hidden="true"></i></button>
                     		    				                           	`;
                     		    				                        }
                     		    				                        div += `
@@ -2854,7 +2896,7 @@
                     		    				</div>
 	                    		    		</div>
 	                    		    	</div>
-		      					    		<div id="allGroupMembersListingAccepted`+ housingRequest.id +`" style="display: none;">
+		      					    		<div id="allGroupMembersListingAccepted`+ housingRequest.groupListings[0].id +`" style="display: none;">
 		      					    		`;
 	      					    				$.each(housingRequest.groupListings[0].group.users, function(index, user) {
 	            								if(user.id != housingRequest.groupListings[0].group.leader.id){
@@ -2880,18 +2922,18 @@
 			                    		    				                        <h4><strong style="padding-right: 10px;">Deposit Paid: </strong>
 			                    		    				                        `;
 			                    		    				                        
-			                    		    				                        if(user.securityDepositPaid == "true"){
+			                    		    				                        if(user.securityDepositPaid == true){
 			                    		    				                        	div += `
-			                    		    				                            <button id="depositPaid`+ housingRequest.id +`Z`+ user.id +`" type="button" onclick="paidToUnpaid(`+ housingRequest.group.leader.id +`, `+ housingRequest.id +`)" class="btn btn-success btn-circle" data-tooltip="Click here to mark deposit as NOT paid"><i class="fa fa-check" aria-hidden="true"></i></button>
-			                    		    				                            <button id="markDepositUnpaid`+ housingRequest.id +`Z`+ user.id +`" type="button" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
-			                    		    				                            <button id="depositMarkedUnPaid`+ housingRequest.id +`Z`+ user.id +`" type="button" onclick="paidToPaid(`+ user.id +`, `+ housingRequest.id +`)" class="btn btn-danger btn-circle" style="display: none;" data-tooltip="Click here to mark deposit as paid"><i class="fa fa-times" aria-hidden="true"></i></button>
+			                    		    				                            <button id="depositPaid`+ housingRequest.groupListings[0].id +`Z`+ user.id +`" type="button" onclick="paidToUnpaid(`+ user.id +`, `+ housingRequest.groupListings[0].id +`)" class="btn btn-success btn-circle" data-tooltip="Click here to mark deposit as NOT paid"><i class="fa fa-check" aria-hidden="true"></i></button>
+			                    		    				                            <button id="markDepositUnpaid`+ housingRequest.groupListings[0].id +`Z`+ user.id +`" type="button" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+			                    		    				                            <button id="depositMarkedUnPaid`+ housingRequest.groupListings[0].id +`Z`+ user.id +`" type="button" onclick="paidToPaid(`+ user.id +`, `+ housingRequest.groupListings[0].id +`)" class="btn btn-danger btn-circle" style="display: none;" data-tooltip="Click here to mark deposit as paid"><i class="fa fa-times" aria-hidden="true"></i></button>
 			                    		    				                            `;
 			                    		    				                        }
 			                    		    				                        else{
 			                    		    				                        	div += `
-			                    		    				                        	<button id="depositUnpaid`+ housingRequest.id +`Z`+ user.id +`" type="button" onclick="unpaidToPaid(`+ user.id +`, `+ housingRequest.id +`)" class="btn btn-danger btn-circle" data-tooltip="Click here to mark deposit as paid"><i class="fa fa-times" aria-hidden="true"></i></button>
-			                    		    				                            <button id="markDepositPaid`+ housingRequest.id +`Z`+ user.id +`" type="button" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
-			                    		    				                            <button id="depositMarkedPaid`+ housingRequest.id +`Z`+ user.id +`" type="button" onclick="unpaidToUnpaid(`+ user.id +`, `+ housingRequest.id +`)" class="btn btn-success btn-circle" style="display: none;" data-tooltip="Click here to mark deposit as NOT paid"><i class="fa fa-check" aria-hidden="true"></i></button>
+			                    		    				                        	<button id="depositUnpaid`+ housingRequest.groupListings[0].id +`Z`+ user.id +`" type="button" onclick="unpaidToPaid(`+ user.id +`, `+ housingRequest.groupListings[0].id +`)" class="btn btn-danger btn-circle" data-tooltip="Click here to mark deposit as paid"><i class="fa fa-times" aria-hidden="true"></i></button>
+			                    		    				                            <button id="markDepositPaid`+ housingRequest.groupListings[0].id +`Z`+ user.id +`" type="button" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+			                    		    				                            <button id="depositMarkedPaid`+ housingRequest.groupListings[0].id +`Z`+ user.id +`" type="button" onclick="unpaidToUnpaid(`+ user.id +`, `+ housingRequest.groupListings[0].id +`)" class="btn btn-success btn-circle" style="display: none;" data-tooltip="Click here to mark deposit as NOT paid"><i class="fa fa-check" aria-hidden="true"></i></button>
 			                    		    				                           	`;
 			                    		    				                        }
 			                    		    				                        div += `
@@ -2909,8 +2951,8 @@
 	            								})
 											div+=`
 		      					    		</div>
-		      					    		<button class="btn btn-info" id="allGroupMembersListingAcceptedToggle`+ housingRequest.id +`" onClick="showAcceptedHousingRequestMembers(`+ housingRequest.id +`)"><i class='fa fa-users' aria-hidden='true'></i> See other `+ membersNotLeaderCount +` members</button>
-		      					    		<button class="btn btn-info" id="hideAllGroupMembersListingAcceptedToggle`+ housingRequest.id +`" onClick="hideAcceptedHousingRequestMembers(`+ housingRequest.id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other `+ membersNotLeaderCount +` members</button>
+		      					    		<button class="btn btn-info" id="allGroupMembersListingAcceptedToggle`+ housingRequest.groupListings[0].id +`" onClick="showAcceptedHousingRequestMembers(`+ housingRequest.groupListings[0].id +`)"><i class='fa fa-users' aria-hidden='true'></i> See other `+ membersNotLeaderCount +` members</button>
+		      					    		<button class="btn btn-info" id="hideAllGroupMembersListingAcceptedToggle`+ housingRequest.groupListings[0].id +`" onClick="hideAcceptedHousingRequestMembers(`+ housingRequest.groupListings[0].id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other `+ membersNotLeaderCount +` members</button>
 				                    		<br>
 				                    		<br>
 				                    	</div>
@@ -2918,11 +2960,11 @@
 			                    </div>
 			                </div>
 						<br>
-						<div class="row" id="undoConfirmRequest`+ housingRequest.id +`" style="display: none;">
+						<div class="row" id="undoConfirmRequest`+ housingRequest.groupListings[0].id +`" style="display: none;">
 							<div class="col-xl-1"></div>
 							<div class="col-xl-10">
 								<div class="alert alert-info" role="alert">
-								    You have just confirmed a group for this listing <button class="link" onclick="undoConfirmGroup(`+ housingRequest.id +`)">Undo?</button>
+								    You have just confirmed a group for this listing <button class="link" onclick="undoConfirmGroup(`+ housingRequest.groupListings[0].id +`)">Undo?</button>
 								</div>
 							</div>
 						</div>

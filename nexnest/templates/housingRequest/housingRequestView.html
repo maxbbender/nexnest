@@ -488,45 +488,85 @@
     }
 
 	function markLeasesCollected(requestID){
-    	$("#markAllCollected"+requestID).hide();
-    	$("#markAllCollectedLoading"+requestID).show();
-        $("#areLeasesCollected").html("True");
-    	setTimeout(function () {
-        	$("#markAllCollectedLoading"+requestID).hide();
-        	$("#markAllUncollected"+requestID).show();
-            isEverythingDone(getNumDepositsPaid(requestID), getNumberOfTenants(), getAreLeasesCollected());
-        }, 1200);        
+        requestURL = '/houseRequest/{{housingRequest.id}}/allLeasesSubmitted/ajax'
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+            	$("#markAllCollected"+requestID).hide();
+            	$("#markAllCollectedLoading"+requestID).show();
+                $("#areLeasesCollected").html("True");
+            	setTimeout(function () {
+                	$("#markAllCollectedLoading"+requestID).hide();
+                	$("#markAllUncollected"+requestID).show();
+                    isEverythingDone(getNumDepositsPaid(requestID), getNumberOfTenants(), getAreLeasesCollected());
+                }, 1200);
+            }
+            else{
+                alert("Something went wrong, try again later");
+            }
+        });
     }
 
     function markLeasesUncollected(requestID){
-    	$("#markAllUncollected"+requestID).hide();
-    	$("#markAllCollectedLoading"+requestID).show();
-        $("#areLeasesCollected").html("False");
-    	setTimeout(function () {
-        	$("#markAllCollectedLoading"+requestID).hide();
-        	$("#markAllCollected"+requestID).show();
-        }, 1200);    	 	
+        requestURL = '/houseRequest/{{housingRequest.id}}/allLeasesSubmitted/ajax'
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){
+            	$("#markAllUncollected"+requestID).hide();
+            	$("#markAllCollectedLoading"+requestID).show();
+                $("#areLeasesCollected").html("False");
+            	setTimeout(function () {
+                	$("#markAllCollectedLoading"+requestID).hide();
+                	$("#markAllCollected"+requestID).show();
+                }, 1200);
+            }
+            else{
+                alert("Something went wrong, try again later");
+            }
+        });	 	
     }
 
     function undoMarkLeasesCollected(requestID){
-    	$("#undoMarkAllCollected"+requestID).hide();
-    	$("#undoMarkAllCollectedLoading"+requestID).show();
-        $("#areLeasesCollected").html("False");
-    	setTimeout(function () {
-        	$("#undoMarkAllCollectedLoading"+requestID).hide();
-        	$("#undoMarkAllUncollected"+requestID).show();
-        }, 1200);    	 	
+        requestURL = '/houseRequest/{{housingRequest.id}}/allLeasesSubmitted/ajax'
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){
+            	$("#undoMarkAllCollected"+requestID).hide();
+            	$("#undoMarkAllCollectedLoading"+requestID).show();
+                $("#areLeasesCollected").html("False");
+            	setTimeout(function () {
+                	$("#undoMarkAllCollectedLoading"+requestID).hide();
+                	$("#undoMarkAllUncollected"+requestID).show();
+                }, 1200);
+            }
+            else{
+                alert("Something went wrong, try again later");
+            }
+        });
     }
 
     function undoMarkLeasesUncollected(requestID){
-    	$("#undoMarkAllUncollected"+requestID).hide();
-    	$("#undoMarkAllCollectedLoading"+requestID).show();
-        $("#areLeasesCollected").html("True");
-    	setTimeout(function () {
-        	$("#undoMarkAllCollectedLoading"+requestID).hide();
-        	$("#undoMarkAllCollected"+requestID).show();
-            isEverythingDone(getNumDepositsPaid(requestID), getNumberOfTenants(), getAreLeasesCollected());
-        }, 1200);        
+        requestURL = '/houseRequest/{{housingRequest.id}}/allLeasesSubmitted/ajax'
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){
+            	$("#undoMarkAllUncollected"+requestID).hide();
+            	$("#undoMarkAllCollectedLoading"+requestID).show();
+                $("#areLeasesCollected").html("True");
+            	setTimeout(function () {
+                	$("#undoMarkAllCollectedLoading"+requestID).hide();
+                	$("#undoMarkAllCollected"+requestID).show();
+                    isEverythingDone(getNumDepositsPaid(requestID), getNumberOfTenants(), getAreLeasesCollected());
+                }, 1200);
+            }
+            else{
+                alert("Something went wrong, try again later");
+            }
+        });
     }
 
     function paidToUnpaid(userID, requestID){
@@ -575,6 +615,7 @@
     }
 
     function unpaidToPaid(userID, requestID){
+        alert(userID +"  " + requestID);
     	requestURL = '/houseRequest/{{housingRequest.id}}/securityDeposit/' + userID + '/paid'
     	$.getJSON(requestURL, function(data) {
             results = data['results'];
