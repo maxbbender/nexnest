@@ -537,3 +537,7 @@ button.link {
   width: 400px;
   margin: 0 30px 0 2px;
 }
+
+.slider-selection {
+  background: #BABABA;
+}
