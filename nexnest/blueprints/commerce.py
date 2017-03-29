@@ -1,35 +1,19 @@
 from flask import Blueprint, render_template, request, jsonify
+from flask_login import current_user
 
-from pprint import pprint
+from pprint import pprint, pformat
 
+from nexnest import logger
 from nexnest.application import braintree, csrf, session
 
-from nexnest.models.transaction import ListingTransaction
+from nexnest.models.transaction import ListingTransaction, ListingTransactionListing
 from nexnest.models.listing import Listing
 from nexnest.forms import PreCheckoutForm
+from nexnest.utils.flash import flash_errors
 
 import json
 
 commerce = Blueprint('commerce', __name__, template_folder='../templates/commerce')
-
-
-# @commerce.route('/preCheckout', methods=['POST'])
-# def preCheckout():
-#     json = request.get_json(force=True)
-#     print(json)
-#     pprint(json['items'])
-#     pprint("Landlord ID %s" % json['landlord'])
-
-#     for item in json['items']:
-#         print("Item %r" % item)
-#         listing = session.query(Listing).filter_by(int(item['listing_id'])).first()
-#         newListingTransaction = ListingTransaction(plan=item['plan'],
-#                                                    listing=listing,
-#                                                    status='new',
-#                                                    success=False
-#                                                    )
-
-# return jsonify({})
 
 
 @commerce.route('/client_token', methods=['GET'])
@@ -41,45 +25,91 @@ def clientToken():
 
 @commerce.route('/preCheckout', methods=['GET', 'POST'])
 def viewPreCheckout():
-    # testJson = {"landlord":1,"items":[{"listing_id":"2","plan":"standard"},{"listing_id":"3","plan":"premium"}]};
-    jsonData = json.loads(request.form["json"])
     form = PreCheckoutForm(request.form)
 
     if form.validate():
-        print("testJSON")
-        pprint(jsonData)
+        jsonData = json.loads(request.form["json"])
         return render_template('confirmCheckout.html',
+                               preCheckoutForm=PreCheckoutForm(),
                                jsonData=jsonData)
     else:
         return 'error'
 
 
-@commerce.route('/checkout', methods=['GET'])
+@commerce.route('/checkout', methods=['GET', 'POST'])
 def checkout():
-    return render_template('checkout.html',
-                           clientToken=braintree.ClientToken.generate())
+    logger.debug('commerce.checkout() /checkout')
+    if request.method == 'POST':
+        form = PreCheckoutForm(request.form)
 
+        if form.validate():
+            listingObjects = json.loads(form.json.data)
+            logger.debug('Form Validated')
+            logger.debug('RAW Form JSON %s | Type %r' % (form.json.data, type(form.json.data)))
+            logger.debug('Parsed JSON %s | Type %r' % (pformat(listingObjects), type(listingObjects)))
 
-# @commerce.route('/postListingCheckout', methods=['POST'])
-# def postListingCheckout():
-#     postedJSON = request.get_json(force=True)
+            # Now we want to build out the listings we are going to create
+            # the transaction for
+            # listings = []
+            # checkoutTotal = 0
+            # for item in listingObjects['items']:
+            #     listingObject = {}
 
-#     for item in postedJSON['items']
-#         newListingTransaction
-#     pass
+            #     listingObject['listing'] = listing
+            #     listingObject['plan'] = item['plan']
+            #     listings.append(listingObject)
+
+            # Create our transaction record
+            newListingTransaction = ListingTransaction(user=current_user)
+            session.add(newListingTransaction)
+            session.commit()
+
+            for item in listingObjects['items']:
+                # Ambiguous variables because my database setup is stupid
+                listing = session.query(Listing) \
+                    .filter_by(id=int(item['listing_id'])) \
+                    .first()
+                newLTL = ListingTransactionListing(listing=listing,
+                                                   listingTransaction=newListingTransaction,
+                                                   plan=item['plan'])
+                session.add(newLTL)
+                session.commit()
+
+            logger.debug("NewListingTransaction %r" % newListingTransaction)
+            logger.debug("NewListingTransaction LTL Objects %r" % newListingTransaction.listings)
+
+        else:
+            print('invalid form')
+            flash_errors(form)
+
+        return render_template('checkout.html',
+                               clientToken=braintree.ClientToken.generate(),
+                               totalPrice=newListingTransaction.totalTransactionPrice,
+                               listingTransaction=newListingTransaction)
+    else:
+        if 'listingTransactionID' in request.args:
+            listingTransaction = session.query(ListingTransaction) \
+                .filter_by(id=int(request.args['listingTransactionID'])) \
+                .first()
+
+            if listingTransaction is not None:
+                if listingTransaction.isViewableBy(current_user):
+                    return render_template('checkout.html',
+                                           clientToken=braintree.ClientToken.generate(),
+                                           totalPrice=listingTransaction.totalTransactionPrice,
+                                           listingTransaction=listingTransaction)
 
 
 @commerce.route('/transactionGenerate', methods=['POST'])
-@csrf.exempt
 def genTransaction():
-    print("Genning Transaction")
+    logger.debug('commerce.genTransaction() /transactionGenerate')
     # dicts = request.form
     # for key in dicts:
     #     print ('form key %r' % dicts[key])
     # print("Card Number %s" % request.form['card-number'])
     # print("CVV %s" % request.form['cvv'])
     # print("Expriation %s" % request.form['expiration-date'])
-    print("Nonce %s" % request.form['payment_method_nonce'])
+    logger.debug("Nonce %s" % request.form['payment_method_nonce'])
 
     result = braintree.Transaction.sale({
         'amount': '1.00',
@@ -88,4 +118,22 @@ def genTransaction():
             'submit_for_settlement': True
         }
     })
-    return result
+
+    if result.is_success:
+        logger.debug('Successfull Result')
+
+        listingTransaction = session.query(ListingTransaction) \
+            .filter_by(id=int(request.form['listingTransactionID'])) \
+            .first()
+
+        if listingTransaction is not None:
+            if listingTransaction.isViewableBy(current_user):
+                listingTransaction.success = True
+                listingTransaction.status = result.transaction.status
+                listingTransaction.braintree_transaction_id = result.transaction.id
+                session.commit()
+        return 'yay'
+    else:
+        logger.warning('Unsuccessfull Result')
+        logger.warning('Transaction Status %s' % result.transaction.status)
+        return 'boo'

@@ -55,6 +55,7 @@ class Listing(Base):
     washer_free = db.Column(db.Boolean)
     youtube_url = db.Column(db.String(256))
     floor_plan_url = db.Column(db.String(256))
+    featured = db.Column(db.Boolean)
 
     # monthly_rent_due_date = db.Column(db.Date)
 
@@ -76,6 +77,7 @@ class Listing(Base):
     tours = relationship("Tour", backref='listing')
     house = relationship("House", backref=backref('listing', uselist=False))
     favorite = relationship("GroupListingFavorite", backref='listing')
+    listingTransactionListing = relationship("ListingTransactionListing", backref='listing')
 
     def __init__(
             self,
@@ -117,7 +119,8 @@ class Listing(Base):
             youtube_url=None,
             apartment_number=None,
             first_semester_rent_due_date=None,
-            second_semester_rent_due_date=None):
+            second_semester_rent_due_date=None,
+            featured=False):
 
         self.street = street
         self.city = city
@@ -161,6 +164,7 @@ class Listing(Base):
         self.cable = cable
         self.washer_free = washer_free
         self.youtube_url = youtube_url
+        self.featured = featured
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
@@ -179,6 +183,10 @@ class Listing(Base):
             'endDate': self.end_date.strftime("%B %d, %Y"),
             'url': '/listing/view/%d' % self.id
         }
+
+    @property
+    def briefStreet(self):
+        return self.street[:22] + '...'
 
     def landLords(self):
         landlords = []

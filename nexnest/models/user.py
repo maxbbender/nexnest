@@ -63,6 +63,7 @@ class User(Base):
         "Notification", backref='user', lazy="dynamic")
     messages = relationship('Message', backref='user')
     groupListingFavorites = relationship('GroupListingFavorite', backref='user')
+    transactions = relationship('Transaction', backref='user')
 
     def __init__(self,
                  email,

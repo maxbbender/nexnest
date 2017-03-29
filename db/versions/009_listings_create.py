@@ -40,6 +40,7 @@ listings = Table('listings', meta,
                  Column('heat_gas', Boolean()),
                  Column('cable', Boolean()),
                  Column('washer_free', Boolean()),
+                 Column('featured', Boolean()),
                  Column('youtube_url', String(length=256)),
                  Column('floor_plan_url', String(length=256)))
 
