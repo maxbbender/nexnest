@@ -372,7 +372,11 @@ def leasesSubmittedAJAX(id):
 
     if groupListing is not None:
         if groupListing.isEditableBy(current_user, toFlash=False):
-            groupListing.all_leases_submitted = True
+            if groupListing.all_leases_submitted:
+                groupListing.all_leases_submitted = False
+            else:
+                groupListing.all_leases_submitted = True
+
             session.commit()
 
             return jsonify(results={'success': True})
