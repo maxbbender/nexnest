@@ -184,6 +184,10 @@ class Listing(Base):
             'url': '/listing/view/%d' % self.id
         }
 
+    @property
+    def briefStreet(self):
+        return self.street[:22] + '...'
+
     def landLords(self):
         landlords = []
 
