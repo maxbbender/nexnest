@@ -47,6 +47,22 @@ class Tour(Base):
     def __repr__(self):
         return '<Tour %r>' % self.id
 
+    def serialize(self):
+        group_users = []
+        for user in self.group.acceptedUsers:
+            group_users.append(user.shortSerialize)
+
+        tour = {
+            'id': self.id,
+            'lastRequested': self.last_requested,
+            'tourConfirmed': self.tour_confirmed,
+            'url': '/tour/view/%d' % self.id,
+            'timeRequested': self.time_requested.strftime("%B %d, %Y %I:%M %p"),
+            'group': self.group.serialize
+        }
+
+        return tour
+
     def isViewableBy(self, user, toFlash=True):
         if user in self.group.getUsers() or user in self.listing.landLordsAsUsers():
             return True
@@ -71,9 +87,58 @@ class Tour(Base):
             session.add(newNotif)
             session.commit()
 
-    # def genConfirmNotifications(self):
-    #     for user in self.group.accep
+    def genConfirmNotifications(self):
+        for user in self.group.acceptedUsers:
+            newNotif = Notification(notif_type='tour_confirmed',
+                                    target_user=user,
+                                    target_model_id=self.id)
+            session.add(newNotif)
+            session.commit()
 
+    def undoConfirmNotifications(self):
+        session.query(Notification) \
+            .filter_by(notif_type='tour_confirmed',
+                       target_model_id=self.id) \
+            .delete()
+        session.commit()
+
+    def genTimeChangeNotifications(self):
+        if self.last_requested == 'landlord':
+            for user in self.group.acceptedUsers:
+                newNotif = Notification(notif_type='new_tour_time',
+                                        target_user=user,
+                                        target_model_id=self.id)
+                session.add(newNotif)
+                session.commit()
+        else:
+            for user in self.listing.landLordsAsUsers():
+                newNotif = Notification(notif_type='new_tour_time',
+                                        target_user=user,
+                                        target_model_id=self.id)
+                session.add(newNotif)
+                session.commit()
+
+    def undoTimeChangeNotifications(self):
+        session.query(Notification) \
+            .filter_by(notif_type='new_tour_time',
+                       target_model_id=self.id) \
+            .delete()
+        session.commit()
+
+    def genDeniedNotifications(self):
+        for user in self.group.acceptedUsers:
+            newNotif = Notification(notif_type='tour_denied',
+                                    target_user=user,
+                                    target_model_id=self.id)
+            session.add(newNotif)
+            session.commit()
+
+    def undoDeniedNotifications(self):
+        session.query(Notification) \
+            .filter_by(notif_type='tour_denied',
+                       target_model_id=self.id) \
+            .delete()
+        session.commit()
 
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument

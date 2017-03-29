@@ -1,10 +1,9 @@
 venv/
 *.pyc
 *.swp
-*.sublime-workspace
-*.sublime*
 .vagrant/
 *.glue
+*.sublime*
 nexnest/uploads/*
 nosetests.xml
 coverage.xml

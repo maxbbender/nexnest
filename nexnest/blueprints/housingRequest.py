@@ -82,6 +82,11 @@ def view(id):
         .filter_by(id=id) \
         .first()
 
+    if housingRequest.completed:
+        house = session.query(House).filter_by(listing_id=housingRequest.listing_id).first()
+
+        return redirect(url_for('houses.view', id=house.id))
+
     messages = session.query(GroupListingMessage) \
         .filter_by(groupListingID=housingRequest.id).order_by(desc(GroupListingMessage.date_created)) \
         .all()

@@ -26,7 +26,7 @@ class Notification(Base):
     # ----------------------------------------------------------------b#
     # NEW ONES (need category):
     # | user_leave_group | maintenance_inprogress | maintenance_completed
-    # | group_listing_accept | group_listing_denied | tour_confirm
+    # | group_listing_accept | group_listing_denied | tour_confirm | tour_denied
     notif_type = db.Column(db.String(128))
     redirect_url = db.Column(db.String(128))
     message = db.Column
@@ -51,11 +51,14 @@ class Notification(Base):
                            'house_message', 'tour_message',
                            'maintenance_message']
 
-        generic_notification = ['friend', 'group_user',
-                                'group_listing', 'house',
-                                'group_listing_favorite', 'maintenance',
-                                'security_deposit', 'tour',
-                                'rent_reminder', 'new_tour_time']
+        # generic_notification = ['friend', 'group_user',
+        #                         'group_listing', 'house',
+        #                         'group_listing_favorite', 'maintenance',
+        #                         'security_deposit', 'tour',
+        #                         'rent_reminder', 'new_tour_time', 'user_leave_group',
+        #                         'maintenance_inprogress', 'maintenance_completed',
+        #                         'group_listing_accept', 'group_listing_denied',
+        #                         'tour_confirm', 'tour_denied']
 
         report_notification = ['platform_report', 'report_group',
                                'report_landlord', 'report_listing']
@@ -64,10 +67,10 @@ class Notification(Base):
             self.category = 'direct_message'
         elif self.notif_type in generic_message:
             self.category = 'generic_message'
-        elif self.notif_type in generic_notification:
-            self.category = 'generic_notification'
         elif self.notif_type in report_notification:
             self.category = 'report_notification'
+        else:
+            self.category = 'generic_notification'
 
         message, returnObject, redirectURL = self.getNotification()  # pylint: disable=unused-variable
         self.redirect_url = redirectURL
@@ -90,7 +93,7 @@ class Notification(Base):
         return self.redirect_url
 
     def getNotification(self):
-        ########TODODOOOO#########
+        # #######TODODOOOO######## #
         # report_group | report_landlord | report_listing | rent_reminder
         ##########################
         # So this is super hacky, and not good to do....
@@ -406,6 +409,18 @@ class Notification(Base):
                 message = 'Your tour has been confirmed!'
 
                 redirectURL = '/tour/view/%d' % returnObject.id
+
+                return message, returnObject, redirectURL
+
+        elif self.notif_type == 'tour_denied':
+            returnObject = session.query(Tour) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = 'Your request for a tour at %s has been denied' % returnObject.listing.street
+
+                redirectURL = '/group/view/%d' % returnObject.group.id
 
                 return message, returnObject, redirectURL
 

@@ -1,6 +1,7 @@
-from nexnest.application import db
+from nexnest.application import db, session
 
-from .message import Message
+from nexnest.models.message import Message
+from nexnest.models.notification import Notification
 
 
 class TourMessage(Message):
@@ -32,3 +33,20 @@ class TourMessage(Message):
     def __repr__(self):
         return '<TourMessage ~ Tour %r | Message %r>' % \
             (self.tour_id, self.message_id)
+
+    def genNotifications(self):
+        for user in self.tour.group.acceptedUsers:
+            if user is not self.user:
+                newNotif = Notification(notif_type='tour_message',
+                                        target_user=user,
+                                        target_model_id=self.id)
+                session.add(newNotif)
+                session.commit()
+
+        for user in self.tour.listing.landLordsAsUsers():
+            if user is not self.user:
+                newNotif = Notification(notif_type='tour_message',
+                                        target_user=user,
+                                        target_model_id=self.id)
+                session.add(newNotif)
+                session.commit()

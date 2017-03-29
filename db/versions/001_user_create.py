@@ -25,9 +25,9 @@ users = Table('users',
               Column('phone', String(length=10)),
               Column('dob', DateTime()),
               Column('profile_image', String(length=128)),
-              Column('date_created', String(length=128),
+              Column('date_created', DateTime(),
                      nullable=False),
-              Column('date_modified', String(length=128),
+              Column('date_modified', DateTime(),
                      nullable=False),
               Column('active', Boolean()))
 

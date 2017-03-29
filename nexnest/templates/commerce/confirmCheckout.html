@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block content %}
+	<div class="row">
+		<div class="col-xl-3"></div>
+		<div class="col-xl-6">
+			<div class="card">
+				<div class="card-header">
+					<h3>Proceed With Checkout</h3>
+				</div>
+				<div class="card-block">
+					<div class="row">
+						<div class="col-xl-5">
+							<strong>Listing</strong>
+						</div>
+						<div class="col-xl-3">
+							<strong>Plan</strong>
+						</div>
+						<div class="col-xl-3">
+							<strong>Price</strong>
+						</div>
+						<div class="col-xl-1">
+						</div>
+					</div>
+					<hr>
+					<div class="row">
+						<div class="col-xl-12" id="checkOutItems">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xl-5">
+							<div class="input-group">
+							    <span class="input-group-btn">
+							        <button class="btn btn-secondary" type="button" style="pointer-events: none;">Coupon Code?</button>
+							    </span>
+							    <input id="couponCodeInput" type="text" class="form-control" placeholder="Enter it here!">
+							</div>
+						</div>
+						<div class="col-xl-4">
+							<span id="discount" style="color: green;"></span>
+						</div>
+						<div class="col-xl-3">
+								<button class="btn btn-info" id="sumbitCouponCode" onClick="validateCoupon()" style="float: right; display: none;">Submit Code</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xl-12">
+					<button class="btn btn-primary" onClick="proceedToCheckout()" style="float: right;">Proceed To Checkout</button>
+				</div>
+			</div>
+		</div>
+	</div>
+    {% from "_formhelpers.html" import render_field %}
+    <form id="preCheckoutForm" action="/checkout" method="POST">
+        {{preCheckoutForm.csrf_token}}
+        {{ render_field(preCheckoutForm.json, id="preCheckoutJSON", class="form-control", type="hidden") }}
+    </form>
+{% endblock %}
+{% block scripts %}
+<script>
+	$( document ).ready(function() {
+		// data = JSON.parse({{jsonData|tojson}});
+        data = {{jsonData|tojson}};
+        // console.log(data)
+		landlordID = data['landlord']
+		items = data['items'];
+		// console.log(items);
+		$.each(items, function(index, item) {
+			var checkoutItem = `<div class='row' id="itemInCart`+item.listing_id+`">
+									<div class='col-xl-5'>
+										<strong>`+ item.listing_street +`</strong>
+										<br>
+										`+ item.leasePeriod +`
+									</div>
+									<div class='col-xl-3'>
+										`+ item.plan +`
+									</div>
+									<div class='col-xl-3'>
+										`;
+										if(item.plan == "standard"){
+											checkoutItem += "$100";
+										}
+										else if(item.plan == "premium"){
+											checkoutItem += "$200";
+										}
+									checkoutItem +=`
+									</div>
+									<div class='col-xl-1'>
+										<button class='btn btn-danger btn-circle' style='float:right;' onClick='removeListingToPurchase(`+ item.listing_id +`, `+ item.index +`)'><i class='fa fa-times' aria-hidden='true'></i></button>
+									</div>
+								</div>
+								<hr id="hrInCart`+item.listing_id+`">`;
+			$("#checkOutItems").append(checkoutItem);
+		})
+	});
+	function removeListingToPurchase(id, index){
+		$("#itemInCart"+id).remove();
+		$("#hrInCart"+id).remove();
+		items.splice(index, 1);
+	}
+	function proceedToCheckout(){
+		var cart = {};
+    	cart.landlord = landlordID;
+    	cart.items = items;
+    	cart.couponCode = $('#couponCodeInput').val();
+        
+    	// cart = JSON.stringify(cart);
+        console.log(cart);
+
+        preCheckoutJSONElement = document.getElementById("preCheckoutJSON")
+        preCheckoutJSONElement.value = JSON.stringify(cart)
+        precheckoutElement = document.getElementById("preCheckoutForm")
+        precheckoutElement.submit()
+	}
+
+	function validateCoupon(){
+		//need to get the valid coupons here
+
+		var input = $('#couponCodeInput').val();
+		if(input == "henloStinky"){
+			$("#discount").html("15% Off");
+			$("#discount").css("color", "green");
+		}
+		else if(input == "rojopapi"){
+			$("#discount").html("25% Off");
+			$("#discount").css("color", "green");
+		}
+		else{
+			$("#discount").html("Not a Valid Code");
+			$("#discount").css("color", "red");
+		}
+	}
+
+	$('#couponCodeInput').on('input',function(e){
+		var input = $('#couponCodeInput').val();
+		if(input.length > 0){
+			$("#sumbitCouponCode").show();
+		}
+		else{
+			$("#sumbitCouponCode").hide();
+		}
+    });
+</script>	
+{% endblock %}
