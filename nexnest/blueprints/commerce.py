@@ -8,6 +8,8 @@ from nexnest.application import braintree, csrf, session
 
 from nexnest.models.transaction import ListingTransaction, ListingTransactionListing
 from nexnest.models.listing import Listing
+from nexnest.models.cupon import Cupon
+
 from nexnest.forms import PreCheckoutForm
 from nexnest.utils.flash import flash_errors
 
@@ -68,7 +70,7 @@ def checkout():
             logger.debug("NewListingTransaction LTL Objects %r" % newListingTransaction.listings)
 
         else:
-            print('invalid form')
+            logger.warning('Invalid PreCheckoutForm')
             flash_errors(form)
 
         return render_template('checkout.html',
@@ -128,16 +130,36 @@ def genTransaction():
                     }
                 })
 
+            # The Transaction was successfull
             if result.is_success:
-                logger.debug('Successfull Result')
                 listingTransaction.success = True
                 listingTransaction.status = result.transaction.status
                 listingTransaction.braintree_transaction_id = result.transaction.id
                 session.commit()
+
+                # Now we want to go through the listings and set them to active
+                for listing in listingTransaction.listings:
+                    listing.active = True
+                    session.commit()
+
+                logger.debug('Successfull Result')
                 flash('Transaction Success, your listings are now live!', 'success')
                 return redirect(url_for('indexs.index'))
+
+            # The Transaction was NOT successfull
             else:
                 logger.warning('Unsuccessfull Result')
                 logger.warning('Transaction Error %s (%s|%s)' % (result.transaction.status, result.transaction.processor_response_code, result.transaction.processor_response_text))
                 flash('Transaction Error %s (%s|%s) Contact an administrator if you believe this is an error our our end.' % (result.transaction.status, result.transaction.processor_response_code, result.transaction.processor_response_text), 'error')
                 return redirect('/landlord/dashboard#checkoutTab')
+
+
+@commmerce.route('/cupon/<cuponCode>/check', methods=['POST'])
+@login_required
+def checkCuponCode(cuponCode):
+    cupon = session.query(Cupon) \
+    .filter_by(cupon_code=cuponCode) \
+    .first()
+
+    if cupon is not None:
+        

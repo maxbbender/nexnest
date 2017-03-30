@@ -144,10 +144,9 @@
 			        </div>
 		        </div>
 	        </div>
-            {% from "_formhelpers.html" import render_field %}
             <form id="preCheckoutForm" action="/preCheckout" method="POST">
                 {{preCheckoutForm.csrf_token}}
-                {{ render_field(preCheckoutForm.json, id="preCheckoutJSON", class="form-control", type="hidden") }}
+                {{preCheckoutForm.json(id='preCheckoutJSON')}}
             </form>
 		    <div class="tab-pane active" id="occupiedListingsTab" role="tabpanel" style="padding: 0px;">
 		    	<div class="row">
