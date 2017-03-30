@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for
+from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
 from flask_login import current_user
 
 from pprint import pprint, pformat
@@ -139,5 +139,5 @@ def genTransaction():
             else:
                 logger.warning('Unsuccessfull Result')
                 logger.warning('Transaction Error %s (%s|%s)' % (result.transaction.status, result.transaction.processor_response_code, result.transaction.processor_response_text))
-                flash('Transaction Error %s (%s|%s) Contact an administrator if you believe this is an error our our end.' % (result.transaction.status, result.transaction.processor_response_code, result.transaction.processor_response_text))
+                flash('Transaction Error %s (%s|%s) Contact an administrator if you believe this is an error our our end.' % (result.transaction.status, result.transaction.processor_response_code, result.transaction.processor_response_text), 'error')
                 return redirect('/landlord/dashboard#checkoutTab')
