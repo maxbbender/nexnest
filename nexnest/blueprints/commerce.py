@@ -1,9 +1,9 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, redirect, url_for
 from flask_login import current_user
 
 from pprint import pprint, pformat
 
-from nexnest import logger
+from nexnest import logger, env
 from nexnest.application import braintree, csrf, session
 
 from nexnest.models.transaction import ListingTransaction, ListingTransactionListing
@@ -47,17 +47,6 @@ def checkout():
             logger.debug('Form Validated')
             logger.debug('RAW Form JSON %s | Type %r' % (form.json.data, type(form.json.data)))
             logger.debug('Parsed JSON %s | Type %r' % (pformat(listingObjects), type(listingObjects)))
-
-            # Now we want to build out the listings we are going to create
-            # the transaction for
-            # listings = []
-            # checkoutTotal = 0
-            # for item in listingObjects['items']:
-            #     listingObject = {}
-
-            #     listingObject['listing'] = listing
-            #     listingObject['plan'] = item['plan']
-            #     listings.append(listingObject)
 
             # Create our transaction record
             newListingTransaction = ListingTransaction(user=current_user)
@@ -103,37 +92,52 @@ def checkout():
 @commerce.route('/transactionGenerate', methods=['POST'])
 def genTransaction():
     logger.debug('commerce.genTransaction() /transactionGenerate')
-    # dicts = request.form
-    # for key in dicts:
-    #     print ('form key %r' % dicts[key])
-    # print("Card Number %s" % request.form['card-number'])
-    # print("CVV %s" % request.form['cvv'])
-    # print("Expriation %s" % request.form['expiration-date'])
-    logger.debug("Nonce %s" % request.form['payment_method_nonce'])
 
-    result = braintree.Transaction.sale({
-        'amount': '1.00',
-        'payment_method_nonce': 'fake-valid-visa-nonce',
-        'options': {
-            'submit_for_settlement': True
-        }
-    })
+    listingTransaction = session.query(ListingTransaction) \
+        .filter_by(id=int(request.form['listingTransactionID'])) \
+        .first()
 
-    if result.is_success:
-        logger.debug('Successfull Result')
+    if listingTransaction is not None:
+        if listingTransaction.isViewableBy(current_user):
 
-        listingTransaction = session.query(ListingTransaction) \
-            .filter_by(id=int(request.form['listingTransactionID'])) \
-            .first()
+            transactionAmount = listingTransaction.totalTransactionPrice
 
-        if listingTransaction is not None:
-            if listingTransaction.isViewableBy(current_user):
+            logger.debug('Generating Transaction for %r | Price %d | Nonce %s' % (listingTransaction, transactionAmount, request.form['payment_method_nonce']))
+
+            # If we are in development we are going to use the fake payment
+            # setup for braintree
+            result = None
+            if env == 'development' or env == 'test':
+                logger.debug('genTransaction() - DEVELOPMENT SETTINGS')
+
+                result = braintree.Transaction.sale({
+                    'amount': str(transactionAmount),
+                    'payment_method_nonce': 'fake-valid-visa-nonce',
+                    'options': {
+                        'submit_for_settlement': True
+                    }
+                })
+            else:
+                logger.debug('genTransaction() - PRODUCTION SETTINGS')
+
+                result = braintree.Transaction.sale({
+                    'amount': str(transactionAmount),
+                    'payment_method_nonce': request.form['payment_method_nonce'],
+                    'options': {
+                        'submit_for_settlement': True
+                    }
+                })
+
+            if result.is_success:
+                logger.debug('Successfull Result')
                 listingTransaction.success = True
                 listingTransaction.status = result.transaction.status
                 listingTransaction.braintree_transaction_id = result.transaction.id
                 session.commit()
-        return 'yay'
-    else:
-        logger.warning('Unsuccessfull Result')
-        logger.warning('Transaction Status %s' % result.transaction.status)
-        return 'boo'
+                flash('Transaction Success, your listings are now live!', 'success')
+                return redirect(url_for('indexs.index'))
+            else:
+                logger.warning('Unsuccessfull Result')
+                logger.warning('Transaction Error %s (%s|%s)' % (result.transaction.status, result.transaction.processor_response_code, result.transaction.processor_response_text))
+                flash('Transaction Error %s (%s|%s) Contact an administrator if you believe this is an error our our end.' % (result.transaction.status, result.transaction.processor_response_code, result.transaction.processor_response_text))
+                return redirect('/landlord/dashboard#checkoutTab')
