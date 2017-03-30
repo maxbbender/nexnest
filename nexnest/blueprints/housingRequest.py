@@ -363,6 +363,31 @@ def allLeasesSubmitted():
     return redirect(url_for('indexs.index'))
 
 
+@housingRequests.route('/houseRequest/<id>/allLeasesSubmitted/ajax', methods=['GET'])
+@login_required
+def leasesSubmittedAJAX(id):
+    errorMessage = None
+
+    groupListing = session.query(GroupListing).filter_by(id=id).first()
+
+    if groupListing is not None:
+        if groupListing.isEditableBy(current_user, toFlash=False):
+            if groupListing.all_leases_submitted:
+                groupListing.all_leases_submitted = False
+            else:
+                groupListing.all_leases_submitted = True
+
+            session.commit()
+
+            return jsonify(results={'success': True})
+        else:
+            errorMessage = 'Permissions Error'
+    else:
+        errorMessage = 'Invalid Reqeuest'
+
+    return jsonify(results={'success': False, 'message': errorMessage})
+
+
 # NOTIFICATIONS IMPLEMENTED
 @housingRequests.route('/houseRequest/<id>/accept/ajax', methods=['GET'])
 @login_required
@@ -372,7 +397,7 @@ def acceptHousingRequestAJAX(id):
     groupListing = session.query(GroupListing).filter_by(id=id).first()
 
     if groupListing is not None:
-        if groupListing.isEditableBy(current_user):
+        if groupListing.isEditableBy(current_user, toFlash=False):
             groupListing.accepted = True
             groupListing.group.invalidateOpenInvitations()
             session.commit()
@@ -405,7 +430,7 @@ def acceptHousingRequestAJAXUndo(id):
     groupListing = session.query(GroupListing).filter_by(id=id).first()
 
     if groupListing is not None:
-        if groupListing.isEditableBy(current_user):
+        if groupListing.isEditableBy(current_user, toFlash=False):
             groupListing.accepted = False
             session.commit()
 
@@ -433,7 +458,7 @@ def completeHousingRequestAJAX(id):
     groupListing = session.query(GroupListing).filter_by(id=id).first()
 
     if groupListing is not None:
-        if groupListing.isEditableBy(current_user):
+        if groupListing.isEditableBy(current_user, toFlash=False):
             groupListing.completed = True
             session.commit()
 
@@ -457,7 +482,7 @@ def completeHousingRequestAJAXUndo(id):
     groupListing = session.query(GroupListing).filter_by(id=id).first()
 
     if groupListing is not None:
-        if groupListing.isEditableBy(current_user):
+        if groupListing.isEditableBy(current_user, toFlash=False):
             groupListing.completed = False
             session.commit()
 
@@ -481,7 +506,7 @@ def denyHousingRequestAJAX(id):
     groupListing = session.query(GroupListing).filter_by(id=id).first()
 
     if groupListing is not None:
-        if groupListing.isEditableBy(current_user):
+        if groupListing.isEditableBy(current_user, toFlash=False):
             groupListing.group_show = False
             groupListing.landlord_show = False
             session.commit()
@@ -506,7 +531,7 @@ def denyHousingRequestAJAXUndo(id):
     groupListing = session.query(GroupListing).filter_by(id=id).first()
 
     if groupListing is not None:
-        if groupListing.isEditableBy(current_user):
+        if groupListing.isEditableBy(current_user, toFlash=False):
             groupListing.group_show = True
             groupListing.landlord_show = True
             session.commit()
