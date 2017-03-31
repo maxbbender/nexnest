@@ -399,7 +399,16 @@ def acceptHousingRequestAJAX(id):
     if groupListing is not None:
         if groupListing.isEditableBy(current_user, toFlash=False):
             groupListing.accepted = True
+            groupListing.group.invalidateOpenInvitations()
             session.commit()
+
+            # Create Security Deposit records
+            for user in groupListing.group.acceptedUsers:
+                newSecurityDeposit = SecurityDeposit(user=user,
+                                                     groupListing=groupListing)
+
+                session.add(newSecurityDeposit)
+                session.commit()
 
             groupListing.genAcceptedNotifications()
 
@@ -426,6 +435,10 @@ def acceptHousingRequestAJAXUndo(id):
             session.commit()
 
             groupListing.undoAcceptedNotifications()
+
+            # We need to remove all the security deposit records
+            session.query(SecurityDeposit).filter_by(group_listing_id=groupListing.id).delete()
+            session.commit()
 
             return jsonify(results={'success': True})
         else:

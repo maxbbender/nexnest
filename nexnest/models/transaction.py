@@ -1,7 +1,7 @@
 from datetime import datetime as dt
 
 from nexnest import logger
-from nexnest.application import db
+from nexnest.application import db, session
 
 from .base import Base
 
@@ -124,6 +124,7 @@ class ListingTransaction(Transaction):
                 logger.debug("New Total : %d" % totalPrice)
 
             self.total = totalPrice
+            session.commit()
 
             return self.total
 

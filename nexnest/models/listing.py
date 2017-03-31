@@ -172,7 +172,7 @@ class Listing(Base):
         self.date_modified = now
 
     def __repr__(self):
-        return '<Listing %r>' % self.id
+        return '<Listing %r | %s>' % (self.id, self.street)
 
     @property
     def shortSerialize(self):
