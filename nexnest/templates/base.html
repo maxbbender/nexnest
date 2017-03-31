@@ -14,8 +14,7 @@
 	    <link rel="stylesheet" href="{{url_for('static', filename='font-awesome-4.7.0/css/font-awesome.min.css')}}">
         <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap-notifications.css')}}">
         <link rel="stylesheet" href="{{url_for('static', filename='css/magnific-popup.css')}}">        
-        <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.7.2/css/bootstrap-slider.css">    
+        <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">  
         <script src="{{url_for('static', filename='js/flatpickr.js')}}"></script>        
 	    <script src="{{url_for('static', filename='js/jquery-latest.js')}}"></script>        
         <script src="{{url_for('static', filename='js/bootstrap-validator.js')}}"></script>
@@ -150,7 +149,11 @@
         <div class="row" style="width: 100%; overflow-x: hidden;">
             <div class="col-xs-12" style="padding-left: 15px;">
 		        {% block content %}{% endblock %}
-                <!-- {% include 'footer.html' %} -->
+            </div>
+        </div>
+        <div class="row" style="width: 100%; overflow-x: hidden; padding-top: 50px; margin-left: 0px;">
+            <div class="col-xs-12" style="padding-left: 15px;">
+                {% include 'footer.html' %}
             </div>
         </div>
 

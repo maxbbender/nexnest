@@ -615,7 +615,6 @@
     }
 
     function unpaidToPaid(userID, requestID){
-        alert(userID +"  " + requestID);
     	requestURL = '/houseRequest/{{housingRequest.id}}/securityDeposit/' + userID + '/paid'
     	$.getJSON(requestURL, function(data) {
             results = data['results'];

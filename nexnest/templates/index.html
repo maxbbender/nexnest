@@ -7,7 +7,10 @@
 	    	<div class="card card-inverse">
 	    		<img class="card-img" src="static/img/testHouse7.jpg" alt="Card image" style="width: 100%;">
 	    		<div class="card-img-overlay" style="display: flex; flex-direction: column; justify-content: center;">
-	    			<div class="row justify-content-center" style="align-items: flex-end;">
+	    			<div class="row" style="margin-top: -150px;">
+	    				<h1 style="color: white; padding-left: 10%;">Insert Tagline from Nate and Alex Here</h1>
+	    			</div>
+	    			<div class="row justify-content-center" style="align-items: flex-end; padding-top: 150px;">
 	    				<div class="col-xl-3" style="left: 8vw;">
 	    					<label for="where">Where</label>
     					    <select class="form-control" id="where" style="width: 75%;">
@@ -41,248 +44,255 @@
 	    	</div>
 	    </div>
     </div>
+    <div class="row justify-content-center" style="margin-left: 15px;">
+    	<h3>Built For Students</h3>
+    </div>
     <div class="row" style="margin-left: 15px;">
-	    <!-- Featured Listings -->
-		<div class="row m-x-auto">
-			{% for featured in listings %}
-				<div class="col-md-4" style="padding-left: 30px; padding-right: 30px; padding-bottom: 30px">
-					{% include 'featuredListing.html' %}
-				</div>
-			{% endfor %}
-		</div>
-	    {% else %}
-	    	<div class="row m-x-auto">
-				<div class="col-md-12 col-lg-6 col-xl-6">
-					<nav class="navbar sticky-top navbar-light bg-faded">
-						<div class="row">
-					    	<div class="col-xs-4">
-	        					    <select class="form-control filterOption" id="where2" onch>
-	        					    	<option disabled>Select Where</option>
-	        					      	<option>Fredonia, NY</option>
-	        					    </select>
+    	<div class="col-xl-3" style="text-align: center;">
+    		Wsdfojhsdfhjod ojha ojh asfdojhasd ojhasdojhas dhjo asjoh jhoas dhjas oh asdohjasd jhosad jasd hj hjasohjas odhasd oashdo s
+    	</div>
+    	<div class="col-xl-3" style="text-align: center;">
+    		Wsdfojhsdfhjod ojha ojh asfdojhasd ojhasdojhas dhjo asjoh jhoas dhjas oh asdohjasd jhosad jasd hj hjasohjas odhasd oashdo s
+    	</div>
+    	<div class="col-xl-3" style="text-align: center;">
+    		Wsdfojhsdfhjod ojha ojh asfdojhasd ojhasdojhas dhjo asjoh jhoas dhjas oh asdohjasd jhosad jasd hj hjasohjas odhasd oashdo s
+    	</div>
+    	<div class="col-xl-3" style="text-align: center;">
+    		Wsdfojhsdfhjod ojha ojh asfdojhasd ojhasdojhas dhjo asjoh jhoas dhjas oh asdohjasd jhosad jasd hj hjasohjas odhasd oashdo s
+    	</div>
+    </div>
+	{% else %}
+    	<div class="row m-x-auto" style="margin-left: 15px;">
+			<div class="col-md-12 col-lg-6 col-xl-6">
+				<nav class="navbar sticky-top navbar-light bg-faded">
+					<div class="row">
+				    	<div class="col-xs-4">
+        					    <select class="form-control filterOption" id="where2" onch>
+        					    	<option disabled>Select Where</option>
+        					      	<option>Fredonia, NY</option>
+        					    </select>
+				        </div>
+				        <div class="col-xs-4">
+        					    <select class="form-control filterOption" id="when2">
+        					    	<option disabled>Select Term</option>
+        					      	<option>2017-2018 School Year</option>
+        					      	<option>2018 Summer</option>
+        					      	<option>2018-2019 School Year</option>
+        					      	<option>2019 Summer</option>
+        					    </select>
+				        </div>
+				        <div class="col-xs-4">
+						        <select class="form-control filterOption" id="rooms2">
+						        	<option disabled>Bedrooms</option>
+						          	<option value="1">1 Bed</option>
+						          	<option value="2">2 Beds</option>
+						          	<option value="3">3 Beds</option>
+						          	<option value="4+">4+ Beds</option>
+						        </select>
+					    </div>
+				    </div>
+				    <div class="row" style="padding-top: 10px;">
+    					<div class="col-xs-12 col-lg-8" style="padding-left: 30px;">
+    						Max Price
+    						<br>
+    					    <input class="filterOption" id="priceRange" type="text" data-slider-ticks="[1000, 2000, 3000, 4000, 5000]" data-slider-ticks-snap-bounds="100" data-slider-ticks-labels='["$1000", "$2000", "$3000", "$4000", "$5000"]' data-slider-value="3000" value="3000" />
+    					    <div class="btn-group" data-toggle="buttons" style="padding-left: 30px;">
+    					      	<label class="btn btn-outline-primary filterOption active" id="priceSearchMonth">
+    					      	<input type="radio" name="packageChoice" id="priceSearchMonthInput" checked autocomplete="off"> Month
+    					        </label>
+    					      	<label class="btn btn-outline-primary filterOption" id="priceSearchTerm">
+    					      	<input type="radio" name="packageChoice" id="priceSearchMonthInput" autocomplete="off"> Term
+    					        </label>
 					        </div>
-					        <div class="col-xs-4">
-	        					    <select class="form-control filterOption" id="when2">
-	        					    	<option disabled>Select Term</option>
-	        					      	<option>2017-2018 School Year</option>
-	        					      	<option>2018 Summer</option>
-	        					      	<option>2018-2019 School Year</option>
-	        					      	<option>2019 Summer</option>
-	        					    </select>
-					        </div>
-					        <div class="col-xs-4">
-							        <select class="form-control filterOption" id="rooms2">
-							        	<option disabled>Bedrooms</option>
-							          	<option value="1">1 Bed</option>
-							          	<option value="2">2 Beds</option>
-							          	<option value="3">3 Beds</option>
-							          	<option value="4+">4+ Beds</option>
-							        </select>
-						    </div>
+    					</div>
+    					<div class="col-xs-12 col-lg-4">        						
+    						<br>
+					        <button class="btn btn-secondary" onClick="showMoreFilters()" style="float: right; width: 210.66px; text-align: left;">More Filters <i class="fa fa-chevron-down" aria-hidden="true"></i></button>
 					    </div>
-					    <div class="row" style="padding-top: 10px;">
-        					<div class="col-xs-12 col-lg-8" style="padding-left: 30px;">
-        						Max Price
-        						<br>
-        					    <input class="filterOption" id="priceRange" type="text" data-slider-ticks="[1000, 2000, 3000, 4000, 5000]" data-slider-ticks-snap-bounds="100" data-slider-ticks-labels='["$1000", "$2000", "$3000", "$4000", "$5000"]' data-slider-value="3000" value="3000" />
-        					    <div class="btn-group" data-toggle="buttons" style="padding-left: 30px;">
-	    					      	<label class="btn btn-outline-primary filterOption active" id="priceSearchMonth">
-	    					      	<input type="radio" name="packageChoice" id="priceSearchMonthInput" checked autocomplete="off"> Month
-	    					        </label>
-	    					      	<label class="btn btn-outline-primary filterOption" id="priceSearchTerm">
-	    					      	<input type="radio" name="packageChoice" id="priceSearchMonthInput" autocomplete="off"> Term
-	    					        </label>
-    					        </div>
-        					</div>
-        					<div class="col-xs-12 col-lg-4">        						
-        						<br>
-						        <button class="btn btn-secondary" onClick="showMoreFilters()" style="float: right; width: 210.66px; text-align: left;">More Filters <i class="fa fa-chevron-down" aria-hidden="true"></i></button>
-						    </div>
+				    </div>
+				    <div class="row" style="padding-top: 10px;">
+    					<div class="col-xs-8">
+    						<input type="text" class="form-control" placeholder="Search for an Address">
+    					</div>
+    					<div class="col-xs-4">
+    						<select class="form-control filterOption" id="sortBy">
+					        	<option disabled selected value="default">Sort By</option>
+					          	<option value="priceLowToHigh">Low to High</option>
+					          	<option value="priceHighToLow">High to Low</option>
+					          	<option value="mostRecent">Recent</option>
+						    </select>
 					    </div>
-					    <div class="row" style="padding-top: 10px;">
-        					<div class="col-xs-8">
-        						<input type="text" class="form-control" placeholder="Search for an Address">
-        					</div>
-        					<div class="col-xs-4">
-        						<select class="form-control filterOption" id="sortBy">
-						        	<option disabled selected value="default">Sort By</option>
-						          	<option value="priceLowToHigh">Low to High</option>
-						          	<option value="priceHighToLow">High to Low</option>
-						          	<option value="mostRecent">Recent</option>
-							    </select>
-						    </div>
-					    </div>
-					    <div class="row hidden-lg-up" style="padding-top: 10px;">
-					    	<div class="col-xs-12">
-					    		<button id="toggleMap" class="btn btn-secondary" style="float: right;">Switch To Map View</button>
-					    	</div>
-					    </div>
-					</nav>
+				    </div>
+				    <div class="row hidden-lg-up" style="padding-top: 10px;">
+				    	<div class="col-xs-12">
+				    		<button id="toggleMap" class="btn btn-secondary" style="float: right;">Switch To Map View</button>
+				    	</div>
+				    </div>
+				</nav>
 
-					<div class="row" id="mainContent">
-						<div id="listingView" class="col-xs-12">
-							{% if listings is not none %}
-								<div class="row m-x-auto">
-									{% for listing in listings %}
-										<div class="col-md-6" style="padding-left: 30px; padding-bottom: 30px">
-											{% include 'listing.html' %}
-										</div>
-									{% endfor %}
+				<div class="row" id="mainContent">
+					<div id="listingView" class="col-xs-12">
+						{% if listings is not none %}
+							<div class="row m-x-auto">
+								{% for listing in listings %}
+									<div class="col-md-6" style="padding-left: 30px; padding-bottom: 30px">
+										{% include 'listing.html' %}
+									</div>
+								{% endfor %}
+							</div>
+						{% endif %}
+					</div>
+					<div id="mapView" class="col-xs-12" style="background-image: url('static/img/mapTest.png'); display: none; height: 80vh;">
+						<!-- Show map if they toggle map view -->
+					</div>
+				</div>
+				<div class="row" id="moreFilters" style="display: none; margin-left: 30px;">
+				<br><br>
+					<div class="col-xl-1">							
+					</div>
+					<div class="col-xl-10">							
+						<h1>Property Type</h1>
+						<div class="row">
+							<div class="col-xs-4">
+								<label class="control-label form-control-feedback" id="house_label">House</label>
+								<div class="checkbox">
+								    <label style="font-size: 1.5em">
+								    	<input id="houseCheckBox" type="checkbox" checked>
+								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+								    </label>
 								</div>
-							{% endif %}
+							</div>
+							<div class="col-xs-4">
+								<label class="control-label form-control-feedback" id="apartment_label">Apartment</label>
+								<div class="checkbox">
+								    <label style="font-size: 1.5em">
+								    	<input id="apartmentCheckBox" type="checkbox" checked>
+								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+								    </label>
+								</div>
+							</div>
+							<div class="col-xs-4">
+								<label class="control-label form-control-feedback" id="complex_label">Complex</label>
+								<div class="checkbox">
+								    <label style="font-size: 1.5em">
+								    	<input id="complexCheckBox" type="checkbox" checked>
+								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+								    </label>
+								</div>
+							</div>
 						</div>
-						<div id="mapView" class="col-xs-12" style="background-image: url('static/img/mapTest.png'); display: none; height: 100vh;">
-							<!-- Show map if they toggle map view -->
+						<hr>
+						<br>
+						<h1>Distance to Campus</h1>
+						<div class="row">
+							<div class="col-xl-12">
+								<b>1 Mi</b> <input id="distanceToCampus" type="text" class="span2" value="" data-slider-min="1" data-slider-max="10" data-slider-step="1"/> <b>10 Mi</b>
+							</div>								
+						</div>
+						<hr>
+						<br>
+						<h1>Pet Friendly</h1>
+						<div class="row">
+							<div class="col-xs-6">
+								<label class="control-label form-control-feedback" id="dogs_label">Dogs</label>
+								<div class="checkbox">
+								    <label style="font-size: 1.5em">
+								    	<input id="dogCheckBox" type="checkbox">
+								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+								    </label>
+								</div>
+							</div>
+							<div class="col-xs-6">
+								<label class="control-label form-control-feedback" id="cats_label">Cats</label>
+								<div class="checkbox">
+								    <label style="font-size: 1.5em">
+								    	<input id="catCheckBox" type="checkbox">
+								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+								    </label>
+								</div>
+							</div>
+						</div>
+						<hr>
+						<br>
+						<h1>Includes</h1>
+						<div class="row">
+							<div class="col-xs-6 col-xl-4">
+								<label class="control-label form-control-feedback" id="furnished_label">Furnished</label>
+								<div class="checkbox">
+								    <label style="font-size: 1.5em">
+								    	<input id="furnishedCheckBox" type="checkbox">
+								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+								    </label>
+								</div>
+							</div>
+							<div class="col-xs-6 col-xl-4">
+								<label class="control-label form-control-feedback" id="dishwasher_label">Dishwasher</label>
+								<div class="checkbox">
+								    <label style="font-size: 1.5em">
+								    	<input id="dishwasherCheckBox" type="checkbox">
+								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+								    </label>
+								</div>
+							</div>
+							<div class="col-xs-6 col-xl-4">
+								<label class="control-label form-control-feedback" id="laundry_label">On-Site Laundry</label>
+								<div class="checkbox">
+								    <label style="font-size: 1.5em">
+								    	<input id="laundryCheckBox" type="checkbox">
+								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+								    </label>
+								</div>
+							</div>
+							<div class="col-xs-6 col-xl-4">
+								<label class="control-label form-control-feedback" id="internet_label">Internet Included</label>
+								<div class="checkbox">
+								    <label style="font-size: 1.5em">
+								    	<input id="internetCheckBox" type="checkbox">
+								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+								    </label>
+								</div>
+							</div>
+							<div class="col-xl-4">
+								<label class="control-label form-control-feedback" id="cable_label">Cable Included</label>
+								<div class="checkbox">
+								    <label style="font-size: 1.5em">
+								    	<input id="cableCheckBox" type="checkbox">
+								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+								    </label>
+								</div>
+							</div>
+							<div class="col-xs-6 col-xl-4">
+								<label class="control-label form-control-feedback" id="snow_label">Snow Removal</label>
+								<div class="checkbox">
+								    <label style="font-size: 1.5em">
+								    	<input id="snowRemovalCheckBox" type="checkbox">
+								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+								    </label>
+								</div>
+							</div>
+							<div class="col-xs-6 col-xl-4">
+								<label class="control-label form-control-feedback" id="garbage_label">Garbage Removal</label>
+								<div class="checkbox">
+								    <label style="font-size: 1.5em">
+								    	<input id="garbageCheckBox" type="checkbox">
+								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+								    </label>
+								</div>
+							</div>
+						</div>
+						<hr>
+						<div class="row">
+							<div class="col-xs-12">
+								<button class="btn btn-primary" onClick="buildFilters()" style="float: right;">Search</button>
+							</div>
 						</div>
 					</div>
-					<div class="row" id="moreFilters" style="display: none; margin-left: 30px;">
-					<br><br>
-						<div class="col-xl-1">							
-						</div>
-						<div class="col-xl-10">							
-							<h1>Property Type</h1>
-							<div class="row">
-								<div class="col-xs-4">
-									<label class="control-label form-control-feedback" id="house_label">House</label>
-									<div class="checkbox">
-									    <label style="font-size: 1.5em">
-									    	<input id="houseCheckBox" type="checkbox" checked>
-									        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-									    </label>
-									</div>
-								</div>
-								<div class="col-xs-4">
-									<label class="control-label form-control-feedback" id="apartment_label">Apartment</label>
-									<div class="checkbox">
-									    <label style="font-size: 1.5em">
-									    	<input id="apartmentCheckBox" type="checkbox" checked>
-									        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-									    </label>
-									</div>
-								</div>
-								<div class="col-xs-4">
-									<label class="control-label form-control-feedback" id="complex_label">Complex</label>
-									<div class="checkbox">
-									    <label style="font-size: 1.5em">
-									    	<input id="complexCheckBox" type="checkbox" checked>
-									        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-									    </label>
-									</div>
-								</div>
-							</div>
-							<hr>
-							<br>
-							<h1>Distance to Campus</h1>
-							<div class="row">
-								<div class="col-xl-12">
-									<b>1 Mi</b> <input id="distanceToCampus" type="text" class="span2" value="" data-slider-min="1" data-slider-max="10" data-slider-step="1"/> <b>10 Mi</b>
-								</div>								
-							</div>
-							<hr>
-							<br>
-							<h1>Pet Friendly</h1>
-							<div class="row">
-								<div class="col-xs-6">
-									<label class="control-label form-control-feedback" id="dogs_label">Dogs</label>
-									<div class="checkbox">
-									    <label style="font-size: 1.5em">
-									    	<input id="dogCheckBox" type="checkbox">
-									        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-									    </label>
-									</div>
-								</div>
-								<div class="col-xs-6">
-									<label class="control-label form-control-feedback" id="cats_label">Cats</label>
-									<div class="checkbox">
-									    <label style="font-size: 1.5em">
-									    	<input id="catCheckBox" type="checkbox">
-									        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-									    </label>
-									</div>
-								</div>
-							</div>
-							<hr>
-							<br>
-							<h1>Includes</h1>
-							<div class="row">
-								<div class="col-xs-6 col-xl-4">
-									<label class="control-label form-control-feedback" id="furnished_label">Furnished</label>
-									<div class="checkbox">
-									    <label style="font-size: 1.5em">
-									    	<input id="furnishedCheckBox" type="checkbox">
-									        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-									    </label>
-									</div>
-								</div>
-								<div class="col-xs-6 col-xl-4">
-									<label class="control-label form-control-feedback" id="dishwasher_label">Dishwasher</label>
-									<div class="checkbox">
-									    <label style="font-size: 1.5em">
-									    	<input id="dishwasherCheckBox" type="checkbox">
-									        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-									    </label>
-									</div>
-								</div>
-								<div class="col-xs-6 col-xl-4">
-									<label class="control-label form-control-feedback" id="laundry_label">On-Site Laundry</label>
-									<div class="checkbox">
-									    <label style="font-size: 1.5em">
-									    	<input id="laundryCheckBox" type="checkbox">
-									        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-									    </label>
-									</div>
-								</div>
-								<div class="col-xs-6 col-xl-4">
-									<label class="control-label form-control-feedback" id="internet_label">Internet Included</label>
-									<div class="checkbox">
-									    <label style="font-size: 1.5em">
-									    	<input id="internetCheckBox" type="checkbox">
-									        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-									    </label>
-									</div>
-								</div>
-								<div class="col-xl-4">
-									<label class="control-label form-control-feedback" id="cable_label">Cable Included</label>
-									<div class="checkbox">
-									    <label style="font-size: 1.5em">
-									    	<input id="cableCheckBox" type="checkbox">
-									        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-									    </label>
-									</div>
-								</div>
-								<div class="col-xs-6 col-xl-4">
-									<label class="control-label form-control-feedback" id="snow_label">Snow Removal</label>
-									<div class="checkbox">
-									    <label style="font-size: 1.5em">
-									    	<input id="snowRemovalCheckBox" type="checkbox">
-									        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-									    </label>
-									</div>
-								</div>
-								<div class="col-xs-6 col-xl-4">
-									<label class="control-label form-control-feedback" id="garbage_label">Garbage Removal</label>
-									<div class="checkbox">
-									    <label style="font-size: 1.5em">
-									    	<input id="garbageCheckBox" type="checkbox">
-									        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-									    </label>
-									</div>
-								</div>
-							</div>
-							<hr>
-							<div class="row">
-								<div class="col-xs-12">
-									<button class="btn btn-primary" onClick="buildFilters()" style="float: right;">Search</button>
-								</div>
-							</div>
-						</div>
-					</div>		
-				</div>
-				<div class="hidden-md-down col-lg-6 col-xl-6" style="background-image: url('static/img/mapTest.png'); height: 90vh; position: fixed; left: 50%;">
-				</div>
+				</div>		
 			</div>
-	    {% endif %}
-	</div>
+			<div class="hidden-md-down col-lg-6 col-xl-6" style="background-image: url('static/img/mapTest.png'); height: 80vh; position: fixed; left: 50%;">
+			</div>
+		</div>
+    {% endif %}
 {% endblock %}
 {% block scripts %}
 <script>

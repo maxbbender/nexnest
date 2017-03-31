@@ -327,7 +327,14 @@
 			    	<div class="col-xs-0 col-md-1"></div>
 			    	<div class="col-xs-12 col-md-10">
 				    	<div class="callout-block text-center fade-in-b">
-				    		<h1 style="font-size: 3.5vh;">All Listings</h1>
+				    		<div class="row">
+				    			<div class="col-xs-8">
+					    			<h1 style="font-size: 3.5vh;">All Listings</h1>
+					    		</div>
+					    		<div class="col-xs-4">
+					    			<a href="{{ url_for('listings.createListing') }}" class="btn btn-primary" style="float: right;">Create New Listing</a>
+					    		</div>
+				    		</div>
 				    	</div>
 			    	</div>
 			    </div>
@@ -2010,44 +2017,41 @@
 		}); 	 	
     }
 
-    function confirmGroup(requestID){		
-        $("#confirmGroupButton"+requestID).hide();
-        $("#confirmGroupLoading"+requestID).show();        
-        setTimeout(function () {
-        	$("#confirmRequest"+requestID).fadeOut(300);
-        	$("#undoConfirmRequest"+requestID).show();
-        	confirmGroupUndoTimeoutTimer = setTimeout(function () {
-        		$("#undoConfirmRequest"+requestID).fadeOut(300);
-        	}, 8000);
-        }, 1200);
-        // requestURL = '/tour/' + requestID + '/confirm/ajax';
-        // $.getJSON(requestURL, function(data) {
-        //     results = data['results'];
-        //     // alert(data['results'].success);
-        //     if (results.success == true){ 
-        //         //alert("Tour accepted now we need to move this element to 'Scheduled Tours'... make sure to make the button think toO!");
-        //     } else {
-        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
-        //     }
-        // });
+    function confirmGroup(requestID){        
+	     requestURL = '/houseRequest/' + requestID + '/complete/ajax';
+	     $.getJSON(requestURL, function(data) {
+	         results = data['results'];
+	         if (results.success == true){ 
+	             $("#confirmGroupButton"+requestID).hide();
+	             $("#confirmGroupLoading"+requestID).show();        
+	             setTimeout(function () {
+	             	$("#confirmRequest"+requestID).fadeOut(300);
+	             	$("#undoConfirmRequest"+requestID).show();
+	             	confirmGroupUndoTimeoutTimer = setTimeout(function () {
+	             		$("#undoConfirmRequest"+requestID).fadeOut(300);
+	             	}, 8000);
+	             }, 1200);
+	         } else {
+	            alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+	         }
+	     });
     }
 
-    function undoConfirmGroup(requestID){
-    	clearTimeout(confirmGroupUndoTimeoutTimer);    	
-    	$("#confirmGroupLoading"+requestID).hide();
-        $("#confirmGroupButton"+requestID).show();
-        $("#undoConfirmRequest"+requestID).hide();
-        $("#confirmRequest"+requestID).show();        
-        // requestURL = '/tour/' + id + '/unConfirm/ajax';
-        // $.getJSON(requestURL, function(data) {
-        //     results = data['results'];
-        //     // alert(data['results'].success);
-        //     if (results.success == true){ 
-        //         //alert("Tour has been un-accepted now we need to move this element to 'Requested Tours'");
-        //     } else {
-        //         alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
-        //     }
-        // });
+    function undoConfirmGroup(requestID){    	        
+        requestURL = '/houseRequest/' + requestID + '/undoComplete/ajax';
+        $.getJSON(requestURL, function(data) {
+            results = data['results'];
+            // alert(data['results'].success);
+            if (results.success == true){ 
+                clearTimeout(confirmGroupUndoTimeoutTimer);    	
+            	$("#confirmGroupLoading"+requestID).hide();
+                $("#confirmGroupButton"+requestID).show();
+                $("#undoConfirmRequest"+requestID).hide();
+                $("#confirmRequest"+requestID).show();
+            } else {
+                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
+            }
+        });
     }
 
     //Variables for checkout
