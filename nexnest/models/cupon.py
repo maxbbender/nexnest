@@ -55,6 +55,15 @@ class Cupon(Base):
     def __repr__(self):
         return '<Cupon id:%d | key:%s>' % (self.id, self.cupon_key)
 
+    @property
+    def serialize(self):
+        return {
+            'cuponKey': self.cupon_key,
+            'percentageOff': self.percentage_off,
+            'uses': self.uses,
+            'unlimited': self.unlimited
+        }
+
     def genCuponKey(self):
         newRandomKey = idGenerator()
 
