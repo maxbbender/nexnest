@@ -188,6 +188,14 @@ class Listing(Base):
     def briefStreet(self):
         return self.street[:22] + '...'
 
+    @property
+    def hasAcceptedGroupListing(self):
+        for groupListing in self.groups:
+            if groupListing.accepted:
+                return True
+
+        return False
+
     def landLords(self):
         landlords = []
 

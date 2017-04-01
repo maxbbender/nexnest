@@ -154,12 +154,12 @@ def genTransaction():
                 return redirect('/landlord/dashboard#checkoutTab')
 
 
-@commmerce.route('/cupon/<cuponCode>/check', methods=['POST'])
-@login_required
-def checkCuponCode(cuponCode):
-    cupon = session.query(Cupon) \
-    .filter_by(cupon_code=cuponCode) \
-    .first()
+# @commmerce.route('/cupon/<cuponCode>/check', methods=['POST'])
+# @login_required
+# def checkCuponCode(cuponCode):
+#     cupon = session.query(Cupon) \
+#     .filter_by(cupon_code=cuponCode) \
+#     .first()
 
-    if cupon is not None:
-        
+#     if cupon is not None:
+#         
