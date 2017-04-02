@@ -51,10 +51,9 @@
 			</div>
 		</div>
 	</div>
-    {% from "_formhelpers.html" import render_field %}
     <form id="preCheckoutForm" action="/checkout" method="POST">
         {{preCheckoutForm.csrf_token}}
-        {{ render_field(preCheckoutForm.json, id="preCheckoutJSON", class="form-control", type="hidden") }}
+        {{preCheckoutForm.json(id='preCheckoutJSON')}}
     </form>
 {% endblock %}
 {% block scripts %}
@@ -105,9 +104,6 @@
     	cart.items = items;
     	cart.couponCode = $('#couponCodeInput').val();
         
-    	// cart = JSON.stringify(cart);
-        console.log(cart);
-
         preCheckoutJSONElement = document.getElementById("preCheckoutJSON")
         preCheckoutJSONElement.value = JSON.stringify(cart)
         precheckoutElement = document.getElementById("preCheckoutForm")

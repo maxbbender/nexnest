@@ -482,3 +482,13 @@ mm9 = MaintenanceMessageFactory(maintenance=m3, user=user3)
 mm10 = MaintenanceMessageFactory(maintenance=m3, user=user4)
 
 session.commit()
+
+# Some Cupons
+cupon1 = CuponFactory(cupon_key='tenUnlimited',
+                      unlimited=True,
+                      percentage_off=10)
+cupon2 = CuponFactory(cupon_key='tenSingle',
+                      unlimited=False,
+                      percentage_off=10,
+                      uses=1)
+session.commit()

@@ -215,6 +215,9 @@ class Landlord(Base):
         unAcceptedGroupListings = []
 
         for listing in self.getListings():
+            if listing.hasAcceptedGroupListing:
+                continue
+
             if len(listing.groups) == 0:
                 continue
 
@@ -222,13 +225,12 @@ class Landlord(Base):
             groupListings = []
 
             for groupListing in listing.groups:
-                if not groupListing.accepted:
+                if not groupListing.accepted and groupListing.landlord_show:
                     groupListingDict = groupListing.serialize
 
                     numSecurityDepositsPaid = session.query(SecurityDeposit) \
-                        .filter_by(
-                        group_listing_id=int(groupListingDict['id']),
-                        completed=True) \
+                        .filter_by(group_listing_id=int(groupListingDict['id']),
+                                   completed=True) \
                         .count()
 
                     groupListingDict['numSecurityDepositsPaid'] = numSecurityDepositsPaid
@@ -253,7 +255,7 @@ class Landlord(Base):
             groupListings = []
 
             for groupListing in listing.groups:
-                if groupListing.accepted and not groupListing.completed:
+                if groupListing.accepted and not groupListing.completed and groupListing.landlord_show:
                     groupListingDict = groupListing.serialize
 
                     securityDeposit = session.query(SecurityDeposit) \

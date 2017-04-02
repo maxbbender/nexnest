@@ -1,10 +1,13 @@
 from datetime import datetime as dt
 
-from nexnest.application import db
+from sqlalchemy import event, UniqueConstraint
+
+from nexnest.application import db, session
+from nexnest.utils.misc import idGenerator
 
 from .base import Base
 
-from sqlalchemy import event, UniqueConstraint
+from flask import flash
 
 
 class Cupon(Base):
@@ -13,6 +16,7 @@ class Cupon(Base):
     cupon_key = db.Column(db.Text)
     unlimited = db.Column(db.Boolean)
     uses = db.Column(db.Integer)
+    percentage_off = db.Column(db.Integer)
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
 
@@ -22,11 +26,24 @@ class Cupon(Base):
 
     def __init__(
             self,
+            percentage_off,
             cupon_key=None,
             unlimited=False,
             uses=0
     ):
-        self.cupon_key = cupon_key
+        if cupon_key is None:
+            self.cupon_key = self.genCuponKey()
+        else:
+            keyCount = session.query(Cupon).filter_by(cupon_key=cupon_key).count()
+
+            if keyCount == 0:
+                self.cupon_key = cupon_key
+            else:
+                newRandomKey = self.genCuponKey()
+                self.cupon_key = newRandomKey
+                flash('Cupon Key is already in use, generated a different key : %s' % self.cupon_key, 'warning')
+
+        self.percentage_off = percentage_off
         self.unlimited = unlimited
         self.uses = uses
 
@@ -38,6 +55,30 @@ class Cupon(Base):
     def __repr__(self):
         return '<Cupon id:%d | key:%s>' % (self.id, self.cupon_key)
 
+    @property
+    def serialize(self):
+        return {
+            'cuponKey': self.cupon_key,
+            'percentageOff': self.percentage_off,
+            'uses': self.uses,
+            'unlimited': self.unlimited
+        }
+
+    def genCuponKey(self):
+        newRandomKey = idGenerator()
+
+        keyCount = session.query(Cupon).filter_by(cupon_key=newRandomKey).count()
+
+        while keyCount > 0:
+            newRandomKey = idGenerator()
+
+            keyCount = session.query(Cupon).filter_by(cupon_key=newRandomKey).count()
+
+        return newRandomKey
+
+    def cuponPrice(self, price):
+        return price * 1 - (self.percentage_off / 100)
+
 
 def update_date_modified(mapper, connection, target):
     # 'target' is the inserted object
@@ -45,6 +86,3 @@ def update_date_modified(mapper, connection, target):
 
 
 event.listen(Cupon, 'before_update', update_date_modified)
-
-
-# Table('cupons', MetaData(bind=None), Column('id', Integer(), table=<cupons>, primary_key=True, nullable=False), Column('cupon_key', Text(), table=<cupons>), Column('unlimited', Boolean(), table=<cupons>), Column('uses', Integer(), table=<cupons>), Column('date_created', DateTime(), table=<cupons>), Column('date_modified', DateTime(), table=<cupons>), schema=None)
