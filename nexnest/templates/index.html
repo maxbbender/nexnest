@@ -495,7 +495,7 @@
   	}
   	var listing8 = {
   		url: '/listing/view/8',
-  		briefStreet: '69 ',
+  		briefStreet: '69 Street Name',
   		city: 'Patchogue',
   		state: 'NY',
   		num_bedrooms: '3',
@@ -506,7 +506,7 @@
 
   	var listing9 = {
   		url: '/listing/view/9',
-  		briefStreet: '9 Fairview Ext',
+  		briefStreet: 'Not Fake Name',
   		city: 'Poughkeepsie',
   		state: 'NY',
   		num_bedrooms: '6',
@@ -515,14 +515,61 @@
   		rent_due: 'month'
   	}
   	var listings = [];
+  	var featuredListings = [];
 	listings.push(listing1);
 	listings.push(listing2);
 	listings.push(listing3);
 	listings.push(listing4);
 	listings.push(listing5);
 	listings.push(listing6);
+	featuredListings.push(listing7);
+	featuredListings.push(listing8);
+	featuredListings.push(listing9);
 	
 	function displayListings(){
+		//Featured
+		$.each(featuredListings, function(index, listing) {
+			console.log(listing);
+
+			var nextListing = `<div class="card" style="width: 100%;">
+				<a href="`+ listing.url +`">
+					<img src="/static/img/testHouse.jpg" class="listingImg card-img-top">
+				</a>
+				<div class="card-block" style="background-color: #89cdef;">
+					<div class="row">
+						<div class="col-xs-12" style="text-align: right;">
+							<strong>Featured!</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-4">
+							<span class="text-nowrap">
+								`+ listing.num_bedrooms +`<i class="fa fa-bed" aria-hidden="true"></i>
+								&nbsp;
+								`+ listing.num_full_baths +`<i class="fa fa-bath" aria-hidden="true"></i>
+							</span>
+							<br>
+							$`+ listing.price +` per `+ listing.rent_due +`
+						</div>
+						<div class="col-xs-8">
+							<div class="row">
+								<div class="col-xs-12" style="text-align: right;">
+									<span class="text-nowrap">`+ listing.briefStreet +`</span>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12" style="text-align: right;">
+									<span class="text-nowrap">`+ listing.city +`, `+ listing.state +`</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>`;
+			$("#listingsGoHere").append(`<div class="col-md-6" style="padding-left: 30px; padding-bottom: 30px">` + nextListing + `</div>`);
+		});
+
+		//None Featured
 		$.each(listings, function(index, listing) {
 			console.log(listing);
 
@@ -557,7 +604,7 @@
 				</div>
 			</div>`;
 			$("#listingsGoHere").append(`<div class="col-md-6" style="padding-left: 30px; padding-bottom: 30px">` + nextListing + `</div>`);
-		})
+		});
 	}
 
 	$("#initialSearchButton").click(function() {
