@@ -211,3 +211,8 @@ def editListing(listingID):
 
         return redirect(url_for('listings.viewListing',
                                 listingID=listingID))
+
+
+@listings.route('/listing/search/AJAX', methods=['POST'])
+def searchListingsAJAX():
+    json = request.get_json(force=True)
