@@ -5,9 +5,11 @@
 	<div class="card-block">
 		<div class="row">
 			<div class="col-xs-4">
-				{{ listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
-				&nbsp;
-				{{ listing.num_full_baths }}<i class="fa fa-bath" aria-hidden="true"></i>
+				<span class="text-nowrap">
+					{{ listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
+					&nbsp;
+					{{ listing.num_full_baths }}<i class="fa fa-bath" aria-hidden="true"></i>
+				</span>
 				<br>
 				${{ listing.price }} per {{ listing.rent_due }}
 			</div>
