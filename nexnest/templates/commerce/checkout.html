@@ -1,22 +1,40 @@
 {% extends "base.html" %}
 {% block content %}
-<form id="checkout-form" action="/transactionGenerate" method="post">
-  <div id="error-message"></div>
-  <input type='hidden' name='csrf_token' value="{{csrf_token()}}" />
-  <input type='hidden' name='listingTransactionID' value="{{listingTransaction.id}}" />
-
-  <label for="card-number">Card Number</label>
-  <div class="hosted-field" id="card-number"></div>
-
-  <label for="cvv">CVV</label>
-  <div class="hosted-field" id="cvv"></div>
-
-  <label for="expiration-date">Expiration Date</label>
-  <div class="hosted-field" id="expiration-date"></div>
-
-  <input type="hidden" name="payment_method_nonce">
-  <input type="submit" value="Pay ${{totalPrice}}" disabled>
-</form>
+<link href="{{url_for('static', filename='css/checkout.css')}}" rel="stylesheet">
+<br>
+<div class="row">
+  <div class="col-xs-1 col-xl-3"></div>
+  <div class="col-xs-10 col-xl-6">
+    <form id="checkout-form" action="/transactionGenerate" method="post">
+      <div id="error-message"></div>
+      <input type='hidden' name='csrf_token' value="{{csrf_token()}}" />
+      <input type='hidden' name='listingTransactionID' value="{{listingTransaction.id}}" />
+      <div class="panel">
+        <header class="panel__header">
+          <h1>Card Payment</h1>
+        </header>    
+        <div class="panel__content">
+          <div class="textfield--float-label">
+            <label class="hosted-field--label" for="card-number">Card Number</label>
+            <div class="hosted-field" id="card-number"></div>
+          </div>
+          <div class="textfield--float-label">
+            <label class="hosted-field--label" for="expiration-date">Expiration Date</label>
+            <div class="hosted-field" id="expiration-date"></div>
+          </div>
+          <div class="textfield--float-label">
+            <label class="hosted-field--label" for="cvv">Expiration Date</label>
+            <div class="hosted-field" id="cvv"></div>
+          </div>
+        </div>
+        <footer class="panel__footer">
+          <input type="hidden" name="payment_method_nonce">
+          <input class="pay-button" type="submit" value="Pay ${{totalPrice}}" disabled>
+        </footer>
+      </div>  
+    </form>
+  </div>
+</div>
 
 <!-- Load the Client component. -->
 <script src="https://js.braintreegateway.com/web/3.11.0/js/client.min.js"></script>
