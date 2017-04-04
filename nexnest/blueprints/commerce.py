@@ -8,7 +8,7 @@ from nexnest.application import braintree, csrf, session
 
 from nexnest.models.transaction import ListingTransaction, ListingTransactionListing
 from nexnest.models.listing import Listing
-from nexnest.models.cupon import Cupon
+from nexnest.models.coupon import Coupon
 
 from nexnest.forms import PreCheckoutForm
 from nexnest.utils.flash import flash_errors
@@ -154,12 +154,12 @@ def genTransaction():
                 return redirect('/landlord/dashboard#checkoutTab')
 
 
-# @commmerce.route('/cupon/<cuponCode>/check', methods=['POST'])
+# @commmerce.route('/coupon/<couponCode>/check', methods=['POST'])
 # @login_required
-# def checkCuponCode(cuponCode):
-#     cupon = session.query(Cupon) \
-#         .filter_by(cupon_code=cuponCode) \
+# def checkCouponCode(couponCode):
+#     coupon = session.query(coupon) \
+#         .filter_by(coupon_code=couponCode) \
 #         .first()
 
-#     if cupon is not None:
+#     if coupon is not None:
         

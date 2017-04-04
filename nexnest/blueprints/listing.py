@@ -213,6 +213,38 @@ def editListing(listingID):
                                 listingID=listingID))
 
 
-@listings.route('/listing/search/AJAX', methods=['POST'])
-def searchListingsAJAX():
-    json = request.get_json(force=True)
+# @listings.route('/listing/search/AJAX', methods=['POST'])
+# def searchListingsAJAX():
+#     # json = request.get_json(force=True)
+#     postedJSON = {
+#         'bedrooms': 4,
+#         'distanceToCampus':8,
+#         'includes': [
+#             'furnished',
+#             'dishwasher',
+#             'laundry',
+#             'internet',
+#             'cable',
+#             'snowRemoval',
+#             'garbageRemoval'
+#         ],
+#         'listingTypes': [
+#             'house',
+#             'apartment',
+#             'complex'
+#         ],
+#         'location': 'Fredonia, NY',
+#         'minPrice': 1000,
+#         'maxPrice': 3000,
+#         'pets': [
+#             'dogs',
+#             'cats'
+#         ],
+#         'priceTerm': 'month',
+#         'sortBy': None, # 
+#         'term' : '2018-2019 School Year'
+
+#     }
+#     # Required Fields : bedrooms  | minPrice | maxPrice | €22
+
+

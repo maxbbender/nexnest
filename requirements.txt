@@ -34,3 +34,5 @@ flask-admin
 
 # Payment
 braintree
+
+google-api-python-client

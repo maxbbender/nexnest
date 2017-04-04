@@ -10,10 +10,10 @@ from .base import Base
 from flask import flash
 
 
-class Cupon(Base):
-    __tablename__ = 'cupons'
+class Coupon(Base):
+    __tablename__ = 'coupons'
     id = db.Column(db.Integer, primary_key=True)
-    cupon_key = db.Column(db.Text)
+    coupon_key = db.Column(db.Text)
     unlimited = db.Column(db.Boolean)
     uses = db.Column(db.Integer)
     percentage_off = db.Column(db.Integer)
@@ -21,27 +21,27 @@ class Cupon(Base):
     date_modified = db.Column(db.DateTime)
 
     __table_args__ = (
-        UniqueConstraint('cupon_key'),
+        UniqueConstraint('coupon_key'),
     )
 
     def __init__(
             self,
             percentage_off,
-            cupon_key=None,
+            coupon_key=None,
             unlimited=False,
             uses=0
     ):
-        if cupon_key is None:
-            self.cupon_key = self.genCuponKey()
+        if coupon_key is None:
+            self.coupon_key = self.genCouponKey()
         else:
-            keyCount = session.query(Cupon).filter_by(cupon_key=cupon_key).count()
+            keyCount = session.query(Coupon).filter_by(coupon_key=coupon_key).count()
 
             if keyCount == 0:
-                self.cupon_key = cupon_key
+                self.coupon_key = coupon_key
             else:
-                newRandomKey = self.genCuponKey()
-                self.cupon_key = newRandomKey
-                flash('Cupon Key is already in use, generated a different key : %s' % self.cupon_key, 'warning')
+                newRandomKey = self.genCouponKey()
+                self.coupon_key = newRandomKey
+                flash('coupon Key is already in use, generated a different key : %s' % self.coupon_key, 'warning')
 
         self.percentage_off = percentage_off
         self.unlimited = unlimited
@@ -53,30 +53,30 @@ class Cupon(Base):
         self.date_modified = now
 
     def __repr__(self):
-        return '<Cupon id:%d | key:%s>' % (self.id, self.cupon_key)
+        return '<coupon id:%d | key:%s>' % (self.id, self.coupon_key)
 
     @property
     def serialize(self):
         return {
-            'cuponKey': self.cupon_key,
+            'couponKey': self.coupon_key,
             'percentageOff': self.percentage_off,
             'uses': self.uses,
             'unlimited': self.unlimited
         }
 
-    def genCuponKey(self):
+    def genCouponKey(self):
         newRandomKey = idGenerator()
 
-        keyCount = session.query(Cupon).filter_by(cupon_key=newRandomKey).count()
+        keyCount = session.query(Coupon).filter_by(coupon_key=newRandomKey).count()
 
         while keyCount > 0:
             newRandomKey = idGenerator()
 
-            keyCount = session.query(Cupon).filter_by(cupon_key=newRandomKey).count()
+            keyCount = session.query(Coupon).filter_by(coupon_key=newRandomKey).count()
 
         return newRandomKey
 
-    def cuponPrice(self, price):
+    def couponPrice(self, price):
         return price * 1 - (self.percentage_off / 100)
 
 
@@ -85,4 +85,4 @@ def update_date_modified(mapper, connection, target):
     target.date_modified = dt.now().isoformat()  # Update Date Modified
 
 
-event.listen(Cupon, 'before_update', update_date_modified)
+event.listen(Coupon, 'before_update', update_date_modified)

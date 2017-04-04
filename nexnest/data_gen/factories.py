@@ -273,12 +273,12 @@ class GroupListingFavoriteFactory(factory.alchemy.SQLAlchemyModelFactory):
     user = factory.SubFactory(UserFactory)
 
 
-class CuponFactory(factory.alchemy.SQLAlchemyModelFactory):
+class CouponFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
-        model = cupon.Cupon
+        model = coupon.Coupon
         sqlalchemy_session = session
 
-    cupon_key = None
+    coupon_key = None
     unlimited = False
     uses = 10
     percentage_off = 0
