@@ -73,10 +73,10 @@
 					                    			<div class="checkbox">
 					                    			    <label style="font-size: 1.5em">
 					                    			    {% if listing.time_period == "school" %}
-					                    			        <input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', 100);"/>
+					                    			        <input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" data-time="{{listing.time_period}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', 100);"/>
 					                    			        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
 					                    			    {% elif listing.time_period == "summer" %}
-					                    			    	<input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', 50);"/>
+					                    			    	<input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" data-time="{{listing.time_period}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', 50);"/>
 					                    			        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
 					                    			    {% endif %}
 					                    			    </label>
@@ -2187,6 +2187,7 @@
     			var id = obj.id.match(/\d+/)[0];
     			var street = obj.dataset.street;
     			var leasePeriod = obj.dataset.lease;
+    			var time = obj.dataset.time;
     			//console.log(id);
     			if($("#standardLabel"+id).hasClass("active")){
     				selectedItem = {
@@ -2194,6 +2195,7 @@
     					listing_id: id,
     					listing_street: street,
     					leasePeriod: leasePeriod,
+    					timePeriod: time,
     					plan: 'standard'    					
     				}
     				cart.items.push(selectedItem);
@@ -2204,6 +2206,7 @@
     					listing_id: id,
     					listing_street: street,
     					leasePeriod: leasePeriod,
+    					timePeriod: time,
     					plan: 'premium'    					
     				}
     				cart.items.push(selectedItem);

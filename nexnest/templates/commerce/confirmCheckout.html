@@ -1,33 +1,33 @@
 {% extends "base.html" %}
 {% block content %}
 	<div class="row">
-		<div class="col-xl-3"></div>
-		<div class="col-xl-6">
+		<div class="col-xs-1 col-xl-3"></div>
+		<div class="col-xs-10 col-xl-6">
 			<div class="card" style="border: 0px;">
 				<div class="card-header">
 					<h3>Proceed With Checkout</h3>
 				</div>
 				<div class="card-block">
 					<div class="row">
-						<div class="col-xl-5">
+						<div class="col-xs-5">
 							<strong>Listing</strong>
 						</div>
-						<div class="col-xl-3">
+						<div class="col-xs-4">
 							<strong>Plan</strong>
 						</div>
-						<div class="col-xl-3">
+						<div class="col-xs-2">
 							<strong>Price</strong>
 						</div>
-						<div class="col-xl-1">
+						<div class="col-xs-1">
 						</div>
 					</div>
 					<hr>
 					<div class="row">
-						<div class="col-xl-12" id="checkOutItems">
+						<div class="col-xs-12" id="checkOutItems">
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-xl-5">
+						<div class="col-xs-12 col-lg-7 col-xl-7" style="padding-bottom: 10px;">
 							<div class="input-group">
 							    <span class="input-group-btn">
 							        <button class="btn btn-secondary" type="button" style="pointer-events: none;">Coupon Code?</button>
@@ -35,17 +35,17 @@
 							    <input id="couponCodeInput" type="text" class="form-control" placeholder="Enter it here!">
 							</div>
 						</div>
-						<div class="col-xl-4">
+						<div class="col-xs-6 col-lg-3 col-xl-3">
 							<span id="discount" style="color: green;"></span>
 						</div>
-						<div class="col-xl-3">
+						<div class="col-xs-6 col-lg-2 col-xl-2">
 								<button class="btn btn-info" id="sumbitCouponCode" onClick="validateCoupon()" style="float: right; display: none;">Submit Code</button>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-xl-12">
+				<div class="col-xs-12">
 					<button class="btn btn-primary" onClick="proceedToCheckout()" style="float: right;">Proceed To Checkout</button>
 				</div>
 			</div>
@@ -64,28 +64,38 @@
         // console.log(data)
 		landlordID = data['landlord']
 		items = data['items'];
-		// console.log(items);
+		console.log(items);
 		$.each(items, function(index, item) {
 			var checkoutItem = `<div class='row' id="itemInCart`+item.listing_id+`">
-									<div class='col-xl-5'>
+									<div class='col-xs-5'>
 										<strong>`+ item.listing_street +`</strong>
 										<br>
 										`+ item.leasePeriod +`
 									</div>
-									<div class='col-xl-3'>
-										`+ item.plan +`
+									<div class='col-xs-4'>
+										`+ item.plan +` `+ item.timePeriod +`
 									</div>
-									<div class='col-xl-3'>
+									<div class='col-xs-2'>
 										`;
 										if(item.plan == "standard"){
-											checkoutItem += "$100";
+											if(item.timePeriod == "school"){
+												checkoutItem += "$100";
+											}
+											else if(item.timePeriod == "summer"){
+												checkoutItem += "$50";
+											}
 										}
 										else if(item.plan == "premium"){
-											checkoutItem += "$200";
+											if(item.timePeriod == "school"){
+												checkoutItem += "$200";
+											}
+											else if(item.timePeriod == "summer"){
+												checkoutItem += "$100";
+											}
 										}
 									checkoutItem +=`
 									</div>
-									<div class='col-xl-1'>
+									<div class='col-xs-1'>
 										<button class='btn btn-danger btn-circle' style='float:right;' onClick='removeListingToPurchase(`+ item.listing_id +`, `+ item.index +`)'><i class='fa fa-times' aria-hidden='true'></i></button>
 									</div>
 								</div>
@@ -114,9 +124,7 @@
 		//need to get the valid coupons here
 
 		var input = $('#couponCodeInput').val();
-		requestURL = '/cupon/<cuponCode>/check'
-		$.getJSON(requestURL, function(data) {
-
+		
 		if(input == "henloStinky"){
 			$("#discount").html("15% Off");
 			$("#discount").css("color", "green");
