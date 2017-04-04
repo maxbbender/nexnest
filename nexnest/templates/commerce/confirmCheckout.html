@@ -43,12 +43,19 @@
 						</div>
 					</div>
 				</div>
-			</div>
+				<div class="card-footer">
+					<div class="row">
+						<div class="col-xs-12" id="totalPrice">
+							Total Price: 
+						</div>
+					</div>
+				</div>
+			</div>			
 			<div class="row">
 				<div class="col-xs-12">
 					<button class="btn btn-primary" onClick="proceedToCheckout()" style="float: right;">Proceed To Checkout</button>
 				</div>
-			</div>
+			</div>			
 		</div>
 	</div>
     <form id="preCheckoutForm" action="/checkout" method="POST">
@@ -58,6 +65,8 @@
 {% endblock %}
 {% block scripts %}
 <script>
+	var totalPrice = 0;
+	var priceAfterCoupon = 0;
 	$( document ).ready(function() {
 		// data = JSON.parse({{jsonData|tojson}});
         data = {{jsonData|tojson}};
@@ -65,7 +74,7 @@
 		landlordID = data['landlord']
 		items = data['items'];
 		console.log(items);
-		$.each(items, function(index, item) {
+		$.each(items, function(index, item) {			
 			var checkoutItem = `<div class='row' id="itemInCart`+item.listing_id+`">
 									<div class='col-xs-5'>
 										<strong>`+ item.listing_street +`</strong>
@@ -80,17 +89,21 @@
 										if(item.plan == "standard"){
 											if(item.timePeriod == "school"){
 												checkoutItem += "$100";
+												totalPrice += 100;
 											}
 											else if(item.timePeriod == "summer"){
 												checkoutItem += "$50";
+												totalPrice += 50;
 											}
 										}
 										else if(item.plan == "premium"){
 											if(item.timePeriod == "school"){
 												checkoutItem += "$200";
+												totalPrice += 200;
 											}
 											else if(item.timePeriod == "summer"){
 												checkoutItem += "$100";
+												totalPrice += 100;
 											}
 										}
 									checkoutItem +=`
@@ -102,6 +115,7 @@
 								<hr id="hrInCart`+item.listing_id+`">`;
 			$("#checkOutItems").append(checkoutItem);
 		})
+		$("#totalPrice").html(`<h2>Total Price: `+"$"+totalPrice+`</h2>`);
 	});
 	function removeListingToPurchase(id, index){
 		$("#itemInCart"+id).remove();
@@ -129,13 +143,19 @@
 			results = data['results'];
 			console.log(results);
 			if(results.validCupon == true){
-				console.log('yay');
-				$("#discount").html(results.cupon.percentageOff+"% Off");
+				//update total price div
+				priceAfterCoupon = (totalPrice*(100-results.cupon.percentageOff)/100);
+				//totalPrice = totalPrice-results.cupon.percentageOff;
+				$("#totalPrice").html(`<h2>Total Price: `+"$"+priceAfterCoupon+`</h2>`);
+				//display the valid coupon percentage off
+				$("#discount").html("<strong>"+results.cupon.percentageOff+"% Off"+"</strong>");
 		 	    $("#discount").css("color", "green");
 			}
 			else{
-				$("#discount").html("Invlaid Code");
+				$("#discount").html("<strong>"+"Invlaid Code"+"</strong>");
 				$("#discount").css("color", "red");
+				//if the user had a correct code and then enters a wrong one display orighinal price
+				$("#totalPrice").html(`<h2>Total Price: `+"$"+totalPrice+`</h2>`);
 			}
 		});
 	}
