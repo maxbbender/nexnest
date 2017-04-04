@@ -121,22 +121,23 @@
 	}
 
 	function validateCoupon(){
-		//need to get the valid coupons here
-
 		var input = $('#couponCodeInput').val();
-		
-		if(input == "henloStinky"){
-			$("#discount").html("15% Off");
-			$("#discount").css("color", "green");
-		}
-		else if(input == "rojopapi"){
-			$("#discount").html("25% Off");
-			$("#discount").css("color", "green");
-		}
-		else{
-			$("#discount").html("Not a Valid Code");
-			$("#discount").css("color", "red");
-		}
+		requestURL = '/cupon/'+input+'/check';
+		$("#acceptedTab").empty();
+
+		$.getJSON(requestURL, function(data) {
+			results = data['results'];
+			console.log(results);
+			if(results.validCupon == true){
+				console.log('yay');
+				$("#discount").html(results.cupon.percentageOff+"% Off");
+		 	    $("#discount").css("color", "green");
+			}
+			else{
+				$("#discount").html("Invlaid Code");
+				$("#discount").css("color", "red");
+			}
+		});
 	}
 
 	$('#couponCodeInput').on('input',function(e){

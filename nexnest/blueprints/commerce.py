@@ -161,7 +161,7 @@ def genTransaction():
 @login_required
 def checkCuponCode(cuponCode):
     cupon = session.query(Cupon) \
-        .filter_by(cupon_keyj=cuponCode) \
+        .filter_by(cupon_key=cuponCode) \
         .first()
 
     if cupon is not None:
