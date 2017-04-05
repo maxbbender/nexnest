@@ -36,3 +36,4 @@ flask-admin
 braintree
 
 google-api-python-client
+googlemaps

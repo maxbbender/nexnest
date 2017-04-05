@@ -21,6 +21,7 @@ class School(Base):
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
     users = relationship("User", backref='school')
+    listings = relationship("Listing", backref='school')
 
     def __init__(self,
                  name,

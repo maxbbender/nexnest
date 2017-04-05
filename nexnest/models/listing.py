@@ -56,6 +56,7 @@ class Listing(Base):
     youtube_url = db.Column(db.String(256))
     floor_plan_url = db.Column(db.String(256))
     featured = db.Column(db.Boolean)
+    school_id = db.Column(db.Integer, db.ForeignKey('schools.id'))
 
     # monthly_rent_due_date = db.Column(db.Date)
 

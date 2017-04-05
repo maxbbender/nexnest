@@ -41,15 +41,32 @@ listings = Table('listings', meta,
                  Column('cable', Boolean()),
                  Column('washer_free', Boolean()),
                  Column('featured', Boolean()),
+                 Column('school_id', Integer()),
                  Column('youtube_url', String(length=256)),
                  Column('floor_plan_url', String(length=256)))
 
 
 def upgrade(migrate_engine):
     meta.bind = migrate_engine
+
     listings.create()
+
+    # Foreign Keys
+    schools = Table('schools', meta, autoload=True)
+
+    ForeignKeyConstraint(
+        columns=[listings.c.school_id],
+        refcolumns=[schools.c.id]).create()
 
 
 def downgrade(migrate_engine):
     meta.bind = migrate_engine
+
+    # Foreign Keys
+    schools = Table('schools', meta, autoload=True)
+
+    ForeignKeyConstraint(
+        columns=[listings.c.school_id],
+        refcolumns=[schools.c.id]).drop()
+
     listings.drop()
