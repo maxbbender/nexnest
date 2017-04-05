@@ -30,8 +30,8 @@ class User(Base):
     phone = db.Column(db.String(10))
     dob = db.Column(db.Date)
     profile_image = db.Column(db.String(128))
-    date_created = db.Column(db.String(128), nullable=False)
-    date_modified = db.Column(db.String(128), nullable=False)
+    date_created = db.Column(db.DateTime, nullable=False)
+    date_modified = db.Column(db.DateTime, nullable=False)
     school_id = db.Column(db.Integer(), db.ForeignKey('schools.id'))
     active = db.Column(db.Boolean)
     # twitter_token = db.Column(db.Text)
@@ -63,6 +63,7 @@ class User(Base):
         "Notification", backref='user', lazy="dynamic")
     messages = relationship('Message', backref='user')
     groupListingFavorites = relationship('GroupListingFavorite', backref='user')
+    transactions = relationship('Transaction', backref='user')
 
     def __init__(self,
                  email,
@@ -109,7 +110,16 @@ class User(Base):
         self.active = True
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<User %r | %s>' % (self.username, self.name)
+
+    @property
+    def shortSerialize(self):
+        return {
+            'name': self.name,
+            'id': self.id,
+            'profileImageURL': self.profile_image,
+            'url': '/user/view/%d' % self.id
+        }
 
     def set_password(self, __password__):
         if __password__ == "":

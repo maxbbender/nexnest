@@ -18,6 +18,8 @@ from nexnest.models.house import House
 from nexnest.models.maintenance import Maintenance
 from nexnest.models.group_listing_message import GroupListingMessage
 from nexnest.models.group_user import GroupUser
+from nexnest.models.cupon import Cupon
+from nexnest.models.transaction import *
 
 from flask import redirect, url_for
 from flask_admin import Admin
@@ -57,3 +59,6 @@ admin.add_view(AdminModelView(House, session))
 admin.add_view(AdminModelView(Maintenance, session))
 admin.add_view(AdminModelView(GroupListingMessage, session))
 admin.add_view(AdminModelView(GroupUser, session))
+admin.add_view(AdminModelView(ListingTransaction, session))
+admin.add_view(AdminModelView(ListingTransactionListing, session))
+admin.add_view(AdminModelView(Cupon, session))

@@ -1,9 +1,11 @@
 from datetime import datetime, date
 from sqlalchemy.orm import relationship
 
-from nexnest.application import db
+from nexnest.application import db, session
 
 from .base import Base
+
+from nexnest.models.security_deposit import SecurityDeposit
 
 
 class Landlord(Base):
@@ -46,6 +48,54 @@ class Landlord(Base):
             listings.append(landlordListing.listing)
 
         return listings
+
+    def getRequestedToursJSON(self):
+        requestedTours = []
+
+        for listing in self.getListings():
+            if listing.hasTours:
+                requestedToursObject = {'listing': listing.shortSerialize}
+
+                tourList = []
+
+                for tour in listing.tours:
+                    if tour.declined:
+                        continue
+
+                    if tour.time_requested >= datetime.now():
+                        if not tour.tour_confirmed:
+                            tourList.append(tour.serialize())
+
+                if len(tourList) > 0:
+                    requestedToursObject['tours'] = tourList
+                    requestedToursObject['tourCount'] = len(tourList)
+                    requestedTours.append(requestedToursObject)
+
+        return requestedTours
+
+    def getScheduledToursJSON(self):
+        scheduledTours = []
+
+        for listing in self.getListings():
+            if listing.hasTours:
+                scheduledToursObject = {'listing': listing.shortSerialize}
+
+                tourList = []
+
+                for tour in listing.tours:
+                    if tour.declined:
+                        continue
+
+                    if tour.time_requested >= datetime.now():
+                        if tour.tour_confirmed:
+                            tourList.append(tour.serialize())
+
+                if len(tourList) > 0:
+                    scheduledToursObject['tours'] = tourList
+                    scheduledToursObject['tourCount'] = len(tourList)
+                    scheduledTours.append(scheduledToursObject)
+
+        return scheduledTours
 
     def getActiveTours(self):
         requestedTours = []
@@ -160,3 +210,153 @@ class Landlord(Base):
                 completedMaintenanceRequests.append(houseObject)
 
         return openMaintenanceRequests, inProgressMaintenanceRequests, completedMaintenanceRequests
+
+    def getUnAcceptedGroupListingsJSON(self):
+        unAcceptedGroupListings = []
+
+        for listing in self.getListings():
+            if listing.hasAcceptedGroupListing:
+                continue
+
+            if len(listing.groups) == 0:
+                continue
+
+            groupListingObject = {'listing': listing.shortSerialize}
+            groupListings = []
+
+            for groupListing in listing.groups:
+                if not groupListing.accepted and groupListing.landlord_show:
+                    groupListingDict = groupListing.serialize
+
+                    numSecurityDepositsPaid = session.query(SecurityDeposit) \
+                        .filter_by(group_listing_id=int(groupListingDict['id']),
+                                   completed=True) \
+                        .count()
+
+                    groupListingDict['numSecurityDepositsPaid'] = numSecurityDepositsPaid
+
+                    groupListings.append(groupListingDict)
+
+            if len(groupListings) > 0:
+                groupListingObject['groupListings'] = groupListings
+                groupListingObject['requestCount'] = len(groupListings)
+                unAcceptedGroupListings.append(groupListingObject)
+
+        return unAcceptedGroupListings
+
+    def getAcceptedGroupListingsJSON(self):
+        acceptedGroupListings = []
+
+        for listing in self.getListings():
+            if len(listing.groups) == 0:
+                continue
+
+            groupListingObject = {'listing': listing.shortSerialize}
+            groupListings = []
+
+            for groupListing in listing.groups:
+                if groupListing.accepted and not groupListing.completed and groupListing.landlord_show:
+                    groupListingDict = groupListing.serialize
+
+                    securityDeposit = session.query(SecurityDeposit) \
+                        .filter_by(
+                        group_listing_id=int(groupListingDict['id']),
+                        user_id=int(groupListingDict['group']['leader']['id'])) \
+                        .first()
+
+                    groupListingDict['group']['leader']['securityDepositPaid'] = securityDeposit.completed
+
+                    numSecurityDepositsPaid = session.query(SecurityDeposit) \
+                        .filter_by(
+                        group_listing_id=int(groupListingDict['id']),
+                        completed=True) \
+                        .count()
+
+                    groupListingDict['numSecurityDepositsPaid'] = numSecurityDepositsPaid
+
+                    groupListings.append(groupListingDict)
+
+            if len(groupListings) > 0:
+                groupListingObject['groupListings'] = groupListings
+                groupListingObject['requestCount'] = len(groupListings)
+                acceptedGroupListings.append(groupListingObject)
+
+        return acceptedGroupListings
+
+    def getOpenMaintenanceJSON(self):
+        openMaintenance = []
+
+        for listing in self.getListings():
+            if not listing.hasHouse():
+                continue
+
+            house = listing.house[0]
+
+            if len(house.maintenanceRequests) == 0:
+                continue
+
+            maintenanceObject = {'listing': listing.shortSerialize}
+            maintenanceList = []
+
+            for maintenanceRequest in house.maintenanceRequests:
+                if maintenanceRequest.status == 'open':
+                    maintenanceList.append(maintenanceRequest.serialize)
+
+            if len(maintenanceList) > 0:
+                maintenanceObject['maintenanceRequests'] = maintenanceList
+                maintenanceObject['requestCount'] = len(maintenanceList)
+                openMaintenance.append(maintenanceObject)
+
+        return openMaintenance
+
+    def getInProgressMaintenanceJSON(self):
+        inProgressMaintenance = []
+
+        for listing in self.getListings():
+            if not listing.hasHouse():
+                continue
+
+            house = listing.house[0]
+
+            if len(house.maintenanceRequests) == 0:
+                continue
+
+            maintenanceObject = {'listing': listing.shortSerialize}
+            maintenanceList = []
+
+            for maintenanceRequest in house.maintenanceRequests:
+                if maintenanceRequest.status == 'inprogress':
+                    maintenanceList.append(maintenanceRequest.serialize)
+
+            if len(maintenanceList) > 0:
+                maintenanceObject['maintenanceRequests'] = maintenanceList
+                maintenanceObject['requestCount'] = len(maintenanceList)
+                inProgressMaintenance.append(maintenanceObject)
+
+        return inProgressMaintenance
+
+    def getCompletedMaintenanceJSON(self):
+        completedMaintenance = []
+
+        for listing in self.getListings():
+            if not listing.hasHouse():
+                continue
+
+            house = listing.house[0]
+
+            if len(house.maintenanceRequests) == 0:
+                continue
+
+            maintenanceObject = {'listing': listing.shortSerialize}
+            maintenanceList = []
+
+            for maintenanceRequest in house.maintenanceRequests:
+                if maintenanceRequest.status == 'completed':
+                    maintenanceList.append(maintenanceRequest.serialize)
+
+            if len(maintenanceList) > 0:
+                maintenanceObject['maintenanceRequests'] = maintenanceList
+                maintenanceObject['requestCount'] = len(maintenanceList)
+                completedMaintenance.append(maintenanceObject)
+
+        return completedMaintenance

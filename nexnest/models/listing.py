@@ -11,7 +11,6 @@ from sqlalchemy.orm import relationship, backref
 import os
 
 
-# class PostReport(Base):
 class Listing(Base):
     __tablename__ = 'listings'
     id = db.Column(db.Integer, primary_key=True)
@@ -56,6 +55,7 @@ class Listing(Base):
     washer_free = db.Column(db.Boolean)
     youtube_url = db.Column(db.String(256))
     floor_plan_url = db.Column(db.String(256))
+    featured = db.Column(db.Boolean)
 
     # monthly_rent_due_date = db.Column(db.Date)
 
@@ -77,6 +77,7 @@ class Listing(Base):
     tours = relationship("Tour", backref='listing')
     house = relationship("House", backref=backref('listing', uselist=False))
     favorite = relationship("GroupListingFavorite", backref='listing')
+    listingTransactionListing = relationship("ListingTransactionListing", backref='listing')
 
     def __init__(
             self,
@@ -118,7 +119,8 @@ class Listing(Base):
             youtube_url=None,
             apartment_number=None,
             first_semester_rent_due_date=None,
-            second_semester_rent_due_date=None):
+            second_semester_rent_due_date=None,
+            featured=False):
 
         self.street = street
         self.city = city
@@ -162,6 +164,7 @@ class Listing(Base):
         self.cable = cable
         self.washer_free = washer_free
         self.youtube_url = youtube_url
+        self.featured = featured
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
@@ -169,7 +172,29 @@ class Listing(Base):
         self.date_modified = now
 
     def __repr__(self):
-        return '<Listing %r>' % self.id
+        return '<Listing %r | %s>' % (self.id, self.street)
+
+    @property
+    def shortSerialize(self):
+        return {
+            'id': self.id,
+            'street': self.street,
+            'startDate': self.start_date.strftime("%B %d, %Y"),
+            'endDate': self.end_date.strftime("%B %d, %Y"),
+            'url': '/listing/view/%d' % self.id
+        }
+
+    @property
+    def briefStreet(self):
+        return self.street[:22] + '...'
+
+    @property
+    def hasAcceptedGroupListing(self):
+        for groupListing in self.groups:
+            if groupListing.accepted:
+                return True
+
+        return False
 
     def landLords(self):
         landlords = []
@@ -198,6 +223,30 @@ class Listing(Base):
 
     def hasHouse(self):
         return len(self.house) > 0
+
+    @property
+    def hasUtilities(self):
+        return self.electricity or self.water or self.heat_gas or self.internet or self.cable
+
+    @property
+    def hasServices(self):
+        return self.handicap or self.snow_plowing or self.emergency_maintenance or self.security_service or self.garbage_service
+
+    @property
+    def hasAppliances(self):
+        return self.washer or self.dryer or self.air_conditioning or self.dishwasher
+
+    @property
+    def hasPets(self):
+        return self.dogs or self.cats or (len(self.other_pets) > 0)
+
+    @property
+    def hasTours(self):
+        if not self.hasHouse():
+            if len(self.tours):
+                return True
+        else:
+            return False
 
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument

@@ -107,6 +107,7 @@ def viewTour(tourID):
         return redirect(url_for('indexs.index'))
 
 
+# NOTIFICATIONS IMPLEMENTED
 @tours.route('/tour/<tourID>/confirm')
 @login_required
 def confirmTour(tourID):
@@ -119,6 +120,8 @@ def confirmTour(tourID):
             tour.tour_confirmed = True
             session.commit()
             flash("Tour Confirmed", 'success')
+
+            tour.genConfirmNotifications()
             return redirect(url_for('tours.viewTour', tourID=tourID))
         else:
             flash("You are not allowed to confirm this tour", 'warning')
@@ -128,6 +131,7 @@ def confirmTour(tourID):
         return redirect(request.url)
 
 
+# NOTIFICATIONS IMPLEMENTED
 @tours.route('/tour/<tourID>/confirm/ajax')
 @login_required
 def confirmTourAJAX(tourID):
@@ -142,6 +146,8 @@ def confirmTourAJAX(tourID):
             tour.tour_confirmed = True
             session.commit()
 
+            tour.genConfirmNotifications()
+
             return jsonify(results={'success': True})
         else:
             errorMessage = 'Permissions Error'
@@ -151,6 +157,7 @@ def confirmTourAJAX(tourID):
     return jsonify(results={'success': False, 'message': errorMessage})
 
 
+# NOTIFICATIONS IMPLEMENTED
 @tours.route('/tour/<tourID>/unConfirm/ajax')
 @login_required
 def unConfirmTourAJAX(tourID):
@@ -165,6 +172,8 @@ def unConfirmTourAJAX(tourID):
             tour.tour_confirmed = False
             session.commit()
 
+            tour.undoConfirmNotifications()
+
             return jsonify(results={'success': True})
         else:
             errorMessage = 'Permissions Error'
@@ -174,6 +183,7 @@ def unConfirmTourAJAX(tourID):
     return jsonify(results={'success': False, 'message': errorMessage})
 
 
+# NOTIFICATIONS IMPLEMENTED
 @tours.route('/tour/<tourID>/updateDate', methods=['POST'])
 @login_required
 def updateTime(tourID):
@@ -194,6 +204,8 @@ def updateTime(tourID):
                 else:
                     tour.last_requested = 'group'
 
+                tour.genTimeChangeNotifications()
+
                 session.commit()
             else:
                 flash("Only Group Leader and Landlord can change time", 'warning')
@@ -206,6 +218,7 @@ def updateTime(tourID):
     return redirect(url_for('tours.viewTour', tourID=tourID))
 
 
+# NOTIFICATIONS IMPLEMENTED
 @tours.route('/tour/createMessage', methods=['POST'])
 @login_required
 def createMessage():
@@ -222,6 +235,8 @@ def createMessage():
                 session.add(newTM)
                 session.commit()
 
+                newTM.genNotifications()
+
                 return redirect(url_for('tours.viewTour', tourID=tour.id))
         else:
             flash("Tour does not exist", 'warning')
@@ -231,6 +246,7 @@ def createMessage():
     return form.redirect()
 
 
+# NOTIFICATIONS IMPLEMENTED
 @tours.route('/tour/<tourID>/decline/ajax')
 @login_required
 def declineTourAJAX(tourID):
@@ -245,6 +261,8 @@ def declineTourAJAX(tourID):
             tour.declined = True
             session.commit()
 
+            tour.genDeniedNotifications()
+
             return jsonify(results={'success': True})
         else:
             errorMessage = 'Permissions Error'
@@ -254,6 +272,7 @@ def declineTourAJAX(tourID):
     return jsonify(results={'success': False, 'message': errorMessage})
 
 
+# NOTIFICATIONS IMPLEMENTED
 @tours.route('/tour/<tourID>/unDecline/ajax')
 @login_required
 def unDeclineTourAJAX(tourID):
@@ -267,6 +286,8 @@ def unDeclineTourAJAX(tourID):
         if tour.isEditableBy(current_user, toFlash=False):
             tour.declined = False
             session.commit()
+
+            tour.undoDeniedNotifications()
 
             return jsonify(results={'success': True})
         else:

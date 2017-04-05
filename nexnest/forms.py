@@ -91,6 +91,7 @@ class ProfilePictureForm(RedirectForm):
 class LoginForm(RedirectForm):
     email = StringField('Email Address', [Length(min=6, max=35)])
     password = PasswordField('Password', [InputRequired()])
+    nextURL = HiddenField('Next', [Optional()])
 
 
 class ListingForm(RedirectForm):
@@ -238,3 +239,8 @@ class LeaseUploadForm(RedirectForm):
 
     groupListingID = HiddenField('groupListingID',
                                  validators=[InputRequired()])
+
+
+class PreCheckoutForm(RedirectForm):
+    json = HiddenField('Lease')
+    # cuponCode = StringField('Cupon Code', validators=[Optional()])

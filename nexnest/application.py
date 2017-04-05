@@ -24,6 +24,14 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = '/login'
 
+import braintree
+
+
+braintree.Configuration.configure(braintree.Environment.Sandbox,
+                                  merchant_id="95d9g95dztdsgkkh",
+                                  public_key="fdtk8w9qbpvqr6kn",
+                                  private_key="ec367f7335d5e9c222656212e1ff78f2")
+
 # Our Models
 # from nexnest.models import *
 # from nexnest.models import base
@@ -50,6 +58,7 @@ from nexnest.blueprints.tour import tours
 from nexnest.blueprints.landlord import landlords
 from nexnest.blueprints.housingRequest import housingRequests
 from nexnest.blueprints.house import houses
+from nexnest.blueprints.commerce import commerce
 
 app.register_blueprint(base)
 app.register_blueprint(indexs)
@@ -60,6 +69,7 @@ app.register_blueprint(tours)
 app.register_blueprint(landlords)
 app.register_blueprint(housingRequests)
 app.register_blueprint(houses)
+app.register_blueprint(commerce)
 
 from nexnest.forms import LoginForm, PasswordChangeForm, ProfilePictureForm
 
@@ -79,4 +89,4 @@ def insert_login_form():
         login_form = LoginForm()
         return dict(login_form=login_form)
 
-import nexnest.admin # pylint: disable=unused-import
+import nexnest.admin  # pylint: disable=unused-import

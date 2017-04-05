@@ -4,12 +4,15 @@ from nexnest.application import db, session
 
 from flask import flash
 
+from pprint import pprint
+
 from .base import Base
 
 from sqlalchemy import event
 from sqlalchemy.orm import relationship
 
 from nexnest.models.group_user import GroupUser
+from nexnest.models.security_deposit import SecurityDeposit
 
 
 class Group(Base):
@@ -77,6 +80,23 @@ class Group(Base):
         return True
 
     @property
+    def serialize(self, groupListingID=None):
+        group_users = []
+        for user in self.acceptedUsers:
+            group_users.append(user.shortSerialize)
+
+        return {
+            'leader': self.leader.shortSerialize,
+            'id': self.id,
+            'name': self.name,
+            'startDate': self.start_date,
+            'endDate': self.end_date,
+            'url': '/group/view/%d' % self.id,
+            'users': group_users,
+            'userCount': len(group_users)
+        }
+
+    @property
     def unAcceptedUsers(self):
         unAcceptedUsers = []
         for groupUser in self.users:
@@ -87,10 +107,28 @@ class Group(Base):
 
     @property
     def acceptedUsers(self):
+        leaderFound = False
         acceptedUsers = []
-        for groupUser in self.users:
+        # print("Accepted Users for Group %r" % self)
+        for idx, groupUser in enumerate(self.users):
             if groupUser.accepted:
-                acceptedUsers.append(groupUser.user)
+                # print("Looking at user %r" % groupUser.user)
+                if groupUser.user.id == self.leader_id and not leaderFound:
+                    # print("Found Leader %r" % groupUser.user)
+                    # pprint("Current List %r" % acceptedUsers)
+                    leaderFound = True
+
+                    # If this is the first time through don't do anything
+                    if idx > 0:
+                        tempUser = acceptedUsers[0]
+                        acceptedUsers[0] = groupUser.user
+                        acceptedUsers.append(tempUser)
+                        continue
+                    else:
+                        acceptedUsers.append(groupUser.user)
+                    # pprint("After List %r" % acceptedUsers)
+                else:
+                    acceptedUsers.append(groupUser.user)
 
         return acceptedUsers
 

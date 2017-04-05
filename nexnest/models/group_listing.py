@@ -84,6 +84,34 @@ class GroupListing(Base):
         else:
             return 'Not Accepted'
 
+    @property
+    def serialize(self):
+        group = self.group.serialize
+
+        for user in group['users']:
+            # Find the security deposit record
+            for deposit in self.securityDeposits:
+                if deposit.user_id == user['id']:
+                    if deposit.completed:
+                        user['securityDepositPaid'] = True
+                    else:
+                        user['securityDepositPaid'] = False
+                    break
+
+        groupListing = {
+            'id': self.id,
+            'accepted': self.accepted,
+            'completed': self.completed,
+            'url': '/houseRequest/view/%d' % self.id,
+            'group': group,
+            'leasesCollected': self.all_leases_submitted
+        }
+
+        if self.firstMessage is not None:
+            groupListing['message'] = self.firstMessage.content
+
+        return groupListing
+
     def isViewableBy(self, user, toFlash=True):
         if user in self.group.getUsers():
             return True
@@ -141,6 +169,14 @@ class GroupListing(Base):
                 numPaid += 1
 
         return numPaid
+
+    @property
+    def allSecurityDepositsPaid(self):
+        for deposit in self.securityDeposits:
+            if not deposit.completed:
+                return False
+
+        return True
 
     def genNotifications(self):
         for landlord in self.listing.landLordsAsUsers():
