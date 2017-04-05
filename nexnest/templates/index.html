@@ -130,7 +130,7 @@
 					<div class="col-xs-12 col-sm-6 col-md-8 col-lg-7" style="padding-left: 0px;">
 						Price Range
 						<br>
-					    <span class="text-nowrap"><b id="minPriceDisplay" style="padding-right: 10px;">$0</b> <input id="priceSlider" type="text" class="span2" value="" data-slider-min="0" data-slider-max="5000" data-slider-step="500" data-slider-value="[0,5000]"/> <b id="maxPriceDisplay" style="padding-left: 10px;">$5,000</b></span>
+					    <span class="text-nowrap"><b id="minPriceDisplay" style="padding-right: 10px;">$0</b> <input id="priceSlider" type="text" class="span2 filterOption" value="" data-slider-min="0" data-slider-max="5000" data-slider-step="500" data-slider-value="[0,5000]"/> <b id="maxPriceDisplay" style="padding-left: 10px;">$5,000</b></span>
 					</div>
 					<div class="col-xs-12 col-sm-6 col-md-4 col-lg-5" style="align-self: flex-end;">
 						Price Per Bedroom Per
@@ -373,7 +373,9 @@
     	filters.location = $("#where2 option:selected").text();
     	filters.term = $("#when2 option:selected").text();
     	filters.bedrooms = parseInt($("#rooms2").val(), 10);
-    	filters.priceRange = $("#priceSlider").val();
+    	var prices = $("#priceSlider").val().split(',');
+		filters.minPrice = parseInt(prices[0], 10);
+		filters.maxPrice = parseInt(prices[1], 10);
     	if($("#priceSearchMonth").hasClass("active")){
     		filters.priceTerm = "month"
     	}
