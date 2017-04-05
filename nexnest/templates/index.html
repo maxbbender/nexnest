@@ -166,14 +166,11 @@
 				    </div>
 			    </div>			    
 			</nav>
-			<div class="row hidden-xl-up" style="padding-top: 10px;">
-				<div class="col-xs-12">
+			<div class="row" id="mainContent" style="padding-top: 10px;">
+				<div class="col-xs-12 hidden-xl-up">
 					<button id="toggleMap" class="btn btn-secondary" style="float: right;">Switch To Map View</button>
 				</div>
-			</div>
-
-			<div class="row" id="mainContent" style="padding-top: 10px;">
-				<div id="listingView" class="col-xs-12">
+				<div id="listingView" class="col-xs-12" style="padding-top: 10px;">
 					{% if listings is not none %}
 						<div class="row m-x-auto" id="listingsGoHere">
 							<!-- {% for listing in listings %}
@@ -294,7 +291,7 @@
 							    </label>
 							</div>
 						</div>
-						<div class="col-xl-4">
+						<div class="col-xs-6 col-xl-4">
 							<label class="control-label form-control-feedback" id="cable_label">Cable Included</label>
 							<div class="checkbox">
 							    <label style="font-size: 1.5em">
@@ -325,7 +322,7 @@
 					<hr>
 					<div class="row">
 						<div class="col-xs-12">
-							<button class="btn btn-primary" onClick="buildFilters()" style="float: right;">Search</button>
+							<button id="advancedSearch" class="btn btn-primary" onClick="buildFilters()" style="float: right;">Search</button>
 						</div>
 					</div>
 				</div>
@@ -365,6 +362,11 @@
     	filters.term = $("#when option:selected").text();
     	filters.bedrooms = parseInt($("#rooms").val(), 10);
 	}
+
+	$("#advancedSearch").click(function() {
+		$("#moreFilters").toggle();
+		$("#mainContent").toggle();
+  	});
 
 	function buildFilters(){
 		var filters = {};
