@@ -341,9 +341,7 @@
 	var priceSlider = new Slider('#priceSlider', {});
 
 	$("#priceSlider").change(function() {
-		//console.log($("#priceSlider").val());
-		var prices = $("#priceSlider").val().split(',')
-		console.log(prices);
+		var prices = $("#priceSlider").val().split(',');
 		var minPrice = prices[0];
 		var maxPrice = prices[1];
 		$("#minPriceDisplay").text("$"+minPrice);
@@ -526,17 +524,6 @@
   		price: '4500',
   		rent_due: 'semester'
   	}
-
-  	var listing9 = {
-  		url: '/listing/view/1',
-  		briefStreet: 'Not Fake Name',
-  		city: 'Poughkeepsie',
-  		state: 'NY',
-  		num_bedrooms: '6',
-  		num_full_baths: '1',
-  		price: '6000',
-  		rent_due: 'month'
-  	}
   	var listings = [];
   	var featuredListings = [];
 	listings.push(listing1);
@@ -547,7 +534,6 @@
 	listings.push(listing6);
 	featuredListings.push(listing7);
 	featuredListings.push(listing8);
-	featuredListings.push(listing9);
 	
 	function displayListings(){
 		//Featured
@@ -555,15 +541,11 @@
 			console.log(listing);
 
 			var nextListing = `<div class="card" style="width: 100%;">
+				<div class="ribbon-wrapper-green"><div class="ribbon-green">FEATURED</div></div>
 				<a href="`+ listing.url +`">
 					<img src="/static/img/testHouse.jpg" class="listingImg card-img-top">
 				</a>
 				<div class="card-block" style="background-color: #89cdef;">
-					<div class="row">
-						<div class="col-xs-12" style="text-align: right;">
-							<strong>Featured!</strong>
-						</div>
-					</div>
 					<div class="row">
 						<div class="col-xs-4">
 							<span class="text-nowrap">
@@ -592,7 +574,7 @@
 			$("#listingsGoHere").append(`<div class="col-md-6" style="padding-left: 15px; padding-bottom: 30px">` + nextListing + `</div>`);
 		});
 
-		//None Featured
+		//Non Featured
 		$.each(listings, function(index, listing) {
 			console.log(listing);
 
