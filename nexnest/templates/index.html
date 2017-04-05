@@ -128,9 +128,9 @@
 			    </div>
 			    <div class="row" style="padding-top: 10px;">
 					<div class="col-xs-12 col-sm-6 col-md-8 col-lg-7" style="padding-left: 0px;">
-						Max Price
+						Price Range
 						<br>
-					    <span class="text-nowrap"><b style="padding-right: 10px;">$1,000</b> <input id="priceSlider" type="text" class="span2" value="" data-slider-min="1000" data-slider-max="10000" data-slider-step="500" data-slider-value="[1000,10000]"/> <b style="padding-left: 10px;">$10,000</b></span>
+					    <span class="text-nowrap"><b id="minPriceDisplay" style="padding-right: 10px;">$0</b> <input id="priceSlider" type="text" class="span2" value="" data-slider-min="0" data-slider-max="5000" data-slider-step="500" data-slider-value="[0,5000]"/> <b id="maxPriceDisplay" style="padding-left: 10px;">$5,000</b></span>
 					</div>
 					<div class="col-xs-12 col-sm-6 col-md-4 col-lg-5" style="align-self: flex-end;">
 						Price Per Bedroom Per
@@ -340,6 +340,16 @@
 	var distanceSlider = new Slider('#distanceToCampus', {});
 	var priceSlider = new Slider('#priceSlider', {});
 
+	$("#priceSlider").change(function() {
+		//console.log($("#priceSlider").val());
+		var prices = $("#priceSlider").val().split(',')
+		console.log(prices);
+		var minPrice = prices[0];
+		var maxPrice = prices[1];
+		$("#minPriceDisplay").text("$"+minPrice);
+		$("#maxPriceDisplay").text("$"+maxPrice);
+  	}); 
+
 
 	function showMoreFilters(){
 		$("#moreFilters").toggle();
@@ -363,7 +373,7 @@
     	filters.location = $("#where2 option:selected").text();
     	filters.term = $("#when2 option:selected").text();
     	filters.bedrooms = parseInt($("#rooms2").val(), 10);
-    	filters.maxPrice = parseInt($("#priceSlider").val(), 10);
+    	filters.priceRange = $("#priceSlider").val();
     	if($("#priceSearchMonth").hasClass("active")){
     		filters.priceTerm = "month"
     	}
