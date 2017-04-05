@@ -2,307 +2,349 @@
 {% block content %}
 	{% if not current_user.is_authenticated %}
     <!-- !!NOT LOGGED IN!! -->
-    <div class="row" style="padding-left: 15px;">
-    	<div class="col-xl-12">
-	    	<div class="card card-inverse">
-	    		<img class="card-img" src="static/img/testHouse7.jpg" alt="Card image" style="width: 100%;">
-	    		<div class="card-img-overlay" style="display: flex; flex-direction: column; justify-content: center;">
-	    			<div class="row" style="margin-top: -150px;">
-	    				<h1 style="color: white; padding-left: 10%;">Insert Tagline from Nate and Alex Here</h1>
-	    			</div>
-	    			<div class="row justify-content-center" style="align-items: flex-end; padding-top: 150px;">
-	    				<div class="col-xl-3" style="left: 8vw;">
-	    					<label for="where">Where</label>
-    					    <select class="form-control" id="where" style="width: 75%;">
-    					      	<option>Fredonia, NY</option>
-    					    </select>
-	    				</div>
-	    				<div class="col-xl-3" style="left: 8vw;">
-	    					<label for="when">When</label>
-    					    <select class="form-control" id="when" style="width: 75%;">
-    					    	<option disabled selected>Select Term</option>
-    					      	<option>School Year 2017-2018</option>
-    					      	<option>Summer 2018</option>
-    					      	<option>School Year 2018-2019</option>
-    					      	<option>Summer 2019</option>
-    					    </select>
-	    				</div>
-	    				<div class="col-xl-3" style="left: 8vw;">
-	    					<label for="bedrooms">Bedrooms</label>
-    					    <select class="form-control" id="bedrooms" style="width: 75%;">
-    					      	<option>1</option>
-    					      	<option>2</option>
-    					      	<option>3</option>
-    					      	<option>4+</option>
-    					    </select>
-	    				</div>
-	    				<div class="col-xl-1" style="left: 8vw;">
-	    					<button class="btn btn-primary">Search</button>
-	    				</div>
-	    			</div>
-	    		</div>
+    <div id="initialView">
+	    <div class="row" style="padding-left: 15px;">
+	    	<div class="col-xl-12">
+		    	<div class="card card-inverse">
+		    		<img class="card-img" src="static/img/testHouse7.jpg" alt="Card image" style="width: 100%;">
+		    		<div class="card-img-overlay" style="display: flex; flex-direction: column; justify-content: center;">
+		    			<div class="row" style="margin-top: -150px;">
+		    				<h1 style="color: white; padding-left: 10%;">Insert Tagline from Nate and Alex Here</h1>
+		    			</div>
+		    			<div class="row justify-content-center" style="align-items: flex-end; padding-top: 150px;">
+		    				<div class="col-xl-3" style="left: 8vw;">
+		    					<label for="where">Where</label>
+	    					    <select class="form-control" id="where" style="width: 75%;">
+	    					      	<option value="Fredonia, NY">Fredonia, NY</option>
+	    					    </select>
+		    				</div>
+		    				<div class="col-xl-3" style="left: 8vw;">
+		    					<label for="when">When</label>
+	    					    <select class="form-control" id="when" style="width: 75%;">
+	    					      	<option value="2017-2018 School Year">2017-2018 School Year</option>
+	    					      	<option value="2018 Summer">2018 Summer</option>
+	    					      	<option value="2018-2019 School Year">2018-2019 School Year</option>
+	    					      	<option value="2019 Summer">2019 Summer</option>
+	    					    </select>
+		    				</div>
+		    				<div class="col-xl-3" style="left: 8vw;">
+		    					<label for="bedrooms">Bedrooms</label>
+	    					    <select class="form-control" id="rooms" style="width: 75%;">
+	    					      	<option value="1">1</option>
+	    					      	<option value="2">2</option>
+	    					      	<option value="3">3</option>
+	    					      	<option value="4+">4+</option>
+	    					    </select>
+		    				</div>
+		    				<div class="col-xl-1" style="left: 8vw;">
+		    					<button id="initialSearchButton" class="btn btn-primary">Search</button>
+		    				</div>
+		    			</div>
+		    		</div>
+		    	</div>
+		    </div>
+	    </div>
+	    <div class="row" style="margin-left: 15px;">
+	    	<div class="col-xs-12" style="text-align: center;">
+	    		<h1>Built For Students</h1>
 	    	</div>
 	    </div>
-    </div>
-    <div class="row justify-content-center" style="margin-left: 15px;">
-    	<h3>Built For Students</h3>
-    </div>
-    <div class="row" style="margin-left: 15px;">
-    	<div class="col-xl-3" style="text-align: center;">
-    		Wsdfojhsdfhjod ojha ojh asfdojhasd ojhasdojhas dhjo asjoh jhoas dhjas oh asdohjasd jhosad jasd hj hjasohjas odhasd oashdo s
-    	</div>
-    	<div class="col-xl-3" style="text-align: center;">
-    		Wsdfojhsdfhjod ojha ojh asfdojhasd ojhasdojhas dhjo asjoh jhoas dhjas oh asdohjasd jhosad jasd hj hjasohjas odhasd oashdo s
-    	</div>
-    	<div class="col-xl-3" style="text-align: center;">
-    		Wsdfojhsdfhjod ojha ojh asfdojhasd ojhasdojhas dhjo asjoh jhoas dhjas oh asdohjasd jhosad jasd hj hjasohjas odhasd oashdo s
-    	</div>
-    	<div class="col-xl-3" style="text-align: center;">
-    		Wsdfojhsdfhjod ojha ojh asfdojhasd ojhasdojhas dhjo asjoh jhoas dhjas oh asdohjasd jhosad jasd hj hjasohjas odhasd oashdo s
-    	</div>
-    </div>
-	{% else %}
-    	<div class="row m-x-auto" style="margin-left: 15px;">
-			<div class="col-md-12 col-lg-6 col-xl-6">
-				<nav class="navbar sticky-top navbar-light bg-faded">
-					<div class="row">
-				    	<div class="col-xs-4">
-        					    <select class="form-control filterOption" id="where2" onch>
-        					    	<option disabled>Select Where</option>
-        					      	<option>Fredonia, NY</option>
-        					    </select>
-				        </div>
-				        <div class="col-xs-4">
-        					    <select class="form-control filterOption" id="when2">
-        					    	<option disabled>Select Term</option>
-        					      	<option>2017-2018 School Year</option>
-        					      	<option>2018 Summer</option>
-        					      	<option>2018-2019 School Year</option>
-        					      	<option>2019 Summer</option>
-        					    </select>
-				        </div>
-				        <div class="col-xs-4">
-						        <select class="form-control filterOption" id="rooms2">
-						        	<option disabled>Bedrooms</option>
-						          	<option value="1">1 Bed</option>
-						          	<option value="2">2 Beds</option>
-						          	<option value="3">3 Beds</option>
-						          	<option value="4+">4+ Beds</option>
-						        </select>
-					    </div>
+	    <div class="row" style="margin-left: 15px;">
+	    	<div class="col-xl-4" style="text-align: center;">
+	    		<i class="fa fa-home fa-3x" aria-hidden="true"></i>
+	    		<br>
+	    		Wsdfojhsdfhjod ojha ojh asfdojhasd ojhasdojhas dhjo asjoh jhoas dhjas oh asdohjasd jhosad jasd hj hjasohjas odhasd oashdo s
+	    	</div>
+	    	<div class="col-xl-4" style="text-align: center;">
+	    		<i class="fa fa-users fa-3x" aria-hidden="true"></i>
+	    		<br>
+	    		Wsdfojhsdfhjod ojha ojh asfdojhasd ojhasdojhas dhjo asjoh jhoas dhjas oh asdohjasd jhosad jasd hj hjasohjas odhasd oashdo s
+	    	</div>
+	    	<div class="col-xl-4" style="text-align: center;">
+	    		<i class="fa fa-usd fa-3x" aria-hidden="true"></i>
+	    		<br>
+	    		Wsdfojhsdfhjod ojha ojh asfdojhasd ojhasdojhas dhjo asjoh jhoas dhjas oh asdohjasd jhosad jasd hj hjasohjas odhasd oashdo s
+	    	</div>
+	    </div>
+	    <br><br>
+	    <div class="row" style="margin-left: 15px;">
+	    	<div class="col-xs-12" style="text-align: center;">
+	    		<h1>Insert Thing Here</h1>
+	    	</div>
+	    </div>
+	    <div class="row" style="margin-left: 15px;">
+	    	<div class="col-xl-4" style="text-align: center;">
+	    		<i class="fa fa-calendar fa-3x" aria-hidden="true"></i>
+	    		<br>
+	    		Wsdfojhsdfhjod ojha ojh asfdojhasd ojhasdojhas dhjo asjoh jhoas dhjas oh asdohjasd jhosad jasd hj hjasohjas odhasd oashdo s
+	    	</div>
+	    	<div class="col-xl-4" style="text-align: center;">
+	    		<i class="fa fa-handshake-o fa-3x" aria-hidden="true"></i>
+	    		<br>
+	    		Wsdfojhsdfhjod ojha ojh asfdojhasd ojhasdojhas dhjo asjoh jhoas dhjas oh asdohjasd jhosad jasd hj hjasohjas odhasd oashdo s
+	    	</div>
+	    	<div class="col-xl-4" style="text-align: center;">
+	    		<i class="fa fa-comments fa-3x" aria-hidden="true"></i>
+	    		<br>
+	    		Wsdfojhsdfhjod ojha ojh asfdojhasd ojhasdojhas dhjo asjoh jhoas dhjas oh asdohjasd jhosad jasd hj hjasohjas odhasd oashdo s
+	    	</div>
+	    </div>
+	</div>
+	{% endif %}
+	<div id="homepage" class="row m-x-auto" style="display: none;">
+		<div class="col-md-12 col-lg-12 col-xl-7">
+			<div class="row hidden-sm-up">
+				<div class="col-xs-12" style="padding-bottom: 15px;">
+					<button id="showFilterButton" class="btn btn-secondary" style="width: 100%;">Show Filters <i class="fa fa-chevron-down" aria-hidden="true"></i></button>
+					<button id="hideFilterButton" class="btn btn-secondary" style="width: 100%; display: none;">Hide Filters <i class="fa fa-chevron-up" aria-hidden="true"></i></button>
+				</div>
+			</div>
+			<nav id="filterBar" class="navbar sticky-top navbar-light bg-faded hidden-xs-down">				
+				<div class="row">
+			    	<div class="col-xs-12 col-sm-6 col-lg-4" style="padding-bottom: 5px;">
+					    <select class="form-control filterOption" id="where2">
+					    	<option disabled>Select Where</option>
+					      	<option>Fredonia, NY</option>
+					    </select>
+			        </div>
+			        <div class="col-xs-12 col-sm-6 col-lg-4" style="padding-bottom: 5px;">
+					    <select class="form-control filterOption" id="when2">
+					    	<option disabled>Select Term</option>
+					      	<option value="2017-2018 School Year">2017-2018 School Year</option>
+					      	<option value="2018 Summer">2018 Summer</option>
+					      	<option value="2018-2019 School Year">2018-2019 School Year</option>
+					      	<option value="2019 Summer">2019 Summer</option>
+					    </select>
+			        </div>
+			        <div class="col-xs-12 col-sm-6 col-lg-4" style="padding-bottom: 5px;">
+				        <select class="form-control filterOption" id="rooms2">
+				        	<option disabled>Bedrooms</option>
+				          	<option value="1">1 Bed</option>
+				          	<option value="2">2 Beds</option>
+				          	<option value="3">3 Beds</option>
+				          	<option selected value="4+">4+ Beds</option>
+				        </select>
 				    </div>
-				    <div class="row" style="padding-top: 10px;">
-    					<div class="col-xs-12 col-lg-8" style="padding-left: 30px;">
-    						Max Price
-    						<br>
-    					    <input class="filterOption" id="priceRange" type="text" data-slider-ticks="[1000, 2000, 3000, 4000, 5000]" data-slider-ticks-snap-bounds="100" data-slider-ticks-labels='["$1000", "$2000", "$3000", "$4000", "$5000"]' data-slider-value="3000" value="3000" />
-    					    <div class="btn-group" data-toggle="buttons" style="padding-left: 30px;">
-    					      	<label class="btn btn-outline-primary filterOption active" id="priceSearchMonth">
-    					      	<input type="radio" name="packageChoice" id="priceSearchMonthInput" checked autocomplete="off"> Month
-    					        </label>
-    					      	<label class="btn btn-outline-primary filterOption" id="priceSearchTerm">
-    					      	<input type="radio" name="packageChoice" id="priceSearchMonthInput" autocomplete="off"> Term
-    					        </label>
-					        </div>
-    					</div>
-    					<div class="col-xs-12 col-lg-4">        						
-    						<br>
-					        <button class="btn btn-secondary" onClick="showMoreFilters()" style="float: right; width: 210.66px; text-align: left;">More Filters <i class="fa fa-chevron-down" aria-hidden="true"></i></button>
-					    </div>
-				    </div>
-				    <div class="row" style="padding-top: 10px;">
-    					<div class="col-xs-8">
-    						<input type="text" class="form-control" placeholder="Search for an Address">
-    					</div>
-    					<div class="col-xs-4">
-    						<select class="form-control filterOption" id="sortBy">
-					        	<option disabled selected value="default">Sort By</option>
-					          	<option value="priceLowToHigh">Low to High</option>
-					          	<option value="priceHighToLow">High to Low</option>
-					          	<option value="mostRecent">Recent</option>
-						    </select>
-					    </div>
-				    </div>
-				    <div class="row hidden-lg-up" style="padding-top: 10px;">
-				    	<div class="col-xs-12">
-				    		<button id="toggleMap" class="btn btn-secondary" style="float: right;">Switch To Map View</button>
-				    	</div>
-				    </div>
-				</nav>
-
-				<div class="row" id="mainContent">
-					<div id="listingView" class="col-xs-12">
-						{% if listings is not none %}
-							<div class="row m-x-auto">
-								{% for listing in listings %}
-									<div class="col-md-6" style="padding-left: 30px; padding-bottom: 30px">
-										{% include 'listing.html' %}
-									</div>
-								{% endfor %}
-							</div>
-						{% endif %}
+			    </div>
+			    <div class="row" style="padding-top: 10px;">
+					<div class="col-xs-12 col-sm-6 col-md-8 col-lg-7" style="padding-left: 0px;">
+						Price Range
+						<br>
+					    <span class="text-nowrap"><b id="minPriceDisplay" style="padding-right: 10px;">$0</b> <input id="priceSlider" type="text" class="span2 filterOption" value="" data-slider-min="0" data-slider-max="5000" data-slider-step="500" data-slider-value="[0,5000]"/> <b id="maxPriceDisplay" style="padding-left: 10px;">$5,000</b></span>
 					</div>
-					<div id="mapView" class="col-xs-12" style="background-image: url('static/img/mapTest.png'); display: none; height: 80vh;">
-						<!-- Show map if they toggle map view -->
+					<div class="col-xs-12 col-sm-6 col-md-4 col-lg-5" style="align-self: flex-end;">
+						Price Per Bedroom Per
+						<br>
+					    <div class="btn-group" data-toggle="buttons">
+					      	<label class="btn btn-outline-primary filterOption" id="priceSearchMonth">
+					      	<input type="radio" name="packageChoice" id="priceSearchMonthInput" autocomplete="off"> Month
+					        </label>
+					      	<label class="btn btn-outline-primary filterOption active" id="priceSearchTerm">
+					      	<input type="radio" name="packageChoice" id="priceSearchMonthInput" checked autocomplete="off"> Semester
+					        </label>
+				        </div>
+					</div>
+			    </div>
+			    <div class="row" style="padding-top: 10px;">
+			    	<div class="col-md-4"></div>
+			    	<div class="col-xs-6 col-md-4">
+				        <button class="btn btn-secondary" onClick="showMoreFilters()" style="width: 100%; text-align: left;">More Filters <i class="fa fa-chevron-down" aria-hidden="true"></i></button>
+				    </div>
+					<div class="col-xs-6 col-md-4">
+						<select class="form-control filterOption" id="sortBy" style="width: 100%;">
+				        	<option disabled selected value="default">Sort By</option>
+				          	<option value="priceLowToHigh">Low to High</option>
+				          	<option value="priceHighToLow">High to Low</option>
+				          	<option value="mostRecent">Recent</option>
+				          	<option value="distanceToCampusMiles">Distance To Campus</option>
+					    </select>
+				    </div>
+			    </div>
+			    <div class="row" style="padding-top: 10px;">
+				    <div class="col-xs-12">
+				    	<input type="text" class="form-control" placeholder="Search for an Address">
+				    </div>
+			    </div>			    
+			</nav>
+			<div class="row" id="mainContent" style="padding-top: 10px;">
+				<div class="col-xs-12 hidden-xl-up">
+					<button id="toggleMap" class="btn btn-secondary" style="float: right;">Switch To Map View</button>
+				</div>
+				<div id="listingView" class="col-xs-12" style="padding-top: 10px;">
+					{% if listings is not none %}
+						<div class="row m-x-auto" id="listingsGoHere">
+							<!-- {% for listing in listings %}
+								<div class="col-md-6" style="padding-left: 30px; padding-bottom: 30px">
+									{% include 'listing.html' %}
+								</div>
+							{% endfor %} -->
+						</div>
+					{% endif %}
+				</div>
+				<div id="mapView" class="col-xs-12" style="background-image: url('static/img/mapTest.png'); display: none; height: 80vh;">
+					<!-- Show map if they toggle map view -->
+				</div>
+			</div>
+			<div class="row" id="moreFilters" style="display: none; margin-left: 30px;">
+			<br><br>
+				<div class="col-xl-1">							
+				</div>
+				<div class="col-xl-10">							
+					<h1>Property Type</h1>
+					<div class="row">
+						<div class="col-xs-4">
+							<label class="control-label form-control-feedback" id="house_label">House</label>
+							<div class="checkbox">
+							    <label style="font-size: 1.5em">
+							    	<input id="houseCheckBox" type="checkbox" checked>
+							        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+							    </label>
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<label class="control-label form-control-feedback" id="apartment_label">Apartment</label>
+							<div class="checkbox">
+							    <label style="font-size: 1.5em">
+							    	<input id="apartmentCheckBox" type="checkbox" checked>
+							        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+							    </label>
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<label class="control-label form-control-feedback" id="complex_label">Complex</label>
+							<div class="checkbox">
+							    <label style="font-size: 1.5em">
+							    	<input id="complexCheckBox" type="checkbox" checked>
+							        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+							    </label>
+							</div>
+						</div>
+					</div>
+					<hr>
+					<br>
+					<h1>Distance to Campus</h1>
+					<div class="row">
+						<div class="col-xl-12">
+							<b>1 Mi</b> <input id="distanceToCampus" type="text" class="span2" data-slider-value="10" data-slider-min="1" data-slider-max="10" data-slider-step="1"/> <b style="padding-left: 5px;">10 Mi</b>
+						</div>								
+					</div>
+					<hr>
+					<br>
+					<h1>Pet Friendly</h1>
+					<div class="row">
+						<div class="col-xs-6">
+							<label class="control-label form-control-feedback" id="dogs_label">Dogs</label>
+							<div class="checkbox">
+							    <label style="font-size: 1.5em">
+							    	<input id="dogCheckBox" type="checkbox">
+							        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+							    </label>
+							</div>
+						</div>
+						<div class="col-xs-6">
+							<label class="control-label form-control-feedback" id="cats_label">Cats</label>
+							<div class="checkbox">
+							    <label style="font-size: 1.5em">
+							    	<input id="catCheckBox" type="checkbox">
+							        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+							    </label>
+							</div>
+						</div>
+					</div>
+					<hr>
+					<br>
+					<h1>Includes</h1>
+					<div class="row">
+						<div class="col-xs-6 col-xl-4">
+							<label class="control-label form-control-feedback" id="furnished_label">Furnished</label>
+							<div class="checkbox">
+							    <label style="font-size: 1.5em">
+							    	<input id="furnishedCheckBox" type="checkbox">
+							        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+							    </label>
+							</div>
+						</div>
+						<div class="col-xs-6 col-xl-4">
+							<label class="control-label form-control-feedback" id="dishwasher_label">Dishwasher</label>
+							<div class="checkbox">
+							    <label style="font-size: 1.5em">
+							    	<input id="dishwasherCheckBox" type="checkbox">
+							        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+							    </label>
+							</div>
+						</div>
+						<div class="col-xs-6 col-xl-4">
+							<label class="control-label form-control-feedback" id="laundry_label">On-Site Laundry</label>
+							<div class="checkbox">
+							    <label style="font-size: 1.5em">
+							    	<input id="laundryCheckBox" type="checkbox">
+							        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+							    </label>
+							</div>
+						</div>
+						<div class="col-xs-6 col-xl-4">
+							<label class="control-label form-control-feedback" id="internet_label">Internet Included</label>
+							<div class="checkbox">
+							    <label style="font-size: 1.5em">
+							    	<input id="internetCheckBox" type="checkbox">
+							        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+							    </label>
+							</div>
+						</div>
+						<div class="col-xs-6 col-xl-4">
+							<label class="control-label form-control-feedback" id="cable_label">Cable Included</label>
+							<div class="checkbox">
+							    <label style="font-size: 1.5em">
+							    	<input id="cableCheckBox" type="checkbox">
+							        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+							    </label>
+							</div>
+						</div>
+						<div class="col-xs-6 col-xl-4">
+							<label class="control-label form-control-feedback" id="snow_label">Snow Removal</label>
+							<div class="checkbox">
+							    <label style="font-size: 1.5em">
+							    	<input id="snowRemovalCheckBox" type="checkbox">
+							        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+							    </label>
+							</div>
+						</div>
+						<div class="col-xs-6 col-xl-4">
+							<label class="control-label form-control-feedback" id="garbage_label">Garbage Removal</label>
+							<div class="checkbox">
+							    <label style="font-size: 1.5em">
+							    	<input id="garbageCheckBox" type="checkbox">
+							        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+							    </label>
+							</div>
+						</div>
+					</div>
+					<hr>
+					<div class="row">
+						<div class="col-xs-12">
+							<button id="advancedSearch" class="btn btn-primary" onClick="buildFilters()" style="float: right;">Search</button>
+						</div>
 					</div>
 				</div>
-				<div class="row" id="moreFilters" style="display: none; margin-left: 30px;">
-				<br><br>
-					<div class="col-xl-1">							
-					</div>
-					<div class="col-xl-10">							
-						<h1>Property Type</h1>
-						<div class="row">
-							<div class="col-xs-4">
-								<label class="control-label form-control-feedback" id="house_label">House</label>
-								<div class="checkbox">
-								    <label style="font-size: 1.5em">
-								    	<input id="houseCheckBox" type="checkbox" checked>
-								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-								    </label>
-								</div>
-							</div>
-							<div class="col-xs-4">
-								<label class="control-label form-control-feedback" id="apartment_label">Apartment</label>
-								<div class="checkbox">
-								    <label style="font-size: 1.5em">
-								    	<input id="apartmentCheckBox" type="checkbox" checked>
-								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-								    </label>
-								</div>
-							</div>
-							<div class="col-xs-4">
-								<label class="control-label form-control-feedback" id="complex_label">Complex</label>
-								<div class="checkbox">
-								    <label style="font-size: 1.5em">
-								    	<input id="complexCheckBox" type="checkbox" checked>
-								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-								    </label>
-								</div>
-							</div>
-						</div>
-						<hr>
-						<br>
-						<h1>Distance to Campus</h1>
-						<div class="row">
-							<div class="col-xl-12">
-								<b>1 Mi</b> <input id="distanceToCampus" type="text" class="span2" value="" data-slider-min="1" data-slider-max="10" data-slider-step="1"/> <b>10 Mi</b>
-							</div>								
-						</div>
-						<hr>
-						<br>
-						<h1>Pet Friendly</h1>
-						<div class="row">
-							<div class="col-xs-6">
-								<label class="control-label form-control-feedback" id="dogs_label">Dogs</label>
-								<div class="checkbox">
-								    <label style="font-size: 1.5em">
-								    	<input id="dogCheckBox" type="checkbox">
-								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-								    </label>
-								</div>
-							</div>
-							<div class="col-xs-6">
-								<label class="control-label form-control-feedback" id="cats_label">Cats</label>
-								<div class="checkbox">
-								    <label style="font-size: 1.5em">
-								    	<input id="catCheckBox" type="checkbox">
-								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-								    </label>
-								</div>
-							</div>
-						</div>
-						<hr>
-						<br>
-						<h1>Includes</h1>
-						<div class="row">
-							<div class="col-xs-6 col-xl-4">
-								<label class="control-label form-control-feedback" id="furnished_label">Furnished</label>
-								<div class="checkbox">
-								    <label style="font-size: 1.5em">
-								    	<input id="furnishedCheckBox" type="checkbox">
-								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-								    </label>
-								</div>
-							</div>
-							<div class="col-xs-6 col-xl-4">
-								<label class="control-label form-control-feedback" id="dishwasher_label">Dishwasher</label>
-								<div class="checkbox">
-								    <label style="font-size: 1.5em">
-								    	<input id="dishwasherCheckBox" type="checkbox">
-								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-								    </label>
-								</div>
-							</div>
-							<div class="col-xs-6 col-xl-4">
-								<label class="control-label form-control-feedback" id="laundry_label">On-Site Laundry</label>
-								<div class="checkbox">
-								    <label style="font-size: 1.5em">
-								    	<input id="laundryCheckBox" type="checkbox">
-								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-								    </label>
-								</div>
-							</div>
-							<div class="col-xs-6 col-xl-4">
-								<label class="control-label form-control-feedback" id="internet_label">Internet Included</label>
-								<div class="checkbox">
-								    <label style="font-size: 1.5em">
-								    	<input id="internetCheckBox" type="checkbox">
-								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-								    </label>
-								</div>
-							</div>
-							<div class="col-xl-4">
-								<label class="control-label form-control-feedback" id="cable_label">Cable Included</label>
-								<div class="checkbox">
-								    <label style="font-size: 1.5em">
-								    	<input id="cableCheckBox" type="checkbox">
-								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-								    </label>
-								</div>
-							</div>
-							<div class="col-xs-6 col-xl-4">
-								<label class="control-label form-control-feedback" id="snow_label">Snow Removal</label>
-								<div class="checkbox">
-								    <label style="font-size: 1.5em">
-								    	<input id="snowRemovalCheckBox" type="checkbox">
-								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-								    </label>
-								</div>
-							</div>
-							<div class="col-xs-6 col-xl-4">
-								<label class="control-label form-control-feedback" id="garbage_label">Garbage Removal</label>
-								<div class="checkbox">
-								    <label style="font-size: 1.5em">
-								    	<input id="garbageCheckBox" type="checkbox">
-								        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-								    </label>
-								</div>
-							</div>
-						</div>
-						<hr>
-						<div class="row">
-							<div class="col-xs-12">
-								<button class="btn btn-primary" onClick="buildFilters()" style="float: right;">Search</button>
-							</div>
-						</div>
-					</div>
-				</div>		
-			</div>
-			<div class="hidden-md-down col-lg-6 col-xl-6" style="background-image: url('static/img/mapTest.png'); height: 80vh; position: fixed; left: 50%;">
-			</div>
+			</div>		
 		</div>
-    {% endif %}
+		<div class="hidden-lg-down col-xl-6" style="background-image: url('static/img/mapTest.png'); height: 80vh; position: fixed; left: 59%;">
+		</div>
+	</div>
 {% endblock %}
 {% block scripts %}
 <script>
-	var slider = new Slider('#distanceToCampus', {});
+	var distanceSlider = new Slider('#distanceToCampus', {});
+	var priceSlider = new Slider('#priceSlider', {});
 
-	var slider = new Slider("#priceRange", {
-	    ticks: [1000, 2000, 3000, 4000, 5000],
-	    ticks_labels: ["$1000", "$2000", "$3000", "$4000", "$5000"],
-	    ticks_snap_bounds: 100
-	});
+	$("#priceSlider").change(function() {
+		var prices = $("#priceSlider").val().split(',');
+		var minPrice = prices[0];
+		var maxPrice = prices[1];
+		$("#minPriceDisplay").text("$"+minPrice);
+		$("#maxPriceDisplay").text("$"+maxPrice);
+  	}); 
+
 
 	function showMoreFilters(){
 		$("#moreFilters").toggle();
@@ -314,12 +356,26 @@
   		buildFilters();
   	});
 
+	function initialFilters(){
+		var filters = {};
+    	filters.location = $("#where option:selected").text();
+    	filters.term = $("#when option:selected").text();
+    	filters.bedrooms = parseInt($("#rooms").val(), 10);
+	}
+
+	$("#advancedSearch").click(function() {
+		$("#moreFilters").toggle();
+		$("#mainContent").toggle();
+  	});
+
 	function buildFilters(){
 		var filters = {};
     	filters.location = $("#where2 option:selected").text();
     	filters.term = $("#when2 option:selected").text();
-    	filters.bedrooms = $("#rooms2").val();
-    	filters.maxPrice = $("#priceRange").val();
+    	filters.bedrooms = parseInt($("#rooms2").val(), 10);
+    	var prices = $("#priceSlider").val().split(',');
+		filters.minPrice = parseInt(prices[0], 10);
+		filters.maxPrice = parseInt(prices[1], 10);
     	if($("#priceSearchMonth").hasClass("active")){
     		filters.priceTerm = "month"
     	}
@@ -339,7 +395,7 @@
     		filters.listingTypes.push("complex");
     	}
     	//Distance to Campus
-    	filters.distanceToCampus = $("#distanceToCampus").val();
+    	filters.distanceToCampus = parseInt($("#distanceToCampus").val(), 10);
 
     	//Pets
     	filters.pets = [];
@@ -388,6 +444,208 @@
   			$("#toggleMap").text("Switch To Map View")
   		}  		
   	});
+
+  	var listing1 = {
+  		url: '/listing/view/1',
+  		briefStreet: '8239 Molina Mall',
+  		city: 'North Brittanyton',
+  		state: 'NY',
+  		num_bedrooms: '5',
+  		num_full_baths: '3',
+  		price: '6000',
+  		rent_due: 'semester'
+  	}
+
+  	var listing2 = {
+  		url: '/listing/view/2',
+  		briefStreet: '25 Myrtle Lane',
+  		city: 'Patchogue',
+  		state: 'NY',
+  		num_bedrooms: '3',
+  		num_full_baths: '1',
+  		price: '2500',
+  		rent_due: 'month'
+  	}
+  	var listing3 = {
+  		url: '/listing/view/3',
+  		briefStreet: '76 Taylor Ave',
+  		city: 'Poughkeepsie',
+  		state: 'NY',
+  		num_bedrooms: '4',
+  		num_full_baths: '2',
+  		price: '5000',
+  		rent_due: 'semester'
+  	}
+
+  	var listing4 = {
+  		url: '/listing/view/4',
+  		briefStreet: '51 Bennet Ave',
+  		city: 'Medford',
+  		state: 'NY',
+  		num_bedrooms: '2',
+  		num_full_baths: '1',
+  		price: '3750',
+  		rent_due: 'month'
+  	}
+  	var listing5 = {
+  		url: '/listing/view/5',
+  		briefStreet: '15 Potter St',
+  		city: 'Patchogue',
+  		state: 'NY',
+  		num_bedrooms: '3',
+  		num_full_baths: '2',
+  		price: '4500',
+  		rent_due: 'semester'
+  	}
+
+  	var listing6 = {
+  		url: '/listing/view/3',
+  		briefStreet: '9 Fairview Ext',
+  		city: 'Poughkeepsie',
+  		state: 'NY',
+  		num_bedrooms: '6',
+  		num_full_baths: '1',
+  		price: '6000',
+  		rent_due: 'month'
+  	}
+  	var listing7 = {
+  		url: '/listing/view/2',
+  		briefStreet: '7 Trap Lane',
+  		city: 'Medford',
+  		state: 'NY',
+  		num_bedrooms: '2',
+  		num_full_baths: '1',
+  		price: '3750',
+  		rent_due: 'month'
+  	}
+  	var listing8 = {
+  		url: '/listing/view/2',
+  		briefStreet: '69 Street Name',
+  		city: 'Patchogue',
+  		state: 'NY',
+  		num_bedrooms: '3',
+  		num_full_baths: '2',
+  		price: '4500',
+  		rent_due: 'semester'
+  	}
+  	var listings = [];
+  	var featuredListings = [];
+	listings.push(listing1);
+	listings.push(listing2);
+	listings.push(listing3);
+	listings.push(listing4);
+	listings.push(listing5);
+	listings.push(listing6);
+	featuredListings.push(listing7);
+	featuredListings.push(listing8);
 	
+	function displayListings(){
+		//Featured
+		$.each(featuredListings, function(index, listing) {
+			console.log(listing);
+
+			var nextListing = `<div class="card" style="width: 100%;">
+				<div class="ribbon-wrapper-green"><div class="ribbon-green">FEATURED</div></div>
+				<a href="`+ listing.url +`">
+					<img src="/static/img/testHouse.jpg" class="listingImg card-img-top">
+				</a>
+				<div class="card-block" style="background-color: #89cdef;">
+					<div class="row">
+						<div class="col-xs-4">
+							<span class="text-nowrap">
+								`+ listing.num_bedrooms +`<i class="fa fa-bed" aria-hidden="true"></i>
+								&nbsp;
+								`+ listing.num_full_baths +`<i class="fa fa-bath" aria-hidden="true"></i>
+							</span>
+							<br>
+							<span class="text-nowrap">$`+ listing.price +` <br> per bedroom/`+ listing.rent_due +`</span>
+						</div>
+						<div class="col-xs-8">
+							<div class="row">
+								<div class="col-xs-12" style="text-align: right;">
+									<span class="text-nowrap">`+ listing.briefStreet +`</span>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12" style="text-align: right;">
+									<span class="text-nowrap">`+ listing.city +`, `+ listing.state +`</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>`;
+			$("#listingsGoHere").append(`<div class="col-md-6" style="padding-left: 15px; padding-bottom: 30px">` + nextListing + `</div>`);
+		});
+
+		//Non Featured
+		$.each(listings, function(index, listing) {
+			console.log(listing);
+
+			var nextListing = `<div class="card" style="width: 100%;">
+				<a href="`+ listing.url +`">
+					<img src="/static/img/testHouse.jpg" class="listingImg card-img-top">
+				</a>
+				<div class="card-block">
+					<div class="row">
+						<div class="col-xs-4">
+							<span class="text-nowrap">
+								`+ listing.num_bedrooms +`<i class="fa fa-bed" aria-hidden="true"></i>
+								&nbsp;
+								`+ listing.num_full_baths +`<i class="fa fa-bath" aria-hidden="true"></i>
+							</span>
+							<br>
+							$`+ listing.price +` per `+ listing.rent_due +`
+						</div>
+						<div class="col-xs-8">
+							<div class="row">
+								<div class="col-xs-12" style="text-align: right;">
+									<span class="text-nowrap">`+ listing.briefStreet +`</span>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12" style="text-align: right;">
+									<span class="text-nowrap">`+ listing.city +`, `+ listing.state +`</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>`;
+			$("#listingsGoHere").append(`<div class="col-md-6" style="padding-left: 15px; padding-bottom: 30px">` + nextListing + `</div>`);
+		});
+	}
+
+	$("#initialSearchButton").click(function() {
+		$("#initialView").hide();
+  		$("#homepage").show();
+  		//prefil new filters with values from previous filters
+  		$("#when2").val($("#when option:selected").text());
+  		$("#where2").val($("#where option:selected").text());
+  		$("#rooms2").val($("#rooms option:selected").text());
+  		//Get the listings here
+  		initialFilters();
+  		//display them here
+  		displayListings();  				
+  	});
+
+  	$("#showFilterButton").click(function() {
+		$("#filterBar").removeClass("hidden-xs-down");
+		$("#hideFilterButton").show();
+		$("#showFilterButton").hide();
+  	});
+
+  	$("#hideFilterButton").click(function() {
+		$("#filterBar").addClass("hidden-xs-down");
+		$("#hideFilterButton").hide();
+		$("#showFilterButton").show();
+  	}); 
+
+	$( document ).ready(function() {
+		{% if current_user.is_authenticated %}
+			displayListings();
+			$("#homepage").show();
+		{% endif %}    	
+	});
 </script>
 {% endblock %}

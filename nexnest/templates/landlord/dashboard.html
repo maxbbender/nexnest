@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
 {% block content %}
-<button class="btn" onClick="getJSON()">Yo lets get some JSON</button>
-<div id="poopNugget"></div>
 <link href="{{url_for('static', filename='css/landlord/dashboardStyling.css')}}" rel="stylesheet">
 <div class="row">
     <div class="col-md-2 col-sm-2 col-xs-2 display-table-cell v-align box" id="navigation" style="height: inherit;">
@@ -74,8 +72,13 @@
 						                    	<div class="col-xs-1" style="align-items: center; display: flex;">
 					                    			<div class="checkbox">
 					                    			    <label style="font-size: 1.5em">
-					                    			        <input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', 100);"/>
+					                    			    {% if listing.time_period == "school" %}
+					                    			        <input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" data-time="{{listing.time_period}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', 100);"/>
 					                    			        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+					                    			    {% elif listing.time_period == "summer" %}
+					                    			    	<input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" data-time="{{listing.time_period}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', 50);"/>
+					                    			        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+					                    			    {% endif %}
 					                    			    </label>
 					                    			</div>						                    		
 						                    	</div>
@@ -83,6 +86,7 @@
 					                    			<h3 style="font-size: 2.5vh;"><strong>{{ listing.street }}, {{ listing.city }} {{ listing.state }}</strong></h3>
 					                    			<small style="font-size: 1.5vh;">Lease Period: {{ listing.start_date }} - {{ listing.end_date }}</small>
 						                    	</div>
+						                    	{% if listing.time_period == "school" %}
 						                    	<div class="col-xs-5" id="packageOptions{{listing.id}}" style="display: none; align-items: center;">
 						                    		<div class="btn-group" data-toggle="buttons">
 						                    		    <label class="btn btn-outline-primary active" id="standardLabel{{listing.id}}" onclick="downgradeToStandard({{listing.id}}, 100)">
@@ -93,6 +97,18 @@
 						                    		  	</label>
 						                    		</div>
 						                    	</div>
+						                    	{% elif listing.time_period == "summer" %}
+						                    	<div class="col-xs-5" id="packageOptions{{listing.id}}" style="display: none; align-items: center;">
+						                    		<div class="btn-group" data-toggle="buttons">
+						                    		    <label class="btn btn-outline-primary active" id="standardLabel{{listing.id}}" onclick="downgradeToStandard({{listing.id}}, 50)">
+						                    		    	<input type="radio" name="packageChoice" id="standard{{listing.id}}" checked autocomplete="off"> Standard($50)
+						                    		  	</label>
+						                    		  	<label class="btn btn-outline-primary" id="deluxeLabel{{listing.id}}" onclick="upgradeToDeluxe({{listing.id}}, 100)">
+						                    		    	<input type="radio" name="packageChoice" id="deluxe{{listing.id}}" autocomplete="off"> Deluxe($100)
+						                    		  	</label>
+						                    		</div>
+						                    	</div>
+						                    	{% endif %}
 						                    </div>			                    
 					                    </div>
 					                </div>
@@ -2141,19 +2157,23 @@
     }
 
     function upgradeToDeluxe(id, price){
-    	$("#itemPrice"+id).text("$"+price);
-    	$("#itemPrice2"+id).text("$"+price);
-    	totalCost += (price-100);
-    	$("#checkoutTotal").text("$"+totalCost);
-    	$("#checkoutTotal2").text("$"+totalCost);
+    	if(! $("#deluxeLabel"+id).hasClass("active")){
+	    	$("#itemPrice"+id).text("$"+price);
+	    	$("#itemPrice2"+id).text("$"+price);
+	    	totalCost += (price/2);
+	    	$("#checkoutTotal").text("$"+totalCost);
+	    	$("#checkoutTotal2").text("$"+totalCost);
+	    }
     }
 
     function downgradeToStandard(id, price){
-    	$("#itemPrice"+id).text("$"+price);
-    	$("#itemPrice2"+id).text("$"+price);
-    	totalCost -= price;
-    	$("#checkoutTotal").text("$"+totalCost);
-    	$("#checkoutTotal2").text("$"+totalCost);
+    	if(! $("#standardLabel"+id).hasClass("active")){
+    		$("#itemPrice"+id).text("$"+price);
+	    	$("#itemPrice2"+id).text("$"+price);
+	    	totalCost -= price;
+	    	$("#checkoutTotal").text("$"+totalCost);
+	    	$("#checkoutTotal2").text("$"+totalCost);
+    	}	
     }
 
     function checkout(landlordID){
@@ -2167,6 +2187,7 @@
     			var id = obj.id.match(/\d+/)[0];
     			var street = obj.dataset.street;
     			var leasePeriod = obj.dataset.lease;
+    			var time = obj.dataset.time;
     			//console.log(id);
     			if($("#standardLabel"+id).hasClass("active")){
     				selectedItem = {
@@ -2174,6 +2195,7 @@
     					listing_id: id,
     					listing_street: street,
     					leasePeriod: leasePeriod,
+    					timePeriod: time,
     					plan: 'standard'    					
     				}
     				cart.items.push(selectedItem);
@@ -2184,6 +2206,7 @@
     					listing_id: id,
     					listing_street: street,
     					leasePeriod: leasePeriod,
+    					timePeriod: time,
     					plan: 'premium'    					
     				}
     				cart.items.push(selectedItem);

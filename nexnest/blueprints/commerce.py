@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
-from flask_login import current_user
+from flask_login import current_user, login_required
 
 from pprint import pprint, pformat
 
@@ -19,6 +19,7 @@ commerce = Blueprint('commerce', __name__, template_folder='../templates/commerc
 
 
 @commerce.route('/client_token', methods=['GET'])
+@login_required
 def clientToken():
     token = braintree.ClientToken.generate()
     print(token)
@@ -26,6 +27,7 @@ def clientToken():
 
 
 @commerce.route('/preCheckout', methods=['GET', 'POST'])
+@login_required
 def viewPreCheckout():
     form = PreCheckoutForm(request.form)
 
@@ -39,6 +41,7 @@ def viewPreCheckout():
 
 
 @commerce.route('/checkout', methods=['GET', 'POST'])
+@login_required
 def checkout():
     logger.debug('commerce.checkout() /checkout')
     if request.method == 'POST':
@@ -154,12 +157,16 @@ def genTransaction():
                 return redirect('/landlord/dashboard#checkoutTab')
 
 
-# @commmerce.route('/coupon/<couponCode>/check', methods=['POST'])
-# @login_required
-# def checkCouponCode(couponCode):
-#     coupon = session.query(coupon) \
-#         .filter_by(coupon_code=couponCode) \
-#         .first()
+@commerce.route('/cupon/<cuponCode>/check', methods=['GET'])
+@login_required
+def checkCuponCode(cuponCode):
+    cupon = session.query(Cupon) \
+        .filter_by(cupon_key=cuponCode) \
+        .first()
 
-#     if coupon is not None:
-        
+    if cupon is not None:
+        logger.debug("Found Cupon %r" % cupon)
+        return jsonify(results={'validCupon': True, 'cupon': cupon.serialize})
+    else:
+        logger.warning("Could not find cupon with code %s" % cuponCode)
+        return jsonify(results={'validCupon': False})

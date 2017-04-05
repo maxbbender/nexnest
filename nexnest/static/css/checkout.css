@@ -1,0 +1,191 @@
+/*--------------------
+SHARED VARIABLES
+--------------------*/
+/*--------------------
+GENERAL
+--------------------*/
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: #f2f2f2;
+  font-family: 'Roboto', verdana, sans-serif;
+  height: 100%;
+}
+
+h1 {
+  font-size: 1.5em;
+  font-weight: 100;
+}
+
+#cardForm {
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+/*--------------------
+PANEL FORM
+--------------------*/
+.panel {
+  background: #FFF;
+  width: 100%;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 2px 0 rgba(0, 0, 0, 0.12);
+}
+
+.panel__header {
+  background: #3F51B5;
+  color: #FFF;
+}
+
+.panel__header,
+.panel__footer {
+  padding: 1em 2em;
+}
+
+.panel__footer {
+  background: #666;
+}
+
+.panel__content {
+  padding: 1em 2em;
+  overflow: hidden;
+}
+
+.textfield--float-label {
+  width: 50%;
+  float: left;
+  padding-right: 5%;
+  display: inline-block;
+}
+
+.hosted-field--label {
+  -webkit-transform: translateY(0.4em);
+          transform: translateY(0.4em);
+  font-size: 1.125em;
+  line-height: 32px;
+  -webkit-transition: all .15s ease-out;
+  transition: all .15s ease-out;
+  display: block;
+  width: 100%;
+  font-weight: 400;
+  overflow: hidden;
+  margin-bottom: 0.5em;
+}
+.hosted-field--label.label-float, .hosted-field--label.filled, .hosted-field--label.invalid {
+  height: 33px;
+  margin-bottom: -1px;
+  -webkit-transform: translate(0, 0);
+          transform: translate(0, 0);
+  font-size: 12px;
+  line-height: 15px;
+  text-overflow: ellipsis;
+  color: #2196F3;
+  -webkit-transition: all 0.15s ease-out;
+  transition: all 0.15s ease-out;
+}
+.hosted-field--label.filled {
+  color: rgba(0, 0, 0, 0.54);
+}
+.hosted-field--label.invalid {
+  color: #F44336;
+}
+
+span.icon {
+  position: relative;
+  top: 0.2em;
+  margin-right: 0.2em;
+}
+
+svg {
+  fill: #333;
+}
+
+.hosted-field {
+  height: 32px;
+  margin-bottom: 1em;
+  display: block;
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.87);
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.26);
+  outline: 0;
+  width: 100%;
+  font-size: 16px;
+  padding: 0;
+  box-shadow: none;
+  border-radius: 0;
+  position: relative;
+}
+
+.pay-button {
+  background: #E91E63;
+  color: #fff;
+  margin: 0 auto;
+  border: 0;
+  border-radius: 3px;
+  padding: 1em 3em;
+  font-size: 1em;
+  text-transform: uppercase;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+/*--------------------
+BT HOSTED FIELDS SPECIFIC 
+--------------------*/
+.braintree-hosted-fields-focused {
+  border-bottom: 2px solid #3F51B5;
+  -webkit-transition: all 200ms ease;
+  transition: all 200ms ease;
+}
+
+.braintree-hosted-fields-invalid {
+  border-bottom: 2px solid #E91E63;
+  -webkit-transition: all 200ms ease;
+  transition: all 200ms ease;
+}
+
+/*---------------------
+Media Queries
+----------------------*/
+@media (max-width: 600px) {
+  html {
+    overflow: auto;
+  }
+
+  #cardForm {
+    height: auto;
+    margin: 2em;
+    font-size: 13px;
+  }
+
+  .panel {
+    width: 100%;
+  }
+
+  .textfield--float-label {
+    width: 100%;
+    float: none;
+    display: inline-block;
+  }
+
+  .pay-button {
+    width: 100%;
+  }
+}

@@ -50,6 +50,8 @@ test:
 
 
 test_setup:
+	pip install --upgrade pip
+	pip install -r requirements.txt
 	# nexnest_test ~~ Drop->Create->Version Control->InitDB->[INIT DATA]
 	dropdb -U nexnest_test nexnest_test --if-exists
 	createdb -U nexnest_test -O nexnest_test -h localhost -p 5432 nexnest_test
