@@ -86,6 +86,15 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        {{ form.colleges }}
+                                        <label class="control-label">What Colleges are you targeting?(up to 3)</label>
+                                        <div id="magicsuggest" required='required'></div>
+                                    </div>
+                                </div>
+                            </div>
                             <button id="zipCodeButton" class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
                         </div>
                     </div>
@@ -705,11 +714,19 @@ $(document).ready(function() {
                 var zipCodeValue = $("#zip_code").val();
                 var isValidZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(zipCodeValue);
                 if (isValidZip) {
-                    nextStepWizard.removeClass('disabled').trigger('click');
+                    nextStepWizard.removeClass('disabled');
                 } else {
                     $("#zip_code").closest(".form-group").addClass("has-error");
                     $("#zip_code").closest(".form-group").addClass("has-danger");
 
+                }
+                if($("#colleges").val() == ""){
+                    nextStepWizard.addClass('disabled').trigger('click');
+                    $("#magicsuggest").closest(".form-group").addClass("has-error");
+                    $("#magicsuggest").closest(".form-group").addClass("has-danger");
+                }
+                else{
+                    nextStepWizard.removeClass('disabled').trigger('click');
                 }
             }
             else{
@@ -800,11 +817,27 @@ $('#price').change(function() {
 });
 
 function submitListingForm() {
+    $("#colleges").val(JSON.stringify(collegeEnter.getValue()));
     $("form#createListingForm").submit();
 }
 
 
 
+var collegeEnter = $('#magicsuggest').magicSuggest({
+    allowFreeEntries: false,
+    required: true,
+    maxSelection: 3,
+    maxSuggestions: 15,
+    required: true,
+    useCommaKey: true,
+    useZebraStyle: true,
+    placeholder: 'Type or use dropdown to select colleges',
+    data: ['Paris', 'New York', 'Gotham', 'New Jersey', 'Patchogue']
+});
+
+$(collegeEnter).on('selectionchange', function(){
+    $("#colleges").val(JSON.stringify(collegeEnter.getValue()));
+});
 
 </script>
 {% endblock %}
