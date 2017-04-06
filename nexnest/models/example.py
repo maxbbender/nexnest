@@ -1,14 +1,13 @@
 # pylint: skip-file
+from sqlalchemy import event
+
 from datetime import datetime as dt
 
 from nexnest.application import db
 
-from .base import Base
-
-from sqlalchemy import event
+from nexnest.models.base import Base
 
 
-# class PostReport(Base):
 class XXXX(Base):
     __tablename__ = 'XXXX'
     id = db.Column(db.Integer, primary_key=True)

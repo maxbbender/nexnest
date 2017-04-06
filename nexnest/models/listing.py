@@ -40,7 +40,6 @@ class Listing(Base):
     description = db.Column(db.Text)
     num_full_baths = db.Column(db.Integer)
     num_half_baths = db.Column(db.Integer)
-    time_period = db.Column(db.Text)
     apartment_number = db.Column(db.Integer)
     disabled = db.Column(db.Boolean)
     property_type = db.Column(db.Text)
@@ -56,7 +55,6 @@ class Listing(Base):
     youtube_url = db.Column(db.String(256))
     floor_plan_url = db.Column(db.String(256))
     featured = db.Column(db.Boolean)
-    school_id = db.Column(db.Integer, db.ForeignKey('schools.id'))
 
     # monthly_rent_due_date = db.Column(db.Date)
 
@@ -65,6 +63,9 @@ class Listing(Base):
     # when a landlord creates a new listing at the same
     # address
     active = db.Column(db.Boolean)
+
+    # school | year | summer
+    time_period = db.Column(db.Text)
 
     # This is set to False once a group has been accepted,
     # and completed for the house
@@ -79,6 +80,7 @@ class Listing(Base):
     house = relationship("House", backref=backref('listing', uselist=False))
     favorite = relationship("GroupListingFavorite", backref='listing')
     listingTransactionListing = relationship("ListingTransactionListing", backref='listing')
+    schools = relationship("ListingSchool", back_populates='listing')
 
     def __init__(
             self,

@@ -6,6 +6,7 @@ from nexnest.models.listing import Listing
 from nexnest.models.message import Message
 from nexnest.models.landlord import Landlord
 from nexnest.models.school import School
+from nexnest.models.listing_school import ListingSchool
 from nexnest.models.tour import Tour
 from nexnest.models.tour_message import TourMessage
 from nexnest.models.group_message import GroupMessage
@@ -18,7 +19,7 @@ from nexnest.models.house import House
 from nexnest.models.maintenance import Maintenance
 from nexnest.models.group_listing_message import GroupListingMessage
 from nexnest.models.group_user import GroupUser
-from nexnest.models.cupon import Cupon
+from nexnest.models.coupon import Coupon
 from nexnest.models.transaction import *
 
 from flask import redirect, url_for
@@ -61,4 +62,5 @@ admin.add_view(AdminModelView(GroupListingMessage, session))
 admin.add_view(AdminModelView(GroupUser, session))
 admin.add_view(AdminModelView(ListingTransaction, session))
 admin.add_view(AdminModelView(ListingTransactionListing, session))
-admin.add_view(AdminModelView(Cupon, session))
+admin.add_view(AdminModelView(Coupon, session))
+admin.add_view(AdminModelView(ListingSchool, session))

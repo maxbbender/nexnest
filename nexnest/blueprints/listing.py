@@ -7,9 +7,11 @@ from nexnest.application import session, app
 from nexnest.forms import ListingForm, SuggestListingForm, TourForm, GroupListingForm
 from nexnest.models.listing import Listing
 from nexnest.models.landlord_listing import LandlordListing
+from nexnest.models.school import School
 
 from nexnest.utils.flash import flash_errors
 from nexnest.utils.file import allowed_file, isPDF
+from nexnest.utils.school import allSchoolsAsStrings
 
 import os
 
@@ -135,12 +137,15 @@ def createListing():
                 flash_errors(form)
                 return render_template('/landlord/createListing.html',
                                        form=form,
-                                       title='Create Listing')
+                                       title='Create Listing',
+                                       schools=allSchoolsAsStrings())
         else:
             form = ListingForm()
             return render_template('/landlord/createListing.html',
                                    form=form,
-                                   title='Create Listing')
+                                   title='Create Listing',
+                                   schools=allSchoolsAsStrings()
+                                   )
     else:
         flash("Only Landlords can create listings", 'warning')
         return redirect(url_for('indexs.index'))
@@ -213,38 +218,36 @@ def editListing(listingID):
                                 listingID=listingID))
 
 
-# @listings.route('/listing/search/AJAX', methods=['POST'])
-# def searchListingsAJAX():
-#     # json = request.get_json(force=True)
-#     postedJSON = {
-#         'bedrooms': 4,
-#         'distanceToCampus':8,
-#         'includes': [
-#             'furnished',
-#             'dishwasher',
-#             'laundry',
-#             'internet',
-#             'cable',
-#             'snowRemoval',
-#             'garbageRemoval'
-#         ],
-#         'listingTypes': [
-#             'house',
-#             'apartment',
-#             'complex'
-#         ],
-#         'location': 'Fredonia, NY',
-#         'minPrice': 1000,
-#         'maxPrice': 3000,
-#         'pets': [
-#             'dogs',
-#             'cats'
-#         ],
-#         'priceTerm': 'month',
-#         'sortBy': None, # 
-#         'term' : '2018-2019 School Year'
+@listings.route('/listing/search/AJAX', methods=['POST'])
+def searchListingsAJAX():
+    # json = request.get_json(force=True)
+    postedJSON = {
+        'bedrooms': 4,  # 1-4 (if at 4 it means 4+)
+        'distanceToCampus': 8,  # In miles
+        'includes': [  # If any of these are here this means that they are check, if not they are not checked. If they are check the listing HAS to have them. if not don't add to filter
+            'furnished',
+            'dishwasher',
+            'laundry',
+            'internet',
+            'cable',
+            'snowRemoval',
+            'garbageRemoval'
+        ],
+        'listingTypes': [  # Only show if element of list, don't show if not element
+            'house',
+            'apartment',
+            'complex'
+        ],
+        'location': 'Fredonia, NY',  # This will be switched to school
+        'minPrice': 1000,
+        'maxPrice': 3000,
+        'pets': [  # Same as includes
+            'dogs',
+            'cats'
+        ],
+        'priceTerm': 'month',  # month|semester (based on listing price)
+        'sortBy': None,  # priceLowToHigh|priceHighToLow|mostRecent|distanceToCampus
+        'term': '2018-2019 School Year'  # YYYY-YYYY [School Year|Summer]
 
-#     }
-#     # Required Fields : bedrooms  | minPrice | maxPrice | €22
-
-
+    }
+    # Required Fields : bedrooms  | minPrice | maxPrice | €22
