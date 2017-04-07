@@ -218,34 +218,20 @@
 												                    		&nbsp;
 												                    		{{ house.listing.num_full_baths }}<i class="fa fa-bath" aria-hidden="true"></i></strong></h3>
 												                    		<br>
-												                    		<h3 style="font-size: 3.0vh;"><strong>Occupied By: {{house.group.name}}</strong>({{house.group.acceptedUsers|count}} Members)</h3>
-												                    		<strong>Group Leader:</strong>
-												                    		{% for user in house.group.acceptedUsers %}
-												                    			{% with group=house.group %}         
-												                    				<div class="row">
-												                    					<div class="col-sm-12" style="padding: 0px;">
-												                    						{% if group.leader_id == user.id %}
-												                    		    				{% include 'landlord/smallMember.html' %}
-												                    						{% endif %}
-												                    		    		</div>
-												                    		    	</div>
-												                    		    {% endwith %}
-												                    		{% endfor %}
+												                    		<h3 style="font-size: 3.0vh;"><strong>Occupied By: {{house.group.name}}</strong>({{house.group.acceptedUsers|count}} Members)</h3>				
 						    			      					    		<div id="allGroupMembersCurrentlyOccupied{{house.group.id}}" style="display: none;">
 						    		      					    				{% for user in house.group.acceptedUsers %}
 						    		      					    					{% with group=house.group %}         
 						    		      					    						<div class="row">
 						    		      					    							<div class="col-sm-12" style="padding: 0px;">
-						    		      					    								{% if not group.leader_id == user.id %}
-						    		      					    				    				{% include 'landlord/smallMember.html' %}
-						    		      					    				    			{% endif %}
+						    		      					    				    			{% include 'landlord/smallMember.html' %}
 						    		      					    				    		</div>
 						    		      					    				    	</div>
 						    		      					    				    {% endwith %}
 						    		      					    				{% endfor %}
 						    			      					    		</div>
-						    			      					    		<button class="btn btn-info" id="allGroupMembersCurrentlyOccupiedToggle{{house.group.id}}" onClick="showOccupiedHouseMembers({{house.group.id}})"><i class='fa fa-users' aria-hidden='true'></i> See other {{house.group.acceptedUsers|count-1}} members</button>
-						    			      					    		<button class="btn btn-info" id="hideAllGroupMembersCurrentlyOccupiedToggle{{house.group.id}}" onClick="hideOccupiedHouseMembers({{house.group.id}})" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other {{house.group.acceptedUsers|count-1}} members</button>
+						    			      					    		<button class="btn btn-info" id="allGroupMembersCurrentlyOccupiedToggle{{house.group.id}}" onClick="showOccupiedHouseMembers({{house.group.id}})"><i class='fa fa-users' aria-hidden='true'></i> See Tenants</button>
+						    			      					    		<button class="btn btn-info" id="hideAllGroupMembersCurrentlyOccupiedToggle{{house.group.id}}" onClick="hideOccupiedHouseMembers({{house.group.id}})" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide Tenants</button>
 												                    		<br>
 												                    	</div>
 												                    </div>
@@ -289,33 +275,19 @@
 												                    		{{ house.listing.num_full_baths }}<i class="fa fa-bath" aria-hidden="true"></i></strong></h3>
 												                    		<br>
 												                    		<h3 style="font-size: 3.0vh;"><strong>Occupied By: {{house.group.name}}</strong>({{house.group.acceptedUsers|count}} Members)</h3>
-												                    		<strong>Group Leader:</strong>
-												                    		{% for user in house.group.acceptedUsers %}
-												                    			{% with group=house.group %}         
-												                    				<div class="row">
-												                    					<div class="col-sm-12" style="padding: 0px;">
-												                    						{% if group.leader_id == user.id %}
-												                    		    				{% include 'landlord/smallMember.html' %}
-												                    						{% endif %}
-												                    		    		</div>
-												                    		    	</div>
-												                    		    {% endwith %}
-												                    		{% endfor %}
 						    			      					    		<div id="allGroupMembersWillBeOccupied{{house.id}}" style="display: none;">
 						    		      					    				{% for user in house.group.acceptedUsers %}
 						    		      					    					{% with group=house.group %}         
 						    		      					    						<div class="row">
 						    		      					    							<div class="col-sm-12" style="padding: 0px;">
-						    		      					    								{% if not group.leader_id == user.id %}
-						    		      					    				    				{% include 'landlord/smallMember.html' %}
-						    		      					    				    			{% endif %}
+						    		      					    				    			{% include 'landlord/smallMember.html' %}
 						    		      					    				    		</div>
 						    		      					    				    	</div>
 						    		      					    				    {% endwith %}
 						    		      					    				{% endfor %}
 						    			      					    		</div>
-						    			      					    		<button class="btn btn-info" id="allGroupMembersWillBeOccupiedToggle{{house.id}}" onClick="showWillBeOccupiedHouseMembers({{house.id}})"><i class='fa fa-users' aria-hidden='true'></i> See other {{house.group.acceptedUsers|count-1}} members</button>
-						    			      					    		<button class="btn btn-info" id="hideAllGroupMembersWillBeOccupiedToggle{{house.id}}" onClick="hideWillBeOccupiedHouseMembers({{house.id}})" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other {{house.group.acceptedUsers|count-1}} members</button>
+						    			      					    		<button class="btn btn-info" id="allGroupMembersWillBeOccupiedToggle{{house.id}}" onClick="showWillBeOccupiedHouseMembers({{house.id}})"><i class='fa fa-users' aria-hidden='true'></i> See Future Tenants</button>
+						    			      					    		<button class="btn btn-info" id="hideAllGroupMembersWillBeOccupiedToggle{{house.id}}" onClick="hideWillBeOccupiedHouseMembers({{house.id}})" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide Future Tenants</button>
 												                    		<br>
 												                    	</div>
 												                    </div>
@@ -417,167 +389,7 @@
 		        	                <br>
 		        	                <div class="tab-content">
 		        	                    <div class="tab-pane selected-tab first-tab active" id="requestedToursTab" role="tabpanel" style="padding: 0px;">
-		        	                        {% if requestedTours %}
-		        	                            {% for tourObject in requestedTours %}
-		        	                            	<div id="numberOfRequestedTours{{tourObject.listing.id}}" style="display: none;">{{tourObject.tours|length }}</div>
-		        	                            	<div id="doIShowDiv{{tourObject.listing.id}}" style="display: none;">show</div>
-		        	                            	<div class="card" id="requestedTourListing{{tourObject.listing.id}}" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-        							                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
-        								                    <div class="row">
-        								                    	<div class="col-xl-12">
-        								                    		<h3 style="font-size: 3.5vh;" id="requestedToursCount{{tourObject.listing.id}}"><strong>
-        								                    		{{tourObject.listing.street}} ({{tourObject.tours|length }} Requests)</strong></h3>
-        								                    		<small style="font-size: 2.5vh;">Lease Period: {{ tourObject.listing.start_date }} - {{ tourObject.listing.end_date }}</small>
-        								                    	</div>
-        								                    </div>			                    
-        							                    </div>
-        							                    <div class="card-block">
-        							                    	<div class="row">
-        							                    		<div class="col-xl-1"></div>
-        							                    		<div class="col-xl-10">
-        							                    			<strong>
-        							                    				<h2 class="hidden-sm-up" style="font-size: 2.5vh;">Group(s) Requesting This Tour: </h2>
-        							                    				<h2 class="hidden-xs-down" style="font-size: 3.5vh;">Group(s) Requesting This Tour: </h2>
-        							                    			</strong>
-        							                    		</div>
-        							                    	</div>
-	        	                    	        			{% for tour in tourObject.tours %}
-	        	                    	        				<div class="row" id="requestedTour{{tour.id}}">
-	        	                    	        					<div class="col-xs-0 col-xl-1"></div>
-	        	                    	        					<div class="col-xs-12 col-xl-10"  style="padding-left:  10px;">
-			        	                    	        				<div class="card">
-		        							                    			<div class="card-header">
-		        							                    				<div class="row">
-		        								                    				<div class="col-12 col-xl-12">
-					        	                    	            					<h3 style="font-size: 3.5vh;"><strong>{{tour.group.name}} </strong>({{tour.group.acceptedUsers|count}} Members)
-					        	                    	            					<a class="btn btn-primary hidden-sm-down" href="{{ url_for('tours.viewTour', tourID=tour.id) }}" style="float: right;">More Info</a></h3>
-					        	                    	            				</div>
-					        	                    	            			</div>
-					        	                    	            			<div class="row">
-					        	                    	            				<div class="col-xl-12">
-					        	                    	            					Requested Date and Time: {{tour.time_requested}}
-					        	                    	            				</div>
-					        	                    	            			</div>
-					        	                    	            			<br>
-					        	                    	            			<div class="row">
-					        	                    	            				<div class="col-xs-12">
-					        	                    	            					<div class="row">
-					        	                    	            						{% if tour.last_requested == 'group' %}
-						        	                    	            						<div class="col-lg-4 col-centered" style="padding-right: 15px; padding-bottom: 5px; ">
-								        	                    	            					<div id="acceptTourButton{{tour.id}}">
-								        	                    	            						<button id="acceptTourBtn{{tour.id}}" class="btn btn-success" style="width: 166.5px;" onclick="acceptTour({{tour.id}}, {{tourObject.listing.id}}, '{{tourObject.listing.street}}')">Accept Tour</button>
-								        	                    	            					</div>
-								        	                    	            					<div id="acceptTourLoading{{tour.id}}" style="display: none;">
-								        	                    	            						<button class="btn btn-success" style="width: 166.5px;">
-								        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-								        	                    	            						</button>
-								        	                    	            					</div>
-								        	                    	            				</div>						
-								        	                    	            				<div class="col-lg-4 col-centered" style="padding-right: 15px; padding-bottom: 5px;">
-								        	                    	            					<a href="#!" id="tourTimeChangeBtn{{tour.id}}" class="btn btn-info" data-toggle="modal" data-target="#suggestTimeTourModal" data-tourid="{{tour.id}}" data-groupid="{{tour.group.id}}">Date/Time Change</a>
-								        	                    	            				</div>
-								        	                    	            			{% else %}
-								        	                    	            				<div class="col-lg-4 col-centered" style="padding-left: 15px; padding-right: 15px; padding-bottom: 5px;">
-								        	                    	            					<button class="btn btn-secondary" style="width: 166.5px;" disabled>Waiting For Group</button>
-								        	                    	            				</div>
-							        	                    	            				{% endif %}
-							        	                    	            				<div class="col-lg-4 col-centered" style="padding-right: 15px; padding-bottom: 5px;">
-							        	                    	            					<div id="declineTourButton{{tour.id}}">
-							        	                    	            						<button id="declineTourBtn{{tour.id}}" style="width: 166.5px;" class="btn btn-danger" onclick="declineTour({{tour.id}}, {{tourObject.listing.id}}, '{{tourObject.listing.street}}')">Decline Tour</button>
-							        	                    	            					</div>
-							        	                    	            					<div id="declineTourLoading{{tour.id}}" style="display: none;">
-							        	                    	            						<button class="btn btn-danger" style="width: 166.5px;">
-							        	                    	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-							        	                    	            						</button>
-							        	                    	            					</div>
-							        	                    	            				</div>
-							        	                    	            				<br>
-							        	                    	            				<div class="col-sm-12 hidden-md-up" style="padding-left: 15px;">
-							        	                    	            					<a class="btn btn-primary" style="width: 166.5px;" href="{{ url_for('tours.viewTour', tourID=tour.id) }}">More Info</a>
-							        	                    	            				</div>
-						        	                    	            				</div>
-					        	                    	            				</div>	        	                    	            				
-					        	                    	            			</div>
-					        	                    	            		</div>
-					        	                    	            		<div class="card-block">
-		        							                    				<div class="row">
-		        							                    					<div class="col-sm-12">
-					        								                    		<strong>Tour Status: </strong>
-					        								                    		<br>		
-					        								                    		{% if tour.last_requested == 'landlord' %}
-					        								                    			Pending The Group's Decision
-					        								                    			<br>
-					        								                    			Waiting for the group leader, {{ tour.group.leader.name }} to confirm the requested time or suggest a different one
-					        								                    		{% else %}
-					        								                    			Pending Your Decision
-					        								                    			<br>
-					        								                    			Waiting for the you to confrim the requested time or suggest a different one
-					        								                    		{% endif %}
-					        								                    		<br><br>
-					        								                    		<strong>Group Leader:</strong>
-					        								                    		Accepted USers: {{tour.group.acceptedUsers}}<br>
-					        								                    		{{tour.group.leader_id}}<br>
-					        								                    		{% for user in tour.group.acceptedUsers %}
-					        								                    		{{user.id}}
-					        								                    			{% with group=tour.group %}
-					        								                    				<div class="row">
-					        								                    					<div class="col-sm-12" style="padding: 0px;">
-					        								                    						{% if group.leader_id == user.id %}
-					        								                    		    				{% include 'landlord/smallMember.html' %}
-					        								                    						{% endif %}
-					        								                    		    		</div>
-					        								                    		    	</div>
-					        								                    		    {% endwith %}
-					        								                    		{% endfor %}
-					                    			      					    		<div id="allMembersRequestedTour{{tour.id}}" style="display: none;">
-					                    		      					    				{% for user in tour.group.acceptedUsers %}
-					                    		      					    					{% with group=tour.group %}         
-					                    		      					    						<div class="row">
-					                    		      					    							<div class="col-sm-12" style="padding: 0px;">
-					                    		      					    								{% if not group.leader_id == user.id %}
-					                    		      					    				    				{% include 'landlord/smallMember.html' %}
-					                    		      					    				    			{% endif %}
-					                    		      					    				    		</div>
-					                    		      					    				    	</div>
-					                    		      					    				    {% endwith %}
-					                    		      					    				{% endfor %}
-					                    			      					    		</div>
-					                    			      					    		<button class="btn btn-info" id="allMembersRequestedTourToggle{{tour.id}}" onClick="showRequestedTourMembers({{tour.id}})"><i class='fa fa-users' aria-hidden='true'></i> See other {{tour.group.acceptedUsers|count-1}} members</button>
-					                    			      					    		<button class="btn btn-info" id="hideAllMembersRequestedTourToggle{{tour.id}}" onClick="hideRequestedTourMembers({{tour.id}})" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other {{tour.group.acceptedUsers|count-1}} members</button>	  		
-					                    			      					    	</div>
-					                    			      					    </div>
-					                    			      					</div>
-					                    			      				</div>
-					                    			      			</div>
-					                    			      		</div>
-					                    			      		<div class="row" id="undoAcceptTourDiv{{tour.id}}" style="display: none;">
-					                    			      			<div class="col-xl-1"></div>
-					                    			      			<div class="col-xl-10">
-					                    			      				<div class="alert alert-info" role="alert">
-					                    			      				    You have just accepted a tour for {{ tour.time_requested }} <button class="link" onclick="undoAcceptTour({{tour.id}}, {{tourObject.listing.id}})">Undo?</button>
-					                    			      				</div>
-					                    			      			</div>
-					                    			      		</div>
-					                    			      		<div class="row" id="undoDeclineTourDiv{{tour.id}}" style="display: none;">
-					                    			      			<div class="col-xl-1"></div>
-					                    			      			<div class="col-xl-10">
-					                    			      				<div class="alert alert-info" role="alert">
-					                    			      				    You have just declined a tour for {{ tour.time_requested }} <button class="link" onclick="undoDeclineTour({{tour.id}}, {{tourObject.listing.id}})">Undo?</button>
-					                    			      				</div>
-					                    			      			</div>
-					                    			      		</div>
-	        	                    	        			{% endfor %}
-					        	                        </div>
-					        	                    </div>
-			            						{% endfor %}
-			            						<div id="noRequestedTours" style="display: none;" class="alert alert-info" role="alert">
-			            							<strong>No Requested Tours</strong>
-			            						</div>
-		            						{% else %}
-		            							<div class="alert alert-info" role="alert">
-		            								<strong>No Requested Tours</strong>
-		            							</div>
-		            						{% endif %}
+		        	                        
 		        	                    </div>
 		        	                    <div class="tab-pane selected-tab" id="scheduledToursTab" role="tabpanel" style="padding: 0px;">
 		        	                        {% if scheduledTours %}
@@ -1178,13 +990,13 @@
 	}
 
 	function showWillBeOccupiedHouseMembers(id){
-		$("#allGroupMembersWillBeOccupied").toggle();
-	    $("#allGroupMembersWillBeOccupiedToggle").hide();
-	    $("#hideAllGroupMembersWillBeOccupiedToggle").show();
+		$("#allGroupMembersWillBeOccupied"+id).show();
+	    $("#allGroupMembersWillBeOccupiedToggle"+id).hide();
+	    $("#hideAllGroupMembersWillBeOccupiedToggle"+id).show();
 	}
 
 	function hideWillBeOccupiedHouseMembers(id){
-		$("#allGroupMembersWillBeOccupied"+id).toggle();
+		$("#allGroupMembersWillBeOccupied"+id).hide();
 		$("#allGroupMembersWillBeOccupiedToggle"+id).show();
 		$("#hideAllGroupMembersWillBeOccupiedToggle"+id).hide();
 	}
@@ -1913,11 +1725,10 @@
     }
 
     function unpaidToPaid(userID, requestID){
-    	alert(userID +"  " + requestID);
     	requestURL = '/houseRequest/'+ requestID +'/securityDeposit/' + userID + '/paid'
     	$.getJSON(requestURL, function(data) {
             results = data['results'];
-            alert(data['results'].success);
+            //alert(data['results'].success);
             if (results.success == true){ 
 		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
 		    	$("#numDeposits"+requestID).html(depositsPaid+1);
@@ -2712,34 +2523,10 @@
                     					<div class="col-xs-12">
                     						<strong>The Group's Initial Message to You: </strong>
                     						`+ houseRequest.message +`
-                    						<br><br>
-                    						<strong>Group Leader: </strong>
-                    						<div class="row">
-        										<div class="col-sm-12" style="padding: 0px;">                  											
-    							    				<div class="card" style="width: 100%">
-    							    					<div class="card-block">
-    							    					    <div class="row">
-    							    					        <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
-    							    					            <img src="`+ houseRequest.group.leader.profileImageURL +`" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;">
-    							    					        </div>
-    							    					        <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-10">
-    							    					            <div class="row">
-    							    					                <div class="col-xs-12">                           
-    							    					                    <a href="`+ houseRequest.group.leader.url +`">
-    							    					                        <h4 style="font-size: 3.0vh;">`+ houseRequest.group.leader.name +`</h4>
-    							    					                    </a>
-    							    					                </div>
-    							    					            </div>
-    							    					        </div>
-    							    					    </div>
-    							    					</div>
-    							    				</div>
-    							    			</div>
-    							    		</div>
+                    						<br><br>                    						
                     						<div id="allGroupMembersListingUnaccepted`+ houseRequest.id +`" style="display:none">
             								`;	
             								$.each(houseRequest.group.users, function(index, user) {
-            								if(user.id != houseRequest.group.leader.id){
             									individualElement += `
             									<div class="row">
             										<div class="col-sm-12" style="padding: 0px;">                  											
@@ -2764,12 +2551,11 @@
         							    			</div>
         							    		</div>
         							    		`;
-        							    	}
             								})            								
         							    	individualElement += `
         							    	</div>
-        							    	<button class="btn btn-info" id="allGroupMembersListingUnacceptedToggle`+ houseRequest.id +`" onClick="showUnacceptedHousingRequestMembers(`+ houseRequest.id +`)"><i class='fa fa-users' aria-hidden='true'></i> See other `+ membersNotLeaderCount +` members</button>
-		      					    		<button class="btn btn-info" id="hideAllGroupMembersListingUnacceptedToggle`+ houseRequest.id +`" style="display: none" onClick="hideUnacceptedHousingRequestMembers(`+ houseRequest.id +`)"><i class='fa fa-users' aria-hidden='true'></i> Hide other `+ membersNotLeaderCount +` members</button>
+        							    	<button class="btn btn-info" id="allGroupMembersListingUnacceptedToggle`+ houseRequest.id +`" onClick="showUnacceptedHousingRequestMembers(`+ houseRequest.id +`)"><i class='fa fa-users' aria-hidden='true'></i> See Group Members</button>
+		      					    		<button class="btn btn-info" id="hideAllGroupMembersListingUnacceptedToggle`+ houseRequest.id +`" style="display: none" onClick="hideUnacceptedHousingRequestMembers(`+ houseRequest.id +`)"><i class='fa fa-users' aria-hidden='true'></i> Hide Group Members</button>
         							    	`;
         			individualElement += "</div></div></div></div></div></div>";
         			individualElement += `
@@ -2876,56 +2662,10 @@
 			                    	<div class="col-xl-2"></div>
 			                    	<div class="col-xl-8">
 			                    		<strong>Security Deposits Collected:</strong>				                    		    
-		                    				<div class="row">
-	                    					<div class="col-sm-12" style="padding: 0px;">				                    						
-                    		    				<div class="card">
-                    		    				    <div class="card-block">
-                    		    				        <div class="row">
-                    		    				            <div class="hidden-sm-down col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
-                    		    				                <img src="`+ housingRequest.groupListings[0].group.leader.profileImageURL +`" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;" />
-                    		    				            </div>
-                    		    				            <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xl-10">
-                    		    				                <div class="row">
-                    		    				                    <div class="col-xs-12 col-md-6">
-                    		    				                        <div class="row">
-                    		    				                            <a href="`+ housingRequest.groupListings[0].group.leader.url +`">
-                    		    				                                <h4 style="font-size: 3.0vh;">`+ housingRequest.groupListings[0].group.leader.name +`</h4>
-                    		    				                            </a>
-                    		    				                            <h6 style="padding-top: 10px; padding-left: 5px;"><span class="tag tag-primary">Group Leader</span></h6>
-                    		    				                        </div>
-                    		    				                    </div>
-                    		    				                    <div class="col-xs-12 col-md-6">                            
-                    		    				                        <h4><strong style="padding-right: 10px;">Deposit Paid: </strong>
-                    		    				                        `;
-                    		    				                        
-                    		    				                        if(housingRequest.groupListings[0].group.leader.securityDepositPaid == true){
-                    		    				                        	div += `
-                    		    				                            <button id="depositPaid`+ housingRequest.groupListings[0].id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" onclick="paidToUnpaid(`+ housingRequest.groupListings[0].group.leader.id +`, `+ housingRequest.groupListings[0].id +`)" class="btn btn-success btn-circle" data-tooltip="Click here to mark deposit as NOT paid"><i class="fa fa-check" aria-hidden="true"></i></button>
-                    		    				                            <button id="markDepositUnpaid`+ housingRequest.groupListings[0].id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
-                    		    				                            <button id="depositMarkedUnPaid`+ housingRequest.groupListings[0].id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" onclick="paidToPaid(`+ housingRequest.groupListings[0].group.leader.id +`, `+ housingRequest.groupListings[0].id +`)" class="btn btn-danger btn-circle" style="display: none;" data-tooltip="Click here to mark deposit as paid"><i class="fa fa-times" aria-hidden="true"></i></button>
-                    		    				                            `;
-                    		    				                        }
-                    		    				                        else{
-                    		    				                        	div += `
-                    		    				                        	<button id="depositUnpaid`+ housingRequest.groupListings[0].id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" onclick="unpaidToPaid(`+ housingRequest.groupListings[0].group.leader.id +`, `+ housingRequest.groupListings[0].id +`)" class="btn btn-danger btn-circle" data-tooltip="Click here to mark deposit as paid"><i class="fa fa-times" aria-hidden="true"></i></button>
-                    		    				                            <button id="markDepositPaid`+ housingRequest.groupListings[0].id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
-                    		    				                            <button id="depositMarkedPaid`+ housingRequest.groupListings[0].id +`Z`+ housingRequest.groupListings[0].group.leader.id +`" type="button" onclick="unpaidToUnpaid(`+ housingRequest.groupListings[0].group.leader.id +`, `+ housingRequest.groupListings[0].id +`)" class="btn btn-success btn-circle" style="display: none;" data-tooltip="Click here to mark deposit as NOT paid"><i class="fa fa-check" aria-hidden="true"></i></button>
-                    		    				                           	`;
-                    		    				                        }
-                    		    				                        div += `
-                    		    				                        </h4>
-                    		    				                    </div>
-                    		    				                </div>
-                    		    				            </div>
-                    		    				        </div>
-                    		    				    </div>
-                    		    				</div>
-	                    		    		</div>
-	                    		    	</div>
+		                    				<br>
 		      					    		<div id="allGroupMembersListingAccepted`+ housingRequest.groupListings[0].id +`" style="display: none;">
 		      					    		`;
 	      					    				$.each(housingRequest.groupListings[0].group.users, function(index, user) {
-	            								if(user.id != housingRequest.groupListings[0].group.leader.id){
 	            									div += `
 	            									<div class="row">
 				                    					<div class="col-sm-12" style="padding: 0px;">
@@ -2973,12 +2713,11 @@
 				                    		    		</div>
 				                    		    	</div>
 	        							    		`;
-	        							    	}
 	            								})
 											div+=`
 		      					    		</div>
-		      					    		<button class="btn btn-info" id="allGroupMembersListingAcceptedToggle`+ housingRequest.groupListings[0].id +`" onClick="showAcceptedHousingRequestMembers(`+ housingRequest.groupListings[0].id +`)"><i class='fa fa-users' aria-hidden='true'></i> See other `+ membersNotLeaderCount +` members</button>
-		      					    		<button class="btn btn-info" id="hideAllGroupMembersListingAcceptedToggle`+ housingRequest.groupListings[0].id +`" onClick="hideAcceptedHousingRequestMembers(`+ housingRequest.groupListings[0].id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other `+ membersNotLeaderCount +` members</button>
+		      					    		<button class="btn btn-info" id="allGroupMembersListingAcceptedToggle`+ housingRequest.groupListings[0].id +`" onClick="showAcceptedHousingRequestMembers(`+ housingRequest.groupListings[0].id +`)"><i class='fa fa-users' aria-hidden='true'></i> See Group Members</button>
+		      					    		<button class="btn btn-info" id="hideAllGroupMembersListingAcceptedToggle`+ housingRequest.groupListings[0].id +`" onClick="hideAcceptedHousingRequestMembers(`+ housingRequest.groupListings[0].id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide Group Members</button>
 				                    		<br>
 				                    		<br>
 				                    	</div>
@@ -3129,32 +2868,8 @@
 				                    		}
 				                    		individualElement += `
 				                    		<br><br>
-				                    		<strong>Group Leader:</strong>
-				                    		<div class="row">
-        										<div class="col-sm-12" style="padding: 0px;">                  											
-    							    				<div class="card" style="width: 100%">
-    							    					<div class="card-block">
-    							    					    <div class="row">
-    							    					        <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
-    							    					            <img src="`+ tour.group.leader.profileImageURL +`" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;">
-    							    					        </div>
-    							    					        <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-10">
-    							    					            <div class="row">
-    							    					                <div class="col-xs-12">                           
-    							    					                    <a href="`+tour.group.leader.url +`">
-    							    					                        <h4 style="font-size: 3.0vh;">`+ tour.group.leader.name +`</h4>
-    							    					                    </a>
-    							    					                </div>
-    							    					            </div>
-    							    					        </div>
-    							    					    </div>
-    							    					</div>
-    							    				</div>
-    							    			</div>
-    							    		</div>
 				                    		<div id="allMembersRequestedTour`+ tour.id +`" style="display: none;">`;
 				                    		$.each(tour.group.users, function(index, user) {
-					                    		if(user.id != tour.group.leader.id){
 					                    			individualElement += `
 	            									<div class="row">
 	            										<div class="col-sm-12" style="padding: 0px;">                  											
@@ -3179,12 +2894,11 @@
 	        							    			</div>
 	        							    		</div>
 	        							    		`;
-	        							    	}
 				                    		})            								
         							    	individualElement += `
 		      					    		</div></div>
-		      					    		<button class="btn btn-info" id="allMembersRequestedTourToggle`+ tour.id +`" onClick="showRequestedTourMembers(`+ tour.id +`)"><i class='fa fa-users' aria-hidden='true'></i> See other `+ membersNotLeaderCount +` members</button>
-		      					    		<button class="btn btn-info" id="hideAllMembersRequestedTourToggle`+ tour.id +`" onClick="hideRequestedTourMembers(`+ tour.id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other `+ membersNotLeaderCount +` members</button>	  		
+		      					    		<button class="btn btn-info" id="allMembersRequestedTourToggle`+ tour.id +`" onClick="showRequestedTourMembers(`+ tour.id +`)"><i class='fa fa-users' aria-hidden='true'></i> See Group Members</button>
+		      					    		<button class="btn btn-info" id="hideAllMembersRequestedTourToggle`+ tour.id +`" onClick="hideRequestedTourMembers(`+ tour.id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide Group Members</button>
 		      					    	</div>
 		      					    </div>
 		      					</div>
@@ -3300,32 +3014,8 @@
 				                    		<br>
 				                    		Please Arrive at the property on `+ tour.timeRequested +` to meet for this tour
 				                    		<br><br>
-				                    		<strong>Group Leader:</strong>
-				                    		<div class="row">
-        										<div class="col-sm-12" style="padding: 0px;">
-    							    				<div class="card" style="width: 100%">
-    							    					<div class="card-block">
-    							    					    <div class="row">
-    							    					        <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
-    							    					            <img src="`+ tour.group.leader.profileImageURL +`" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;">
-    							    					        </div>
-    							    					        <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-10">
-    							    					            <div class="row">
-    							    					                <div class="col-xs-12">                           
-    							    					                    <a href="`+ tour.group.leader.url +`">
-    							    					                        <h4 style="font-size: 3.0vh;">`+ tour.group.leader.name +`</h4>
-    							    					                    </a>
-    							    					                </div>
-    							    					            </div>
-    							    					        </div>
-    							    					    </div>
-    							    					</div>
-    							    				</div>
-    							    			</div>
-    							    		</div>
 											<div id="allMembersScheduledTour`+ tour.id +`" style="display: none;">`;
 				                    		$.each(tour.group.users, function(index, user) {
-					                    		if(user.id != tour.group.leader.id){
 	            								individualElement += `
 	            									<div class="row">
 	            										<div class="col-sm-12" style="padding: 0px;">
@@ -3350,12 +3040,11 @@
 	        							    			</div>
 	        							    		</div>
 	        							    		`;
-	        							    	}
 				                    		})
         							    	individualElement += `
 		      					    		</div></div>
-		      					    		<button class="btn btn-info" id="allMembersScheduledTourToggle`+ tour.id +`" onClick="showScheduledTourMembers(`+ tour.id +`)"><i class='fa fa-users' aria-hidden='true'></i> See other `+ membersNotLeaderCount +` members</button>
-		      					    		<button class="btn btn-info" id="hideAllMembersScheduledTourToggle`+ tour.id +`" onClick="hideScheduledTourMembers(`+ tour.id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide other `+ membersNotLeaderCount +` members</button>	  		
+		      					    		<button class="btn btn-info" id="allMembersScheduledTourToggle`+ tour.id +`" onClick="showScheduledTourMembers(`+ tour.id +`)"><i class='fa fa-users' aria-hidden='true'></i> See Group Members</button>
+		      					    		<button class="btn btn-info" id="hideAllMembersScheduledTourToggle`+ tour.id +`" onClick="hideScheduledTourMembers(`+ tour.id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide Group Members</button>	  		
 		      					    	</div>
 		      					    </div>
 		      					</div>

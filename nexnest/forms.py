@@ -149,6 +149,7 @@ class ListingForm(RedirectForm):
     washer_free = BooleanField('Is the Washer Free?')
     floor_plan = FileField('Floor Plan')
     youtube_url = StringField('Listing Video', [Optional(), URL()])
+    colleges = HiddenField('Colleges', [InputRequired()])
 
 
 class CreateGroupForm(RedirectForm):

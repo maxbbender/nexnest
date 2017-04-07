@@ -45,6 +45,10 @@
 				</div>
 				<div class="card-footer">
 					<div class="row">
+						<div class="col-xs-12" id="subTotal">
+						</div>
+						<div class="col-xs-12" id="tax">
+						</div>
 						<div class="col-xs-12" id="totalPrice">
 							Total Price: 
 						</div>
@@ -66,7 +70,10 @@
 {% block scripts %}
 <script>
 	var totalPrice = 0;
+	var subTotal = 0;
 	var priceAfterCoupon = 0;
+	var subtotalAfterCoupon = 0;
+	var taxBeforeCoupon = 0;
 	$( document ).ready(function() {
 		// data = JSON.parse({{jsonData|tojson}});
         data = {{jsonData|tojson}};
@@ -115,6 +122,12 @@
 								<hr id="hrInCart`+item.listing_id+`">`;
 			$("#checkOutItems").append(checkoutItem);
 		})
+		//tax calculation
+		subTotal = totalPrice;
+		taxBeforeCoupon = totalPrice*.075;
+		totalPrice = (totalPrice*1.075);
+		$("#subTotal").html(`<h4>Subtoal: `+"$"+subTotal+`</h4>`);
+		$("#tax").html(`<h4>Tax: `+"$"+taxBeforeCoupon+`</h4>`);
 		$("#totalPrice").html(`<h2>Total Price: `+"$"+totalPrice+`</h2>`);
 	});
 	function removeListingToPurchase(id, index){
@@ -144,9 +157,13 @@
 			console.log(results);
 			if(results.validCupon == true){
 				//update total price div
-				priceAfterCoupon = (totalPrice*(100-results.cupon.percentageOff)/100);
+				subtotalAfterCoupon = (totalPrice*(100-results.cupon.percentageOff)/100);
+				taxAfterCoupon = subtotalAfterCoupon*.075;
+				priceAfterCoupon = (subtotalAfterCoupon*1.075);
 				//totalPrice = totalPrice-results.cupon.percentageOff;
 				$("#totalPrice").html(`<h2>Total Price: `+"$"+priceAfterCoupon+`</h2>`);
+				$("#subTotal").html(`<h4>Subtoal: `+"$"+subtotalAfterCoupon+`</h4>`);
+				$("#tax").html(`<h4>Tax: `+"$"+taxAfterCoupon+`</h4>`);
 				//display the valid coupon percentage off
 				$("#discount").html("<strong>"+results.cupon.percentageOff+"% Off"+"</strong>");
 		 	    $("#discount").css("color", "green");
@@ -155,7 +172,9 @@
 				$("#discount").html("<strong>"+"Invlaid Code"+"</strong>");
 				$("#discount").css("color", "red");
 				//if the user had a correct code and then enters a wrong one display orighinal price
+				$("#subTotal").html(`<h4>Subtoal: `+"$"+subTotal+`</h4>`);
 				$("#totalPrice").html(`<h2>Total Price: `+"$"+totalPrice+`</h2>`);
+				$("#tax").html(`<h4>Tax: `+"$"+taxBeforeCoupon+`</h4>`);
 			}
 		});
 	}
