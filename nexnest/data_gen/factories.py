@@ -14,6 +14,8 @@ import random
 
 fake = Faker()
 
+fredonia = session.query(school.School).filter_by(name='SUNY at Fredonia').first()
+
 
 class SchoolFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
@@ -282,3 +284,12 @@ class CouponFactory(factory.alchemy.SQLAlchemyModelFactory):
     unlimited = False
     uses = 10
     percentage_off = 0
+
+
+class ListingSchoolFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = listing_school.ListingSchool
+        sqlalchemy_session = session
+
+    listing = factory.SubFactory(ListingFactory)
+    school = fredonia
