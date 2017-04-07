@@ -1,21 +1,23 @@
+import os
+import json
+
 from flask import Blueprint
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
+from werkzeug import secure_filename  # pylint: disable=E0611
 
+from nexnest import logger
 from nexnest.application import session, app
 
 from nexnest.forms import ListingForm, SuggestListingForm, TourForm, GroupListingForm
 from nexnest.models.listing import Listing
+from nexnest.models.listing_school import ListingSchool
 from nexnest.models.landlord_listing import LandlordListing
 from nexnest.models.school import School
 
 from nexnest.utils.flash import flash_errors
 from nexnest.utils.file import allowed_file, isPDF
 from nexnest.utils.school import allSchoolsAsStrings
-
-import os
-
-from werkzeug import secure_filename  # pylint: disable=E0611
 
 listings = Blueprint('listings', __name__, template_folder='../templates')
 
@@ -84,6 +86,24 @@ def createListing():
                 session.add(newListing)
                 session.commit()
 
+                # Now we want to define the colleges this listing is associated with
+
+                collegeNames = json.loads(form.colleges.data)
+
+                for collegeName in collegeNames:
+                    school = session.query(School).filter_by(name=collegeName).first()
+
+                    if school is not None:
+                        newListingSchool = ListingSchool(listing=newListing, school=school)
+                        session.add(newListingSchool)
+                        session.commit()
+                        logger.debug('newListingSchool %r' % newListingSchool)
+                    else:
+                        logger.error('Could not find school with name %s. Could not associated listing %r with school' % (collegeName, newListing))
+
+                logger.debug('form.colleges.data : %s' % form.colleges.data)
+                logger.debug('collegeNames %r' % collegeNames)
+
                 if newListing.property_type == 'apartment':
                     newListing.apartment_number = form.apartment_number.data
 
@@ -106,6 +126,7 @@ def createListing():
                 # Lets add the photos
                 uploadedFiles = request.files.getlist("pictures")
                 filenames = []
+                fileUploadError = False
                 for file in uploadedFiles:
                     if file and allowed_file(file.filename):
                         filename = secure_filename(file.filename)
@@ -113,7 +134,11 @@ def createListing():
                         file.save(os.path.join(folderPicturesPath, filename))
                         filenames.append(filename)
                     else:
-                        flash("Error saving file %s" % file.filename, 'error')
+                        fileUploadError = True
+                        logger.error("Error saving file %s" % file.filename)
+                
+                if fileUploadError:
+                    flash("Error saving file", 'danger')
 
                 flash('Listing Created', 'success')
 

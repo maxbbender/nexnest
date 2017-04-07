@@ -832,7 +832,8 @@ var collegeEnter = $('#magicsuggest').magicSuggest({
     useCommaKey: true,
     useZebraStyle: true,
     placeholder: 'Type or use dropdown to select colleges',
-    data: ['Paris', 'New York', 'Gotham', 'New Jersey', 'Patchogue']
+    // data: ['Paris', 'New York', 'Gotham', 'New Jersey', 'Patchogue']
+    data : {{schools|tojson}}
 });
 
 $(collegeEnter).on('selectionchange', function(){
