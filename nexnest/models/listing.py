@@ -251,6 +251,10 @@ class Listing(Base):
         else:
             return False
 
+    @property
+    def address(self):
+        return '%s, %s %s, %s' % (self.street, self.city, self.state, self.zip_code)
+
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument
     # 'target' is the inserted object

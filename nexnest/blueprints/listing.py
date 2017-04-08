@@ -125,20 +125,25 @@ def createListing():
 
                 # Lets add the photos
                 uploadedFiles = request.files.getlist("pictures")
-                filenames = []
-                fileUploadError = False
-                for file in uploadedFiles:
-                    if file and allowed_file(file.filename):
-                        filename = secure_filename(file.filename)
 
-                        file.save(os.path.join(folderPicturesPath, filename))
-                        filenames.append(filename)
-                    else:
-                        fileUploadError = True
-                        logger.error("Error saving file %s" % file.filename)
-                
-                if fileUploadError:
-                    flash("Error saving file", 'danger')
+                if not uploadedFiles[0].filename == '':
+                    logger.debug("Uploaded Files : %r" % uploadedFiles)
+                    filenames = []
+                    fileUploadError = False
+                    for file in uploadedFiles:
+                        if file and allowed_file(file.filename):
+                            filename = secure_filename(file.filename)
+
+                            file.save(os.path.join(folderPicturesPath, filename))
+                            filenames.append(filename)
+                        else:
+                            fileUploadError = True
+                            logger.error("Error saving file %s" % file.filename)
+                    
+                    if fileUploadError:
+                        flash("Error saving file", 'danger')
+                else:
+                    logger.debug("No Picture files to upload")
 
                 flash('Listing Created', 'success')
 
