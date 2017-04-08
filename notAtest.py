@@ -7,46 +7,10 @@ import os
 
 from pprint import pprint
 from nexnest.utils.school import allSchoolsAsStrings
-
-
-
-# u = session.query(landlord.Landlord).filter_by(user_id=1).first()
-# print(u)
-# pprint(u.getInProgressMaintenanceJSON())
-
-# u = session.query(maintenance.Maintenance).filter_by(id=1).first()
-# print(u)
-# pprint(u.serialize)
-
-# u = session.query(listing.Listing).filter_by(id=1).first()
-# print(u)
-# pprint(u.house[0])
-# service = build('books', 'v1', developerKey="AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w")
 import googlemaps
-gmaps = googlemaps.Client(key='AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w')
 
-origins = '45 South Clover Street, Poughkeepsie NY'
-destinations = 'Marist College, Poughkeepsie NY'
+allListings = session.query(listing.Listing).filter(listing.Listing.num_bedrooms == 3)
 
-response = gmaps.distance_matrix(origins=origins,
-                                 destinations=destinations,
-                                 units='imperial')
+allListings = allListings.filter(listing.Listing.cats).first()
 
-print("Response")
-pprint(response)
-print('AAAAAAAAAaaa')
-print(response['rows'][0]['elements'][0]['distance'])
-print(response['rows'][0]['elements'][0]['duration'])
-# print(response['rows'][0])
-
-response = gmaps.distance_matrix(origins=origins,
-                                 destinations=destinations,
-                                 units='imperial',
-                                 mode='walking')
-
-print("Response")
-pprint(response)
-
-# print(listing_school.ListingSchool.__table__)
-
-print(allSchoolsAsStrings())
+print(allListings)

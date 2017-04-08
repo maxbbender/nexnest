@@ -192,6 +192,13 @@ class Listing(Base):
         return self.street[:22] + '...'
 
     @property
+    def pricePerMonth(self):
+        if self.rent_due == 'montly':
+            return self.price
+        else:
+            return self.price / 6
+
+    @property
     def hasAcceptedGroupListing(self):
         for groupListing in self.groups:
             if groupListing.accepted:

@@ -139,7 +139,7 @@ def createListing():
                         else:
                             fileUploadError = True
                             logger.error("Error saving file %s" % file.filename)
-                    
+
                     if fileUploadError:
                         flash("Error saving file", 'danger')
                 else:
@@ -268,16 +268,49 @@ def searchListingsAJAX():
             'apartment',
             'complex'
         ],
-        'location': 'Fredonia, NY',  # This will be switched to school
+        'school': 'Marist',  # This will be switched to school
         'minPrice': 1000,
         'maxPrice': 3000,
         'pets': [  # Same as includes
             'dogs',
             'cats'
         ],
-        'priceTerm': 'month',  # month|semester (based on listing price)
+        'priceTerm': 'month',  # month|semester (based on listing price) MATHS
         'sortBy': None,  # priceLowToHigh|priceHighToLow|mostRecent|distanceToCampus
         'term': '2018-2019 School Year'  # YYYY-YYYY [School Year|Summer]
 
     }
     # Required Fields : bedrooms  | minPrice | maxPrice | €22
+    allListings = None
+    # Bedroom Checks:
+    if 'bedrooms' in postedJSON:
+        if postedJSON['bedrooms'] < 4:
+            allListings = session.query(Listing).fitler(Listing.num_bedrooms == postedJSON['bedrooms'])
+        else:
+            allListings = session.query(Listing).fitler(Listing.num_bedrooms >= 4)
+
+    if 'minPrice' in postedJSON:
+        if allListings.filter(Listing.)
+
+    # sortBy Check
+    if ['sortBy'] in postedJSON:
+        if postedJSON['sortBy'] == 'priceLowToHigh':
+
+        elif postedJSON['sortBy'] == 'priceHighToLow':
+
+        elif postedJSON['sortBy'] == 'mostRecent':
+
+        elif postedJSON['sortBy'] == 'distanceToCampus':
+
+            # No sorting
+    else:
+
+    if postedJSON['bedrooms'] < 4:
+
+    return {
+        'distance': {
+            'school': {
+                'name'
+            }
+        }
+    }
