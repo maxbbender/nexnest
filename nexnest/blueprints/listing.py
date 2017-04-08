@@ -1,19 +1,23 @@
+import os
+import json
+
 from flask import Blueprint
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
+from werkzeug import secure_filename  # pylint: disable=E0611
 
+from nexnest import logger
 from nexnest.application import session, app
 
 from nexnest.forms import ListingForm, SuggestListingForm, TourForm, GroupListingForm
 from nexnest.models.listing import Listing
+from nexnest.models.listing_school import ListingSchool
 from nexnest.models.landlord_listing import LandlordListing
+from nexnest.models.school import School
 
 from nexnest.utils.flash import flash_errors
 from nexnest.utils.file import allowed_file, isPDF
-
-import os
-
-from werkzeug import secure_filename  # pylint: disable=E0611
+from nexnest.utils.school import allSchoolsAsStrings
 
 listings = Blueprint('listings', __name__, template_folder='../templates')
 
@@ -82,6 +86,24 @@ def createListing():
                 session.add(newListing)
                 session.commit()
 
+                # Now we want to define the colleges this listing is associated with
+
+                collegeNames = json.loads(form.colleges.data)
+
+                for collegeName in collegeNames:
+                    school = session.query(School).filter_by(name=collegeName).first()
+
+                    if school is not None:
+                        newListingSchool = ListingSchool(listing=newListing, school=school)
+                        session.add(newListingSchool)
+                        session.commit()
+                        logger.debug('newListingSchool %r' % newListingSchool)
+                    else:
+                        logger.error('Could not find school with name %s. Could not associated listing %r with school' % (collegeName, newListing))
+
+                logger.debug('form.colleges.data : %s' % form.colleges.data)
+                logger.debug('collegeNames %r' % collegeNames)
+
                 if newListing.property_type == 'apartment':
                     newListing.apartment_number = form.apartment_number.data
 
@@ -103,15 +125,25 @@ def createListing():
 
                 # Lets add the photos
                 uploadedFiles = request.files.getlist("pictures")
-                filenames = []
-                for file in uploadedFiles:
-                    if file and allowed_file(file.filename):
-                        filename = secure_filename(file.filename)
 
-                        file.save(os.path.join(folderPicturesPath, filename))
-                        filenames.append(filename)
-                    else:
-                        flash("Error saving file %s" % file.filename, 'error')
+                if not uploadedFiles[0].filename == '':
+                    logger.debug("Uploaded Files : %r" % uploadedFiles)
+                    filenames = []
+                    fileUploadError = False
+                    for file in uploadedFiles:
+                        if file and allowed_file(file.filename):
+                            filename = secure_filename(file.filename)
+
+                            file.save(os.path.join(folderPicturesPath, filename))
+                            filenames.append(filename)
+                        else:
+                            fileUploadError = True
+                            logger.error("Error saving file %s" % file.filename)
+
+                    if fileUploadError:
+                        flash("Error saving file", 'danger')
+                else:
+                    logger.debug("No Picture files to upload")
 
                 flash('Listing Created', 'success')
 
@@ -135,12 +167,15 @@ def createListing():
                 flash_errors(form)
                 return render_template('/landlord/createListing.html',
                                        form=form,
-                                       title='Create Listing')
+                                       title='Create Listing',
+                                       schools=allSchoolsAsStrings())
         else:
             form = ListingForm()
             return render_template('/landlord/createListing.html',
                                    form=form,
-                                   title='Create Listing')
+                                   title='Create Listing',
+                                   schools=allSchoolsAsStrings()
+                                   )
     else:
         flash("Only Landlords can create listings", 'warning')
         return redirect(url_for('indexs.index'))
@@ -211,3 +246,71 @@ def editListing(listingID):
 
         return redirect(url_for('listings.viewListing',
                                 listingID=listingID))
+
+
+@listings.route('/listing/search/AJAX', methods=['POST'])
+def searchListingsAJAX():
+    # json = request.get_json(force=True)
+    postedJSON = {
+        'bedrooms': 4,  # 1-4 (if at 4 it means 4+)
+        'distanceToCampus': 8,  # In miles
+        'includes': [  # If any of these are here this means that they are check, if not they are not checked. If they are check the listing HAS to have them. if not don't add to filter
+            'furnished',
+            'dishwasher',
+            'laundry',
+            'internet',
+            'cable',
+            'snowRemoval',
+            'garbageRemoval'
+        ],
+        'listingTypes': [  # Only show if element of list, don't show if not element
+            'house',
+            'apartment',
+            'complex'
+        ],
+        'school': 'Marist',  # This will be switched to school
+        'minPrice': 1000,
+        'maxPrice': 3000,
+        'pets': [  # Same as includes
+            'dogs',
+            'cats'
+        ],
+        'priceTerm': 'month',  # month|semester (based on listing price) MATHS
+        'sortBy': None,  # priceLowToHigh|priceHighToLow|mostRecent|distanceToCampus
+        'term': '2018-2019 School Year'  # YYYY-YYYY [School Year|Summer]
+
+    }
+    # Required Fields : bedrooms  | minPrice | maxPrice | €22
+    allListings = None
+    # Bedroom Checks:
+    if 'bedrooms' in postedJSON:
+        if postedJSON['bedrooms'] < 4:
+            allListings = session.query(Listing).fitler(Listing.num_bedrooms == postedJSON['bedrooms'])
+        else:
+            allListings = session.query(Listing).fitler(Listing.num_bedrooms >= 4)
+
+    if 'minPrice' in postedJSON:
+        if allListings.filter(Listing.)
+
+    # sortBy Check
+    if ['sortBy'] in postedJSON:
+        if postedJSON['sortBy'] == 'priceLowToHigh':
+
+        elif postedJSON['sortBy'] == 'priceHighToLow':
+
+        elif postedJSON['sortBy'] == 'mostRecent':
+
+        elif postedJSON['sortBy'] == 'distanceToCampus':
+
+            # No sorting
+    else:
+
+    if postedJSON['bedrooms'] < 4:
+
+    return {
+        'distance': {
+            'school': {
+                'name'
+            }
+        }
+    }

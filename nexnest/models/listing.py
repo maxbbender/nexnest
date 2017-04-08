@@ -40,7 +40,6 @@ class Listing(Base):
     description = db.Column(db.Text)
     num_full_baths = db.Column(db.Integer)
     num_half_baths = db.Column(db.Integer)
-    time_period = db.Column(db.Text)
     apartment_number = db.Column(db.Integer)
     disabled = db.Column(db.Boolean)
     property_type = db.Column(db.Text)
@@ -65,6 +64,9 @@ class Listing(Base):
     # address
     active = db.Column(db.Boolean)
 
+    # school | year | summer
+    time_period = db.Column(db.Text)
+
     # This is set to False once a group has been accepted,
     # and completed for the house
     show = db.Column(db.Boolean)
@@ -78,6 +80,7 @@ class Listing(Base):
     house = relationship("House", backref=backref('listing', uselist=False))
     favorite = relationship("GroupListingFavorite", backref='listing')
     listingTransactionListing = relationship("ListingTransactionListing", backref='listing')
+    schools = relationship("ListingSchool", back_populates='listing')
 
     def __init__(
             self,
@@ -189,6 +192,13 @@ class Listing(Base):
         return self.street[:22] + '...'
 
     @property
+    def pricePerMonth(self):
+        if self.rent_due == 'montly':
+            return self.price
+        else:
+            return self.price / 6
+
+    @property
     def hasAcceptedGroupListing(self):
         for groupListing in self.groups:
             if groupListing.accepted:
@@ -247,6 +257,10 @@ class Listing(Base):
                 return True
         else:
             return False
+
+    @property
+    def address(self):
+        return '%s, %s %s, %s' % (self.street, self.city, self.state, self.zip_code)
 
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument

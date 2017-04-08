@@ -8,7 +8,7 @@ from nexnest.application import braintree, csrf, session
 
 from nexnest.models.transaction import ListingTransaction, ListingTransactionListing
 from nexnest.models.listing import Listing
-from nexnest.models.cupon import Cupon
+from nexnest.models.coupon import Coupon
 
 from nexnest.forms import PreCheckoutForm
 from nexnest.utils.flash import flash_errors

@@ -6,15 +6,11 @@ from nexnest.models import *
 import os
 
 from pprint import pprint
+from nexnest.utils.school import allSchoolsAsStrings
+import googlemaps
 
-u = session.query(landlord.Landlord).filter_by(user_id=1).first()
-print(u)
-pprint(u.getInProgressMaintenanceJSON())
+allListings = session.query(listing.Listing).filter(listing.Listing.num_bedrooms == 3)
 
-# u = session.query(maintenance.Maintenance).filter_by(id=1).first()
-# print(u)
-# pprint(u.serialize)
+allListings = allListings.filter(listing.Listing.cats).first()
 
-# u = session.query(listing.Listing).filter_by(id=1).first()
-# print(u)
-# pprint(u.house[0])
+print(allListings)

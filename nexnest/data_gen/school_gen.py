@@ -3,7 +3,7 @@ from nexnest.application import session
 from nexnest.models.school import School
 
 # Fredoia School
-fredonia = School('Fredonia',
+fredonia = School('SUNY at Fredonia',
                   '280 Central Ave',
                   'Fredonia',
                   'NY',

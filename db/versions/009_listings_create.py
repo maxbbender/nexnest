@@ -47,9 +47,25 @@ listings = Table('listings', meta,
 
 def upgrade(migrate_engine):
     meta.bind = migrate_engine
+
     listings.create()
+
+    # Foreign Keys
+    # schools = Table('schools', meta, autoload=True)
+
+    # ForeignKeyConstraint(
+    #     columns=[listings.c.school_id],
+    #     refcolumns=[schools.c.id]).create()
 
 
 def downgrade(migrate_engine):
     meta.bind = migrate_engine
+
+    # Foreign Keys
+    # schools = Table('schools', meta, autoload=True)
+
+    # ForeignKeyConstraint(
+    #     columns=[listings.c.school_id],
+    #     refcolumns=[schools.c.id]).drop()
+
     listings.drop()

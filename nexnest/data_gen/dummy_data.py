@@ -1,6 +1,8 @@
+from nexnest import logger
 from nexnest.application import session
 
 from nexnest.data_gen.factories import *
+from nexnest.models import *
 
 from faker import Faker
 
@@ -69,6 +71,27 @@ landlordListing5 = LandlordListingFactory(landlord=landlord1, listing=listing5)
 landlordListing6 = LandlordListingFactory(landlord=landlord1, listing=listing6)
 
 session.commit()
+
+# LISTING SCHOOLS
+allListings = session.query(listing.Listing).all()
+for Alisting in allListings:
+    newListingSchool = ListingSchoolFactory(listing=Alisting)
+    session.commit()
+
+
+listingSchool = session.query(listing_school.ListingSchool).filter_by(listing_id=2).first()
+
+if listingSchool is not None:
+    marist = session.query(school.School).filter_by(name='Marist').first()
+
+    if marist is not None:
+        newListingSchool = ListingSchoolFactory(listing=listingSchool.listing, school=marist)
+        session.commit()
+    else:
+        logger.warning('Could not find Marist for dummy data generation')
+else:
+    logger.warning('Could not find listing to add another school to')
+
 
 # GROUP
 group1 = GroupFactory(leader=user2)
@@ -483,12 +506,12 @@ mm10 = MaintenanceMessageFactory(maintenance=m3, user=user4)
 
 session.commit()
 
-# Some Cupons
-cupon1 = CuponFactory(cupon_key='tenUnlimited',
-                      unlimited=True,
-                      percentage_off=10)
-cupon2 = CuponFactory(cupon_key='tenSingle',
-                      unlimited=False,
-                      percentage_off=10,
-                      uses=1)
+# Some coupons
+coupon1 = CouponFactory(coupon_key='tenUnlimited',
+                        unlimited=True,
+                        percentage_off=10)
+coupon2 = CouponFactory(coupon_key='tenSingle',
+                        unlimited=False,
+                        percentage_off=10,
+                        uses=1)
 session.commit()
