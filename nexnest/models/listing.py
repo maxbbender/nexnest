@@ -1,5 +1,6 @@
 from datetime import datetime as dt
 
+from nexnest import logger
 from nexnest.application import db, app
 
 from .base import Base
@@ -22,6 +23,8 @@ class Listing(Base):
     end_date = db.Column(db.Date)
     num_bedrooms = db.Column(db.Integer)
     price = db.Column(db.Integer)
+    price_per_semester = db.Column(db.Integer)
+    price_per_month = db.Column(db.Integer)
     square_footage = db.Column(db.Integer)
     parking = db.Column(db.String)
     cats = db.Column(db.Boolean)
@@ -168,6 +171,15 @@ class Listing(Base):
         self.washer_free = washer_free
         self.youtube_url = youtube_url
         self.featured = featured
+
+        if self.rent_due == 'monthly':
+            self.price_per_month = self.price
+            self.price_per_semester = self.price * 6
+        elif self.rent_due == 'semester':
+            self.price_per_month = self.price / 6
+            self.price_per_semester = self.price
+        else:
+            logger.error('Unknown Rent Due Value while create listing : %s' % self.rent_due)
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels

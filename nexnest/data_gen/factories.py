@@ -293,3 +293,7 @@ class ListingSchoolFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     listing = factory.SubFactory(ListingFactory)
     school = fredonia
+    driving_time = '10min'
+    driving_miles = '2'
+    walking_time = '17min'
+    walking_miles = '1.6'

@@ -248,69 +248,69 @@ def editListing(listingID):
                                 listingID=listingID))
 
 
-@listings.route('/listing/search/AJAX', methods=['POST'])
-def searchListingsAJAX():
-    # json = request.get_json(force=True)
-    postedJSON = {
-        'bedrooms': 4,  # 1-4 (if at 4 it means 4+)
-        'distanceToCampus': 8,  # In miles
-        'includes': [  # If any of these are here this means that they are check, if not they are not checked. If they are check the listing HAS to have them. if not don't add to filter
-            'furnished',
-            'dishwasher',
-            'laundry',
-            'internet',
-            'cable',
-            'snowRemoval',
-            'garbageRemoval'
-        ],
-        'listingTypes': [  # Only show if element of list, don't show if not element
-            'house',
-            'apartment',
-            'complex'
-        ],
-        'school': 'Marist',  # This will be switched to school
-        'minPrice': 1000,
-        'maxPrice': 3000,
-        'pets': [  # Same as includes
-            'dogs',
-            'cats'
-        ],
-        'priceTerm': 'month',  # month|semester (based on listing price) MATHS
-        'sortBy': None,  # priceLowToHigh|priceHighToLow|mostRecent|distanceToCampus
-        'term': '2018-2019 School Year'  # YYYY-YYYY [School Year|Summer]
+# @listings.route('/listing/search/AJAX', methods=['POST'])
+# def searchListingsAJAX():
+#     # json = request.get_json(force=True)
+#     postedJSON = {
+#         'bedrooms': 4,  # 1-4 (if at 4 it means 4+)
+#         'distanceToCampus': 8,  # In miles
+#         'includes': [  # If any of these are here this means that they are check, if not they are not checked. If they are check the listing HAS to have them. if not don't add to filter
+#             'furnished',
+#             'dishwasher',
+#             'laundry',
+#             'internet',
+#             'cable',
+#             'snowRemoval',
+#             'garbageRemoval'
+#         ],
+#         'listingTypes': [  # Only show if element of list, don't show if not element
+#             'house',
+#             'apartment',
+#             'complex'
+#         ],
+#         'school': 'Marist',  # This will be switched to school
+#         'minPrice': 1000,
+#         'maxPrice': 3000,
+#         'pets': [  # Same as includes
+#             'dogs',
+#             'cats'
+#         ],
+#         'priceTerm': 'month',  # month|semester (based on listing price) MATHS
+#         'sortBy': None,  # priceLowToHigh|priceHighToLow|mostRecent|distanceToCampus
+#         'term': '2018-2019 School Year'  # YYYY-YYYY [School Year|Summer]
 
-    }
-    # Required Fields : bedrooms  | minPrice | maxPrice | €22
-    allListings = None
-    # Bedroom Checks:
-    if 'bedrooms' in postedJSON:
-        if postedJSON['bedrooms'] < 4:
-            allListings = session.query(Listing).fitler(Listing.num_bedrooms == postedJSON['bedrooms'])
-        else:
-            allListings = session.query(Listing).fitler(Listing.num_bedrooms >= 4)
+#     }
+#     # Required Fields : bedrooms  | minPrice | maxPrice | €22
+#     allListings = None
+#     # Bedroom Checks:
+#     if 'bedrooms' in postedJSON:
+#         if postedJSON['bedrooms'] < 4:
+#             allListings = session.query(Listing).fitler(Listing.num_bedrooms == postedJSON['bedrooms'])
+#         else:
+#             allListings = session.query(Listing).fitler(Listing.num_bedrooms >= 4)
 
-    if 'minPrice' in postedJSON:
-        if allListings.filter(Listing.)
+#     if 'minPrice' in postedJSON:
+#         if allListings.filter(Listing.)
 
-    # sortBy Check
-    if ['sortBy'] in postedJSON:
-        if postedJSON['sortBy'] == 'priceLowToHigh':
+#     # sortBy Check
+#     if ['sortBy'] in postedJSON:
+#         if postedJSON['sortBy'] == 'priceLowToHigh':
 
-        elif postedJSON['sortBy'] == 'priceHighToLow':
+#         elif postedJSON['sortBy'] == 'priceHighToLow':
 
-        elif postedJSON['sortBy'] == 'mostRecent':
+#         elif postedJSON['sortBy'] == 'mostRecent':
 
-        elif postedJSON['sortBy'] == 'distanceToCampus':
+#         elif postedJSON['sortBy'] == 'distanceToCampus':
 
-            # No sorting
-    else:
+#             # No sorting
+#     else:
 
-    if postedJSON['bedrooms'] < 4:
+#     if postedJSON['bedrooms'] < 4:
 
-    return {
-        'distance': {
-            'school': {
-                'name'
-            }
-        }
-    }
+#     return {
+#         'distance': {
+#             'school': {
+#                 'name'
+#             }
+#         }
+#     }
