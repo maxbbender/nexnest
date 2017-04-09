@@ -290,7 +290,8 @@ def editListing(listingID):
 #             allListings = session.query(Listing).fitler(Listing.num_bedrooms >= 4)
 
 #     if 'minPrice' in postedJSON:
-#         if allListings.filter(Listing)
+#         if allListings.filter(Listing.)
+
 
 #     # sortBy Check
 #     if ['sortBy'] in postedJSON:

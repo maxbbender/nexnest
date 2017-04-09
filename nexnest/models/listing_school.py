@@ -51,7 +51,7 @@ class ListingSchool(Base):
             logger.debug("Driving Response")
             logger.debug(pformat(drivingResponse))
 
-            if drivingResponse['status'] == 'OK':
+            if drivingResponse['status'] == 'OK' and drivingResponse['rows'][0]['elements'][0]['status'] == 'OK':
                 self.driving_time = drivingResponse['rows'][0]['elements'][0]['duration']['text']
                 self.driving_miles = drivingResponse['rows'][0]['elements'][0]['distance']['text']
             else:
@@ -70,7 +70,7 @@ class ListingSchool(Base):
             logger.debug("Walking Response")
             logger.debug(pformat(walkingResponse))
 
-            if walkingResponse['status'] == 'OK':
+            if walkingResponse['status'] == 'OK' and walkingResponse['rows'][0]['elements'][0]['status'] == 'OK':
                 self.driving_time = walkingResponse['rows'][0]['elements'][0]['duration']['text']
                 self.driving_miles = walkingResponse['rows'][0]['elements'][0]['distance']['text']
             else:
