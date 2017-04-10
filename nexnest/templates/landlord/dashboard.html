@@ -17,7 +17,7 @@
         	    </li>
         	    <li class="nav-item">
         	        <a class="nav-link left-panel active" style="padding-left: 10px;" id="allListingsTab2" data-toggle="tab" href="#allListingsTab" role="tab">
-        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-md-down">All Listings</span>
+        	        	<i class="fa fa-globe" aria-hidden="true"></i><span class="hidden-md-down">All Listings</span>
         	        </a>
         	    </li>
         		<li class="nav-item">
@@ -32,7 +32,7 @@
         	    </li>
         	    <li class="nav-item">
         	        <a class="nav-link left-panel" style="padding-left: 10px;" id="requestsTab2" data-toggle="tab" href="#requestsTab" role="tab">
-        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-md-down">Listing Requests</span>
+        	        	<i class="fa fa-handshake-o" aria-hidden="true"></i><span class="hidden-md-down">Listing Requests</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
@@ -42,7 +42,7 @@
         	    </li>
         	    <li class="nav-item">
         	        <a class="nav-link left-panel" style="padding-left: 10px;" id="paymentTab2" data-toggle="tab" href="#paymentTab" role="tab">
-        	        	<i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-md-down">Payment Portal</span>
+        	        	<i class="fa fa-usd" aria-hidden="true"></i><span class="hidden-md-down">Payment Portal</span>
         	        </a>
         	    </li>
         	</ul>
@@ -61,6 +61,12 @@
 			    </div>
 		    	<br>
 		    	<div class="row">
+		    		<div class="col-xs-12">
+		    			<a href="#!" class="btn btn-info" data-toggle="modal" data-target="#packageDescriptionModal">View Packages and Pricing</a>
+		    		</div>
+		    	</div>
+		    	<br>
+		    	<div class="row">		    		
 		    		<div class="col-xs-12 col-lg-8">
 			            {% for listing in listings %}
 			            	<div class="row">
@@ -826,8 +832,42 @@
 	</div>
 </div>
 
-    <!--Suggest Different Time Tour Modal-->
-    <div class="modal fade" id="suggestTimeTourModal" tabindex="-1" role="dialog" aria-labelledby="suggestTimeTour" aria-hidden="true">
+<!--Suggest Different Time Tour Modal-->
+<div class="modal fade" id="suggestTimeTourModal" tabindex="-1" role="dialog" aria-labelledby="suggestTimeTour" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-1"></div>
+                    <div class="col-xs-10">
+                        <form id="request_tour_time_change" action="#" method="POST">
+                            {{ dateChangeForm.csrf_token }}
+                            {{ dateChangeForm.input_id }}
+                            {{ dateChangeForm.requestedDateTime() }}                             
+                            <p class="flatpickr input-group" data-wrap="true" data-clickOpens="false">
+                                <input id="tourRequestTime" placeholder="Pick date" data-input style="background-color: inherit;">
+                                <a class="btn input-btn" style="border-color: #ddd;" data-toggle><i class="fa fa-calendar" aria-hidden="true"></i></a>
+                                <a class="btn input-btn" style="border-color: #ddd;" data-clear><i class="fa fa-times" aria-hidden="true"></i></a>
+                            </p>
+                        </form>  
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" id="requestTimeLink" class="btn btn-primary" onclick="#">Request Time</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Package Options Modal-->
+    <div class="modal fade" id="packageDescriptionModal" tabindex="-1" role="dialog" aria-labelledby="packageDescriptionModal" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -836,25 +876,57 @@
                     </button>
                     <h4 class="modal-title"></h4>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="text-align: center;">
                     <div class="row">
-                        <div class="col-xs-1"></div>
-                        <div class="col-xs-10">
-                            <form id="request_tour_time_change" action="#" method="POST">
-                                {{ dateChangeForm.csrf_token }}
-                                {{ dateChangeForm.input_id }}
-                                {{ dateChangeForm.requestedDateTime() }}                             
-                                <p class="flatpickr input-group" data-wrap="true" data-clickOpens="false">
-                                    <input id="tourRequestTime" placeholder="Pick date" data-input style="background-color: inherit;">
-                                    <a class="btn input-btn" style="border-color: #ddd;" data-toggle><i class="fa fa-calendar" aria-hidden="true"></i></a>
-                                    <a class="btn input-btn" style="border-color: #ddd;" data-clear><i class="fa fa-times" aria-hidden="true"></i></a>
-                                </p>
-                            </form>  
+                        <div class="col-xs-6" style="border-right: 1px solid #333;">
+                        	<div class="row">
+                        		<div class="col-xs-12">
+                        			<h1>Standard</h1>
+                        		</div>
+                        		<hr>
+                        		<div class="col-xs-12">
+                        			<ul>
+                        				<li>Thing From Alex</li>
+                        				<li>Thing From Alex</li>
+                        				<li>Thing From Alex</li>
+                        				<li>Thing From Alex</li>
+                        				<li>Thing From Alex</li>
+                        			</ul>
+                        			<hr>
+                        		</div>
+                        		<div class="col-xs-12">
+                        			<h3>Pricing</h3>
+                  					<strong>Year: $100</strong>
+                  					<br>
+                  					<strong>Summer: $50</strong>
+                        		</div>
+                        	</div>
+                        </div>
+                        <div class="col-xs-6">
+                        	<div class="row">
+                        		<div class="col-xs-12">
+                        			<h1>Deluxe</h1>
+                        		</div>
+                        		<hr>
+                        		<div class="col-xs-12">
+                        			<ul>
+                        				<li>Thing From Nate</li>
+                        				<li>Thing From Nate</li>
+                        				<li>Thing From Nate</li>
+                        				<li>Thing From Nate</li>
+                        				<li>Thing From Nate</li>
+                        			</ul>
+                        			<hr>
+                        		</div>
+                        		<div class="col-xs-12">
+                        			<h3>Pricing</h3>
+                  					<strong>Year: $200</strong>
+                  					<br>
+                  					<strong>Summer: $100</strong>
+                        		</div>
+                        	</div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <a href="#" id="requestTimeLink" class="btn btn-primary" onclick="#">Request Time</a>
                 </div>
             </div>
         </div>
@@ -2099,6 +2171,14 @@
       $("#requestTimeLink").attr('onClick', "submitTimeChangeForm("+group+")");      
       modal.find('.modal-title').text('Request Different Time For Tour');
     })
+
+    //Package Option Modal
+    $('#packageDescriptionModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      var modal = $(this);      
+      modal.find('.modal-title').text('Packages & Pricing');
+    })
+
 
     function submitTimeChangeForm(id) {
         $("#input_id").val(id);
