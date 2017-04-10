@@ -13,9 +13,9 @@
 		    			</div>
 		    			<div class="row justify-content-center" style="align-items: flex-end; padding-top: 150px;">
 		    				<div class="col-xl-3" style="left: 8vw;">
-		    					<label for="where">Where</label>
-	    					    <select class="form-control" id="where" style="width: 75%;">
-	    					      	<option value="Fredonia, NY">Fredonia, NY</option>
+		    					<label for="school">College</label>
+	    					    <select class="form-control" id="school" style="width: 75%;">
+	    					      	<option value="SUNY at Fredonia">SUNY at Fredonia</option>
 	    					    </select>
 		    				</div>
 		    				<div class="col-xl-3" style="left: 8vw;">
@@ -102,9 +102,9 @@
 			<nav id="filterBar" class="navbar sticky-top navbar-light bg-faded hidden-xs-down">				
 				<div class="row">
 			    	<div class="col-xs-12 col-sm-6 col-lg-4" style="padding-bottom: 5px;">
-					    <select class="form-control filterOption" id="where2">
-					    	<option disabled>Select Where</option>
-					      	<option>Fredonia, NY</option>
+					    <select class="form-control filterOption" id="school2">
+					    	<option disabled>Select College</option>
+					      	<option>SUNY at Fredonia</option>
 					    </select>
 			        </div>
 			        <div class="col-xs-12 col-sm-6 col-lg-4" style="padding-bottom: 5px;">
@@ -370,7 +370,7 @@
 
 	function buildFilters(){
 		var filters = {};
-    	filters.location = $("#where2 option:selected").text();
+    	filters.school = $("#school2 option:selected").text();
     	filters.term = $("#when2 option:selected").text();
     	filters.bedrooms = parseInt($("#rooms2").val(), 10);
     	var prices = $("#priceSlider").val().split(',');
@@ -621,7 +621,7 @@
   		$("#homepage").show();
   		//prefil new filters with values from previous filters
   		$("#when2").val($("#when option:selected").text());
-  		$("#where2").val($("#where option:selected").text());
+  		$("#school2").val($("#school option:selected").text());
   		$("#rooms2").val($("#rooms option:selected").text());
   		//Get the listings here
   		initialFilters();

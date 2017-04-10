@@ -58,8 +58,10 @@
                         <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10">
                             <h2> Step 1: Address</h2>
                             <div class="row">
-                                <div id="locationField">
-                                    <input id="autocomplete" placeholder="Enter your address" onFocus="geolocate()" type="text"></input>
+                                <div class="col-xs-12">
+                                    <div id="locationField">
+                                        <input class="form-control" id="autocomplete" placeholder="Enter your address" onFocus="geolocate()" type="text"></input>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -652,41 +654,54 @@
     function fillInAddress() {
         // Get the place details from the autocomplete object.
         var place = autocomplete.getPlace();
+        //get all the info we need
+        var street_number = place.address_components[0].long_name;
+        var street_name = place.address_components[1].long_name;
+        var street = street_number + " " + street_name;
+        var city = place.address_components[2].long_name;
+        var state = place.address_components[4].short_name;
+        var zipcode = place.address_components[6].long_name;
 
-        for (var component in componentForm) {
-            document.getElementById(component).value = '';
-            document.getElementById(component).disabled = false;
-        }
+        //fill in all the fields
+        $("#street").val(street);
+        $("#city").val(city);
+        $("#state").val(state);
+        $("#zip_code").val(zipcode);
+        
+        // for (var component in componentForm) {
+        //     document.getElementById(component).value = '';
+        //     document.getElementById(component).disabled = false;
+        // }
 
-        // Get each component of the address from the place details
-        // and fill the corresponding field on the form.
-        console.log(place.address_components)
-        for (var i = 0; i < place.address_components.length; i++) {
-            var addressType = place.address_components[i].types[0];
-            if (componentForm[addressType]) {
-                var val = place.address_components[i][componentForm[addressType]];
-                document.getElementById(addressType).value = val;
-            }
-        }
+        // // Get each component of the address from the place details
+        // // and fill the corresponding field on the form.
+        // console.log(place.address_components)
+        // for (var i = 0; i < place.address_components.length; i++) {
+        //     var addressType = place.address_components[i].types[0];
+        //     if (componentForm[addressType]) {
+        //         var val = place.address_components[i][componentForm[addressType]];
+        //         document.getElementById(addressType).value = val;
+        //     }
+        // }
     }
 
     // Bias the autocomplete object to the user's geographical location,
     // as supplied by the browser's 'navigator.geolocation' object.
-    // function geolocate() {
-    //     if (navigator.geolocation) {
-    //         navigator.geolocation.getCurrentPosition(function(position) {
-    //             var geolocation = {
-    //                 lat: position.coords.latitude,
-    //                 lng: position.coords.longitude
-    //             };
-    //             var circle = new google.maps.Circle({
-    //                 center: geolocation,
-    //                 radius: position.coords.accuracy
-    //             });
-    //             autocomplete.setBounds(circle.getBounds());
-    //         });
-    //     }
-    // }
+    function geolocate() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var geolocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                var circle = new google.maps.Circle({
+                    center: geolocation,
+                    radius: position.coords.accuracy
+                });
+                autocomplete.setBounds(circle.getBounds());
+            });
+        }
+    }
     </script>
     <script>
     $(document).ready(function() {
@@ -897,7 +912,7 @@
         useCommaKey: true,
         useZebraStyle: true,
         placeholder: 'Type or use dropdown to select colleges',
-        // data: ['Paris', 'New York', 'Gotham', 'New Jersey', 'Patchogue']
+        id:'college-enter',
         data: {{schools|tojson}}
     });
 
