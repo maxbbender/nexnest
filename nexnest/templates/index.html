@@ -132,18 +132,6 @@
 						<br>
 					    <span class="text-nowrap"><b id="minPriceDisplay" style="padding-right: 10px;">$0</b> <input id="priceSlider" type="text" class="span2 filterOption" value="" data-slider-min="0" data-slider-max="5000" data-slider-step="500" data-slider-value="[0,5000]"/> <b id="maxPriceDisplay" style="padding-left: 10px;">$5,000</b></span>
 					</div>
-					<div class="col-xs-12 col-sm-6 col-md-4 col-lg-5" style="align-self: flex-end;">
-						Price Per Bedroom Per
-						<br>
-					    <div class="btn-group" data-toggle="buttons">
-					      	<label class="btn btn-outline-primary filterOption" id="priceSearchMonth">
-					      	<input type="radio" name="packageChoice" id="priceSearchMonthInput" autocomplete="off"> Month
-					        </label>
-					      	<label class="btn btn-outline-primary filterOption active" id="priceSearchTerm">
-					      	<input type="radio" name="packageChoice" id="priceSearchMonthInput" checked autocomplete="off"> Semester
-					        </label>
-				        </div>
-					</div>
 			    </div>
 			    <div class="row" style="padding-top: 10px;">
 			    	<div class="col-md-4"></div>
@@ -379,12 +367,6 @@
     	var prices = $("#priceSlider").val().split(',');
 		filters.minPrice = parseInt(prices[0], 10);
 		filters.maxPrice = parseInt(prices[1], 10);
-    	if($("#priceSearchMonth").hasClass("active")){
-    		filters.priceTerm = "month"
-    	}
-    	else if($("#priceSearchTerm").hasClass("active")){
-    		filters.priceTerm = "term"
-    	}
     	
     	//The Lisitng Types
     	filters.listingTypes = [];
