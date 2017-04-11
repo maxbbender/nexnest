@@ -59,6 +59,7 @@ from nexnest.blueprints.landlord import landlords
 from nexnest.blueprints.housingRequest import housingRequests
 from nexnest.blueprints.house import houses
 from nexnest.blueprints.commerce import commerce
+from nexnest.blueprints.error import errors
 
 app.register_blueprint(base)
 app.register_blueprint(indexs)
@@ -70,6 +71,7 @@ app.register_blueprint(landlords)
 app.register_blueprint(housingRequests)
 app.register_blueprint(houses)
 app.register_blueprint(commerce)
+app.register_blueprint(errors)
 
 from nexnest.forms import LoginForm, PasswordChangeForm, ProfilePictureForm
 
