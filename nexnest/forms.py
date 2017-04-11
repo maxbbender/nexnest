@@ -106,6 +106,7 @@ class ListingForm(RedirectForm):
     end_date = StringField(
         'End Date', [Length(min=5, max=15), InputRequired()])
     time_period = SelectField('Length of Lease', choices=valid_time_periods)
+    time_period_date_range = HiddenField('Lease Time Frame', [InputRequired()])
     num_bedrooms = IntegerField('Number of Bedrooms', [InputRequired()])
     num_full_baths = IntegerField(
         'Number of Full Bathrooms', [InputRequired()])
