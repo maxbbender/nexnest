@@ -70,6 +70,8 @@ class Listing(Base):
     # school | year | summer
     time_period = db.Column(db.Text)
 
+    time_period_date_range = db.Column(db.Text)
+
     # This is set to False once a group has been accepted,
     # and completed for the house
     show = db.Column(db.Boolean)
@@ -101,6 +103,7 @@ class Listing(Base):
             num_half_baths,
             num_full_baths,
             time_period,
+            time_period_date_range,
             property_type,
             rent_due,
             other_pets,
@@ -158,6 +161,7 @@ class Listing(Base):
         self.active = False  # Landlords have to activate listing
         self.show = False  # Landlord have to activate listing
         self.time_period = time_period
+        self.time_period_date_range = time_period_date_range
         self.parking = parking
         self.property_type = property_type
         self.rent_due = rent_due

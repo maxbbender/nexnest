@@ -1,5 +1,6 @@
 import os
 import json
+import re
 
 from flask import Blueprint
 from flask import render_template, request, redirect, url_for, flash
@@ -250,6 +251,7 @@ def editListing(listingID):
 
 # @listings.route('/listing/search/AJAX', methods=['POST'])
 # def searchListingsAJAX():
+#     logger.debug("@listings.route('/listing/search/AJAX")
 #     # json = request.get_json(force=True)
 #     postedJSON = {
 #         'bedrooms': 4,  # 1-4 (if at 4 it means 4+)
@@ -280,7 +282,7 @@ def editListing(listingID):
 #         'term': '2018-2019 School Year'  # YYYY-YYYY [School Year|Summer]
 
 #     }
-#     # Required Fields : bedrooms  | minPrice | maxPrice | €22
+#     # Required Fields : `bedrooms` | `minPrice` | `maxPrice` | `priceTerm` | `school`
 #     allListings = None
 #     # Bedroom Checks:
 #     if 'bedrooms' in postedJSON:
@@ -288,9 +290,23 @@ def editListing(listingID):
 #             allListings = session.query(Listing).fitler(Listing.num_bedrooms == postedJSON['bedrooms'])
 #         else:
 #             allListings = session.query(Listing).fitler(Listing.num_bedrooms >= 4)
+#     else:
+#         logger.error("bedrooms not found in listing search query")
 
-#     if 'minPrice' in postedJSON:
-#         if allListings.filter(Listing.)
+#     if 'minPrice' in postedJSON and 'maxPrice' in postedJSON:
+#         allListings = allListings.filter(Listing.price_per_month >= postedJSON['minPrice'], Listing.price_per_month <= postedJSON['maxPrice'])
+#     else:
+#         logger.error('minPrice not found in listing search query')
+
+
+#     # let's look at the term
+#     schoolYearPattern = re.compile("\d{4}-\d{4}")
+
+#     if 'term' in postedJSON:
+#         if schoolYearPattern.match(postedJSON['term']):
+
+#     else:
+#         logger.error("term not found in listing search query")
 
 #     # sortBy Check
 #     if ['sortBy'] in postedJSON:
