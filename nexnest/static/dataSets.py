@@ -149,8 +149,7 @@ maintenanceRequestTypes = [
 propertyTypes = [
     ('house', 'House'),
     ('apartment', 'Apartment'),
-    ('complex', 'Complex'),
-    ('room', 'Room'),
+    ('complex', 'Complex')
 ]
 
 rentDue = [

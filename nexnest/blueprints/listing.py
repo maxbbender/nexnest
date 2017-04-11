@@ -161,8 +161,17 @@ def createListing():
                     newListing.floor_plan_url = '/uploads/listings/%s/floorplan.pdf' % str(newListing.id)
 
                     session.commit()
-
-                return redirect(url_for('listings.viewListing', listingID=newListing.id))
+                if form.nextAction.data == 'checkout':
+                    return redirect(url_for('landlords.landlordDashboard'))
+                elif form.nextAction.data == 'createNew':
+                    return redirect(url_for('listings.createListing'))
+                elif form.nextAction.data == 'createCopy':
+                    return render_template('/landlord/createListing.html',
+                                       form=form,
+                                       title='Create Listing',
+                                       schools=allSchoolsAsStrings())
+                else:
+                    return redirect(url_for('listings.viewListing', listingID=newListing.id))
             else:
                 flash_errors(form)
                 return render_template('/landlord/createListing.html',
@@ -181,6 +190,31 @@ def createListing():
         return redirect(url_for('indexs.index'))
 
 
+@listings.route('/listing/clone/<listingID>', methods=['GET', 'POST'])
+@login_required
+def cloneListing(listingID):
+    listingLandlords = session.query(LandlordListing) \
+        .filter_by(listing_id=listingID,
+                   landlord_id=current_user.id) \
+        .count()
+
+    # The current user is a landlord for this listing
+    if listingLandlords > 0:
+
+        currentListing = session.query(
+            Listing).filter_by(id=listingID).first()
+
+        form = ListingForm(obj=currentListing)
+        return render_template('/landlord/createListing.html',
+                               form=form,
+                               title='Create Listing',
+                               schools=allSchoolsAsStrings())
+    else:
+        flash("You are not the landlord of this listing", 'warning')
+
+        return redirect(url_for('listings.viewListing',
+                                listingID=listingID))
+                                    
 @listings.route('/listing/edit/<listingID>', methods=['GET', 'POST'])
 @login_required
 def editListing(listingID):
@@ -195,10 +229,7 @@ def editListing(listingID):
         currentListing = session.query(
             Listing).filter_by(id=listingID).first()
 
-        form = ListingForm(obj=currentListing,
-                           unit_type=currentListing.unit_type,
-                           time_period=currentListing.time_period,
-                           parking=currentListing.parking)
+        form = ListingForm(obj=currentListing)
 
         if request.method == 'GET':
             return render_template('/landlord/createListing.html',

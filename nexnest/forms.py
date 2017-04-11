@@ -151,6 +151,7 @@ class ListingForm(RedirectForm):
     floor_plan = FileField('Floor Plan')
     youtube_url = StringField('Listing Video', [Optional(), URL()])
     colleges = HiddenField('Colleges', [InputRequired()])
+    nextAction = HiddenField('Next')
 
 
 class CreateGroupForm(RedirectForm):

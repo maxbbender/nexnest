@@ -234,6 +234,9 @@ class Listing(Base):
 
         return landlords
 
+    def isLandlord(self, current_user):
+        return current_user in self.landLordsAsUsers
+
     def getPhotoURLs(self):
         photoURLs = []
         folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(self.id), 'pictures')
