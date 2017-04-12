@@ -116,6 +116,7 @@
 			{% endif %}
 			{% if current_user in listing.landLordsAsUsers() %}
 				<a href="{{url_for('listings.cloneListing', listingID=listing.id)}}" class="btn btn-primary">Clone Listing</a>
+				<a href="{{url_for('listings.editListing', listingID=listing.id)}}" class="btn btn-primary">Edit Listing</a>
 			{% endif %}
 			<hr>
 			<div class="row">
