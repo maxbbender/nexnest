@@ -6,6 +6,7 @@
 	    {% else %}
 	    <title>NexNest</title>
 	    {% endif %}
+        <link rel="stylesheet" href="{{url_for('static', filename='css/flatpickr.css')}}">
         <link rel="stylesheet" href="{{url_for('static', filename='css/rangeslider.css')}}">
         <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap-slider.css')}}">
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
@@ -14,8 +15,7 @@
 	    <link rel="stylesheet" href="{{url_for('static', filename='font-awesome-4.7.0/css/font-awesome.min.css')}}">
         <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap-notifications.css')}}">
         <link rel="stylesheet" href="{{url_for('static', filename='css/magnific-popup.css')}}">
-        <link rel="stylesheet" href="{{url_for('static', filename='css/magicsuggest-min.css')}}">
-        <link rel="stylesheet" href="https://unpkg.com/flatpickr/dist/flatpickr.min.css">  
+        <link rel="stylesheet" href="{{url_for('static', filename='css/magicsuggest-min.css')}}">         
         <script src="{{url_for('static', filename='js/flatpickr.js')}}"></script>        
 	    <script src="{{url_for('static', filename='js/jquery-latest.js')}}"></script>        
         <script src="{{url_for('static', filename='js/bootstrap-validator.js')}}"></script>

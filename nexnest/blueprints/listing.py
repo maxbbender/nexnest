@@ -81,7 +81,9 @@ def createListing():
                                      heat_gas=form.heat_gas.data,
                                      cable=form.cable.data,
                                      washer_free=form.washer_free.data,
-                                     youtube_url=form.youtube_url.data)
+                                     youtube_url=form.youtube_url.data,
+                                     first_semester_rent_due_date=form.first_semester_rent_due_date.data,
+                                     second_semester_rent_due_date=form.second_semester_rent_due_date.data)
 
                 session.add(newListing)
                 session.commit()
@@ -166,10 +168,12 @@ def createListing():
                 elif form.nextAction.data == 'createNew':
                     return redirect(url_for('listings.createListing'))
                 elif form.nextAction.data == 'createCopy':
+                    selectedSchools = session.query(ListingSchool).filter_by(listing=newListing).all()
                     return render_template('/landlord/createListing.html',
                                        form=form,
                                        title='Create Listing',
-                                       schools=allSchoolsAsStrings())
+                                       schools=allSchoolsAsStrings(),
+                                       selectedSchools=selectedSchools)
                 else:
                     return redirect(url_for('listings.viewListing', listingID=newListing.id))
             else:
@@ -204,11 +208,15 @@ def cloneListing(listingID):
         currentListing = session.query(
             Listing).filter_by(id=listingID).first()
 
+        #Get colleges associated with the listing
+        selectedSchools = session.query(ListingSchool).filter_by(listing=currentListing).all()
+
         form = ListingForm(obj=currentListing)
         return render_template('/landlord/createListing.html',
                                form=form,
                                title='Create Listing',
-                               schools=allSchoolsAsStrings())
+                               schools=allSchoolsAsStrings(),
+                               selectedSchools=selectedSchools)
     else:
         flash("You are not the landlord of this listing", 'warning')
 
@@ -229,23 +237,29 @@ def editListing(listingID):
         currentListing = session.query(
             Listing).filter_by(id=listingID).first()
 
+        #Get colleges associated with the listing
+        selectedSchools = session.query(ListingSchool).filter_by(listing=currentListing).all()
+
         form = ListingForm(obj=currentListing)
 
         if request.method == 'GET':
-            return render_template('/landlord/createListing.html',
+            return render_template('/landlord/editListing.html',
                                    form=form,
-                                   title='Edit Listing')
+                                   title='Edit Listing',
+                                   listingID=listingID,
+                                   schools=allSchoolsAsStrings(),
+                                   selectedSchools = selectedSchools)
         else:  # POST
             form = ListingForm(request.form)
 
             if form.validate():
                 currentListing.street = form.street.data
                 currentListing.city = form.city.data
+                currentListing.state = form.state.data
                 currentListing.zip_code = form.zip_code.data
                 currentListing.start_date = form.start_date.data
                 currentListing.end_date = form.end_date.data
                 currentListing.time_period = form.time_period.data
-                currentListing.unit_type = form.unit_type.data
                 currentListing.apartment_number = form.apartment_number.data
                 currentListing.num_bedrooms = form.num_bedrooms.data
                 currentListing.num_full_baths = form.num_full_baths.data
@@ -262,12 +276,26 @@ def editListing(listingID):
                 currentListing.air_conditioning = form.air_conditioning.data
                 currentListing.handicap = form.handicap.data
                 currentListing.furnished = form.furnished.data
-                currentListing.utilities_included = form.utilities_included.data
                 currentListing.emergency_maintenance = form.emergency_maintenance.data
                 currentListing.snow_plowing = form.snow_plowing.data
                 currentListing.garbage_service = form.garbage_service.data
                 currentListing.security_service = form.security_service.data
                 currentListing.description = form.description.data
+                currentListing.rent_due = form.rent_due.data
+                currentListing.property_type = form.property_type.data
+                currentListing.electricity = form.electricity.data
+                currentListing.internet = form.internet.data
+                currentListing.water = form.water.data
+                currentListing.heat_gas = form.heat_gas.data
+                currentListing.cable = form.cable.data
+                currentListing.washer_free = form.washer_free.data
+                currentListing.youtube_url = form.youtube_url.data
+                if form.property_type == 'apartment':
+                    currentListing.apartment_number = form.apartment_number.data
+
+                if form.rent_due == 'semester':
+                    currentListing.first_semester_rent_due_date = form.first_semester_rent_due_date.data
+                    currentListing.second_semester_rent_due_date = form.second_semester_rent_due_date.data
                 session.commit()
                 flash('Listing Updated', 'info')
                 return redirect(url_for('listings.viewListing',

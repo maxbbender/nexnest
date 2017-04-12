@@ -5,7 +5,7 @@
     </div>
     <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-8">
         <div class="callout-block text-center fade-in-b">
-            <h1>Create a Listing</h1>
+            <h1>Edit Listing</h1>
         </div>
         <br>
         <div class="stepwizard col-xs-12">
@@ -49,7 +49,7 @@
             </div>
         </div>
         <br>
-        <form id="createListingForm" action="{{url_for('listings.createListing')}}" role="form" data-toggle="validator" method='POST' enctype="multipart/form-data">
+        <form id="editListingForm" action="{{url_for('listings.editListing', listingID=listingID)}}" role="form" data-toggle="validator" method='POST' enctype="multipart/form-data">
             {{form.csrf_token}}
             <div class="row setup-content" id="step-1">
                 <div class="col-xs-12">
@@ -96,6 +96,9 @@
                             <div class="row">
                                 <div class="col-xs-6">
                                     <div class="form-group">
+                                        {% for school in selectedSchools %}
+                                            {{ school.school.name }}
+                                        {% endfor %}
                                         {{ form.colleges }}
                                         <label class="control-label">What Colleges are you targeting?(up to 3)</label>
                                         <div id="magicsuggest" required='required'></div>
@@ -637,40 +640,12 @@
                                         {{form.youtube_url(class='form-control', type="url")}}
                                     </div>
                                 </div>
-                                {{form.nextAction}}
-                                <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#confirmModal">Create Listing</a>
+                                <button onClick="submitListingForm()" class="btn btn-primary">Edit Listing</a>
                             </div>
                         </div>
                     </div>
                 </div>
         </form>
-        </div>
-    </div>
-    <!--Confirm Listing-->
-    <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirm" aria-hidden="true">
-        <div class="modal-dialog" role="document" style="max-width: 700px;">
-            <div class="modal-content">
-                <div class="modal-header">                  
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h4 class="modal-title" id="requestTour"></h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-xs-1"></div>
-                        <div class="col-xs-10">
-                              You have succesfully created your listing. From here you have three options. You can <strong>Proceed to Checkout</strong> where you can purchase this listing and have it displayed on NexNest! You can also <strong>Create Another Listing</strong> and then checkout multiple at once. If you want, you can even <strong>Use This Listing as Template</strong> which will prefill the create form with everything you chose for this listing. This is ideal to create this listing again for the following year.
-                        </div>
-                    </div>
-                    <div id="groupNumber" style="display: none;"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onClick="submitListingForm('createNew')" data-dismiss="modal">Create Another Listing</button>
-                    <button type="button" class="btn btn-primary" onClick="submitListingForm('createCopy')" data-dismiss="modal">Use Listing as Template</button>
-                    <button type="button" class="btn btn-primary" onClick="submitListingForm('checkout')" data-dismiss="modal">Proceed to Checkout</button>
-                </div>
-            </div>
         </div>
     </div>
     {% endblock %}
@@ -762,15 +737,6 @@
     </script>
     <script>
     $(document).ready(function() {
-
-        flatpickr(".flatpickr", {
-            wrap: true,
-            disable: [{
-                from: "0001-01-01",
-                to: "today"
-            }]
-        });
-        $('.flatpickr-calendar').css('z-index', 99999999999999);
         //Determine wether or not to show the apartment # field
         if ($("#property_type").val() == "apartment") {
             $("#apartmentNumberInput").show();
@@ -817,7 +783,7 @@
         //Fill in the college select field
         //collegeEnter.setSelection([{name:'Paris', value:1}]);
         {% for school in selectedSchools %}
-            collegeEnter.setValue(['{{school.school.name}}']);
+            collegeEnter.setValue(['{{ school.school.name }}']);
         {% endfor %}
 
         /* Here we go, populate hidden form object with values to submit */
@@ -941,6 +907,17 @@
         $('a[data-toggle="' + tog + '"][data-title="' + sel + '"]').removeClass('notActive').addClass('active');
     });
 
+    $(document).ready(function() {
+        flatpickr(".flatpickr", {
+            wrap: true,
+            disable: [{
+                from: "0001-01-01",
+                to: "today"
+            }]
+        });
+        $('.flatpickr-calendar').css('z-index', 99999999999999);
+    });
+
     $(document).on("focusin", "#leaseStartDateInput", function() {
         $(this).prop('readonly', true);
     });
@@ -1014,7 +991,7 @@
         }
     });
 
-    function submitListingForm(nextAction) {
+    function submitListingForm() {
         $("#colleges").val(JSON.stringify(collegeEnter.getValue()));
         if($("#time_period").val()=="school"){
             $("#time_period_date_range").val($("#time_range_full_select").val());
@@ -1025,18 +1002,8 @@
         else if($("#time_period").val()=="summer"){
             $("#time_period_date_range").val($("#time_range_summer_select").val());
         }
-        //fill hidden next field        
-        $("#nextAction").val(nextAction);
-        alert($("#nextAction").val());
-        $("form#createListingForm").submit();
+        $("form#editListingForm").submit();
     }
-
-    //Request Tour Modal
-    $('#confirmModal').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget);
-      var modal = $(this);
-      modal.find('.modal-title').text('What Next?');
-    })
 
     var collegeEnter = $('#magicsuggest').magicSuggest({
         allowFreeEntries: false,
