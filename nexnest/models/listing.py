@@ -70,6 +70,8 @@ class Listing(Base):
     # school | year | summer
     time_period = db.Column(db.Text)
 
+    time_period_date_range = db.Column(db.Text)
+
     # This is set to False once a group has been accepted,
     # and completed for the house
     show = db.Column(db.Boolean)
@@ -101,6 +103,7 @@ class Listing(Base):
             num_half_baths,
             num_full_baths,
             time_period,
+            time_period_date_range,
             property_type,
             rent_due,
             other_pets,
@@ -158,6 +161,7 @@ class Listing(Base):
         self.active = False  # Landlords have to activate listing
         self.show = False  # Landlord have to activate listing
         self.time_period = time_period
+        self.time_period_date_range = time_period_date_range
         self.parking = parking
         self.property_type = property_type
         self.rent_due = rent_due
@@ -197,6 +201,51 @@ class Listing(Base):
             'startDate': self.start_date.strftime("%B %d, %Y"),
             'endDate': self.end_date.strftime("%B %d, %Y"),
             'url': '/listing/view/%d' % self.id
+        }
+
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'street': self.street,
+            'state': self.state,
+            'zipCode': self.zip_code,
+            'address': self.address,
+            'startDate': self.start_date.strftime("%B %d, %Y"),
+            'endDate': self.end_date.strftime("%B %d, %Y"),
+            'url': '/listing/view/%d' % self.id,
+            'numBedrooms': self.num_bedrooms,
+            'price': self.price,
+            'pricePerSemester': self.price_per_semester,
+            'pricePerMonth': self.price_per_month,
+            'squareFootage': self.square_footage,
+            'parking': self.parking,
+            'cats': self.cats,
+            'dogs': self.dogs,
+            'washer': self.washer,
+            'washerFree': self.washer_free,
+            'dryer': self.dryer,
+            'dishwasher': self.dishwasher,
+            'airConditioning': self.air_conditioning,
+            'handicap': self.handicap,
+            'furnished': self.furnished,
+            'emergencyMaintenance': self.emergency_maintenance,
+            'snowPlowing': self.snow_plowing,
+            'garbageService': self.garbage_service,
+            'securityService': self.security_service,
+            'description': self.description,
+            'numFullBaths': self.num_full_baths,
+            'numHalfBaths': self.num_half_baths,
+            'apartmentNumber': self.apartment_number,
+            'propertyType': self.property_type,
+            'electricity': self.electricity,
+            'internet': self.internet,
+            'water': self.water,
+            'heatGas': self.heat_gas,
+            'cable': self.cable,
+            'featured': self.featured,
+            'timePeriod': self.time_period,
+            'timePeriodDateRange': self.time_period_date_range,
         }
 
     @property

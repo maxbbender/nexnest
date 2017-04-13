@@ -1,3 +1,5 @@
+import math
+
 from sqlalchemy.orm import relationship
 
 import googlemaps
@@ -21,10 +23,10 @@ class ListingSchool(Base):
                           primary_key=True)
     # destination_address = db.Column(db.Text)
     # origin_address = db.Column(db.Text)
-    driving_time = db.Column(db.Text)
-    driving_miles = db.Column(db.Text)
-    walking_time = db.Column(db.Text)
-    walking_miles = db.Column(db.Text)
+    driving_time = db.Column(db.Float) # In Minutes
+    driving_miles = db.Column(db.Float) # In Miles
+    walking_time = db.Column(db.Float) # In Minutes
+    walking_miles = db.Column(db.Float) # In Miles
 
     school = relationship('School', back_populates='listings')
     listing = relationship('Listing', back_populates='schools')
@@ -52,8 +54,8 @@ class ListingSchool(Base):
             logger.debug(pformat(drivingResponse))
 
             if drivingResponse['status'] == 'OK' and drivingResponse['rows'][0]['elements'][0]['status'] == 'OK':
-                self.driving_time = drivingResponse['rows'][0]['elements'][0]['duration']['text']
-                self.driving_miles = drivingResponse['rows'][0]['elements'][0]['distance']['text']
+                self.driving_time = math.ceil((drivingResponse['rows'][0]['elements'][0]['duration']['value'])/60)
+                self.driving_miles = round((drivingResponse['rows'][0]['elements'][0]['distance']['value'] / 1609.34), 1)
             else:
                 logger.warning('Could not calculate driving time from %r to %r' % (self.listing, self.school))
                 logger.warning('Status from googlemaps : %s' % drivingResponse['status'])
@@ -71,8 +73,8 @@ class ListingSchool(Base):
             logger.debug(pformat(walkingResponse))
 
             if walkingResponse['status'] == 'OK' and walkingResponse['rows'][0]['elements'][0]['status'] == 'OK':
-                self.driving_time = walkingResponse['rows'][0]['elements'][0]['duration']['text']
-                self.driving_miles = walkingResponse['rows'][0]['elements'][0]['distance']['text']
+                self.driving_time = math.ceil(walkingResponse['rows'][0]['elements'][0]['duration']['value'] / 60)
+                self.driving_miles = round((walkingResponse['rows'][0]['elements'][0]['distance']['value'] / 1609.34), 1)
             else:
                 logger.warning('Could not calculate walking time from %r to %r' % (self.listing, self.school))
                 logger.warning('Status from googlemaps : %s' % walkingResponse['status'])

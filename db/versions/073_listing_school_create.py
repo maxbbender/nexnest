@@ -14,13 +14,13 @@ listingSchools = Table('listing_schools', meta,
                               primary_key=True,
                               nullable=False),
                        Column('driving_time',
-                              Text()),
+                              Float()),
                        Column('driving_miles',
-                              Text()),
+                              Float()),
                        Column('walking_time',
-                              Text()),
+                              Float()),
                        Column('walking_miles',
-                              Text()),)
+                              Float()))
 
 
 def upgrade(migrate_engine):
