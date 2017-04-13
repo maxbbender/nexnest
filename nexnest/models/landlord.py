@@ -42,6 +42,14 @@ class Landlord(Base):
     def __repr__(self):
         return '<Landlord %r>' % self.user_id
 
+    @property
+    def hasListingsToCheckout(self):
+        for listing in self.getListings():
+            if not listing.active:
+                return True
+
+        return False
+
     def getListings(self):
         listings = []
         for landlordListing in self.listings:

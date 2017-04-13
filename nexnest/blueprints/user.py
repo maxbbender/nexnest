@@ -82,12 +82,8 @@ def login():
             # Does the user exist
             if user is not None:
                 if user.active is True:
-
                     if check_password(user, login_form.password.data):
                         login_user(user)
-
-                        if user.isLandlord:
-                            return redirect(url_for('landlords.landlordDashboard'))
                     else:
                         flash("Error validating login credentials", 'danger')
                 else:
@@ -97,10 +93,17 @@ def login():
         else:
             flash_errors(login_form)
 
-        if login_form.nextURL.data != '':
-            return redirect(login_form.nextURL.data)
-        else:
-            return login_form.redirect()
+        # if login_form.nextURL.data != '':
+        #     return redirect(login_form.nextURL.data)
+        # elif login_form.next.data is not None:
+        #     return redirect(login_form.next.data)
+        # else:
+        #     return login_form.redirect()
+        if login_form.next.data == '':
+            if user.isLandlord:
+                return redirect('/landlord/dashboard')
+
+        return login_form.redirect()
 
 
 @users.route('/logout')

@@ -43,11 +43,12 @@ def viewListing(listingID):
 @listings.route('/listing/create', methods=['GET', 'POST'])
 @login_required
 def createListing():
+    logger.debug('/listing/create createListing()')
     # User can only create listing if landlord
     if current_user.isLandlord:
         if request.method == 'POST':
             form = ListingForm(request.form)
-            print(form)
+            logger.debug('POST form : %r' % form)
             if form.validate():
                 newListing = Listing(street=form.street.data,
                                      city=form.city.data,
@@ -92,7 +93,6 @@ def createListing():
                 session.commit()
 
                 # Now we want to define the colleges this listing is associated with
-
                 collegeNames = json.loads(form.colleges.data)
 
                 for collegeName in collegeNames:
@@ -344,14 +344,14 @@ def searchListingsAJAX():
 
     # }
     # Required Fields : `bedrooms` | `minPrice` | `maxPrice` | `priceTerm` | `school`
-    allListings = None
+    allListings = session.query(Listing).filter(Listing.active == True)
 
     # Bedroom Checks:
     if 'bedrooms' in postedJSON:
         if postedJSON['bedrooms'] < 4:
-            allListings = session.query(Listing).filter(Listing.num_bedrooms == postedJSON['bedrooms'])
+            allListings = allListings.filter(Listing.num_bedrooms == postedJSON['bedrooms'])
         else:
-            allListings = session.query(Listing).filter(Listing.num_bedrooms >= 4)
+            allListings = allListings.filter(Listing.num_bedrooms >= 4)
     else:
         logger.error("Bedrooms not found in listing search query")
 

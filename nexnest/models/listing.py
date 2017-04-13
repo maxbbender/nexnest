@@ -159,7 +159,7 @@ class Listing(Base):
         self.apartment_number = apartment_number
         self.disabled = False
         self.active = False  # Landlords have to activate listing
-        self.show = False  # Landlord have to activate listing
+        self.show = False
         self.time_period = time_period
         self.time_period_date_range = time_period_date_range
         self.parking = parking
@@ -264,6 +264,20 @@ class Listing(Base):
         for groupListing in self.groups:
             if groupListing.accepted:
                 return True
+
+        return False
+
+    def isEditableBy(self, user):
+        if user in self.landLordsAsUsers():
+            return True
+
+        return False
+
+    def isViewableBy(self, user):
+        if self.isEditableBy(user):
+            return True
+        elif self.active and self.show:
+            return True
 
         return False
 
