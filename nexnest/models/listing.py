@@ -204,6 +204,51 @@ class Listing(Base):
         }
 
     @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'street': self.street,
+            'state': self.state,
+            'zipCode': self.zip_code,
+            'address': self.address,
+            'startDate': self.start_date.strftime("%B %d, %Y"),
+            'endDate': self.end_date.strftime("%B %d, %Y"),
+            'url': '/listing/view/%d' % self.id,
+            'numBedrooms': self.num_bedrooms,
+            'price': self.price,
+            'pricePerSemester': self.price_per_semester,
+            'pricePerMonth': self.price_per_month,
+            'squareFootage': self.square_footage,
+            'parking': self.parking,
+            'cats': self.cats,
+            'dogs': self.dogs,
+            'washer': self.washer,
+            'washerFree': self.washer_free,
+            'dryer': self.dryer,
+            'dishwasher': self.dishwasher,
+            'airConditioning': self.air_conditioning,
+            'handicap': self.handicap,
+            'furnished': self.furnished,
+            'emergencyMaintenance': self.emergency_maintenance,
+            'snowPlowing': self.snow_plowing,
+            'garbageService': self.garbage_service,
+            'securityService': self.security_service,
+            'description': self.description,
+            'numFullBaths': self.num_full_baths,
+            'numHalfBaths': self.num_half_baths,
+            'apartmentNumber': self.apartment_number,
+            'propertyType': self.property_type,
+            'electricity': self.electricity,
+            'internet': self.internet,
+            'water': self.water,
+            'heatGas': self.heat_gas,
+            'cable': self.cable,
+            'featured': self.featured,
+            'timePeriod': self.time_period,
+            'timePeriodDateRange': self.time_period_date_range,
+        }
+
+    @property
     def briefStreet(self):
         return self.street[:22] + '...'
 
