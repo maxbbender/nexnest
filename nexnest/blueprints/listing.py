@@ -173,10 +173,10 @@ def createListing():
                 elif form.nextAction.data == 'createCopy':
                     selectedSchools = session.query(ListingSchool).filter_by(listing=newListing).all()
                     return render_template('/landlord/createListing.html',
-                                       form=form,
-                                       title='Create Listing',
-                                       schools=allSchoolsAsStrings(),
-                                       selectedSchools=selectedSchools)
+                                           form=form,
+                                           title='Create Listing',
+                                           schools=allSchoolsAsStrings(),
+                                           selectedSchools=selectedSchools)
                 else:
                     return redirect(url_for('listings.viewListing', listingID=newListing.id))
             else:
@@ -211,7 +211,7 @@ def cloneListing(listingID):
         currentListing = session.query(
             Listing).filter_by(id=listingID).first()
 
-        #Get colleges associated with the listing
+        # Get colleges associated with the listing
         selectedSchools = session.query(ListingSchool).filter_by(listing=currentListing).all()
 
         form = ListingForm(obj=currentListing)
@@ -225,7 +225,8 @@ def cloneListing(listingID):
 
         return redirect(url_for('listings.viewListing',
                                 listingID=listingID))
-                                    
+
+
 @listings.route('/listing/edit/<listingID>', methods=['GET', 'POST'])
 @login_required
 def editListing(listingID):
@@ -240,7 +241,7 @@ def editListing(listingID):
         currentListing = session.query(
             Listing).filter_by(id=listingID).first()
 
-        #Get colleges associated with the listing
+        # Get colleges associated with the listing
         selectedSchools = session.query(ListingSchool).filter_by(listing=currentListing).all()
 
         form = ListingForm(obj=currentListing)
@@ -251,7 +252,7 @@ def editListing(listingID):
                                    title='Edit Listing',
                                    listingID=listingID,
                                    schools=allSchoolsAsStrings(),
-                                   selectedSchools = selectedSchools)
+                                   selectedSchools=selectedSchools)
         else:  # POST
             form = ListingForm(request.form)
 
@@ -389,11 +390,15 @@ def searchListingsAJAX():
 
     # School
     if 'school' in postedJSON:
+        logger.debug('Looking at school %s' % postedJSON['school'])
         school = session.query(School).filter_by(name=postedJSON['school']).first()
 
         if school is not None:
             if 'distanceToCampus' in postedJSON:
-                allListings = allListings.join(ListingSchool).filter(ListingSchool.school_id == school.id, int(postedJSON['distanceToCampus']) <=ListingSchool.driving_miles)
+                logger.debug('Distance to Campus %f' % float(postedJSON['distanceToCampus']))
+                allListings = allListings.join(ListingSchool) \
+                    .filter(ListingSchool.school_id == school.id,
+                            postedJSON['distanceToCampus'] <= ListingSchool.driving_miles)
             else:
                 allListings = allListings.join(ListingSchool).filter(ListingSchool.school_id == school.id)
         else:
@@ -408,35 +413,35 @@ def searchListingsAJAX():
         petList = postedJSON['pets']
 
         if 'dogs' in petList:
-            allListings = allListings.filter(Listing.dogs == True)
+            allListings = allListings.filter(Listing.dogs)
 
         if 'cats' in petList:
-            allListings = allListings.filter(Listing.cats == True)
+            allListings = allListings.filter(Listing.cats)
 
     # Includes
     if 'includes' in postedJSON:
         includeList = postedJSON['includes']
 
         if 'furnished' in includeList:
-            allListings = allListings.filter(Listing.furnished == True)
+            allListings = allListings.filter(Listing.furnished)
 
         if 'dishwasher' in includeList:
-            allListings = allListings.filter(Listing.dishwasher == True)
+            allListings = allListings.filter(Listing.dishwasher)
 
         if 'laundry' in includeList:
-            allListings = allListings.filter(Listing.washer == True, Listing.dryer == True)
+            allListings = allListings.filter(Listing.washer, Listing.dryer)
 
         if 'internet' in includeList:
-            allListings = allListings.filter(Listing.internet == True)
+            allListings = allListings.filter(Listing.internet)
 
         if 'cable' in includeList:
-            allListings = allListings.filter(Listing.cable == True)
+            allListings = allListings.filter(Listing.cable)
 
         if 'snowRemoval' in includeList:
-            allListings = allListings.filter(Listing.snow_plowing == True)
+            allListings = allListings.filter(Listing.snow_plowing)
 
         if 'garbageRemoval' in includeList:
-            allListings = allListings.filter(Listing.garbage_service == True)
+            allListings = allListings.filter(Listing.garbage_service)
 
     # Listing Types
     if 'listingTypes' in postedJSON:
@@ -491,7 +496,6 @@ def searchListingsAJAX():
 
             allListings = sortedListings
 
-
         elif postedJSON['sortBy'] == 'priceHighToLow':
             while len(allListings) > 0:
                 highestListing = None
@@ -532,7 +536,6 @@ def searchListingsAJAX():
                         closestListing = listing
                         continue
 
-                    
                     if listing.date_created < closestListing.date_created:
                         closestListing = listing
 

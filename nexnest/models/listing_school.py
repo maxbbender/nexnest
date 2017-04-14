@@ -23,10 +23,10 @@ class ListingSchool(Base):
                           primary_key=True)
     # destination_address = db.Column(db.Text)
     # origin_address = db.Column(db.Text)
-    driving_time = db.Column(db.Float) # In Minutes
-    driving_miles = db.Column(db.Float) # In Miles
-    walking_time = db.Column(db.Float) # In Minutes
-    walking_miles = db.Column(db.Float) # In Miles
+    driving_time = db.Column(db.Numeric)  # In Minutes
+    driving_miles = db.Column(db.Numeric)  # In Miles
+    walking_time = db.Column(db.Numeric)  # In Minutes
+    walking_miles = db.Column(db.Numeric)  # In Miles
 
     school = relationship('School', back_populates='listings')
     listing = relationship('Listing', back_populates='schools')
@@ -54,7 +54,7 @@ class ListingSchool(Base):
             logger.debug(pformat(drivingResponse))
 
             if drivingResponse['status'] == 'OK' and drivingResponse['rows'][0]['elements'][0]['status'] == 'OK':
-                self.driving_time = math.ceil((drivingResponse['rows'][0]['elements'][0]['duration']['value'])/60)
+                self.driving_time = math.ceil((drivingResponse['rows'][0]['elements'][0]['duration']['value']) / 60)
                 self.driving_miles = round((drivingResponse['rows'][0]['elements'][0]['distance']['value'] / 1609.34), 1)
             else:
                 logger.warning('Could not calculate driving time from %r to %r' % (self.listing, self.school))
