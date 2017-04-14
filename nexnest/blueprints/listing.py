@@ -395,10 +395,10 @@ def searchListingsAJAX():
 
         if school is not None:
             if 'distanceToCampus' in postedJSON:
-                logger.debug('Distance to Campus %f' % float(postedJSON['distanceToCampus']))
+                logger.debug('Distance to Campus %d' % postedJSON['distanceToCampus'])
                 allListings = allListings.join(ListingSchool) \
                     .filter(ListingSchool.school_id == school.id,
-                            postedJSON['distanceToCampus'] <= ListingSchool.driving_miles)
+                            postedJSON['distanceToCampus'] >= ListingSchool.driving_miles)
             else:
                 allListings = allListings.join(ListingSchool).filter(ListingSchool.school_id == school.id)
         else:

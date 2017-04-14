@@ -361,6 +361,7 @@
   	});
 
 	function buildFilters(){
+		console.log('Building the filters')
 		var filters = {};
     	filters.school = $("#school2 option:selected").text();
     	filters.term = $("#when2 option:selected").text();
@@ -417,11 +418,12 @@
     	}    	
 
     	filters.sortBy = $("#sortBy").val();
+    	console.log('Filters')
     	console.log(JSON.stringify(filters));
     	$.ajax({
     	    type: "POST",
     	    url: "/listing/search/AJAX",
-    	    data: JSON.stringify({ postedJSON: filters }),
+    	    data: JSON.stringify(filters),
     	    contentType: "application/json; charset=utf-8",
     	    dataType: "json",
     	    success: function(data){
