@@ -324,6 +324,7 @@
 <script>
 	var distanceSlider = new Slider('#distanceToCampus', {});
 	var priceSlider = new Slider('#priceSlider', {});
+	var listings = [];
 
 	$("#priceSlider").change(function() {
 		var prices = $("#priceSlider").val().split(',');
@@ -416,7 +417,23 @@
     	}    	
 
     	filters.sortBy = $("#sortBy").val();
-    	console.log(filters);
+    	console.log(JSON.stringify(filters));
+    	$.ajax({
+    	    type: "POST",
+    	    url: "/listing/search/AJAX",
+    	    data: JSON.stringify({ postedJSON: filters }),
+    	    contentType: "application/json; charset=utf-8",
+    	    dataType: "json",
+    	    success: function(data){
+    	    	console.log(data.listings)
+    	    	
+    	    	console.log(listings);
+    	    	displayListings(data.listings);
+    	    },
+    	    failure: function(errMsg) {
+    	        alert(errMsg);
+    	    }
+    	});
 	}
 
 	$("#toggleMap").click(function() {
@@ -430,69 +447,6 @@
   		}  		
   	});
 
-  	var listing1 = {
-  		url: '/listing/view/1',
-  		briefStreet: '8239 Molina Mall',
-  		city: 'North Brittanyton',
-  		state: 'NY',
-  		num_bedrooms: '5',
-  		num_full_baths: '3',
-  		price: '6000',
-  		rent_due: 'semester'
-  	}
-
-  	var listing2 = {
-  		url: '/listing/view/2',
-  		briefStreet: '25 Myrtle Lane',
-  		city: 'Patchogue',
-  		state: 'NY',
-  		num_bedrooms: '3',
-  		num_full_baths: '1',
-  		price: '2500',
-  		rent_due: 'month'
-  	}
-  	var listing3 = {
-  		url: '/listing/view/3',
-  		briefStreet: '76 Taylor Ave',
-  		city: 'Poughkeepsie',
-  		state: 'NY',
-  		num_bedrooms: '4',
-  		num_full_baths: '2',
-  		price: '5000',
-  		rent_due: 'semester'
-  	}
-
-  	var listing4 = {
-  		url: '/listing/view/4',
-  		briefStreet: '51 Bennet Ave',
-  		city: 'Medford',
-  		state: 'NY',
-  		num_bedrooms: '2',
-  		num_full_baths: '1',
-  		price: '3750',
-  		rent_due: 'month'
-  	}
-  	var listing5 = {
-  		url: '/listing/view/5',
-  		briefStreet: '15 Potter St',
-  		city: 'Patchogue',
-  		state: 'NY',
-  		num_bedrooms: '3',
-  		num_full_baths: '2',
-  		price: '4500',
-  		rent_due: 'semester'
-  	}
-
-  	var listing6 = {
-  		url: '/listing/view/3',
-  		briefStreet: '9 Fairview Ext',
-  		city: 'Poughkeepsie',
-  		state: 'NY',
-  		num_bedrooms: '6',
-  		num_full_baths: '1',
-  		price: '6000',
-  		rent_due: 'month'
-  	}
   	var listing7 = {
   		url: '/listing/view/2',
   		briefStreet: '7 Trap Lane',
@@ -513,19 +467,16 @@
   		price: '4500',
   		rent_due: 'semester'
   	}
-  	var listings = [];
+  	
   	var featuredListings = [];
-	listings.push(listing1);
-	listings.push(listing2);
-	listings.push(listing3);
-	listings.push(listing4);
-	listings.push(listing5);
-	listings.push(listing6);
 	featuredListings.push(listing7);
 	featuredListings.push(listing8);
 	
-	function displayListings(){
+	function displayListings(listings){
+		console.log(listings);
+		$("#listingsGoHere").empty();
 		//Featured
+		console.log(featuredListings);
 		$.each(featuredListings, function(index, listing) {
 			console.log(listing);
 
@@ -566,7 +517,6 @@
 		//Non Featured
 		$.each(listings, function(index, listing) {
 			console.log(listing);
-
 			var nextListing = `<div class="card" style="width: 100%;">
 				<a href="`+ listing.url +`">
 					<img src="/static/img/testHouse.jpg" class="listingImg card-img-top">
@@ -575,9 +525,9 @@
 					<div class="row">
 						<div class="col-xs-4">
 							<span class="text-nowrap">
-								`+ listing.num_bedrooms +`<i class="fa fa-bed" aria-hidden="true"></i>
+								`+ listing.numBedrooms +`<i class="fa fa-bed" aria-hidden="true"></i>
 								&nbsp;
-								`+ listing.num_full_baths +`<i class="fa fa-bath" aria-hidden="true"></i>
+								`+ listing.numFullBaths +`<i class="fa fa-bath" aria-hidden="true"></i>
 							</span>
 							<br>
 							$`+ listing.price +` per `+ listing.rent_due +`
@@ -585,7 +535,7 @@
 						<div class="col-xs-8">
 							<div class="row">
 								<div class="col-xs-12" style="text-align: right;">
-									<span class="text-nowrap">`+ listing.briefStreet +`</span>
+									<span class="text-nowrap">`+ listing.street +`</span>
 								</div>
 							</div>
 							<div class="row">
@@ -611,7 +561,7 @@
   		//Get the listings here
   		initialFilters();
   		//display them here
-  		displayListings();  				
+  		displayListings(listings);  				
   	});
 
   	$("#showFilterButton").click(function() {
@@ -630,7 +580,7 @@
 
 	$( document ).ready(function() {
 		{% if current_user.is_authenticated %}
-			displayListings();
+			displayListings(listings);
 			$("#homepage").show();
 		{% endif %}    	
 	});
