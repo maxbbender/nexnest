@@ -60,6 +60,7 @@ from nexnest.blueprints.housingRequest import housingRequests
 from nexnest.blueprints.house import houses
 from nexnest.blueprints.commerce import commerce
 from nexnest.blueprints.error import errors
+from nexnest.blueprints.notification import notifications
 
 app.register_blueprint(base)
 app.register_blueprint(indexs)
@@ -72,6 +73,7 @@ app.register_blueprint(housingRequests)
 app.register_blueprint(houses)
 app.register_blueprint(commerce)
 app.register_blueprint(errors)
+app.register_blueprint(notifications)
 
 from nexnest.forms import LoginForm, PasswordChangeForm, ProfilePictureForm
 

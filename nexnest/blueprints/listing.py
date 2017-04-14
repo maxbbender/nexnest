@@ -345,7 +345,7 @@ def searchListingsAJAX():
 
     # }
     # Required Fields : `bedrooms` | `minPrice` | `maxPrice` | `priceTerm` | `school`
-    allListings = session.query(Listing).filter(Listing.active == True)
+    allListings = session.query(Listing).filter(Listing.active)
 
     # Bedroom Checks:
     if 'bedrooms' in postedJSON:
