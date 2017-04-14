@@ -209,6 +209,7 @@ class Listing(Base):
             'id': self.id,
             'street': self.street,
             'state': self.state,
+            'city': self.city,
             'zipCode': self.zip_code,
             'address': self.address,
             'startDate': self.start_date.strftime("%B %d, %Y"),
@@ -246,6 +247,7 @@ class Listing(Base):
             'featured': self.featured,
             'timePeriod': self.time_period,
             'timePeriodDateRange': self.time_period_date_range,
+            'priceTerm': self.rent_due
         }
 
     @property
