@@ -691,8 +691,8 @@
         var street_name = place.address_components[1].long_name;
         var street = street_number + " " + street_name;
         var city = place.address_components[2].long_name;
-        var state = place.address_components[4].short_name;
-        var zipcode = place.address_components[6].long_name;
+        var state = place.address_components[5].short_name;
+        var zipcode = place.address_components[7].long_name;
 
         //fill in all the fields
         $("#street").val(street);
