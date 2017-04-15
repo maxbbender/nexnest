@@ -1,6 +1,9 @@
 from flask import Blueprint, jsonify
 from flask_login import login_required, current_user
 
+from sqlalchemy import or_, and_
+
+from nexnest import logger
 from nexnest.application import session
 from nexnest.models.notification import Notification
 
@@ -60,12 +63,23 @@ def markNotificationUnRead(notifID):
 @notifications.route('/notification/allRead')
 @login_required
 def markAllNotificationsRead():
+    # allUnreadNotifs = session.query(Notification) \
+    #     .filter(and_(Notification.target_user_id == current_user.id,
+    #                  Notification.viewed is False,
+    #                  or_(Notification.category == 'report_notification',
+    #                      Notification.category == 'generic_notification'))) \
+    #     .all()
+
     allUnreadNotifs = session.query(Notification) \
-        .filter_by(target_user_id=current_user.id,
-                   viewed=False) \
+        .filter(Notification.target_user_id == current_user.id,
+                Notification.viewed == False,
+                Notification.category.in_(['generic_notification', 'report_notification'])) \
         .all()
 
+    logger.debug('All Unread Notifications %r' % allUnreadNotifs)
+
     for notif in allUnreadNotifs:
+        # if notif.category not in ['generic_message, direct_message']:
         notif.viewed = True
         session.commit()
 
