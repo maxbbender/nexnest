@@ -58,14 +58,9 @@ class Listing(Base):
     youtube_url = db.Column(db.String(256))
     floor_plan_url = db.Column(db.String(256))
     featured = db.Column(db.Boolean)
+    active = db.Column(db.Boolean)
 
     # monthly_rent_due_date = db.Column(db.Date)
-
-    # This is for whether or not the landlord has deleted
-    # the listing. This comes into play for checking dates
-    # when a landlord creates a new listing at the same
-    # address
-    active = db.Column(db.Boolean)
 
     # school | year | summer
     time_period = db.Column(db.Text)

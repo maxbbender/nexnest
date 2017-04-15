@@ -2,10 +2,11 @@ from flask import Blueprint, redirect, url_for, flash, render_template, jsonify
 
 from flask_login import login_required, current_user
 
+from nexnest import logger
 from nexnest.application import session
-
 from nexnest.models.landlord import Landlord
-
+from nexnest.models.listing import Listing
+from nexnest.models.landlord_listing import LandlordListing
 from nexnest.forms import TourDateChangeForm, PreCheckoutForm
 
 landlords = Blueprint('landlords',
@@ -21,6 +22,11 @@ def landlordDashboard():
         landlord = session.query(Landlord) \
             .filter_by(user_id=current_user.id) \
             .first()
+
+        nonActiveListings = []
+        for listing in landlord.getListings():
+            if not listing.active:
+                nonActiveListings.append(listing)
 
         unAcceptedHousingRequests, acceptedHousingRequests, completedHousingRequests = landlord.getHousingRequests()
         openMaintenanceRequests, inProgressMaintenanceRequests, completedMaintenanceRequests = landlord.getMaintenanceRequests()
@@ -42,7 +48,8 @@ def landlordDashboard():
                                openMaintenanceRequests=openMaintenanceRequests,
                                inProgressMaintenanceRequests=inProgressMaintenanceRequests,
                                completedMaintenanceRequests=completedMaintenanceRequests,
-                               preCheckoutForm=PreCheckoutForm())
+                               preCheckoutForm=PreCheckoutForm(),
+                               listingsToCheckout=nonActiveListings)
     else:
         flash("You are not a landlord", 'warning')
         return redirect(url_for('indexs.index'))

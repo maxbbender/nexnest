@@ -3,8 +3,7 @@ from sqlalchemy.orm import relationship
 
 from nexnest.application import db, session
 
-from .base import Base
-
+from nexnest.models.base import Base
 from nexnest.models.security_deposit import SecurityDeposit
 
 
