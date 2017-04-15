@@ -1,6 +1,7 @@
 import os
 import json
 import re
+import datetime
 
 from flask import Blueprint
 from flask import render_template, request, redirect, url_for, flash, jsonify
@@ -49,6 +50,8 @@ def createListing():
         if request.method == 'POST':
             form = ListingForm(request.form)
             logger.debug('POST form : %r' % form)
+            logger.debug('TimePeriodDateRange : %s' % form.time_period_date_range.data)
+            logger.debug('Start Date : %r' % form.start_date.data)
             if form.validate():
                 newListing = Listing(street=form.street.data,
                                      city=form.city.data,
@@ -59,6 +62,7 @@ def createListing():
                                      num_bedrooms=form.num_bedrooms.data,
                                      price=form.price.data,
                                      square_footage=form.square_footage.data,
+                                     time_period_date_range=form.time_period_date_range.data,
                                      parking=form.parking.data,
                                      cats=form.cats.data,
                                      dogs=form.dogs.data,
@@ -89,96 +93,128 @@ def createListing():
                                      first_semester_rent_due_date=form.first_semester_rent_due_date.data,
                                      second_semester_rent_due_date=form.second_semester_rent_due_date.data)
 
-                session.add(newListing)
-                session.commit()
+                otherListingsWithSameAddress = session.query(Listing) \
+                    .filter_by(street=newListing.street,
+                               city=newListing.city,
+                               state=newListing.state,
+                               zip_code=newListing.zip_code,
+                               ) \
+                    .all()
 
-                # Now we want to define the colleges this listing is associated with
-                collegeNames = json.loads(form.colleges.data)
+                conflictingDates = False
+                conflictingListing = None
+                for listing in otherListingsWithSameAddress:
+                    newListingStartDate = datetime.datetime.strptime(newListing.start_date, "%Y-%m-%d").date()
+                    newListingEndDate = datetime.datetime.strptime(newListing.end_date, "%Y-%m-%d").date()
+                    if newListingStartDate <= listing.end_date and newListingStartDate >= listing.start_date:
+                        conflictingListing = listing
+                        conflictingDates = True
+                        break
+                    elif newListingStartDate <= listing.start_date and newListingEndDate >= listing.start_date:
+                        conflictingListing = listing
+                        conflictingDates = True
+                        break
 
-                for collegeName in collegeNames:
-                    school = session.query(School).filter_by(name=collegeName).first()
+                if not conflictingDates:
 
-                    if school is not None:
-                        newListingSchool = ListingSchool(listing=newListing, school=school)
-                        session.add(newListingSchool)
-                        session.commit()
-                        logger.debug('newListingSchool %r' % newListingSchool)
-                    else:
-                        logger.error('Could not find school with name %s. Could not associated listing %r with school' % (collegeName, newListing))
+                    session.add(newListing)
+                    session.commit()
 
-                logger.debug('form.colleges.data : %s' % form.colleges.data)
-                logger.debug('collegeNames %r' % collegeNames)
+                    # Now we want to define the colleges this listing is associated with
+                    collegeNames = json.loads(form.colleges.data)
 
-                if newListing.property_type == 'apartment':
-                    newListing.apartment_number = form.apartment_number.data
+                    for collegeName in collegeNames:
+                        school = session.query(School).filter_by(name=collegeName).first()
 
-                if newListing.rent_due == 'semester':
-                    newListing.first_semester_rent_due_date = form.first_semester_rent_due_date.data
-                    newListing.second_semester_rent_due_date = form.second_semester_rent_due_date.data
-
-                session.commit()
-
-                # Let's create the folder to upload the photos to.
-                folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(newListing.id))
-
-                if not os.path.exists(folderPath):
-                    os.makedirs(folderPath)
-
-                folderPicturesPath = os.path.join(folderPath, 'pictures')
-                if not os.path.exists(folderPicturesPath):
-                    os.makedirs(folderPicturesPath)
-
-                # Lets add the photos
-                uploadedFiles = request.files.getlist("pictures")
-
-                if not uploadedFiles[0].filename == '':
-                    logger.debug("Uploaded Files : %r" % uploadedFiles)
-                    filenames = []
-                    fileUploadError = False
-                    for file in uploadedFiles:
-                        if file and allowed_file(file.filename):
-                            filename = secure_filename(file.filename)
-
-                            file.save(os.path.join(folderPicturesPath, filename))
-                            filenames.append(filename)
+                        if school is not None:
+                            newListingSchool = ListingSchool(listing=newListing, school=school)
+                            session.add(newListingSchool)
+                            session.commit()
+                            logger.debug('newListingSchool %r' % newListingSchool)
                         else:
-                            fileUploadError = True
-                            logger.error("Error saving file %s" % file.filename)
+                            logger.error('Could not find school with name %s. Could not associated listing %r with school' % (collegeName, newListing))
 
-                    if fileUploadError:
-                        flash("Error saving file", 'danger')
-                else:
-                    logger.debug("No Picture files to upload")
+                    logger.debug('form.colleges.data : %s' % form.colleges.data)
+                    logger.debug('collegeNames %r' % collegeNames)
 
-                flash('Listing Created', 'success')
+                    if newListing.property_type == 'apartment':
+                        newListing.apartment_number = form.apartment_number.data
 
-                if 'floor_plan' in request.files:
-                    file = request.files['floor_plan']
-
-                    if file and isPDF(file.filename):
-                        filename = secure_filename(request.files['floor_plan'].filename)
-
-                        if file and allowed_file(filename):
-                            # print('Trying to save file in %s' % os.path.join(folderPath, 'floorplan.pdf'))
-                            file.save(os.path.join(folderPath, 'floorplan.pdf'))
-
-                    newListing.floor_plan_url = os.path.join(folderPath, 'floorplan.pdf')
-                    newListing.floor_plan_url = '/uploads/listings/%s/floorplan.pdf' % str(newListing.id)
+                    if newListing.rent_due == 'semester':
+                        newListing.first_semester_rent_due_date = form.first_semester_rent_due_date.data
+                        newListing.second_semester_rent_due_date = form.second_semester_rent_due_date.data
 
                     session.commit()
-                if form.nextAction.data == 'checkout':
-                    return redirect(url_for('landlords.landlordDashboard'))
-                elif form.nextAction.data == 'createNew':
-                    return redirect(url_for('listings.createListing'))
-                elif form.nextAction.data == 'createCopy':
-                    selectedSchools = session.query(ListingSchool).filter_by(listing=newListing).all()
+
+                    # Let's create the folder to upload the photos to.
+                    folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(newListing.id))
+
+                    if not os.path.exists(folderPath):
+                        os.makedirs(folderPath)
+
+                    folderPicturesPath = os.path.join(folderPath, 'pictures')
+                    if not os.path.exists(folderPicturesPath):
+                        os.makedirs(folderPicturesPath)
+
+                    # Lets add the photos
+                    uploadedFiles = request.files.getlist("pictures")
+
+                    if not uploadedFiles[0].filename == '':
+                        logger.debug("Uploaded Files : %r" % uploadedFiles)
+                        filenames = []
+                        fileUploadError = False
+                        for file in uploadedFiles:
+                            if file and allowed_file(file.filename):
+                                filename = secure_filename(file.filename)
+
+                                file.save(os.path.join(folderPicturesPath, filename))
+                                filenames.append(filename)
+                            else:
+                                fileUploadError = True
+                                logger.error("Error saving file %s" % file.filename)
+
+                        if fileUploadError:
+                            flash("Error saving file", 'danger')
+                    else:
+                        logger.debug("No Picture files to upload")
+
+                    flash('Listing Created', 'success')
+
+                    if 'floor_plan' in request.files:
+                        file = request.files['floor_plan']
+
+                        if file and isPDF(file.filename):
+                            filename = secure_filename(request.files['floor_plan'].filename)
+
+                            if file and allowed_file(filename):
+                                # print('Trying to save file in %s' % os.path.join(folderPath, 'floorplan.pdf'))
+                                file.save(os.path.join(folderPath, 'floorplan.pdf'))
+
+                        newListing.floor_plan_url = os.path.join(folderPath, 'floorplan.pdf')
+                        newListing.floor_plan_url = '/uploads/listings/%s/floorplan.pdf' % str(newListing.id)
+
+                        session.commit()
+                    if form.nextAction.data == 'checkout':
+                        return redirect(url_for('landlords.landlordDashboard'))
+                    elif form.nextAction.data == 'createNew':
+                        return redirect(url_for('listings.createListing'))
+                    elif form.nextAction.data == 'createCopy':
+                        selectedSchools = session.query(ListingSchool).filter_by(listing=newListing).all()
+                        return render_template('/landlord/createListing.html',
+                                               form=form,
+                                               title='Create Listing',
+                                               schools=allSchoolsAsStrings(),
+                                               selectedSchools=selectedSchools)
+                    else:
+                        return redirect(url_for('listings.viewListing', listingID=newListing.id))
+                else:
+                    flash('There is conflicting dates with a listing at the same address. \nThe conflicting listing is listed from %s - %s' %
+                          (conflictingListing.start_date.strftime("%B %d, %Y"),
+                           conflictingListing.end_date.strftime("%B %d, %Y")), 'warning')
                     return render_template('/landlord/createListing.html',
                                            form=form,
                                            title='Create Listing',
-                                           schools=allSchoolsAsStrings(),
-                                           selectedSchools=selectedSchools)
-                else:
-                    return redirect(url_for('listings.viewListing', listingID=newListing.id))
+                                           schools=allSchoolsAsStrings())
             else:
                 flash_errors(form)
                 return render_template('/landlord/createListing.html',

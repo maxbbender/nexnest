@@ -264,6 +264,34 @@ class Listing(Base):
 
         return False
 
+    @property
+    def hasUtilities(self):
+        return self.electricity or self.water or self.heat_gas or self.internet or self.cable
+
+    @property
+    def hasServices(self):
+        return self.handicap or self.snow_plowing or self.emergency_maintenance or self.security_service or self.garbage_service
+
+    @property
+    def hasAppliances(self):
+        return self.washer or self.dryer or self.air_conditioning or self.dishwasher
+
+    @property
+    def hasPets(self):
+        return self.dogs or self.cats or (len(self.other_pets) > 0)
+
+    @property
+    def hasTours(self):
+        if not self.hasHouse():
+            if len(self.tours):
+                return True
+        else:
+            return False
+
+    @property
+    def address(self):
+        return '%s, %s %s, %s' % (self.street, self.city, self.state, self.zip_code)
+
     def isEditableBy(self, user):
         if user in self.landLordsAsUsers():
             return True
@@ -308,34 +336,6 @@ class Listing(Base):
 
     def hasHouse(self):
         return len(self.house) > 0
-
-    @property
-    def hasUtilities(self):
-        return self.electricity or self.water or self.heat_gas or self.internet or self.cable
-
-    @property
-    def hasServices(self):
-        return self.handicap or self.snow_plowing or self.emergency_maintenance or self.security_service or self.garbage_service
-
-    @property
-    def hasAppliances(self):
-        return self.washer or self.dryer or self.air_conditioning or self.dishwasher
-
-    @property
-    def hasPets(self):
-        return self.dogs or self.cats or (len(self.other_pets) > 0)
-
-    @property
-    def hasTours(self):
-        if not self.hasHouse():
-            if len(self.tours):
-                return True
-        else:
-            return False
-
-    @property
-    def address(self):
-        return '%s, %s %s, %s' % (self.street, self.city, self.state, self.zip_code)
 
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument
