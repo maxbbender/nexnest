@@ -16,8 +16,7 @@
                             <dl>
                                 {{ createGroupForm.csrf_token }}
                                 {{ render_field(createGroupForm.name, class="form-control", type="text") }}
-                                {{ render_field(createGroupForm.start_date, class="form-control") }}
-                                {{ render_field(createGroupForm.end_date, class="form-control") }}
+                                {{ render_field(createGroupForm.time_frame, class="form-control")}}
                             </dl>
                             <p>
                                 <input type='submit' value='Create Group' class="btn btn-info">

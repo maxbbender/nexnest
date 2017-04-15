@@ -58,17 +58,14 @@ class Listing(Base):
     youtube_url = db.Column(db.String(256))
     floor_plan_url = db.Column(db.String(256))
     featured = db.Column(db.Boolean)
+    active = db.Column(db.Boolean)
 
     # monthly_rent_due_date = db.Column(db.Date)
 
-    # This is for whether or not the landlord has deleted
-    # the listing. This comes into play for checking dates
-    # when a landlord creates a new listing at the same
-    # address
-    active = db.Column(db.Boolean)
-
     # school | year | summer
     time_period = db.Column(db.Text)
+
+    time_period_date_range = db.Column(db.Text)
 
     # This is set to False once a group has been accepted,
     # and completed for the house
@@ -101,6 +98,7 @@ class Listing(Base):
             num_half_baths,
             num_full_baths,
             time_period,
+            time_period_date_range,
             property_type,
             rent_due,
             other_pets,
@@ -156,8 +154,9 @@ class Listing(Base):
         self.apartment_number = apartment_number
         self.disabled = False
         self.active = False  # Landlords have to activate listing
-        self.show = False  # Landlord have to activate listing
+        self.show = False
         self.time_period = time_period
+        self.time_period_date_range = time_period_date_range
         self.parking = parking
         self.property_type = property_type
         self.rent_due = rent_due
@@ -200,6 +199,53 @@ class Listing(Base):
         }
 
     @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'street': self.street,
+            'state': self.state,
+            'city': self.city,
+            'zipCode': self.zip_code,
+            'address': self.address,
+            'startDate': self.start_date.strftime("%B %d, %Y"),
+            'endDate': self.end_date.strftime("%B %d, %Y"),
+            'url': '/listing/view/%d' % self.id,
+            'numBedrooms': self.num_bedrooms,
+            'price': self.price,
+            'pricePerSemester': self.price_per_semester,
+            'pricePerMonth': self.price_per_month,
+            'squareFootage': self.square_footage,
+            'parking': self.parking,
+            'cats': self.cats,
+            'dogs': self.dogs,
+            'washer': self.washer,
+            'washerFree': self.washer_free,
+            'dryer': self.dryer,
+            'dishwasher': self.dishwasher,
+            'airConditioning': self.air_conditioning,
+            'handicap': self.handicap,
+            'furnished': self.furnished,
+            'emergencyMaintenance': self.emergency_maintenance,
+            'snowPlowing': self.snow_plowing,
+            'garbageService': self.garbage_service,
+            'securityService': self.security_service,
+            'description': self.description,
+            'numFullBaths': self.num_full_baths,
+            'numHalfBaths': self.num_half_baths,
+            'apartmentNumber': self.apartment_number,
+            'propertyType': self.property_type,
+            'electricity': self.electricity,
+            'internet': self.internet,
+            'water': self.water,
+            'heatGas': self.heat_gas,
+            'cable': self.cable,
+            'featured': self.featured,
+            'timePeriod': self.time_period,
+            'timePeriodDateRange': self.time_period_date_range,
+            'priceTerm': self.rent_due
+        }
+
+    @property
     def briefStreet(self):
         return self.street[:22] + '...'
 
@@ -215,6 +261,48 @@ class Listing(Base):
         for groupListing in self.groups:
             if groupListing.accepted:
                 return True
+
+        return False
+
+    @property
+    def hasUtilities(self):
+        return self.electricity or self.water or self.heat_gas or self.internet or self.cable
+
+    @property
+    def hasServices(self):
+        return self.handicap or self.snow_plowing or self.emergency_maintenance or self.security_service or self.garbage_service
+
+    @property
+    def hasAppliances(self):
+        return self.washer or self.dryer or self.air_conditioning or self.dishwasher
+
+    @property
+    def hasPets(self):
+        return self.dogs or self.cats or (len(self.other_pets) > 0)
+
+    @property
+    def hasTours(self):
+        if not self.hasHouse():
+            if len(self.tours):
+                return True
+        else:
+            return False
+
+    @property
+    def address(self):
+        return '%s, %s %s, %s' % (self.street, self.city, self.state, self.zip_code)
+
+    def isEditableBy(self, user):
+        if user in self.landLordsAsUsers():
+            return True
+
+        return False
+
+    def isViewableBy(self, user):
+        if self.isEditableBy(user):
+            return True
+        elif self.active and self.show:
+            return True
 
         return False
 
@@ -248,34 +336,6 @@ class Listing(Base):
 
     def hasHouse(self):
         return len(self.house) > 0
-
-    @property
-    def hasUtilities(self):
-        return self.electricity or self.water or self.heat_gas or self.internet or self.cable
-
-    @property
-    def hasServices(self):
-        return self.handicap or self.snow_plowing or self.emergency_maintenance or self.security_service or self.garbage_service
-
-    @property
-    def hasAppliances(self):
-        return self.washer or self.dryer or self.air_conditioning or self.dishwasher
-
-    @property
-    def hasPets(self):
-        return self.dogs or self.cats or (len(self.other_pets) > 0)
-
-    @property
-    def hasTours(self):
-        if not self.hasHouse():
-            if len(self.tours):
-                return True
-        else:
-            return False
-
-    @property
-    def address(self):
-        return '%s, %s %s, %s' % (self.street, self.city, self.state, self.zip_code)
 
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument

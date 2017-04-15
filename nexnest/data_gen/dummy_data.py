@@ -54,11 +54,17 @@ session.commit()
 start_date = fake.date_time_this_year(before_now=True)
 end_date = fake.date_time_this_year(before_now=False, after_now=True)
 listing1 = ListingFactory(start_date=start_date, end_date=end_date, num_bedrooms=4)
+listing1.active = True
 listing2 = ListingFactory(start_date=fake.date_time_this_year(before_now=False, after_now=True))
+listing2.active = True
 listing3 = ListingFactory(start_date=start_date, end_date=end_date, num_bedrooms=5)
+listing3.active = True
 listing4 = ListingFactory()
+listing4.active = True
 listing5 = ListingFactory()
+listing5.active = True
 listing6 = ListingFactory()
+listing6.active = True
 
 session.commit()
 

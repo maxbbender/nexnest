@@ -1,4 +1,4 @@
-<a href="{{ message.redirectURL }}">
+<a href="{{ message.redirectURL }}" id="{{ message.id }}" class="noti">
     {% if not message.viewed %}
     <li class="notification" style="background-color: aliceblue;">
     {% else %}
@@ -19,9 +19,9 @@
                         <div class="col-xs-8">
                             <small class="timestamp">{{ message.date_created }}</small>
                         </div>
-                        <div class="col-xs-4" style="text-align: right;">
+                        <!-- <div class="col-xs-4" style="text-align: right;">
                             <small>Mark Read</small>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>

@@ -1,16 +1,18 @@
 from nexnest.application import app, session
-from sqlalchemy import desc
+from sqlalchemy import desc, or_
 
 from nexnest.models import *
 
+from nexnest import logger
+
 import os
+import re
+import datetime
 
 from pprint import pprint
 from nexnest.utils.school import allSchoolsAsStrings
 import googlemaps
 
-allListings = session.query(listing.Listing).filter(listing.Listing.num_bedrooms == 3)
+notif = session.query(notification.Notification).first()
 
-allListings = allListings.filter(listing.Listing.cats).first()
-
-print(allListings)
+print(notif.user)

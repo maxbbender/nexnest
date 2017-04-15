@@ -1,13 +1,17 @@
 import os
 import json
+import re
+import datetime
 
 from flask import Blueprint
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import current_user, login_required
 from werkzeug import secure_filename  # pylint: disable=E0611
 
+from sqlalchemy import or_
+
 from nexnest import logger
-from nexnest.application import session, app
+from nexnest.application import session, app, csrf
 
 from nexnest.forms import ListingForm, SuggestListingForm, TourForm, GroupListingForm
 from nexnest.models.listing import Listing
@@ -40,11 +44,14 @@ def viewListing(listingID):
 @listings.route('/listing/create', methods=['GET', 'POST'])
 @login_required
 def createListing():
+    logger.debug('/listing/create createListing()')
     # User can only create listing if landlord
     if current_user.isLandlord:
         if request.method == 'POST':
             form = ListingForm(request.form)
-            print(form)
+            logger.debug('POST form : %r' % form)
+            logger.debug('TimePeriodDateRange : %s' % form.time_period_date_range.data)
+            logger.debug('Start Date : %r' % form.start_date.data)
             if form.validate():
                 newListing = Listing(street=form.street.data,
                                      city=form.city.data,
@@ -55,6 +62,7 @@ def createListing():
                                      num_bedrooms=form.num_bedrooms.data,
                                      price=form.price.data,
                                      square_footage=form.square_footage.data,
+                                     time_period_date_range=form.time_period_date_range.data,
                                      parking=form.parking.data,
                                      cats=form.cats.data,
                                      dogs=form.dogs.data,
@@ -85,97 +93,128 @@ def createListing():
                                      first_semester_rent_due_date=form.first_semester_rent_due_date.data,
                                      second_semester_rent_due_date=form.second_semester_rent_due_date.data)
 
-                session.add(newListing)
-                session.commit()
+                otherListingsWithSameAddress = session.query(Listing) \
+                    .filter_by(street=newListing.street,
+                               city=newListing.city,
+                               state=newListing.state,
+                               zip_code=newListing.zip_code,
+                               ) \
+                    .all()
 
-                # Now we want to define the colleges this listing is associated with
+                conflictingDates = False
+                conflictingListing = None
+                for listing in otherListingsWithSameAddress:
+                    newListingStartDate = datetime.datetime.strptime(newListing.start_date, "%Y-%m-%d").date()
+                    newListingEndDate = datetime.datetime.strptime(newListing.end_date, "%Y-%m-%d").date()
+                    if newListingStartDate <= listing.end_date and newListingStartDate >= listing.start_date:
+                        conflictingListing = listing
+                        conflictingDates = True
+                        break
+                    elif newListingStartDate <= listing.start_date and newListingEndDate >= listing.start_date:
+                        conflictingListing = listing
+                        conflictingDates = True
+                        break
 
-                collegeNames = json.loads(form.colleges.data)
+                if not conflictingDates:
 
-                for collegeName in collegeNames:
-                    school = session.query(School).filter_by(name=collegeName).first()
+                    session.add(newListing)
+                    session.commit()
 
-                    if school is not None:
-                        newListingSchool = ListingSchool(listing=newListing, school=school)
-                        session.add(newListingSchool)
-                        session.commit()
-                        logger.debug('newListingSchool %r' % newListingSchool)
-                    else:
-                        logger.error('Could not find school with name %s. Could not associated listing %r with school' % (collegeName, newListing))
+                    # Now we want to define the colleges this listing is associated with
+                    collegeNames = json.loads(form.colleges.data)
 
-                logger.debug('form.colleges.data : %s' % form.colleges.data)
-                logger.debug('collegeNames %r' % collegeNames)
+                    for collegeName in collegeNames:
+                        school = session.query(School).filter_by(name=collegeName).first()
 
-                if newListing.property_type == 'apartment':
-                    newListing.apartment_number = form.apartment_number.data
-
-                if newListing.rent_due == 'semester':
-                    newListing.first_semester_rent_due_date = form.first_semester_rent_due_date.data
-                    newListing.second_semester_rent_due_date = form.second_semester_rent_due_date.data
-
-                session.commit()
-
-                # Let's create the folder to upload the photos to.
-                folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(newListing.id))
-
-                if not os.path.exists(folderPath):
-                    os.makedirs(folderPath)
-
-                folderPicturesPath = os.path.join(folderPath, 'pictures')
-                if not os.path.exists(folderPicturesPath):
-                    os.makedirs(folderPicturesPath)
-
-                # Lets add the photos
-                uploadedFiles = request.files.getlist("pictures")
-
-                if not uploadedFiles[0].filename == '':
-                    logger.debug("Uploaded Files : %r" % uploadedFiles)
-                    filenames = []
-                    fileUploadError = False
-                    for file in uploadedFiles:
-                        if file and allowed_file(file.filename):
-                            filename = secure_filename(file.filename)
-
-                            file.save(os.path.join(folderPicturesPath, filename))
-                            filenames.append(filename)
+                        if school is not None:
+                            newListingSchool = ListingSchool(listing=newListing, school=school)
+                            session.add(newListingSchool)
+                            session.commit()
+                            logger.debug('newListingSchool %r' % newListingSchool)
                         else:
-                            fileUploadError = True
-                            logger.error("Error saving file %s" % file.filename)
+                            logger.error('Could not find school with name %s. Could not associated listing %r with school' % (collegeName, newListing))
 
-                    if fileUploadError:
-                        flash("Error saving file", 'danger')
-                else:
-                    logger.debug("No Picture files to upload")
+                    logger.debug('form.colleges.data : %s' % form.colleges.data)
+                    logger.debug('collegeNames %r' % collegeNames)
 
-                flash('Listing Created', 'success')
+                    if newListing.property_type == 'apartment':
+                        newListing.apartment_number = form.apartment_number.data
 
-                if 'floor_plan' in request.files:
-                    file = request.files['floor_plan']
-
-                    if file and isPDF(file.filename):
-                        filename = secure_filename(request.files['floor_plan'].filename)
-
-                        if file and allowed_file(filename):
-                            # print('Trying to save file in %s' % os.path.join(folderPath, 'floorplan.pdf'))
-                            file.save(os.path.join(folderPath, 'floorplan.pdf'))
-
-                    newListing.floor_plan_url = os.path.join(folderPath, 'floorplan.pdf')
-                    newListing.floor_plan_url = '/uploads/listings/%s/floorplan.pdf' % str(newListing.id)
+                    if newListing.rent_due == 'semester':
+                        newListing.first_semester_rent_due_date = form.first_semester_rent_due_date.data
+                        newListing.second_semester_rent_due_date = form.second_semester_rent_due_date.data
 
                     session.commit()
-                if form.nextAction.data == 'checkout':
-                    return redirect(url_for('landlords.landlordDashboard'))
-                elif form.nextAction.data == 'createNew':
-                    return redirect(url_for('listings.createListing'))
-                elif form.nextAction.data == 'createCopy':
-                    selectedSchools = session.query(ListingSchool).filter_by(listing=newListing).all()
-                    return render_template('/landlord/createListing.html',
-                                       form=form,
-                                       title='Create Listing',
-                                       schools=allSchoolsAsStrings(),
-                                       selectedSchools=selectedSchools)
+
+                    # Let's create the folder to upload the photos to.
+                    folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(newListing.id))
+
+                    if not os.path.exists(folderPath):
+                        os.makedirs(folderPath)
+
+                    folderPicturesPath = os.path.join(folderPath, 'pictures')
+                    if not os.path.exists(folderPicturesPath):
+                        os.makedirs(folderPicturesPath)
+
+                    # Lets add the photos
+                    uploadedFiles = request.files.getlist("pictures")
+
+                    if not uploadedFiles[0].filename == '':
+                        logger.debug("Uploaded Files : %r" % uploadedFiles)
+                        filenames = []
+                        fileUploadError = False
+                        for file in uploadedFiles:
+                            if file and allowed_file(file.filename):
+                                filename = secure_filename(file.filename)
+
+                                file.save(os.path.join(folderPicturesPath, filename))
+                                filenames.append(filename)
+                            else:
+                                fileUploadError = True
+                                logger.error("Error saving file %s" % file.filename)
+
+                        if fileUploadError:
+                            flash("Error saving file", 'danger')
+                    else:
+                        logger.debug("No Picture files to upload")
+
+                    flash('Listing Created', 'success')
+
+                    if 'floor_plan' in request.files:
+                        file = request.files['floor_plan']
+
+                        if file and isPDF(file.filename):
+                            filename = secure_filename(request.files['floor_plan'].filename)
+
+                            if file and allowed_file(filename):
+                                # print('Trying to save file in %s' % os.path.join(folderPath, 'floorplan.pdf'))
+                                file.save(os.path.join(folderPath, 'floorplan.pdf'))
+
+                        newListing.floor_plan_url = os.path.join(folderPath, 'floorplan.pdf')
+                        newListing.floor_plan_url = '/uploads/listings/%s/floorplan.pdf' % str(newListing.id)
+
+                        session.commit()
+                    if form.nextAction.data == 'checkout':
+                        return redirect(url_for('landlords.landlordDashboard'))
+                    elif form.nextAction.data == 'createNew':
+                        return redirect(url_for('listings.createListing'))
+                    elif form.nextAction.data == 'createCopy':
+                        selectedSchools = session.query(ListingSchool).filter_by(listing=newListing).all()
+                        return render_template('/landlord/createListing.html',
+                                               form=form,
+                                               title='Create Listing',
+                                               schools=allSchoolsAsStrings(),
+                                               selectedSchools=selectedSchools)
+                    else:
+                        return redirect(url_for('listings.viewListing', listingID=newListing.id))
                 else:
-                    return redirect(url_for('listings.viewListing', listingID=newListing.id))
+                    flash('There is conflicting dates with a listing at the same address. \nThe conflicting listing is listed from %s - %s' %
+                          (conflictingListing.start_date.strftime("%B %d, %Y"),
+                           conflictingListing.end_date.strftime("%B %d, %Y")), 'warning')
+                    return render_template('/landlord/createListing.html',
+                                           form=form,
+                                           title='Create Listing',
+                                           schools=allSchoolsAsStrings())
             else:
                 flash_errors(form)
                 return render_template('/landlord/createListing.html',
@@ -208,7 +247,7 @@ def cloneListing(listingID):
         currentListing = session.query(
             Listing).filter_by(id=listingID).first()
 
-        #Get colleges associated with the listing
+        # Get colleges associated with the listing
         selectedSchools = session.query(ListingSchool).filter_by(listing=currentListing).all()
 
         form = ListingForm(obj=currentListing)
@@ -222,7 +261,8 @@ def cloneListing(listingID):
 
         return redirect(url_for('listings.viewListing',
                                 listingID=listingID))
-                                    
+
+
 @listings.route('/listing/edit/<listingID>', methods=['GET', 'POST'])
 @login_required
 def editListing(listingID):
@@ -237,7 +277,7 @@ def editListing(listingID):
         currentListing = session.query(
             Listing).filter_by(id=listingID).first()
 
-        #Get colleges associated with the listing
+        # Get colleges associated with the listing
         selectedSchools = session.query(ListingSchool).filter_by(listing=currentListing).all()
 
         form = ListingForm(obj=currentListing)
@@ -248,7 +288,7 @@ def editListing(listingID):
                                    title='Edit Listing',
                                    listingID=listingID,
                                    schools=allSchoolsAsStrings(),
-                                   selectedSchools = selectedSchools)
+                                   selectedSchools=selectedSchools)
         else:  # POST
             form = ListingForm(request.form)
 
@@ -307,70 +347,241 @@ def editListing(listingID):
                                 listingID=listingID))
 
 
-# @listings.route('/listing/search/AJAX', methods=['POST'])
-# def searchListingsAJAX():
-#     # json = request.get_json(force=True)
-#     postedJSON = {
-#         'bedrooms': 4,  # 1-4 (if at 4 it means 4+)
-#         'distanceToCampus': 8,  # In miles
-#         'includes': [  # If any of these are here this means that they are check, if not they are not checked. If they are check the listing HAS to have them. if not don't add to filter
-#             'furnished',
-#             'dishwasher',
-#             'laundry',
-#             'internet',
-#             'cable',
-#             'snowRemoval',
-#             'garbageRemoval'
-#         ],
-#         'listingTypes': [  # Only show if element of list, don't show if not element
-#             'house',
-#             'apartment',
-#             'complex'
-#         ],
-#         'school': 'Marist',  # This will be switched to school
-#         'minPrice': 1000,
-#         'maxPrice': 3000,
-#         'pets': [  # Same as includes
-#             'dogs',
-#             'cats'
-#         ],
-#         'priceTerm': 'month',  # month|semester (based on listing price) MATHS
-#         'sortBy': None,  # priceLowToHigh|priceHighToLow|mostRecent|distanceToCampus
-#         'term': '2018-2019 School Year'  # YYYY-YYYY [School Year|Summer]
+@listings.route('/listing/search/AJAX', methods=['POST', 'GET'])
+@csrf.exempt
+def searchListingsAJAX():
+    logger.debug("@listings.route('/listing/search/AJAX")
+    postedJSON = request.get_json(force=True)
+    # postedJSON = {
+    #     'bedrooms': 3,  # 1-4 (if at 4 it means 4+)
+    #     # 'distanceToCampus': 8,  # In miles
+    #     'includes': [  # If any of these are here this means that they are check, if not they are not checked. If they are check the listing HAS to have them. if not don't add to filter
+    #         # 'furnished',
+    #         # 'dishwasher',
+    #         # 'laundry',
+    #         # 'internet',
+    #         # 'cable',
+    #         # 'snowRemoval',
+    #         # 'garbageRemoval'
+    #     ],
+    #     'listingTypes': [  # Only show if element of list, don't show if not element
+    #         'house',
+    #         'apartment',
+    #         'complex'
+    #     ],
+    #     'school': 'Marist',  # This will be switched to school
+    #     'minPrice': 1000,
+    #     'maxPrice': 3000,
+    #     'pets': [  # Same as includes
+    #         # 'dogs',
+    #         # 'cats'
+    #     ],
+    #     'sortBy': None,  # priceLowToHigh|priceHighToLow|mostRecent|distanceToCampus
+    #     'term': '2017-2018 School Year'  # YYYY-YYYY [School Year|Summer]
 
-#     }
-#     # Required Fields : bedrooms  | minPrice | maxPrice | €22
-#     allListings = None
-#     # Bedroom Checks:
-#     if 'bedrooms' in postedJSON:
-#         if postedJSON['bedrooms'] < 4:
-#             allListings = session.query(Listing).fitler(Listing.num_bedrooms == postedJSON['bedrooms'])
-#         else:
-#             allListings = session.query(Listing).fitler(Listing.num_bedrooms >= 4)
+    # }
+    # Required Fields : `bedrooms` | `minPrice` | `maxPrice` | `priceTerm` | `school`
+    allListings = session.query(Listing).filter(Listing.active)
 
-#     if 'minPrice' in postedJSON:
-#         if allListings.filter(Listing.)
+    # Bedroom Checks:
+    if 'bedrooms' in postedJSON:
+        if postedJSON['bedrooms'] < 4:
+            allListings = allListings.filter(Listing.num_bedrooms == postedJSON['bedrooms'])
+        else:
+            allListings = allListings.filter(Listing.num_bedrooms >= 4)
+    else:
+        logger.error("Bedrooms not found in listing search query")
 
+    logger.debug("Bedrooms allListings %r" % allListings.all())
 
-#     # sortBy Check
-#     if ['sortBy'] in postedJSON:
-#         if postedJSON['sortBy'] == 'priceLowToHigh':
+    # Price Checks
+    if 'minPrice' in postedJSON and 'maxPrice' in postedJSON:
+        allListings = allListings.filter(Listing.price_per_month >= postedJSON['minPrice'], Listing.price_per_month <= postedJSON['maxPrice'])
+    else:
+        logger.error('Minimum or Maximum price not found in listing search query')
 
-#         elif postedJSON['sortBy'] == 'priceHighToLow':
+    logger.debug("Price allListings %r" % allListings.all())
 
-#         elif postedJSON['sortBy'] == 'mostRecent':
+    # Term Checks
+    if 'term' in postedJSON:
+        schoolYearPattern = re.compile(r"(\d{4}-\d{4})")
+        match = schoolYearPattern.match(postedJSON['term'])
+        if match:
+            allListings = allListings.filter(Listing.time_period_date_range == match.group(1),
+                                             or_(Listing.time_period == 'school',
+                                                 Listing.time_period == 'year'))
+        else:
+            summerPattern = re.compile(r"(\d{4}) Summer")
+            match = summerPattern.match(postedJSON['term'])
 
-#         elif postedJSON['sortBy'] == 'distanceToCampus':
+            if match:
+                allListings = allListings.filter(Listing.time_period_date_range == match.group(1),
+                                                 Listing.time_period == 'summer')
+            else:
+                logger.error("term input is invalid and does not match any patterns defined. postedJSON['term'] : %s" % postedJSON['term'])
+    else:
+        logger.error("Term not found in listing search query")
 
-#             # No sorting
-#     else:
+    logger.debug("Term allListings %r" % allListings.all())
 
-#     if postedJSON['bedrooms'] < 4:
+    # School
+    if 'school' in postedJSON:
+        logger.debug('Looking at school %s' % postedJSON['school'])
+        school = session.query(School).filter_by(name=postedJSON['school']).first()
 
-#     return {
-#         'distance': {
-#             'school': {
-#                 'name'
-#             }
-#         }
-#     }
+        if school is not None:
+            if 'distanceToCampus' in postedJSON:
+                logger.debug('Distance to Campus %d' % postedJSON['distanceToCampus'])
+                allListings = allListings.join(ListingSchool) \
+                    .filter(ListingSchool.school_id == school.id,
+                            postedJSON['distanceToCampus'] >= ListingSchool.driving_miles)
+            else:
+                allListings = allListings.join(ListingSchool).filter(ListingSchool.school_id == school.id)
+        else:
+            logger.error("Could not find school to apply to search filter. postedJSON['school'] : %s" % postedJSON['school'])
+    else:
+        logger.error("School not found in listing search query")
+
+    logger.debug("School allListings %r" % allListings.all())
+
+    # Pets
+    if 'pets' in postedJSON:
+        petList = postedJSON['pets']
+
+        if 'dogs' in petList:
+            allListings = allListings.filter(Listing.dogs)
+
+        if 'cats' in petList:
+            allListings = allListings.filter(Listing.cats)
+
+    # Includes
+    if 'includes' in postedJSON:
+        includeList = postedJSON['includes']
+
+        if 'furnished' in includeList:
+            allListings = allListings.filter(Listing.furnished)
+
+        if 'dishwasher' in includeList:
+            allListings = allListings.filter(Listing.dishwasher)
+
+        if 'laundry' in includeList:
+            allListings = allListings.filter(Listing.washer, Listing.dryer)
+
+        if 'internet' in includeList:
+            allListings = allListings.filter(Listing.internet)
+
+        if 'cable' in includeList:
+            allListings = allListings.filter(Listing.cable)
+
+        if 'snowRemoval' in includeList:
+            allListings = allListings.filter(Listing.snow_plowing)
+
+        if 'garbageRemoval' in includeList:
+            allListings = allListings.filter(Listing.garbage_service)
+
+    # Listing Types
+    if 'listingTypes' in postedJSON:
+        typeList = postedJSON['listingTypes']
+
+        if 'house' in typeList and 'apartment' in typeList and 'complex' in typeList:
+            allListings = allListings.filter(or_(Listing.property_type == 'house',
+                                                 Listing.property_type == 'apartment',
+                                                 Listing.property_type == 'complex',
+                                                 ))
+        elif 'house' in typeList and 'apartment' in typeList:
+            allListings = allListings.filter(or_(Listing.property_type == 'house',
+                                                 Listing.property_type == 'apartment'
+                                                 ))
+        elif 'house' in typeList and 'complex' in typeList:
+            allListings = allListings.filter(or_(Listing.property_type == 'house',
+                                                 Listing.property_type == 'complex'
+                                                 ))
+        elif 'house' in typeList:
+            allListings = allListings.filter(Listing.property_type == 'house')
+
+        elif 'apartment' in typeList and 'complex' in typeList:
+            allListings = allListings.filter(or_(Listing.property_type == 'apartment',
+                                                 Listing.property_type == 'complex'
+                                                 ))
+        elif 'apartment' in typeList:
+            allListings = allListings.filter(Listing.property_type == 'apartment')
+
+        elif 'complex' in typeList:
+            allListings = allListings.filter(Listing.property_type == 'complex')
+        else:
+            logger.error("No Listing Types were defined to search for")
+
+    allListings = allListings.all()
+
+    # sortBy Check
+    if 'sortBy' in postedJSON:
+        sortedListings = []
+        if postedJSON['sortBy'] == 'priceLowToHigh':
+            while len(allListings) > 0:
+                lowestListing = None
+                for listing in allListings:
+                    if lowestListing is None:
+                        lowestListing = listing
+                        continue
+
+                    if listing.price_per_month < lowestListing.price_per_month:
+                        lowestListing = listing
+
+                sortedListings.append(lowestListing)
+                allListings.remove(lowestListing)
+
+            allListings = sortedListings
+
+        elif postedJSON['sortBy'] == 'priceHighToLow':
+            while len(allListings) > 0:
+                highestListing = None
+                for listing in allListings:
+                    if highestListing is None:
+                        highestListing = listing
+                        continue
+
+                    if listing.price_per_month > highestListing.price_per_month:
+                        highestListing = listing
+
+                sortedListings.append(highestListing)
+                allListings.remove(highestListing)
+
+            allListings = sortedListings
+
+        elif postedJSON['sortBy'] == 'mostRecent':
+            while len(allListings) > 0:
+                mostRecentListing = None
+                for listing in allListings:
+                    if mostRecentListing is None:
+                        mostRecentListing = listing
+                        continue
+
+                    if listing.date_created < mostRecentListing.date_created:
+                        mostRecentListing = listing
+
+                sortedListings.append(mostRecentListing)
+                allListings.remove(mostRecentListing)
+
+            allListings = sortedListings
+
+        elif postedJSON['sortBy'] == 'distanceToCampus':
+            while len(allListings) > 0:
+                closestListing = None
+                for listing in allListings:
+                    if closestListing is None:
+                        closestListing = listing
+                        continue
+
+                    if listing.date_created < closestListing.date_created:
+                        closestListing = listing
+
+                sortedListings.append(closestListing)
+                allListings.remove(closestListing)
+
+            allListings = sortedListings
+
+    listingJSONList = []
+    for listing in allListings:
+        listingJSONList.append(listing.serialize)
+
+    return jsonify(listings=listingJSONList)

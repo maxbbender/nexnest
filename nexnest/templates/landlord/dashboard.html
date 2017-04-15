@@ -10,16 +10,24 @@
                         </i><h4 class="hidden-md-down"><strong>My Dashboard</strong></h4>
                     </a>
                 </li>
-                <li class="nav-item">
-        	        <a class="nav-link left-panel" style="padding-left: 10px;" id="checkoutTab2" data-toggle="tab" href="#checkoutTab" role="tab">
-        	        	<i class="fa fa-shopping-cart" aria-hidden="true"></i><span class="hidden-md-down">Checkout</span>
-        	        </a>
-        	    </li>
-        	    <li class="nav-item">
-        	        <a class="nav-link left-panel active" style="padding-left: 10px;" id="allListingsTab2" data-toggle="tab" href="#allListingsTab" role="tab">
-        	        	<i class="fa fa-globe" aria-hidden="true"></i><span class="hidden-md-down">All Listings</span>
-        	        </a>
-        	    </li>
+                {% if current_user.landlord[0].hasListingsToCheckout %}
+	                <li class="nav-item">
+	        	        <a class="nav-link left-panel active" style="padding-left: 10px;" id="checkoutTab2" data-toggle="tab" href="#checkoutTab" role="tab">
+	        	        	<i class="fa fa-shopping-cart" aria-hidden="true"></i><span class="hidden-md-down">Checkout</span>
+	        	        </a>
+	        	    </li>
+	        	    <li class="nav-item">
+	        	        <a class="nav-link left-panel" style="padding-left: 10px;" id="allListingsTab2" data-toggle="tab" href="#allListingsTab" role="tab">
+	        	        	<i class="fa fa-globe" aria-hidden="true"></i><span class="hidden-md-down">All Listings</span>
+	        	        </a>
+	        	    </li>
+        	    {% else %}
+	        	    <li class="nav-item">
+	        	        <a class="nav-link left-panel active" style="padding-left: 10px;" id="allListingsTab2" data-toggle="tab" href="#allListingsTab" role="tab">
+	        	        	<i class="fa fa-globe" aria-hidden="true"></i><span class="hidden-md-down">All Listings</span>
+	        	        </a>
+	        	    </li>
+        	    {% endif %}
         		<li class="nav-item">
         	        <a class="nav-link left-panel" style="padding-left: 10px;" id="occupiedListingsTab2" data-toggle="tab" href="#occupiedListingsTab" role="tab">
         	        	<i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">Occupied Listings</span>
@@ -69,6 +77,7 @@
 		    	<div class="row">		    		
 		    		<div class="col-xs-12 col-lg-8">
 			            {% for listing in listings %}
+			            {% if not listing.active %}
 			            	<div class="row">
 			            		<div class="col-xs-0"></div>
 			            		<div class="col-xs-12 col-lg-12" style="width: 100%">
@@ -120,6 +129,7 @@
 					                </div>
 				                </div>		                
 			                </div>
+			            {% endif %}
 			            {% endfor %}
 			        </div>
 			        <div id="cart" class="hidden-md-down col-lg-3" style="z-index: 10; position: fixed; top: 25%; left: 75%;">
@@ -339,14 +349,17 @@
 			                <div class="card">
 			                    <div class="card-header">
 				                    <div class="row">
-				                    	<div class="col-xs-12 col-md-8 col-lg-10">
+				                    	<div class="col-xs-12 col-md-8 col-lg-8">
 				                    		<a href="{{ url_for('listings.viewListing', listingID=listing.id) }}">
 				                    			<h3 style="font-size: 3.5vh;"><strong>{{ listing.street }}, {{ listing.city }} {{ listing.state }}</strong></h3>
 				                    			<small style="font-size: 2.5vh;">Lease Period: {{ listing.start_date }} - {{ listing.end_date }}</small>
 				                    		</a>
 				                    	</div>
-				                    	<div class="col-xs-2 col-md-4 col-lg-2" style="text-align: right;">
-				                    		<a href="#" class="btn btn-primary">Edit Listing</a>
+				                    	<div class="col-xs-2 col-md-4 col-lg-4" style="text-align: right;">
+				                    		<a href="{{ url_for('listings.cloneListing', listingID=listing.id) }}" class="btn btn-primary">Clone Listing</a>
+				                    		{% if listing.isEditableBy(current_user) %}
+				                    			<a href="{{ url_for('listings.editListing', listingID=listing.id) }}" class="btn btn-primary">Edit Listing</a>
+				                    		{% endif %}
 				                    	</div>
 				                    </div>			                    
 			                    </div>
@@ -959,7 +972,11 @@
 	var hash = document.location.hash;
 	hash = hash.substr(1);
 	if(!hash){
-		hash = "allListingsTab";
+		{% if current_user.landlord[0].hasListingsToCheckout %}
+			hash = "checkoutTab";
+		{% else %}
+			hash = "allListingsTab";
+		{% endif %}
 		window.location.hash = hash;
 	}
 	//alert(hash);
@@ -1002,7 +1019,11 @@
 		}
 	}
 	else{
-		$("#allListingsTab").addClass('active');
+		{% if current_user.landlord[0].hasListingsToCheckout %}
+			$("#checkoutTab").addClass('active');
+		{% else %}
+			$("#allListingsTab").addClass('active');
+		{% endif %}
 	}
 	//Any time a tab is clicked on left panel update the url to show that
 	$(".left-panel").click(function () {

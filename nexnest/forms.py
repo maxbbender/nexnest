@@ -34,7 +34,7 @@ class RedirectForm(FlaskForm):
         if not self.next.data:
             self.next.data = get_redirect_target() or ''
 
-    def redirect(self, endpoint='index', **values):
+    def redirect(self, endpoint='/', **values):
         if is_safe_url(self.next.data):
             return redirect(self.next.data)
         target = get_redirect_target()
@@ -156,10 +156,10 @@ class ListingForm(RedirectForm):
 
 class CreateGroupForm(RedirectForm):
     name = StringField('Group Name:', [Length(min=2, max=50), InputRequired()])
-    # time_frame = SelectField(
-    #     'When are you looking for a house?', choices=valid_time_frames)
-    start_date = DateField('Start Date', format='%Y-%m-%d')
-    end_date = DateField('End Date', format='%Y-%m-%d')
+    time_frame = SelectField(
+        'When are you looking for a house?', choices=valid_time_frames)
+    #start_date = DateField('Start Date', format='%Y-%m-%d')
+    #end_date = DateField('End Date', format='%Y-%m-%d')
 
 
 class GroupMessageForm(RedirectForm):

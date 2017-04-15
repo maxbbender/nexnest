@@ -67,7 +67,7 @@
 		<div class="col-xs-10 col-md-8 col-lg-8">
 			<div class="row">
 				<div class="col-xs-9">
-					<br>{{ listing.schools }}
+					<br>					
 					<h4>{{ listing.street }},
 					<br>
 					{{ listing.city }}, {{ listing.state }}, {{ listing.zip_code }}</h4>
@@ -116,8 +116,11 @@
 			{% endif %}
 			{% if current_user in listing.landLordsAsUsers() %}
 				<a href="{{url_for('listings.cloneListing', listingID=listing.id)}}" class="btn btn-primary">Clone Listing</a>
-				<a href="{{url_for('listings.editListing', listingID=listing.id)}}" class="btn btn-primary">Edit Listing</a>
+				{% if listing.isEditableBy(current_user) %}
+					<a href="{{url_for('listings.editListing', listingID=listing.id)}}" class="btn btn-primary">Edit Listing</a>
+				{% endif %}
 			{% endif %}
+			
 			<hr>
 			<div class="row">
 				<div class="col-xl-12">
@@ -193,6 +196,36 @@
 						{% endif %}
 						<div class="col-xs-12 col-md-6 col-xl-4">
 							Parking: {{ listing.parking }}
+						</div>
+					</div>
+				</div>
+			</div>
+			<hr style="padding-bottom: 15px;">
+			<div class="row">
+				<div class="col-sm-4">
+					<h2>Distance to {{ listing.schools[0].school.name }}:</h2>
+				</div>
+				<div class="col-sm-8">
+					<div class="row">
+						<div class="col-xs-12 col-md-6 col-xl-4">
+							<strong>Distance:</strong>
+						</div>
+						<div class="col-xs-12 col-md-6 col-xl-4">
+							<strong>Driving Time:</strong>
+						</div>
+						<div class="col-xs-12 col-md-6 col-xl-4">
+							<strong>Walking Time:</strong>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12 col-md-6 col-xl-4">
+							{{ listing.schools[0].driving_miles }} Miles
+						</div>
+						<div class="col-xs-12 col-md-6 col-xl-4">
+							{{ listing.schools[0].driving_time }} Minutes
+						</div>
+						<div class="col-xs-12 col-md-6 col-xl-4">
+							{{ listing.schools[0].walking_time }} Minutes
 						</div>
 					</div>
 				</div>

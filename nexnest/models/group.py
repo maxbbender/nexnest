@@ -20,8 +20,9 @@ class Group(Base):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text)
     leader_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    start_date = db.Column(db.Date)
-    end_date = db.Column(db.Date)
+    target_time_period = db.Column(db.Text)
+    # start_date = db.Column(db.Date)
+    # end_date = db.Column(db.Date)
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
     users = relationship("GroupUser", back_populates='group')
@@ -35,11 +36,13 @@ class Group(Base):
             self,
             name,
             leader,
-            start_date,
-            end_date
+            target_time_period
+            # start_date,
+            # end_date
     ):
-        self.start_date = start_date
-        self.end_date = end_date
+        # self.start_date = start_date
+        # self.end_date = end_date
+        self.target_time_period = target_time_period
         self.name = name
 
         self.leader = leader

@@ -128,7 +128,7 @@
 			    </div>
 			    <div class="row" style="padding-top: 10px;">
 					<div class="col-xs-12 col-sm-6 col-md-8 col-lg-7" style="padding-left: 0px;">
-						Price Range
+						Monthly Price Range
 						<br>
 					    <span class="text-nowrap"><b id="minPriceDisplay" style="padding-right: 10px;">$0</b> <input id="priceSlider" type="text" class="span2 filterOption" value="" data-slider-min="0" data-slider-max="5000" data-slider-step="500" data-slider-value="[0,5000]"/> <b id="maxPriceDisplay" style="padding-left: 10px;">$5,000</b></span>
 					</div>
@@ -324,6 +324,9 @@
 <script>
 	var distanceSlider = new Slider('#distanceToCampus', {});
 	var priceSlider = new Slider('#priceSlider', {});
+	var listings = [];
+	//create the timer for loading screen
+	var loadingScreenTimer;
 
 	$("#priceSlider").change(function() {
 		var prices = $("#priceSlider").val().split(',');
@@ -341,17 +344,37 @@
 
 	//call buildFilters on change of any filter element
 	$( ".filterOption" ).change(function() {
-  		buildFilters();
+  		buildFilters("False");
   	});
 
 	function initialFilters(){
 		var filters = {};
-    	filters.location = $("#where option:selected").text();
+    	filters.school = $("#where option:selected").text();
     	filters.term = $("#when option:selected").text();
     	filters.bedrooms = parseInt($("#rooms").val(), 10);
     	var prices = $("#priceSlider").val().split(',');
 		filters.minPrice = parseInt(prices[0], 10);
 		filters.maxPrice = parseInt(prices[1], 10);
+		$.LoadingOverlay("show", {
+		    image       : "",
+		    fontawesome : "fa fa-spinner fa-spin"
+		});
+		$.ajax({
+    	    type: "POST",
+    	    url: "/listing/search/AJAX",
+    	    data: JSON.stringify(filters),
+    	    contentType: "application/json; charset=utf-8",
+    	    dataType: "json",
+    	    success: function(data){
+    	    	setTimeout(function(){
+    	    	    $.LoadingOverlay("hide");
+    	    	}, 1000);
+    	    	displayListings(data.listings);
+    	    },
+    	    failure: function(errMsg) {
+    	        alert(errMsg);
+    	    }
+    	});
 	}
 
 	$("#advancedSearch").click(function() {
@@ -359,7 +382,10 @@
 		$("#mainContent").toggle();
   	});
 
-	function buildFilters(){
+	function buildFilters(refresh){
+		//If they had already changed something clear the timer
+		clearTimeout(loadingScreenTimer);
+		console.log('Building the filters')
 		var filters = {};
     	filters.school = $("#school2 option:selected").text();
     	filters.term = $("#when2 option:selected").text();
@@ -416,7 +442,38 @@
     	}    	
 
     	filters.sortBy = $("#sortBy").val();
-    	console.log(filters);
+    	// console.log('Filters')
+    	// console.log(JSON.stringify(filters));
+    	if(refresh == 'True'){
+    		$.LoadingOverlay("show", {
+			    image       : "",
+			    fontawesome : "fa fa-spinner fa-spin"
+			});
+    	}
+    	loadingScreenTimer = setTimeout(function () {
+    		if(refresh != 'True'){
+		    	$.LoadingOverlay("show", {
+				    image       : "",
+				    fontawesome : "fa fa-spinner fa-spin"
+				});
+	    	}
+	    	$.ajax({
+	    	    type: "POST",
+	    	    url: "/listing/search/AJAX",
+	    	    data: JSON.stringify(filters),
+	    	    contentType: "application/json; charset=utf-8",
+	    	    dataType: "json",
+	    	    success: function(data){
+	    	    	setTimeout(function(){
+	    	    	    $.LoadingOverlay("hide");
+	    	    	}, 1000);
+	    	    	displayListings(data.listings);
+	    	    },
+	    	    failure: function(errMsg) {
+	    	        alert(errMsg);
+	    	    }
+	    	});
+		}, 2000);
 	}
 
 	$("#toggleMap").click(function() {
@@ -430,69 +487,6 @@
   		}  		
   	});
 
-  	var listing1 = {
-  		url: '/listing/view/1',
-  		briefStreet: '8239 Molina Mall',
-  		city: 'North Brittanyton',
-  		state: 'NY',
-  		num_bedrooms: '5',
-  		num_full_baths: '3',
-  		price: '6000',
-  		rent_due: 'semester'
-  	}
-
-  	var listing2 = {
-  		url: '/listing/view/2',
-  		briefStreet: '25 Myrtle Lane',
-  		city: 'Patchogue',
-  		state: 'NY',
-  		num_bedrooms: '3',
-  		num_full_baths: '1',
-  		price: '2500',
-  		rent_due: 'month'
-  	}
-  	var listing3 = {
-  		url: '/listing/view/3',
-  		briefStreet: '76 Taylor Ave',
-  		city: 'Poughkeepsie',
-  		state: 'NY',
-  		num_bedrooms: '4',
-  		num_full_baths: '2',
-  		price: '5000',
-  		rent_due: 'semester'
-  	}
-
-  	var listing4 = {
-  		url: '/listing/view/4',
-  		briefStreet: '51 Bennet Ave',
-  		city: 'Medford',
-  		state: 'NY',
-  		num_bedrooms: '2',
-  		num_full_baths: '1',
-  		price: '3750',
-  		rent_due: 'month'
-  	}
-  	var listing5 = {
-  		url: '/listing/view/5',
-  		briefStreet: '15 Potter St',
-  		city: 'Patchogue',
-  		state: 'NY',
-  		num_bedrooms: '3',
-  		num_full_baths: '2',
-  		price: '4500',
-  		rent_due: 'semester'
-  	}
-
-  	var listing6 = {
-  		url: '/listing/view/3',
-  		briefStreet: '9 Fairview Ext',
-  		city: 'Poughkeepsie',
-  		state: 'NY',
-  		num_bedrooms: '6',
-  		num_full_baths: '1',
-  		price: '6000',
-  		rent_due: 'month'
-  	}
   	var listing7 = {
   		url: '/listing/view/2',
   		briefStreet: '7 Trap Lane',
@@ -513,60 +507,56 @@
   		price: '4500',
   		rent_due: 'semester'
   	}
-  	var listings = [];
+  	
   	var featuredListings = [];
-	listings.push(listing1);
-	listings.push(listing2);
-	listings.push(listing3);
-	listings.push(listing4);
-	listings.push(listing5);
-	listings.push(listing6);
 	featuredListings.push(listing7);
 	featuredListings.push(listing8);
 	
-	function displayListings(){
+	function displayListings(listings){
+		console.log(listings);
+		$("#listingsGoHere").empty();
 		//Featured
-		$.each(featuredListings, function(index, listing) {
-			console.log(listing);
+		console.log(featuredListings);
+		// $.each(featuredListings, function(index, listing) {
+		// 	console.log(listing);
 
-			var nextListing = `<div class="card" style="width: 100%;">
-				<div class="ribbon-wrapper-green"><div class="ribbon-green">FEATURED</div></div>
-				<a href="`+ listing.url +`">
-					<img src="/static/img/testHouse.jpg" class="listingImg card-img-top">
-				</a>
-				<div class="card-block" style="background-color: #89cdef;">
-					<div class="row">
-						<div class="col-xs-4">
-							<span class="text-nowrap">
-								`+ listing.num_bedrooms +`<i class="fa fa-bed" aria-hidden="true"></i>
-								&nbsp;
-								`+ listing.num_full_baths +`<i class="fa fa-bath" aria-hidden="true"></i>
-							</span>
-							<br>
-							<span class="text-nowrap">$`+ listing.price +` <br> per bedroom/`+ listing.rent_due +`</span>
-						</div>
-						<div class="col-xs-8">
-							<div class="row">
-								<div class="col-xs-12" style="text-align: right;">
-									<span class="text-nowrap">`+ listing.briefStreet +`</span>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-xs-12" style="text-align: right;">
-									<span class="text-nowrap">`+ listing.city +`, `+ listing.state +`</span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>`;
-			$("#listingsGoHere").append(`<div class="col-md-6" style="padding-left: 15px; padding-bottom: 30px">` + nextListing + `</div>`);
-		});
+		// 	var nextListing = `<div class="card" style="width: 100%;">
+		// 		<div class="ribbon-wrapper-green"><div class="ribbon-green">FEATURED</div></div>
+		// 		<a href="`+ listing.url +`">
+		// 			<img src="/static/img/testHouse.jpg" class="listingImg card-img-top">
+		// 		</a>
+		// 		<div class="card-block" style="background-color: #89cdef;">
+		// 			<div class="row">
+		// 				<div class="col-xs-4">
+		// 					<span class="text-nowrap">
+		// 						`+ listing.num_bedrooms +`<i class="fa fa-bed" aria-hidden="true"></i>
+		// 						&nbsp;
+		// 						`+ listing.num_full_baths +`<i class="fa fa-bath" aria-hidden="true"></i>
+		// 					</span>
+		// 					<br>
+		// 					<span class="text-nowrap">$`+ listing.price +` <br> per bedroom/`+ listing.rent_due +`</span>
+		// 				</div>
+		// 				<div class="col-xs-8">
+		// 					<div class="row">
+		// 						<div class="col-xs-12" style="text-align: right;">
+		// 							<span class="text-nowrap">`+ listing.briefStreet +`</span>
+		// 						</div>
+		// 					</div>
+		// 					<div class="row">
+		// 						<div class="col-xs-12" style="text-align: right;">
+		// 							<span class="text-nowrap">`+ listing.city +`, `+ listing.state +`</span>
+		// 						</div>
+		// 					</div>
+		// 				</div>
+		// 			</div>
+		// 		</div>
+		// 	</div>`;
+		// 	$("#listingsGoHere").append(`<div class="col-md-6" style="padding-left: 15px; padding-bottom: 30px">` + nextListing + `</div>`);
+		// });
 
 		//Non Featured
 		$.each(listings, function(index, listing) {
 			console.log(listing);
-
 			var nextListing = `<div class="card" style="width: 100%;">
 				<a href="`+ listing.url +`">
 					<img src="/static/img/testHouse.jpg" class="listingImg card-img-top">
@@ -575,17 +565,17 @@
 					<div class="row">
 						<div class="col-xs-4">
 							<span class="text-nowrap">
-								`+ listing.num_bedrooms +`<i class="fa fa-bed" aria-hidden="true"></i>
+								`+ listing.numBedrooms +`<i class="fa fa-bed" aria-hidden="true"></i>
 								&nbsp;
-								`+ listing.num_full_baths +`<i class="fa fa-bath" aria-hidden="true"></i>
+								`+ listing.numFullBaths +`<i class="fa fa-bath" aria-hidden="true"></i>
 							</span>
 							<br>
-							$`+ listing.price +` per `+ listing.rent_due +`
+							$`+ listing.price +` per `+ listing.priceTerm +`
 						</div>
 						<div class="col-xs-8">
 							<div class="row">
 								<div class="col-xs-12" style="text-align: right;">
-									<span class="text-nowrap">`+ listing.briefStreet +`</span>
+									<span class="text-nowrap">`+ listing.street +`</span>
 								</div>
 							</div>
 							<div class="row">
@@ -599,6 +589,11 @@
 			</div>`;
 			$("#listingsGoHere").append(`<div class="col-md-6" style="padding-left: 15px; padding-bottom: 30px">` + nextListing + `</div>`);
 		});
+		if(listings.length == 0){
+			$("#listingsGoHere").append(`<div class="alert alert-info" role="alert" style="width: 100%; text-align: center;">
+    	            						<strong>No Listings Match The Selected Filters. Try Expanding Your Search</strong>
+    	            					 </div>`);
+		}
 	}
 
 	$("#initialSearchButton").click(function() {
@@ -609,9 +604,8 @@
   		$("#school2").val($("#school option:selected").text());
   		$("#rooms2").val($("#rooms option:selected").text());
   		//Get the listings here
-  		initialFilters();
   		//display them here
-  		displayListings();  				
+  		initialFilters();  				
   	});
 
   	$("#showFilterButton").click(function() {
@@ -630,7 +624,7 @@
 
 	$( document ).ready(function() {
 		{% if current_user.is_authenticated %}
-			displayListings();
+			buildFilters("True");
 			$("#homepage").show();
 		{% endif %}    	
 	});

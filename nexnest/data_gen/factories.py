@@ -90,6 +90,7 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     cable = bool(random.getrandbits(1))
     washer_free = bool(random.getrandbits(1))
     youtube_url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+    time_period_date_range = '2017-2018'
 
 
 class LandlordFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -122,10 +123,11 @@ class GroupFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     name = factory.LazyAttribute(lambda x: fake.company())
     leader = factory.SubFactory(UserFactory)
-    start_date = date.today()
-    end_date = date(date.today().year + 1,
-                    date.today().month,
-                    date.today().day)
+    # start_date = date.today()
+    # end_date = date(date.today().year + 1,
+    #                 date.today().month,
+    #                 date.today().day)
+    target_time_period = '2017-2018'
 
 
 class GroupUserFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -293,7 +295,7 @@ class ListingSchoolFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     listing = factory.SubFactory(ListingFactory)
     school = fredonia
-    driving_time = '10min'
-    driving_miles = '2'
-    walking_time = '17min'
-    walking_miles = '1.6'
+    driving_time = 10
+    driving_miles = 2
+    walking_time = 17
+    walking_miles = 3

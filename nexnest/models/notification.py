@@ -1,10 +1,10 @@
 from datetime import datetime as dt
 
 from sqlalchemy import event
+from flask import flash
 
 from nexnest.application import db, session
-
-from .base import Base
+from nexnest.models.base import Base
 
 
 class Notification(Base):
@@ -51,15 +51,6 @@ class Notification(Base):
                            'house_message', 'tour_message',
                            'maintenance_message']
 
-        # generic_notification = ['friend', 'group_user',
-        #                         'group_listing', 'house',
-        #                         'group_listing_favorite', 'maintenance',
-        #                         'security_deposit', 'tour',
-        #                         'rent_reminder', 'new_tour_time', 'user_leave_group',
-        #                         'maintenance_inprogress', 'maintenance_completed',
-        #                         'group_listing_accept', 'group_listing_denied',
-        #                         'tour_confirm', 'tour_denied']
-
         report_notification = ['platform_report', 'report_group',
                                'report_landlord', 'report_listing']
 
@@ -91,6 +82,17 @@ class Notification(Base):
     @property
     def redirectURL(self):
         return self.redirect_url
+
+    def isViewableBy(self):
+        return True
+
+    def isEditableBy(self, user, toFlash=False):
+        if self.user == user:
+            return True
+        else:
+            if toFlash:
+                flash('Permissions Error', 'warning')
+                return False
 
     def getNotification(self):
         # #######TODODOOOO######## #
