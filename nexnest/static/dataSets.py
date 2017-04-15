@@ -1,8 +1,8 @@
 valid_time_frames = [
-    ('0', '2017-2018 School Year'),
-    ('1', '2018 Summer'),
-    ('2', '2018-2019 School Year'),
-    ('3', '2019 Summer')
+    ('2017-2018', '2017-2018 School Year'),
+    ('2018', '2018 Summer'),
+    ('2018-2019', '2018-2019 School Year'),
+    ('2019', '2019 Summer')
 ]
 
 yesNo = [

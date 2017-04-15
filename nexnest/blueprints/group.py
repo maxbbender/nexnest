@@ -38,24 +38,27 @@ def createGroup():
         groupHasConflict = None
         conflict = False
         for group in current_user.accepted_groups:
-            if form.start_date.data < group.start_date and form.end_date.data > group.start_date:
-                # If I start before the group start, but end anywhere after
-                # group start, this conflicts with current group
+            if form.time_frame == group.target_time_period:
                 groupHasConflict = group
                 conflict = True
                 break
-            elif form.start_date.data >= group.start_date and form.start_date.data <= group.end_date:
-                # If I start after the group starts, but not after group ends,
-                # also conflict with current group
-                groupHasConflict = group
-                conflict = True
-                break
+            # if form.start_date.data < group.start_date and form.end_date.data > group.start_date:
+            #     # If I start before the group start, but end anywhere after
+            #     # group start, this conflicts with current group
+            #     groupHasConflict = group
+            #     conflict = True
+            #     break
+            # elif form.start_date.data >= group.start_date and form.start_date.data <= group.end_date:
+            #     # If I start after the group starts, but not after group ends,
+            #     # also conflict with current group
+            #     groupHasConflict = group
+            #     conflict = True
+            #     break
 
         if not conflict:
             newGroup = Group(name=form.name.data,
                              leader=current_user,
-                             start_date=form.start_date.data,
-                             end_date=form.end_date.data)
+                             target_time_period=form.time_frame.data)
 
             session.add(newGroup)
             session.commit()
@@ -67,8 +70,7 @@ def createGroup():
             flash("Conflict with Group %s. Cannot create group in same time period as %s. Start(%s) End(%s)" %
                   (groupHasConflict.name,
                    groupHasConflict.name,
-                   groupHasConflict.start_date,
-                   groupHasConflict.end_date))
+                   groupHasConflict.target_time_period))
 
     return form.redirect()
 
