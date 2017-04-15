@@ -5,7 +5,7 @@
         	<strong>Group Leader:</strong> <a href="{{ url_for('users.viewUser', userID=group.leader.id) }}">{{ group.leader.fname }} {{ group.leader.lname }}</a>
         </p>
     	<p class="card-text">
-    		Intended Lease Period: {{ group.start_date }} - {{ group.end_date }}
+    		Intended Lease Period: {{ group.target_time_period }}
     	</p>
     	<strong>Current Group Members:</strong>
     	{% for user in group.acceptedUsers %}
