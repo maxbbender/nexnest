@@ -347,12 +347,29 @@
 
 	function initialFilters(){
 		var filters = {};
-    	filters.location = $("#where option:selected").text();
+    	filters.school = $("#where option:selected").text();
     	filters.term = $("#when option:selected").text();
     	filters.bedrooms = parseInt($("#rooms").val(), 10);
     	var prices = $("#priceSlider").val().split(',');
 		filters.minPrice = parseInt(prices[0], 10);
 		filters.maxPrice = parseInt(prices[1], 10);
+		console.log(filters);
+		$.ajax({
+    	    type: "POST",
+    	    url: "/listing/search/AJAX",
+    	    data: JSON.stringify(filters),
+    	    contentType: "application/json; charset=utf-8",
+    	    dataType: "json",
+    	    success: function(data){
+    	    	console.log(data.listings)
+    	    	
+    	    	console.log(listings);
+    	    	displayListings(data.listings);
+    	    },
+    	    failure: function(errMsg) {
+    	        alert(errMsg);
+    	    }
+    	});
 	}
 
 	$("#advancedSearch").click(function() {
@@ -561,9 +578,8 @@
   		$("#school2").val($("#school option:selected").text());
   		$("#rooms2").val($("#rooms option:selected").text());
   		//Get the listings here
-  		initialFilters();
   		//display them here
-  		displayListings(listings);  				
+  		initialFilters();  				
   	});
 
   	$("#showFilterButton").click(function() {
@@ -582,7 +598,7 @@
 
 	$( document ).ready(function() {
 		{% if current_user.is_authenticated %}
-			displayListings(listings);
+			buildFilters();
 			$("#homepage").show();
 		{% endif %}    	
 	});
