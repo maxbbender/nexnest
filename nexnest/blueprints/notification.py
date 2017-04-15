@@ -63,13 +63,6 @@ def markNotificationUnRead(notifID):
 @notifications.route('/notification/allRead')
 @login_required
 def markAllNotificationsRead():
-    # allUnreadNotifs = session.query(Notification) \
-    #     .filter(and_(Notification.target_user_id == current_user.id,
-    #                  Notification.viewed is False,
-    #                  or_(Notification.category == 'report_notification',
-    #                      Notification.category == 'generic_notification'))) \
-    #     .all()
-
     allUnreadNotifs = session.query(Notification) \
         .filter(Notification.target_user_id == current_user.id,
                 Notification.viewed == False,
@@ -81,6 +74,22 @@ def markAllNotificationsRead():
     for notif in allUnreadNotifs:
         # if notif.category not in ['generic_message, direct_message']:
         notif.viewed = True
+        session.commit()
+
+    return jsonify(results={'success': True})
+
+
+@notifications.route('/messages/allRead')
+@login_required
+def markAllMessagesRead():
+    allUnreadMessages = session.query(Notification) \
+        .filter(Notification.target_user_id == current_user.id,
+                Notification.viewed == False,
+                Notification.category.in_(['generic_message', 'direct_message'])) \
+        .all()
+
+    for messageNotif in allUnreadMessages:
+        messageNotif.viewed = True
         session.commit()
 
     return jsonify(results={'success': True})
