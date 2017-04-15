@@ -325,6 +325,8 @@
 	var distanceSlider = new Slider('#distanceToCampus', {});
 	var priceSlider = new Slider('#priceSlider', {});
 	var listings = [];
+	//create the timer for loading screen
+	var loadingScreenTimer;
 
 	$("#priceSlider").change(function() {
 		var prices = $("#priceSlider").val().split(',');
@@ -342,7 +344,7 @@
 
 	//call buildFilters on change of any filter element
 	$( ".filterOption" ).change(function() {
-  		buildFilters();
+  		buildFilters("False");
   	});
 
 	function initialFilters(){
@@ -380,7 +382,9 @@
 		$("#mainContent").toggle();
   	});
 
-	function buildFilters(){
+	function buildFilters(refresh){
+		//If they had already changed something clear the timer
+		clearTimeout(loadingScreenTimer);
 		console.log('Building the filters')
 		var filters = {};
     	filters.school = $("#school2 option:selected").text();
@@ -438,28 +442,38 @@
     	}    	
 
     	filters.sortBy = $("#sortBy").val();
-    	console.log('Filters')
-    	console.log(JSON.stringify(filters));
-    	$.LoadingOverlay("show", {
-		    image       : "",
-		    fontawesome : "fa fa-spinner fa-spin"
-		});
-    	$.ajax({
-    	    type: "POST",
-    	    url: "/listing/search/AJAX",
-    	    data: JSON.stringify(filters),
-    	    contentType: "application/json; charset=utf-8",
-    	    dataType: "json",
-    	    success: function(data){
-    	    	setTimeout(function(){
-    	    	    $.LoadingOverlay("hide");
-    	    	}, 1000);
-    	    	displayListings(data.listings);
-    	    },
-    	    failure: function(errMsg) {
-    	        alert(errMsg);
-    	    }
-    	});
+    	// console.log('Filters')
+    	// console.log(JSON.stringify(filters));
+    	if(refresh == 'True'){
+    		$.LoadingOverlay("show", {
+			    image       : "",
+			    fontawesome : "fa fa-spinner fa-spin"
+			});
+    	}
+    	loadingScreenTimer = setTimeout(function () {
+    		if(refresh != 'True'){
+		    	$.LoadingOverlay("show", {
+				    image       : "",
+				    fontawesome : "fa fa-spinner fa-spin"
+				});
+	    	}
+	    	$.ajax({
+	    	    type: "POST",
+	    	    url: "/listing/search/AJAX",
+	    	    data: JSON.stringify(filters),
+	    	    contentType: "application/json; charset=utf-8",
+	    	    dataType: "json",
+	    	    success: function(data){
+	    	    	setTimeout(function(){
+	    	    	    $.LoadingOverlay("hide");
+	    	    	}, 1000);
+	    	    	displayListings(data.listings);
+	    	    },
+	    	    failure: function(errMsg) {
+	    	        alert(errMsg);
+	    	    }
+	    	});
+		}, 2000);
 	}
 
 	$("#toggleMap").click(function() {
@@ -503,42 +517,42 @@
 		$("#listingsGoHere").empty();
 		//Featured
 		console.log(featuredListings);
-		$.each(featuredListings, function(index, listing) {
-			console.log(listing);
+		// $.each(featuredListings, function(index, listing) {
+		// 	console.log(listing);
 
-			var nextListing = `<div class="card" style="width: 100%;">
-				<div class="ribbon-wrapper-green"><div class="ribbon-green">FEATURED</div></div>
-				<a href="`+ listing.url +`">
-					<img src="/static/img/testHouse.jpg" class="listingImg card-img-top">
-				</a>
-				<div class="card-block" style="background-color: #89cdef;">
-					<div class="row">
-						<div class="col-xs-4">
-							<span class="text-nowrap">
-								`+ listing.num_bedrooms +`<i class="fa fa-bed" aria-hidden="true"></i>
-								&nbsp;
-								`+ listing.num_full_baths +`<i class="fa fa-bath" aria-hidden="true"></i>
-							</span>
-							<br>
-							<span class="text-nowrap">$`+ listing.price +` <br> per bedroom/`+ listing.rent_due +`</span>
-						</div>
-						<div class="col-xs-8">
-							<div class="row">
-								<div class="col-xs-12" style="text-align: right;">
-									<span class="text-nowrap">`+ listing.briefStreet +`</span>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-xs-12" style="text-align: right;">
-									<span class="text-nowrap">`+ listing.city +`, `+ listing.state +`</span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>`;
-			$("#listingsGoHere").append(`<div class="col-md-6" style="padding-left: 15px; padding-bottom: 30px">` + nextListing + `</div>`);
-		});
+		// 	var nextListing = `<div class="card" style="width: 100%;">
+		// 		<div class="ribbon-wrapper-green"><div class="ribbon-green">FEATURED</div></div>
+		// 		<a href="`+ listing.url +`">
+		// 			<img src="/static/img/testHouse.jpg" class="listingImg card-img-top">
+		// 		</a>
+		// 		<div class="card-block" style="background-color: #89cdef;">
+		// 			<div class="row">
+		// 				<div class="col-xs-4">
+		// 					<span class="text-nowrap">
+		// 						`+ listing.num_bedrooms +`<i class="fa fa-bed" aria-hidden="true"></i>
+		// 						&nbsp;
+		// 						`+ listing.num_full_baths +`<i class="fa fa-bath" aria-hidden="true"></i>
+		// 					</span>
+		// 					<br>
+		// 					<span class="text-nowrap">$`+ listing.price +` <br> per bedroom/`+ listing.rent_due +`</span>
+		// 				</div>
+		// 				<div class="col-xs-8">
+		// 					<div class="row">
+		// 						<div class="col-xs-12" style="text-align: right;">
+		// 							<span class="text-nowrap">`+ listing.briefStreet +`</span>
+		// 						</div>
+		// 					</div>
+		// 					<div class="row">
+		// 						<div class="col-xs-12" style="text-align: right;">
+		// 							<span class="text-nowrap">`+ listing.city +`, `+ listing.state +`</span>
+		// 						</div>
+		// 					</div>
+		// 				</div>
+		// 			</div>
+		// 		</div>
+		// 	</div>`;
+		// 	$("#listingsGoHere").append(`<div class="col-md-6" style="padding-left: 15px; padding-bottom: 30px">` + nextListing + `</div>`);
+		// });
 
 		//Non Featured
 		$.each(listings, function(index, listing) {
@@ -575,6 +589,11 @@
 			</div>`;
 			$("#listingsGoHere").append(`<div class="col-md-6" style="padding-left: 15px; padding-bottom: 30px">` + nextListing + `</div>`);
 		});
+		if(listings.length == 0){
+			$("#listingsGoHere").append(`<div class="alert alert-info" role="alert" style="width: 100%; text-align: center;">
+    	            						<strong>No Listings Match The Selected Filters. Try Expanding Your Search</strong>
+    	            					 </div>`);
+		}
 	}
 
 	$("#initialSearchButton").click(function() {
@@ -605,7 +624,7 @@
 
 	$( document ).ready(function() {
 		{% if current_user.is_authenticated %}
-			buildFilters();
+			buildFilters("True");
 			$("#homepage").show();
 		{% endif %}    	
 	});
