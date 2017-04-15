@@ -123,10 +123,11 @@ class GroupFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     name = factory.LazyAttribute(lambda x: fake.company())
     leader = factory.SubFactory(UserFactory)
-    start_date = date.today()
-    end_date = date(date.today().year + 1,
-                    date.today().month,
-                    date.today().day)
+    # start_date = date.today()
+    # end_date = date(date.today().year + 1,
+    #                 date.today().month,
+    #                 date.today().day)
+    target_time_period = '2017-2018'
 
 
 class GroupUserFactory(factory.alchemy.SQLAlchemyModelFactory):
