@@ -156,27 +156,6 @@ def createListing():
                     if not os.path.exists(folderPicturesPath):
                         os.makedirs(folderPicturesPath)
 
-                    # Lets add the photos
-                    uploadedFiles = request.files.getlist("pictures")
-
-                    if not uploadedFiles[0].filename == '':
-                        logger.debug("Uploaded Files : %r" % uploadedFiles)
-                        filenames = []
-                        fileUploadError = False
-                        for file in uploadedFiles:
-                            if file and allowed_file(file.filename):
-                                filename = secure_filename(file.filename)
-
-                                file.save(os.path.join(folderPicturesPath, filename))
-                                filenames.append(filename)
-                            else:
-                                fileUploadError = True
-                                logger.error("Error saving file %s" % file.filename)
-
-                        if fileUploadError:
-                            flash("Error saving file", 'danger')
-                    else:
-                        logger.debug("No Picture files to upload")
 
                     flash('Listing Created', 'success')
 
@@ -345,6 +324,43 @@ def editListing(listingID):
 
         return redirect(url_for('listings.viewListing',
                                 listingID=listingID))
+
+
+@app.route("/listing/upload", methods=["POST"])
+@csrf.exempt
+def upload():
+    """Handle the upload of a file."""
+
+    # Is the upload using Ajax, or a direct POST by the form?
+    is_ajax = True
+
+    # Target folder for these uploads.
+    #target = "/uploads/listings/11/pictures"
+    folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', '27')
+    try:
+        if not os.path.exists(folderPath):
+            os.makedirs(folderPath)
+
+        folderPicturesPath = os.path.join(folderPath, 'pictures')
+        if not os.path.exists(folderPicturesPath):
+            os.makedirs(folderPicturesPath)
+    except:
+        if is_ajax:
+            logger.error(False, "Couldn't create upload directory: {}".format(folderPicturesPath))
+        else:
+            return "Couldn't create upload directory: {}".format(folderPicturesPath)
+
+    for upload in request.files.getlist("pictures"):
+        filename = upload.filename.rsplit("/")[0]
+        logger.debug("filename is " + filename)
+        destination = "/".join([folderPicturesPath, filename])
+        upload.save(destination)
+
+    if is_ajax:
+        logger.debug(True, folderPicturesPath)
+        return jsonify("hello");
+    else:
+        return redirect(url_for("upload_complete", uuid=folderPicturesPath))
 
 
 @listings.route('/listing/search/AJAX', methods=['POST', 'GET'])
