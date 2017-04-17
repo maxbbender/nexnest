@@ -2,9 +2,9 @@ from flask import Blueprint
 from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
 
+from nexnest import logger
 from nexnest.application import session
 
-# from nexnest.models import user.User, Group, School, DirectMessage
 from nexnest.models.user import User
 from nexnest.models.group import Group
 from nexnest.models.school import School
@@ -327,7 +327,13 @@ def changePassword():
 # @users.route('/user/getNotifications/<int:page>', methods=['GET', 'POST'])
 # @login_required
 # def getNotifications(page=1):
-#     allNotifications = session.query(Notification) \
+#     logger.debug("/user/getNotifications page : ", page)
+#     # allNotifications = Notification.query.filter_by(target_user_id=current_user.id).paginate(page, 3, False).items
+#     allNotifications = session.query(Notification.request_url,
+#                                      Notification.category,
+#                                      Notification.notif_type) \
 #         .filter_by(target_user_id=current_user.id) \
-#         .paginate(page, 10, False)
-        
+#         .distinct(Notification.request_url, Notification.notif_type) \
+#         .paginate(page, 3, False).items
+
+#     logger.debug('All Notifications ', allNotifications)

@@ -260,32 +260,42 @@ class User(Base):
     def isAdmin(self):
         return self.role == 'admin'
 
+    def getNotifications(self):
+        return self.notifications \
+            .filter(Notification.category.in_(('report_notification', 'generic_notification'))) \
+            .distinct(Notification.notif_type, Notification.redirect_url) \
+            .paginate(1, 10, False).items
+
+    def getMessageNotifications(self):
+        return self.notifications \
+            .filter(Notification.category.in_(('direct_message', 'generic_message'))) \
+            .distinct(Notification.notif_type, Notification.redirect_url) \
+            .paginate(1, 10, False).items
+
     # def hasDirectMessagesWith(self):
     #     allUsers = []
     #     mySentMessages = self.sentDM.group_by(DirectMessage.target_user_id)
     #     return mySentMessages
 
-    def unreadNotifications(self):
-        allNotifications = self.notifications \
-            .filter_by(viewed=False) \
-            .group_by(Notification.id, Notification.notif_type, Notification.redirect_url).all()
+    # def unreadNotifications(self):
+    #     allNotifications = self.notifications \
+    #         .distinct(Notification.notif_type, Notification.redirect_url) \
+    #         .paginate(1, 10, False)
 
-        # print(allNotifications)
+    #     messages = []
+    #     notifications = []
 
-        messages = []
-        notifications = []
+    #     messageTypes = ['group_listing_message', 'group_message',
+    #                     'house_message', 'tour_message',
+    #                     'maintenance_message', 'direct_message']
 
-        messageTypes = ['group_listing_message', 'group_message',
-                        'house_message', 'tour_message',
-                        'maintenance_message', 'direct_message']
+    #     for notification in allNotifications:
+    #         if notification.notif_type in messageTypes:
+    #             messages.append(notification)
+    #         else:
+    #             notifications.append(notification)
 
-        for notification in allNotifications:
-            if notification.notif_type in messageTypes:
-                messages.append(notification)
-            else:
-                notifications.append(notification)
-
-        return messages, notifications
+    #     return messages, notifications
 
     @property
     def name(self):
