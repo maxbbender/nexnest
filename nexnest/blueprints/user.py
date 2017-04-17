@@ -9,6 +9,7 @@ from nexnest.models.user import User
 from nexnest.models.group import Group
 from nexnest.models.school import School
 from nexnest.models.direct_message import DirectMessage
+from nexnest.models.notification import Notification
 
 from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm, CreateGroupForm
 
@@ -320,3 +321,13 @@ def changePassword():
         flash_errors(passForm)
 
     return passForm.redirect()
+
+
+# @users.route('/user/getNotifications', methods=['GET', 'POST'])
+# @users.route('/user/getNotifications/<int:page>', methods=['GET', 'POST'])
+# @login_required
+# def getNotifications(page=1):
+#     allNotifications = session.query(Notification) \
+#         .filter_by(target_user_id=current_user.id) \
+#         .paginate(page, 10, False)
+        
