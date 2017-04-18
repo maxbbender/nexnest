@@ -1067,7 +1067,25 @@
         theme: "fa",
         maxFileCount: 12,
         showCancel: false,
-        showPreview: true
+        showPreview: true,
+        overwriteInitial: false,
+        initialPreview: [
+            {% for picture in picturePaths %}
+                "/uploads/listings/28/pictures/{{picture}}",
+            {% endfor %}
+        ],
+        initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
+        initialPreviewFileType: 'image', // image is the default and can be overridden in config below
+        initialPreviewConfig: [
+            {% for picture in picturePaths %}
+                {caption: "Picture 1", size: 827000, width: "120px", url: "/listing/delete/{{picture}}", key: 1},
+            {% endfor %}
+        ],
+        purifyHtml: true, // this by default purifies HTML data for preview
+        uploadExtraData: {
+            img_key: "1000",
+            img_keywords: "happy, places",
+        }
     }).on('filesorted', function(e, params) {
     console.log('File sorted params', params);
     });

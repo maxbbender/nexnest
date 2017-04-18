@@ -291,6 +291,10 @@
             self.isError = false;
             self.ajaxAborted = false;
             self.cancelling = false;
+            t = self._getLayoutTemplate('progress');
+            self.progressTemplate = t.replace('{class}', self.progressClass);
+            self.progressCompleteTemplate = t.replace('{class}', self.progressCompleteClass);
+            self.progressErrorTemplate = t.replace('{class}', self.progressErrorClass);
             self.dropZoneEnabled = $h.hasDragDropSupport() && self.dropZoneEnabled;
             self.isDisabled = $el.attr('disabled') || $el.attr('readonly');
             if (self.isDisabled) {
@@ -344,7 +348,7 @@
         },
         _initTemplateDefaults: function () {
             var self = this, tMain1, tMain2, tPreview, tFileIcon, tClose, tCaption, tBtnDefault, tBtnLink, tBtnBrowse,
-                tModalMain, tModal, tProgress, tSize, tFooter, tActions, tActionDelete, tActionZoom,
+                tModalMain, tModal, tProgress, tSize, tFooter, tActions, tActionDelete, tActionUpload, tActionZoom,
                 tActionDrag, tTagBef, tTagBef1, tTagBef2, tTagAft, tGeneric, tHtml, tImage, tText, tVideo, tAudio,
                 tFlash, tObject, tPdf, tOther, tZoomCache, vDefaultDim;
             tMain1 = '{preview}\n' +
@@ -354,6 +358,7 @@
                 '   <div class="input-group-btn">\n' +
                 '       {remove}\n' +
                 '       {cancel}\n' +
+                '       {upload}\n' +
                 '       {browse}\n' +
                 '   </div>\n' +
                 '</div>';
@@ -394,22 +399,30 @@
                 '    </div>\n' +
                 '  </div>\n' +
                 '</div>\n';
+            tProgress = '<div class="progress">\n' +
+                '    <div class="{class}" role="progressbar"' +
+                ' aria-valuenow="{percent}" aria-valuemin="0" aria-valuemax="100" style="width:{percent}%;">\n' +
+                '        {status}\n' +
+                '     </div>\n' +
+                '</div>';
             tSize = ' <samp>({sizeText})</samp>';
             tFooter = '<div class="file-thumbnail-footer">\n' +
                 '    <div class="file-footer-caption" title="{caption}">{caption}<br>{size}</div>\n' +
                 '    {progress} {actions}\n' +
                 '</div>';
-            tActions = '\n' +
+            tActions = '<div class="file-upload-indicator" title="{indicatorTitle}">{indicator}</div>\n' +
                 '{drag}\n' +
-                '<div class="file-actions" style="margin-top: 0px;">\n' +
+                '<div class="file-actions">\n' +
                 '    <div class="file-footer-buttons">\n' +
-                '        {delete} {zoom} {other}' +
+                '        {upload} {delete} {zoom} {other}' +
                 '    </div>\n' +
                 '    <div class="clearfix"></div>\n' +
                 '</div>';
             //noinspection HtmlUnknownAttribute
             tActionDelete = '<button type="button" class="kv-file-remove {removeClass}" ' +
                 'title="{removeTitle}" {dataUrl}{dataKey}>{removeIcon}</button>\n';
+            tActionUpload = '<button type="button" class="kv-file-upload {uploadClass}" title="{uploadTitle}">' +
+                '{uploadIcon}</button>';
             tActionZoom = '<button type="button" class="kv-file-zoom {zoomClass}" ' +
                 'title="{zoomTitle}">{zoomIcon}</button>';
             tActionDrag = '<span class="file-drag-handle {dragClass}" title="{dragTitle}">{dragIcon}</span>';
@@ -456,6 +469,7 @@
                     footer: tFooter,
                     actions: tActions,
                     actionDelete: tActionDelete,
+                    actionUpload: tActionUpload,
                     actionZoom: tActionZoom,
                     actionDrag: tActionDrag,
                     btnDefault: tBtnDefault,
@@ -1494,6 +1508,7 @@
             self.loadedImages = [];
             self.totalImagesCount = 0;
             self.$btnUpload.removeAttr('disabled');
+            self._setProgress(0);
             $h.addCss(self.$progress, 'hide');
             self._resetErrors(false);
             self.ajaxAborted = false;
@@ -1625,6 +1640,7 @@
                     if (previewId) {
                         self._setAsyncUploadStatus(previewId, pct, fileCount);
                     } else {
+                        self._setProgress(pct);
                     }
                 }, false);
             }
@@ -1826,6 +1842,7 @@
                     self.uploadCount = 0;
                     self.uploadStatus = {};
                     self.uploadLog = [];
+                    self._setProgress(101);
                 }, 100);
             };
             fnBefore = function (jqXHR) {
@@ -1846,6 +1863,7 @@
                 $.extend(true, params, outData);
                 if (self._abort(params)) {
                     jqXHR.abort();
+                    self._setProgressCancelled();
                 }
             };
             fnSuccess = function (data, textStatus, jqXHR) {
@@ -1858,6 +1876,7 @@
                             self._setThumbStatus($thumb, 'Success');
                             $btnUpload.hide();
                             self._initUploadSuccess(data, $thumb, allFiles);
+                            self._setProgress(101, $prog);
                         }
                         self._raise('fileuploaded', [outData, pid, i]);
                         if (!allFiles) {
@@ -1900,6 +1919,7 @@
                     self.uploadStatus[previewId] = 100;
                     self._setPreviewError($thumb, i);
                     $.extend(true, params, self._getOutData(jqXHR));
+                    self._setProgress(101, $prog, self.msgAjaxProgressError.replace('{operation}', op));
                     self._showUploadError(errMsg, params);
                 }, 100);
             };
@@ -1939,6 +1959,7 @@
                 self._raise('filebatchpreupload', [outData]);
                 if (self._abort(outData)) {
                     jqXHR.abort();
+                    self._setProgressCancelled();
                 }
             };
             fnSuccess = function (data, textStatus, jqXHR) {
@@ -1960,6 +1981,7 @@
                     } else {
                         self.reset();
                     }
+                    self._setProgress(101);
                 } else {
                     if (self.showPreview) {
                         $thumbs.each(function () {
@@ -2010,6 +2032,7 @@
                 self._getThumbs().removeClass('file-uploading');
                 self._getThumbs(' .kv-file-upload').removeAttr('disabled');
                 self._getThumbs(' .kv-file-delete').removeAttr('disabled');
+                self._setProgress(101, self.$progress, self.msgAjaxProgressError.replace('{operation}', op));
             };
             $.each(files, function (key, data) {
                 if (!$h.isEmpty(files[key])) {
@@ -2028,10 +2051,12 @@
                 self.lock();
                 var outData = self._getOutData(jqXHR);
                 self._raise('filebatchpreupload', [outData]);
+                self._setProgress(50);
                 params.data = outData;
                 params.xhr = jqXHR;
                 if (self._abort(params)) {
                     jqXHR.abort();
+                    self._setProgressCancelled();
                 }
             };
             fnSuccess = function (data, textStatus, jqXHR) {
@@ -2040,6 +2065,7 @@
                     self._raise('filebatchuploadsuccess', [outData]);
                     self._clearFileInput();
                     self._initUploadSuccess(data);
+                    self._setProgress(101);
                 } else {
                     self._showUploadError(data.error, outData, 'filebatchuploaderror');
                 }
@@ -2054,6 +2080,7 @@
                     errMsg = self._parseError(op, jqXHR, errorThrown);
                 params.data = outData;
                 self._showUploadError(errMsg, outData, 'filebatchuploaderror');
+                self._setProgress(101, self.$progress, self.msgAjaxProgressError.replace('{operation}', op));
             };
             self._ajaxSubmit(fnBefore, fnSuccess, fnComplete, fnError);
         },
@@ -2579,6 +2606,28 @@
             $indicator.attr('title', config[msg]);
             $thumb.addClass(css);
         },
+        _setProgressCancelled: function () {
+            var self = this;
+            self._setProgress(101, self.$progress, self.msgCancelled);
+        },
+        _setProgress: function (p, $el, error) {
+            var self = this, pct = Math.min(p, 100), out, status, pctLimit = self.progressUploadThreshold,
+                t = p <= 100 ? self.progressTemplate : self.progressCompleteTemplate,
+                template = pct < 100 ? self.progressTemplate : (error ? self.progressErrorTemplate : t);
+            $el = $el || self.$progress;
+            if (!$h.isEmpty(template)) {
+                if (pctLimit && pct > pctLimit && p <= 100) {
+                    out = template.replace(/\{percent}/g, pctLimit).replace(/\{status}/g, self.msgUploadThreshold);
+                } else {
+                    status = p > 100 ? self.msgUploadEnd : pct + '%';
+                    out = template.replace(/\{percent}/g, pct).replace(/\{status}/g, status);
+                }
+                $el.html(out);
+                if (error) {
+                    $el.find('[role="progressbar"]').html(error);
+                }
+            }
+        },
         _setFileDropZoneTitle: function () {
             var self = this, $zone = self.$container.find('.file-drop-zone'), title = self.dropZoneTitle, strFiles;
             if (self.isClickable) {
@@ -2597,10 +2646,12 @@
         },
         _setAsyncUploadStatus: function (previewId, pct, total) {
             var self = this, sum = 0;
+            self._setProgress(pct, $('#' + previewId).find('.file-thumb-progress'));
             self.uploadStatus[previewId] = pct;
             $.each(self.uploadStatus, function (key, value) {
                 sum += value;
             });
+            self._setProgress(Math.floor(sum / total));
 
         },
         _validateMinCount: function () {
@@ -2919,7 +2970,8 @@
         },
         _renderThumbProgress: function () {
             var self = this;
-            return '<div class="file-thumb-progress hide">';
+            return '<div class="file-thumb-progress hide">' + self.progressTemplate.replace(/\{percent}/g, '0')
+                    .replace(/\{status}/g, self.msgUploadBegin) + '</div>';
         },
         _renderFileFooter: function (caption, size, width, isError) {
             var self = this, config = self.fileActionSettings, rem = config.showRemove, drg = config.showDrag,
@@ -2960,6 +3012,12 @@
                     .replace(/\{removeTitle}/g, config.removeTitle)
                     .replace(/\{dataUrl}/g, vUrl)
                     .replace(/\{dataKey}/g, vKey);
+            }
+            if (showUpload) {
+                btnUpload = self._getLayoutTemplate('actionUpload')
+                    .replace(/\{uploadClass}/g, config.uploadClass)
+                    .replace(/\{uploadIcon}/g, config.uploadIcon)
+                    .replace(/\{uploadTitle}/g, config.uploadTitle);
             }
             if (showZoom) {
                 btnZoom = self._getLayoutTemplate('actionZoom')
@@ -3089,6 +3147,7 @@
                 data = $.extend(true, {}, self._getOutData(), params);
                 data.abortData = self.ajaxAborted.data || {};
                 data.abortMessage = self.ajaxAborted.message;
+                self._setProgress(101, self.$progress, self.msgCancelled);
                 self._showUploadError(self.ajaxAborted.message, data, 'filecustomerror');
                 self.cancel();
                 return true;
@@ -3189,6 +3248,7 @@
                     xhr[i].abort();
                 }
             }
+            self._setProgressCancelled();
             self._getThumbs().each(function () {
                 var $thumb = $(this), ind = $thumb.attr('data-fileindex');
                 $thumb.removeClass('file-uploading');
@@ -3302,6 +3362,7 @@
             self.uploadStatus = {};
             self.uploadLog = [];
             self.lock();
+            self._setProgress(2);
             if (totLen === 0 && hasExtraData) {
                 self._uploadExtraOnly();
                 return;

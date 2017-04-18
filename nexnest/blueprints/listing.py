@@ -179,11 +179,17 @@ def createListing():
                         return redirect(url_for('listings.createListing'))
                     elif form.nextAction.data == 'createCopy':
                         selectedSchools = session.query(ListingSchool).filter_by(listing=newListing).all()
+                        #Get Pictures
+                        folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(newListing.id))
+                        folderPicturesPath = os.path.join(folderPath, 'pictures')
+                        picturePaths = os.listdir(folderPicturesPath)
+                        picturePaths.pop(0)
                         return render_template('/landlord/createListing.html',
                                                form=form,
                                                title='Create Listing',
                                                schools=allSchoolsAsStrings(),
-                                               selectedSchools=selectedSchools)
+                                               selectedSchools=selectedSchools,
+                                               picturePaths=picturePaths)
                     else:
                         return redirect(url_for('listings.viewListing', listingID=newListing.id))
                 else:
@@ -205,7 +211,8 @@ def createListing():
             return render_template('/landlord/createListing.html',
                                    form=form,
                                    title='Create Listing',
-                                   schools=allSchoolsAsStrings()
+                                   schools=allSchoolsAsStrings(),
+                                   picturePaths=picturePaths
                                    )
     else:
         flash("Only Landlords can create listings", 'warning')
@@ -229,12 +236,18 @@ def cloneListing(listingID):
         # Get colleges associated with the listing
         selectedSchools = session.query(ListingSchool).filter_by(listing=currentListing).all()
 
+        #Get the previous pictures
+        folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
+        folderPicturesPath = os.path.join(folderPath, 'pictures')
+        picturePaths = os.listdir(folderPicturesPath)
+
         form = ListingForm(obj=currentListing)
         return render_template('/landlord/createListing.html',
                                form=form,
                                title='Create Listing',
                                schools=allSchoolsAsStrings(),
-                               selectedSchools=selectedSchools)
+                               selectedSchools=selectedSchools,
+                               picturePaths=picturePaths)
     else:
         flash("You are not the landlord of this listing", 'warning')
 
@@ -259,6 +272,11 @@ def editListing(listingID):
         # Get colleges associated with the listing
         selectedSchools = session.query(ListingSchool).filter_by(listing=currentListing).all()
 
+        #Get the pictures from the liting
+        folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
+        folderPicturesPath = os.path.join(folderPath, 'pictures')
+        picturePaths = os.listdir(folderPicturesPath)
+
         form = ListingForm(obj=currentListing)
 
         if request.method == 'GET':
@@ -267,7 +285,8 @@ def editListing(listingID):
                                    title='Edit Listing',
                                    listingID=listingID,
                                    schools=allSchoolsAsStrings(),
-                                   selectedSchools=selectedSchools)
+                                   selectedSchools=selectedSchools,
+                                   picturePaths=picturePaths)
         else:  # POST
             form = ListingForm(request.form)
 
@@ -326,9 +345,9 @@ def editListing(listingID):
                                 listingID=listingID))
 
 
-@app.route("/listing/upload", methods=["POST"])
+@app.route("/listing/upload/<listingID>", methods=["POST"])
 @csrf.exempt
-def upload():
+def upload(listingID):
     """Handle the upload of a file."""
 
     # Is the upload using Ajax, or a direct POST by the form?
@@ -336,7 +355,7 @@ def upload():
 
     # Target folder for these uploads.
     #target = "/uploads/listings/11/pictures"
-    folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', '27')
+    folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
     try:
         if not os.path.exists(folderPath):
             os.makedirs(folderPath)
@@ -349,9 +368,14 @@ def upload():
             logger.error(False, "Couldn't create upload directory: {}".format(folderPicturesPath))
         else:
             return "Couldn't create upload directory: {}".format(folderPicturesPath)
-
     for upload in request.files.getlist("pictures"):
-        filename = upload.filename.rsplit("/")[0]
+        extension = os.path.splitext(upload.filename)[1]
+        #filename = upload.filename.rsplit("/")[0]
+        dir = folderPicturesPath
+        list = os.listdir(dir) # dir is your directory path
+        number_files = len(list)
+        filename = str(number_files)+extension
+        logger.debug(number_files)
         logger.debug("filename is " + filename)
         destination = "/".join([folderPicturesPath, filename])
         upload.save(destination)
@@ -361,6 +385,14 @@ def upload():
         return jsonify("hello");
     else:
         return redirect(url_for("upload_complete", uuid=folderPicturesPath))
+
+@app.route("/listing/delete/<listingID>/<filename>", methods=["POST"])
+@csrf.exempt
+def deletePhoto(listingID, filename):
+    folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
+    folderPicturesPath = os.path.join(folderPath, 'pictures')
+    os.remove(folderPicturesPath+"/"+filename)
+    return jsonify("hello");
 
 
 @listings.route('/listing/search/AJAX', methods=['POST', 'GET'])
