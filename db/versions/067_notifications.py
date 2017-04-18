@@ -16,6 +16,7 @@ notifications = Table('notifications', meta,
                       Column('category', Text()),
                       # Column('message', Text()),
                       Column('notif_type', String(length=128)),
+                      Column('message', Text()),
                       Column('redirect_url', String(length=128)))
 
 

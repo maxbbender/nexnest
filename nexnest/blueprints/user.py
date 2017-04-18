@@ -323,17 +323,33 @@ def changePassword():
     return passForm.redirect()
 
 
-# @users.route('/user/getNotifications', methods=['GET', 'POST'])
-# @users.route('/user/getNotifications/<int:page>', methods=['GET', 'POST'])
-# @login_required
-# def getNotifications(page=1):
-#     logger.debug("/user/getNotifications page : ", page)
-#     # allNotifications = Notification.query.filter_by(target_user_id=current_user.id).paginate(page, 3, False).items
-#     allNotifications = session.query(Notification.request_url,
-#                                      Notification.category,
-#                                      Notification.notif_type) \
-#         .filter_by(target_user_id=current_user.id) \
-#         .distinct(Notification.request_url, Notification.notif_type) \
-#         .paginate(page, 3, False).items
+@users.route('/user/getNotifications', methods=['GET', 'POST'])
+@users.route('/user/getNotifications/<int:page>', methods=['GET', 'POST'])
+@login_required
+def getNotifications(page=1):
+    logger.debug("/user/getNotifications page : ", page)
 
-#     logger.debug('All Notifications ', allNotifications)
+    allNotifications = Notification.query \
+        .filter_by(target_user_id=current_user.id) \
+        .distinct(Notification.notif_type,
+                  Notification.redirect_url) \
+        .paginate(page, 10, False)
+
+    logger.debug("allNotifications : ", allNotifications)
+
+    allNotificationList = []
+
+    for notif in allNotifications.items:
+        allNotificationList.append(notif.serialize)
+
+    returnDict = {'notifications': allNotificationList}
+
+    paginateDict = {
+        'hasNext': allNotifications.has_next,
+        'hasPrev': allNotifications.has_prev,
+        'numPages': allNotifications.pages
+    }
+
+    returnDict['paginateDetials'] = paginateDict
+
+    return jsonify(returnDict)

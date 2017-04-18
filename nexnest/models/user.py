@@ -113,6 +113,17 @@ class User(Base):
         return '<User %r | %s>' % (self.username, self.name)
 
     @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'fname': self.fname,
+            'lname': self.lname,
+            'profileImageURL': self.profile_image,
+            'url': '/user/view/%d' % self.id
+        }
+
+    @property
     def shortSerialize(self):
         return {
             'name': self.name,
@@ -136,14 +147,7 @@ class User(Base):
 
         return self
 
-    @property
-    def serialize(self):
-        return {
-            'id': self.id,
-            'username': self.username,
-            'fname': self.fname,
-            'lname': self.lname
-        }
+    
 
     @property
     def is_authenticated(self):
