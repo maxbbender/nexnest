@@ -66,7 +66,8 @@ def markAllNotificationsRead():
     allUnreadNotifs = session.query(Notification) \
         .filter(Notification.target_user_id == current_user.id,
                 Notification.viewed == False,
-                Notification.category.in_(['generic_notification', 'report_notification'])) \
+                Notification.category.in_(['generic_notification',
+                                           'report_notification'])) \
         .all()
 
     logger.debug('All Unread Notifications %r' % allUnreadNotifs)
@@ -85,7 +86,8 @@ def markAllMessagesRead():
     allUnreadMessages = session.query(Notification) \
         .filter(Notification.target_user_id == current_user.id,
                 Notification.viewed == False,
-                Notification.category.in_(['generic_message', 'direct_message'])) \
+                Notification.category.in_(['generic_message',
+                                           'direct_message'])) \
         .all()
 
     for messageNotif in allUnreadMessages:
