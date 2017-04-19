@@ -257,9 +257,9 @@ def editListing(listingID):
         picturePaths = os.listdir(folderPicturesPath)
 
         #Get the bannerPhoto from the liting
-        # bannerFolderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
-        # bannerFolderPicturesPath = os.path.join(bannerFolderPath, 'bannerPhoto')
-        # bannerPath = os.listdir(bannerFolderPicturesPath)
+        bannerFolderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
+        bannerFolderPicturesPath = os.path.join(bannerFolderPath, 'bannerPhoto')
+        bannerPath = os.listdir(bannerFolderPicturesPath)[0]
 
         form = ListingForm(obj=currentListing)
 
@@ -270,7 +270,8 @@ def editListing(listingID):
                                    listingID=listingID,
                                    schools=allSchoolsAsStrings(),
                                    selectedSchools=selectedSchools,
-                                   picturePaths=picturePaths)
+                                   picturePaths=picturePaths,
+                                   bannerPath=bannerPath)
         else:  # POST
             form = ListingForm(request.form)
 
@@ -328,6 +329,15 @@ def editListing(listingID):
                 if not os.path.exists(folderPicturesPath):
                     os.makedirs(folderPicturesPath)
 
+                # #Make sure to delete the original banner photo in case of different extension
+                # for the_file in os.listdir(folderPicturesPath):
+                #     file_path = os.path.join(folderPicturesPath, the_file)
+                #     try:
+                #         if os.path.isfile(file_path):
+                #             os.unlink(file_path)
+                #     except Exception as e:
+                #         print(e)
+
                 # Lets add the photos
                 uploadedFiles = request.files.getlist("bannerPicture")
                 filenames = []
@@ -351,7 +361,8 @@ def editListing(listingID):
                                        listingID=listingID,
                                        schools=allSchoolsAsStrings(),
                                        selectedSchools=selectedSchools,
-                                       picturePaths=picturePaths)
+                                       picturePaths=picturePaths,
+                                       bannerPath=bannerPath)
     else:
         flash("You are not the landlord of this listing", 'warning')
 
