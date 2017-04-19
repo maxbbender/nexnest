@@ -38,7 +38,8 @@ def viewListing(listingID):
                            listing=listing,
                            groups=myGroups,
                            title='Listing',
-                           pictures=listing.getPhotoURLs())
+                           pictures=listing.getPhotoURLs(),
+                           bannerPhoto=listing.getBannerPhotoURL())
 
 
 @listings.route('/listing/create', methods=['GET', 'POST'])
