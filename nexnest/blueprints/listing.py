@@ -257,9 +257,9 @@ def editListing(listingID):
         picturePaths = os.listdir(folderPicturesPath)
 
         #Get the bannerPhoto from the liting
-        bannerFolderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
-        bannerFolderPicturesPath = os.path.join(bannerFolderPath, 'bannerPhoto')
-        bannerPath = os.listdir(bannerFolderPicturesPath)
+        # bannerFolderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
+        # bannerFolderPicturesPath = os.path.join(bannerFolderPath, 'bannerPhoto')
+        # bannerPath = os.listdir(bannerFolderPicturesPath)
 
         form = ListingForm(obj=currentListing)
 
@@ -270,8 +270,7 @@ def editListing(listingID):
                                    listingID=listingID,
                                    schools=allSchoolsAsStrings(),
                                    selectedSchools=selectedSchools,
-                                   picturePaths=picturePaths,
-                                   bannerPath=bannerPath)
+                                   picturePaths=picturePaths)
         else:  # POST
             form = ListingForm(request.form)
 
@@ -320,7 +319,7 @@ def editListing(listingID):
                     currentListing.first_semester_rent_due_date = form.first_semester_rent_due_date.data
                     currentListing.second_semester_rent_due_date = form.second_semester_rent_due_date.data
                 session.commit()
-                
+
                 folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
                 if not os.path.exists(folderPath):
                     os.makedirs(folderPath)
@@ -344,6 +343,15 @@ def editListing(listingID):
                 flash('Listing Updated', 'info')
                 return redirect(url_for('listings.viewListing',
                                         listingID=listingID))
+            else:
+                flash_errors(form)
+                return render_template('/landlord/editListing.html',
+                                       form=form,
+                                       title='Edit Listing',
+                                       listingID=listingID,
+                                       schools=allSchoolsAsStrings(),
+                                       selectedSchools=selectedSchools,
+                                       picturePaths=picturePaths)
     else:
         flash("You are not the landlord of this listing", 'warning')
 

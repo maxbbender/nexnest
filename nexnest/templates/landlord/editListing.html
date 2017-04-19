@@ -1000,6 +1000,7 @@
 
     function submitListingForm() {
         $("#colleges").val(JSON.stringify(collegeEnter.getValue()));
+        $('#pictures').fileinput('upload');
         if($("#time_period").val()=="school"){
             $("#time_period_date_range").val($("#time_range_full_select").val());
         }
@@ -1040,16 +1041,12 @@
         showPreview: true,
         overwriteInitial: true,
         initialPreview: [
-            {% for picture in bannerPath %}
-                "/uploads/listings/{{listingID}}/bannerPhoto/{{picture}}",
-            {% endfor %}
+            "/uploads/listings/{{listingID}}/bannerPhoto/listing{{listingID}}banner.png",
         ],
         initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
         initialPreviewFileType: 'image', // image is the default and can be overridden in config below
         initialPreviewConfig: [
-            {% for picture in bannerPath %}
-                {caption: "Picture 1", size: 827000, width: "120px", url: "/listing/delete/{{listingID}}/{{picture}}", key: 1},
-            {% endfor %}
+            {caption: "Picture 1", size: 827000, width: "120px", url: "/listing/delete/{{listingID}}/listing{{listingID}}banner.png", key: 1},
         ]
     }).on('filesorted', function(e, params) {
     console.log('File sorted params', params);
