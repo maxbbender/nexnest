@@ -2,13 +2,14 @@ from flask import Blueprint
 from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
 
+from nexnest import logger
 from nexnest.application import session
 
-# from nexnest.models import user.User, Group, School, DirectMessage
 from nexnest.models.user import User
 from nexnest.models.group import Group
 from nexnest.models.school import School
 from nexnest.models.direct_message import DirectMessage
+from nexnest.models.notification import Notification
 
 from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm, CreateGroupForm
 
@@ -320,3 +321,35 @@ def changePassword():
         flash_errors(passForm)
 
     return passForm.redirect()
+
+
+@users.route('/user/getNotifications', methods=['GET', 'POST'])
+@users.route('/user/getNotifications/<int:page>', methods=['GET', 'POST'])
+@login_required
+def getNotifications(page=1):
+    logger.debug("/user/getNotifications page : ", page)
+
+    allNotifications = Notification.query \
+        .filter_by(target_user_id=current_user.id) \
+        .distinct(Notification.notif_type,
+                  Notification.redirect_url) \
+        .paginate(page, 10, False)
+
+    logger.debug("allNotifications : ", allNotifications)
+
+    allNotificationList = []
+
+    for notif in allNotifications.items:
+        allNotificationList.append(notif.serialize)
+
+    returnDict = {'notifications': allNotificationList}
+
+    paginateDict = {
+        'hasNext': allNotifications.has_next,
+        'hasPrev': allNotifications.has_prev,
+        'numPages': allNotifications.pages
+    }
+
+    returnDict['paginateDetials'] = paginateDict
+
+    return jsonify(returnDict)

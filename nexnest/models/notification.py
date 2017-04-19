@@ -29,7 +29,7 @@ class Notification(Base):
     # | group_listing_accept | group_listing_denied | tour_confirm | tour_denied
     notif_type = db.Column(db.String(128))
     redirect_url = db.Column(db.String(128))
-    message = db.Column
+    message = db.Column(db.Text)
 
     def __init__(
             self,
@@ -64,15 +64,22 @@ class Notification(Base):
             self.category = 'generic_notification'
 
         message, returnObject, redirectURL = self.getNotification()  # pylint: disable=unused-variable
+        self.message = message
         self.redirect_url = redirectURL
 
     def __repr__(self):
         return '<Notification %r>' % self.id
 
     @property
-    def message(self):
-        message, returnObject, redirectURL = self.getNotification()  # pylint: disable=unused-variable
-        return message
+    def serialize(self):
+        return {
+            'target_user': self.user.serialize,
+            'viewed': self.viewed,
+            'notif_type': self.notif_type,
+            'message': self.message,
+            'redirectURL': self.redirect_url,
+            'category': self.category
+        }
 
     @property
     def returnObject(self):

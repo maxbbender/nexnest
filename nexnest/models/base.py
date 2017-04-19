@@ -1,4 +1,5 @@
 from sqlalchemy.ext.declarative import declarative_base
+from nexnest.application import session
 
 
 def update(self, data):
@@ -14,3 +15,4 @@ def update(self, data):
 Base = declarative_base()
 
 Base.update = update
+Base.query = session.query_property()

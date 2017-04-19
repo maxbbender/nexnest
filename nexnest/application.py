@@ -12,9 +12,10 @@ from sqlalchemy import create_engine
 from nexnest import app
 
 # DB setup
-engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
-session = scoped_session(sessionmaker(bind=engine))
+# engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+# session = scoped_session(sessionmaker(bind=engine))
 db = SQLAlchemy(app)
+session = db.session
 
 # CSRF setup
 csrf = CSRFProtect(app)
@@ -83,12 +84,12 @@ def insert_login_form():
     if current_user.is_authenticated:
         passwordChangeForm = PasswordChangeForm()
         avatarChangeForm = ProfilePictureForm()
-        messages, notifications = current_user.unreadNotifications()
+        # messages, notifications = current_user.unreadNotifications()
         # notifications = current_user.notifications
         return dict(passwordChangeForm=passwordChangeForm,
                     avatarChangeForm=avatarChangeForm,
-                    notifications=notifications,
-                    notificationMessages=messages)
+                    notifications=current_user.getNotifications(),
+                    notificationMessages=current_user.getMessageNotifications())
     else:
         login_form = LoginForm()
         return dict(login_form=login_form)
