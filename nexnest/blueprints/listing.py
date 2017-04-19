@@ -419,6 +419,14 @@ def deletePhoto(listingID, filename):
     os.remove(folderPicturesPath+"/"+filename)
     return jsonify("hello");
 
+@app.route("/listing/deleteBanner/<listingID>/<filename>", methods=["POST"])
+@csrf.exempt
+def deleteBannerPhoto(listingID, filename):
+    folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
+    folderPicturesPath = os.path.join(folderPath, 'bannerPhoto')
+    os.remove(folderPicturesPath+"/"+filename)
+    return jsonify("hello");
+
 @listings.route('/listing/<listingID>/uploadPhotos', methods=['GET', 'POST'])
 @login_required
 def uploadPhotos(listingID):
