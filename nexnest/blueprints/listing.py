@@ -13,7 +13,7 @@ from sqlalchemy import or_
 from nexnest import logger
 from nexnest.application import session, app, csrf
 
-from nexnest.forms import ListingForm, SuggestListingForm, TourForm, GroupListingForm
+from nexnest.forms import ListingForm, SuggestListingForm, TourForm, GroupListingForm, PhotoForm
 from nexnest.models.listing import Listing
 from nexnest.models.listing_school import ListingSchool
 from nexnest.models.landlord_listing import LandlordListing
@@ -156,9 +156,6 @@ def createListing():
                     if not os.path.exists(folderPicturesPath):
                         os.makedirs(folderPicturesPath)
 
-
-                    flash('Listing Created', 'success')
-
                     if 'floor_plan' in request.files:
                         file = request.files['floor_plan']
 
@@ -173,25 +170,8 @@ def createListing():
                         newListing.floor_plan_url = '/uploads/listings/%s/floorplan.pdf' % str(newListing.id)
 
                         session.commit()
-                    if form.nextAction.data == 'checkout':
-                        return redirect(url_for('landlords.landlordDashboard'))
-                    elif form.nextAction.data == 'createNew':
-                        return redirect(url_for('listings.createListing'))
-                    elif form.nextAction.data == 'createCopy':
-                        selectedSchools = session.query(ListingSchool).filter_by(listing=newListing).all()
-                        #Get Pictures
-                        folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(newListing.id))
-                        folderPicturesPath = os.path.join(folderPath, 'pictures')
-                        picturePaths = os.listdir(folderPicturesPath)
-                        picturePaths.pop(0)
-                        return render_template('/landlord/createListing.html',
-                                               form=form,
-                                               title='Create Listing',
-                                               schools=allSchoolsAsStrings(),
-                                               selectedSchools=selectedSchools,
-                                               picturePaths=picturePaths)
-                    else:
-                        return redirect(url_for('listings.viewListing', listingID=newListing.id))
+                    return redirect(url_for('listings.uploadPhotos', listingID=newListing.id))
+
                 else:
                     flash('There is conflicting dates with a listing at the same address. \nThe conflicting listing is listed from %s - %s' %
                           (conflictingListing.start_date.strftime("%B %d, %Y"),
@@ -211,8 +191,7 @@ def createListing():
             return render_template('/landlord/createListing.html',
                                    form=form,
                                    title='Create Listing',
-                                   schools=allSchoolsAsStrings(),
-                                   picturePaths=picturePaths
+                                   schools=allSchoolsAsStrings()
                                    )
     else:
         flash("Only Landlords can create listings", 'warning')
@@ -374,7 +353,7 @@ def upload(listingID):
         dir = folderPicturesPath
         list = os.listdir(dir) # dir is your directory path
         number_files = len(list)
-        filename = str(number_files)+extension
+        filename = "listing"+listingID+"photo"+str(number_files)+extension
         logger.debug(number_files)
         logger.debug("filename is " + filename)
         destination = "/".join([folderPicturesPath, filename])
@@ -393,6 +372,61 @@ def deletePhoto(listingID, filename):
     folderPicturesPath = os.path.join(folderPath, 'pictures')
     os.remove(folderPicturesPath+"/"+filename)
     return jsonify("hello");
+
+@listings.route('/listing/<listingID>/uploadPhotos', methods=['GET', 'POST'])
+@login_required
+def uploadPhotos(listingID):
+    if current_user.isLandlord:
+        if request.method == 'POST':
+            form = PhotoForm(request.form)
+            if form.validate():
+                #upload the banner folder
+                folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
+                if not os.path.exists(folderPath):
+                    os.makedirs(folderPath)
+
+                folderPicturesPath = os.path.join(folderPath, 'bannerPhoto')
+                if not os.path.exists(folderPicturesPath):
+                    os.makedirs(folderPicturesPath)
+
+                # Lets add the photos
+                uploadedFiles = request.files.getlist("bannerPicture")
+                filenames = []
+                for file in uploadedFiles:
+                    if file and allowed_file(file.filename):
+                        extension = os.path.splitext(file.filename)[1]
+                        filename = "listing"+listingID+"banner"+extension
+
+                        file.save(os.path.join(folderPicturesPath, filename))
+                        filenames.append(filename)
+                    else:
+                        flash("Error saving file %s" % file.filename, 'error')
+                flash('Listing Created', 'success')
+                if form.nextAction.data == 'checkout':
+                    return redirect(url_for('landlords.landlordDashboard'))
+                elif form.nextAction.data == 'createNew':
+                    return redirect(url_for('listings.createListing'))
+                elif form.nextAction.data == 'createCopy':
+                    selectedSchools = session.query(ListingSchool).filter_by(listing=listingID).all()
+                    #Get Pictures
+                    return render_template('/landlord/createListing.html',
+                                           form=form,
+                                           title='Create Listing',
+                                           schools=allSchoolsAsStrings(),
+                                           selectedSchools=selectedSchools)
+                return jsonify("Only reach here if you somehow messed up the nextAction");
+            else:
+                return jsonify("Do something Smart Here");
+        else:
+            form = PhotoForm()
+            return render_template('/landlord/uploadPhotos.html',
+                                   form=form,
+                                   title='Upload Photos',
+                                   listingID=listingID
+                                   )
+    else:
+        flash("Only Landlords can upload photos", 'warning')
+        return redirect(url_for('indexs.index'))
 
 
 @listings.route('/listing/search/AJAX', methods=['POST', 'GET'])

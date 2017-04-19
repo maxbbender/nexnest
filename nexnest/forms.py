@@ -133,7 +133,6 @@ class ListingForm(RedirectForm):
     security_service = BooleanField('Is there a security service provided?')
     description = TextAreaField('Please provide a detailed description of the property', [
                                 Length(min=1, max=1500), InputRequired()])
-    pictures = FileField('Pictures for Listing')
     property_type = SelectField('Property Type', choices=propertyTypes)
     rent_due = SelectField('How often is rent due?', choices=rentDue)
     first_semester_rent_due_date = DateField(
@@ -151,8 +150,11 @@ class ListingForm(RedirectForm):
     floor_plan = FileField('Floor Plan')
     youtube_url = StringField('Listing Video', [Optional(), URL()])
     colleges = HiddenField('Colleges', [InputRequired()])
-    nextAction = HiddenField('Next')
 
+class PhotoForm(RedirectForm):
+    pictures = FileField('Pictures for Listing')
+    bannerPicture = FileField('Pictures for Listing')
+    nextAction = HiddenField('Next')
 
 class CreateGroupForm(RedirectForm):
     name = StringField('Group Name:', [Length(min=2, max=50), InputRequired()])
