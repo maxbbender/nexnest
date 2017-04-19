@@ -65,6 +65,12 @@
         $("form#photoForm").submit();
     }
 
+    $("#bannerPicture").fileinput({
+        theme: "fa",
+        showUpload: false,
+        showCancel: false,
+    });
+
     $("#pictures").fileinput({
         uploadUrl: "/listing/upload/{{listingID}}", // server upload action
         uploadAsync: true,
@@ -73,6 +79,7 @@
         showCancel: false,
         showPreview: true,
         overwriteInitial: false,
+        showUpload: false,
         initialPreview: [
             {% for picture in picturePaths %}
                 "/uploads/listings/28/pictures/{{picture}}",
@@ -84,12 +91,7 @@
             {% for picture in picturePaths %}
                 {caption: "Picture 1", size: 827000, width: "120px", url: "/listing/delete/{{picture}}", key: 1},
             {% endfor %}
-        ],
-        purifyHtml: true, // this by default purifies HTML data for preview
-        uploadExtraData: {
-            img_key: "1000",
-            img_keywords: "happy, places",
-        }
+        ]
     }).on('filesorted', function(e, params) {
     console.log('File sorted params', params);
     });
