@@ -150,6 +150,8 @@ class ListingForm(RedirectForm):
     floor_plan = FileField('Floor Plan')
     youtube_url = StringField('Listing Video', [Optional(), URL()])
     colleges = HiddenField('Colleges', [InputRequired()])
+    pictures = FileField('Pictures for Listing')
+    bannerPicture = FileField('Pictures for Listing')
 
 class PhotoForm(RedirectForm):
     pictures = FileField('Pictures for Listing')

@@ -619,6 +619,13 @@
                             <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10">
                                 <h3>Step 9: Photos</h3>
                                 <br>
+                                <p><strong>Banner Photo</strong></p>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label class="control-label form-control-feedback">Choose Photo</label>
+                                        {{form.bannerPicture(class='form-control')}}
+                                    </div>
+                                </div>
                                 <p><strong>Photos</strong></p>
                                 <div class="row">
                                     <div class="form-group">
@@ -1023,12 +1030,38 @@
         $("#colleges").val(JSON.stringify(collegeEnter.getValue()));
     });
 
+    $("#bannerPicture").fileinput({
+        uploadUrl: "/listing/upload", // server upload action
+        uploadAsync: true,
+        theme: "fa",
+        maxFileCount: 1,
+        showCancel: false,
+        showUpload: false,
+        showPreview: true,
+        overwriteInitial: true,
+        initialPreview: [
+            {% for picture in bannerPath %}
+                "/uploads/listings/{{listingID}}/bannerPhoto/{{picture}}",
+            {% endfor %}
+        ],
+        initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
+        initialPreviewFileType: 'image', // image is the default and can be overridden in config below
+        initialPreviewConfig: [
+            {% for picture in bannerPath %}
+                {caption: "Picture 1", size: 827000, width: "120px", url: "/listing/delete/{{listingID}}/{{picture}}", key: 1},
+            {% endfor %}
+        ]
+    }).on('filesorted', function(e, params) {
+    console.log('File sorted params', params);
+    });
+
     $("#pictures").fileinput({
         uploadUrl: "/listing/upload", // server upload action
         uploadAsync: true,
         theme: "fa",
         maxFileCount: 12,
         showCancel: false,
+        showUpload: false,
         showPreview: true,
         overwriteInitial: false,
         initialPreview: [

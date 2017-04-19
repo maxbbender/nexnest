@@ -256,6 +256,11 @@ def editListing(listingID):
         folderPicturesPath = os.path.join(folderPath, 'pictures')
         picturePaths = os.listdir(folderPicturesPath)
 
+        #Get the bannerPhoto from the liting
+        bannerFolderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
+        bannerFolderPicturesPath = os.path.join(bannerFolderPath, 'bannerPhoto')
+        bannerPath = os.listdir(bannerFolderPicturesPath)
+
         form = ListingForm(obj=currentListing)
 
         if request.method == 'GET':
@@ -265,7 +270,8 @@ def editListing(listingID):
                                    listingID=listingID,
                                    schools=allSchoolsAsStrings(),
                                    selectedSchools=selectedSchools,
-                                   picturePaths=picturePaths)
+                                   picturePaths=picturePaths,
+                                   bannerPath=bannerPath)
         else:  # POST
             form = ListingForm(request.form)
 
@@ -314,6 +320,27 @@ def editListing(listingID):
                     currentListing.first_semester_rent_due_date = form.first_semester_rent_due_date.data
                     currentListing.second_semester_rent_due_date = form.second_semester_rent_due_date.data
                 session.commit()
+                
+                folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
+                if not os.path.exists(folderPath):
+                    os.makedirs(folderPath)
+
+                folderPicturesPath = os.path.join(folderPath, 'bannerPhoto')
+                if not os.path.exists(folderPicturesPath):
+                    os.makedirs(folderPicturesPath)
+
+                # Lets add the photos
+                uploadedFiles = request.files.getlist("bannerPicture")
+                filenames = []
+                for file in uploadedFiles:
+                    if file and allowed_file(file.filename):
+                        extension = os.path.splitext(file.filename)[1]
+                        filename = "listing"+listingID+"banner"+extension
+
+                        file.save(os.path.join(folderPicturesPath, filename))
+                        filenames.append(filename)
+                    else:
+                        flash("Error saving file %s" % file.filename, 'error')
                 flash('Listing Updated', 'info')
                 return redirect(url_for('listings.viewListing',
                                         listingID=listingID))

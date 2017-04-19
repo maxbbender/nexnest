@@ -69,6 +69,18 @@
         theme: "fa",
         showUpload: false,
         showCancel: false,
+        initialPreview: [
+            {% for picture in bannerPath %}
+                "/uploads/listings/{{listingID}}/bannerPhoto/{{picture}}",
+            {% endfor %}
+        ],
+        initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
+        initialPreviewFileType: 'image', // image is the default and can be overridden in config below
+        initialPreviewConfig: [
+            {% for picture in bannerPath %}
+                {caption: "Picture 1", size: 827000, width: "120px", url: "/listing/delete/{{picture}}", key: 1},
+            {% endfor %}
+        ]
     });
 
     $("#pictures").fileinput({
@@ -82,7 +94,7 @@
         showUpload: false,
         initialPreview: [
             {% for picture in picturePaths %}
-                "/uploads/listings/28/pictures/{{picture}}",
+                "/uploads/listings/{{listingID}}/pictures/{{picture}}",
             {% endfor %}
         ],
         initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
