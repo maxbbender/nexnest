@@ -111,7 +111,7 @@ def markGroupedNotificationRead(notifID):
         if notif.isEditableBy(current_user, False):
             allNotifsToMarkRead = Notification.query \
                 .filter(Notification.redirect_url == notif.redirect_url,
-                        Notification.category == notif.category,
+                        Notification.notif_type == notif.notif_type,
                         Notification.target_user_id == current_user.id,
                         Notification.viewed == False) \
                 .all()
@@ -133,4 +133,3 @@ def markGroupedNotificationRead(notifID):
         return jsonify(results={'success': False, 'message': errorMessage})
     else:
         return jsonify(results={'success': True})
-
