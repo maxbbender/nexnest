@@ -157,16 +157,16 @@ def genTransaction():
                 return redirect('/landlord/dashboard#checkoutTab')
 
 
-@commerce.route('/cupon/<cuponCode>/check', methods=['GET'])
+@commerce.route('/coupon/<couponCode>/check', methods=['GET'])
 @login_required
-def checkCuponCode(cuponCode):
-    cupon = session.query(Cupon) \
-        .filter_by(cupon_key=cuponCode) \
+def checkCouponCode(couponCode):
+    coupon = session.query(Coupon) \
+        .filter_by(coupon_key=couponCode) \
         .first()
 
-    if cupon is not None:
-        logger.debug("Found Cupon %r" % cupon)
-        return jsonify(results={'validCupon': True, 'cupon': cupon.serialize})
+    if coupon is not None:
+        logger.debug("Found Coupon %r" % coupon)
+        return jsonify(results={'validCoupon': True, 'coupon': coupon.serialize})
     else:
-        logger.warning("Could not find cupon with code %s" % cuponCode)
-        return jsonify(results={'validCupon': False})
+        logger.warning("Could not find coupon with code %s" % couponCode)
+        return jsonify(results={'validCoupon': False})
