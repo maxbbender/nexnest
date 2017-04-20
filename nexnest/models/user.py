@@ -147,8 +147,6 @@ class User(Base):
 
         return self
 
-    
-
     @property
     def is_authenticated(self):
         return True
@@ -267,13 +265,13 @@ class User(Base):
     def getNotifications(self):
         return self.notifications \
             .filter(Notification.category.in_(('report_notification', 'generic_notification'))) \
-            .distinct(Notification.notif_type, Notification.redirect_url) \
+            .distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed) \
             .paginate(1, 10, False).items
 
     def getMessageNotifications(self):
         return self.notifications \
             .filter(Notification.category.in_(('direct_message', 'generic_message'))) \
-            .distinct(Notification.notif_type, Notification.redirect_url) \
+            .distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed) \
             .paginate(1, 10, False).items
 
     # def hasDirectMessagesWith(self):

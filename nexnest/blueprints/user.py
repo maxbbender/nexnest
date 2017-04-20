@@ -331,11 +331,13 @@ def getNotifications(page=1):
 
     allNotifications = Notification.query \
         .filter_by(target_user_id=current_user.id) \
+        .filter(Notification.category.in_(('report_notification', 'generic_notification'))) \
         .distinct(Notification.notif_type,
-                  Notification.redirect_url) \
+                  Notification.redirect_url,
+                  Notification.viewed) \
         .paginate(page, 10, False)
 
-    logger.debug("allNotifications : ", allNotifications)
+    logger.debug("allNotifications : ", allNotifications.items)
 
     allNotificationList = []
 
@@ -350,6 +352,41 @@ def getNotifications(page=1):
         'numPages': allNotifications.pages
     }
 
-    returnDict['paginateDetials'] = paginateDict
+    returnDict['paginateDetails'] = paginateDict
 
     return jsonify(returnDict)
+
+
+@users.route('/user/getMessageNotifications', methods=['GET', 'POST'])
+@users.route('/user/getMessageNotifications/<int:page>', methods=['GET', 'POST'])
+@login_required
+def getMessageNotifications(page=1):
+    logger.debug("/user/getNotifications page : ", page)
+
+    allNotifications = Notification.query \
+        .filter_by(target_user_id=current_user.id) \
+        .filter(Notification.category.in_(('direct_message', 'generic_message'))) \
+        .distinct(Notification.notif_type,
+                  Notification.redirect_url,
+                  Notification.viewed) \
+        .paginate(page, 10, False)
+
+    logger.debug("allNotifications : ", allNotifications.items)
+
+    allNotificationList = []
+
+    for notif in allNotifications.items:
+        allNotificationList.append(notif.serialize)
+
+    returnDict = {'notifications': allNotificationList}
+
+    paginateDict = {
+        'hasNext': allNotifications.has_next,
+        'hasPrev': allNotifications.has_prev,
+        'numPages': allNotifications.pages
+    }
+
+    returnDict['paginateDetails'] = paginateDict
+
+    return jsonify(returnDict)
+
