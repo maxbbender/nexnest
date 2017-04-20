@@ -3,7 +3,8 @@
     <form id="photoForm" action="{{url_for('listings.uploadPhotos', listingID=listingID)}}" role="form" data-toggle="validator" method='POST' enctype="multipart/form-data">
         {{form.csrf_token}}
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-md-1"></div>
+            <div class="col-xs-12 col-md-10">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                         <h3>Select Photos</h3>
@@ -12,14 +13,14 @@
                         <div class="row" style="width: 100%;">
                             <div class="form-group" style="width: 100%;">
                                 <label class="control-label form-control-feedback">Choose Photo</label>
-                                {{form.bannerPicture(class='form-control file')}}
+                                {{form.bannerPicture(class='form-control file', required='required')}}
                             </div>
                         </div>
-                        <p><strong>Photos</strong></p>
+                        <p><strong>Other photos of the property. (Up to 15)</strong></p>
                         <div class="row" style="width: 100%;">
                             <div class="form-group" style="width: 100%;">
                                 <label class="control-label form-control-feedback">Choose Photos</label>
-                                {{form.pictures(class='form-control file-loading', multiple='')}}
+                                {{form.pictures(class='form-control file-loading', multiple='', required='required')}}
                             </div>
                         </div>
                         {{form.nextAction}}
@@ -87,7 +88,7 @@
         uploadUrl: "/listing/upload/{{listingID}}", // server upload action
         uploadAsync: true,
         theme: "fa",
-        maxFileCount: 12,
+        maxFileCount: 15,
         showCancel: false,
         showPreview: true,
         overwriteInitial: false,

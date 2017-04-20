@@ -410,11 +410,11 @@
                 '    <div class="file-footer-caption" title="{caption}">{caption}<br>{size}</div>\n' +
                 '    {progress} {actions}\n' +
                 '</div>';
-            tActions = '<div class="file-upload-indicator" title="{indicatorTitle}">{indicator}</div>\n' +
+            tActions = '\n' +
                 '{drag}\n' +
                 '<div class="file-actions">\n' +
                 '    <div class="file-footer-buttons">\n' +
-                '        {upload} {delete} {zoom} {other}' +
+                '        {delete} {zoom} {other}' +
                 '    </div>\n' +
                 '    <div class="clearfix"></div>\n' +
                 '</div>';
@@ -3628,7 +3628,7 @@
         },
         msgUploadAborted: 'The file upload was aborted',
         msgUploadThreshold: 'Processing...',
-        msgUploadBegin: 'Initializing...',
+        msgUploadBegin: '',
         msgUploadEnd: 'Done',
         msgUploadEmpty: 'No valid data available for upload.',
         msgValidationError: 'Validation Error',
