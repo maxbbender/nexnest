@@ -341,10 +341,13 @@ def getNotifications(page=1):
 
     allNotificationList = []
 
+    numUnviewed = 0
     for notif in allNotifications.items:
         allNotificationList.append(notif.serialize)
+        if not notif.viewed:
+            numUnviewed += 1
 
-    returnDict = {'notifications': allNotificationList}
+    returnDict = {'numUnviewed': numUnviewed, 'notifications': allNotificationList}
 
     paginateDict = {
         'hasNext': allNotifications.has_next,
@@ -389,4 +392,3 @@ def getMessageNotifications(page=1):
     returnDict['paginateDetails'] = paginateDict
 
     return jsonify(returnDict)
-

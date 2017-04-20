@@ -85,11 +85,26 @@ def insert_login_form():
         passwordChangeForm = PasswordChangeForm()
         avatarChangeForm = ProfilePictureForm()
         # messages, notifications = current_user.unreadNotifications()
-        # notifications = current_user.notifications
+        notifications = current_user.getNotifications()
+
+        numUnviewed = 0
+        for notif in notifications:
+            if not notif.viewed:
+                numUnviewed += 1
+
+        messages = current_user.getMessageNotifications()
+
+        numUnviewedMessages = 0
+        for notif in messages:
+            if not notif.viewed:
+                numUnviewedMessages += 1
+
         return dict(passwordChangeForm=passwordChangeForm,
                     avatarChangeForm=avatarChangeForm,
-                    notifications=current_user.getNotifications(),
-                    notificationMessages=current_user.getMessageNotifications())
+                    notifications=notifications,
+                    numUnviewedNotifications=numUnviewed,
+                    numUnviewedMessages=numUnviewedMessages,
+                    notificationMessages=messages)
     else:
         login_form = LoginForm()
         return dict(login_form=login_form)
