@@ -149,23 +149,23 @@
 
 	function validateCoupon(){
 		var input = $('#couponCodeInput').val();
-		requestURL = '/cupon/'+input+'/check';
+		requestURL = '/coupon/'+input+'/check';
 		$("#acceptedTab").empty();
 
 		$.getJSON(requestURL, function(data) {
 			results = data['results'];
 			console.log(results);
-			if(results.validCupon == true){
+			if(results.validCoupon == true){
 				//update total price div
-				subtotalAfterCoupon = (totalPrice*(100-results.cupon.percentageOff)/100);
+				subtotalAfterCoupon = (totalPrice*(100-results.coupon.percentageOff)/100);
 				taxAfterCoupon = subtotalAfterCoupon*.075;
 				priceAfterCoupon = (subtotalAfterCoupon*1.075);
-				//totalPrice = totalPrice-results.cupon.percentageOff;
+				//totalPrice = totalPrice-results.coupon.percentageOff;
 				$("#totalPrice").html(`<h2>Total Price: `+"$"+priceAfterCoupon+`</h2>`);
 				$("#subTotal").html(`<h4>Subtoal: `+"$"+subtotalAfterCoupon+`</h4>`);
 				$("#tax").html(`<h4>Tax: `+"$"+taxAfterCoupon+`</h4>`);
 				//display the valid coupon percentage off
-				$("#discount").html("<strong>"+results.cupon.percentageOff+"% Off"+"</strong>");
+				$("#discount").html("<strong>"+results.coupon.percentageOff+"% Off"+"</strong>");
 		 	    $("#discount").css("color", "green");
 			}
 			else{

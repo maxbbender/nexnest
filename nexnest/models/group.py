@@ -92,8 +92,7 @@ class Group(Base):
             'leader': self.leader.shortSerialize,
             'id': self.id,
             'name': self.name,
-            'startDate': self.start_date,
-            'endDate': self.end_date,
+            'targetTimePeriod': self.target_time_period,
             'url': '/group/view/%d' % self.id,
             'users': group_users,
             'userCount': len(group_users)

@@ -73,9 +73,10 @@ class Notification(Base):
     @property
     def serialize(self):
         return {
-            'target_user': self.user.serialize,
+            'id': self.id,
+            'targetUser': self.user.serialize,
             'viewed': self.viewed,
-            'notif_type': self.notif_type,
+            'notifType': self.notif_type,
             'message': self.message,
             'redirectURL': self.redirect_url,
             'category': self.category

@@ -97,53 +97,37 @@ def markAllMessagesRead():
     return jsonify(results={'success': True})
 
 
-@notifications.route('/notification/<redirectURL>/<notifType>/read/AJAX')
+@notifications.route('/notification/<notifID>/allRead/AJAX')
 @login_required
-def markGroupedNotificationRead(redirectURL, notifType):
-    notifs = session.query(Notification) \
-        .filter_by(redirect_url=redirectURL,
-                   notif_type=notifType,
-                   viewed=False) \
-        .all()
+def markGroupedNotificationRead(notifID):
+    logger.debug('/notification/<notifID>/allRead/AJAX')
+    notif = Notification.query.filter_by(id=notifID).first()
+
+    logger.debug('Looking at Notification : %r' % notif)
+    logger.debug('Notification Details : %r' % notif.serialize)
 
     errorMessage = None
+    if notif is not None:
+        if notif.isEditableBy(current_user, False):
+            allNotifsToMarkRead = Notification.query \
+                .filter(Notification.redirect_url == notif.redirect_url,
+                        Notification.notif_type == notif.notif_type,
+                        Notification.target_user_id == current_user.id,
+                        Notification.viewed == False) \
+                .all()
 
-    if len(notifs) > 0:
-        for notif in notifs:
-            if notif.isEditableBy(current_user, False):
-                notif.viewed = True
-                session.commit()
+            logger.debug('Other Notifications that matched queried : %r ' % allNotifsToMarkRead)
+
+            if len(allNotifsToMarkRead) > 0:
+                for notifa in allNotifsToMarkRead:
+                    notifa.viewed = True
+                    session.commit()
             else:
-                errorMessage = 'Permissions Error'
+                errorMessage = "No notifications found to mark as read"
+        else:
+            errorMessage = 'Permissions Error'
     else:
-        errorMessage = 'Could not find notifications to mark as read'
-
-    if errorMessage is not None:
-        return jsonify(results={'success': False, 'message': errorMessage})
-    else:
-        return jsonify(results={'success': True})
-
-
-@notifications.route('/notification/<redirectURL>/<notifType>/unRead/AJAX')
-@login_required
-def markGroupedNotificationUnRead(redirectURL, notifType):
-    notifs = session.query(Notification) \
-        .filter_by(redirect_url=redirectURL,
-                   notif_type=notifType,
-                   viewed=True) \
-        .all()
-
-    errorMessage = None
-
-    if len(notifs) > 0:
-        for notif in notifs:
-            if notif.isEditableBy(current_user, False):
-                notif.viewed = False
-                session.commit()
-            else:
-                errorMessage = 'Permissions Error'
-    else:
-        errorMessage = 'Could not find notifications to mark as read'
+        errorMessage = "Invalid Request"
 
     if errorMessage is not None:
         return jsonify(results={'success': False, 'message': errorMessage})
