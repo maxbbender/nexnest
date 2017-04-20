@@ -199,9 +199,11 @@
               modal.find('.modal-title').text('Change Profile Picture')
             });
             $(".noti").click(function(event){
+                var type = $(event.currentTarget).attr("data-type")
+                var redirect = $(event.currentTarget).attr("data-redirect")
                 $.ajax({
                     type: "GET",
-                    url: "/notification/"+event.currentTarget.id+"/read/AJAX",
+                    url: "/notification"+ redirect +"/"+ type +"/read/AJAX",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function(data){
