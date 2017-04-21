@@ -37,8 +37,6 @@
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 	<body>
-        NUM UNVIEWED NOTIFICATIONS {{numUnviewedNotifications}}     
-        NUM UNVIEWED MESSAGES {{numUnviewedMessages}}
 		<nav class="navbar navbar-light bg-faded">
 			<a class="navbar-brand" href="{{ url_for('indexs.index') }}">NexNest</a>
 		    <ul class="nav navbar-nav">
@@ -97,10 +95,10 @@
                     {% if current_user %}
                     <li class="nav-item">
                         <div class="dropdown dropdown-notifications dropdown-toggle">
-                            <i data-count="{{ notificationMessages|length }}" class="fa fa-comments fa-2x notification-icon" style="padding-top: 4px;" id="dropdownNotificationButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
+                            <i data-count="{{ numUnviewedMessages }}" class="fa fa-comments fa-2x notification-icon" style="padding-top: 4px;" id="dropdownNotificationButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
                             <div class="dropdown-menu dropdown-menu-right" style="overflow:hidden; width: 93vw; right: -100px; max-height: 90vh;" aria-labelledby="dropdownNotificationButton">
                                 <div class="dropdown-toolbar">
-                                    <h2 class="dropdown-toolbar-title"><strong>Messages ({{ notificationMessages|length }} new)</strong>
+                                    <h2 class="dropdown-toolbar-title"><strong>Messages ({{ numUnviewedMessages }} new)</strong>
                                     <span style="float: right;"><a href="#" id="markAllMessages">Mark All Read</a></span></h2>
                                 </div>
                                 <ul class="notifications">
@@ -113,10 +111,10 @@
                     </li>
                     <li class="nav-item">
                         <div class="dropdown dropdown-notifications dropdown-toggle">
-                            <i data-count="{{ notifications|length }}" class="fa fa-bell fa-2x notification-icon" style="padding-top: 4px;" id="dropdownNotificationButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
+                            <i data-count="{{ numUnviewedNotifications }}" class="fa fa-bell fa-2x notification-icon" style="padding-top: 4px;" id="dropdownNotificationButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
                             <div class="dropdown-menu dropdown-menu-right" style="overflow:hidden; width: 93vw; right: -48px; max-height: 90vh;" aria-labelledby="dropdownNotificationButton">
                                 <div class="dropdown-toolbar">
-                                    <h2 class="dropdown-toolbar-title"><strong>Notifications ({{ notifications|length }} new)</strong>
+                                    <h2 class="dropdown-toolbar-title"><strong>Notifications ({{ numUnviewedNotifications }} new)</strong>
                                     <span style="float: right;"><a href="#" id="markAllNotif">Mark All Read</a></span></h2>
                                 </div>
                                 <ul class="notifications">
@@ -205,7 +203,7 @@
                 var redirect = $(event.currentTarget).attr("data-redirect")
                 $.ajax({
                     type: "GET",
-                    url: "/notification"+ redirect +"/"+ type +"/read/AJAX",
+                    url: "/notification/"+ event.currentTarget.id +"/allRead/AJAX",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function(data){
