@@ -56,7 +56,7 @@ class Coupon(Base):
         self.date_modified = now
 
     def __repr__(self):
-        return '<Coupon id:%d | key:%s>' % (self.id, self.coupon_key)
+        return '<Coupon id: %d | key: %s>' % (self.id, self.coupon_key)
 
     @property
     def serialize(self):
