@@ -687,14 +687,35 @@
     function fillInAddress() {
         // Get the place details from the autocomplete object.
         var place = autocomplete.getPlace();
+        var street_number;
+        var street_name;
+        var street;
+        var city;
+        var state;
+        var zipcode;
         //get all the info we need
         console.log(place);
-        var street_number = place.address_components[0].long_name;
-        var street_name = place.address_components[1].long_name;
-        var street = street_number + " " + street_name;
-        var city = place.address_components[2].long_name;
-        var state = place.address_components[5].short_name;
-        var zipcode = place.address_components[7].long_name;
+        for(var i = 0; i < place.address_components.length; i++){
+            if(place.address_components[i].types[0] == "postal_code"){
+                zipcode = place.address_components[i].long_name;
+            }
+            else if(place.address_components[i].types[0] == "street_number"){
+                street_number = place.address_components[i].long_name;
+            }
+            else if(place.address_components[i].types[0] == "route"){
+                street_name = place.address_components[i].long_name;
+            }
+            else if(place.address_components[i].types[0] == "neighborhood"){
+                city = place.address_components[i].long_name;
+            }
+            else if(place.address_components[i].types[0] == "locality"){
+                city = place.address_components[i].long_name;
+            }
+            else if(place.address_components[i].types[0] == "administrative_area_level_1"){
+                state = place.address_components[i].short_name;
+            }
+        }
+        street = street_number + " " + street_name;
 
         //fill in all the fields
         $("#street").val(street);
