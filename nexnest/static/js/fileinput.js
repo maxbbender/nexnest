@@ -2611,22 +2611,22 @@
             self._setProgress(101, self.$progress, self.msgCancelled);
         },
         _setProgress: function (p, $el, error) {
-            var self = this, pct = Math.min(p, 100), out, status, pctLimit = self.progressUploadThreshold,
-                t = p <= 100 ? self.progressTemplate : self.progressCompleteTemplate,
-                template = pct < 100 ? self.progressTemplate : (error ? self.progressErrorTemplate : t);
-            $el = $el || self.$progress;
-            if (!$h.isEmpty(template)) {
-                if (pctLimit && pct > pctLimit && p <= 100) {
-                    out = template.replace(/\{percent}/g, pctLimit).replace(/\{status}/g, self.msgUploadThreshold);
-                } else {
-                    status = p > 100 ? self.msgUploadEnd : pct + '%';
-                    out = template.replace(/\{percent}/g, pct).replace(/\{status}/g, status);
-                }
-                $el.html(out);
-                if (error) {
-                    $el.find('[role="progressbar"]').html(error);
-                }
-            }
+            // var self = this, pct = Math.min(p, 100), out, status, pctLimit = self.progressUploadThreshold,
+            //     t = p <= 100 ? self.progressTemplate : self.progressCompleteTemplate,
+            //     template = pct < 100 ? self.progressTemplate : (error ? self.progressErrorTemplate : t);
+            // $el = $el || self.$progress;
+            // if (!$h.isEmpty(template)) {
+            //     if (pctLimit && pct > pctLimit && p <= 100) {
+            //         out = template.replace(/\{percent}/g, pctLimit).replace(/\{status}/g, self.msgUploadThreshold);
+            //     } else {
+            //         status = p > 100 ? self.msgUploadEnd : pct + '%';
+            //         out = template.replace(/\{percent}/g, pct).replace(/\{status}/g, status);
+            //     }
+            //     $el.html(out);
+            //     if (error) {
+            //         $el.find('[role="progressbar"]').html(error);
+            //     }
+            // }
         },
         _setFileDropZoneTitle: function () {
             var self = this, $zone = self.$container.find('.file-drop-zone'), title = self.dropZoneTitle, strFiles;
