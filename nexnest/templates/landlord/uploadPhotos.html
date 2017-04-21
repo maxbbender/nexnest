@@ -7,19 +7,16 @@
             <div class="col-xs-12 col-md-10">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <h3>Select Photos</h3>
                         <br>
-                        <p><strong>Banner Photo(The photo that is displayed on the homepage)</strong></p>
+                        <h3><strong>Banner Photo(The photo that is displayed on the homepage)</strong></h3>
                         <div class="row" style="width: 100%;">
                             <div class="form-group" style="width: 100%;">
-                                <label class="control-label form-control-feedback">Choose Photo</label>
                                 {{form.bannerPicture(class='form-control file', required='required')}}
                             </div>
                         </div>
-                        <p><strong>Other photos of the property. (Up to 15)</strong></p>
+                        <h3><strong>Other photos of the property. (Up to 15)</strong></h3>
                         <div class="row" style="width: 100%;">
                             <div class="form-group" style="width: 100%;">
-                                <label class="control-label form-control-feedback">Choose Photos</label>
                                 {{form.pictures(class='form-control file-loading', multiple='', required='required')}}
                             </div>
                         </div>
