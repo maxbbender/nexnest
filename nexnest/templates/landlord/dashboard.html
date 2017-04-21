@@ -226,7 +226,7 @@
 											                    <div class="card-block">
 												                    <div class="row">
 												                    	<div class="hidden-md-down col-lg-4">
-												                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
+												                    		<img src="{{house.listing.getBannerPhotoURL()}}" class="listingImg">
 												                    	</div>
 												                    	<div class="col-xs-12 col-lg-8">
 												                    		<h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ house.listing.price }}</strong> per bed per semester</h3>
@@ -282,7 +282,7 @@
 											                    <div class="card-block">
 												                    <div class="row">
 												                    	<div class="hidden-md-down col-lg-4">
-												                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
+												                    		<img src="{{house.listing.getBannerPhotoURL()}}" class="listingImg">
 												                    	</div>
 												                    	<div class="col-xs-12 col-lg-8">
 												                    		<h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ house.listing.price }}</strong> per bedroom per semester</h3>
