@@ -123,9 +123,9 @@
 			$("#checkOutItems").append(checkoutItem);
 		})
 		//tax calculation
-		subTotal = totalPrice;
-		taxBeforeCoupon = totalPrice*.075;
-		totalPrice = (totalPrice*1.075);
+		subTotal = Number(totalPrice).toFixed(2);
+		taxBeforeCoupon = Number(totalPrice*.075).toFixed(2);
+		totalPrice = Number((totalPrice*1.075)).toFixed(2);
 		$("#subTotal").html(`<h4>Subtoal: `+"$"+subTotal+`</h4>`);
 		$("#tax").html(`<h4>Tax: `+"$"+taxBeforeCoupon+`</h4>`);
 		$("#totalPrice").html(`<h2>Total Price: `+"$"+totalPrice+`</h2>`);
@@ -157,9 +157,9 @@
 			console.log(results);
 			if(results.validCoupon == true){
 				//update total price div
-				subtotalAfterCoupon = (totalPrice*(100-results.coupon.percentageOff)/100);
-				taxAfterCoupon = subtotalAfterCoupon*.075;
-				priceAfterCoupon = (subtotalAfterCoupon*1.075);
+				subtotalAfterCoupon = Number((totalPrice*(100-results.coupon.percentageOff)/100)).toFixed(2);
+				taxAfterCoupon = Number(subtotalAfterCoupon*.075).toFixed(2);
+				priceAfterCoupon = Number((subtotalAfterCoupon*1.075)).toFixed(2);
 				//totalPrice = totalPrice-results.coupon.percentageOff;
 				$("#totalPrice").html(`<h2>Total Price: `+"$"+priceAfterCoupon+`</h2>`);
 				$("#subTotal").html(`<h4>Subtoal: `+"$"+subtotalAfterCoupon+`</h4>`);
