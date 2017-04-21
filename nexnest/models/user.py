@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship
 
 from flask import flash
 
+from nexnest import logger
 from nexnest.application import db, session
 from nexnest.utils.password import hash_password
 from nexnest.models.group_user import GroupUser
@@ -263,10 +264,16 @@ class User(Base):
         return self.role == 'admin'
 
     def getNotifications(self):
-        return self.notifications \
+        logger.debug(type(Notification.query))
+        return Notification.query \
+            .filter(Notification.target_user_id == self.id) \
             .filter(Notification.category.in_(('report_notification', 'generic_notification'))) \
             .distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed) \
             .paginate(1, 10, False).items
+        # return self.notifications \
+        #     .filter(Notification.category.in_(('report_notification', 'generic_notification'))) \
+        #     .distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed) \
+        #     .paginate(1, 10, False).items
 
     def getMessageNotifications(self):
         return self.notifications \

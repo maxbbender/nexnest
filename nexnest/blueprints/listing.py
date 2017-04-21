@@ -120,6 +120,12 @@ def createListing():
                     session.add(newListing)
                     session.commit()
 
+                    # Lets assign the current user to be the landlord of this listing
+                    newLandLordListing = LandlordListing(landlord=current_user.landlord[0],
+                                                         listing=newListing)
+                    session.add(newLandLordListing)
+                    session.commit()
+
                     # Now we want to define the colleges this listing is associated with
                     collegeNames = json.loads(form.colleges.data)
 
