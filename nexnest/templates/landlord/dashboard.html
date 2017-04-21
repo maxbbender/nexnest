@@ -246,7 +246,7 @@
 						    		      					    				    {% endwith %}
 						    		      					    				{% endfor %}
 						    			      					    		</div>
-						    			      					    		<button class="btn btn-info" id="allGroupMembersCurrentlyOccupiedToggle{{house.group.id}}" onClick="showOccupiedHouseMembers({{house.group.id}})"><i class='fa fa-users' aria-hidden='true'></i> See Tenants</button>
+						    			      					    		<button class="btn btn-info" id="allGroupMembersCurrentlyOccupiedToggle{{house.group.id}}" onClick="showOccupiedHouseMembers({{house.group.id}})"><i class='fa fa-users' aria-hidden='true'></i> Tenants</button>
 						    			      					    		<button class="btn btn-info" id="hideAllGroupMembersCurrentlyOccupiedToggle{{house.group.id}}" onClick="hideOccupiedHouseMembers({{house.group.id}})" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide Tenants</button>
 												                    		<br>
 												                    	</div>
@@ -302,7 +302,7 @@
 						    		      					    				    {% endwith %}
 						    		      					    				{% endfor %}
 						    			      					    		</div>
-						    			      					    		<button class="btn btn-info" id="allGroupMembersWillBeOccupiedToggle{{house.id}}" onClick="showWillBeOccupiedHouseMembers({{house.id}})"><i class='fa fa-users' aria-hidden='true'></i> See Future Tenants</button>
+						    			      					    		<button class="btn btn-info" id="allGroupMembersWillBeOccupiedToggle{{house.id}}" onClick="showWillBeOccupiedHouseMembers({{house.id}})"><i class='fa fa-users' aria-hidden='true'></i> Future Tenants</button>
 						    			      					    		<button class="btn btn-info" id="hideAllGroupMembersWillBeOccupiedToggle{{house.id}}" onClick="hideWillBeOccupiedHouseMembers({{house.id}})" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide Future Tenants</button>
 												                    		<br>
 												                    	</div>
@@ -2655,7 +2655,7 @@
             								})            								
         							    	individualElement += `
         							    	</div>
-        							    	<button class="btn btn-info" id="allGroupMembersListingUnacceptedToggle`+ houseRequest.id +`" onClick="showUnacceptedHousingRequestMembers(`+ houseRequest.id +`)"><i class='fa fa-users' aria-hidden='true'></i> See Group Members</button>
+        							    	<button class="btn btn-info" id="allGroupMembersListingUnacceptedToggle`+ houseRequest.id +`" onClick="showUnacceptedHousingRequestMembers(`+ houseRequest.id +`)"><i class='fa fa-users' aria-hidden='true'></i> Group Members</button>
 		      					    		<button class="btn btn-info" id="hideAllGroupMembersListingUnacceptedToggle`+ houseRequest.id +`" style="display: none" onClick="hideUnacceptedHousingRequestMembers(`+ houseRequest.id +`)"><i class='fa fa-users' aria-hidden='true'></i> Hide Group Members</button>
         							    	`;
         			individualElement += "</div></div></div></div></div></div>";
@@ -2817,7 +2817,7 @@
 	            								})
 											div+=`
 		      					    		</div>
-		      					    		<button class="btn btn-info" id="allGroupMembersListingAcceptedToggle`+ housingRequest.groupListings[0].id +`" onClick="showAcceptedHousingRequestMembers(`+ housingRequest.groupListings[0].id +`)"><i class='fa fa-users' aria-hidden='true'></i> See Group Members</button>
+		      					    		<button class="btn btn-info" id="allGroupMembersListingAcceptedToggle`+ housingRequest.groupListings[0].id +`" onClick="showAcceptedHousingRequestMembers(`+ housingRequest.groupListings[0].id +`)"><i class='fa fa-users' aria-hidden='true'></i> Group Members</button>
 		      					    		<button class="btn btn-info" id="hideAllGroupMembersListingAcceptedToggle`+ housingRequest.groupListings[0].id +`" onClick="hideAcceptedHousingRequestMembers(`+ housingRequest.groupListings[0].id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide Group Members</button>
 				                    		<br>
 				                    		<br>
@@ -2998,7 +2998,7 @@
 				                    		})            								
         							    	individualElement += `
 		      					    		</div></div>
-		      					    		<button class="btn btn-info" id="allMembersRequestedTourToggle`+ tour.id +`" onClick="showRequestedTourMembers(`+ tour.id +`)"><i class='fa fa-users' aria-hidden='true'></i> See Group Members</button>
+		      					    		<button class="btn btn-info" id="allMembersRequestedTourToggle`+ tour.id +`" onClick="showRequestedTourMembers(`+ tour.id +`)"><i class='fa fa-users' aria-hidden='true'></i> Group Members</button>
 		      					    		<button class="btn btn-info" id="hideAllMembersRequestedTourToggle`+ tour.id +`" onClick="hideRequestedTourMembers(`+ tour.id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide Group Members</button>
 		      					    	</div>
 		      					    </div>
@@ -3144,7 +3144,7 @@
 				                    		})
         							    	individualElement += `
 		      					    		</div></div>
-		      					    		<button class="btn btn-info" id="allMembersScheduledTourToggle`+ tour.id +`" onClick="showScheduledTourMembers(`+ tour.id +`)"><i class='fa fa-users' aria-hidden='true'></i> See Group Members</button>
+		      					    		<button class="btn btn-info" id="allMembersScheduledTourToggle`+ tour.id +`" onClick="showScheduledTourMembers(`+ tour.id +`)"><i class='fa fa-users' aria-hidden='true'></i> Group Members</button>
 		      					    		<button class="btn btn-info" id="hideAllMembersScheduledTourToggle`+ tour.id +`" onClick="hideScheduledTourMembers(`+ tour.id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide Group Members</button>	  		
 		      					    	</div>
 		      					    </div>
