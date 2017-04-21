@@ -58,6 +58,26 @@ def checkout():
             session.add(newListingTransaction)
             session.commit()
 
+            if 'couponCode' in listingObjects:
+                couponCodeString = listingObjects['couponCode']
+
+                # Lets check that the coupon is valid
+                coupon = Coupon.query.filter_by(coupon_key=couponCodeString).first()
+
+                if coupon is not None:
+                    if coupon.unlimited:
+                        newListingTransaction.coupon_id = coupon.id
+                        session.commit()
+                    else:
+                        if coupon.uses > 0:
+                            newListingTransaction.coupon_id = coupon.id
+                            coupon.uses = coupon.uses - 1
+                            session.commit()
+                        else:
+                            logger.info('User %r used coupon %r that hs no uses left' % (current_user, coupon))
+                else:
+                    logger.info('Coupon got passed through that is invalid. Code : ' % couponCodeString)
+
             for item in listingObjects['items']:
                 # Ambiguous variables because my database setup is stupid
                 listing = session.query(Listing) \

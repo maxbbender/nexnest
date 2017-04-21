@@ -64,7 +64,6 @@ listing4.active = True
 listing5 = ListingFactory()
 listing5.active = True
 listing6 = ListingFactory()
-listing6.active = True
 
 session.commit()
 

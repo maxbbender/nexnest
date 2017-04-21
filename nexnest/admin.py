@@ -5,6 +5,7 @@ from nexnest.models.group import Group
 from nexnest.models.listing import Listing
 from nexnest.models.message import Message
 from nexnest.models.landlord import Landlord
+from nexnest.models.landlord_listing import LandlordListing
 from nexnest.models.school import School
 from nexnest.models.listing_school import ListingSchool
 from nexnest.models.tour import Tour
@@ -64,3 +65,5 @@ admin.add_view(AdminModelView(ListingTransaction, session))
 admin.add_view(AdminModelView(ListingTransactionListing, session))
 admin.add_view(AdminModelView(Coupon, session))
 admin.add_view(AdminModelView(ListingSchool, session))
+admin.add_view(AdminModelView(LandlordListing, session))
+
