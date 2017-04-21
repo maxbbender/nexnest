@@ -299,3 +299,11 @@ class ListingSchoolFactory(factory.alchemy.SQLAlchemyModelFactory):
     driving_miles = 2
     walking_time = 17
     walking_miles = 3
+
+
+class NotificationPreferenceFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = notification_preference.NotificationPreference
+        sqlalchemy_session = session
+
+    user = factory.SubFactory(UserFactory)

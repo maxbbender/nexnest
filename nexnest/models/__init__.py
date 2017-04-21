@@ -1,4 +1,4 @@
-__all__ = ['direct_message', 'friend', 'group', 'group_listing', 'group_listing_favorite', 'group_listing_message', 'group_message', 'group_user', 'house', 'house_message', 'landlord', 'landlord_listing', 'listing', 'listing_favorite', 'maintenance', 'maintenance_message', 'message', 'notification', 'platform_report', 'report', 'report_group', 'report_landlord', 'report_listing', 'school', 'school_user', 'security_deposit', 'tour', 'tour_message', 'user', 'coupon', 'listing_school']
+__all__ = ['direct_message', 'friend', 'group', 'group_listing', 'group_listing_favorite', 'group_listing_message', 'group_message', 'group_user', 'house', 'house_message', 'landlord', 'landlord_listing', 'listing', 'listing_favorite', 'maintenance', 'maintenance_message', 'message', 'notification', 'platform_report', 'report', 'report_group', 'report_landlord', 'report_listing', 'school', 'school_user', 'security_deposit', 'tour', 'tour_message', 'user', 'coupon', 'listing_school', 'notification_preference']
 
 # from .base import Base
 # from .group import Group

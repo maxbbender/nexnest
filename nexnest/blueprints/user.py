@@ -10,6 +10,7 @@ from nexnest.models.group import Group
 from nexnest.models.school import School
 from nexnest.models.direct_message import DirectMessage
 from nexnest.models.notification import Notification
+from nexnest.models.notification_preference import NotificationPreference
 
 from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm, CreateGroupForm
 
@@ -38,8 +39,9 @@ def register():
 
         if registerForm.validate():
             # First make sure that the school is valid
-            school = session.query(School).filter(func.lower(
-                School.name) == registerForm.school.data.lower()).first()
+            school = session.query(School) \
+                .filter(func.lower(School.name) == registerForm.school.data.lower()) \
+                .first()
 
             if school is not None:
                 # School Exists
@@ -53,6 +55,10 @@ def register():
                 session.commit()
 
                 login_user(newUser)
+
+                userPrefs = NotificationPreference(user=newUser)
+                session.add(userPrefs)
+                session.commit()
 
                 return redirect(url_for('indexs.index'))
             else:

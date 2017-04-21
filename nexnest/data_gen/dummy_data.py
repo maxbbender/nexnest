@@ -45,6 +45,10 @@ admin = UserFactory(role='admin', email='admin@admin.com')
 
 session.commit()
 
+for user in user.User.query.all():
+    np = NotificationPreferenceFactory(user=user)
+    session.commit()
+
 # LANDLORDS
 landlord1 = LandlordFactory(user=landlord)
 

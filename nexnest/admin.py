@@ -1,5 +1,6 @@
 from nexnest import app
 from nexnest.application import session
+from nexnest.models.notification_preference import NotificationPreference
 from nexnest.models.user import User
 from nexnest.models.group import Group
 from nexnest.models.listing import Listing
@@ -66,4 +67,5 @@ admin.add_view(AdminModelView(ListingTransactionListing, session))
 admin.add_view(AdminModelView(Coupon, session))
 admin.add_view(AdminModelView(ListingSchool, session))
 admin.add_view(AdminModelView(LandlordListing, session))
+admin.add_view(AdminModelView(NotificationPreference, session))
 
