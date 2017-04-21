@@ -6,7 +6,8 @@ meta = MetaData()
 listingTransactions = Table('listing_transactions', meta,
                             Column('id', Integer(),
                                    primary_key=True,
-                                   nullable=False))
+                                   nullable=False),
+                            Column('coupon_code', Text()))
 # Column('listing_id', Integer()),
 # Column('plan', String(length=50)))
 

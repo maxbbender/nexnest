@@ -70,6 +70,7 @@ event.listen(Transaction, 'before_update', update_date_modified)
 class ListingTransaction(Transaction):
     __tablename__ = 'listing_transactions'
     id = db.Column(db.Integer, db.ForeignKey('transactions.id'), primary_key=True)
+    coupon_code = db.Column(db.Text)
     listings = relationship("ListingTransactionListing", backref='transaction')
 
     __mapper_args__ = {
@@ -82,6 +83,7 @@ class ListingTransaction(Transaction):
             status='open',
             success=False,
             braintree_transaction_id=None,
+            couponCode=None
     ):
 
         super().__init__(
@@ -90,6 +92,8 @@ class ListingTransaction(Transaction):
             success=success,
             user=user
         )
+
+        self.coupon_code = couponCode
 
     def __repr__(self):
         return 'ListingTransaction %r' % self.id

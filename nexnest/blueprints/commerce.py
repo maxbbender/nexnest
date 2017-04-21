@@ -58,6 +58,9 @@ def checkout():
             session.add(newListingTransaction)
             session.commit()
 
+            # if 'couponCode' in listingObjects:
+                
+
             for item in listingObjects['items']:
                 # Ambiguous variables because my database setup is stupid
                 listing = session.query(Listing) \

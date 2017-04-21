@@ -246,3 +246,4 @@ class LeaseUploadForm(RedirectForm):
 
 class PreCheckoutForm(RedirectForm):
     json = HiddenField('Lease')
+    # couponCode = StringField('Coupon Code', validators=[Optional()])
