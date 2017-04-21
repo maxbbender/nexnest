@@ -70,8 +70,9 @@ event.listen(Transaction, 'before_update', update_date_modified)
 class ListingTransaction(Transaction):
     __tablename__ = 'listing_transactions'
     id = db.Column(db.Integer, db.ForeignKey('transactions.id'), primary_key=True)
-    coupon_code = db.Column(db.Text)
+    coupon_id = db.Column(db.Integer, db.ForeignKey('coupons.id'))
     listings = relationship("ListingTransactionListing", backref='transaction')
+    coupon = relationship('Coupon', back_populates='listingTransaction')
 
     __mapper_args__ = {
         'polymorphic_identity': 'listing',
@@ -83,7 +84,7 @@ class ListingTransaction(Transaction):
             status='open',
             success=False,
             braintree_transaction_id=None,
-            couponCode=None
+            coupon=None
     ):
 
         super().__init__(
@@ -93,7 +94,8 @@ class ListingTransaction(Transaction):
             user=user
         )
 
-        self.coupon_code = couponCode
+        if coupon is not None:
+            self.coupon_id = coupon.id
 
     def __repr__(self):
         return 'ListingTransaction %r' % self.id
@@ -127,7 +129,13 @@ class ListingTransaction(Transaction):
 
                 logger.debug("New Total : %d" % totalPrice)
 
-            self.total = totalPrice
+            logger.debug("Final totalPrice : %d" % totalPrice)
+            if self.coupon is not None:
+                self.total = self.coupon.couponPrice(totalPrice)
+                logger.debug("Price after Coupon %d" % self.total)
+            else:
+                self.total = totalPrice
+
             session.commit()
 
             return self.total

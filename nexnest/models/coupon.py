@@ -1,6 +1,7 @@
 from datetime import datetime as dt
 
 from sqlalchemy import event, UniqueConstraint
+from sqlalchemy.orm import relationship
 
 from nexnest.application import db, session
 from nexnest.utils.misc import idGenerator
@@ -19,6 +20,8 @@ class Coupon(Base):
     percentage_off = db.Column(db.Integer)
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
+
+    listingTransaction = relationship('ListingTransaction', uselist=False, back_populates='coupon')
 
     __table_args__ = (
         UniqueConstraint('coupon_key'),
@@ -53,7 +56,7 @@ class Coupon(Base):
         self.date_modified = now
 
     def __repr__(self):
-        return '<coupon id:%d | key:%s>' % (self.id, self.coupon_key)
+        return '<Coupon id:%d | key:%s>' % (self.id, self.coupon_key)
 
     @property
     def serialize(self):
@@ -77,7 +80,7 @@ class Coupon(Base):
         return newRandomKey
 
     def couponPrice(self, price):
-        return price * 1 - (self.percentage_off / 100)
+        return price * (1 - (self.percentage_off / 100))
 
 
 def update_date_modified(mapper, connection, target):

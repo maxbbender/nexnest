@@ -7,7 +7,7 @@ listingTransactions = Table('listing_transactions', meta,
                             Column('id', Integer(),
                                    primary_key=True,
                                    nullable=False),
-                            Column('coupon_code', Text()))
+                            Column('coupon_id', Integer()))
 # Column('listing_id', Integer()),
 # Column('plan', String(length=50)))
 
@@ -18,10 +18,15 @@ def upgrade(migrate_engine):
 
     # listings = Table('listings', meta, autoload=True)
     transactions = Table('transactions', meta, autoload=True)
+    coupon = Table('coupons', meta, autoload=True)
 
     ForeignKeyConstraint(
         columns=[listingTransactions.c.id],
         refcolumns=[transactions.c.id]).create()
+
+    ForeignKeyConstraint(
+        columns=[listingTransactions.c.coupon_id],
+        refcolumns=[coupon.c.id]).create()
 
     # ForeignKeyConstraint(
     #     columns=[listingTransactions.c.listing_id],
@@ -38,6 +43,10 @@ def downgrade(migrate_engine):
     ForeignKeyConstraint(
         columns=[listingTransactions.c.id],
         refcolumns=[transactions.c.id]).drop()
+
+    ForeignKeyConstraint(
+        columns=[listingTransactions.c.coupon_id],
+        refcolumns=[coupon.c.id]).drop()
 
     # ForeignKeyConstraint(
     #     columns=[listingTransactions.c.listing_id],
