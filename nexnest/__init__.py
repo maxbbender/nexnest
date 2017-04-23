@@ -2,14 +2,13 @@
 
 # OS Functions
 from os import environ
-from os.path import join
-from os.path import dirname
+from os.path import join, dirname
 
 from dotenv import load_dotenv
 
 # Flask
 from flask import Flask
-from flask_mail import Mail
+from flask_mail import Mail, email_dispatched
 
 import logging
 import sys
@@ -23,12 +22,9 @@ env = environ.get('NEXNEST_ENV')
 if env is None:
     env = 'development'
 
-# File Uploads
-UPLOAD_FOLDER = dirname(__file__) + '/uploads'
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'pdf'])
-
 # App setup
 app = Flask(__name__, static_folder="static")
+app.config.from_object('nexnest.config')
 
 superENV = environ.get('NEXNEST_SUPER_%s_SETTINGS' % env.upper())
 
@@ -37,11 +33,8 @@ if superENV is not None:
 else:
     app.config.from_envvar('NEXNEST_%s_SETTINGS' % env.upper())
 
-app.secret_key = 'domislove'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['TRAP_BAD_REQUEST_ERRORS'] = True
-# app.config['SERVER_NAME'] = '127.0.0.1:8000' # Breaks CSRF TOKENS
 
+# - LOGGER -
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
@@ -56,15 +49,11 @@ ch.setFormatter(formatter)
 # add the handlers to the logger
 logger.addHandler(ch)
 
-# EMAIL SETUP
-app.config['MAIL_SERVER'] = 'mail.nexnest.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_USERNAME'] = 'no_reply@nexnest.com'
-app.config['MAIL_PASSWORD'] = 'W3HgnVDXEo'
-
-# administrator list
-app.config['ADMINS'] = ['staff@nexnest.com']
-
 mail = Mail(app)
+
+
+def logEmailDispatch(message):
+    logger.debug('Email Sent! Subject %s' % message.subject)
+
+
+email_dispatched.connect(logEmailDispatch)

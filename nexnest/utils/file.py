@@ -1,9 +1,9 @@
-from nexnest import ALLOWED_EXTENSIONS
+from nexnest import app
 
 
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+           filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 
 def isPDF(filename):

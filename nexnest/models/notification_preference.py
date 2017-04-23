@@ -9,6 +9,7 @@ from nexnest.models.base import Base
 # _notification = db.Column(db.Boolean)
 # _email = db.Column(db.Boolean)
 
+
 class NotificationPreference(Base):
     __tablename__ = 'notification_preferences'
     id = db.Column(db.Integer, primary_key=True)
@@ -19,11 +20,11 @@ class NotificationPreference(Base):
     direct_message_notification = db.Column(db.Boolean)
     direct_message_email = db.Column(db.Boolean)
 
-    tour_message_notification = db.Column(db.Boolean)
-    tour_message_email = db.Column(db.Boolean)
+    tour_message_notification = db.Column(db.Boolean)  # D
+    tour_message_email = db.Column(db.Boolean)         # D
 
-    tour_time_notification = db.Column(db.Boolean)
-    tour_time_email = db.Column(db.Boolean)
+    tour_time_notification = db.Column(db.Boolean) # D
+    tour_time_email = db.Column(db.Boolean) # D
 
     group_message_notification = db.Column(db.Boolean)
     group_message_email = db.Column(db.Boolean)

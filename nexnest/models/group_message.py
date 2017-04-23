@@ -36,6 +36,7 @@ class GroupMessage(Message):
     def genNotifications(self):
         for user in self.group.acceptedUsers:
             if user is not self.user:
+
                 newNotification = Notification(target_user=user,
                                                target_model_id=self.id,
                                                notif_type='group_message')

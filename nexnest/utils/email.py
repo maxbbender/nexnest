@@ -18,6 +18,6 @@ def send_email(subject, sender, recipients, text_body=None, html_body=None):
         msg.html = html_body
 
     if html_body is not None or text_body is not None:
-        # thr = Thread(target=send_async_email, args=[app, msg])
-        # thr.start()
-        mail.send(msg)
+        thr = Thread(target=send_async_email, args=[app, msg])
+        thr.start()
+        # mail.send(msg)

@@ -105,18 +105,32 @@ class Tour(Base):
     def genTimeChangeNotifications(self):
         if self.last_requested == 'landlord':
             for user in self.group.acceptedUsers:
-                newNotif = Notification(notif_type='new_tour_time',
-                                        target_user=user,
-                                        target_model_id=self.id)
-                session.add(newNotif)
-                session.commit()
+
+                if user.notificationPreference.tour_time_notification:
+
+                    newNotif = Notification(notif_type='new_tour_time',
+                                            target_user=user,
+                                            target_model_id=self.id)
+                    session.add(newNotif)
+                    session.commit()
+
+                if user.notificationPreference.tour_time_email:
+                    user.sendEmail(emailType='generic',
+                                   message='A new time has been requested for your tour.')
+
         else:
             for user in self.listing.landLordsAsUsers():
-                newNotif = Notification(notif_type='new_tour_time',
-                                        target_user=user,
-                                        target_model_id=self.id)
-                session.add(newNotif)
-                session.commit()
+
+                if user.notificationPreference.tour_time_notification:
+                    newNotif = Notification(notif_type='new_tour_time',
+                                            target_user=user,
+                                            target_model_id=self.id)
+                    session.add(newNotif)
+                    session.commit()
+
+                if user.notificationPreference.tour_time_email:
+                    user.sendEmail(emailType='generic',
+                                   message='A new time has been requested for your tour.')
 
     def undoTimeChangeNotifications(self):
         session.query(Notification) \

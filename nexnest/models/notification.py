@@ -23,7 +23,7 @@ class Notification(Base):
     # | group_listing_favorite| maintenance   | platform_report  | report_group
     # | report_landlord       | report_listing| security_deposit | tour
     # | maintenance_message   | rent_reminder | new_tour_time    | tour_message
-    # ----------------------------------------------------------------b#
+    # ----------------------------------------------------------------#
     # NEW ONES (need category):
     # | user_leave_group | maintenance_inprogress | maintenance_completed
     # | group_listing_accept | group_listing_denied | tour_confirm | tour_denied
