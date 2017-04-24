@@ -1,11 +1,13 @@
-from nexnest.models.notification import Notification
-from nexnest.application import session
+# from nexnest.models.notification import Notification
+# from nexnest.application import session
 
 
-def createNotification(targetUser, targetModelID, notifType):
-    newNotification = Notification(target_user=targetUser,
-                                   target_model_id=self.id,
-                                   notif_type='group_message')
+# def createNotification(targetUser, targetModelID, notifType):
+# 	if
+# 	if targetUser.notificationPreference.
+#     newNotification = Notification(target_user=targetUser,
+#                                    target_model_id=targetModelID,
+#                                    notif_type=notifType)
 
-    session.add(newNotification)
-    session.commit()
+#     session.add(newNotification)
+#     session.commit()

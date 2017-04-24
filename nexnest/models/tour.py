@@ -81,19 +81,31 @@ class Tour(Base):
 
     def genNotifications(self):
         for landlord in self.listing.landLordsAsUsers():
-            newNotif = Notification(notif_type='tour',
-                                    target_user=landlord,
-                                    target_model_id=self.id)
-            session.add(newNotif)
-            session.commit()
+
+            if landlord.notificationPreference.tour_create_notification:
+                newNotif = Notification(notif_type='tour',
+                                        target_user=landlord,
+                                        target_model_id=self.id)
+                session.add(newNotif)
+                session.commit()
+
+            if landlord.notificationPreference.tour_create_email:
+                landlord.sendEmail(emailType='generic',
+                                   message='A new Tour ')
 
     def genConfirmNotifications(self):
         for user in self.group.acceptedUsers:
-            newNotif = Notification(notif_type='tour_confirmed',
-                                    target_user=user,
-                                    target_model_id=self.id)
-            session.add(newNotif)
-            session.commit()
+
+            if user.notificationPreference.tour_confirmed_notification:
+                newNotif = Notification(notif_type='tour_confirmed',
+                                        target_user=user,
+                                        target_model_id=self.id)
+                session.add(newNotif)
+                session.commit()
+
+            if user.notificationPreference.tour_confirmed_email:
+                user.sendEmail(emailType='generic',
+                               message='Your tour has been confirmed')
 
     def undoConfirmNotifications(self):
         session.query(Notification) \
@@ -139,13 +151,18 @@ class Tour(Base):
             .delete()
         session.commit()
 
-    def genDeniedNotifications(self):
-        for user in self.group.acceptedUsers:
-            newNotif = Notification(notif_type='tour_denied',
-                                    target_user=user,
-                                    target_model_id=self.id)
-            session.add(newNotif)
-            session.commit()
+    # def genDeniedNotifications(self):
+    #     for user in self.group.acceptedUsers:
+    #         if user.notificationPreference.tour_denied_notification:
+    #             newNotif = Notification(notif_type='tour_denied',
+    #                                     target_user=user,
+    #                                     target_model_id=self.id)
+    #             session.add(newNotif)
+    #             session.commit()
+            
+    #         if user.notificationPreference.tour_denied_email:
+                
+
 
     def undoDeniedNotifications(self):
         session.query(Notification) \

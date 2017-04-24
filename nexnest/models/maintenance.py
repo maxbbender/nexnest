@@ -88,27 +88,58 @@ class Maintenance(Base):
     def genNotifications(self):
         for user in self.house.tenants:
             if user is not self.user:
-                newNotif = Notification(notif_type='maintenance',
+
+                if user.notificationPreference.maintenance_notification:
+                    newNotif = Notification(notif_type='maintenance',
+                                            target_model_id=self.id,
+                                            target_user=user)
+                    session.add(newNotif)
+                    session.commit()
+
+                if user.notificationPreference.maintenance_email:
+                    user.sendEmail(emailType='generic',
+                                   message='A new Maintenance Request has be created for your listing at %s' % (self.house.listing.address))
+
+        for user in self.house.listing.landLordsAsUsers():
+            if user is not self.user:
+
+                if user.notificationPreference.maintenance_notification:
+                    newNotif = Notification(notif_type='maintenance',
+                                            target_model_id=self.id,
+                                            target_user=user)
+                    session.add(newNotif)
+                    session.commit()
+
+                if user.notificationPreference.maintenance_email:
+                    user.sendEmail(emailType='generic',
+                                   message='A new Maintenance Request has be created for your listing at %s' % (self.house.listing.address))
+
+    def genInProgressNotifications(self):
+        for user in self.house.tenants:
+
+            if user.notificationPreference.maintenance_inProgress_notification:
+                newNotif = Notification(notif_type='maintenance_inprogress',
                                         target_model_id=self.id,
                                         target_user=user)
                 session.add(newNotif)
                 session.commit()
 
-    def genInProgressNotifications(self):
-        for user in self.house.tenants:
-            newNotif = Notification(notif_type='maintenance_inprogress',
-                                    target_model_id=self.id,
-                                    target_user=user)
-            session.add(newNotif)
-            session.commit()
+            if user.notificationPreference.maintenance_inProgress_email:
+                user.sendEmail(emailType='generic',
+                               message='Your Maintenance Request has been marked In-Progress!')
 
     def genCompletedNotifications(self):
         for user in self.house.tenants:
-            newNotif = Notification(notif_type='maintenance_completed',
-                                    target_model_id=self.id,
-                                    target_user=user)
-            session.add(newNotif)
-            session.commit()
+
+            if user.notificationPreference.maintenance_completed_notification:
+                newNotif = Notification(notif_type='maintenance_completed',
+                                        target_model_id=self.id,
+                                        target_user=user)
+                session.add(newNotif)
+                session.commit()
+            if user.notificationPreference.maintenance_completed_email:
+                user.sendEmail(emailType='generic',
+                               message='Your Maintenance Request has been completed!')
 
     def removeInProgressNotifications(self):
         # notifs = session.query(Notification).filter_by(notif_type='maintenance_inprogress',

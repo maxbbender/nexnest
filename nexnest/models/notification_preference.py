@@ -23,17 +23,20 @@ class NotificationPreference(Base):
     tour_message_notification = db.Column(db.Boolean)  # D
     tour_message_email = db.Column(db.Boolean)         # D
 
-    tour_time_notification = db.Column(db.Boolean) # D
-    tour_time_email = db.Column(db.Boolean) # D
+    tour_time_notification = db.Column(db.Boolean)  # D
+    tour_time_email = db.Column(db.Boolean)  # D
 
-    group_message_notification = db.Column(db.Boolean)
-    group_message_email = db.Column(db.Boolean)
+    group_message_notification = db.Column(db.Boolean)  # D
+    group_message_email = db.Column(db.Boolean)  # D
 
-    house_message_notification = db.Column(db.Boolean)
-    house_message_email = db.Column(db.Boolean)
+    house_message_notification = db.Column(db.Boolean)  # D
+    house_message_email = db.Column(db.Boolean)  # D
 
-    tour_confirmed_notification = db.Column(db.Boolean)
-    tour_confirmed_email = db.Column(db.Boolean)
+    tour_confirmed_notification = db.Column(db.Boolean)  # D
+    tour_confirmed_email = db.Column(db.Boolean)  # D
+
+    tour_denied_notification = db.Column(db.Boolean)
+    tour_denied_email = db.Column(db.Boolean)
 
     maintenance_notification = db.Column(db.Boolean)
     maintenance_email = db.Column(db.Boolean)
@@ -61,6 +64,9 @@ class NotificationPreference(Base):
 
     house_notification = db.Column(db.Boolean)
     house_email = db.Column(db.Boolean)
+
+    tour_create_notification = db.Column(db.Boolean)
+    tour_create_email = db.Column(db.Boolean)
 
     user = relationship('User', back_populates='notificationPreference')
 

@@ -42,6 +42,10 @@ class HouseMessage(Message):
 
                     session.add(newNotification)
                     session.commit()
+
+                if user.notificationPreference.house_message_email:
+                    user.sendEmail(emailType='message',
+                                   message=self.content)
         else:
             for user in self.house.tenants:
                 if user is not self.user:
