@@ -196,7 +196,11 @@
         <div class="col-xs-12 col-md-11 col-lg-5 col-xl-5" style="padding-left: 10%;">
             <div class="row">
                 <div class="card" style="width:100%;">
+                    {% if current_user in landlords %}
+                    <h3 class="card-header" style="font-size: 3.0vh;">Group Message</h3>
+                    {% else %}
                     <h3 class="card-header" style="font-size: 3.0vh;">Group Message with Landlord:</h3>
+                    {% endif %}
                     <div class="card-block">
                         <!-- Add new message -->
                         <div class="form-group">
