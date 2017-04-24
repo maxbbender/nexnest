@@ -39,7 +39,11 @@ notifPref = Table('notification_preferences', meta,
                   Column('group_listing_notification', Boolean()),
                   Column('group_listing_email', Boolean()),
                   Column('house_notification', Boolean()),
-                  Column('house_email', Boolean()))
+                  Column('house_email', Boolean()),
+                  Column('tour_denied_notification', Boolean()),
+                  Column('tour_denied_email', Boolean()),
+                  Column('tour_create_notification', Boolean()),
+                  Column('tour_create_email', Boolean()))
 
 
 def upgrade(migrate_engine):

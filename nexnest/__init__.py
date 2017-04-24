@@ -52,7 +52,7 @@ logger.addHandler(ch)
 mail = Mail(app)
 
 
-def logEmailDispatch(message):
+def logEmailDispatch(message, app):
     logger.debug('Email Sent! Subject %s' % message.subject)
 
 

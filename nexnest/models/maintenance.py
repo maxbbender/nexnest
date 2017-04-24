@@ -146,8 +146,9 @@ class Maintenance(Base):
         #                                                target_model_id=self.id)
         # session.delete(notifs)
         # session.commit()
-        session.query(Notification).filter_by(notif_type='maintenance_inprogress',
-                                              target_model_id=self.id) \
+        session.query(Notification) \
+            .filter_by(notif_type='maintenance_inprogress',
+                       target_model_id=self.id) \
             .delete()
 
         session.commit()
@@ -157,8 +158,9 @@ class Maintenance(Base):
         #                                                target_model_id=self.id)
         # session.delete(notifs)
         # session.commit()
-        session.query(Notification).filter_by(notif_type='maintenance_completed',
-                                              target_model_id=self.id) \
+        session.query(Notification) \
+            .filter_by(notif_type='maintenance_completed',
+                       target_model_id=self.id) \
             .delete()
 
         session.commit()

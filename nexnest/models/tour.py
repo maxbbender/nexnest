@@ -151,18 +151,18 @@ class Tour(Base):
             .delete()
         session.commit()
 
-    # def genDeniedNotifications(self):
-    #     for user in self.group.acceptedUsers:
-    #         if user.notificationPreference.tour_denied_notification:
-    #             newNotif = Notification(notif_type='tour_denied',
-    #                                     target_user=user,
-    #                                     target_model_id=self.id)
-    #             session.add(newNotif)
-    #             session.commit()
-            
-    #         if user.notificationPreference.tour_denied_email:
-                
+    def genDeniedNotifications(self):
+        for user in self.group.acceptedUsers:
+            if user.notificationPreference.tour_denied_notification:
+                newNotif = Notification(notif_type='tour_denied',
+                                        target_user=user,
+                                        target_model_id=self.id)
+                session.add(newNotif)
+                session.commit()
 
+            if user.notificationPreference.tour_denied_email:
+                user.sendEmail(emailType='generic',
+                               message='Your request to tour the house at %s has been denied' % self.house.listing.address)
 
     def undoDeniedNotifications(self):
         session.query(Notification) \
