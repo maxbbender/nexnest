@@ -29,7 +29,8 @@ users = Table('users',
                      nullable=False),
               Column('date_modified', DateTime(),
                      nullable=False),
-              Column('active', Boolean()))
+              Column('active', Boolean()),
+              Column('email_confirmed', Boolean()))
 
 
 def upgrade(migrate_engine):

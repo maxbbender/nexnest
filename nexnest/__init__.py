@@ -53,7 +53,7 @@ mail = Mail(app)
 
 
 def logEmailDispatch(message, app):
-    logger.debug('Email Sent! Subject %s' % message.subject)
+    logger.debug('Email Sent! Subject %s | Text %s' % (message.subject, message.html))
 
 
 email_dispatched.connect(logEmailDispatch)

@@ -1,3 +1,4 @@
+
 from sqlalchemy import event
 from sqlalchemy.orm import relationship
 
@@ -38,17 +39,17 @@ class NotificationPreference(Base):
     tour_denied_notification = db.Column(db.Boolean)  # D
     tour_denied_email = db.Column(db.Boolean)  # D
 
-    maintenance_notification = db.Column(db.Boolean) # D
-    maintenance_email = db.Column(db.Boolean) # D
+    maintenance_notification = db.Column(db.Boolean)  # D
+    maintenance_email = db.Column(db.Boolean)  # D
 
-    maintenance_inProgress_notification = db.Column(db.Boolean) # D
-    maintenance_inProgress_email = db.Column(db.Boolean) # D
+    maintenance_inProgress_notification = db.Column(db.Boolean)  # D
+    maintenance_inProgress_email = db.Column(db.Boolean)  # D
 
-    maintenance_completed_notification = db.Column(db.Boolean) # D
-    maintenance_completed_email = db.Column(db.Boolean) # D
+    maintenance_completed_notification = db.Column(db.Boolean)  # D
+    maintenance_completed_email = db.Column(db.Boolean)  # D
 
-    maintenance_message_notification = db.Column(db.Boolean) # D
-    maintenance_message_email = db.Column(db.Boolean) # D
+    maintenance_message_notification = db.Column(db.Boolean)  # D
+    maintenance_message_email = db.Column(db.Boolean)  # D
 
     rent_due_notification = db.Column(db.Boolean)
     rent_due_email = db.Column(db.Boolean)
@@ -59,20 +60,20 @@ class NotificationPreference(Base):
     group_user_notification = db.Column(db.Boolean)
     group_user_email = db.Column(db.Boolean)
 
-    group_listing_notification = db.Column(db.Boolean) # D
-    group_listing_email = db.Column(db.Boolean) # D
+    group_listing_notification = db.Column(db.Boolean)  # D
+    group_listing_email = db.Column(db.Boolean)  # D
 
-    group_listing_accept_notification = db.Column(db.Boolean) # D
-    group_listing_accept_email = db.Column(db.Boolean) # D
+    group_listing_accept_notification = db.Column(db.Boolean)  # D
+    group_listing_accept_email = db.Column(db.Boolean)  # D
 
-    group_listing_deny_notification = db.Column(db.Boolean) # D
-    group_listing_deny_email = db.Column(db.Boolean) # D
+    group_listing_deny_notification = db.Column(db.Boolean)  # D
+    group_listing_deny_email = db.Column(db.Boolean)  # D
 
-    group_listing_completed_notification = db.Column(db.Boolean) # D
-    group_listing_completed_email = db.Column(db.Boolean) # D
+    group_listing_completed_notification = db.Column(db.Boolean)  # D
+    group_listing_completed_email = db.Column(db.Boolean)  # D
 
-    house_notification = db.Column(db.Boolean)
-    house_email = db.Column(db.Boolean)
+    house_notification = db.Column(db.Boolean)  # D
+    house_email = db.Column(db.Boolean)  # D
 
     tour_create_notification = db.Column(db.Boolean)  # D
     tour_create_email = db.Column(db.Boolean)  # D

@@ -36,6 +36,7 @@ class User(Base):
     date_modified = db.Column(db.DateTime, nullable=False)
     school_id = db.Column(db.Integer(), db.ForeignKey('schools.id'))
     active = db.Column(db.Boolean)
+    email_confirmed = db.Column(db.Boolean)
     # twitter_token = db.Column(db.Text)
     # twitter_secret = db.Column(db.Text)
     # sentDM = relationship('DirectMessage',  # direct_message.DirectMessage
@@ -81,6 +82,7 @@ class User(Base):
                  phone=None,
                  dob=None,
                  profile_image=None,
+                 email_confirmed=False
                  ):
 
         self.school_id = school.id
@@ -111,6 +113,7 @@ class User(Base):
         self.date_created = now
         self.date_modified = now
         self.active = True
+        self.email_confirmed = email_confirmed
 
     def __repr__(self):
         return '<User %r | %s>' % (self.username, self.name)
