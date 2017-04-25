@@ -229,7 +229,7 @@
                                         <div class="form-group" style="display: none;" id="first_semester_rent_due">
                                             <label class="control-label form-control-feedback" id="apartment_number_label">First Semester Rent Due Date</label>
                                             <p id="end" class="flatpickr input-group" data-wrap="true" data-clickOpens="false">
-                                                {{form.first_semester_rent_due_date(id="endLeaseDateInput", class='form-control', data_input="true", maxlength='100', type="date", style="background-color: inherit;")}}
+                                                {{form.first_semester_rent_due_date(id="firstSemesterRentDue", class='form-control', data_input="true", maxlength='100', type="date", style="background-color: inherit;")}}
                                                 <a class="btn input-btn" style="border-color: #ddd;" data-toggle><i class="fa fa-calendar" aria-hidden="true"></i></a>
                                                 <a class="btn input-btn" style="border-color: #ddd;" data-clear><i class="fa fa-times" aria-hidden="true"></i></a>
                                             </p>
@@ -240,7 +240,7 @@
                                         <div class="form-group" style="display: none;" id="second_semester_rent_due">
                                             <label class="control-label form-control-feedback" id="apartment_number_label">Second Semester Rent Due Date</label>
                                             <p id="end" class="flatpickr input-group" data-wrap="true" data-clickOpens="false">
-                                                {{form.second_semester_rent_due_date(id="endLeaseDateInput", class='form-control', data_input="true", maxlength='100', type="date", style="background-color: inherit;")}}
+                                                {{form.second_semester_rent_due_date(id="secondSemesterRentDue", class='form-control', data_input="true", maxlength='100', type="date", style="background-color: inherit;")}}
                                                 <a class="btn input-btn" style="border-color: #ddd;" data-toggle><i class="fa fa-calendar" aria-hidden="true"></i></a>
                                                 <a class="btn input-btn" style="border-color: #ddd;" data-clear><i class="fa fa-times" aria-hidden="true"></i></a>
                                             </p>
@@ -923,7 +923,28 @@
                     } else {
                         nextStepWizard.removeClass('disabled').trigger('click');
                     }
-                } else {
+                } else if(curStep[0].id == "step-3"){
+                    if($("#rent_due").val() == "semester"){
+                        var start_date = new Date($("#leaseStartDateInput").val());
+                        var end_date = new Date($("#endLeaseDateInput").val());
+                        var first_semester_rent_due = new Date($("#firstSemesterRentDue").val());
+                        var second_semester_rent_due = new Date($("#secondSemesterRentDue").val());
+                        $("#firstSemesterRentDue").closest(".form-group").removeClass("has-error");
+                        $("#secondSemesterRentDue").closest(".form-group").removeClass("has-danger");
+                        if((first_semester_rent_due >= start_date) && (second_semester_rent_due < end_date)){
+                            if(first_semester_rent_due < second_semester_rent_due){
+                                nextStepWizard.removeClass('disabled').trigger('click');
+                            }
+                            else{
+                                $("#secondSemesterRentDue").closest(".form-group").addClass("has-danger");
+                            }
+                        }else{
+                            $("#firstSemesterRentDue").closest(".form-group").addClass("has-error");
+                            $("#secondSemesterRentDue").closest(".form-group").addClass("has-danger");
+                        }
+                    }
+                }
+                else {
                     nextStepWizard.removeClass('disabled').trigger('click');
                 }
             }
