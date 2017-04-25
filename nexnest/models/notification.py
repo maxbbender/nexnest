@@ -85,7 +85,7 @@ class Notification(Base):
         }
 
         if self.category in ['direct_message', 'generic_message']:
-            dictToReturn['sourceUserProfileURL'] = Message.query.filter_by(id=self.target_model_id).first().user.profile_image
+            dictToReturn['message'] = Message.query.filter_by(id=self.target_model_id).first().serialize
 
         return dictToReturn
 
