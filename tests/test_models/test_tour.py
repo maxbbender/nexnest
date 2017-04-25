@@ -5,6 +5,7 @@ from nexnest.application import session
 from nexnest.data_gen.factories import UserFactory, GroupFactory, GroupUserFactory, ListingFactory, LandlordListingFactory, LandlordFactory, TourFactory, TourMessageFactory
 
 from nexnest.models.notification import Notification
+from nexnest.models.notification_preference import NotificationPreference
 
 from .utils import dropAllRows
 
@@ -13,7 +14,17 @@ class TestTour(unittest.TestCase):
 
     def setUp(self):
         self.landlordUser = UserFactory()
+        session.commit()
+
+        newNotifPref = NotificationPreference(user=self.landlordUser)
+        session.add(newNotifPref)
+        session.commit()
+
         self.leader = UserFactory()
+        session.commit()
+
+        newNotifPref = NotificationPreference(user=self.leader)
+        session.add(newNotifPref)
         session.commit()
 
         self.landlord = LandlordFactory(user=self.landlordUser)
