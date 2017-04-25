@@ -281,7 +281,7 @@ class User(Base):
         return self.notifications \
             .filter(Notification.category.in_(('direct_message', 'generic_message'))) \
             .distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed) \
-            .paginate(1, 1, False).items
+            .paginate(1, 10, False).items
 
     def getUnreadMessageNotificationCount(self):
         return self.notifications \

@@ -402,7 +402,7 @@ def getMessageNotifications(page=1):
         .distinct(Notification.notif_type,
                   Notification.redirect_url,
                   Notification.viewed) \
-        .paginate(page, 1, False)
+        .paginate(page, 10, False)
 
     logger.debug("allNotifications : %r" % allNotifications.items)
 

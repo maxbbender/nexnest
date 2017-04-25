@@ -99,7 +99,7 @@
                     <li class="nav-item">
                         <div class="dropdown dropdown-notifications dropdown-toggle">
                             <i data-count="{{ numUnviewedMessages }}" class="fa fa-comments fa-2x notification-icon" style="padding-top: 4px;" id="dropdownNotificationButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
-                            <div class="dropdown-menu dropdown-menu-right" style="overflow:hidden; width: 93vw; right: -100px; max-height: 90vh;" aria-labelledby="dropdownNotificationButton">
+                            <div class="dropdown-menu dropdown-menu-right" style="overflow:scroll; overflow-x: hidden; width: 93vw; right: -100px; max-height: 75vh;" aria-labelledby="dropdownNotificationButton">
                                 <div class="dropdown-toolbar">
                                     <h2 class="dropdown-toolbar-title"><strong>Messages ({{ numUnviewedMessages }} new)</strong>
                                     <span style="float: right;"><a href="#" id="markAllMessages">Mark All Read</a></span></h2>
@@ -288,10 +288,8 @@
 
             $("#moreNotifications").click(function(event){
                 currentNotificationPage++;
-                console.log("current page: "+ currentNotificationPage);
                 requestURL = "/user/getNotifications/"+currentNotificationPage;
                 $.getJSON(requestURL, function(data) {
-                    console.log(data)
                     notifications = data['notifications'];
                     notificationDetails = data['paginateDetails'];
                    
@@ -364,10 +362,8 @@
 
             $("#moreMessages").click(function(event){
                 currentMessagePage++;
-                console.log("current page: "+ currentMessagePage);
-                requestURL = "/user/getNotifications/"+currentMessagePage;
+                requestURL = "/user/getMessageNotifications/"+currentMessagePage;
                 $.getJSON(requestURL, function(data) {
-                    console.log(data)
                     notifications = data['notifications'];
                     notificationDetails = data['paginateDetails'];
                    
@@ -388,11 +384,11 @@
                                 </div>
                                 <div class="media-body">
                                     <strong class="notification-title">`+ message.message +`</strong>
-                                    <p class="notification-desc"><b>`+ message.returnObject.user.fname + message.returnObject.user.lname +`: </b> `+ message.returnObject.brief +`</p>
+                                    <p class="notification-desc"><b> `+ message.messageObject.user.fname +` `+ message.messageObject.user.lname +` </b> `+ message.messageObject.contentBrief +`</p>
                                     <div class="notification-meta">
                                         <div class="row">
                                             <div class="col-xs-8">
-                                                <small class="timestamp">message.date_created </small>
+                                                <small class="timestamp">`+ message.messageObject.date +` </small>
                                             </div>
                                         </div>
                                     </div>
@@ -412,16 +408,16 @@
                                 newNotification += `<div class="media">
                                     <div class="media-left vertical-center" style="text-align: center;">
                                         <div class="media-object">
-                                            <img src="`+message.returnObject.user.profile_image+`" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle" alt="Name" />
+                                            <img src="`+message.messageObject.user.profileImageURL+`" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle" alt="Name" />
                                         </div>
                                     </div>
                                     <div class="media-body">
-                                        <strong class="notification-title">`+message.message+`</strong>
-                                        <p class="notification-desc">`+message.returnObject.brief+`</p>
+                                        <strong class="notification-title"> `+message.message+` </strong>
+                                        <p class="notification-desc">`+message.messageObject.contentBrief+`</p>
                                         <div class="notification-meta">
                                             <div class="row">
                                                 <div class="col-xs-8">
-                                                    <small class="timestamp">message.date_created</small>
+                                                    <small class="timestamp">`+ message.messageObject.date +`</small>
                                                 </div>
                                             </div>
                                         </div>
