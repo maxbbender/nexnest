@@ -105,9 +105,17 @@
                                     <span style="float: right;"><a href="#" id="markAllMessages">Mark All Read</a></span></h2>
                                 </div>
                                 <ul class="notifications">
-                                    {% for message in notificationMessages %}
-                                        {% include 'notifications/' + message.category +'.html' %}
-                                    {% endfor %}
+                                    <div id="messageArea">
+                                        {% for message in notificationMessages %}
+                                            {% include 'notifications/' + message.category +'.html' %}
+                                        {% endfor %}
+                                    </div>
+                                    <br>
+                                    <div class="row" id="doIShowMoreMessages" style="display: none;">
+                                        <div class="col-xs-12" style="text-align: center;">
+                                            <button class="btn btn-secondary" id="moreMessages">See More</button>
+                                        </div>
+                                    </div>
                                 </ul>
                             </div>
                         </div>
@@ -122,13 +130,14 @@
                                 </div>
                                 <ul class="notifications">
                                     <div id="notificationArea">
-                                    {% for notification in notifications %}
-                                        {% include 'notifications/' + notification.category +'.html' %}
-                                    {% endfor %}
+                                        {% for notification in notifications %}
+                                            {% include 'notifications/' + notification.category +'.html' %}
+                                        {% endfor %}
                                     </div>
+                                    <br>
                                     <div class="row" id="doIShowMoreNotifications" style="display: none;">
-                                        <div class="col-xs-12">
-                                            <button id="moreNotifications">See More</button>
+                                        <div class="col-xs-12" style="text-align: center;">
+                                            <button class="btn btn-secondary" id="moreNotifications">See More</button>
                                         </div>
                                     </div>
                                 </ul>
@@ -201,11 +210,20 @@
                         $("#doIShowMoreNotifications").show();
                     }
                 });
+                requestURL = "/user/getMessageNotifications/1";
+                $.getJSON(requestURL, function(data) {
+                    console.log(data)
+                    notificationDetails = data['paginateDetails'];
+                    if(notificationDetails.hasNext == true){
+                        $("#doIShowMoreMessages").show();
+                    }
+                });
             });
             $(document).on('click', '.dropdown-notifications', function (e) {
               e.stopPropagation();
             });
-            var currentPage = 1;
+            var currentNotificationPage = 1;
+            var currentMessagePage = 1;
 			//Login Modal
             $('#loginModal').on('show.bs.modal', function (event) {
               var button = $(event.relatedTarget)
@@ -269,9 +287,9 @@
             });
 
             $("#moreNotifications").click(function(event){
-                currentPage++;
-                console.log("current page: "+ currentPage);
-                requestURL = "/user/getNotifications/"+currentPage;
+                currentNotificationPage++;
+                console.log("current page: "+ currentNotificationPage);
+                requestURL = "/user/getNotifications/"+currentNotificationPage;
                 $.getJSON(requestURL, function(data) {
                     console.log(data)
                     notifications = data['notifications'];
@@ -340,6 +358,85 @@
                    }
                    else{
                         $("#doIShowMoreNotifications").hide();
+                   }
+                });
+            });
+
+            $("#moreMessages").click(function(event){
+                currentMessagePage++;
+                console.log("current page: "+ currentMessagePage);
+                requestURL = "/user/getNotifications/"+currentMessagePage;
+                $.getJSON(requestURL, function(data) {
+                    console.log(data)
+                    notifications = data['notifications'];
+                    notificationDetails = data['paginateDetails'];
+                   
+                   $.each(notifications, function(index, message) {
+                    if(message.category == "generic_message"){
+                        var newNotification = `<a href="`+ message.redirectURL +`" id="`+ message.id +`" class="noti">`;
+                            if(message.viewed == false){
+                                newNotification += `<li class="notification" style="background-color: aliceblue;">`;
+                            }
+                            else{
+                                newNotification += `<li class="notification">`;
+                            }
+                            newNotification += `<div class="media">
+                                <div class="media-left vertical-center" style="text-align: center">
+                                    <div class="media-object">
+                                        <i class="fa fa-users fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>
+                                    </div>
+                                </div>
+                                <div class="media-body">
+                                    <strong class="notification-title">`+ message.message +`</strong>
+                                    <p class="notification-desc"><b>`+ message.returnObject.user.fname + message.returnObject.user.lname +`: </b> `+ message.returnObject.brief +`</p>
+                                    <div class="notification-meta">
+                                        <div class="row">
+                                            <div class="col-xs-8">
+                                                <small class="timestamp">message.date_created </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </a>`;
+                    }
+                    else{
+                        var newNotification = `<a href="`+message.redirectURL+`" id="`+message.id+`" class="noti">`;
+                            if(message.viewed == false){
+                                newNotification += `<li class="notification" style="background-color: aliceblue;">`;
+                            }
+                            else{
+                                newNotification += `<li class="notification">`;
+                            }
+                                newNotification += `<div class="media">
+                                    <div class="media-left vertical-center" style="text-align: center;">
+                                        <div class="media-object">
+                                            <img src="`+message.returnObject.user.profile_image+`" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle" alt="Name" />
+                                        </div>
+                                    </div>
+                                    <div class="media-body">
+                                        <strong class="notification-title">`+message.message+`</strong>
+                                        <p class="notification-desc">`+message.returnObject.brief+`</p>
+                                        <div class="notification-meta">
+                                            <div class="row">
+                                                <div class="col-xs-8">
+                                                    <small class="timestamp">message.date_created</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </a>`;
+                    }
+                    $("#messageArea").append(newNotification);
+                   });
+                   if(notificationDetails.hasNext == true){
+                        $("#doIShowMoreMessages").show();
+                   }
+                   else{
+                        $("#doIShowMoreMessages").hide();
                    }
                 });
             });

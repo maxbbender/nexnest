@@ -372,7 +372,7 @@ def getMessageNotifications(page=1):
         .distinct(Notification.notif_type,
                   Notification.redirect_url,
                   Notification.viewed) \
-        .paginate(page, 10, False)
+        .paginate(page, 1, False)
 
     logger.debug("allNotifications : ", allNotifications.items)
 
