@@ -18,10 +18,7 @@ from pprint import pprint
 from nexnest.utils.school import allSchoolsAsStrings
 import googlemaps
 
-# print(90* (1 - (10/100)))
-# send_email('Dom', 'no_reply@nexnest.com', ['maxbbender@gmail.com'], 'Hey You', None)
 user = user.User.query.first()
 print(user)
 
-emailSend = user.sendEmail(emailType='message', message='domislove')
-print(emailSend)
+print(user.getUnreadNotificationCount())

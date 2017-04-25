@@ -61,7 +61,7 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     parking = 'onstreet'
     cats = bool(random.getrandbits(1))
     dogs = bool(random.getrandbits(1))
-    other_pets = factory.LazyAttribute(lambda x: fake.paragraph())
+    other_pets = factory.LazyAttribute(lambda x: fake.paragraph(nb_sentences=2))
     washer = bool(random.getrandbits(1))
     dryer = bool(random.getrandbits(1))
     dishwasher = bool(random.getrandbits(1))

@@ -359,7 +359,7 @@ def changePassword():
 @users.route('/user/getNotifications/<int:page>', methods=['GET', 'POST'])
 @login_required
 def getNotifications(page=1):
-    logger.debug("/user/getNotifications page : ", page)
+    logger.debug("/user/getNotifications page : %d" % page)
 
     allNotifications = Notification.query \
         .filter_by(target_user_id=current_user.id) \
@@ -369,15 +369,13 @@ def getNotifications(page=1):
                   Notification.viewed) \
         .paginate(page, 10, False)
 
-    logger.debug("allNotifications : ", allNotifications.items)
+    logger.debug("allNotifications : %r" % allNotifications.items)
 
     allNotificationList = []
-
-    numUnviewed = 0
     for notif in allNotifications.items:
         allNotificationList.append(notif.serialize)
-        if not notif.viewed:
-            numUnviewed += 1
+
+    numUnviewed = current_user.getUnreadNotificationCount()
 
     returnDict = {'numUnviewed': numUnviewed, 'notifications': allNotificationList}
 
@@ -396,7 +394,7 @@ def getNotifications(page=1):
 @users.route('/user/getMessageNotifications/<int:page>', methods=['GET', 'POST'])
 @login_required
 def getMessageNotifications(page=1):
-    logger.debug("/user/getNotifications page : ", page)
+    logger.debug("/user/getMessageNotifications page : %d" % page)
 
     allNotifications = Notification.query \
         .filter_by(target_user_id=current_user.id) \
@@ -406,15 +404,14 @@ def getMessageNotifications(page=1):
                   Notification.viewed) \
         .paginate(page, 10, False)
 
-    logger.debug("allNotifications : ", allNotifications.items)
+    logger.debug("allNotifications : %r" % allNotifications.items)
 
     allNotificationList = []
 
-    numUnviewed = 0
     for notif in allNotifications.items:
         allNotificationList.append(notif.serialize)
-        if not notif.viewed:
-            numUnviewed += 1
+
+    numUnviewed = current_user.getUnreadMessageNotificationCount()
 
     returnDict = {'numUnviewed': numUnviewed, 'notifications': allNotificationList}
 

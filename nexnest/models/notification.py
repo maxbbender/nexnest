@@ -72,15 +72,21 @@ class Notification(Base):
 
     @property
     def serialize(self):
-        return {
+        dictToReturn = {
             'id': self.id,
             'targetUser': self.user.serialize,
             'viewed': self.viewed,
             'notifType': self.notif_type,
             'message': self.message,
             'redirectURL': self.redirect_url,
-            'category': self.category
+            'category': self.category,
+            'date': self.date_created.strftime('%B-%d-%y')
         }
+
+        # if self.category in ['direct_message', 'generic_message']:
+        #     dictToReturn['userImageURL'] = self.user.profile_image
+
+        return dictToReturn
 
     @property
     def returnObject(self):
