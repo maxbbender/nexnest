@@ -2,11 +2,12 @@ from datetime import datetime as dt
 
 from sqlalchemy.orm import relationship
 
-from flask import flash
+from flask import flash, render_template
 
 from nexnest import logger
 from nexnest.application import db, session
 from nexnest.utils.password import hash_password
+from nexnest.utils.email import send_email
 from nexnest.models.group_user import GroupUser
 from nexnest.models.group_listing import GroupListing
 from nexnest.models.notification import Notification
@@ -35,6 +36,7 @@ class User(Base):
     date_modified = db.Column(db.DateTime, nullable=False)
     school_id = db.Column(db.Integer(), db.ForeignKey('schools.id'))
     active = db.Column(db.Boolean)
+    email_confirmed = db.Column(db.Boolean)
     # twitter_token = db.Column(db.Text)
     # twitter_secret = db.Column(db.Text)
     # sentDM = relationship('DirectMessage',  # direct_message.DirectMessage
@@ -60,11 +62,11 @@ class User(Base):
     securityDeposits = relationship("SecurityDeposit", backref='user')
     # maintenanceMessages = relationship("MaintenanceMessage", backref='user')
     maintenanceRequests = relationship("Maintenance", backref='user')
-    notifications = relationship(
-        "Notification", backref='user', lazy="dynamic")
+    notifications = relationship("Notification", backref='user', lazy="dynamic")
     messages = relationship('Message', backref='user')
     groupListingFavorites = relationship('GroupListingFavorite', backref='user')
     transactions = relationship('Transaction', backref='user')
+    notificationPreference = relationship('NotificationPreference', uselist=False, back_populates='user')
 
     def __init__(self,
                  email,
@@ -79,6 +81,7 @@ class User(Base):
                  phone=None,
                  dob=None,
                  profile_image=None,
+                 email_confirmed=False
                  ):
 
         self.school_id = school.id
@@ -109,6 +112,7 @@ class User(Base):
         self.date_created = now
         self.date_modified = now
         self.active = True
+        self.email_confirmed = email_confirmed
 
     def __repr__(self):
         return '<User %r | %s>' % (self.username, self.name)
@@ -160,12 +164,6 @@ class User(Base):
     def is_anonymous(self):
         return False
 
-    def get_id(self):
-        try:
-            return unicode(self.id)  # python 2
-        except NameError:
-            return str(self.id)  # python 3
-
     @property
     def accepted_groups(self):
         acceptedGroups = []
@@ -183,6 +181,31 @@ class User(Base):
                 unAcceptedGroups.append(groupUser.group)
 
         return unAcceptedGroups
+
+    @property
+    def name(self):
+        return "%s %s" % (self.fname, self.lname)
+
+    @property
+    def isLandlord(self):
+        landlordCount = session.query(
+            Landlord).filter_by(user_id=self.id).count()
+
+        return landlordCount == 1
+
+    @property
+    def isGroupLeader(self):
+        return len(self.groupLeader) > 0
+
+    @property
+    def isAdmin(self):
+        return self.role == 'admin'
+
+    def get_id(self):
+        try:
+            return unicode(self.id)  # python 2
+        except NameError:
+            return str(self.id)  # python 3
 
     def accept_group_invite(self, group):
         group_user = session.query(GroupUser).filter_by(
@@ -208,13 +231,6 @@ class User(Base):
             session.commit()
         else:
             flash("Unable to find record to decline")
-
-    @property
-    def isLandlord(self):
-        landlordCount = session.query(
-            Landlord).filter_by(user_id=self.id).count()
-
-        return landlordCount == 1
 
     def leaveGroup(self, group):
         # Me must check that this group doesn't have any group listings
@@ -255,25 +271,11 @@ class User(Base):
                     "Unable to leave group, Group is a part of a current listing that is accepted", 'warning')
                 return False
 
-    @property
-    def isGroupLeader(self):
-        return len(self.groupLeader) > 0
-
-    @property
-    def isAdmin(self):
-        return self.role == 'admin'
-
     def getNotifications(self):
-        logger.debug(type(Notification.query))
-        return Notification.query \
-            .filter(Notification.target_user_id == self.id) \
+        return self.notifications \
             .filter(Notification.category.in_(('report_notification', 'generic_notification'))) \
             .distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed) \
             .paginate(1, 10, False).items
-        # return self.notifications \
-        #     .filter(Notification.category.in_(('report_notification', 'generic_notification'))) \
-        #     .distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed) \
-        #     .paginate(1, 10, False).items
 
     def getMessageNotifications(self):
         return self.notifications \
@@ -281,31 +283,35 @@ class User(Base):
             .distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed) \
             .paginate(1, 1, False).items
 
-    # def hasDirectMessagesWith(self):
-    #     allUsers = []
-    #     mySentMessages = self.sentDM.group_by(DirectMessage.target_user_id)
-    #     return mySentMessages
+    def getUnreadMessageNotificationCount(self):
+        return self.notifications \
+            .filter(Notification.viewed == False) \
+            .filter(Notification.category.in_(('direct_message', 'generic_message'))) \
+            .distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed) \
+            .count()
 
-    # def unreadNotifications(self):
-    #     allNotifications = self.notifications \
-    #         .distinct(Notification.notif_type, Notification.redirect_url) \
-    #         .paginate(1, 10, False)
+    def getUnreadNotificationCount(self):
+        return self.notifications \
+            .filter(Notification.viewed == False) \
+            .filter(Notification.category.in_(('report_notification', 'generic_notification'))) \
+            .distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed) \
+            .count()
 
-    #     messages = []
-    #     notifications = []
-
-    #     messageTypes = ['group_listing_message', 'group_message',
-    #                     'house_message', 'tour_message',
-    #                     'maintenance_message', 'direct_message']
-
-    #     for notification in allNotifications:
-    #         if notification.notif_type in messageTypes:
-    #             messages.append(notification)
-    #         else:
-    #             notifications.append(notification)
-
-    #     return messages, notifications
-
-    @property
-    def name(self):
-        return "%s %s" % (self.fname, self.lname)
+    def sendEmail(self, emailType, message):
+        logger.debug('User.sendEmail()')
+        logger.debug('EmailType %s' % emailType)
+        # fullMessage = None
+        if emailType == 'message':
+            send_email(subject='NexNest - New Message',
+                       sender='no_reply@nexnest.com',
+                       recipients=[self.email],
+                       html_body=render_template('email/newMessage.html',
+                                                 user=self,
+                                                 message=message))
+        elif emailType == 'generic':
+            send_email(subject='NexNest - New Message',
+                       sender='no_reply@nexnest.com',
+                       recipients=[self.email],
+                       html_body=render_template('email/generic.html',
+                                                 user=self,
+                                                 message=message))

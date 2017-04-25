@@ -10,18 +10,22 @@ from nexnest.models.group import Group
 from nexnest.models.school import School
 from nexnest.models.direct_message import DirectMessage
 from nexnest.models.notification import Notification
+from nexnest.models.notification_preference import NotificationPreference
 
 from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm, CreateGroupForm
 
 from nexnest.utils.password import check_password
 from nexnest.utils.flash import flash_errors
 from nexnest.utils.file import allowed_file
+from nexnest.utils.email import generate_confirmation_token, confirm_token
 
 from sqlalchemy import func, asc, or_, and_
 
 from werkzeug.utils import secure_filename
 
 import os
+
+from itsdangerous import BadSignature
 
 users = Blueprint('users', __name__, template_folder='../templates/user')
 
@@ -38,8 +42,9 @@ def register():
 
         if registerForm.validate():
             # First make sure that the school is valid
-            school = session.query(School).filter(func.lower(
-                School.name) == registerForm.school.data.lower()).first()
+            school = session.query(School) \
+                .filter(func.lower(School.name) == registerForm.school.data.lower()) \
+                .first()
 
             if school is not None:
                 # School Exists
@@ -52,9 +57,15 @@ def register():
                 session.add(newUser)
                 session.commit()
 
-                login_user(newUser)
+                # Notification Preference Table init
+                session.add(NotificationPreference(user=newUser))
+                session.commit()
 
-                return redirect(url_for('indexs.index'))
+                emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(newUser.email), _external=True)
+                newUser.sendEmail('generic',
+                                  'Click the link to confirm your account <a href="%s">Click Here</a>' % emailConfirmURL)
+
+                return redirect(url_for('users.emailConfirmNotice', email=registerForm.email.data))
             else:
                 flash("School you selected doesn't exist", 'warning')
 
@@ -82,9 +93,12 @@ def login():
 
             # Does the user exist
             if user is not None:
-                if user.active is True:
+                if user.active:
                     if check_password(user, login_form.password.data):
-                        login_user(user)
+                        if user.email_confirmed:
+                            login_user(user)
+                        else:
+                            flash('You must confirm your email before logging in', 'danger')
                     else:
                         flash("Error validating login credentials", 'danger')
                 else:
@@ -94,12 +108,6 @@ def login():
         else:
             flash_errors(login_form)
 
-        # if login_form.nextURL.data != '':
-        #     return redirect(login_form.nextURL.data)
-        # elif login_form.next.data is not None:
-        #     return redirect(login_form.next.data)
-        # else:
-        #     return login_form.redirect()
         if login_form.next.data == '':
             if user.isLandlord:
                 return redirect('/landlord/dashboard')
@@ -111,6 +119,30 @@ def login():
 def logout():
     logout_user()
     return redirect("/")
+
+
+@users.route('/emailConfirm/<email>')
+def emailConfirmNotice(email):
+    return render_template('/user/confirmEmail.html',
+                           email=email)
+
+
+@users.route('/user/emailConfirm/<payload>')
+def emailConfirm(payload):
+    try:
+        email = confirm_token(payload)
+    except:
+        flash('The confirmation link is invalid or has expired.', 'danger')
+    user = User.query.filter_by(email=email).first_or_404()
+
+    if user.email_confirmed:
+        flash('Account already confirmed. Please login.', 'success')
+    else:
+        user.email_confirmed = True
+        session.commit()
+        flash('You have confirmed your account. Thanks!', 'success')
+
+    return redirect(url_for('indexs.index'))
 
 
 @users.route('/user/view/<userID>', methods=['GET', 'POST'])
@@ -327,7 +359,7 @@ def changePassword():
 @users.route('/user/getNotifications/<int:page>', methods=['GET', 'POST'])
 @login_required
 def getNotifications(page=1):
-    logger.debug("/user/getNotifications page : ", page)
+    logger.debug("/user/getNotifications page : %d" % page)
 
     allNotifications = Notification.query \
         .filter_by(target_user_id=current_user.id) \
@@ -337,15 +369,13 @@ def getNotifications(page=1):
                   Notification.viewed) \
         .paginate(page, 10, False)
 
-    logger.debug("allNotifications : ", allNotifications.items)
+    logger.debug("allNotifications : %r" % allNotifications.items)
 
     allNotificationList = []
-
-    numUnviewed = 0
     for notif in allNotifications.items:
         allNotificationList.append(notif.serialize)
-        if not notif.viewed:
-            numUnviewed += 1
+
+    numUnviewed = current_user.getUnreadNotificationCount()
 
     returnDict = {'numUnviewed': numUnviewed, 'notifications': allNotificationList}
 
@@ -364,7 +394,7 @@ def getNotifications(page=1):
 @users.route('/user/getMessageNotifications/<int:page>', methods=['GET', 'POST'])
 @login_required
 def getMessageNotifications(page=1):
-    logger.debug("/user/getNotifications page : ", page)
+    logger.debug("/user/getMessageNotifications page : %d" % page)
 
     allNotifications = Notification.query \
         .filter_by(target_user_id=current_user.id) \
@@ -374,15 +404,14 @@ def getMessageNotifications(page=1):
                   Notification.viewed) \
         .paginate(page, 1, False)
 
-    logger.debug("allNotifications : ", allNotifications.items)
+    logger.debug("allNotifications : %r" % allNotifications.items)
 
     allNotificationList = []
 
-    numUnviewed = 0
     for notif in allNotifications.items:
         allNotificationList.append(notif.serialize)
-        if not notif.viewed:
-            numUnviewed += 1
+
+    numUnviewed = current_user.getUnreadMessageNotificationCount()
 
     returnDict = {'numUnviewed': numUnviewed, 'notifications': allNotificationList}
 

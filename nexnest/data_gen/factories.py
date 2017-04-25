@@ -41,6 +41,7 @@ class UserFactory(factory.alchemy.SQLAlchemyModelFactory):
     lname = factory.LazyAttribute(lambda x: fake.last_name())
     school = factory.SubFactory(SchoolFactory)
     role = 'user'
+    email_confirmed = True
 
 
 class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -60,7 +61,7 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     parking = 'onstreet'
     cats = bool(random.getrandbits(1))
     dogs = bool(random.getrandbits(1))
-    other_pets = factory.LazyAttribute(lambda x: fake.paragraph())
+    other_pets = factory.LazyAttribute(lambda x: fake.paragraph(nb_sentences=2))
     washer = bool(random.getrandbits(1))
     dryer = bool(random.getrandbits(1))
     dishwasher = bool(random.getrandbits(1))
@@ -299,3 +300,11 @@ class ListingSchoolFactory(factory.alchemy.SQLAlchemyModelFactory):
     driving_miles = 2
     walking_time = 17
     walking_miles = 3
+
+
+class NotificationPreferenceFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = notification_preference.NotificationPreference
+        sqlalchemy_session = session
+
+    user = factory.SubFactory(UserFactory)

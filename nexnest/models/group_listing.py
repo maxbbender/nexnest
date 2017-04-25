@@ -180,20 +180,30 @@ class GroupListing(Base):
 
     def genNotifications(self):
         for landlord in self.listing.landLordsAsUsers():
+            if landlord.notificationPreference.group_listing_notification:
+                newNotif = Notification(notif_type='group_listing',
+                                        target_model_id=self.id,
+                                        target_user=landlord)
+                session.add(newNotif)
+                session.commit()
 
-            newNotif = Notification(notif_type='group_listing',
-                                    target_model_id=self.id,
-                                    target_user=landlord)
-            session.add(newNotif)
-            session.commit()
+            if landlord.notificationPreference.group_listing_email:
+                landlord.sendEmail(emailType='generic',
+                                   message='A new request to live at %s has been made!' % self.listing.address)
 
     def genAcceptedNotifications(self):
         for user in self.group.acceptedUsers:
-            newNotif = Notification(notif_type='group_listing_accept',
-                                    target_user=user,
-                                    target_model_id=self.id)
-            session.add(newNotif)
-            session.commit()
+
+            if user.notificationPreference.group_listing_accept_notification:
+                newNotif = Notification(notif_type='group_listing_accept',
+                                        target_user=user,
+                                        target_model_id=self.id)
+                session.add(newNotif)
+                session.commit()
+
+            if user.notificationPreference.group_listing_accept_email:
+                user.sendEmail(emailType='generic',
+                               message='Your request to live at %s has been accepted! Now you must sign the lease and pay all security deposits!' % self.listing.address)
 
     def undoAcceptedNotifications(self):
         session.query(Notification) \
@@ -205,11 +215,17 @@ class GroupListing(Base):
 
     def genDeniedNotifications(self):
         for user in self.group.acceptedUsers:
-            newNotif = Notification(notif_type='group_listing_denied',
-                                    target_user=user,
-                                    target_model_id=self.id)
-            session.add(newNotif)
-            session.commit()
+
+            if user.notificationPreference.group_listing_deny_notification:
+                newNotif = Notification(notif_type='group_listing_denied',
+                                        target_user=user,
+                                        target_model_id=self.id)
+                session.add(newNotif)
+                session.commit()
+
+            if user.notificationPreference.group_listing_deny_email:
+                user.sendEmail(emailType='generic',
+                               message='Your request to live at %s has been denied' % self.listing.address)
 
     def undoDeniedNotifications(self):
         session.query(Notification) \
@@ -221,18 +237,31 @@ class GroupListing(Base):
 
     def genCompletedNotifications(self):
         for user in self.group.acceptedUsers:
-            newNotif = Notification(notif_type='group_listing_completed',
-                                    target_user=user,
-                                    target_model_id=self.id)
-            session.add(newNotif)
-            session.commit()
+
+            if user.notificationPreference.group_listing_completed_notification:
+                newNotif = Notification(notif_type='group_listing_completed',
+                                        target_user=user,
+                                        target_model_id=self.id)
+                session.add(newNotif)
+                session.commit()
+
+            if user.notificationPreference.group_listing_completed_email:
+                user.sendEmail(emailType='generic',
+                               message='Your request to live at %s has been marked as completed! Welcome to your new house' % self.listing.address)
 
         for landlord in self.listing.landLordsAsUsers():
-            newNotif = Notification(notif_type='group_listing_completed',
-                                    target_user=landlord,
-                                    target_model_id=self.id)
-            session.add(newNotif)
-            session.commit()
+
+            if landlord.notificationPreference.group_listing_completed_notification:
+
+                newNotif = Notification(notif_type='group_listing_completed',
+                                        target_user=landlord,
+                                        target_model_id=self.id)
+                session.add(newNotif)
+                session.commit()
+
+            if landlord.notificationPreference.group_listing_completed_email:
+                landlord.sendEmail(emailType='generic',
+                                   message='Your request to live at %s has been marked as completed! Welcome to your new house' % self.listing.address)
 
     def undoCompletedNotifications(self):
         session.query(Notification) \

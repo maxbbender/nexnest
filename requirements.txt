@@ -4,6 +4,7 @@ Flask-Assets
 Flask-WTF
 Flask-Login
 flask-admin
+flask_mail
 
 # Database
 Flask-SQLAlchemy

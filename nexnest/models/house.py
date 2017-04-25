@@ -5,7 +5,8 @@ from sqlalchemy.orm import relationship
 
 from flask import flash
 
-from nexnest.application import db
+from nexnest.application import db, session
+from nexnest.models.notification import Notification
 
 from .base import Base
 
@@ -75,6 +76,31 @@ class House(Base):
         # print(inProgressMR)
         # print(completedMR)
         return openMR, inProgressMR, completedMR
+
+    def genNotifications(self):
+        for user in self.group.acceptedUsers:
+            if user.notificationPreference.house_notification:
+                newNotif = Notification(target_user=user,
+                                        target_model_id=self.id,
+                                        notif_type='house')
+                session.add(newNotif)
+                session.commit()
+
+            if user.notificationPreference.house_email:
+                user.sendEmail(emailType='generic',
+                               message='You have a new house! Review all the actions you can take including Paying Rent and making Maintenance Requests!')
+
+        for user in self.listing.landLordsAsUsers():
+            if user.notificationPreference.house_notification:
+                newNotif = Notification(target_user=user,
+                                        target_model_id=self.id,
+                                        notif_type='house')
+                session.add(newNotif)
+                session.commit()
+
+            if user.notificationPreference.house_email:
+                user.sendEmail(emailType='generic',
+                               message='You have a new house! This is where you will be able to recieve rent and see maintenance requests!')
 
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument

@@ -5,6 +5,7 @@ from flask import flash
 
 from nexnest.application import db, session
 from nexnest.models.base import Base
+from nexnest.models.message import Message
 
 
 class Notification(Base):
@@ -23,7 +24,7 @@ class Notification(Base):
     # | group_listing_favorite| maintenance   | platform_report  | report_group
     # | report_landlord       | report_listing| security_deposit | tour
     # | maintenance_message   | rent_reminder | new_tour_time    | tour_message
-    # ----------------------------------------------------------------b#
+    # ----------------------------------------------------------------#
     # NEW ONES (need category):
     # | user_leave_group | maintenance_inprogress | maintenance_completed
     # | group_listing_accept | group_listing_denied | tour_confirm | tour_denied
@@ -72,15 +73,21 @@ class Notification(Base):
 
     @property
     def serialize(self):
-        return {
+        dictToReturn = {
             'id': self.id,
             'targetUser': self.user.serialize,
             'viewed': self.viewed,
             'notifType': self.notif_type,
             'message': self.message,
             'redirectURL': self.redirect_url,
-            'category': self.category
+            'category': self.category,
+            'date': self.date_created.strftime('%B-%d-%y')
         }
+
+        if self.category in ['direct_message', 'generic_message']:
+            dictToReturn['sourceUserProfileURL'] = Message.query.filter_by(id=self.target_model_id).first().user.profile_image
+
+        return dictToReturn
 
     @property
     def returnObject(self):
