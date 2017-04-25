@@ -5,6 +5,7 @@ from flask import flash
 
 from nexnest.application import db, session
 from nexnest.models.base import Base
+from nexnest.models.message import Message
 
 
 class Notification(Base):
@@ -83,8 +84,8 @@ class Notification(Base):
             'date': self.date_created.strftime('%B-%d-%y')
         }
 
-        # if self.category in ['direct_message', 'generic_message']:
-        #     dictToReturn['userImageURL'] = self.user.profile_image
+        if self.category in ['direct_message', 'generic_message']:
+            dictToReturn['sourceUserProfileURL'] = Message.query.filter_by(id=self.target_model_id).first().user.profile_image
 
         return dictToReturn
 
