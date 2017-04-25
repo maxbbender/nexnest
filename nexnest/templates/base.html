@@ -115,15 +115,22 @@
                     <li class="nav-item">
                         <div class="dropdown dropdown-notifications dropdown-toggle">
                             <i data-count="{{ numUnviewedNotifications }}" class="fa fa-bell fa-2x notification-icon" style="padding-top: 4px;" id="dropdownNotificationButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
-                            <div class="dropdown-menu dropdown-menu-right" style="overflow:hidden; width: 93vw; right: -48px; max-height: 90vh;" aria-labelledby="dropdownNotificationButton">
+                            <div class="dropdown-menu dropdown-menu-right" style="overflow:scroll; overflow-x: hidden; width: 93vw; right: -48px; max-height: 75vh;" aria-labelledby="dropdownNotificationButton">
                                 <div class="dropdown-toolbar">
                                     <h2 class="dropdown-toolbar-title"><strong>Notifications ({{ numUnviewedNotifications }} new)</strong>
                                     <span style="float: right;"><a href="#" id="markAllNotif">Mark All Read</a></span></h2>
                                 </div>
                                 <ul class="notifications">
+                                    <div id="notificationArea">
                                     {% for notification in notifications %}
                                         {% include 'notifications/' + notification.category +'.html' %}
                                     {% endfor %}
+                                    </div>
+                                    <div class="row" id="doIShowMoreNotifications" style="display: none;">
+                                        <div class="col-xs-12">
+                                            <button id="moreNotifications">See More</button>
+                                        </div>
+                                    </div>
                                 </ul>
                             </div>
                         </div>
@@ -185,6 +192,20 @@
         {% block scripts %}
         {% endblock %}
 		<script>
+            $( document ).ready(function() {
+                requestURL = "/user/getNotifications/1";
+                $.getJSON(requestURL, function(data) {
+                    console.log(data)
+                    notificationDetails = data['paginateDetails'];
+                    if(notificationDetails.hasNext == true){
+                        $("#doIShowMoreNotifications").show();
+                    }
+                });
+            });
+            $(document).on('click', '.dropdown-notifications', function (e) {
+              e.stopPropagation();
+            });
+            var currentPage = 1;
 			//Login Modal
             $('#loginModal').on('show.bs.modal', function (event) {
               var button = $(event.relatedTarget)
@@ -246,6 +267,83 @@
                     }
                 });
             });
+
+            $("#moreNotifications").click(function(event){
+                currentPage++;
+                console.log("current page: "+ currentPage);
+                requestURL = "/user/getNotifications/"+currentPage;
+                $.getJSON(requestURL, function(data) {
+                    console.log(data)
+                    notifications = data['notifications'];
+                    notificationDetails = data['paginateDetails'];
+                   
+                   $.each(notifications, function(index, notification) {
+                    var newNotification = `<a href="`+ notification.redirectURL +`" id="`+ notification.id +`" data-type="`+ notification.notifType +`" data-redirect="`+ notification.redirectURL +`" class="noti">`;
+                        if(notification.viewed == false){
+                            newNotification += `<li class="notification" style="background-color: aliceblue;">`;
+                        }
+                        else{
+                            newNotification += `<li class="notification">`;
+                        }
+                            newNotification += `<div class="media">
+                                <div class="media-left vertical-center" style="text-align: center;">
+                                    <div class="media-object">`;
+                                        if(notification.notifType == "maintenance"){
+                                            newNotification += `<i class="fa fa-wrench fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                        }
+                                        else if(notification.notifType == "tour"){
+                                            newNotification += `<i class="fa fa-calendar fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                        }
+                                        else if(notification.notifType == "security_deposit"){
+                                            newNotification += `<i class="fa fa-usd fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                        }    
+                                        else if(notification.notifType == "group_listing"){
+                                            newNotification += `<i class="fa fa-home fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                        }
+                                        else if(notification.notifType == "house"){
+                                            newNotification += `<i class="fa fa-handshake-o fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                        }
+                                        else if(notification.notifType == "group_user"){
+                                            newNotification += `<i class="fa fa-user fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                        }
+                                        else if(notification.notifType == "group_listing_favorite"){
+                                            newNotification += `<i class="fa fa-star fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                        }
+                                        else if(notification.notifType == "new_tour_time"){
+                                            newNotification += `<i class="fa fa-clock-o fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                        }
+                                        else if(notification.notifType == "rent_reminder"){
+                                            newNotification += `<i class="fa fa-usd fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                        }
+                                        else{
+                                            newNotification += `<i class="fa fa-bell fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                        }
+                                    newNotification += `</div>
+                                </div>
+                                <div class="media-body">
+                                    <strong class="notification-title">`+ notification.message +`</strong>
+                                    <div class="notification-meta">
+                                        <div class="row">
+                                            <div class="col-xs-8">
+                                                <small class="timestamp">notification.date_created</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </a>`;
+                    $("#notificationArea").append(newNotification);
+                   });
+                   if(notificationDetails.hasNext == true){
+                        $("#doIShowMoreNotifications").show();
+                   }
+                   else{
+                        $("#doIShowMoreNotifications").hide();
+                   }
+                });
+            });
+            
 		</script>
 	</body>
 </html>
