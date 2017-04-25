@@ -41,6 +41,16 @@ class Message(Base):
     def brief(self):
         return self.content[0:50] + "..."
 
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'content': self.content,
+            'contentBrief': self.brief,
+            'user': self.user.serialize,
+            'date': self.date_created.strftime('%B-%d-%y')
+        }
+
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument
     # 'target' is the inserted object
