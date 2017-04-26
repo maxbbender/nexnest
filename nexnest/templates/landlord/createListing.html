@@ -108,7 +108,8 @@
                         <div class="row">
                             <div class="col-xs-0 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
                             <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10">
-                                <h2> Step 2: Rental Time Period</h2>                                
+                                <h2> Step 2: Rental Time Period</h2>
+                                {{endDate}}
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                         <div class="form-group">
@@ -930,6 +931,8 @@
                         var first_semester_rent_due = new Date($("#firstSemesterRentDue").val());
                         var second_semester_rent_due = new Date($("#secondSemesterRentDue").val());
                         $("#firstSemesterRentDue").closest(".form-group").removeClass("has-error");
+                        $("#firstSemesterRentDue").closest(".form-group").removeClass("has-danger");
+                        $("#secondSemesterRentDue").closest(".form-group").removeClass("has-error");
                         $("#secondSemesterRentDue").closest(".form-group").removeClass("has-danger");
                         if((first_semester_rent_due >= start_date) && (second_semester_rent_due < end_date)){
                             if(first_semester_rent_due < second_semester_rent_due){
@@ -940,9 +943,29 @@
                             }
                         }else{
                             $("#firstSemesterRentDue").closest(".form-group").addClass("has-error");
+                            $("#firstSemesterRentDue").closest(".form-group").addClass("has-danger");
+                            $("#secondSemesterRentDue").closest(".form-group").addClass("has-error");
                             $("#secondSemesterRentDue").closest(".form-group").addClass("has-danger");
                         }
                     }
+                    else{
+                        nextStepWizard.removeClass('disabled').trigger('click');
+                    }
+                }else if(curStep[0].id == "step-2"){
+                    {% if endDate %}
+                        var start_date = new Date($("#leaseStartDateInput").val());
+                        var oldEnd = new Date("{{endDate}}");
+                        if(oldEnd > start_date){
+                            alert("bad boy");
+                            $("#leaseStartDateInput").closest(".form-group").addClass("has-error");
+                            $("#leaseStartDateInput").closest(".form-group").addClass("has-danger");
+                        }
+                        else{
+                            nextStepWizard.removeClass('disabled').trigger('click');
+                        }
+                    {% else %}
+                        nextStepWizard.removeClass('disabled').trigger('click');
+                    {% endif %}
                 }
                 else {
                     nextStepWizard.removeClass('disabled').trigger('click');

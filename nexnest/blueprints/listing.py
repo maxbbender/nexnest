@@ -233,7 +233,8 @@ def cloneListing(listingID):
                                title='Create Listing',
                                schools=allSchoolsAsStrings(),
                                selectedSchools=selectedSchools,
-                               picturePaths=picturePaths)
+                               picturePaths=picturePaths,
+                               endDate=currentListing.end_date)
     else:
         flash("You are not the landlord of this listing", 'warning')
 
