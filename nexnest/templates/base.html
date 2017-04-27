@@ -106,9 +106,6 @@
                                 </div>
                                 <ul class="notifications">
                                     <div id="messageArea">
-                                        {% for message in notificationMessages %}
-                                            {% include 'notifications/' + message.category +'.html' %}
-                                        {% endfor %}
                                     </div>
                                     <br>
                                     <div class="row" id="doIShowMoreMessages" style="display: none;">
@@ -130,9 +127,6 @@
                                 </div>
                                 <ul class="notifications">
                                     <div id="notificationArea">
-                                        {% for notification in notifications %}
-                                            {% include 'notifications/' + notification.category +'.html' %}
-                                        {% endfor %}
                                     </div>
                                     <br>
                                     <div class="row" id="doIShowMoreNotifications" style="display: none;">
@@ -204,19 +198,151 @@
             $( document ).ready(function() {
                 requestURL = "/user/getNotifications/1";
                 $.getJSON(requestURL, function(data) {
-                    console.log(data)
+                    notifications = data['notifications'];
                     notificationDetails = data['paginateDetails'];
-                    if(notificationDetails.hasNext == true){
+                   
+                   $.each(notifications, function(index, notification) {
+                    console.log(notification);
+                    var newNotification = `<a href="`+ notification.redirectURL +`" id="`+ notification.id +`" data-type="`+ notification.notifType +`" data-redirect="`+ notification.redirectURL +`" class="noti">`;
+                        if(notification.viewed == false){
+                            newNotification += `<li class="notification" style="background-color: aliceblue;">`;
+                        }
+                        else{
+                            newNotification += `<li class="notification">`;
+                        }
+                            newNotification += `<div class="media">
+                                <div class="media-left vertical-center" style="text-align: center;">
+                                    <div class="media-object">`;
+                                        if(notification.notifType == "maintenance"){
+                                            newNotification += `<i class="fa fa-wrench fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                        }
+                                        else if(notification.notifType == "tour"){
+                                            newNotification += `<i class="fa fa-calendar fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                        }
+                                        else if(notification.notifType == "security_deposit"){
+                                            newNotification += `<i class="fa fa-usd fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                        }    
+                                        else if(notification.notifType == "group_listing"){
+                                            newNotification += `<i class="fa fa-home fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                        }
+                                        else if(notification.notifType == "house"){
+                                            newNotification += `<i class="fa fa-handshake-o fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                        }
+                                        else if(notification.notifType == "group_user"){
+                                            newNotification += `<i class="fa fa-user fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                        }
+                                        else if(notification.notifType == "group_listing_favorite"){
+                                            newNotification += `<i class="fa fa-star fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                        }
+                                        else if(notification.notifType == "new_tour_time"){
+                                            newNotification += `<i class="fa fa-clock-o fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                        }
+                                        else if(notification.notifType == "rent_reminder"){
+                                            newNotification += `<i class="fa fa-usd fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                        }
+                                        else{
+                                            newNotification += `<i class="fa fa-bell fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                        }
+                                    newNotification += `</div>
+                                </div>
+                                <div class="media-body">
+                                    <strong class="notification-title">`+ notification.message +`</strong>
+                                    <div class="notification-meta">
+                                        <div class="row">
+                                            <div class="col-xs-8">
+                                                <small class="timestamp">`+notification.date+`</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </a>`;
+                    $("#notificationArea").append(newNotification);
+                   });
+                   if(notificationDetails.hasNext == true){
                         $("#doIShowMoreNotifications").show();
-                    }
+                   }
+                   else{
+                        $("#doIShowMoreNotifications").hide();
+                   }
                 });
+
+
+
+
                 requestURL = "/user/getMessageNotifications/1";
                 $.getJSON(requestURL, function(data) {
-                    console.log(data)
+                    notifications = data['notifications'];
                     notificationDetails = data['paginateDetails'];
-                    if(notificationDetails.hasNext == true){
-                        $("#doIShowMoreMessages").show();
+                   
+                   $.each(notifications, function(index, message) {
+                    if(message.category == "generic_message"){
+                        var newNotification = `<a href="`+ message.redirectURL +`" id="`+ message.id +`" class="noti">`;
+                            if(message.viewed == false){
+                                newNotification += `<li class="notification" style="background-color: aliceblue;">`;
+                            }
+                            else{
+                                newNotification += `<li class="notification">`;
+                            }
+                            newNotification += `<div class="media">
+                                <div class="media-left vertical-center" style="text-align: center">
+                                    <div class="media-object">
+                                        <i class="fa fa-users fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>
+                                    </div>
+                                </div>
+                                <div class="media-body">
+                                    <strong class="notification-title">`+ message.message +`</strong>
+                                    <p class="notification-desc"><b> `+ message.messageObject.user.fname +` `+ message.messageObject.user.lname +` </b> `+ message.messageObject.contentBrief +`</p>
+                                    <div class="notification-meta">
+                                        <div class="row">
+                                            <div class="col-xs-8">
+                                                <small class="timestamp">`+ message.messageObject.date +` </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </a>`;
                     }
+                    else{
+                        var newNotification = `<a href="`+message.redirectURL+`" id="`+message.id+`" class="noti">`;
+                            if(message.viewed == false){
+                                newNotification += `<li class="notification" style="background-color: aliceblue;">`;
+                            }
+                            else{
+                                newNotification += `<li class="notification">`;
+                            }
+                                newNotification += `<div class="media">
+                                    <div class="media-left vertical-center" style="text-align: center;">
+                                        <div class="media-object">
+                                            <img src="`+message.messageObject.user.profileImageURL+`" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle" alt="Name" />
+                                        </div>
+                                    </div>
+                                    <div class="media-body">
+                                        <strong class="notification-title"> `+message.message+` </strong>
+                                        <p class="notification-desc">`+message.messageObject.contentBrief+`</p>
+                                        <div class="notification-meta">
+                                            <div class="row">
+                                                <div class="col-xs-8">
+                                                    <small class="timestamp">`+ message.messageObject.date +`</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </a>`;
+                    }
+                    $("#messageArea").append(newNotification);
+                   });
+                   if(notificationDetails.hasNext == true){
+                        $("#doIShowMoreMessages").show();
+                   }
+                   else{
+                        $("#doIShowMoreMessages").hide();
+                   }
                 });
             });
             $(document).on('click', '.dropdown-notifications', function (e) {
@@ -294,6 +420,7 @@
                     notificationDetails = data['paginateDetails'];
                    
                    $.each(notifications, function(index, notification) {
+                    console.log(notification);
                     var newNotification = `<a href="`+ notification.redirectURL +`" id="`+ notification.id +`" data-type="`+ notification.notifType +`" data-redirect="`+ notification.redirectURL +`" class="noti">`;
                         if(notification.viewed == false){
                             newNotification += `<li class="notification" style="background-color: aliceblue;">`;
@@ -341,7 +468,7 @@
                                     <div class="notification-meta">
                                         <div class="row">
                                             <div class="col-xs-8">
-                                                <small class="timestamp">notification.date_created</small>
+                                                <small class="timestamp">`+notification.date+`</small>
                                             </div>
                                         </div>
                                     </div>
