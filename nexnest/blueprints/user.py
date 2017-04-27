@@ -485,3 +485,16 @@ def favoriteListing(listingID):
     session.add(newFavorite)
     session.commit()
     return jsonify("true")
+
+@users.route('/user/unFavoriteListing/<listingID>', methods=['GET', 'POST'])
+@login_required
+def unFavoriteListing(listingID):
+    listing = session.query(Listing).filter_by(id=listingID).first()
+
+    logger.debug("Listing %r" % listing)
+    listingFavorite = session.query(ListingFavorite).filter_by(listing=listing, user=current_user).first()
+
+    logger.debug("ListingFavorite %r" % listingFavorite)
+    session.delete(listingFavorite)
+    session.commit()
+    return jsonify("true")
