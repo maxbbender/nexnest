@@ -15,7 +15,12 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#emailTab" role="tab">
-                            <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Email Settings</span>
+                            <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Notification Settings</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#favoritesTab" role="tab">
+                            <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">My Favorites</span>
                         </a>
                     </li>
                 </ul>
@@ -342,58 +347,165 @@
                 </div>
                 </form>               
             </div>
+            <div class="tab-pane" id="favoritesTab" role="tabpanel" style="padding: 0px;">
+                <div class="row">
+                    <div class="col-xs-1"></div>
+                    <div class="col-xs-10">
+                        <div class="callout-block text-center fade-in-b">
+                            <h1>My Favorites</h1>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-xs-1"></div>
+                    <div class="col-xs-10">
+                        {% for favorite in userFavorites %}
+                            <div class="row">
+                                <div class="col-xs-0 col-md-1"></div>
+                                <div class="col-xs-12 col-md-10" style="width: 100%">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <div class="row">
+                                                <div class="col-xs-12 col-md-8 col-lg-8">
+                                                    <a href="{{ url_for('listings.viewListing', listingID=favorite.listing.id) }}">
+                                                        <h3 style="font-size: 3.5vh;"><strong>{{ favorite.listing.street }}, {{ favorite.listing.city }} {{ favorite.listing.state }}</strong></h3>
+                                                        <small style="font-size: 2.5vh;">Lease Period: {{ favorite.listing.start_date }} - {{ favorite.listing.end_date }}</small>
+                                                    </a>
+                                                </div>
+                                                <div class="col-xs-2 col-md-4 col-lg-4" style="text-align: right;">
+                                                    <a href='#' class="btn btn-primary" id="{{ favorite.listing.id }}" data-toggle="modal" data-target="#suggestListingModal">Favorite For Group</a>
+                                                </div>
+                                            </div>                              
+                                        </div>
+                                        <div class="card-block">
+                                            <div class="row">
+                                                <div class="hidden-md-down col-lg-4">
+                                                    <img src="{{favorite.listing.getBannerPhotoURL()}}" class="listingImg">
+                                                </div>
+                                                <div class="col-xs-12 col-lg-8">
+                                                    <h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ favorite.listing.price }}</strong> per bedroom per semester</h3>
+                                                    <h3 style="font-size: 3.0vh;"><strong>{{ favorite.listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
+                                                    &nbsp;
+                                                    {{ favorite.listing.num_full_baths }}<i class="fa fa-bath" aria-hidden="true"></i></strong></h3>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-xl-12" style="padding-left: 15px;">
+                                                            <br>
+                                                            <strong> Property Description: </strong> {{ favorite.listing.description }}
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-xl-12">
+                                                            <strong>Time Period of Rental:</strong> {{ favorite.listing.time_period }}
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">                                                         
+                                                        <div class="col-xl-6">
+                                                            <strong>Lease Start Date:</strong> {{ favorite.listing.start_date }}
+                                                        </div>
+                                                        <div class="col-xl-6">
+                                                            <strong>Lease End Date:</strong> {{ favorite.listing.end_date }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        {% if favorite.listing.rent_due == "semester" %}
+                                                            <div class="col-xl-6">
+                                                                <strong>First Semester Rent Due:</strong> {{ favorite.listing.first_semester_rent_due_date }}
+                                                            </div>
+                                                            <div class="col-xl-6">
+                                                                <strong>Second Semester Rent Due:</strong> {{ favorite.listing.second_semester_rent_due_date }}
+                                                            </div>                                                               
+                                                        {% elif favorite.listing.rent_due == "monthly" %}
+                                                            <div class="col-xl-12">
+                                                                <strong>Rent Due: </strong>1st of each month
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <!-- Suggest to Group Modal -->
+    <div class="modal fade" id="suggestListingModal" tabindex="-1" role="dialog" aria-labelledby="suggestListingModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="login"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-1"></div>
+                        <div class="col-xs-10">
+                            {% for group in groups %}
+                                <div class="card" style="width:100%;">
+                                    <h3 class="card-header">{{ group.name }}</h3>
+                                    <div class="card-block">            
+                                        <p class="card-text">
+                                            <strong>Group Leader:</strong>{{ group.leader.fname }} {{ group.leader.lname }}
+                                        </p>
+                                        <p class="card-text">
+                                            <strong>Intended Lease Period:</strong> {{ group.start_date }} - {{ group.end_date }}
+                                        </p>
+                                        <p class="card-text">
+                                            <strong><a href=# id="allMembersToggle{{group.id}}">See all members</a></strong>
+                                            <div id="allMembers{{group.id}}" style="display: none;">
+                                                {% for user in group.acceptedUsers %}
+                                                    <li>{{ user.fname }} {{ user.lname }}</li>
+                                                {% endfor %}
+                                            </div>
+                                        </p>                                    
+                                        <button id="favLisiting{{group.id}}" class="btn btn-primary" data-dismiss="modal">Favorite Listing</button>
+                                    </div>
+                                </div>
+                                <script>
+                                    //Suggest Listing Modal
+                                    $('#suggestListingModal').on('show.bs.modal', function (event) {
+                                      var button = $(event.relatedTarget)
+                                      var id = $(event.id);\
+                                      $("#favLisiting{{group.id}}").click(function(){favoriteLisitng({{group.id}}, event.relatedTarget.id); })
+                                      var modal = $(this)
+                                      modal.find('.modal-title').text('Suggest to Which Group?')
+                                    })
+
+                                    //Show/hide all members of group
+                                    $("#allMembersToggle{{group.id}}").click(function(){
+                                        $("#allMembers{{group.id}}").toggle();
+                                    });
+                                </script>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
         </div>
     </div>
     {% else %}
 
     {% endif %}
 
-
-
-
-    <!-- <div class="row">
-        <div class="col-xs-4"></div>
-        <div class="col-xs-4 col-centered">
-            <h1 style="display: inline; text-transform:capitalize;">{{ user.fname }} {{ user.lname }}</h1>
-        </div>
-    </div>
-    <br>
-    <div class="text-xs-center">
-        {% if user.id == current_user.id %}
-            <a href="{{ url_for('users.editAccountInfo') }}" class="btn btn-outline-info">Edit your profile</a>
-            <a href="#" data-toggle="modal" data-target="#passwordChangeModal" class="btn btn-outline-info">Change Password</a>
-        {% elif not user.id == current_user.id %}
-            <a href="{{ url_for('indexs.index') }}" class="btn btn-outline-info">Invite to group</a>
-            <a href="{{ url_for('users.directMessagesIndividual', user_id=user.id) }}" class="btn btn-outline-info">Message</a>
-        {% endif %}
-    </div>
-    <br>
-    <div class="text-xs-center" style="width: 200px;display:block; margin-left: auto; margin-right: auto;">
-        <div class="card card-outline-primary" style="display:block; margin-left: auto; margin-right: auto;">
-            <img class="card-img" src="{{user.profile_image}}" style="height: 150px;">
-            <div class="card-img-overlay"> 
-            {% if user.id == current_user.id %}
-                <a href="#" data-toggle="modal" data-target="#changeAvatarModal" style="position: absolute; bottom:0px;right:0px;color:#0275d8;"><i class="fa fa-pencil-square fa-2x" aria-hidden="true"></i></a>
-            {% endif %}
-            </div>
-        </div>
-    </div>
-    <hr>
-    <div class="row">
-        <div class="col-xs-4"></div>
-        <div class="col-xs-4">
-            <div class="row">
-                {% if user.bio is not none %}
-                    <span>Bio: {{ user.bio }}</span>
-                {% endif %}
-            </div>
-            <div class="row">
-                {% if user.website is not none %}
-                    <span>Website: <a href="{{ user.website }}">{{ user.website }}</a></span>
-                {% endif %}
-            </div>
-        </div>
-    </div> -->
     {% include 'changePasswordModal.html' %}
     {% include 'changeAvatarModal.html' %}
+{% endblock %}
+{% block scripts %}
+<script>
+    function favoriteLisitng(groupID, listingID){
+        alert("alert for "+groupID +" " + listingID)
+    }
+</script>
 {% endblock %}

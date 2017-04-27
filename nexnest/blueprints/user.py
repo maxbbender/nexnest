@@ -3,7 +3,7 @@ from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
 
 from nexnest import logger
-from nexnest.application import session
+from nexnest.application import session, csrf
 
 from nexnest.models.user import User
 from nexnest.models.group import Group
@@ -156,6 +156,8 @@ def viewUser(userID):
     user = session.query(User).filter_by(id=userID).first()
     currentPreferences = session.query(
             NotificationPreference).filter_by(user_id=userID).first()
+    userFavorites = session.query(ListingFavorite).filter_by(user=current_user).all()
+    myGroups = current_user.accepted_groups
     logger.debug(currentPreferences)
     form = EmailPreferencesForm(obj=currentPreferences)
 
@@ -163,7 +165,9 @@ def viewUser(userID):
         return render_template('/user/account.html',
                                user=user, 
                                form=form,
-                               title=user.fname
+                               title=user.fname,
+                               userFavorites=userFavorites,
+                               groups=myGroups
                                )
 
     else:
@@ -474,6 +478,7 @@ def getMessageNotifications(page=1):
 
 @users.route('/user/favoriteListing/<listingID>', methods=['GET', 'POST'])
 @login_required
+@csrf.exempt
 def favoriteListing(listingID):
     listing = session.query(Listing).filter_by(id=listingID).first()
 
@@ -488,6 +493,7 @@ def favoriteListing(listingID):
 
 @users.route('/user/unFavoriteListing/<listingID>', methods=['GET', 'POST'])
 @login_required
+@csrf.exempt
 def unFavoriteListing(listingID):
     listing = session.query(Listing).filter_by(id=listingID).first()
 
