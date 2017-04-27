@@ -12,7 +12,7 @@ from nexnest.models.direct_message import DirectMessage
 from nexnest.models.notification import Notification
 from nexnest.models.notification_preference import NotificationPreference
 
-from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm, CreateGroupForm
+from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm, CreateGroupForm, EmailPreferencesForm
 
 from nexnest.utils.password import check_password
 from nexnest.utils.flash import flash_errors
@@ -149,8 +149,53 @@ def emailConfirm(payload):
 @login_required
 def viewUser(userID):
     # fake lisiting for testing
+
+    form = EmailPreferencesForm(request.form)
     user = session.query(User).filter_by(id=userID).first()
-    return render_template('/user/account.html', user=user, title=user.fname)
+    currentPreferences = session.query(
+            NotificationPreference).filter_by(user_id=userID).first()
+    logger.debug(currentPreferences)
+    form = EmailPreferencesForm(obj=currentPreferences)
+
+    if request.method == 'GET':
+        return render_template('/user/account.html',
+                               user=user, 
+                               form=form,
+                               title=user.fname
+                               )
+
+    else:
+        if form.validate():
+            currentPreferences.direct_message_email = form.direct_message_email.data
+            currentPreferences.tour_message_email = form.tour_message_email.data
+            currentPreferences.group_message_email = form.group_message_email.data
+            currentPreferences.house_message_email = form.house_message_email.data
+            currentPreferences.maintenance_message_email = form.maintenance_message_email.data
+            currentPreferences.tour_time_email = form.tour_time_email.data
+            currentPreferences.tour_confirmed_email = form.tour_confirmed_email.data
+            currentPreferences.tour_denied_email = form.tour_denied_email.data
+            currentPreferences.maintenance_email = form.maintenance_email.data
+            currentPreferences.maintenance_inProgress_email = form.maintenance_inProgress_email.data
+            currentPreferences.maintenance_completed_email = form.maintenance_completed_email.data
+            currentPreferences.rent_due_email = form.rent_due_email.data
+            currentPreferences.rent_paid_email = form.rent_paid_email.data
+            currentPreferences.group_user_email = form.group_user_email.data
+            currentPreferences.group_listing_email = form.group_listing_email.data
+            currentPreferences.group_listing_accept_email = form.group_listing_accept_email.data
+            currentPreferences.group_listing_deny_email = form.group_listing_deny_email.data
+            currentPreferences.group_listing_completed_email = form.group_listing_completed_email.data
+            session.commit()
+
+            flash('Preferences Updated', 'success')
+            return render_template('/user/account.html',
+                               user=user, 
+                               form=form,
+                               title=user.fname
+                               )
+        else:
+            flash_errors(form)
+            return redirect(url_for('users.viewUser',
+                                    userID=userID))
 
 
 @users.route('/user/edit/info', methods=['GET', 'POST'])

@@ -251,3 +251,29 @@ class LeaseUploadForm(RedirectForm):
 class PreCheckoutForm(RedirectForm):
     json = HiddenField('Lease')
     # couponCode = StringField('Coupon Code', validators=[Optional()])
+
+class EmailPreferencesForm(RedirectForm):
+    direct_message_email = BooleanField('direct_message')
+    tour_message_email = BooleanField('tour_message')
+    group_message_email = BooleanField('group_message_email')
+    house_message_email = BooleanField('house_message')
+    maintenance_message_email = BooleanField('maintenance_message')
+    tour_time_email = BooleanField('tour_time_email')
+    tour_confirmed_email = BooleanField('tour_confirmed')
+    tour_denied_email = BooleanField('tour_denied')
+    tour_create_email = BooleanField('tour_create')
+    maintenance_email = BooleanField('maintenance')
+    maintenance_inProgress_email = BooleanField('maintenance_inProgress')
+    maintenance_completed_email = BooleanField('maintenance_completed')
+    rent_due_email = BooleanField('rent_due')
+    rent_paid_email = BooleanField('rent_paid')
+    group_user_email = BooleanField('group_user')
+    group_listing_email = BooleanField('group_listing')
+    house_email = BooleanField('house')
+    group_listing_accept_email = BooleanField('group_listing_accept')
+    group_listing_deny_email = BooleanField('group_listing_deny')
+    group_listing_completed_email = BooleanField('group_listing_completed')
+
+
+    
+    

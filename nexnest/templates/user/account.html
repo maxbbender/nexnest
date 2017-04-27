@@ -14,23 +14,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#houseTab" role="tab">
-                            <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">My House</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#myGroupsTab" role="tab">
-                            <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">My Groups</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#myToursTab" role="tab">
-                            <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">My Tours</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#requestsTab" role="tab">
-                            <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">My Listing Requests</span>
+                        <a class="nav-link" data-toggle="tab" href="#emailTab" role="tab">
+                            <i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Email Settings</span>
                         </a>
                     </li>
                 </ul>
@@ -86,6 +71,276 @@
                         </div>
                     </div>
                 </div>                
+            </div>
+            <div class="tab-pane" id="emailTab" role="tabpanel" style="padding: 0px;">
+                <div class="row">
+                    <div class="col-xs-1"></div>
+                    <div class="col-xs-10">
+                        <div class="callout-block text-center fade-in-b">
+                            <h1>Email Settings</h1>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <form method=post>
+                {{form.csrf_token}}
+                <div class="row">
+                    <div class="col-xs-1"></div>
+                    <div class="col-xs-10">
+                        <div class="card">
+                            <div class="card-block">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h4 class="card-title"><strong>Messages</strong></h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback" id="direct_message_label">Direct Messages</label>
+                                            <div class="checkbox">
+                                                <label style="font-size: 1.5em">
+                                                    {{form.direct_message_email(class='form-control form-check-input')}}
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback" id="direct_message_label">Tour Group Message</label>
+                                            <div class="checkbox">
+                                                <label style="font-size: 1.5em">
+                                                    {{form.tour_message_email(class='form-control form-check-input')}}
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback" id="direct_message_label">Message in Group</label>
+                                            <div class="checkbox">
+                                                <label style="font-size: 1.5em">
+                                                    {{form.group_message_email(class='form-control form-check-input')}}
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback" id="direct_message_label">House Group Message</label>
+                                            <div class="checkbox">
+                                                <label style="font-size: 1.5em">
+                                                    {{form.house_message_email(class='form-control form-check-input')}}
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback" id="direct_message_label">Maintenance Message</label>
+                                            <div class="checkbox">
+                                                <label style="font-size: 1.5em">
+                                                    {{form.maintenance_message_email(class='form-control form-check-input')}}
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h4 class="card-title"><strong>Tours</strong></h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback" id="tour_time_label">Tour Time Change</label>
+                                            <div class="checkbox">
+                                                <label style="font-size: 1.5em">
+                                                    {{form.tour_time_email(class='form-control form-check-input')}}
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback" id="tour_confirmed_label">Tour Confirmed</label>
+                                            <div class="checkbox">
+                                                <label style="font-size: 1.5em">
+                                                    {{form.tour_confirmed_email(class='form-control form-check-input')}}
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback" id="tour_denied_label">Tour Denied</label>
+                                            <div class="checkbox">
+                                                <label style="font-size: 1.5em">
+                                                    {{form.tour_denied_email(class='form-control form-check-input')}}
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h4 class="card-title"><strong>Maintenance</strong></h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback" id="tour_time_label">New Maintenance Request</label>
+                                            <div class="checkbox">
+                                                <label style="font-size: 1.5em">
+                                                    {{form.maintenance_email(class='form-control form-check-input')}}
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback" id="tour_confirmed_label">Maintenance In-Progress</label>
+                                            <div class="checkbox">
+                                                <label style="font-size: 1.5em">
+                                                    {{form.maintenance_inProgress_email(class='form-control form-check-input')}}
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback" id="tour_denied_label">Maintenance Completed</label>
+                                            <div class="checkbox">
+                                                <label style="font-size: 1.5em">
+                                                    {{form.maintenance_completed_email(class='form-control form-check-input')}}
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h4 class="card-title"><strong>Rent</strong></h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback" id="tour_time_label">Rent Due</label>
+                                            <div class="checkbox">
+                                                <label style="font-size: 1.5em">
+                                                    {{form.rent_due_email(class='form-control form-check-input')}}
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback" id="tour_confirmed_label">Rent Paid</label>
+                                            <div class="checkbox">
+                                                <label style="font-size: 1.5em">
+                                                    {{form.rent_paid_email(class='form-control form-check-input')}}
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h4 class="card-title"><strong>Groups</strong></h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback" id="tour_time_label">Invited To Group</label>
+                                            <div class="checkbox">
+                                                <label style="font-size: 1.5em">
+                                                    {{form.group_user_email(class='form-control form-check-input')}}
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h4 class="card-title"><strong>Property Requests</strong></h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback" id="tour_time_label">Property Has Been Requested by a Group</label>
+                                            <div class="checkbox">
+                                                <label style="font-size: 1.5em">
+                                                    {{form.group_listing_email(class='form-control form-check-input')}}
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback" id="tour_confirmed_label">Request Accepted</label>
+                                            <div class="checkbox">
+                                                <label style="font-size: 1.5em">
+                                                    {{form.group_listing_accept_email(class='form-control form-check-input')}}
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback" id="tour_denied_label">Request Denied</label>
+                                            <div class="checkbox">
+                                                <label style="font-size: 1.5em">
+                                                    {{form.group_listing_deny_email(class='form-control form-check-input')}}
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback" id="tour_denied_label">Request Completed</label>
+                                            <div class="checkbox">
+                                                <label style="font-size: 1.5em">
+                                                    {{form.group_listing_completed_email(class='form-control form-check-input')}}
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <input type='submit' value='Update Preferences' class="btn btn-primary">
+                            </div>                    
+                        </div>
+                    </div>
+                </div>
+                </form>               
             </div>
         </div>
     </div>

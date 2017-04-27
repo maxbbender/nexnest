@@ -202,7 +202,7 @@
                     notificationDetails = data['paginateDetails'];
                    
                    $.each(notifications, function(index, notification) {
-                    console.log(notification);
+                    //console.log(notification);
                     var newNotification = `<a href="`+ notification.redirectURL +`" id="`+ notification.id +`" data-type="`+ notification.notifType +`" data-redirect="`+ notification.redirectURL +`" class="noti">`;
                         if(notification.viewed == false){
                             newNotification += `<li class="notification" style="background-color: aliceblue;">`;
@@ -420,7 +420,7 @@
                     notificationDetails = data['paginateDetails'];
                    
                    $.each(notifications, function(index, notification) {
-                    console.log(notification);
+                    //console.log(notification);
                     var newNotification = `<a href="`+ notification.redirectURL +`" id="`+ notification.id +`" data-type="`+ notification.notifType +`" data-redirect="`+ notification.redirectURL +`" class="noti">`;
                         if(notification.viewed == false){
                             newNotification += `<li class="notification" style="background-color: aliceblue;">`;
