@@ -11,6 +11,8 @@ from nexnest.models.school import School
 from nexnest.models.direct_message import DirectMessage
 from nexnest.models.notification import Notification
 from nexnest.models.notification_preference import NotificationPreference
+from nexnest.models.listing_favorite import ListingFavorite
+from nexnest.models.listing import Listing
 
 from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm, CreateGroupForm, EmailPreferencesForm
 
@@ -469,3 +471,17 @@ def getMessageNotifications(page=1):
     returnDict['paginateDetails'] = paginateDict
 
     return jsonify(returnDict)
+
+@users.route('/user/favoriteListing/<listingID>', methods=['GET', 'POST'])
+@login_required
+def favoriteListing(listingID):
+    listing = session.query(Listing).filter_by(id=listingID).first()
+
+    logger.debug("Listing %r" % listing)
+    newFavorite = ListingFavorite(user=current_user,
+                                  listing=listing)
+
+    logger.debug("ListingFavorite %r" % newFavorite)
+    session.add(newFavorite)
+    session.commit()
+    return jsonify("true")
