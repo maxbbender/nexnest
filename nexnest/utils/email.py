@@ -1,6 +1,6 @@
 from threading import Thread
 from flask_mail import Message
-from nexnest import app, mail
+from nexnest import app, mail, logger
 # from flask import url_for
 from itsdangerous import URLSafeTimedSerializer
 
@@ -38,6 +38,9 @@ def send_email(subject, sender, recipients, text_body=None, html_body=None):
         msg.html = html_body
 
     if html_body is not None or text_body is not None:
-        thr = Thread(target=send_async_email, args=[app, msg])
-        thr.start()
-        # mail.send(msg)
+        if not app.config['TESTING']:
+            thr = Thread(target=send_async_email, args=[app, msg])
+            thr.start()
+            # mail.send(msg)
+        else:
+            logger.debug('Sent Email ~ Subject: %s | Message %s' % (subject, html_body))

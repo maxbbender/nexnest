@@ -42,6 +42,10 @@ class TestHouse(unittest.TestCase):
             u = UserFactory()
             session.commit()
 
+            newNotifPref = NotificationPreference(user=u)
+            session.add(newNotifPref)
+            session.commit()
+
             gu = GroupUserFactory(user=u, group=self.group)
             gu.accepted = True
             session.commit()

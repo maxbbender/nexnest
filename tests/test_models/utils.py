@@ -18,6 +18,7 @@ from nexnest.models.maintenance_message import MaintenanceMessage
 from nexnest.models.group_listing_message import GroupListingMessage
 from nexnest.models.tour import Tour
 from nexnest.models.tour_message import TourMessage
+from nexnest.models.notification_preference import NotificationPreference
 
 
 def dropAllRows():
@@ -53,7 +54,10 @@ def dropAllRows():
     session.commit()
     session.query(Landlord).delete()
     session.commit()
+    session.query(NotificationPreference).delete()
+    session.commit()
     session.query(User).delete()
     session.commit()
     session.query(Listing).delete()
     session.commit()
+
