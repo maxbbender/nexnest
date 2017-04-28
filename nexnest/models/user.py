@@ -67,6 +67,7 @@ class User(Base):
     groupListingFavorites = relationship('GroupListingFavorite', backref='user')
     transactions = relationship('Transaction', backref='user')
     notificationPreference = relationship('NotificationPreference', uselist=False, back_populates='user')
+    individualFavorites = relationship('ListingFavorite', backref='user')
 
     def __init__(self,
                  email,

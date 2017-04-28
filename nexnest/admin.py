@@ -22,6 +22,7 @@ from nexnest.models.maintenance import Maintenance
 from nexnest.models.group_listing_message import GroupListingMessage
 from nexnest.models.group_user import GroupUser
 from nexnest.models.coupon import Coupon
+from nexnest.models.listing_favorite import ListingFavorite
 from nexnest.models.transaction import *
 
 from flask import redirect, url_for
@@ -68,4 +69,5 @@ admin.add_view(AdminModelView(Coupon, session))
 admin.add_view(AdminModelView(ListingSchool, session))
 admin.add_view(AdminModelView(LandlordListing, session))
 admin.add_view(AdminModelView(NotificationPreference, session))
+admin.add_view(AdminModelView(ListingFavorite, session))
 

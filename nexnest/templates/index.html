@@ -561,6 +561,9 @@
 				<a href="`+ listing.url +`">
 					<img src=`+ listing.bannerPhotoURL +` class="listingImg card-img-top">
 				</a>
+				<div style="position: relative; width: 0; height: 0">
+					<i class="fa fa-2x fa-star-o listingFavortite" aria-hidden="true" style="bottom: 217px; position: absolute;" onClick="favotiteListing(`+listing.id+`)"></i>
+				</div>
 				<div class="card-block">
 					<div class="row">
 						<div class="col-xs-4">
@@ -643,5 +646,18 @@
 	    	  }
 	    	})
 	  } );
+
+	function favotiteListing(listingID){
+		$.ajax({
+    	    type: "POST",
+    	    url: "/user/favoriteListing/"+listingID,
+    	    success: function(data){
+    	    	
+    	    },
+    	    failure: function(errMsg) {
+    	        alert(errMsg);
+    	    }
+    	});
+	}
 </script>
 {% endblock %}
