@@ -53,6 +53,11 @@
         	        	<i class="fa fa-usd" aria-hidden="true"></i><span class="hidden-md-down">Payment Portal</span>
         	        </a>
         	    </li>
+        	    <li class="nav-item">
+        	        <a class="nav-link left-panel" style="padding-left: 10px;" id="availabilityTab2" data-toggle="tab" href="#availabilityTab" role="tab">
+        	        	<i class="fa fa-calendar" aria-hidden="true"></i><span class="hidden-md-down">My Availability</span>
+        	        </a>
+        	    </li>
         	</ul>
         </div>
     </div>
@@ -841,6 +846,34 @@
 	        <div class="tab-pane" id="paymentTab" role="tabpanel">
 	            Payment Portal
 	        </div>
+	        <div class="tab-pane" id="availabilityTab" role="tabpanel">
+	            <div class="row">
+			    	<div class="col-xs-1"></div>
+			    	<div class="col-xs-10" style="width: 100%">
+				    	<div class="callout-block text-center fade-in-b">
+				    		<h1 style="font-size: 3.5vh;" class="hidden-xs-down">Availibilty for Tours</h1>
+				    		<h1 style="font-size: 3.5vh;" class="hidden-sm-up">Availibilty</h1>
+				    	</div>
+			    	</div>
+			    </div>
+		    	<br>
+		    	<div class="row">
+		        	<div class="col-xs-0 col-md-1"></div>
+		        	<div class="col-xs-12 col-md-10 col-lg-10 col-xl-10" style="padding-left: 15px;">
+		        	    <div class="row">
+		        	        <div class="card" style="width:100%; border: none;">
+		        	            <div class="card-block">
+		        	            	Select the times you are available for tours on an average week. This simply will suggest these times to prospective tenants. It does not prevent them from requesting other time slots
+		        	            	<br>
+		        	            	<div id="day-schedule"></div>
+		        	            	<br>
+		        	            	<button class="btn btn-primary" onClick="updateAvailibilty()">Update Availabilty</button>
+		        	            </div>
+		        	        </div>
+		        	    </div>
+		        	</div>
+		        </div>
+	        </div>
 		</div>
 	</div>
 </div>
@@ -966,7 +999,7 @@
 		});
 
 	//Code for navigating tabs
-	var validMainTabs = ["occupiedListingsTab", "allListingsTab", "toursTab", "requestsTab", "maintenanceTab", "paymentTab", "checkoutTab"];
+	var validMainTabs = ["occupiedListingsTab", "allListingsTab", "toursTab", "requestsTab", "maintenanceTab", "paymentTab", "checkoutTab", "availabilityTab"];
 	var validSecondTabs = ["currentlyOccupiedTab", "willBeOccupiedTab", "scheduledToursTab", "requestedToursTab", "unacceptedTab", "acceptedTab", 
 	"newMaintenanceTab", "inProgressMaintenanceTab", "completedMaintenanceTab"];
 	var hash = document.location.hash;
@@ -994,6 +1027,7 @@
 		$("#requestsTab").removeClass('active');
 		$("#maintenanceTab").removeClass('active');
 		$("#paymentTab").removeClass('active');
+		$("#availabilityTab").removeClass('active');
 		//remove content from current left tab
 		$(".nav-link").removeClass('active');
 		//set highlight left tab
@@ -3178,6 +3212,33 @@
             console.log(acceptedGroupListings);
         })
     }
+
+    (function ($) {
+      $("#day-schedule").dayScheduleSelector({
+        /*
+        days: [1, 2, 3, 5, 6],
+        interval: 15,
+        startTime: '09:50',
+        endTime: '21:06'
+        */
+      });
+      $("#day-schedule").on('selected.artsy.dayScheduleSelector', function (e, selected) {
+        console.log(selected);
+      })
+      $("#day-schedule").data('artsy.dayScheduleSelector').deserialize({
+        '0': [['09:00', '10:00'], ['13:00', '14:00']]
+      });
+    })($);
+
+    function updateAvailibilty(){
+	    $( ".time-slot" ).each(function( index ) {
+	      if($( this ).attr( "data-selected" )){
+	      	var day = $(this).attr("data-day");
+	      	var time = $(this).attr("data-time");
+	      	console.log("Day: " + day + " Time: " + time);
+	      }
+	    });
+	}
 
 </script>
 {% endblock %}
