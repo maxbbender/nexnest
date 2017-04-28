@@ -474,7 +474,7 @@
                                     //Suggest Listing Modal
                                     $('#suggestListingModal').on('show.bs.modal', function (event) {
                                       var button = $(event.relatedTarget)
-                                      var id = $(event.id);\
+                                      var id = $(event.id);
                                       $("#favLisiting{{group.id}}").click(function(){favoriteLisitng({{group.id}}, event.relatedTarget.id); })
                                       var modal = $(this)
                                       modal.find('.modal-title').text('Suggest to Which Group?')
