@@ -1054,7 +1054,7 @@
     });
 
     $("#pictures").fileinput({
-        uploadUrl: "/listing/upload", // server upload action
+        uploadUrl: "/listing/upload/{{listingID}}", // server upload action
         uploadAsync: true,
         theme: "fa",
         maxFileCount: 12,

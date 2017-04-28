@@ -407,6 +407,7 @@ def upload(listingID):
         dir = folderPicturesPath
         list = os.listdir(dir) # dir is your directory path
         number_files = len(list)
+        number_files += 1
         filename = "listing"+listingID+"photo"+str(number_files)+extension
         logger.debug(number_files)
         logger.debug("filename is " + filename)
