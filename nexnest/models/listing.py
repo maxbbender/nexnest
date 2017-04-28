@@ -343,7 +343,11 @@ class Listing(Base):
         if os.path.exists(folderPath):
             for filename in os.listdir(folderPath):
                 photoURL.append("/uploads/listings/%r/bannerPhoto/%s" % (self.id, filename.replace("\'", "")))
-        return photoURL[0]
+        
+        if len(photoURL) > 0:
+            return photoURL[0]
+        else:
+            return None
 
     def hasHouse(self):
         return len(self.house) > 0

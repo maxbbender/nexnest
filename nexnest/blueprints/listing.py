@@ -159,9 +159,13 @@ def createListing():
                     if not os.path.exists(folderPath):
                         os.makedirs(folderPath)
 
-                    folderPicturesPath = os.path.join(folderPath, 'pictures')
-                    if not os.path.exists(folderPicturesPath):
-                        os.makedirs(folderPicturesPath)
+                    listingPicturePath = os.path.join(folderPath, 'pictures')
+                    if not os.path.exists(listingPicturePath):
+                        os.makedirs(listingPicturePath)
+
+                    listingBannerPath = os.path.join(folderPath, 'bannerPhoto')
+                    if not os.path.exists(listingBannerPath):
+                        os.makedirs(listingBannerPath)
 
                     if 'floor_plan' in request.files:
                         file = request.files['floor_plan']
@@ -208,66 +212,59 @@ def createListing():
 @listings.route('/listing/clone/<listingID>', methods=['GET', 'POST'])
 @login_required
 def cloneListing(listingID):
-    listingLandlords = session.query(LandlordListing) \
-        .filter_by(listing_id=listingID,
-                   landlord_id=current_user.id) \
-        .count()
+    listingToClone = Listing.query.filter_by(id=listingID).first_or_404()
 
-    # The current user is a landlord for this listing
-    if listingLandlords > 0:
-
-        currentListing = session.query(
-            Listing).filter_by(id=listingID).first()
-
+    if listing.isEditableBy(current_user):
         # Get colleges associated with the listing
-        selectedSchools = session.query(ListingSchool).filter_by(listing=currentListing).all()
+        selectedSchools = ListingSchool.query.filter_by(listing=listingToClone).all()
 
-        #Get the previous pictures
+        # Get the previous pictures
         folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
-        folderPicturesPath = os.path.join(folderPath, 'pictures')
-        picturePaths = os.listdir(folderPicturesPath)
+        listingPicturePath = os.path.join(folderPath, 'pictures')
+        picturePaths = os.listdir(listingPicturePath)
 
-        form = ListingForm(obj=currentListing)
+        form = ListingForm(obj=listingToClone)
         return render_template('/landlord/createListing.html',
                                form=form,
                                title='Create Listing',
                                schools=allSchoolsAsStrings(),
                                selectedSchools=selectedSchools,
                                picturePaths=picturePaths,
-                               endDate=currentListing.end_date)
+                               endDate=listingToClone.end_date)
     else:
         flash("You are not the landlord of this listing", 'warning')
 
-        return redirect(url_for('listings.viewListing',
+    return redirect(url_for('listings.viewListing',
                                 listingID=listingID))
 
 
 @listings.route('/listing/edit/<listingID>', methods=['GET', 'POST'])
 @login_required
 def editListing(listingID):
-    listingLandlords = session.query(LandlordListing) \
-        .filter_by(listing_id=listingID,
-                   landlord_id=current_user.id) \
-        .count()
+    currentListing = Listing.query.filter_by(id=listingID).first_or_404()
 
     # The current user is a landlord for this listing
-    if listingLandlords > 0:
-
-        currentListing = session.query(
-            Listing).filter_by(id=listingID).first()
+    if currentListing.isEditableBy(current_user):
 
         # Get colleges associated with the listing
         selectedSchools = session.query(ListingSchool).filter_by(listing=currentListing).all()
 
-        #Get the pictures from the liting
+        # Listing Folder Path
         folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
-        folderPicturesPath = os.path.join(folderPath, 'pictures')
-        picturePaths = os.listdir(folderPicturesPath)
 
-        #Get the bannerPhoto from the liting
-        bannerFolderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
-        bannerFolderPicturesPath = os.path.join(bannerFolderPath, 'bannerPhoto')
-        bannerPath = os.listdir(bannerFolderPicturesPath)[0]
+        # Get the pictures from the liting
+        listingPicturePath = os.path.join(folderPath, 'pictures')
+        if os.path.exists(listingPicturePath):
+            picturePaths = os.listdir(listingPicturePath)
+        else:
+            picturePaths = None
+
+        # Get the bannerPhoto from the liting
+        bannerlistingPicturePath = os.path.join(folderPath, 'bannerPhoto')
+        if os.path.exists(bannerlistingPicturePath):
+            bannerPath = os.listdir(bannerlistingPicturePath)[0]
+        else:
+            bannerPath = None
 
         form = ListingForm(obj=currentListing)
 
@@ -329,35 +326,40 @@ def editListing(listingID):
                     currentListing.second_semester_rent_due_date = form.second_semester_rent_due_date.data
                 session.commit()
 
-                folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
-                if not os.path.exists(folderPath):
-                    os.makedirs(folderPath)
+                listingPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
+                if not os.path.exists(listingPath):
+                    os.makedirs(listingPath)
 
-                folderPicturesPath = os.path.join(folderPath, 'bannerPhoto')
-                if not os.path.exists(folderPicturesPath):
-                    os.makedirs(folderPicturesPath)
+                listingBannerPath = os.path.join(listingPath, 'bannerPhoto')
+                if not os.path.exists(listingBannerPath):
+                    os.makedirs(listingBannerPath)
 
-                # #Make sure to delete the original banner photo in case of different extension
-                # for the_file in os.listdir(folderPicturesPath):
-                #     file_path = os.path.join(folderPicturesPath, the_file)
-                #     try:
-                #         if os.path.isfile(file_path):
-                #             os.unlink(file_path)
-                #     except Exception as e:
-                #         print(e)
+                listingPicturePath = os.path.join(listingPath, 'pictures')
+                if not os.path.exists(listingPicturePath):
+                    os.makedirs(listingPicturePath)
+
+                # Make sure to delete the original banner photo in case of different extension
+                bannerPhotos = os.listdir(listingBannerPath)
+                if len(bannerPhotos) > 0:
+                    for photo in bannerPhotos:
+                        fullFilePath = os.path.join(listingBannerPath, photo)
+                        try:
+                            os.remove(fullFilePath)
+                        except OSError as err:
+                            logger.warning('Tried to delete file %s and got error %s' % (fullFilePath, err))
+
 
                 # Lets add the photos
                 uploadedFiles = request.files.getlist("bannerPicture")
-                filenames = []
                 for file in uploadedFiles:
                     if file and allowed_file(file.filename):
                         extension = os.path.splitext(file.filename)[1]
                         filename = "listing"+listingID+"banner"+extension
 
-                        file.save(os.path.join(folderPicturesPath, filename))
-                        filenames.append(filename)
+                        file.save(os.path.join(listingBannerPath, filename))
                     else:
                         flash("Error saving file %s" % file.filename, 'error')
+
                 flash('Listing Updated', 'info')
                 return redirect(url_for('listings.viewListing',
                                         listingID=listingID))
@@ -378,7 +380,7 @@ def editListing(listingID):
                                 listingID=listingID))
 
 
-@app.route("/listing/upload/<listingID>", methods=["POST"])
+@listings.route("/listing/upload/<listingID>", methods=["POST"])
 @csrf.exempt
 def upload(listingID):
     """Handle the upload of a file."""
@@ -386,84 +388,107 @@ def upload(listingID):
     # Is the upload using Ajax, or a direct POST by the form?
     is_ajax = True
 
-    # Target folder for these uploads.
-    #target = "/uploads/listings/11/pictures"
-    folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
-    try:
-        if not os.path.exists(folderPath):
-            os.makedirs(folderPath)
+    listing = Listing.query.filter_by(id=listingID).first_or_404()
 
-        folderPicturesPath = os.path.join(folderPath, 'pictures')
-        if not os.path.exists(folderPicturesPath):
-            os.makedirs(folderPicturesPath)
-    except:
-        if is_ajax:
-            logger.error(False, "Couldn't create upload directory: {}".format(folderPicturesPath))
-        else:
-            return "Couldn't create upload directory: {}".format(folderPicturesPath)
-    for upload in request.files.getlist("pictures"):
-        extension = os.path.splitext(upload.filename)[1]
-        #filename = upload.filename.rsplit("/")[0]
-        dir = folderPicturesPath
-        list = os.listdir(dir) # dir is your directory path
-        number_files = len(list)
-        filename = "listing"+listingID+"photo"+str(number_files)+extension
-        logger.debug(number_files)
-        logger.debug("filename is " + filename)
-        destination = "/".join([folderPicturesPath, filename])
-        upload.save(destination)
+    # Can this listing be changed by the current user
+    if listing.isEditableBy(current_user):
+        listingUploadFolder = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listing.id))
+
+        try:
+            if not os.path.exists(listingUploadFolder):
+                os.makedirs(listingUploadFolder)
+
+            listingPictureFolder = os.path.join(listingUploadFolder, 'pictures')
+            if not os.path.exists(listingPictureFolder):
+                os.makedirs(listingPictureFolder)
+        except:
+            if is_ajax:
+                logger.error(False, "Couldn't create upload directory: {}".format(listingPictureFolder))
+            else:
+                return "Couldn't create upload directory: {}".format(listingPictureFolder)
+
+    # Now we uplopad the files
+    for file in request.files.getlist("pictures"):
+        if file and allowed_file(file.filename):
+            extension = os.path.splitext(upload.filename)[1]
+            fileList = os.listdir(listingPictureFolder)
+
+            list = os.listdir(dir) # dir is your directory path
+            number_files = len(list)
+            filename = "listing"+listingID+"photo"+str(number_files)+extension
+
+            pathToSave = os.path.join(listingPictureFolder, filename)
+            upload.save(pathToSave)
+
+            logger.debug(number_files)
+            logger.debug("filename is " + filename)
+            logger.debug("file saved at %s" % pathToSave)
 
     if is_ajax:
-        logger.debug(True, folderPicturesPath)
-        return jsonify("hello");
+        logger.debug(True, listingPictureFolder)
+        return jsonify(results={'success': True});
     else:
-        return redirect(url_for("upload_complete", uuid=folderPicturesPath))
+        return redirect(url_for("listings.view", listingID=listing.id))
 
-@app.route("/listing/delete/<listingID>/<filename>", methods=["POST"])
+@listings.route("/listing/delete/<listingID>/<filename>", methods=["POST"])
 @csrf.exempt
 def deletePhoto(listingID, filename):
-    folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
-    folderPicturesPath = os.path.join(folderPath, 'pictures')
-    os.remove(folderPicturesPath+"/"+filename)
-    return jsonify("hello");
+    listing = Listing.query.filter_by(id=listingID).first_or_404()
 
-@app.route("/listing/deleteBanner/<listingID>/<filename>", methods=["POST"])
+    if listing.isEditableBy(current_user):
+
+        folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
+        listingPicturePath = os.path.join(folderPath, 'pictures')
+        os.remove(listingPicturePath+"/"+filename)
+
+        return jsonify(results={'success': True})
+    else:
+        return jsonify(results={'success': False, 'message': 'Permissions Error'})
+
+@listings.route("/listing/deleteBanner/<listingID>/<filename>", methods=["POST"])
 @csrf.exempt
 def deleteBannerPhoto(listingID, filename):
-    folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
-    folderPicturesPath = os.path.join(folderPath, 'bannerPhoto')
-    os.remove(folderPicturesPath+"/"+filename)
-    return jsonify("hello");
+    listing = Listing.query.filter_by(id=listingID).first_or_404()
+
+    if listing.isEditableBy(current_user):
+        folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
+        listingPicturePath = os.path.join(folderPath, 'bannerPhoto')
+        os.remove(listingPicturePath+"/"+filename)
+        return jsonify(results={'success': True})
+    else:
+        return jsonify(results={'success': False, 'message': 'Permissions Error'})
+
 
 @listings.route('/listing/<listingID>/uploadPhotos', methods=['GET', 'POST'])
 @login_required
 def uploadPhotos(listingID):
-    if current_user.isLandlord:
+    listing = Listing.query.filter_by(id=listingID).first_or_404()
+
+    if listing.isEditableBy(current_user):
         if request.method == 'POST':
             form = PhotoForm(request.form)
             if form.validate():
-                #upload the banner folder
-                folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
-                if not os.path.exists(folderPath):
-                    os.makedirs(folderPath)
+                # upload the banner folder
+                listingPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
+                if not os.path.exists(listingPath):
+                    os.makedirs(listingPath)
 
-                folderPicturesPath = os.path.join(folderPath, 'bannerPhoto')
-                if not os.path.exists(folderPicturesPath):
-                    os.makedirs(folderPicturesPath)
+                listingBannerPath = os.path.join(listingPath, 'bannerPhoto')
+                if not os.path.exists(listingBannerPath):
+                    os.makedirs(listingBannerPath)
 
-                # Lets add the photos
+
+
+                # Banner Photo Upload
                 uploadedFiles = request.files.getlist("bannerPicture")
-                filenames = []
                 for file in uploadedFiles:
                     if file and allowed_file(file.filename):
                         extension = os.path.splitext(file.filename)[1]
                         filename = "listing"+listingID+"banner"+extension
-
-                        file.save(os.path.join(folderPicturesPath, filename))
-                        filenames.append(filename)
+                        file.save(os.path.join(listingBannerPath, filename))
                     else:
                         flash("Error saving file %s" % file.filename, 'error')
-                flash('Listing Created', 'success')
+                        
                 if form.nextAction.data == 'checkout':
                     return redirect(url_for('landlords.landlordDashboard'))
                 elif form.nextAction.data == 'createNew':
@@ -496,34 +521,7 @@ def uploadPhotos(listingID):
 def searchListingsAJAX():
     logger.debug("@listings.route('/listing/search/AJAX")
     postedJSON = request.get_json(force=True)
-    # postedJSON = {
-    #     'bedrooms': 3,  # 1-4 (if at 4 it means 4+)
-    #     # 'distanceToCampus': 8,  # In miles
-    #     'includes': [  # If any of these are here this means that they are check, if not they are not checked. If they are check the listing HAS to have them. if not don't add to filter
-    #         # 'furnished',
-    #         # 'dishwasher',
-    #         # 'laundry',
-    #         # 'internet',
-    #         # 'cable',
-    #         # 'snowRemoval',
-    #         # 'garbageRemoval'
-    #     ],
-    #     'listingTypes': [  # Only show if element of list, don't show if not element
-    #         'house',
-    #         'apartment',
-    #         'complex'
-    #     ],
-    #     'school': 'Marist',  # This will be switched to school
-    #     'minPrice': 1000,
-    #     'maxPrice': 3000,
-    #     'pets': [  # Same as includes
-    #         # 'dogs',
-    #         # 'cats'
-    #     ],
-    #     'sortBy': None,  # priceLowToHigh|priceHighToLow|mostRecent|distanceToCampus
-    #     'term': '2017-2018 School Year'  # YYYY-YYYY [School Year|Summer]
 
-    # }
     # Required Fields : `bedrooms` | `minPrice` | `maxPrice` | `priceTerm` | `school`
     allListings = session.query(Listing).filter(Listing.active)
 

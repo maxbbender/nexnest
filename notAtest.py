@@ -1,7 +1,7 @@
 from nexnest.application import app, session, db
 from sqlalchemy import desc, or_
 
-from nexnest import mail
+from nexnest import mail, app
 from nexnest.models import *
 from nexnest.models.base import Base
 from nexnest.models.notification import Notification
@@ -21,4 +21,5 @@ import googlemaps
 user = user.User.query.first()
 print(user)
 
-print(user.getUnreadNotificationCount())
+dira = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'], 'listings', '1', 'pictures'))
+print(dira)
