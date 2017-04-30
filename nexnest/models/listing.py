@@ -79,6 +79,7 @@ class Listing(Base):
     tours = relationship("Tour", backref='listing')
     house = relationship("House", backref=backref('listing', uselist=False))
     favorite = relationship("GroupListingFavorite", backref='listing')
+    individualFavorite = relationship('ListingFavorite', backref='listing')
     listingTransactionListing = relationship("ListingTransactionListing", backref='listing')
     schools = relationship("ListingSchool", back_populates='listing')
 
@@ -242,7 +243,8 @@ class Listing(Base):
             'featured': self.featured,
             'timePeriod': self.time_period,
             'timePeriodDateRange': self.time_period_date_range,
-            'priceTerm': self.rent_due
+            'priceTerm': self.rent_due,
+            'bannerPhotoURL': self.getBannerPhotoURL()
         }
 
     @property
@@ -333,6 +335,19 @@ class Listing(Base):
             for filename in os.listdir(folderPath):
                 photoURLs.append("/uploads/listings/%r/pictures/%s" % (self.id, filename.replace("\'", "")))
         return photoURLs
+
+    def getBannerPhotoURL(self):
+        photoURL = []
+        folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(self.id), 'bannerPhoto')
+
+        if os.path.exists(folderPath):
+            for filename in os.listdir(folderPath):
+                photoURL.append("/uploads/listings/%r/bannerPhoto/%s" % (self.id, filename.replace("\'", "")))
+        
+        if len(photoURL) > 0:
+            return photoURL[0]
+        else:
+            return None
 
     def hasHouse(self):
         return len(self.house) > 0

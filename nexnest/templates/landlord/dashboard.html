@@ -53,6 +53,11 @@
         	        	<i class="fa fa-usd" aria-hidden="true"></i><span class="hidden-md-down">Payment Portal</span>
         	        </a>
         	    </li>
+        	    <li class="nav-item">
+        	        <a class="nav-link left-panel" style="padding-left: 10px;" id="availabilityTab2" data-toggle="tab" href="#availabilityTab" role="tab">
+        	        	<i class="fa fa-calendar" aria-hidden="true"></i><span class="hidden-md-down">My Availability</span>
+        	        </a>
+        	    </li>
         	</ul>
         </div>
     </div>
@@ -226,7 +231,7 @@
 											                    <div class="card-block">
 												                    <div class="row">
 												                    	<div class="hidden-md-down col-lg-4">
-												                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
+												                    		<img src="{{house.listing.getBannerPhotoURL()}}" class="listingImg">
 												                    	</div>
 												                    	<div class="col-xs-12 col-lg-8">
 												                    		<h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ house.listing.price }}</strong> per bed per semester</h3>
@@ -246,7 +251,7 @@
 						    		      					    				    {% endwith %}
 						    		      					    				{% endfor %}
 						    			      					    		</div>
-						    			      					    		<button class="btn btn-info" id="allGroupMembersCurrentlyOccupiedToggle{{house.group.id}}" onClick="showOccupiedHouseMembers({{house.group.id}})"><i class='fa fa-users' aria-hidden='true'></i> See Tenants</button>
+						    			      					    		<button class="btn btn-info" id="allGroupMembersCurrentlyOccupiedToggle{{house.group.id}}" onClick="showOccupiedHouseMembers({{house.group.id}})"><i class='fa fa-users' aria-hidden='true'></i> Tenants</button>
 						    			      					    		<button class="btn btn-info" id="hideAllGroupMembersCurrentlyOccupiedToggle{{house.group.id}}" onClick="hideOccupiedHouseMembers({{house.group.id}})" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide Tenants</button>
 												                    		<br>
 												                    	</div>
@@ -282,7 +287,7 @@
 											                    <div class="card-block">
 												                    <div class="row">
 												                    	<div class="hidden-md-down col-lg-4">
-												                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
+												                    		<img src="{{house.listing.getBannerPhotoURL()}}" class="listingImg">
 												                    	</div>
 												                    	<div class="col-xs-12 col-lg-8">
 												                    		<h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ house.listing.price }}</strong> per bedroom per semester</h3>
@@ -302,7 +307,7 @@
 						    		      					    				    {% endwith %}
 						    		      					    				{% endfor %}
 						    			      					    		</div>
-						    			      					    		<button class="btn btn-info" id="allGroupMembersWillBeOccupiedToggle{{house.id}}" onClick="showWillBeOccupiedHouseMembers({{house.id}})"><i class='fa fa-users' aria-hidden='true'></i> See Future Tenants</button>
+						    			      					    		<button class="btn btn-info" id="allGroupMembersWillBeOccupiedToggle{{house.id}}" onClick="showWillBeOccupiedHouseMembers({{house.id}})"><i class='fa fa-users' aria-hidden='true'></i> Future Tenants</button>
 						    			      					    		<button class="btn btn-info" id="hideAllGroupMembersWillBeOccupiedToggle{{house.id}}" onClick="hideWillBeOccupiedHouseMembers({{house.id}})" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide Future Tenants</button>
 												                    		<br>
 												                    	</div>
@@ -366,7 +371,7 @@
 			                    <div class="card-block">
 				                    <div class="row">
 				                    	<div class="hidden-md-down col-lg-4">
-				                    		<img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg">
+				                    		<img src="{{listing.getBannerPhotoURL()}}" class="listingImg">
 				                    	</div>
 				                    	<div class="col-xs-12 col-lg-8">
 				                    		<h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ listing.price }}</strong> per bedroom per semester</h3>
@@ -841,6 +846,34 @@
 	        <div class="tab-pane" id="paymentTab" role="tabpanel">
 	            Payment Portal
 	        </div>
+	        <div class="tab-pane" id="availabilityTab" role="tabpanel">
+	            <div class="row">
+			    	<div class="col-xs-1"></div>
+			    	<div class="col-xs-10" style="width: 100%">
+				    	<div class="callout-block text-center fade-in-b">
+				    		<h1 style="font-size: 3.5vh;" class="hidden-xs-down">Availibilty for Tours</h1>
+				    		<h1 style="font-size: 3.5vh;" class="hidden-sm-up">Availibilty</h1>
+				    	</div>
+			    	</div>
+			    </div>
+		    	<br>
+		    	<div class="row">
+		        	<div class="col-xs-0 col-md-1"></div>
+		        	<div class="col-xs-12 col-md-10 col-lg-10 col-xl-10" style="padding-left: 15px;">
+		        	    <div class="row">
+		        	        <div class="card" style="width:100%; border: none;">
+		        	            <div class="card-block">
+		        	            	Select the times you are available for tours on an average week. This simply will suggest these times to prospective tenants. It does not prevent them from requesting other time slots
+		        	            	<br>
+		        	            	<div id="day-schedule"></div>
+		        	            	<br>
+		        	            	<button class="btn btn-primary" onClick="updateAvailibilty()">Update Availabilty</button>
+		        	            </div>
+		        	        </div>
+		        	    </div>
+		        	</div>
+		        </div>
+	        </div>
 		</div>
 	</div>
 </div>
@@ -966,7 +999,7 @@
 		});
 
 	//Code for navigating tabs
-	var validMainTabs = ["occupiedListingsTab", "allListingsTab", "toursTab", "requestsTab", "maintenanceTab", "paymentTab", "checkoutTab"];
+	var validMainTabs = ["occupiedListingsTab", "allListingsTab", "toursTab", "requestsTab", "maintenanceTab", "paymentTab", "checkoutTab", "availabilityTab"];
 	var validSecondTabs = ["currentlyOccupiedTab", "willBeOccupiedTab", "scheduledToursTab", "requestedToursTab", "unacceptedTab", "acceptedTab", 
 	"newMaintenanceTab", "inProgressMaintenanceTab", "completedMaintenanceTab"];
 	var hash = document.location.hash;
@@ -994,6 +1027,7 @@
 		$("#requestsTab").removeClass('active');
 		$("#maintenanceTab").removeClass('active');
 		$("#paymentTab").removeClass('active');
+		$("#availabilityTab").removeClass('active');
 		//remove content from current left tab
 		$(".nav-link").removeClass('active');
 		//set highlight left tab
@@ -2655,7 +2689,7 @@
             								})            								
         							    	individualElement += `
         							    	</div>
-        							    	<button class="btn btn-info" id="allGroupMembersListingUnacceptedToggle`+ houseRequest.id +`" onClick="showUnacceptedHousingRequestMembers(`+ houseRequest.id +`)"><i class='fa fa-users' aria-hidden='true'></i> See Group Members</button>
+        							    	<button class="btn btn-info" id="allGroupMembersListingUnacceptedToggle`+ houseRequest.id +`" onClick="showUnacceptedHousingRequestMembers(`+ houseRequest.id +`)"><i class='fa fa-users' aria-hidden='true'></i> Group Members</button>
 		      					    		<button class="btn btn-info" id="hideAllGroupMembersListingUnacceptedToggle`+ houseRequest.id +`" style="display: none" onClick="hideUnacceptedHousingRequestMembers(`+ houseRequest.id +`)"><i class='fa fa-users' aria-hidden='true'></i> Hide Group Members</button>
         							    	`;
         			individualElement += "</div></div></div></div></div></div>";
@@ -2817,7 +2851,7 @@
 	            								})
 											div+=`
 		      					    		</div>
-		      					    		<button class="btn btn-info" id="allGroupMembersListingAcceptedToggle`+ housingRequest.groupListings[0].id +`" onClick="showAcceptedHousingRequestMembers(`+ housingRequest.groupListings[0].id +`)"><i class='fa fa-users' aria-hidden='true'></i> See Group Members</button>
+		      					    		<button class="btn btn-info" id="allGroupMembersListingAcceptedToggle`+ housingRequest.groupListings[0].id +`" onClick="showAcceptedHousingRequestMembers(`+ housingRequest.groupListings[0].id +`)"><i class='fa fa-users' aria-hidden='true'></i> Group Members</button>
 		      					    		<button class="btn btn-info" id="hideAllGroupMembersListingAcceptedToggle`+ housingRequest.groupListings[0].id +`" onClick="hideAcceptedHousingRequestMembers(`+ housingRequest.groupListings[0].id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide Group Members</button>
 				                    		<br>
 				                    		<br>
@@ -2998,7 +3032,7 @@
 				                    		})            								
         							    	individualElement += `
 		      					    		</div></div>
-		      					    		<button class="btn btn-info" id="allMembersRequestedTourToggle`+ tour.id +`" onClick="showRequestedTourMembers(`+ tour.id +`)"><i class='fa fa-users' aria-hidden='true'></i> See Group Members</button>
+		      					    		<button class="btn btn-info" id="allMembersRequestedTourToggle`+ tour.id +`" onClick="showRequestedTourMembers(`+ tour.id +`)"><i class='fa fa-users' aria-hidden='true'></i> Group Members</button>
 		      					    		<button class="btn btn-info" id="hideAllMembersRequestedTourToggle`+ tour.id +`" onClick="hideRequestedTourMembers(`+ tour.id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide Group Members</button>
 		      					    	</div>
 		      					    </div>
@@ -3144,7 +3178,7 @@
 				                    		})
         							    	individualElement += `
 		      					    		</div></div>
-		      					    		<button class="btn btn-info" id="allMembersScheduledTourToggle`+ tour.id +`" onClick="showScheduledTourMembers(`+ tour.id +`)"><i class='fa fa-users' aria-hidden='true'></i> See Group Members</button>
+		      					    		<button class="btn btn-info" id="allMembersScheduledTourToggle`+ tour.id +`" onClick="showScheduledTourMembers(`+ tour.id +`)"><i class='fa fa-users' aria-hidden='true'></i> Group Members</button>
 		      					    		<button class="btn btn-info" id="hideAllMembersScheduledTourToggle`+ tour.id +`" onClick="hideScheduledTourMembers(`+ tour.id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide Group Members</button>	  		
 		      					    	</div>
 		      					    </div>
@@ -3178,6 +3212,33 @@
             console.log(acceptedGroupListings);
         })
     }
+
+    (function ($) {
+      $("#day-schedule").dayScheduleSelector({
+        /*
+        days: [1, 2, 3, 5, 6],
+        interval: 15,
+        startTime: '09:50',
+        endTime: '21:06'
+        */
+      });
+      $("#day-schedule").on('selected.artsy.dayScheduleSelector', function (e, selected) {
+        console.log(selected);
+      })
+      $("#day-schedule").data('artsy.dayScheduleSelector').deserialize({
+        '0': [['09:00', '10:00'], ['13:00', '14:00']]
+      });
+    })($);
+
+    function updateAvailibilty(){
+	    $( ".time-slot" ).each(function( index ) {
+	      if($( this ).attr( "data-selected" )){
+	      	var day = $(this).attr("data-day");
+	      	var time = $(this).attr("data-time");
+	      	console.log("Day: " + day + " Time: " + time);
+	      }
+	    });
+	}
 
 </script>
 {% endblock %}

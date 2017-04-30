@@ -82,7 +82,7 @@ def createTour():
 @tours.route('/tour/view/<tourID>')
 @login_required
 def viewTour(tourID):
-    tour = session.query(Tour).filter_by(id=tourID).first()
+    tour = Tour.query.filter_by(id=tourID).first_or_404()
 
     messageForm = TourMessageForm()
     dateChangeForm = TourDateChangeForm()

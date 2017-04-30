@@ -5,6 +5,7 @@ from flask import flash
 
 from nexnest.application import db, session
 from nexnest.models.base import Base
+from nexnest.models.message import Message
 
 
 class Notification(Base):
@@ -72,15 +73,21 @@ class Notification(Base):
 
     @property
     def serialize(self):
-        return {
+        dictToReturn = {
             'id': self.id,
             'targetUser': self.user.serialize,
             'viewed': self.viewed,
             'notifType': self.notif_type,
             'message': self.message,
             'redirectURL': self.redirect_url,
-            'category': self.category
+            'category': self.category,
+            'date': self.date_created.strftime('%B-%d-%y')
         }
+
+        if self.category in ['direct_message', 'generic_message']:
+            dictToReturn['messageObject'] = Message.query.filter_by(id=self.target_model_id).first().serialize
+
+        return dictToReturn
 
     @property
     def returnObject(self):

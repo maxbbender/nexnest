@@ -11,6 +11,7 @@ from nexnest.models.notification import Notification
 # from nexnest.models.group_message import GroupMessage
 # from nexnest.models.message import Message
 from nexnest.models.group_listing import GroupListing
+from nexnest.models.notification_preference import NotificationPreference
 
 from .utils import dropAllRows
 
@@ -19,7 +20,17 @@ class TestGroupListing(unittest.TestCase):
 
     def setUp(self):
         self.landlordUser = UserFactory()
+        session.commit()
+
+        newNotifPref = NotificationPreference(user=self.landlordUser)
+        session.add(newNotifPref)
+        session.commit()
+
         self.leader = UserFactory()
+        session.commit()
+
+        newNotifPref = NotificationPreference(user=self.leader)
+        session.add(newNotifPref)
         session.commit()
 
         self.landlord = LandlordFactory(user=self.landlordUser)
@@ -31,6 +42,10 @@ class TestGroupListing(unittest.TestCase):
         # Create some group users
         for i in range(4):
             u = UserFactory()
+            session.commit()
+
+            newNotifPref = NotificationPreference(user=u)
+            session.add(newNotifPref)
             session.commit()
 
             gu = GroupUserFactory(user=u, group=self.group)

@@ -5,6 +5,7 @@ from nexnest.models import *
 from nexnest.static.dataSets import maintenanceRequestTypes, notificationTypes
 
 import factory
+from factory.fuzzy import FuzzyInteger
 from faker import Faker
 
 from datetime import date
@@ -55,26 +56,26 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     zip_code = factory.LazyAttribute(lambda x: fake.zipcode())
     start_date = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
     end_date = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
-    num_bedrooms = 3
-    price = 6000
-    square_footage = 3500
+    num_bedrooms = FuzzyInteger(1,6)
+    price = FuzzyInteger(1000,6000, 100)
+    square_footage = FuzzyInteger(1000,6000, 100)
     parking = 'onstreet'
-    cats = bool(random.getrandbits(1))
-    dogs = bool(random.getrandbits(1))
-    other_pets = factory.LazyAttribute(lambda x: fake.paragraph())
-    washer = bool(random.getrandbits(1))
-    dryer = bool(random.getrandbits(1))
-    dishwasher = bool(random.getrandbits(1))
-    air_conditioning = bool(random.getrandbits(1))
-    handicap = bool(random.getrandbits(1))
-    furnished = bool(random.getrandbits(1))
-    emergency_maintenance = bool(random.getrandbits(1))
-    snow_plowing = bool(random.getrandbits(1))
-    garbage_service = bool(random.getrandbits(1))
-    security_service = bool(random.getrandbits(1))
+    cats = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
+    dogs = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
+    other_pets = factory.LazyAttribute(lambda x: fake.paragraph(nb_sentences=2))
+    washer = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
+    dryer = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
+    dishwasher = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
+    air_conditioning = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
+    handicap = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
+    furnished = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
+    emergency_maintenance = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
+    snow_plowing = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
+    garbage_service = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
+    security_service = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
     description = factory.LazyAttribute(lambda x: fake.paragraph())
-    num_half_baths = 4
-    num_full_baths = 3
+    num_half_baths = FuzzyInteger(1,2)
+    num_full_baths = FuzzyInteger(1,4)
     time_period = 'school'
     apartment_number = 2
     property_type = 'apartment'
@@ -84,12 +85,12 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     second_semester_rent_due_date = factory.LazyAttribute(
         lambda x: fake.date(pattern="%Y-%m-%d"))
     # monthly_rent_due_date = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
-    electricity = bool(random.getrandbits(1))
-    internet = bool(random.getrandbits(1))
-    water = bool(random.getrandbits(1))
-    heat_gas = bool(random.getrandbits(1))
-    cable = bool(random.getrandbits(1))
-    washer_free = bool(random.getrandbits(1))
+    electricity = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
+    internet = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
+    water = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
+    heat_gas = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
+    cable = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
+    washer_free = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
     youtube_url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
     time_period_date_range = '2017-2018'
 
@@ -100,8 +101,8 @@ class LandlordFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session = session
 
     user = factory.SubFactory(UserFactory)
-    online_pay = bool(random.getrandbits(1))
-    check_pay = bool(random.getrandbits(1))
+    online_pay = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
+    check_pay = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
     street = factory.LazyAttribute(lambda x: fake.street_address())
     city = factory.LazyAttribute(lambda x: fake.city())
     state = factory.LazyAttribute(lambda x: fake.state_abbr())
@@ -296,10 +297,10 @@ class ListingSchoolFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     listing = factory.SubFactory(ListingFactory)
     school = fredonia
-    driving_time = 10
-    driving_miles = 2
-    walking_time = 17
-    walking_miles = 3
+    driving_time = FuzzyInteger(3,20)
+    driving_miles = FuzzyInteger(1,5)
+    walking_time = FuzzyInteger(5,25)
+    walking_miles = FuzzyInteger(1,10)
 
 
 class NotificationPreferenceFactory(factory.alchemy.SQLAlchemyModelFactory):

@@ -3,7 +3,7 @@ from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
 
 from nexnest import logger
-from nexnest.application import session
+from nexnest.application import session, csrf
 
 from nexnest.models.user import User
 from nexnest.models.group import Group
@@ -11,8 +11,10 @@ from nexnest.models.school import School
 from nexnest.models.direct_message import DirectMessage
 from nexnest.models.notification import Notification
 from nexnest.models.notification_preference import NotificationPreference
+from nexnest.models.listing_favorite import ListingFavorite
+from nexnest.models.listing import Listing
 
-from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm, CreateGroupForm
+from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm, CreateGroupForm, EmailPreferencesForm
 
 from nexnest.utils.password import check_password
 from nexnest.utils.flash import flash_errors
@@ -149,8 +151,76 @@ def emailConfirm(payload):
 @login_required
 def viewUser(userID):
     # fake lisiting for testing
+
+    form = EmailPreferencesForm(request.form)
     user = session.query(User).filter_by(id=userID).first()
-    return render_template('/user/account.html', user=user, title=user.fname)
+    currentPreferences = session.query(
+            NotificationPreference).filter_by(user_id=userID).first()
+    userFavorites = session.query(ListingFavorite).filter_by(user=current_user).all()
+    myGroups = current_user.accepted_groups
+    logger.debug(currentPreferences)
+    form = EmailPreferencesForm(obj=currentPreferences)
+
+    if request.method == 'GET':
+        return render_template('/user/account.html',
+                               user=user, 
+                               form=form,
+                               title=user.fname,
+                               userFavorites=userFavorites,
+                               groups=myGroups
+                               )
+
+    else:
+        if form.validate():
+            currentPreferences.direct_message_email = form.direct_message_email.data
+            currentPreferences.tour_message_email = form.tour_message_email.data
+            currentPreferences.group_message_email = form.group_message_email.data
+            currentPreferences.house_message_email = form.house_message_email.data
+            currentPreferences.maintenance_message_email = form.maintenance_message_email.data
+            currentPreferences.tour_time_email = form.tour_time_email.data
+            currentPreferences.tour_confirmed_email = form.tour_confirmed_email.data
+            currentPreferences.tour_denied_email = form.tour_denied_email.data
+            currentPreferences.maintenance_email = form.maintenance_email.data
+            currentPreferences.maintenance_inProgress_email = form.maintenance_inProgress_email.data
+            currentPreferences.maintenance_completed_email = form.maintenance_completed_email.data
+            currentPreferences.rent_due_email = form.rent_due_email.data
+            currentPreferences.rent_paid_email = form.rent_paid_email.data
+            currentPreferences.group_user_email = form.group_user_email.data
+            currentPreferences.group_listing_email = form.group_listing_email.data
+            currentPreferences.group_listing_accept_email = form.group_listing_accept_email.data
+            currentPreferences.group_listing_deny_email = form.group_listing_deny_email.data
+            currentPreferences.group_listing_completed_email = form.group_listing_completed_email.data
+
+            currentPreferences.direct_message_notification = form.direct_message_notification.data
+            currentPreferences.tour_message_notification = form.tour_message_notification.data
+            currentPreferences.group_message_notification = form.group_message_notification.data
+            currentPreferences.house_message_notification = form.house_message_notification.data
+            currentPreferences.maintenance_message_notification = form.maintenance_message_notification.data
+            currentPreferences.tour_time_notification = form.tour_time_notification.data
+            currentPreferences.tour_confirmed_notification = form.tour_confirmed_notification.data
+            currentPreferences.tour_denied_notification = form.tour_denied_notification.data
+            currentPreferences.maintenance_notification = form.maintenance_notification.data
+            currentPreferences.maintenance_inProgress_notification = form.maintenance_inProgress_notification.data
+            currentPreferences.maintenance_completed_notification = form.maintenance_completed_notification.data
+            currentPreferences.rent_due_notification = form.rent_due_notification.data
+            currentPreferences.rent_paid_notification = form.rent_paid_notification.data
+            currentPreferences.group_user_notification = form.group_user_notification.data
+            currentPreferences.group_listing_notification = form.group_listing_notification.data
+            currentPreferences.group_listing_accept_notification = form.group_listing_accept_notification.data
+            currentPreferences.group_listing_deny_notification = form.group_listing_deny_notification.data
+            currentPreferences.group_listing_completed_notification = form.group_listing_completed_notification.data
+            session.commit()
+
+            flash('Preferences Updated', 'success')
+            return render_template('/user/account.html',
+                               user=user, 
+                               form=form,
+                               title=user.fname
+                               )
+        else:
+            flash_errors(form)
+            return redirect(url_for('users.viewUser',
+                                    userID=userID))
 
 
 @users.route('/user/edit/info', methods=['GET', 'POST'])
@@ -359,7 +429,7 @@ def changePassword():
 @users.route('/user/getNotifications/<int:page>', methods=['GET', 'POST'])
 @login_required
 def getNotifications(page=1):
-    logger.debug("/user/getNotifications page : ", page)
+    logger.debug("/user/getNotifications page : %d" % page)
 
     allNotifications = Notification.query \
         .filter_by(target_user_id=current_user.id) \
@@ -369,15 +439,13 @@ def getNotifications(page=1):
                   Notification.viewed) \
         .paginate(page, 10, False)
 
-    logger.debug("allNotifications : ", allNotifications.items)
+    logger.debug("allNotifications : %r" % allNotifications.items)
 
     allNotificationList = []
-
-    numUnviewed = 0
     for notif in allNotifications.items:
         allNotificationList.append(notif.serialize)
-        if not notif.viewed:
-            numUnviewed += 1
+
+    numUnviewed = current_user.getUnreadNotificationCount()
 
     returnDict = {'numUnviewed': numUnviewed, 'notifications': allNotificationList}
 
@@ -396,7 +464,7 @@ def getNotifications(page=1):
 @users.route('/user/getMessageNotifications/<int:page>', methods=['GET', 'POST'])
 @login_required
 def getMessageNotifications(page=1):
-    logger.debug("/user/getNotifications page : ", page)
+    logger.debug("/user/getMessageNotifications page : %d" % page)
 
     allNotifications = Notification.query \
         .filter_by(target_user_id=current_user.id) \
@@ -406,15 +474,14 @@ def getMessageNotifications(page=1):
                   Notification.viewed) \
         .paginate(page, 10, False)
 
-    logger.debug("allNotifications : ", allNotifications.items)
+    logger.debug("allNotifications : %r" % allNotifications.items)
 
     allNotificationList = []
 
-    numUnviewed = 0
     for notif in allNotifications.items:
         allNotificationList.append(notif.serialize)
-        if not notif.viewed:
-            numUnviewed += 1
+
+    numUnviewed = current_user.getUnreadMessageNotificationCount()
 
     returnDict = {'numUnviewed': numUnviewed, 'notifications': allNotificationList}
 
@@ -427,3 +494,32 @@ def getMessageNotifications(page=1):
     returnDict['paginateDetails'] = paginateDict
 
     return jsonify(returnDict)
+
+@users.route('/user/favoriteListing/<listingID>', methods=['GET', 'POST'])
+@login_required
+@csrf.exempt
+def favoriteListing(listingID):
+    listing = session.query(Listing).filter_by(id=listingID).first()
+
+    logger.debug("Listing %r" % listing)
+    newFavorite = ListingFavorite(user=current_user,
+                                  listing=listing)
+
+    logger.debug("ListingFavorite %r" % newFavorite)
+    session.add(newFavorite)
+    session.commit()
+    return jsonify("true")
+
+@users.route('/user/unFavoriteListing/<listingID>', methods=['GET', 'POST'])
+@login_required
+@csrf.exempt
+def unFavoriteListing(listingID):
+    listing = session.query(Listing).filter_by(id=listingID).first()
+
+    logger.debug("Listing %r" % listing)
+    listingFavorite = session.query(ListingFavorite).filter_by(listing=listing, user=current_user).first()
+
+    logger.debug("ListingFavorite %r" % listingFavorite)
+    session.delete(listingFavorite)
+    session.commit()
+    return jsonify("true")

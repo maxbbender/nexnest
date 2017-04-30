@@ -62,12 +62,12 @@ class User(Base):
     securityDeposits = relationship("SecurityDeposit", backref='user')
     # maintenanceMessages = relationship("MaintenanceMessage", backref='user')
     maintenanceRequests = relationship("Maintenance", backref='user')
-    notifications = relationship(
-        "Notification", backref='user', lazy="dynamic")
+    notifications = relationship("Notification", backref='user', lazy="dynamic")
     messages = relationship('Message', backref='user')
     groupListingFavorites = relationship('GroupListingFavorite', backref='user')
     transactions = relationship('Transaction', backref='user')
     notificationPreference = relationship('NotificationPreference', uselist=False, back_populates='user')
+    individualFavorites = relationship('ListingFavorite', backref='user')
 
     def __init__(self,
                  email,
@@ -283,6 +283,20 @@ class User(Base):
             .filter(Notification.category.in_(('direct_message', 'generic_message'))) \
             .distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed) \
             .paginate(1, 10, False).items
+
+    def getUnreadMessageNotificationCount(self):
+        return self.notifications \
+            .filter(Notification.viewed == False) \
+            .filter(Notification.category.in_(('direct_message', 'generic_message'))) \
+            .distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed) \
+            .count()
+
+    def getUnreadNotificationCount(self):
+        return self.notifications \
+            .filter(Notification.viewed == False) \
+            .filter(Notification.category.in_(('report_notification', 'generic_notification'))) \
+            .distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed) \
+            .count()
 
     def sendEmail(self, emailType, message):
         logger.debug('User.sendEmail()')

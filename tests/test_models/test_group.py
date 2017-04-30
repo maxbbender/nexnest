@@ -8,6 +8,7 @@ from nexnest.models.group_user import GroupUser
 from nexnest.models.notification import Notification
 from nexnest.models.user import User
 from nexnest.models.group import Group
+from nexnest.models.notification_preference import NotificationPreference
 
 from .utils import dropAllRows
 
@@ -18,12 +19,20 @@ class TestGroup(unittest.TestCase):
         self.leader = UserFactory()
         session.commit()
 
+        newNotifPref = NotificationPreference(user=self.leader)
+        session.add(newNotifPref)
+        session.commit()
+
         self.group = GroupFactory(leader=self.leader)
         session.commit()
 
         # Create some group users
         for i in range(4):
             u = UserFactory()
+            session.commit()
+
+            newNotifPref = NotificationPreference(user=u)
+            session.add(newNotifPref)
             session.commit()
 
             gu = GroupUserFactory(user=u, group=self.group)

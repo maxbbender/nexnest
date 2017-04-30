@@ -133,7 +133,6 @@ class ListingForm(RedirectForm):
     security_service = BooleanField('Is there a security service provided?')
     description = TextAreaField('Please provide a detailed description of the property', [
                                 Length(min=1, max=1500), InputRequired()])
-    pictures = FileField('Pictures for Listing')
     property_type = SelectField('Property Type', choices=propertyTypes)
     rent_due = SelectField('How often is rent due?', choices=rentDue)
     first_semester_rent_due_date = DateField(
@@ -151,8 +150,13 @@ class ListingForm(RedirectForm):
     floor_plan = FileField('Floor Plan')
     youtube_url = StringField('Listing Video', [Optional(), URL()])
     colleges = HiddenField('Colleges', [InputRequired()])
-    nextAction = HiddenField('Next')
+    pictures = FileField('Pictures for Listing')
+    bannerPicture = FileField('Pictures for Listing')
 
+class PhotoForm(RedirectForm):
+    pictures = FileField('Pictures for Listing')
+    bannerPicture = FileField('Pictures for Listing')
+    nextAction = HiddenField('Next')
 
 class CreateGroupForm(RedirectForm):
     name = StringField('Group Name:', [Length(min=2, max=50), InputRequired()])
@@ -247,3 +251,49 @@ class LeaseUploadForm(RedirectForm):
 class PreCheckoutForm(RedirectForm):
     json = HiddenField('Lease')
     # couponCode = StringField('Coupon Code', validators=[Optional()])
+
+class EmailPreferencesForm(RedirectForm):
+    direct_message_email = BooleanField('direct_message')
+    tour_message_email = BooleanField('tour_message')
+    group_message_email = BooleanField('group_message_email')
+    house_message_email = BooleanField('house_message')
+    maintenance_message_email = BooleanField('maintenance_message')
+    tour_time_email = BooleanField('tour_time_email')
+    tour_confirmed_email = BooleanField('tour_confirmed')
+    tour_denied_email = BooleanField('tour_denied')
+    tour_create_email = BooleanField('tour_create')
+    maintenance_email = BooleanField('maintenance')
+    maintenance_inProgress_email = BooleanField('maintenance_inProgress')
+    maintenance_completed_email = BooleanField('maintenance_completed')
+    rent_due_email = BooleanField('rent_due')
+    rent_paid_email = BooleanField('rent_paid')
+    group_user_email = BooleanField('group_user')
+    group_listing_email = BooleanField('group_listing')
+    house_email = BooleanField('house')
+    group_listing_accept_email = BooleanField('group_listing_accept')
+    group_listing_deny_email = BooleanField('group_listing_deny')
+    group_listing_completed_email = BooleanField('group_listing_completed')
+    direct_message_notification = BooleanField('direct_message')
+    tour_message_notification = BooleanField('tour_message')
+    group_message_notification = BooleanField('group_message_email')
+    house_message_notification = BooleanField('house_message')
+    maintenance_message_notification = BooleanField('maintenance_message')
+    tour_time_notification = BooleanField('tour_time_email')
+    tour_confirmed_notification = BooleanField('tour_confirmed')
+    tour_denied_notification = BooleanField('tour_denied')
+    tour_create_notification = BooleanField('tour_create')
+    maintenance_notification = BooleanField('maintenance')
+    maintenance_inProgress_notification = BooleanField('maintenance_inProgress')
+    maintenance_completed_notification = BooleanField('maintenance_completed')
+    rent_due_notification = BooleanField('rent_due')
+    rent_paid_notification = BooleanField('rent_paid')
+    group_user_notification = BooleanField('group_user')
+    group_listing_notification = BooleanField('group_listing')
+    house_notification = BooleanField('house')
+    group_listing_accept_notification = BooleanField('group_listing_accept')
+    group_listing_deny_notification = BooleanField('group_listing_deny')
+    group_listing_completed_notification = BooleanField('group_listing_completed')
+
+
+    
+    
