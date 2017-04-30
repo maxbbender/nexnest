@@ -7,6 +7,7 @@ from nexnest.application import session
 from nexnest.models.listing import Listing
 from nexnest.models.user import User
 from nexnest.utils.email import send_email
+from nexnest.utils.school import allSchoolsAsStrings
 
 
 indexs = Blueprint('indexs', __name__, template_folder='../templates')
@@ -29,7 +30,8 @@ def index():
                            form=form,
                            listings=allListings,
                            featuredListings=featuredListings,
-                           title='NexNest')
+                           title='NexNest',
+                           schools=allSchoolsAsStrings())
 
 
 @indexs.route('/test')
