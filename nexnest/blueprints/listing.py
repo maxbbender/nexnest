@@ -409,15 +409,14 @@ def upload(listingID):
     # Now we uplopad the files
     for file in request.files.getlist("pictures"):
         if file and allowed_file(file.filename):
-            extension = os.path.splitext(upload.filename)[1]
-            fileList = os.listdir (listingPictureFolder)
+            extension = os.path.splitext(file.filename)[1]
 
             list = os.listdir(dir)  # dir is your directory path
             number_files = len(list)
             filename = "listing" + listingID + "photo" + str(number_files) + extension
 
             pathToSave = os.path.join(listingPictureFolder, filename)
-            upload.save(pathToSave)
+            file.save(pathToSave)
 
             logger.debug(number_files)
             logger.debug("filename is " + filename)
