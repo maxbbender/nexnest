@@ -499,22 +499,30 @@ def getMessageNotifications(page=1):
 @login_required
 @csrf.exempt
 def favoriteListing(listingID):
-    listing = session.query(Listing).filter_by(id=listingID).first()
+    listing = session.query(Listing).filter_by(id=listingID).first_or_404()
 
-    logger.debug("Listing %r" % listing)
-    newFavorite = ListingFavorite(user=current_user,
-                                  listing=listing)
+    # Make sure one doesn't already exist
+    lf = ListingFavorite.query.filter_by(listing=listing,user=current_user).first()
 
-    logger.debug("ListingFavorite %r" % newFavorite)
-    session.add(newFavorite)
-    session.commit()
-    return jsonify("true")
+    if lf is None:
+        logger.debug("Listing %r" % listing)
+        newFavorite = ListingFavorite(user=current_user,
+                                      listing=listing)
+
+        logger.debug("ListingFavorite %r" % newFavorite)
+        session.add(newFavorite)
+        session.commit()
+    else:
+        return jsonify(response={'success': False, 'message': 'Listing has already been favorited'})
+    
+    return jsonify(response={'success': True})
+
 
 @users.route('/user/unFavoriteListing/<listingID>', methods=['GET', 'POST'])
 @login_required
 @csrf.exempt
 def unFavoriteListing(listingID):
-    listing = session.query(Listing).filter_by(id=listingID).first()
+    listing = session.query(Listing).filter_by(id=listingID).first_or_404()
 
     logger.debug("Listing %r" % listing)
     listingFavorite = session.query(ListingFavorite).filter_by(listing=listing, user=current_user).first()

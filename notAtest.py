@@ -13,13 +13,23 @@ from nexnest import logger
 import os
 import re
 import datetime
+import googlemaps
 
 from pprint import pprint
 from nexnest.utils.school import allSchoolsAsStrings
 import googlemaps
+from apiclient.discovery import build
+
 
 user = user.User.query.first()
 print(user)
 
-dira = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'], 'listings', '1', 'pictures'))
-print(dira)
+gmaps = googlemaps.Client(key='AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w')
+
+listing = listing.Listing.query.first()
+
+newlf = listing_favorite.ListingFavorite(listing=listing, user=user)
+session.add(newlf)
+session.commit()
+
+print(listing.isFavoritedBy(user))

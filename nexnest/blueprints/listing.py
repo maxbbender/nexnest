@@ -214,7 +214,7 @@ def createListing():
 def cloneListing(listingID):
     listingToClone = Listing.query.filter_by(id=listingID).first_or_404()
 
-    if listing.isEditableBy(current_user):
+    if listingToClone.isEditableBy(current_user):
         # Get colleges associated with the listing
         selectedSchools = ListingSchool.query.filter_by(listing=listingToClone).all()
 
@@ -235,7 +235,7 @@ def cloneListing(listingID):
         flash("You are not the landlord of this listing", 'warning')
 
     return redirect(url_for('listings.viewListing',
-                                listingID=listingID))
+                            listingID=listingID))
 
 
 @listings.route('/listing/edit/<listingID>', methods=['GET', 'POST'])
@@ -348,15 +348,15 @@ def editListing(listingID):
                         except OSError as err:
                             logger.warning('Tried to delete file %s and got error %s' % (fullFilePath, err))
 
-
                 # Lets add the photos
                 uploadedFiles = request.files.getlist("bannerPicture")
                 for file in uploadedFiles:
                     if file and allowed_file(file.filename):
                         extension = os.path.splitext(file.filename)[1]
-                        filename = "listing"+listingID+"banner"+extension
+                        filename = "listing" + listingID + "banner" + extension
 
                         file.save(os.path.join(listingBannerPath, filename))
+                        currentListing.banner_photo_url = os.path.join(listingBannerPath, filename)
                     else:
                         flash("Error saving file %s" % file.filename, 'error')
 
@@ -410,15 +410,14 @@ def upload(listingID):
     # Now we uplopad the files
     for file in request.files.getlist("pictures"):
         if file and allowed_file(file.filename):
-            extension = os.path.splitext(upload.filename)[1]
-            fileList = os.listdir(listingPictureFolder)
+            extension = os.path.splitext(file.filename)[1]
 
-            list = os.listdir(dir) # dir is your directory path
+            list = os.listdir(dir)  # dir is your directory path
             number_files = len(list)
-            filename = "listing"+listingID+"photo"+str(number_files)+extension
+            filename = "listing" + listingID + "photo" + str(number_files) + extension
 
             pathToSave = os.path.join(listingPictureFolder, filename)
-            upload.save(pathToSave)
+            file.save(pathToSave)
 
             logger.debug(number_files)
             logger.debug("filename is " + filename)
@@ -426,9 +425,10 @@ def upload(listingID):
 
     if is_ajax:
         logger.debug(True, listingPictureFolder)
-        return jsonify(results={'success': True});
+        return jsonify(results={'success': True})
     else:
         return redirect(url_for("listings.view", listingID=listing.id))
+
 
 @listings.route("/listing/delete/<listingID>/<filename>", methods=["POST"])
 @csrf.exempt
@@ -439,11 +439,12 @@ def deletePhoto(listingID, filename):
 
         folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
         listingPicturePath = os.path.join(folderPath, 'pictures')
-        os.remove(listingPicturePath+"/"+filename)
+        os.remove(listingPicturePath + "/" + filename)
 
         return jsonify(results={'success': True})
     else:
         return jsonify(results={'success': False, 'message': 'Permissions Error'})
+
 
 @listings.route("/listing/deleteBanner/<listingID>/<filename>", methods=["POST"])
 @csrf.exempt
@@ -453,12 +454,13 @@ def deleteBannerPhoto(listingID, filename):
     if listing.isEditableBy(current_user):
         folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
         listingPicturePath = os.path.join(folderPath, 'bannerPhoto')
-        os.remove(listingPicturePath+"/"+filename)
+        os.remove(listingPicturePath + "/" + filename)
         return jsonify(results={'success': True})
     else:
         return jsonify(results={'success': False, 'message': 'Permissions Error'})
 
 
+# THIS ONE IS FOR BANNER PHOTOS!
 @listings.route('/listing/<listingID>/uploadPhotos', methods=['GET', 'POST'])
 @login_required
 def uploadPhotos(listingID):
@@ -477,33 +479,33 @@ def uploadPhotos(listingID):
                 if not os.path.exists(listingBannerPath):
                     os.makedirs(listingBannerPath)
 
-
-
                 # Banner Photo Upload
                 uploadedFiles = request.files.getlist("bannerPicture")
                 for file in uploadedFiles:
                     if file and allowed_file(file.filename):
                         extension = os.path.splitext(file.filename)[1]
-                        filename = "listing"+listingID+"banner"+extension
+                        filename = "listing" + listingID + "banner" + extension
                         file.save(os.path.join(listingBannerPath, filename))
+                        listing.banner_photo_url = os.path.join(listingBannerPath, filename)
+                        session.commit()
                     else:
                         flash("Error saving file %s" % file.filename, 'error')
-                        
+
                 if form.nextAction.data == 'checkout':
                     return redirect(url_for('landlords.landlordDashboard'))
                 elif form.nextAction.data == 'createNew':
                     return redirect(url_for('listings.createListing'))
                 elif form.nextAction.data == 'createCopy':
                     selectedSchools = session.query(ListingSchool).filter_by(listing=listingID).all()
-                    #Get Pictures
+                    # Get Pictures
                     return render_template('/landlord/createListing.html',
                                            form=form,
                                            title='Create Listing',
                                            schools=allSchoolsAsStrings(),
                                            selectedSchools=selectedSchools)
-                return jsonify("Only reach here if you somehow messed up the nextAction");
+                return jsonify("Only reach here if you somehow messed up the nextAction")
             else:
-                return jsonify("Do something Smart Here");
+                return jsonify("Do something Smart Here")
         else:
             form = PhotoForm()
             return render_template('/landlord/uploadPhotos.html',
@@ -523,7 +525,11 @@ def searchListingsAJAX():
     postedJSON = request.get_json(force=True)
 
     # Required Fields : `bedrooms` | `minPrice` | `maxPrice` | `priceTerm` | `school`
-    allListings = session.query(Listing).filter(Listing.active)
+    allListings = session.query(Listing).filter(Listing.active == True,
+                                                Listing.featured == False)
+
+    # featuredListings = Listings.query.filter(Listing.active == True,
+    #                                          Listing.featured == True)
 
     # Bedroom Checks:
     if 'bedrooms' in postedJSON:
@@ -549,6 +555,7 @@ def searchListingsAJAX():
         schoolYearPattern = re.compile(r"(\d{4}-\d{4})")
         match = schoolYearPattern.match(postedJSON['term'])
         if match:
+            logger.debug("Term School | Year : %s" % match.group(1))
             allListings = allListings.filter(Listing.time_period_date_range == match.group(1),
                                              or_(Listing.time_period == 'school',
                                                  Listing.time_period == 'year'))
@@ -557,6 +564,7 @@ def searchListingsAJAX():
             match = summerPattern.match(postedJSON['term'])
 
             if match:
+                logger.debug("Term Summer")
                 allListings = allListings.filter(Listing.time_period_date_range == match.group(1),
                                                  Listing.time_period == 'summer')
             else:
@@ -653,15 +661,16 @@ def searchListingsAJAX():
         else:
             logger.error("No Listing Types were defined to search for")
 
-    allListings = allListings.all()
+    standardListings = allListings.filter(Listing.featured == False).all()
+    featuredListings = allListings.filter(Listing.featured == True).limit(2).all()
 
     # sortBy Check
     if 'sortBy' in postedJSON:
         sortedListings = []
         if postedJSON['sortBy'] == 'priceLowToHigh':
-            while len(allListings) > 0:
+            while len(standardListings) > 0:
                 lowestListing = None
-                for listing in allListings:
+                for listing in standardListings:
                     if lowestListing is None:
                         lowestListing = listing
                         continue
@@ -670,14 +679,14 @@ def searchListingsAJAX():
                         lowestListing = listing
 
                 sortedListings.append(lowestListing)
-                allListings.remove(lowestListing)
+                standardListings.remove(lowestListing)
 
-            allListings = sortedListings
+            standardListings = sortedListings
 
         elif postedJSON['sortBy'] == 'priceHighToLow':
-            while len(allListings) > 0:
+            while len(standardListings) > 0:
                 highestListing = None
-                for listing in allListings:
+                for listing in standardListings:
                     if highestListing is None:
                         highestListing = listing
                         continue
@@ -686,14 +695,14 @@ def searchListingsAJAX():
                         highestListing = listing
 
                 sortedListings.append(highestListing)
-                allListings.remove(highestListing)
+                standardListings.remove(highestListing)
 
-            allListings = sortedListings
+            standardListings = sortedListings
 
         elif postedJSON['sortBy'] == 'mostRecent':
-            while len(allListings) > 0:
+            while len(standardListings) > 0:
                 mostRecentListing = None
-                for listing in allListings:
+                for listing in standardListings:
                     if mostRecentListing is None:
                         mostRecentListing = listing
                         continue
@@ -702,14 +711,14 @@ def searchListingsAJAX():
                         mostRecentListing = listing
 
                 sortedListings.append(mostRecentListing)
-                allListings.remove(mostRecentListing)
+                standardListings.remove(mostRecentListing)
 
-            allListings = sortedListings
+            standardListings = sortedListings
 
         elif postedJSON['sortBy'] == 'distanceToCampus':
-            while len(allListings) > 0:
+            while len(standardListings) > 0:
                 closestListing = None
-                for listing in allListings:
+                for listing in standardListings:
                     if closestListing is None:
                         closestListing = listing
                         continue
@@ -718,12 +727,16 @@ def searchListingsAJAX():
                         closestListing = listing
 
                 sortedListings.append(closestListing)
-                allListings.remove(closestListing)
+                standardListings.remove(closestListing)
 
-            allListings = sortedListings
+            standardListings = sortedListings
 
     listingJSONList = []
-    for listing in allListings:
+    for listing in standardListings:
         listingJSONList.append(listing.serialize)
 
-    return jsonify(listings=listingJSONList)
+    featuredJSONList = []
+    for listing in featuredListings:
+        featuredJSONList.append(listing.serialize)
+
+    return jsonify(listings=listingJSONList, featuredListings=featuredJSONList)

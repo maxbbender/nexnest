@@ -2,6 +2,7 @@ from datetime import datetime as dt
 
 from nexnest import logger
 from nexnest.application import db, app
+from nexnest.models.listing_favorite import ListingFavorite
 
 from .base import Base
 
@@ -10,6 +11,8 @@ from sqlalchemy import event
 from sqlalchemy.orm import relationship, backref
 
 import os
+
+import googlemaps
 
 
 class Listing(Base):
@@ -59,6 +62,9 @@ class Listing(Base):
     floor_plan_url = db.Column(db.String(256))
     featured = db.Column(db.Boolean)
     active = db.Column(db.Boolean)
+    lat = db.Column(db.Numeric)
+    lng = db.Column(db.Numeric)
+    banner_photo_url = db.Column(db.Text)
 
     # monthly_rent_due_date = db.Column(db.Date)
 
@@ -125,7 +131,10 @@ class Listing(Base):
             apartment_number=None,
             first_semester_rent_due_date=None,
             second_semester_rent_due_date=None,
-            featured=False):
+            featured=False,
+            lat=None,
+            lng=None,
+            banner_photo_url=None):
 
         self.street = street
         self.city = city
@@ -171,6 +180,7 @@ class Listing(Base):
         self.washer_free = washer_free
         self.youtube_url = youtube_url
         self.featured = featured
+        self.banner_photo_url = banner_photo_url
 
         if self.rent_due == 'monthly':
             self.price_per_month = self.price
@@ -185,6 +195,20 @@ class Listing(Base):
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
         self.date_created = now
         self.date_modified = now
+
+        if lat is None and lng is None:
+
+            gmaps = googlemaps.Client(key='AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w')
+
+            geocode = gmaps.geocode(self.address)
+
+            if geocode is not None:
+                if len(geocode) > 0:
+                    self.lat = geocode[0]['geometry']['location']['lat']
+                    self.lng = geocode[0]['geometry']['location']['lng']
+        else:
+            self.lat = lat
+            self.lng = lng
 
     def __repr__(self):
         return '<Listing %r | %s>' % (self.id, self.street)
@@ -244,7 +268,9 @@ class Listing(Base):
             'timePeriod': self.time_period,
             'timePeriodDateRange': self.time_period_date_range,
             'priceTerm': self.rent_due,
-            'bannerPhotoURL': self.getBannerPhotoURL()
+            'bannerPhotoURL': self.getBannerPhotoURL(),
+            'lat': self.lat,
+            'long': self.lng
         }
 
     @property
@@ -308,6 +334,9 @@ class Listing(Base):
 
         return False
 
+    def isFavoritedBy(self, user):
+        return ListingFavorite.query.filter_by(listing=self, user=user).count() == 1
+
     def landLords(self):
         landlords = []
 
@@ -337,17 +366,20 @@ class Listing(Base):
         return photoURLs
 
     def getBannerPhotoURL(self):
-        photoURL = []
-        folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(self.id), 'bannerPhoto')
-
-        if os.path.exists(folderPath):
-            for filename in os.listdir(folderPath):
-                photoURL.append("/uploads/listings/%r/bannerPhoto/%s" % (self.id, filename.replace("\'", "")))
-        
-        if len(photoURL) > 0:
-            return photoURL[0]
+        if self.banner_photo_url is not None:
+            return self.banner_photo_url
         else:
-            return None
+            photoURL = []
+            folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(self.id), 'bannerPhoto')
+
+            if os.path.exists(folderPath):
+                for filename in os.listdir(folderPath):
+                    photoURL.append("/uploads/listings/%r/bannerPhoto/%s" % (self.id, filename.replace("\'", "")))
+
+            if len(photoURL) > 0:
+                return photoURL[0]
+            else:
+                return None
 
     def hasHouse(self):
         return len(self.house) > 0
