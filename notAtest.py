@@ -26,9 +26,10 @@ print(user)
 
 gmaps = googlemaps.Client(key='AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w')
 
-geocode = gmaps.geocode('117 Bayview Ave, Warwick RI, 02818')
-pprint(geocode)
-print(geocode[0]['geometry']['location']['lat'])
-# geocode = build('geocode', 'v1', developerKey='AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w')
-print(geocode[0]['geometry']['location']['lng'])
+listing = listing.Listing.query.first()
 
+newlf = listing_favorite.ListingFavorite(listing=listing, user=user)
+session.add(newlf)
+session.commit()
+
+print(listing.isFavoritedBy(user))

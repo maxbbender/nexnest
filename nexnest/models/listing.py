@@ -2,6 +2,7 @@ from datetime import datetime as dt
 
 from nexnest import logger
 from nexnest.application import db, app
+from nexnest.models.listing_favorite import ListingFavorite
 
 from .base import Base
 
@@ -264,7 +265,9 @@ class Listing(Base):
             'timePeriod': self.time_period,
             'timePeriodDateRange': self.time_period_date_range,
             'priceTerm': self.rent_due,
-            'bannerPhotoURL': self.getBannerPhotoURL()
+            'bannerPhotoURL': self.getBannerPhotoURL(),
+            'lat': self.lat,
+            'long': self.lng
         }
 
     @property
@@ -327,6 +330,9 @@ class Listing(Base):
             return True
 
         return False
+
+    def isFavoritedBy(self, user):
+        return ListingFavorite.query.filter_by(listing=self, user=user).count() == 1
 
     def landLords(self):
         landlords = []
