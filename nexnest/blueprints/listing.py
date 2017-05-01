@@ -356,6 +356,7 @@ def editListing(listingID):
                         filename = "listing" + listingID + "banner" + extension
 
                         file.save(os.path.join(listingBannerPath, filename))
+                        currentListing.banner_photo_url = os.path.join(listingBannerPath, filename)
                     else:
                         flash("Error saving file %s" % file.filename, 'error')
 
@@ -459,6 +460,7 @@ def deleteBannerPhoto(listingID, filename):
         return jsonify(results={'success': False, 'message': 'Permissions Error'})
 
 
+# THIS ONE IS FOR BANNER PHOTOS!
 @listings.route('/listing/<listingID>/uploadPhotos', methods=['GET', 'POST'])
 @login_required
 def uploadPhotos(listingID):
@@ -486,7 +488,6 @@ def uploadPhotos(listingID):
                         file.save(os.path.join(listingBannerPath, filename))
                         listing.banner_photo_url = os.path.join(listingBannerPath, filename)
                         session.commit()
-
                     else:
                         flash("Error saving file %s" % file.filename, 'error')
 

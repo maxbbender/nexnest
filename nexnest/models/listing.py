@@ -366,17 +366,20 @@ class Listing(Base):
         return photoURLs
 
     def getBannerPhotoURL(self):
-        photoURL = []
-        folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(self.id), 'bannerPhoto')
-
-        if os.path.exists(folderPath):
-            for filename in os.listdir(folderPath):
-                photoURL.append("/uploads/listings/%r/bannerPhoto/%s" % (self.id, filename.replace("\'", "")))
-
-        if len(photoURL) > 0:
-            return photoURL[0]
+        if self.banner_photo_url is not None:
+            return self.banner_photo_url
         else:
-            return None
+            photoURL = []
+            folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(self.id), 'bannerPhoto')
+
+            if os.path.exists(folderPath):
+                for filename in os.listdir(folderPath):
+                    photoURL.append("/uploads/listings/%r/bannerPhoto/%s" % (self.id, filename.replace("\'", "")))
+
+            if len(photoURL) > 0:
+                return photoURL[0]
+            else:
+                return None
 
     def hasHouse(self):
         return len(self.house) > 0
