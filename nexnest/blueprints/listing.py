@@ -214,7 +214,7 @@ def createListing():
 def cloneListing(listingID):
     listingToClone = Listing.query.filter_by(id=listingID).first_or_404()
 
-    if listing.isEditableBy(current_user):
+    if listingToClone.isEditableBy(current_user):
         # Get colleges associated with the listing
         selectedSchools = ListingSchool.query.filter_by(listing=listingToClone).all()
 
@@ -235,7 +235,7 @@ def cloneListing(listingID):
         flash("You are not the landlord of this listing", 'warning')
 
     return redirect(url_for('listings.viewListing',
-                                listingID=listingID))
+                            listingID=listingID))
 
 
 @listings.route('/listing/edit/<listingID>', methods=['GET', 'POST'])
@@ -348,13 +348,12 @@ def editListing(listingID):
                         except OSError as err:
                             logger.warning('Tried to delete file %s and got error %s' % (fullFilePath, err))
 
-
                 # Lets add the photos
                 uploadedFiles = request.files.getlist("bannerPicture")
                 for file in uploadedFiles:
                     if file and allowed_file(file.filename):
                         extension = os.path.splitext(file.filename)[1]
-                        filename = "listing"+listingID+"banner"+extension
+                        filename = "listing" + listingID + "banner" + extension
 
                         file.save(os.path.join(listingBannerPath, filename))
                     else:

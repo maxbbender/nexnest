@@ -11,6 +11,8 @@ from sqlalchemy.orm import relationship, backref
 
 import os
 
+import googlemaps
+
 
 class Listing(Base):
     __tablename__ = 'listings'
@@ -59,6 +61,8 @@ class Listing(Base):
     floor_plan_url = db.Column(db.String(256))
     featured = db.Column(db.Boolean)
     active = db.Column(db.Boolean)
+    lat = db.Column(db.Numeric)
+    lng = db.Column(db.Numeric)
 
     # monthly_rent_due_date = db.Column(db.Date)
 
@@ -125,7 +129,9 @@ class Listing(Base):
             apartment_number=None,
             first_semester_rent_due_date=None,
             second_semester_rent_due_date=None,
-            featured=False):
+            featured=False,
+            lat=None,
+            lng=None):
 
         self.street = street
         self.city = city
@@ -185,6 +191,20 @@ class Listing(Base):
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
         self.date_created = now
         self.date_modified = now
+
+        if lat is None and lng is None:
+
+            gmaps = googlemaps.Client(key='AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w')
+
+            geocode = gmaps.geocode(self.address)
+
+            if geocode is not None:
+                if len(geocode) > 0:
+                    self.lat = geocode[0]['geometry']['location']['lat']
+                    self.lng = geocode[0]['geometry']['location']['lng']
+        else:
+            self.lat = lat
+            self.lng = lng
 
     def __repr__(self):
         return '<Listing %r | %s>' % (self.id, self.street)
@@ -343,7 +363,7 @@ class Listing(Base):
         if os.path.exists(folderPath):
             for filename in os.listdir(folderPath):
                 photoURL.append("/uploads/listings/%r/bannerPhoto/%s" % (self.id, filename.replace("\'", "")))
-        
+
         if len(photoURL) > 0:
             return photoURL[0]
         else:

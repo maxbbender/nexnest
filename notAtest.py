@@ -13,13 +13,22 @@ from nexnest import logger
 import os
 import re
 import datetime
+import googlemaps
 
 from pprint import pprint
 from nexnest.utils.school import allSchoolsAsStrings
 import googlemaps
+from apiclient.discovery import build
+
 
 user = user.User.query.first()
 print(user)
 
-dira = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'], 'listings', '1', 'pictures'))
-print(dira)
+gmaps = googlemaps.Client(key='AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w')
+
+geocode = gmaps.geocode('117 Bayview Ave, Warwick RI, 02818')
+pprint(geocode)
+print(geocode[0]['geometry']['location']['lat'])
+# geocode = build('geocode', 'v1', developerKey='AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w')
+print(geocode[0]['geometry']['location']['lng'])
+

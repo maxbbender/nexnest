@@ -45,7 +45,9 @@ listings = Table('listings', meta,
                  Column('washer_free', Boolean()),
                  Column('featured', Boolean()),
                  Column('youtube_url', String(length=256)),
-                 Column('floor_plan_url', String(length=256)))
+                 Column('floor_plan_url', String(length=256)),
+                 Column('lat', Numeric),
+                 Column('lng', Numeric))
 
 
 def upgrade(migrate_engine):

@@ -56,9 +56,9 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     zip_code = factory.LazyAttribute(lambda x: fake.zipcode())
     start_date = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
     end_date = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
-    num_bedrooms = FuzzyInteger(1,6)
-    price = FuzzyInteger(1000,6000, 100)
-    square_footage = FuzzyInteger(1000,6000, 100)
+    num_bedrooms = FuzzyInteger(1, 6)
+    price = FuzzyInteger(1000, 6000, 100)
+    square_footage = FuzzyInteger(1000, 6000, 100)
     parking = 'onstreet'
     cats = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
     dogs = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
@@ -74,8 +74,8 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     garbage_service = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
     security_service = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
     description = factory.LazyAttribute(lambda x: fake.paragraph())
-    num_half_baths = FuzzyInteger(1,2)
-    num_full_baths = FuzzyInteger(1,4)
+    num_half_baths = FuzzyInteger(1, 2)
+    num_full_baths = FuzzyInteger(1, 4)
     time_period = 'school'
     apartment_number = 2
     property_type = 'apartment'
@@ -93,6 +93,8 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     washer_free = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
     youtube_url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
     time_period_date_range = '2017-2018'
+    lat = 41.670711
+    lng = -71.452748
 
 
 class LandlordFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -297,10 +299,10 @@ class ListingSchoolFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     listing = factory.SubFactory(ListingFactory)
     school = fredonia
-    driving_time = FuzzyInteger(3,20)
-    driving_miles = FuzzyInteger(1,5)
-    walking_time = FuzzyInteger(5,25)
-    walking_miles = FuzzyInteger(1,10)
+    driving_time = FuzzyInteger(3, 20)
+    driving_miles = FuzzyInteger(1, 5)
+    walking_time = FuzzyInteger(5, 25)
+    walking_miles = FuzzyInteger(1, 10)
 
 
 class NotificationPreferenceFactory(factory.alchemy.SQLAlchemyModelFactory):

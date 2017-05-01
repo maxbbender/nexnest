@@ -74,9 +74,10 @@ def checkout():
                             coupon.uses = coupon.uses - 1
                             session.commit()
                         else:
-                            logger.info('User %r used coupon %r that hs no uses left' % (current_user, coupon))
+                            logger.info('%r used coupon %r that hs no uses left' % (current_user, coupon))
                 else:
-                    logger.info('Coupon got passed through that is invalid. Code : ' % couponCodeString)
+                    if couponCodeString != "":
+                        logger.info('Coupon got passed through that is invalid. Code : %s' % couponCodeString)
 
             for item in listingObjects['items']:
                 # Ambiguous variables because my database setup is stupid
@@ -163,6 +164,13 @@ def genTransaction():
                 # Now we want to go through the listings and set them to active
                 for listing in listingTransaction.listings:
                     listing.active = True
+
+                    ltl = ListingTransactionListing.query.filter_by(listing=listing).first()
+
+                    if ltl is not None:
+                        if ltl.plan == 'premium':
+                            listing.featured = True
+
                     session.commit()
 
                 logger.debug('Successfull Result')
