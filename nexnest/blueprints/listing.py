@@ -23,6 +23,8 @@ from nexnest.utils.flash import flash_errors
 from nexnest.utils.file import allowed_file, isPDF
 from nexnest.utils.school import allSchoolsAsStrings
 
+from pprint import pprint
+
 listings = Blueprint('listings', __name__, template_folder='../templates')
 
 
@@ -733,10 +735,33 @@ def searchListingsAJAX():
 
     listingJSONList = []
     for listing in standardListings:
-        listingJSONList.append(listing.serialize)
+        listingDict = listing.serialize
+
+        if current_user.is_authenticated:
+            listingDict['isFavorited'] = listing.isFavoritedBy(current_user)
+        else:
+            listingDict['isFavorited'] = False
+
+        listingJSONList.append(listingDict)
+
+    logger.debug("Standard Listings")
+    for tempDict in listingJSONList:
+        pprint(tempDict)
 
     featuredJSONList = []
     for listing in featuredListings:
-        featuredJSONList.append(listing.serialize)
+        listingDict = listing.serialize
+
+        if current_user.is_authenticated:
+            listingDict['isFavorited'] = listing.isFavoritedBy(current_user)
+        else:
+            listingDict['isFavorited'] = False
+
+        featuredJSONList.append(listingDict)
+
+    logger.debug("Featured Listings")
+
+    for tempDict in featuredJSONList:
+        pprint(tempDict)
 
     return jsonify(listings=listingJSONList, featuredListings=featuredJSONList)

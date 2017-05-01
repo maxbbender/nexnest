@@ -28,8 +28,4 @@ gmaps = googlemaps.Client(key='AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w')
 
 listing = listing.Listing.query.first()
 
-newlf = listing_favorite.ListingFavorite(listing=listing, user=user)
-session.add(newlf)
-session.commit()
-
-print(listing.isFavoritedBy(user))
+pprint(listing.serialize)
