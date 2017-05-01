@@ -564,11 +564,17 @@
 			var nextListing = `<div class="card" style="width: 100%;">
 				<a href="`+ listing.url +`">
 					<img src=`+ listing.bannerPhotoURL +` class="listingImg card-img-top">
-				</a>
-				<div style="position: relative; width: 0; height: 0">
-					<i class="fa fa-2x fa-star-o listingFavortite" aria-hidden="true" style="bottom: 217px; position: absolute;" onClick="favotiteListing(`+listing.id+`)"></i>
-				</div>
-				<div class="card-block">
+				</a>`;
+				if(listing.isFavorited == false){
+					nextListing += `<div style="position: relative; width: 0; height: 0">
+					<i id="listingFavoited_`+listing.id+`" class="fa fa-2x fa-star-o listingFavorite" aria-hidden="true" style="bottom: 217px; position: absolute;"></i>
+					</div>`;
+				}else{
+					nextListing += `<div style="position: relative; width: 0; height: 0">
+					<i id="listingUnfavoited_`+listing.id+`" class="fa fa-2x fa-star listingFavorite" aria-hidden="true" style="bottom: 217px; position: absolute;"></i>
+					</div>`;
+				}
+				nextListing += `<div class="card-block">
 					<div class="row">
 						<div class="col-xs-4">
 							<span class="text-nowrap">
@@ -651,17 +657,41 @@
 	    	})
 	  } );
 
-	function favotiteListing(listingID){
-		$.ajax({
-    	    type: "POST",
-    	    url: "/user/favoriteListing/"+listingID,
-    	    success: function(data){
-    	    	
-    	    },
-    	    failure: function(errMsg) {
-    	        alert(errMsg);
-    	    }
-    	});
-	}
+	$(document).on('click', ".listingFavorite", function() {
+  		var id = $(this).attr("id");
+  		id = id.split("_")[1];
+  		console.log(id);
+  		if($(this).hasClass("fa-star")){
+  			console.log("unfav");
+  			$.ajax({
+	    	    type: "POST",
+	    	    url: "/user/unFavoriteListing/"+id,
+	    	    success: function(data){	    	    	
+	    	    	$("#listingUnfavoited_"+id).removeClass("fa-star");
+	    	    	$("#listingUnfavoited_"+id).addClass("fa-star-o");
+	    	    },
+	    	    failure: function(errMsg) {
+	    	        alert(errMsg);
+	    	    }
+    		});
+  		}
+  		else if($(this).hasClass("fa-star-o")){
+  			console.log("fav");
+			$.ajax({
+	    	    type: "POST",
+	    	    url: "/user/favoriteListing/"+id,
+	    	    success: function(data){
+	    	    	$("#listingFavoited_"+id).removeClass("fa-star-o");
+	    	    	$("#listingFavoited_"+id).addClass("fa-star");
+	    	    },
+	    	    failure: function(errMsg) {
+	    	        alert(errMsg);
+	    	    }
+	    	});
+  		}
+  		else{
+  			console.log("ererree");
+  		}
+  	});
 </script>
 {% endblock %}
