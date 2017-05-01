@@ -64,6 +64,7 @@ class Listing(Base):
     active = db.Column(db.Boolean)
     lat = db.Column(db.Numeric)
     lng = db.Column(db.Numeric)
+    banner_photo_url = db.Column(db.Text)
 
     # monthly_rent_due_date = db.Column(db.Date)
 
@@ -132,7 +133,8 @@ class Listing(Base):
             second_semester_rent_due_date=None,
             featured=False,
             lat=None,
-            lng=None):
+            lng=None,
+            banner_photo_url=None):
 
         self.street = street
         self.city = city
@@ -178,6 +180,7 @@ class Listing(Base):
         self.washer_free = washer_free
         self.youtube_url = youtube_url
         self.featured = featured
+        self.banner_photo_url = banner_photo_url
 
         if self.rent_due == 'monthly':
             self.price_per_month = self.price

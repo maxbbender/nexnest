@@ -484,6 +484,9 @@ def uploadPhotos(listingID):
                         extension = os.path.splitext(file.filename)[1]
                         filename = "listing" + listingID + "banner" + extension
                         file.save(os.path.join(listingBannerPath, filename))
+                        listing.banner_photo_url = os.path.join(listingBannerPath, filename)
+                        session.commit()
+
                     else:
                         flash("Error saving file %s" % file.filename, 'error')
 
