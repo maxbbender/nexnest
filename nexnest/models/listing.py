@@ -14,6 +14,8 @@ import os
 
 import googlemaps
 
+from flask_login import current_user
+
 
 class Listing(Base):
     __tablename__ = 'listings'
@@ -225,7 +227,7 @@ class Listing(Base):
 
     @property
     def serialize(self):
-        return {
+        returnDict = {
             'id': self.id,
             'street': self.street,
             'state': self.state,
@@ -269,9 +271,18 @@ class Listing(Base):
             'timePeriodDateRange': self.time_period_date_range,
             'priceTerm': self.rent_due,
             'bannerPhotoURL': self.getBannerPhotoURL(),
-            'lat': self.lat,
-            'long': self.lng
+            'lat': float(self.lat),
+            'long': float(self.lng)
         }
+
+        # if current_user is not None:
+        #     if current_user.is_authenticated:
+        #         if self.isFavoritedBy(current_user):
+        #             returnDict['isFavorited'] = True
+
+        # returnDict['isFavorited'] = False
+
+        return returnDict
 
     @property
     def briefStreet(self):
