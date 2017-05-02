@@ -108,7 +108,7 @@ class NotificationPreference(Base):
         self.house_message_email = False
 
         self.tour_confirmed_notification = True
-        self.tour_confirmed_email = False
+        self.tour_confirmed_email = True
 
         self.maintenance_notification = True
         self.maintenance_email = True

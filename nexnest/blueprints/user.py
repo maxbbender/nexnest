@@ -35,6 +35,9 @@ users = Blueprint('users', __name__, template_folder='../templates/user')
 @users.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
+        if current_user.is_authenticated:
+            return redirect(url_for('indexs.index'))
+
         schools = [r for r, in session.query(School.name).all()]
         return render_template('register.html',
                                registration_form=RegistrationForm(),
@@ -155,7 +158,7 @@ def viewUser(userID):
     form = EmailPreferencesForm(request.form)
     user = session.query(User).filter_by(id=userID).first()
     currentPreferences = session.query(
-            NotificationPreference).filter_by(user_id=userID).first()
+        NotificationPreference).filter_by(user_id=userID).first()
     userFavorites = session.query(ListingFavorite).filter_by(user=current_user).all()
     myGroups = current_user.accepted_groups
     logger.debug(currentPreferences)
@@ -163,7 +166,7 @@ def viewUser(userID):
 
     if request.method == 'GET':
         return render_template('/user/account.html',
-                               user=user, 
+                               user=user,
                                form=form,
                                title=user.fname,
                                userFavorites=userFavorites,
@@ -213,10 +216,10 @@ def viewUser(userID):
 
             flash('Preferences Updated', 'success')
             return render_template('/user/account.html',
-                               user=user, 
-                               form=form,
-                               title=user.fname
-                               )
+                                   user=user,
+                                   form=form,
+                                   title=user.fname
+                                   )
         else:
             flash_errors(form)
             return redirect(url_for('users.viewUser',
@@ -495,6 +498,7 @@ def getMessageNotifications(page=1):
 
     return jsonify(returnDict)
 
+
 @users.route('/user/favoriteListing/<listingID>', methods=['GET', 'POST'])
 @login_required
 @csrf.exempt
@@ -502,7 +506,7 @@ def favoriteListing(listingID):
     listing = session.query(Listing).filter_by(id=listingID).first_or_404()
 
     # Make sure one doesn't already exist
-    lf = ListingFavorite.query.filter_by(listing=listing,user=current_user).first()
+    lf = ListingFavorite.query.filter_by(listing=listing, user=current_user).first()
 
     if lf is None:
         logger.debug("Listing %r" % listing)
@@ -514,7 +518,7 @@ def favoriteListing(listingID):
         session.commit()
     else:
         return jsonify(response={'success': False, 'message': 'Listing has already been favorited'})
-    
+
     return jsonify(response={'success': True})
 
 

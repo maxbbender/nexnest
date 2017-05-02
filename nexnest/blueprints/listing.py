@@ -405,6 +405,7 @@ def editListing(listingID):
 
 
 @listings.route("/listing/upload/<listingID>", methods=["POST"])
+@login_required
 @csrf.exempt
 def upload(listingID):
     """Handle the upload of a file."""
@@ -451,7 +452,7 @@ def upload(listingID):
 
 
 @listings.route("/listing/delete/<listingID>/<filename>", methods=["POST"])
-@csrf.exempt
+@login_required
 def deletePhoto(listingID, filename):
     listing = Listing.query.filter_by(id=listingID).first_or_404()
 
@@ -467,7 +468,7 @@ def deletePhoto(listingID, filename):
 
 
 @listings.route("/listing/deleteBanner/<listingID>/<filename>", methods=["POST"])
-@csrf.exempt
+@login_required
 def deleteBannerPhoto(listingID, filename):
     listing = Listing.query.filter_by(id=listingID).first_or_404()
 
@@ -556,7 +557,7 @@ def searchListingsAJAX():
 
     # Required Fields : `bedrooms` | `minPrice` | `maxPrice` | `priceTerm` | `school`
     allListings = session.query(Listing).filter(Listing.active == True,
-                                                Listing.featured == False)
+                                                Listing.show == True)
 
     # featuredListings = Listings.query.filter(Listing.active == True,
     #                                          Listing.featured == True)

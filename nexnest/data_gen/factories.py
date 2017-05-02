@@ -95,6 +95,8 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     time_period_date_range = '2017-2018'
     lat = 41.670711
     lng = -71.452748
+    show = True
+    active = True
 
 
 class LandlordFactory(factory.alchemy.SQLAlchemyModelFactory):

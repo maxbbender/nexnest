@@ -136,7 +136,9 @@ class Listing(Base):
             featured=False,
             lat=None,
             lng=None,
-            banner_photo_url=None):
+            banner_photo_url=None,
+            show=False,
+            active=False):
 
         self.street = street
         self.city = city
@@ -165,8 +167,8 @@ class Listing(Base):
         self.num_half_baths = num_half_baths
         self.apartment_number = apartment_number
         self.disabled = False
-        self.active = False  # Landlords have to activate listing
-        self.show = False
+        self.active = active  # Landlords have to activate listing
+        self.show = show
         self.time_period = time_period
         self.time_period_date_range = time_period_date_range
         self.parking = parking
@@ -332,6 +334,9 @@ class Listing(Base):
         return '%s, %s %s, %s' % (self.street, self.city, self.state, self.zip_code)
 
     def isEditableBy(self, user):
+        if self.hasHouse() or self.hasAcceptedGroupListing:
+            return False
+
         if user in self.landLordsAsUsers():
             return True
 
