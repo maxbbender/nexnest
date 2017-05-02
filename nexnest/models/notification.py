@@ -135,6 +135,12 @@ class Notification(Base):
         message = None
         returnObject = None
         redirectURL = None
+
+        '''
+        ------------------------
+        ------- Messages -------
+        ------------------------
+        '''
         if self.notif_type == 'direct_message':
             returnObject = session.query(DirectMessage) \
                 .filter_by(user_id=self.target_model_id) \
@@ -146,48 +152,6 @@ class Notification(Base):
 
                 return message, returnObject, redirectURL
 
-        elif self.notif_type == 'platform_report':
-            returnObject = session.query(PlatformReport) \
-                .filter_by(id=self.target_model_id) \
-                .first()
-
-            if returnObject is not None:
-                message = "There is a new platform report!"
-
-                ##########################
-                ######TODDDDDOOOOOOO######
-                ##########################
-                redirectURL = '/index'
-
-                return message, returnObject, redirectURL
-
-        elif self.notif_type == 'friend':
-            returnObject = session.query(Friend) \
-                .filter_by(target_user_id=self.target_model_id) \
-                .first()
-
-            if returnObject is not None:
-                message = "You have recieved a new Friend Request from %s" %  \
-                    returnObject.source_user.fname
-
-                ##########################
-                ######TODDDDDOOOOOOO######
-                ##########################
-                redirectURL = '/index'
-
-                return message, returnObject, redirectURL
-        elif self.notif_type == 'group_user':
-            returnObject = session.query(Group) \
-                .filter_by(id=self.target_model_id) \
-                .first()
-
-            if returnObject is not None:
-                message = "You have recieved a Group Invitation for %s from %s" %  \
-                    (returnObject.name, returnObject.leader.fname)
-
-                redirectURL = '/group/view/%d' % returnObject.id
-
-                return message, returnObject, redirectURL
         elif self.notif_type == 'group_listing_message':
             returnObject = session.query(GroupListingMessage) \
                 .filter_by(id=self.target_model_id) \
@@ -211,21 +175,6 @@ class Notification(Base):
 
                 return message, returnObject, redirectURL
 
-        # If a house request has been accepted + completed, a house
-        # notification gets created.
-        elif self.notif_type == 'house':
-            returnObject = session.query(House) \
-                .filter_by(id=self.target_model_id) \
-                .first()
-
-            if returnObject is not None:
-                message = "Congratulations! %s has accepted your Housing Request, Click here to go to your new humble abode!" % \
-                    returnObject.listing.landLordsAsUsers()[0].name
-
-                redirectURL = '/house/view/%d' % returnObject.id
-
-                return message, returnObject, redirectURL
-
         elif self.notif_type == 'house_message':
             returnObject = session.query(HouseMessage) \
                 .filter_by(id=self.target_model_id) \
@@ -238,50 +187,14 @@ class Notification(Base):
 
                 return message, returnObject, redirectURL
 
-        elif self.notif_type == 'group_listing_favorite':
-            returnObject = session.query(GroupListingFavorite) \
+        elif self.notif_type == 'tour_message':
+            returnObject = session.query(TourMessage) \
                 .filter_by(id=self.target_model_id) \
                 .first()
 
             if returnObject is not None:
-                message = "%s has favorited a new listing in %s" % \
-                    (returnObject.user.name, returnObject.group.name)
-
-                redirectURL = '/group/view/%d' % returnObject.group.id
-
-                return message, returnObject, redirectURL
-
-        elif self.notif_type == 'maintenance':
-            returnObject = session.query(Maintenance) \
-                .filter_by(id=self.target_model_id) \
-                .first()
-
-            if returnObject is not None:
-                message = "There is a new maintenance request for your listing"
-
-                redirectURL = '/house/maintenanceRequest/%d/view' % returnObject.id
-
-                return message, returnObject, redirectURL
-
-        elif self.notif_type == 'security_deposit':
-            returnObject = session.query(SecurityDeposit) \
-                .filter_by(id=self.target_model_id) \
-                .first()
-
-            if returnObject is not None:
-                message = "%s has paid their security deposit!" % returnObject.user.name
-
-                redirectURL = '/houseRequest/view/%d' % returnObject.groupListing.id
-
-                return message, returnObject, redirectURL
-
-        elif self.notif_type == 'tour':
-            returnObject = session.query(Tour) \
-                .filter_by(id=self.target_model_id) \
-                .first()
-
-            if returnObject is not None:
-                message = "A new tour has been requested for your listing"
+                message = "%s has posted a new message in %s's Tour Request" % \
+                    (returnObject.user.name, returnObject.tour.group.name)
 
                 redirectURL = '/tour/view/%d' % returnObject.id
 
@@ -300,77 +213,28 @@ class Notification(Base):
 
                 return message, returnObject, redirectURL
 
-        elif self.notif_type == 'new_tour_time':
-            returnObject = session.query(Tour) \
-                .filter_by(id=self.target_model_id) \
-                .first()
 
-            if returnObject is not None:
-                message = "A revised tour time has been requested for a tour."
+        
+        # ----------------------------------
+        # --- Group Listings (HouseReq) ----
+        # ----------------------------------
+        
 
-                redirectURL = '/tour/view/%d' % returnObject.id
-
-                return message, returnObject, redirectURL
-
-        elif self.notif_type == 'tour_message':
-            returnObject = session.query(TourMessage) \
-                .filter_by(id=self.target_model_id) \
-                .first()
-
-            if returnObject is not None:
-                message = "%s has posted a new message in %s's Tour Request" % \
-                    (returnObject.user.name, returnObject.tour.group.name)
-
-                redirectURL = '/tour/view/%d' % returnObject.id
-
-                return message, returnObject, redirectURL
         elif self.notif_type == 'group_listing':
             returnObject = session.query(GroupListing) \
                 .filter_by(id=self.target_model_id) \
                 .first()
 
-            if returnObject is not None:
-                message = "You have a new House Request from %s" % \
-                    (returnObject.group.name)
-
-                redirectURL = '/houseRequest/view/%d' % returnObject.id
-
-                return message, returnObject, redirectURL
-
-        elif self.notif_type == 'user_leave_group':
-            returnObject = session.query(GroupUser) \
+        elif self.notif_type == 'group_listing_favorite':
+            returnObject = session.query(GroupListingFavorite) \
                 .filter_by(id=self.target_model_id) \
                 .first()
 
             if returnObject is not None:
-                message = "%s has left %s" % \
+                message = "%s has favorited a new listing in %s" % \
                     (returnObject.user.name, returnObject.group.name)
 
                 redirectURL = '/group/view/%d' % returnObject.group.id
-
-                return message, returnObject, redirectURL
-
-        elif self.notif_type == 'maintenance_inprogress':
-            returnObject = session.query(Maintenance) \
-                .filter_by(id=self.target_model_id) \
-                .first()
-
-            if returnObject is not None:
-                message = "Your landlord has marked your maintenance request as In Progress!"
-
-                redirectURL = '/house/maintenanceRequest/%d/view' % returnObject.id
-
-                return message, returnObject, redirectURL
-
-        elif self.notif_type == 'maintenance_completed':
-            returnObject = session.query(Maintenance) \
-                .filter_by(id=self.target_model_id) \
-                .first()
-
-            if returnObject is not None:
-                message = "Your landlord has marked your maintenance request as Completed!"
-
-                redirectURL = '/house/maintenanceRequest/%d/view' % returnObject.id
 
                 return message, returnObject, redirectURL
 
@@ -398,22 +262,171 @@ class Notification(Base):
 
                 return message, returnObject, redirectURL
 
-        elif self.notif_type == 'group_listing_completed':
-            returnObject = session.query(GroupListing) \
+        elif self.notif_type == 'security_deposit':
+            returnObject = session.query(SecurityDeposit) \
                 .filter_by(id=self.target_model_id) \
                 .first()
 
             if returnObject is not None:
-                message = "Your house request for %s has been completed : Click to go to your new House!" % returnObject.listing.street
+                message = "%s has paid their security deposit!" % returnObject.user.name
 
-                newHouse = session.query(House) \
-                    .filter_by(group_id=returnObject.group.id) \
-                    .first()
+                redirectURL = '/houseRequest/view/%d' % returnObject.groupListing.id
 
-                if newHouse is not None:
-                    redirectURL = '/house/view/%d' % newHouse.id
-                else:
-                    redirectURL = '/'
+                return message, returnObject, redirectURL
+
+        
+        # ---------------------------
+        # --------- Reports ---------
+        # ---------------------------
+        
+
+        elif self.notif_type == 'platform_report':
+            returnObject = session.query(PlatformReport) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "There is a new platform report!"
+
+                ##########################
+                ######TODDDDDOOOOOOO######
+                ##########################
+                redirectURL = '/index'
+
+                return message, returnObject, redirectURL
+
+        
+        # ------------------------
+        # --------- USER ---------
+        # ------------------------
+        
+        elif self.notif_type == 'friend':
+            returnObject = session.query(Friend) \
+                .filter_by(target_user_id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "You have recieved a new Friend Request from %s" %  \
+                    returnObject.source_user.fname
+
+                ##########################
+                ######TODDDDDOOOOOOO######
+                ##########################
+                redirectURL = '/index'
+
+                return message, returnObject, redirectURL
+        elif self.notif_type == 'group_user':
+            returnObject = session.query(Group) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "You have recieved a Group Invitation for %s from %s" %  \
+                    (returnObject.name, returnObject.leader.fname)
+
+                redirectURL = '/group/view/%d' % returnObject.id
+
+                return message, returnObject, redirectURL
+
+
+        
+        # -----------------------
+        # -------- HOUSE --------
+        # -----------------------
+        # If a house request has been accepted + completed, a house
+        # notification gets created.
+        
+
+        elif self.notif_type == 'house':
+            returnObject = session.query(House) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "Congratulations! %s has accepted your Housing Request, Click here to go to your new humble abode!" % \
+                    returnObject.listing.landLordsAsUsers()[0].name
+
+                redirectURL = '/house/view/%d' % returnObject.id
+
+                return message, returnObject, redirectURL
+
+        
+        # -----------------------------
+        # -------- Maintenance --------
+        # -----------------------------
+        
+
+        elif self.notif_type == 'maintenance':
+            returnObject = session.query(Maintenance) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "There is a new maintenance request for your listing"
+
+                redirectURL = '/house/maintenanceRequest/%d/view' % returnObject.id
+
+                return message, returnObject, redirectURL
+
+        elif self.notif_type == 'maintenance_inprogress':
+            returnObject = session.query(Maintenance) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "Your landlord has marked your maintenance request as In Progress!"
+
+                redirectURL = '/house/maintenanceRequest/%d/view' % returnObject.id
+
+                return message, returnObject, redirectURL
+
+        elif self.notif_type == 'maintenance_completed':
+            returnObject = session.query(Maintenance) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "Your landlord has marked your maintenance request as Completed!"
+
+                redirectURL = '/house/maintenanceRequest/%d/view' % returnObject.id
+
+                return message, returnObject, redirectURL
+
+        
+        # ----------------------
+        # -------- TOUR --------
+        # ----------------------
+        
+        elif self.notif_type == 'tour':
+            returnObject = session.query(Tour) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "A new tour has been requested for your listing"
+
+                redirectURL = '/tour/view/%d' % returnObject.id
+
+                return message, returnObject, redirectURL
+
+       
+        elif self.notif_type == 'new_tour_time':
+            returnObject = session.query(Tour) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "A revised tour time has been requested for a tour."
+
+                redirectURL = '/tour/view/%d' % returnObject.id
+
+                return message, returnObject, redirectURL
+
+            if returnObject is not None:
+                message = "You have a new House Request from %s" % \
+                    (returnObject.group.name)
+
+                redirectURL = '/houseRequest/view/%d' % returnObject.id
 
                 return message, returnObject, redirectURL
 
@@ -440,6 +453,9 @@ class Notification(Base):
                 redirectURL = '/group/view/%d' % returnObject.group.id
 
                 return message, returnObject, redirectURL
+
+        else:
+            logger.warning('Unknown Notification type %s' % self.notif_type)
 
         return None, None, None
 

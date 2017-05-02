@@ -236,32 +236,33 @@ class GroupListing(Base):
         session.commit()
 
     def genCompletedNotifications(self):
-        for user in self.group.acceptedUsers:
+        # for user in self.group.acceptedUsers:
 
-            if user.notificationPreference.group_listing_completed_notification:
-                newNotif = Notification(notif_type='group_listing_completed',
-                                        target_user=user,
-                                        target_model_id=self.id)
-                session.add(newNotif)
-                session.commit()
+        #     if user.notificationPreference.group_listing_completed_notification:
+        #         newNotif = Notification(notif_type='group_listing_completed',
+        #                                 target_user=user,
+        #                                 target_model_id=self.id)
+        #         session.add(newNotif)
+        #         session.commit()
 
-            if user.notificationPreference.group_listing_completed_email:
-                user.sendEmail(emailType='generic',
-                               message='Your request to live at %s has been marked as completed! Welcome to your new house' % self.listing.address)
+        #     if user.notificationPreference.group_listing_completed_email:
+        #         user.sendEmail(emailType='generic',
+        #                        message='Your request to live at %s has been marked as completed! Welcome to your new house' % self.listing.address)
 
-        for landlord in self.listing.landLordsAsUsers():
+        # for landlord in self.listing.landLordsAsUsers():
 
-            if landlord.notificationPreference.group_listing_completed_notification:
+        #     if landlord.notificationPreference.group_listing_completed_notification:
 
-                newNotif = Notification(notif_type='group_listing_completed',
-                                        target_user=landlord,
-                                        target_model_id=self.id)
-                session.add(newNotif)
-                session.commit()
+        #         newNotif = Notification(notif_type='group_listing_completed',
+        #                                 target_user=landlord,
+        #                                 target_model_id=self.id)
+        #         session.add(newNotif)
+        #         session.commit()
 
-            if landlord.notificationPreference.group_listing_completed_email:
-                landlord.sendEmail(emailType='generic',
-                                   message='Your request to live at %s has been marked as completed! Welcome to your new house' % self.listing.address)
+        #     if landlord.notificationPreference.group_listing_completed_email:
+        #         landlord.sendEmail(emailType='generic',
+        #                            message='Your request to live at %s has been marked as completed! Welcome to your new house' % self.listing.address)
+        pass
 
     def undoCompletedNotifications(self):
         session.query(Notification) \
