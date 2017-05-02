@@ -335,7 +335,7 @@
 				</div>
 			</div>		
 		</div>
-		<div id="map" class="hidden-lg-down col-xl-5" style="height: 80vh; position: fixed;">
+		<div id="map" class="hidden-lg-down col-xl-5" style="height: 80vh; position: fixed; left: 59vw;">
 		</div>
 		<div id="legend"><h3>Legend</h3></div>
 	</div>
@@ -760,8 +760,8 @@
   	       div.innerHTML = '<img src="' + icon + '"> ' + name;
   	       legend.appendChild(div);
   	    }
-  		map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);		
-  		
+  		map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+  		 		
   	}
   	initMap();
 
@@ -772,17 +772,25 @@
   		console.log(listings.length);
 
   		$.each(listings, function(index, listing) {
-  			addMarker(listing.id, listing.lat, listing.lng, listing.propertyType, '<div style="overflow: auto;"><div id="iw-container"><div class="iw-title"><b>'+listing.address+'</b></div><div class="iw-content"><a href="'+listing.url+'"><img src="'+listing.bannerPhotoURL+'" alt="'+listing.address+'"></a><p><b>[TBD] Miles to Campus</b><br><br>"'+listing.description+'"</p><p style="clear:both;"></p><table class="special"><tbody><tr><td>'+listing.numBedrooms+' Beds</td><td>'+listing.numFullBaths+' Baths</td><td><a href="'+listing.url+'">View</a></td></tr></tbody></table></div><div class="iw-bottom-gradient"></div></div></div>');
+  			addMarker(listing.id, listing.lat, listing.long, listing.propertyType, '<div style="overflow: auto;"><div id="iw-container"><div class="iw-title"><b>'+listing.address+'</b></div><div class="iw-content"><a href="'+listing.url+'"><img src="'+listing.bannerPhotoURL+'" style="height: 50px;" alt="'+listing.address+'"></a><p><b>[TBD] Miles to Campus</b><br><br>"'+listing.description+'"</p><p style="clear:both;"></p><table class="special"><tbody><tr><td>'+listing.numBedrooms+' Beds</td><td>'+listing.numFullBaths+' Baths</td><td><a href="'+listing.url+'">View</a></td></tr></tbody></table></div><div class="iw-bottom-gradient"></div></div></div>');
   		});
+  		$("#map").css('position', 'fixed');
   	}	
 
   	function addMarker(id, lat, long, type, info){
+  		console.log(id);
+  		console.log(lat);
+  		console.log(long);
+  		console.log(type);
+  		console.log(info);
+  		
   		var marker = new google.maps.Marker({
   			id: id,
   			position: new google.maps.LatLng(lat, long),
   			map: map,
   			icon: icons[type].icon
   		});
+  		console.log(marker);
   		marker.addListener('click', function() {
   			new google.maps.InfoWindow({content: info}).open(map, marker);
   		});
