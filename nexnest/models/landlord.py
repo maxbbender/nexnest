@@ -373,7 +373,6 @@ class Landlord(Base):
 
     def getUnBookedHousesJSON(self):
         unBookedHouses = []
-        currDate = date.today()
         for listing in self.getListings():
             if not listing.hasHouse():
                 listingObject = {'listing': listing.serialize}

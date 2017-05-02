@@ -146,6 +146,7 @@ def completedMaintenanceRequestsJSON():
     else:
         return jsonify(completedMaintenanceRequests={'error': 'Invalid Permissions'})
 
+
 @landlords.route('/landlord/unBookedHouses/JSON')
 @login_required
 def unBookedHousesJSON():
@@ -158,18 +159,13 @@ def unBookedHousesJSON():
     else:
         return jsonify(unBookedHouses={'error': 'Invalid Permissions'})
 
+
 @landlords.route('/landlord/<listingID>/isEditable/AJAX')
 @login_required
 def isEditable(listingID):
-    if current_user.isLandlord:
-        landlord = session.query(Landlord) \
-            .filter_by(user_id=current_user.id) \
-            .first()
-        listing = session.query(Listing).filter_by(id=listingID).first()
+    listing = session.query(Listing).filter_by(id=listingID).first()
 
-        if listing.isEditableBy(current_user):
-          return jsonify(results={'success': True})
-        else:
-          return jsonify(results={'success': False})
+    if listing.isEditableBy(current_user):
+        return jsonify(results={'success': True})
     else:
-      return jsonify(results={'error': 'Invalid Permissions'})
+        return jsonify(results={'success': False, 'message': 'Permissions Error'})

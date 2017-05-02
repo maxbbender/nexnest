@@ -30,10 +30,12 @@ listings = Blueprint('listings', __name__, template_folder='../templates')
 
 
 @listings.route('/listing/view/<int:listingID>', methods=['GET', 'POST'])
-@login_required
 def viewListing(listingID):
     listing = session.query(Listing).filter_by(id=listingID).first_or_404()
-    myGroups = current_user.accepted_groups
+    if current_user.is_authenticated:
+        myGroups = current_user.accepted_groups
+    else:
+        myGroups = None
     return render_template('detailedListing.html',
                            suggestListingForm=SuggestListingForm(),
                            requestTourForm=TourForm(),
