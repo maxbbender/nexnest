@@ -179,6 +179,7 @@ class Landlord(Base):
     def getHouses(self):
         currentHouses = []
         futureHouses = []
+        unBookedHouses = []
         currDate = date.today()
         for listing in self.getListings():
             if listing.hasHouse():
@@ -187,17 +188,19 @@ class Landlord(Base):
                     currentHouses.append(listing.house[0])
                 elif listing.start_date >= currDate:
                     futureHouses.append(listing.house[0])
+            else:
+                unBookedHouses.append(listing)
 
         # print("Current Houses %r" % currentHouses)
         # print("Future Houses %r" % futureHouses)
-        return currentHouses, futureHouses
+        return currentHouses, futureHouses, unBookedHouses
 
     def getMaintenanceRequests(self):
         openMaintenanceRequests = []
         inProgressMaintenanceRequests = []
         completedMaintenanceRequests = []
 
-        currentHouses, futureHouses = self.getHouses()
+        currentHouses, futureHouses, unBookedHouses = self.getHouses()
 
         for house in currentHouses:
             openMR, inProgressMR, completedMR = house.groupedMaintenanceRequests()

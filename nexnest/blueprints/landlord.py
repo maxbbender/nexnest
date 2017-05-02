@@ -30,7 +30,7 @@ def landlordDashboard():
 
         unAcceptedHousingRequests, acceptedHousingRequests, completedHousingRequests = landlord.getHousingRequests()
         openMaintenanceRequests, inProgressMaintenanceRequests, completedMaintenanceRequests = landlord.getMaintenanceRequests()
-        currentHouses, futureHouses = landlord.getHouses()
+        currentHouses, futureHouses, unBookedHouses = landlord.getHouses()
 
         requestedTours, scheduledTours = landlord.getActiveTours()
 
@@ -45,6 +45,7 @@ def landlordDashboard():
                                completedHousingRequests=completedHousingRequests,
                                currentHouses=currentHouses,
                                futureHouses=futureHouses,
+                               unBookedHouses=unBookedHouses,
                                openMaintenanceRequests=openMaintenanceRequests,
                                inProgressMaintenanceRequests=inProgressMaintenanceRequests,
                                completedMaintenanceRequests=completedMaintenanceRequests,

@@ -16,23 +16,33 @@
 	        	        	<i class="fa fa-shopping-cart" aria-hidden="true"></i><span class="hidden-md-down">Checkout</span>
 	        	        </a>
 	        	    </li>
-	        	    <li class="nav-item">
+	        	    <!-- <li class="nav-item">
 	        	        <a class="nav-link left-panel" style="padding-left: 10px;" id="allListingsTab2" data-toggle="tab" href="#allListingsTab" role="tab">
 	        	        	<i class="fa fa-globe" aria-hidden="true"></i><span class="hidden-md-down">All Listings</span>
 	        	        </a>
-	        	    </li>
-        	    {% else %}
+	        	    </li> -->
 	        	    <li class="nav-item">
-	        	        <a class="nav-link left-panel active" style="padding-left: 10px;" id="allListingsTab2" data-toggle="tab" href="#allListingsTab" role="tab">
-	        	        	<i class="fa fa-globe" aria-hidden="true"></i><span class="hidden-md-down">All Listings</span>
-	        	        </a>
-	        	    </li>
-        	    {% endif %}
-        		<li class="nav-item">
         	        <a class="nav-link left-panel" style="padding-left: 10px;" id="occupiedListingsTab2" data-toggle="tab" href="#occupiedListingsTab" role="tab">
         	        	<i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">Occupied Listings</span>
         	        </a>
-        	    </li>        	    
+        	    </li>
+        	    {% else %}
+	        	    <!-- <li class="nav-item">
+	        	        <a class="nav-link left-panel active" style="padding-left: 10px;" id="allListingsTab2" data-toggle="tab" href="#allListingsTab" role="tab">
+	        	        	<i class="fa fa-globe" aria-hidden="true"></i><span class="hidden-md-down">All Listings</span>
+	        	        </a>
+	        	    </li> -->
+	        	    <li class="nav-item">
+        	        <a class="nav-link left-panel active" style="padding-left: 10px;" id="occupiedListingsTab2" data-toggle="tab" href="#occupiedListingsTab" role="tab">
+        	        	<i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">Occupied Listings</span>
+        	        </a>
+        	    </li>
+        	    {% endif %}
+        	    <li class="nav-item">
+        	        <a class="nav-link left-panel" style="padding-left: 10px;" id="unOccupiedListingsTab2" data-toggle="tab" href="#unOccupiedListingsTab" role="tab">
+        	        	<i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">UnOccupied Listings</span>
+        	        </a>
+        	    </li>
         	    <li class="nav-item">
         	        <a class="nav-link left-panel" style="padding-left: 10px;" id="toursTab2" data-toggle="tab" href="#toursTab" role="tab">
         	        	<i class="fa fa-calendar" aria-hidden="true"></i><span class="hidden-md-down">Tours</span>
@@ -330,24 +340,38 @@
 		        	</div>
 		       	</div>
 		    </div>
-	        <div class="tab-pane" id="allListingsTab" role="tabpanel" style="padding: 0px;">
+		    <div class="tab-pane" id="unOccupiedListingsTab" role="tabpanel" style="padding: 0px;">
 	        	<div class="row">
 			    	<div class="col-xs-0 col-md-1"></div>
 			    	<div class="col-xs-12 col-md-10">
 				    	<div class="callout-block text-center fade-in-b">
 				    		<div class="row">
 				    			<div class="col-xs-8">
-					    			<h1 style="font-size: 3.5vh;">All Listings</h1>
+					    			<h1 style="font-size: 3.5vh;">Un-Booked Listings</h1>
 					    		</div>
 					    		<div class="col-xs-4">
 					    			<a href="{{ url_for('listings.createListing') }}" class="btn btn-primary" style="float: right;">Create New Listing</a>
 					    		</div>
 				    		</div>
 				    	</div>
+				    	<br>
+				    	<div class="form-group">
+				    	    <label class="control-label">View Un-Booked Listings For What Time Period?</label>
+				    	    <select class="form-control" name="unbooked_time_range" id="unbooked_time_range_select">
+				    	        <option value="2017-2018">2017-2018</option>
+                                <option value="2018-2019">2018-2019</option>
+                                <option value="2019">2019 Summer</option>
+                                <option value="2019-2020">2019-2020</option>
+                                <option value="2020">2020 Summer</option>
+                                <option value="2020-2021">2020-2021</option>
+                                <option value="2021">2021 Summer</option>
+				    	    </select>
+				    	</div>
 			    	</div>
 			    </div>
 		    	<br>
-	            {% for listing in listings %}
+
+	            {% for listing in unBookedHouses %}
 	            	<div class="row">
 	            		<div class="col-xs-0 col-md-1"></div>
 	            		<div class="col-xs-12 col-md-10" style="width: 100%">
@@ -374,7 +398,7 @@
 				                    		<img src="{{listing.getBannerPhotoURL()}}" class="listingImg">
 				                    	</div>
 				                    	<div class="col-xs-12 col-lg-8">
-				                    		<h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ listing.price }}</strong> per bedroom per semester</h3>
+				                    		<h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ listing.price }}</strong> per bedroom per {{ listing.rent_due }}</h3>
 				                    		<h3 style="font-size: 3.0vh;"><strong>{{ listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
 				                    		&nbsp;
 				                    		{{ listing.num_full_baths }}<i class="fa fa-bath" aria-hidden="true"></i></strong></h3>
@@ -999,7 +1023,7 @@
 		});
 
 	//Code for navigating tabs
-	var validMainTabs = ["occupiedListingsTab", "allListingsTab", "toursTab", "requestsTab", "maintenanceTab", "paymentTab", "checkoutTab", "availabilityTab"];
+	var validMainTabs = ["occupiedListingsTab", "unOccupiedListingsTab", "toursTab", "requestsTab", "maintenanceTab", "paymentTab", "checkoutTab", "availabilityTab"];
 	var validSecondTabs = ["currentlyOccupiedTab", "willBeOccupiedTab", "scheduledToursTab", "requestedToursTab", "unacceptedTab", "acceptedTab", 
 	"newMaintenanceTab", "inProgressMaintenanceTab", "completedMaintenanceTab"];
 	var hash = document.location.hash;
@@ -1008,7 +1032,7 @@
 		{% if current_user.landlord[0].hasListingsToCheckout %}
 			hash = "checkoutTab";
 		{% else %}
-			hash = "allListingsTab";
+			hash = "occupiedListingsTab";
 		{% endif %}
 		window.location.hash = hash;
 	}
@@ -1022,7 +1046,7 @@
 	if ($.inArray(mainTab, validMainTabs) > -1) {
 		$("#checkoutTab").removeClass('active');
 		$("#occupiedListingsTab").removeClass('active');
-		$("#allListingsTab").removeClass('active');
+		$("#unOccupiedListingsTab").removeClass('active');
 		$("#toursTab").removeClass('active');
 		$("#requestsTab").removeClass('active');
 		$("#maintenanceTab").removeClass('active');
@@ -3239,6 +3263,10 @@
 	      }
 	    });
 	}
+
+	$("#unbooked_time_range_select").change(function() {
+		alert("test");
+	});
 
 </script>
 {% endblock %}

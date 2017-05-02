@@ -222,10 +222,10 @@
 							{{ listing.schools[0].driving_miles }} Miles
 						</div>
 						<div class="col-xs-12 col-md-6 col-xl-4">
-							{{ listing.schools[0].driving_time }} Minutes
+							<i class="fa fa-car" aria-hidden="true"></i>{{ listing.schools[0].driving_time }} Minutes
 						</div>
 						<div class="col-xs-12 col-md-6 col-xl-4">
-							{{ listing.schools[0].walking_time }} Minutes
+							<i class="fa fa-male" aria-hidden="true"></i>{{ listing.schools[0].walking_time }} Minutes
 						</div>
 					</div>
 				</div>
@@ -261,7 +261,7 @@
 							{% if listing.washer or listing.dryer %}
 								{% if listing.washer_free %}
 									<div class="col-xs-12 col-md-6 col-xl-4">
-										<li>Laundry is Free to use</li>
+										<i class="fa fa-usd" aria-hidden="true"></i><li>Laundry is Free to use</li>
 									</div>							
 								{% endif %}
 							{% endif %}
