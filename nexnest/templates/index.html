@@ -392,7 +392,7 @@
     	    	}, 1000);
     	    	displayListings(data.listings, data.featuredListings);
     	    	//call map init with lat, lng of school
-    	    	mapUpdate(data.listings);
+    	    	mapUpdate(data.listings, data.school.lat, data.school.lng);
     	    },
     	    failure: function(errMsg) {
     	        alert(errMsg);
@@ -494,7 +494,7 @@
 	    	    	}, 1000);
 	    	    	displayListings(data.listings, data.featuredListings);
 	    	    	//call map init with lat, lng of school
-	    	    	mapUpdate(data.listings);
+	    	    	mapUpdate(data.listings, data.school.lat, data.school.lng);
 	    	    },
 	    	    failure: function(errMsg) {
 	    	        alert(errMsg);
@@ -774,12 +774,15 @@
   	}
   	initMap();
 
-  	function mapUpdate(listings){
+  	function mapUpdate(listings, lat, long){
   		// first we clear the map
   		clearMarkers();
-  		console.log(listings);
-  		console.log(listings.length);
-
+  		// console.log(listings);
+  		// console.log(listings.length);
+  		console.log(lat);
+  		console.log(long);
+  		schoolLatLng = {lat: lat, lng: long};
+  		map.setCenter(schoolLatLng);  		
   		$.each(listings, function(index, listing) {
   			addMarker(listing.id, listing.lat, listing.long, listing.propertyType, '<div style="overflow: auto;"><div id="iw-container"><div class="iw-title"><b>'+listing.address+'</b></div><div class="iw-content"><a href="'+listing.url+'"><img src="'+listing.bannerPhotoURL+'" style="height: 50px;" alt="'+listing.address+'"></a><p><b>[TBD] Miles to Campus</b><br><br>"'+listing.description+'"</p><p style="clear:both;"></p><table class="special"><tbody><tr><td>'+listing.numBedrooms+' Beds</td><td>'+listing.numFullBaths+' Baths</td><td><a href="'+listing.url+'">View</a></td></tr></tbody></table></div><div class="iw-bottom-gradient"></div></div></div>');
   		});
