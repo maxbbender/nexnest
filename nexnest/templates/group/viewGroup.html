@@ -132,10 +132,14 @@
                                                                 <div class="card" style="width: 100%;">                       
                                                                     <div class="card-block" style="padding-top: 0px; padding-left: 15px; padding-right: 15px;">
                                                                         <div class="row">
-                                                                            <div class="imageContainer">
+                                                                            <div class="imageContainer" style="width: 100%;">
                                                                                 <div class="image">
                                                                                     <a href="{{ url_for('listings.viewListing', listingID=favorite.listing.id) }}">
-                                                                                        <img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg card-img-top">
+                                                                                    {% if favorite.listing.getBannerPhotoURL() %}
+                                                                                        <img src="{{favorite.listing.getBannerPhotoURL()}}" class="listingImg card-img-top">
+                                                                                    {% else %}
+                                                                                        <img src="/static/img/defaultHouse.png" class="listingImg card-img-top">
+                                                                                    {% endif %}
                                                                                     </a>
                                                                                 </div>
                                                                                 {% if group.leader_id == current_user.id %}
@@ -299,7 +303,11 @@
                                                             <div class="hidden-sm-down col-md-7">
                                                                 <div class="card" style="width: 100%;">
                                                                     <a href="{{ url_for('listings.viewListing', listingID=tour.listing.id) }}">
-                                                                        <img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg card-img-top">
+                                                                        {% if tour.listing.getBannerPhotoURL() %}
+                                                                            <img src="{{tour.listing.getBannerPhotoURL()}}" class="listingImg">
+                                                                        {% else %}
+                                                                            <img src="/static/img/defaultHouse.png" class="listingImg">
+                                                                        {% endif %}
                                                                     </a>
                                                                     <div class="card-block">
                                                                         <div class="row">
@@ -346,11 +354,15 @@
                                         {% endif %}
                                         {% for request in housingRequests %}
                                             <div class="row">
-                                                <div class="card">
+                                                <div class="card" style="border: none;">
                                                     <div class="card-block">
                                                         <div class="card" style="width: 100%;">
                                                             <a href="{{ url_for('housingRequests.view', id=request.id) }}">
-                                                                <img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg card-img-top">
+                                                                {% if request.listing.getBannerPhotoURL() %}
+                                                                    <img src="{{request.listing.getBannerPhotoURL()}}" class="listingImg card-img-top">
+                                                                {% else %}
+                                                                    <img src="/static/img/defaultHouse.png" class="listingImg card-img-top">
+                                                                {% endif %}
                                                             </a>
                                                             <div class="card-block">
                                                                 <span style="font-size: 2.0vh;">

@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-	{% if not current_user.is_authenticated %}
 	<style>
 	  #legend {
 	    font-family: Arial, sans-serif;
@@ -16,12 +15,14 @@
 	    vertical-align: middle;
 	   }
 	</style>
+	{{search}}
+	{% if not search == "search" %}
     <!-- !!NOT LOGGED IN!! -->
     <div id="initialView">
 	    <div class="row" style="padding-left: 15px;">
 	    	<div class="col-xl-12">
 		    	<div class="card card-inverse">
-		    		<img class="card-img" src="static/img/testHouse7.jpg" alt="Card image" style="width: 100%;">
+		    		<img class="card-img" src="/static/img/testHouse7.jpg" alt="Card image" style="width: 100%;">
 		    		<div class="card-img-overlay" style="display: flex; flex-direction: column; justify-content: center;">
 		    			<div class="row" style="margin-top: -150px;">
 		    				<h1 style="color: white; padding-left: 10%;">Insert Tagline from Nate and Alex Here</h1>
@@ -149,7 +150,7 @@
 					<div class="col-xs-12 col-sm-6 col-md-8 col-lg-7" style="padding-left: 0px;">
 						Monthly Price Range
 						<br>
-					    <span class="text-nowrap"><b id="minPriceDisplay" style="padding-right: 10px;">$0</b> <input id="priceSlider" type="text" class="span2 filterOption" value="" data-slider-min="0" data-slider-max="5000" data-slider-step="500" data-slider-value="[0,5000]"/> <b id="maxPriceDisplay" style="padding-left: 10px;">$5,000</b></span>
+					    <span class="text-nowrap"><b id="minPriceDisplay" style="padding-right: 10px;">$0</b> <input id="priceSlider" type="text" class="span2 filterOption" value="" data-slider-min="0" data-slider-max="5000" data-slider-step="100" data-slider-tooltip="hide" data-slider-value="[0,5000]"/> <b id="maxPriceDisplay" style="padding-left: 10px;">$5,000</b></span>
 					</div>
 			    </div>
 			    <div class="row" style="padding-top: 10px;">
@@ -369,7 +370,7 @@
 
 	function initialFilters(){
 		var filters = {};
-    	filters.school = $("#where option:selected").text();
+    	filters.school = $("#school option:selected").text();
     	filters.term = $("#when option:selected").text();
     	filters.bedrooms = parseInt($("#rooms").val(), 10);
     	var prices = $("#priceSlider").val().split(',');
@@ -389,7 +390,7 @@
     	    	setTimeout(function(){
     	    	    $("#listingsGoHere").LoadingOverlay("hide");
     	    	}, 1000);
-    	    	displayListings(data.listings);
+    	    	displayListings(data.listings, data.featuredListings);
     	    	//call map init with lat, lng of school
     	    	mapUpdate(data.listings);
     	    },
@@ -491,7 +492,7 @@
 	    	    	setTimeout(function(){
 	    	    	    $("#listingsGoHere").LoadingOverlay("hide");
 	    	    	}, 1000);
-	    	    	displayListings(data.listings);
+	    	    	displayListings(data.listings, data.featuredListings);
 	    	    	//call map init with lat, lng of school
 	    	    	mapUpdate(data.listings);
 	    	    },
@@ -512,80 +513,75 @@
   			$("#toggleMap").text("Switch To Map View")
   		}  		
   	});
-
-  	var listing7 = {
-  		url: '/listing/view/2',
-  		briefStreet: '7 Trap Lane',
-  		city: 'Medford',
-  		state: 'NY',
-  		num_bedrooms: '2',
-  		num_full_baths: '1',
-  		price: '3750',
-  		rent_due: 'month'
-  	}
-  	var listing8 = {
-  		url: '/listing/view/2',
-  		briefStreet: '69 Street Name',
-  		city: 'Patchogue',
-  		state: 'NY',
-  		num_bedrooms: '3',
-  		num_full_baths: '2',
-  		price: '4500',
-  		rent_due: 'semester'
-  	}
   	
-  	var featuredListings = [];
-	featuredListings.push(listing7);
-	featuredListings.push(listing8);
-	function displayListings(listings){
+	function displayListings(listings, featuredListings){
 		console.log(listings);
 		$("#listingsGoHere").empty();
 		//Featured
 		console.log(featuredListings);
-		// $.each(featuredListings, function(index, listing) {
-		// 	console.log(listing);
+		$.each(featuredListings, function(index, listing) {
+			console.log(listing);
 
-		// 	var nextListing = `<div class="card" style="width: 100%;">
-		// 		<div class="ribbon-wrapper-green"><div class="ribbon-green">FEATURED</div></div>
-		// 		<a href="`+ listing.url +`">
-		// 			<img src="/static/img/testHouse.jpg" class="listingImg card-img-top">
-		// 		</a>
-		// 		<div class="card-block" style="background-color: #89cdef;">
-		// 			<div class="row">
-		// 				<div class="col-xs-4">
-		// 					<span class="text-nowrap">
-		// 						`+ listing.num_bedrooms +`<i class="fa fa-bed" aria-hidden="true"></i>
-		// 						&nbsp;
-		// 						`+ listing.num_full_baths +`<i class="fa fa-bath" aria-hidden="true"></i>
-		// 					</span>
-		// 					<br>
-		// 					<span class="text-nowrap">$`+ listing.price +` <br> per bedroom/`+ listing.rent_due +`</span>
-		// 				</div>
-		// 				<div class="col-xs-8">
-		// 					<div class="row">
-		// 						<div class="col-xs-12" style="text-align: right;">
-		// 							<span class="text-nowrap">`+ listing.briefStreet +`</span>
-		// 						</div>
-		// 					</div>
-		// 					<div class="row">
-		// 						<div class="col-xs-12" style="text-align: right;">
-		// 							<span class="text-nowrap">`+ listing.city +`, `+ listing.state +`</span>
-		// 						</div>
-		// 					</div>
-		// 				</div>
-		// 			</div>
-		// 		</div>
-		// 	</div>`;
-		// 	$("#listingsGoHere").append(`<div class="col-md-6" style="padding-left: 15px; padding-bottom: 30px">` + nextListing + `</div>`);
-		// });
+			var nextListing = `<div class="card" style="width: 100%;">
+				<div class="ribbon-wrapper-green"><div class="ribbon-green">FEATURED</div></div>
+				<a href="`+ listing.url +`">`;
+					if(listing.bannerPhotoURL == ""){						
+						nextListing += `<img src="/static/img/defaultHouse.png" class="listingImg card-img-top">`;
+					}
+					else{
+						nextListing += `<img src=`+ listing.bannerPhotoURL +` class="listingImg card-img-top">`;
+					}
+				nextListing += `</a>`;
+				if(listing.isFavorited == false){
+					nextListing += `<div style="position: relative; width: 0; height: 0">
+					<i id="listingFavoite_`+listing.id+`" class="fa fa-2x fa-star-o listingFavorite" aria-hidden="true" style="bottom: 217px; position: absolute;"></i>
+					</div>`;
+				}else{
+					nextListing += `<div style="position: relative; width: 0; height: 0">
+					<i id="listingFavoite_`+listing.id+`" class="fa fa-2x fa-star listingFavorite" aria-hidden="true" style="bottom: 217px; position: absolute;"></i>
+					</div>`;
+				}
+				nextListing += `<div class="card-block" style="background-color: #89cdef;">
+					<div class="row">
+						<div class="col-xs-4">
+							<span class="text-nowrap">
+								`+ listing.numBedrooms +`<i class="fa fa-bed" aria-hidden="true"></i>
+								&nbsp;
+								`+ listing.numFullBaths +`<i class="fa fa-bath" aria-hidden="true"></i>
+							</span>
+							<br>
+							$`+ listing.price +` per `+ listing.priceTerm +`
+						</div>
+						<div class="col-xs-8">
+							<div class="row">
+								<div class="col-xs-12" style="text-align: right;">
+									<span class="text-nowrap">`+ listing.street +`</span>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12" style="text-align: right;">
+									<span class="text-nowrap">`+ listing.city +`, `+ listing.state +`</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>`;
+			$("#listingsGoHere").append(`<div class="col-md-6" style="padding-left: 15px; padding-bottom: 30px">` + nextListing + `</div>`);
+		});
 
 		//Non Featured
 		$.each(listings, function(index, listing) {
 			console.log(listing);
 			var nextListing = `<div class="card" style="width: 100%;">
-				<a href="`+ listing.url +`">
-					<img src=`+ listing.bannerPhotoURL +` class="listingImg card-img-top">
-				</a>`;
+				<a href="`+ listing.url +`">`;
+					if(listing.bannerPhotoURL == ""){						
+						nextListing += `<img src="static/img/defaultHouse.png" class="listingImg card-img-top">`;
+					}
+					else{
+						nextListing += `<img src=`+ listing.bannerPhotoURL +` class="listingImg card-img-top">`;
+					}					
+				nextListing += `</a>`;
 				if(listing.isFavorited == false){
 					nextListing += `<div style="position: relative; width: 0; height: 0">
 					<i id="listingFavoite_`+listing.id+`" class="fa fa-2x fa-star-o listingFavorite" aria-hidden="true" style="bottom: 217px; position: absolute;"></i>
@@ -639,6 +635,12 @@
   		$("#rooms2").val($("#rooms option:selected").text());
   		//Get the listings here
   		//display them here
+  		var hash = document.location.hash;
+  		hash = hash.substr(1);
+  		if(!hash){  			
+  			hash = "search";
+  			window.location.hash = hash;
+  		}
   		initialFilters();  				
   	});
 
@@ -657,10 +659,13 @@
   	}); 
 
 	$( document ).ready(function() {
-		{% if current_user.is_authenticated %}
+		var hash = document.location.hash;
+		if(hash=="#search"){
 			buildFilters("True");
+			$("#initialView").hide();
 			$("#homepage").show();
-		{% endif %}    	
+
+		}
 	});
 
 	$( function() {
