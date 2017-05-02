@@ -689,6 +689,11 @@
                 <div class="row">
                     <div class="col-xs-1"></div>
                     <div class="col-xs-10">
+                        {% if not userFavorites %}
+                            <div class="alert alert-info" role="alert">
+                                <strong>You have not favorited any listings yet. Simply click the star on any listing on the homepage to favorite them.</strong>
+                            </div>
+                        {% endif %}
                         {% for favorite in userFavorites %}
                             <div class="row">
                                 <div class="col-xs-0 col-md-1"></div>
