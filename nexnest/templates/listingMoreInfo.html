@@ -1,6 +1,10 @@
 <div class="card" style="width: 100%;">
     <a href="{{ url_for('listings.viewListing', listingID=listing.id) }}">
-        <img src="{{url_for('static', filename='img/testHouse.jpg')}}" class="listingImg card-img-top">
+        {% if listing.getBannerPhotoURL() %}
+            <img src="{{listing.getBannerPhotoURL()}}" class="listingImg card-img-top">
+        {% else %}
+            <img src="/static/img/defaultHouse.png" class="listingImg card-img-top">
+        {% endif %}
     </a>
     <div class="card-block">
         <span style="font-size: 2.0vh;">

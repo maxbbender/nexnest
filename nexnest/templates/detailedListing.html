@@ -4,7 +4,7 @@
 		<div class="col-xs-0 col-md-2 col-lg-2"></div>
 		<div class="col-xs-12 col-md-8 col-lg-8" style="padding-left: 40px;">
 			<div class="row">
-				{% if pictures|length > 0 %}
+				{% if listing.bannerPhotoURL %}
 					<a class="hidden-xs-down test-popup-link" href="{{pictures[0]}}" style="width: 100%;">
 						<img src="{{bannerPhoto}}" style="height: 40vh; width: 90%; margin-left: 5%;">
 					</a>
@@ -12,8 +12,8 @@
 						<img src="{{bannerPhoto}}" style="height: 30vh; width: 100%;">
 					</a>
 				 {% else %}
-					<a class="test-popup-link" href="/static/img/testHouse.jpg">
-						<img src="/static/img/testHouse.jpg" style="height: 350px; width: 100%;">
+					<a class="test-popup-link" href="/static/img/testHouse.jpg" style="width: 100%;">
+						<img src="/static/img/defaultHouse.png" style="height: 350px; width: 100%;">
 					</a>
 				 {% endif %}
 			</div>
@@ -41,24 +41,7 @@
 					</div>
 				</div>
 			{% else %}
-				<div class="row">
-					<div class="col-xs-12" style="text-align: center;">
-						<div class="popup-gallery">
-							<a href="/static/img/testKitchen.jpg" data-group="1" class="galleryItem">
-								<img src="/static/img/testKitchen.jpg" width="150" height="150">
-							</a>
-							<a href="/static/img/testLivingRoom.jpg" data-group="1" class="galleryItem"">
-								<img src="/static/img/testLivingRoom.jpg" width="150" height="150">
-							</a>
-							<a href="/static/img/testBathroom.jpg" data-group="1" class="galleryItem"">
-								<img src="/static/img/testBathroom.jpg" width="150" height="150">
-							</a>
-							<a href="/static/img/testBedroom.jpg" data-group="1" class="galleryItem">
-								<img src="/static/img/testBedroom.jpg" width="150" height="150">
-							</a>
-						</div>
-					</div>
-				</div>
+				
 			{% endif %}
 		</div>
 	</div>

@@ -241,7 +241,11 @@
 											                    <div class="card-block">
 												                    <div class="row">
 												                    	<div class="hidden-md-down col-lg-4">
-												                    		<img src="{{house.listing.getBannerPhotoURL()}}" class="listingImg">
+												                    		{% if house.listing.getBannerPhotoURL() %}
+												                    			<img src="{{house.listing.getBannerPhotoURL()}}" class="listingImg">
+												                    		{% else %}
+												                    			<img src="/static/img/defaultHouse.png" class="listingImg">
+												                    		{% endif %}
 												                    	</div>
 												                    	<div class="col-xs-12 col-lg-8">
 												                    		<h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ house.listing.price }}</strong> per bed per semester</h3>
@@ -297,7 +301,11 @@
 											                    <div class="card-block">
 												                    <div class="row">
 												                    	<div class="hidden-md-down col-lg-4">
-												                    		<img src="{{house.listing.getBannerPhotoURL()}}" class="listingImg">
+												                    		{% if house.listing.getBannerPhotoURL() %}
+												                    			<img src="{{house.listing.getBannerPhotoURL()}}" class="listingImg">
+												                    		{% else %}
+												                    			<img src="/static/img/defaultHouse.png" class="listingImg">
+												                    		{% endif %}
 												                    	</div>
 												                    	<div class="col-xs-12 col-lg-8">
 												                    		<h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ house.listing.price }}</strong> per bedroom per semester</h3>
@@ -371,44 +379,7 @@
 			    </div>
 		    	<br>
 		    	<div id="unBookedGoHere">
-	            {% for listing in unBookedHouses %}
-	            	<div class="row" >
-	            		<div class="col-xs-0 col-md-1"></div>
-	            		<div class="col-xs-12 col-md-10" style="width: 100%">
-			                <div class="card">
-			                    <div class="card-header">
-				                    <div class="row">
-				                    	<div class="col-xs-12 col-md-8 col-lg-8">
-				                    		<a href="{{ url_for('listings.viewListing', listingID=listing.id) }}">
-				                    			<h3 style="font-size: 3.5vh;"><strong>{{ listing.street }}, {{ listing.city }} {{ listing.state }}</strong></h3>
-				                    			<small style="font-size: 2.5vh;">Lease Period: {{ listing.start_date }} - {{ listing.end_date }}</small>
-				                    		</a>
-				                    	</div>
-				                    	<div class="col-xs-2 col-md-4 col-lg-4" style="text-align: right;">
-				                    		<a href="{{ url_for('listings.cloneListing', listingID=listing.id) }}" class="btn btn-primary">Clone Listing</a>
-				                    		{% if listing.isEditableBy(current_user) %}
-				                    			<a href="{{ url_for('listings.editListing', listingID=listing.id) }}" class="btn btn-primary">Edit Listing</a>
-				                    		{% endif %}
-				                    	</div>
-				                    </div>			                    
-			                    </div>
-			                    <div class="card-block">
-				                    <div class="row">
-				                    	<div class="hidden-md-down col-lg-4">
-				                    		<img src="{{listing.getBannerPhotoURL()}}" class="listingImg">
-				                    	</div>
-				                    	<div class="col-xs-12 col-lg-8">
-				                    		<h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ listing.price }}</strong> per bedroom per {{ listing.rent_due }}</h3>
-				                    		<h3 style="font-size: 3.0vh;"><strong>{{ listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
-				                    		&nbsp;
-				                    		{{ listing.num_full_baths }}<i class="fa fa-bath" aria-hidden="true"></i></strong></h3>
-				                    	</div>
-				                    </div>
-			                    </div>
-			                </div>
-		                </div>
-	                </div>
-	            {% endfor %}
+	            <!-- Loaded By Ajax -->
 	            </div>
 	        </div>
 	        <div class="tab-pane" id="toursTab" role="tabpanel" style="padding: 0px;">
@@ -1014,6 +985,7 @@
     	getAcceptedGroupListingsRequestsJSON();
     	getTourRequestsJSON();
     	getScheduledToursJSON();
+    	updateUnBooked();
 
     		//reset checkout boxes to unchecked
     		$(".checkoutListingSelect").each(function(i, obj){
@@ -3266,6 +3238,10 @@
 	}
 
 	$("#unbooked_time_range_select").change(function() {
+    	updateUnBooked();
+	});
+
+	function updateUnBooked(){
     	requestURL = '/landlord/unBookedHouses/JSON'
     	$("#unBookedGoHere").empty();
     	console.log($("#unbooked_time_range_select").val());
@@ -3309,9 +3285,14 @@
 	        			                    </div>
 	        			                    <div class="card-block">
 	        				                    <div class="row">
-	        				                    	<div class="hidden-md-down col-lg-4">
-	        				                    		<img src="`+listing.bannerPhotoURL+`" class="listingImg">
-	        				                    	</div>
+	        				                    	<div class="hidden-md-down col-lg-4">`;
+	        				                    		if(listing.bannerPhotoURL == ""){						
+	        				                    			nextHouse += `<img src="/static/img/defaultHouse.png" class="listingImg">`;
+	        				                    		}
+	        				                    		else{
+	        				                    			nextHouse += `<img src=`+ listing.bannerPhotoURL +` class="listingImg">`;
+	        				                    		}
+	        				                    	nextHouse+= `</div>
 	        				                    	<div class="col-xs-12 col-lg-8">
 	        				                    		<h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>`+listing.price+`</strong> per bedroom per `+listing.rent_due+`</h3>
 	        				                    		<h3 style="font-size: 3.0vh;"><strong>`+listing.numBedrooms+`<i class="fa fa-bed" aria-hidden="true"></i>
@@ -3331,8 +3312,7 @@
             	$("#unBookedGoHere").append(`<div class="alert alert-info" role="alert"><strong>You Don't have any listings that are not booked for this time period. <a href="/listing/create">Create one?</a></strong></div>`);
 	        }
         })
-
-	});
+	}
 
 </script>
 {% endblock %}
