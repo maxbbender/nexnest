@@ -1,6 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
 	{% if not current_user.is_authenticated %}
+	<style>
+	  #legend {
+	    font-family: Arial, sans-serif;
+	    background-color:rgba(255, 255, 255, 0.5);
+	    padding: 5px;
+	    margin: 5px;
+	    border: 3px solid lightblue;
+	  }
+	  #legend h3 {
+	    margin-top: 0;
+	  }
+	  #legend img {
+	    vertical-align: middle;
+	   }
+	</style>
     <!-- !!NOT LOGGED IN!! -->
     <div id="initialView">
 	    <div class="row" style="padding-left: 15px;">
@@ -320,8 +335,9 @@
 				</div>
 			</div>		
 		</div>
-		<div class="hidden-lg-down col-xl-6" style="background-image: url('static/img/mapTest.png'); height: 80vh; position: fixed; left: 59%;">
+		<div id="map" class="hidden-lg-down col-xl-5" style="height: 80vh; position: fixed;">
 		</div>
+		<div id="legend"><h3>Legend</h3></div>
 	</div>
 {% endblock %}
 {% block scripts %}
@@ -374,6 +390,7 @@
     	    	    $("#listingsGoHere").LoadingOverlay("hide");
     	    	}, 1000);
     	    	displayListings(data.listings);
+    	    	mapUpdate(data.listings);
     	    },
     	    failure: function(errMsg) {
     	        alert(errMsg);
@@ -472,6 +489,7 @@
 	    	    	    $("#listingsGoHere").LoadingOverlay("hide");
 	    	    	}, 1000);
 	    	    	displayListings(data.listings);
+	    	    	mapUpdate(data.listings);
 	    	    },
 	    	    failure: function(errMsg) {
 	    	        alert(errMsg);
@@ -515,7 +533,6 @@
   	var featuredListings = [];
 	featuredListings.push(listing7);
 	featuredListings.push(listing8);
-	
 	function displayListings(listings){
 		console.log(listings);
 		$("#listingsGoHere").empty();
@@ -567,11 +584,11 @@
 				</a>`;
 				if(listing.isFavorited == false){
 					nextListing += `<div style="position: relative; width: 0; height: 0">
-					<i id="listingFavoited_`+listing.id+`" class="fa fa-2x fa-star-o listingFavorite" aria-hidden="true" style="bottom: 217px; position: absolute;"></i>
+					<i id="listingFavoite_`+listing.id+`" class="fa fa-2x fa-star-o listingFavorite" aria-hidden="true" style="bottom: 217px; position: absolute;"></i>
 					</div>`;
 				}else{
 					nextListing += `<div style="position: relative; width: 0; height: 0">
-					<i id="listingUnfavoited_`+listing.id+`" class="fa fa-2x fa-star listingFavorite" aria-hidden="true" style="bottom: 217px; position: absolute;"></i>
+					<i id="listingFavoite_`+listing.id+`" class="fa fa-2x fa-star listingFavorite" aria-hidden="true" style="bottom: 217px; position: absolute;"></i>
 					</div>`;
 				}
 				nextListing += `<div class="card-block">
@@ -661,14 +678,16 @@
   		var id = $(this).attr("id");
   		id = id.split("_")[1];
   		console.log(id);
+  		console.log($(this));
   		if($(this).hasClass("fa-star")){
   			console.log("unfav");
+  			console.log(id);
   			$.ajax({
 	    	    type: "POST",
 	    	    url: "/user/unFavoriteListing/"+id,
 	    	    success: function(data){	    	    	
-	    	    	$("#listingUnfavoited_"+id).removeClass("fa-star");
-	    	    	$("#listingUnfavoited_"+id).addClass("fa-star-o");
+	    	    	$("#listingFavoite_"+id).removeClass("fa-star");
+	    		$("#listingFavoite_"+id).addClass("fa-star-o");
 	    	    },
 	    	    failure: function(errMsg) {
 	    	        alert(errMsg);
@@ -677,12 +696,14 @@
   		}
   		else if($(this).hasClass("fa-star-o")){
   			console.log("fav");
+  			console.log($(this));
+  			console.log(id);
 			$.ajax({
 	    	    type: "POST",
 	    	    url: "/user/favoriteListing/"+id,
 	    	    success: function(data){
-	    	    	$("#listingFavoited_"+id).removeClass("fa-star-o");
-	    	    	$("#listingFavoited_"+id).addClass("fa-star");
+	    	    	$("#listingFavoite_"+id).removeClass("fa-star-o");
+	    			$("#listingFavoite_"+id).addClass("fa-star");
 	    	    },
 	    	    failure: function(errMsg) {
 	    	        alert(errMsg);
@@ -693,5 +714,93 @@
   			console.log("ererree");
   		}
   	});
+
+  	//MAP STUFF
+  	var markers = [];  
+  	var map;
+  	var icons = {
+  		school: {
+  			 name: 'School',
+  			 //icon: iconBase + 'parking_lot_maps.png'
+  			 icon: 'https://pbs.twimg.com/profile_images/645677834359345152/46rfl_l__normal.jpg' //'School-45.png'
+  		},
+  		apartment: {
+  			name: 'Apartment',
+  			//icon: iconBase + 'info-i_maps.png'
+  			icon:  'https://i.imgur.com/AR9UBFY.png'//'Apartment-45.png'
+  		},
+  		house: {
+  			name: 'House',
+  			//icon: iconBase + 'info-i_maps.png'
+  			icon:  '/static/img/House-45.png'//'House-45.png'
+  		},
+  		complex: {
+  			 name: 'Complex',
+  			 //icon: iconBase + 'info-i_maps.png'
+  			 icon:  '/static/img/Complex-45.png'//'Complex-45.png'
+  		}
+  	};
+  			
+  			
+  	function initMap() {	
+  	  	var schoolLatLng = {lat: 41.7225603, lng: -73.9324651};
+  	  	var myOptions = {
+  	      	zoom: 15,
+  	      	scrollwheel: true,
+  	      	center: schoolLatLng
+  	    	};
+  	    map = new google.maps.Map(document.getElementById('map'), myOptions);
+  		// legend code
+  		var legend = document.getElementById('legend');
+  	    for (var key in icons) {
+  	       var type = icons[key];
+  	       var name = type.name;
+  	       var icon = type.icon;
+  	       var div = document.createElement('div');
+  	       div.innerHTML = '<img src="' + icon + '"> ' + name;
+  	       legend.appendChild(div);
+  	    }
+  		map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);		
+  		
+  	}
+  	initMap();
+
+  	function mapUpdate(listings){
+  		// first we clear the map
+  		clearMarkers();
+  		console.log(listings);
+  		console.log(listings.length);
+
+  		$.each(listings, function(index, listing) {
+  			addMarker(listing.id, listing.lat, listing.lng, listing.propertyType, '<div style="overflow: auto;"><div id="iw-container"><div class="iw-title"><b>'+listing.address+'</b></div><div class="iw-content"><a href="'+listing.url+'"><img src="'+listing.bannerPhotoURL+'" alt="'+listing.address+'"></a><p><b>[TBD] Miles to Campus</b><br><br>"'+listing.description+'"</p><p style="clear:both;"></p><table class="special"><tbody><tr><td>'+listing.numBedrooms+' Beds</td><td>'+listing.numFullBaths+' Baths</td><td><a href="'+listing.url+'">View</a></td></tr></tbody></table></div><div class="iw-bottom-gradient"></div></div></div>');
+  		});
+  	}	
+
+  	function addMarker(id, lat, long, type, info){
+  		var marker = new google.maps.Marker({
+  			id: id,
+  			position: new google.maps.LatLng(lat, long),
+  			map: map,
+  			icon: icons[type].icon
+  		});
+  		marker.addListener('click', function() {
+  			new google.maps.InfoWindow({content: info}).open(map, marker);
+  		});
+  		markers[id] = marker;  
+  	}
+  	// Removes the markers from the map, preps for refresh   
+  	function clearMarkers(id) { 
+  	   if(id == null){
+  		   for (var i = 0; i < markers.length; i++) {    
+  		   		if(markers[i] !== undefined){
+  	    			markers[i].setMap(null);
+  				}
+  	  	   }
+  		  markers = []; 
+  	   }else{
+  	   	   markers[id].setMap(null);
+  	   }
+  	}
 </script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlGruIdIOTEk9uMtdJVY6Zg5aEFzo72IA&callback=initMap" type="text/javascript" async defer></script>
 {% endblock %}
