@@ -31,6 +31,7 @@ class Group(Base):
     tours = relationship("Tour", backref='group')
     house = relationship("House", backref='group')
     favorites = relationship("GroupListingFavorite", backref='group')
+    reports = relationship("ReportGroup", backref='group')
 
     def __init__(
             self,

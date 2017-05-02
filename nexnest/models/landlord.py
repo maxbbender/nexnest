@@ -19,6 +19,7 @@ class Landlord(Base):
     state = db.Column(db.String(2))
     zip_code = db.Column(db.String(5))
     listings = relationship("LandlordListing", back_populates='landlord')
+    reports = relationship("ReportLandlord", backref='landlord')
 
     def __init__(self,
                  user,

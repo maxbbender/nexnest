@@ -1,10 +1,10 @@
 from nexnest.application import db
 
-from .base import Base
+from nexnest.models.report import Report
 
 
 # class PostReport(Base):
-class ReportGroup(Base):
+class ReportGroup(Report):
     __tablename__ = 'report_groups'
     report_id = db.Column(db.Integer,
                           db.ForeignKey('reports.id'),
@@ -13,13 +13,26 @@ class ReportGroup(Base):
                          db.ForeignKey('groups.id'),
                          primary_key=True)
 
+    __mapper_args__ = {
+        'polymorphic_identity': 'group',
+    }
+
     def __init__(
             self,
-            report,
-            group
+            title,
+            content,
+            group,
+            user,
+            sourceURL=None,
     ):
 
-        self.report = report
+        super().__init__(
+            title=title,
+            content=content,
+            user=user,
+            sourceURL=sourceURL
+        )
+
         self.group = group
 
     def __repr__(self):
