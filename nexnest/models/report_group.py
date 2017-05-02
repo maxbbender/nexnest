@@ -3,7 +3,6 @@ from nexnest.application import db
 from nexnest.models.report import Report
 
 
-# class PostReport(Base):
 class ReportGroup(Report):
     __tablename__ = 'report_groups'
     report_id = db.Column(db.Integer,

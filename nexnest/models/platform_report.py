@@ -5,7 +5,7 @@ from nexnest.models.report import Report
 
 class PlatformReport(Report):
     __tablename__ = 'platform_reports'
-    report_id = db.Column(db.Integer, primary_key=True, db.ForeignKey('reports.id'))
+    report_id = db.Column(db.Integer, db.ForeignKey('reports.id'), primary_key=True)
 
     __mapper_args__ = {
         'polymorphic_identity': 'platform',

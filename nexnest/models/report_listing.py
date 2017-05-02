@@ -13,7 +13,7 @@ class ReportListing(Report):
                            primary_key=True)
 
     __mapper_args__ = {
-        'polymorphic_identity': 'landlord',
+        'polymorphic_identity': 'listing',
     }
 
     def __init__(

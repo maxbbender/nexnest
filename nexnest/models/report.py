@@ -14,7 +14,7 @@ class Report(Base):
     content = db.Column(db.Text)
     source_url = db.Column(db.Text)
     type = db.Column(db.String(50))
-    user_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
 

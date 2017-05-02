@@ -5,6 +5,7 @@ from nexnest.application import db, session
 
 from nexnest.models.base import Base
 from nexnest.models.security_deposit import SecurityDeposit
+# from nexnest.models.report_landlord import Report 
 
 
 class Landlord(Base):
