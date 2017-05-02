@@ -915,7 +915,8 @@
                 errMsg += dot;
             }
             if (errMsg === dot) {
-                errMsg = self.msgAjaxError.replace('{operation}', operation);
+                console.error("Something Went Wrong With Upload");
+                //errMsg = self.msgAjaxError.replace('{operation}', operation);
             }
             self.cancelling = false;
             return fileName ? '<b>' + fileName + ': </b>' + errMsg : errMsg;
