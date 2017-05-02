@@ -243,6 +243,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% if current_user.isLandlord %}
                                 <hr>
                                 <div class="row">
                                     <div class="col-xs-12">
@@ -273,6 +274,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% endif %}
                                 <hr>
                                 <div class="row">
                                     <div class="col-xs-12">
@@ -303,6 +305,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% if not current_user.isLandlord %}
                                 <hr>
                                 <div class="row">
                                     <div class="col-xs-12">
@@ -333,6 +336,8 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% endif %}
+                                {% if not current_user.isLandlord%}
                                 <hr>
                                 <div class="row">
                                     <div class="col-xs-12">
@@ -363,6 +368,8 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% endif %}
+                                {% if current_user.isLandlord %}
                                 <hr>
                                 <div class="row">
                                     <div class="col-xs-12">
@@ -393,6 +400,8 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% endif %}
+                                {% if not current_user.isLandlord %}
                                 <hr>
                                 <div class="row">
                                     <div class="col-xs-12">
@@ -423,6 +432,8 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% endif %}
+                                {% if not current_user.isLandlord %}
                                 <hr>
                                 <div class="row">
                                     <div class="col-xs-12">
@@ -453,6 +464,8 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% endif %}
+                                {% if not current_user.isLandlord %}
                                 <hr>
                                 <div class="row">
                                     <div class="col-xs-12">
@@ -483,10 +496,12 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% endif %}
+                                {% if current_user.isLandlord %}
                                 <hr>
                                 <div class="row">
                                     <div class="col-xs-12">
-                                        <h4 class="card-title"><strong>Rent Paid</strong></h4>
+                                        <h4 class="card-title"><strong>A Tenant has Paid Their Rent</strong></h4>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -513,6 +528,8 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% endif %}
+                                {% if not current_user.isLandlord %}
                                 <hr>
                                 <div class="row">
                                     <div class="col-xs-12">
@@ -543,6 +560,8 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% endif %}
+                                {% if current_user.isLandlord %}
                                 <hr>
                                 <div class="row">
                                     <div class="col-xs-12">
@@ -573,6 +592,8 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% endif %}
+                                {% if not current_user.isLandlord %}
                                 <hr>
                                 <div class="row">
                                     <div class="col-xs-12">
@@ -603,6 +624,8 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% endif %}
+                                {% if not current_user.isLandlord %}
                                 <hr>
                                 <div class="row">
                                     <div class="col-xs-12">
@@ -633,10 +656,12 @@
                                         </div>
                                     </div>
                                 </div>
+                                {% endif %}
+                                {% if not current_user.isLandlord %}
                                 <hr>
                                 <div class="row">
                                     <div class="col-xs-12">
-                                        <h4 class="card-title"><strong>Property Request Completed</strong></h4>
+                                        <h4 class="card-title"><strong>Property Request Completed(House is Yours)</strong></h4>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -645,7 +670,7 @@
                                             <label class="control-label form-control-feedback" id="tour_denied_label">Notification</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
-                                                    {{form.group_listing_completed_notification(class='form-control form-check-input')}}
+                                                    {{form.house_notification(class='form-control form-check-input')}}
                                                     <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
                                                 </label>
                                             </div>
@@ -656,13 +681,14 @@
                                             <label class="control-label form-control-feedback" id="tour_denied_label">Email</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
-                                                    {{form.group_listing_completed_email(class='form-control form-check-input')}}
+                                                    {{form.house_email(class='form-control form-check-input')}}
                                                     <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                {% endif %}
                                 <hr>
                                 <input type='submit' value='Update Preferences' class="btn btn-primary">
                             </div>                    
