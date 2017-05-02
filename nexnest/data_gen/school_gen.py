@@ -9,7 +9,9 @@ fredonia = School('SUNY at Fredonia',
                   'NY',
                   '14063',
                   '7166733111',
-                  'http://home.fredonia.edu/')
+                  'http://home.fredonia.edu/',
+                  42.4540921,
+                  -79.3340398)
 
 marist = School('Marist',
                 '3399 North Road',
@@ -17,7 +19,9 @@ marist = School('Marist',
                 'NY',
                 '12601',
                 '8455753000',
-                'http://www.marist.edu/')
+                'http://www.marist.edu/',
+                41.7225603,
+                -73.9324651)
 
 
 session.add(fredonia)

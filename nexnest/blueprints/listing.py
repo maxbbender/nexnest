@@ -377,7 +377,6 @@ def editListing(listingID):
                             filename = "listing" + str(listingID) + "banner" + idGenerator() + extension
                             savePath = os.path.join(listingBannerPath, filename)
 
-
                         file.save(savePath)
                         currentListing.banner_photo_url = '/uploads/listings/%s/bannerPhoto/%s' % (listingID, filename)
                         session.commit()
@@ -405,6 +404,7 @@ def editListing(listingID):
 
 
 @listings.route("/listing/upload/<listingID>", methods=["POST"])
+@login_required
 @csrf.exempt
 def upload(listingID):
     """Handle the upload of a file."""
@@ -451,7 +451,7 @@ def upload(listingID):
 
 
 @listings.route("/listing/delete/<listingID>/<filename>", methods=["POST"])
-@csrf.exempt
+@login_required
 def deletePhoto(listingID, filename):
     listing = Listing.query.filter_by(id=listingID).first_or_404()
 
@@ -467,7 +467,7 @@ def deletePhoto(listingID, filename):
 
 
 @listings.route("/listing/deleteBanner/<listingID>/<filename>", methods=["POST"])
-@csrf.exempt
+@login_required
 def deleteBannerPhoto(listingID, filename):
     listing = Listing.query.filter_by(id=listingID).first_or_404()
 
@@ -556,7 +556,7 @@ def searchListingsAJAX():
 
     # Required Fields : `bedrooms` | `minPrice` | `maxPrice` | `priceTerm` | `school`
     allListings = session.query(Listing).filter(Listing.active == True,
-                                                Listing.featured == False)
+                                                Listing.show == True)
 
     # featuredListings = Listings.query.filter(Listing.active == True,
     #                                          Listing.featured == True)
@@ -634,6 +634,8 @@ def searchListingsAJAX():
         if 'cats' in petList:
             allListings = allListings.filter(Listing.cats)
 
+    logger.debug("Pets allListings %r" % allListings.all())
+
     # Includes
     if 'includes' in postedJSON:
         includeList = postedJSON['includes']
@@ -658,6 +660,8 @@ def searchListingsAJAX():
 
         if 'garbageRemoval' in includeList:
             allListings = allListings.filter(Listing.garbage_service)
+
+    logger.debug("Includes allListings %r" % allListings.all())
 
     # Listing Types
     if 'listingTypes' in postedJSON:
@@ -693,6 +697,9 @@ def searchListingsAJAX():
 
     standardListings = allListings.filter(Listing.featured == False).all()
     featuredListings = allListings.filter(Listing.featured == True).limit(2).all()
+
+    logger.debug("Standard allListings %r" % standardListings)
+    logger.debug("Featured allListings %r" % featuredListings)
 
     # sortBy Check
     if 'sortBy' in postedJSON:
@@ -758,7 +765,7 @@ def searchListingsAJAX():
 
                 sortedListings.append(closestListing)
                 standardListings.remove(closestListing)
-
+ 
             standardListings = sortedListings
 
     listingJSONList = []
@@ -770,11 +777,33 @@ def searchListingsAJAX():
         else:
             listingDict['isFavorited'] = False
 
+        # # Driving and Walking Time
+        # listingSchool = ListingSchool.query.filter_by(listing=listing).all()
+
+        # if listingSchool is not None:
+        #     listingSchoolArray = []
+
+        #     for ls in listingSchool:
+        #         lsDict = {'school': ls.school.name}
+
+        #         times = {
+        #             'drivingMiles': ls.driving_miles,
+        #             'drivingTime': ls.driving_time,
+        #             'walkingMiles': ls.walking_miles,
+        #             'walkingTime': ls.walking_time
+        #         }
+
+        #         lsDict['times'] = times
+
+        #         listingSchoolArray.append(lsDict)
+
+        #     listingDict['schoolDistances'] = listingSchoolArray
+
         listingJSONList.append(listingDict)
 
-    logger.debug("Standard Listings")
-    for tempDict in listingJSONList:
-        pprint(tempDict)
+    # logger.debug("Standard Listings")
+    # for tempDict in listingJSONList:
+    #     pprint(tempDict)
 
     featuredJSONList = []
     for listing in featuredListings:
@@ -787,9 +816,9 @@ def searchListingsAJAX():
 
         featuredJSONList.append(listingDict)
 
-    logger.debug("Featured Listings")
+    # logger.debug("Featured Listings")
+    # for tempDict in featuredJSONList:
+    #     pprint(tempDict)
 
-    for tempDict in featuredJSONList:
-        pprint(tempDict)
-
-    return jsonify(listings=listingJSONList, featuredListings=featuredJSONList)
+    school = School.query.filter_by(name=postedJSON['school']).first()
+    return jsonify(school=school.serialize, listings=listingJSONList, featuredListings=featuredJSONList)

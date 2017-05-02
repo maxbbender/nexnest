@@ -421,6 +421,10 @@ h1 = HouseFactory(listing=listing1, group=group1)
 h2 = HouseFactory(listing=listing2, group=group2)
 h3 = HouseFactory(listing=listing3, group=group3)
 
+listing1.show = False
+listing2.show = False
+listing3.show = False
+
 session.commit()
 
 for user in group1AcceptedUsers:

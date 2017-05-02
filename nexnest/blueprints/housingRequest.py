@@ -208,7 +208,7 @@ def confirmRequest(id):
 
         if groupListing.isEditableBy(current_user):
             groupListing.completed = True
-            groupListing.listing.active = False
+            groupListing.listing.show = False
             session.commit()
 
             flash('Your House Request for %s has been completed! Welcome to your new house!' % groupListing.listing.street, 'success')
@@ -461,7 +461,7 @@ def completeHousingRequestAJAX(id):
     if groupListing is not None:
         if groupListing.isEditableBy(current_user, toFlash=False):
             groupListing.completed = True
-            groupListing.listing.active = False
+            groupListing.listing.show = False
             session.commit()
 
             # Create the House Object
