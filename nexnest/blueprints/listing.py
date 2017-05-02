@@ -765,7 +765,7 @@ def searchListingsAJAX():
 
                 sortedListings.append(closestListing)
                 standardListings.remove(closestListing)
- 
+
             standardListings = sortedListings
 
     listingJSONList = []
@@ -798,6 +798,20 @@ def searchListingsAJAX():
         #         listingSchoolArray.append(lsDict)
 
         #     listingDict['schoolDistances'] = listingSchoolArray
+        listingSchool = ListingSchool.query.filter_by(listing=listing, school=school).first()
+
+        if listingSchool is not None:
+            if listingSchool.driving_time is not None:
+                listingDict['drivingTime'] = float(listingSchool.driving_time)
+
+            if listingSchool.driving_miles is not None:
+                listingDict['drivingMiles'] = float(listingSchool.driving_miles)
+
+            if listingSchool.walking_time is not None:
+                listingDict['walkingTime'] = float(listingSchool.walking_time)
+
+            if listingSchool.walking_miles is not None:
+                listingDict['walkingMiles'] = float(listingSchool.walking_miles)
 
         listingJSONList.append(listingDict)
 
