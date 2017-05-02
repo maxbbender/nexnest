@@ -15,6 +15,7 @@ indexs = Blueprint('indexs', __name__, template_folder='../templates')
 
 @indexs.route('/')
 @indexs.route('/index')
+@indexs.route('/index#search')
 def index():
     form = LoginForm(request.form)
     allListings = session.query(Listing).all()
@@ -26,6 +27,7 @@ def index():
         # db_session.add(user)
         flash('Login Successfull')
         return redirect(url_for('indexs.index'))
+
     return render_template('index.html',
                            form=form,
                            listings=allListings,
