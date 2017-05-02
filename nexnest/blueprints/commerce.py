@@ -162,7 +162,10 @@ def genTransaction():
                 session.commit()
 
                 # Now we want to go through the listings and set them to active
-                for listing in listingTransaction.listings:
+                logger.debug('Successfull Result')
+                logger.debug("Setting these listings to active %r" % listingTransaction.listings)
+                for ltl in listingTransaction.listings:
+                    listing = ltl.listing
                     listing.active = True
 
                     ltl = ListingTransactionListing.query.filter_by(listing=listing).first()
@@ -173,7 +176,6 @@ def genTransaction():
 
                     session.commit()
 
-                logger.debug('Successfull Result')
                 flash('Transaction Success, your listings are now live!', 'success')
                 return redirect(url_for('indexs.index'))
 
