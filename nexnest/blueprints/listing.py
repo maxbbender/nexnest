@@ -22,16 +22,17 @@ from nexnest.models.school import School
 from nexnest.utils.flash import flash_errors
 from nexnest.utils.file import allowed_file, isPDF
 from nexnest.utils.school import allSchoolsAsStrings
+from nexnest.utils.misc import idGenerator
 
 from pprint import pprint
 
 listings = Blueprint('listings', __name__, template_folder='../templates')
 
 
-@listings.route('/listing/view/<listingID>', methods=['GET', 'POST'])
+@listings.route('/listing/view/<int:listingID>', methods=['GET', 'POST'])
 @login_required
 def viewListing(listingID):
-    listing = session.query(Listing).filter_by(id=listingID).first()
+    listing = session.query(Listing).filter_by(id=listingID).first_or_404()
     myGroups = current_user.accepted_groups
     return render_template('detailedListing.html',
                            suggestListingForm=SuggestListingForm(),
@@ -264,7 +265,12 @@ def editListing(listingID):
         # Get the bannerPhoto from the liting
         bannerlistingPicturePath = os.path.join(folderPath, 'bannerPhoto')
         if os.path.exists(bannerlistingPicturePath):
-            bannerPath = os.listdir(bannerlistingPicturePath)[0]
+            bannerPathList = os.listdir(bannerlistingPicturePath)
+
+            if len(bannerPathList) > 0:
+                bannerPath = bannerPathList[0]
+            else:
+                bannerPath = None
         else:
             bannerPath = None
 
@@ -326,6 +332,7 @@ def editListing(listingID):
                 if form.rent_due == 'semester':
                     currentListing.first_semester_rent_due_date = form.first_semester_rent_due_date.data
                     currentListing.second_semester_rent_due_date = form.second_semester_rent_due_date.data
+
                 session.commit()
 
                 listingPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
@@ -339,6 +346,11 @@ def editListing(listingID):
                 listingPicturePath = os.path.join(listingPath, 'pictures')
                 if not os.path.exists(listingPicturePath):
                     os.makedirs(listingPicturePath)
+
+                logger.debug('app.config[UPLOAD_FOLDER] %s' % app.config['UPLOAD_FOLDER'])
+                logger.debug('listingPath %s' % listingPath)
+                logger.debug('listingBannerPath %s' % listingBannerPath)
+                logger.debug('listingPicturePath %s' % listingPicturePath)
 
                 # Make sure to delete the original banner photo in case of different extension
                 bannerPhotos = os.listdir(listingBannerPath)
@@ -355,10 +367,17 @@ def editListing(listingID):
                 for file in uploadedFiles:
                     if file and allowed_file(file.filename):
                         extension = os.path.splitext(file.filename)[1]
-                        filename = "listing" + listingID + "banner" + extension
+                        filename = "listing" + str(listingID) + "banner" + idGenerator() + extension
+                        savePath = os.path.join(listingBannerPath, filename)
 
-                        file.save(os.path.join(listingBannerPath, filename))
-                        currentListing.banner_photo_url = os.path.join(listingBannerPath, filename)
+                        while os.path.exists(savePath):
+                            filename = "listing" + str(listingID) + "banner" + idGenerator() + extension
+                            savePath = os.path.join(listingBannerPath, filename)
+
+
+                        file.save(savePath)
+                        currentListing.banner_photo_url = '/uploads/listings/%s/bannerPhoto/%s' % (listingID, filename)
+                        session.commit()
                     else:
                         flash("Error saving file %s" % file.filename, 'error')
 
@@ -404,29 +423,26 @@ def upload(listingID):
             if not os.path.exists(listingPictureFolder):
                 os.makedirs(listingPictureFolder)
         except:
-            if is_ajax:
-                logger.error(False, "Couldn't create upload directory: {}".format(listingPictureFolder))
-            else:
-                return "Couldn't create upload directory: {}".format(listingPictureFolder)
+            logger.error('Could not create directories')
 
     # Now we uplopad the files
     for file in request.files.getlist("pictures"):
         if file and allowed_file(file.filename):
             extension = os.path.splitext(file.filename)[1]
 
-            list = os.listdir(dir)  # dir is your directory path
-            number_files = len(list)
-            filename = "listing" + listingID + "photo" + str(number_files) + extension
+            filename = "listing" + listingID + "photo" + idGenerator() + extension
 
-            pathToSave = os.path.join(listingPictureFolder, filename)
-            file.save(pathToSave)
+            savePath = os.path.join(listingPictureFolder, filename)
 
-            logger.debug(number_files)
+            while os.path.exists(savePath):
+                filename = "listing" + listingID + "photo" + idGenerator() + extension
+                savePath = os.path.join(listingPictureFolder, filename)
+
+            file.save(savePath)
             logger.debug("filename is " + filename)
-            logger.debug("file saved at %s" % pathToSave)
+            logger.debug("file saved at %s" % savePath)
 
     if is_ajax:
-        logger.debug(True, listingPictureFolder)
         return jsonify(results={'success': True})
     else:
         return redirect(url_for("listings.view", listingID=listing.id))
@@ -486,9 +502,16 @@ def uploadPhotos(listingID):
                 for file in uploadedFiles:
                     if file and allowed_file(file.filename):
                         extension = os.path.splitext(file.filename)[1]
-                        filename = "listing" + listingID + "banner" + extension
-                        file.save(os.path.join(listingBannerPath, filename))
-                        listing.banner_photo_url = os.path.join(listingBannerPath, filename)
+                        filename = "listing" + listingID + "banner" + idGenerator() + extension
+                        savePath = os.path.join(listingBannerPath, filename)
+
+                        while os.path.exists(savePath):
+                            filename = "listing" + listingID + "banner" + idGenerator() + extension
+                            savePath = os.path.join(listingBannerPath, filename)
+
+                        file.save(savePath)
+
+                        listing.banner_photo_url = '/uploads/listings/%s/bannerPhoto/%s' % (listingID, filename)
                         session.commit()
                     else:
                         flash("Error saving file %s" % file.filename, 'error')
