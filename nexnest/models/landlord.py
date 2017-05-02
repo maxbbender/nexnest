@@ -370,3 +370,12 @@ class Landlord(Base):
                 completedMaintenance.append(maintenanceObject)
 
         return completedMaintenance
+
+    def getUnBookedHousesJSON(self):
+        unBookedHouses = []
+        currDate = date.today()
+        for listing in self.getListings():
+            if not listing.hasHouse():
+                listingObject = {'listing': listing.serialize}
+                unBookedHouses.append(listingObject)
+        return unBookedHouses

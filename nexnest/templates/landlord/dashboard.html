@@ -40,7 +40,7 @@
         	    {% endif %}
         	    <li class="nav-item">
         	        <a class="nav-link left-panel" style="padding-left: 10px;" id="unOccupiedListingsTab2" data-toggle="tab" href="#unOccupiedListingsTab" role="tab">
-        	        	<i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">UnOccupied Listings</span>
+        	        	<i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">Un-Booked Listings</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
@@ -370,9 +370,9 @@
 			    	</div>
 			    </div>
 		    	<br>
-
+		    	<div id="unBookedGoHere">
 	            {% for listing in unBookedHouses %}
-	            	<div class="row">
+	            	<div class="row" >
 	            		<div class="col-xs-0 col-md-1"></div>
 	            		<div class="col-xs-12 col-md-10" style="width: 100%">
 			                <div class="card">
@@ -409,6 +409,7 @@
 		                </div>
 	                </div>
 	            {% endfor %}
+	            </div>
 	        </div>
 	        <div class="tab-pane" id="toursTab" role="tabpanel" style="padding: 0px;">
 	        	<div class="row">
@@ -3265,7 +3266,72 @@
 	}
 
 	$("#unbooked_time_range_select").change(function() {
-		alert("test");
+    	requestURL = '/landlord/unBookedHouses/JSON'
+    	$("#unBookedGoHere").empty();
+    	console.log($("#unbooked_time_range_select").val());
+    	$.getJSON(requestURL, function(data) {
+    		console.log(data)
+            unBookedHouses = data['unBookedHouses'];
+            console.log(unBookedHouses);
+            var anythingChosen = false;
+            $.each(unBookedHouses, function(index, listing) {
+            	listing=listing.listing;
+	            if(listing.timePeriodDateRange == $("#unbooked_time_range_select").val()){
+	            	anythingChosen = true;
+	            	var nextHouse =`
+	        	            	<div class="row" >
+	        	            		<div class="col-xs-0 col-md-1"></div>
+	        	            		<div class="col-xs-12 col-md-10" style="width: 100%">
+	        			                <div class="card">
+	        			                    <div class="card-header">
+	        				                    <div class="row">
+	        				                    	<div class="col-xs-12 col-md-8 col-lg-8">
+	        				                    		<a href="`+listing.url+`">
+	        				                    			<h3 style="font-size: 3.5vh;"><strong>`+listing.street+`, `+listing.city+` `+listing.state+`</strong></h3>
+	        				                    			<small style="font-size: 2.5vh;">Lease Period: `+listing.startDate+` - `+listing.endDate+`</small>
+	        				                    		</a>
+	        				                    	</div>
+	        				                    	<div class="col-xs-2 col-md-4 col-lg-4" style="text-align: right;">
+	        				                    		<a href="/listing/clone/`+listing.id+`" class="btn btn-primary">Clone Listing</a>`;
+	        				                    		requestURL = '/landlord/' + listing.id + '/isEditable/AJAX';
+	        				                    		$.getJSON(requestURL, function(data) {
+	        				                    		    results = data['results'];
+	        				                    		    // alert(data['results'].success);
+	        				                    		    if (results.success == true){ 
+	        				                    		        nextHouse += `<a href="/listing/edit/`+listing.id+`" class="btn btn-primary">Edit Listing</a>`;
+	        				                    		    } else {
+	        				                    		       
+	        				                    		    }
+	        				                    		});
+	        				                    	nextHouse += `
+	        				                    	</div>
+	        				                    </div>			                    
+	        			                    </div>
+	        			                    <div class="card-block">
+	        				                    <div class="row">
+	        				                    	<div class="hidden-md-down col-lg-4">
+	        				                    		<img src="`+listing.bannerPhotoURL+`" class="listingImg">
+	        				                    	</div>
+	        				                    	<div class="col-xs-12 col-lg-8">
+	        				                    		<h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>`+listing.price+`</strong> per bedroom per `+listing.rent_due+`</h3>
+	        				                    		<h3 style="font-size: 3.0vh;"><strong>`+listing.numBedrooms+`<i class="fa fa-bed" aria-hidden="true"></i>
+	        				                    		&nbsp;
+	        				                    		`+listing.numFullBaths+`<i class="fa fa-bath" aria-hidden="true"></i></strong></h3>
+	        				                    	</div>
+	        				                    </div>
+	        			                    </div>
+	        			                </div>
+	        		                </div>
+	        	                </div>
+	            	`
+	            	$("#unBookedGoHere").append(nextHouse);
+	            }    
+            })
+            if(anythingChosen == false){
+            	$("#unBookedGoHere").append(`<div class="alert alert-info" role="alert"><strong>You Don't have any listings that are not booked for this time period. <a href="/listing/create">Create one?</a></strong></div>`);
+	        }
+        })
+
 	});
 
 </script>
