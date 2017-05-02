@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-	{% if not current_user.is_authenticated %}
 	<style>
 	  #legend {
 	    font-family: Arial, sans-serif;
@@ -16,12 +15,14 @@
 	    vertical-align: middle;
 	   }
 	</style>
+	{{search}}
+	{% if not search == "search" %}
     <!-- !!NOT LOGGED IN!! -->
     <div id="initialView">
 	    <div class="row" style="padding-left: 15px;">
 	    	<div class="col-xl-12">
 		    	<div class="card card-inverse">
-		    		<img class="card-img" src="static/img/testHouse7.jpg" alt="Card image" style="width: 100%;">
+		    		<img class="card-img" src="/static/img/testHouse7.jpg" alt="Card image" style="width: 100%;">
 		    		<div class="card-img-overlay" style="display: flex; flex-direction: column; justify-content: center;">
 		    			<div class="row" style="margin-top: -150px;">
 		    				<h1 style="color: white; padding-left: 10%;">Insert Tagline from Nate and Alex Here</h1>
@@ -369,7 +370,7 @@
 
 	function initialFilters(){
 		var filters = {};
-    	filters.school = $("#where option:selected").text();
+    	filters.school = $("#school option:selected").text();
     	filters.term = $("#when option:selected").text();
     	filters.bedrooms = parseInt($("#rooms").val(), 10);
     	var prices = $("#priceSlider").val().split(',');
@@ -512,27 +513,6 @@
   			$("#toggleMap").text("Switch To Map View")
   		}  		
   	});
-
-  	var listing7 = {
-  		url: '/listing/view/2',
-  		briefStreet: '7 Trap Lane',
-  		city: 'Medford',
-  		state: 'NY',
-  		num_bedrooms: '2',
-  		num_full_baths: '1',
-  		price: '3750',
-  		rent_due: 'month'
-  	}
-  	var listing8 = {
-  		url: '/listing/view/2',
-  		briefStreet: '69 Street Name',
-  		city: 'Patchogue',
-  		state: 'NY',
-  		num_bedrooms: '3',
-  		num_full_baths: '2',
-  		price: '4500',
-  		rent_due: 'semester'
-  	}
   	
 	function displayListings(listings, featuredListings){
 		console.log(listings);
@@ -655,6 +635,12 @@
   		$("#rooms2").val($("#rooms option:selected").text());
   		//Get the listings here
   		//display them here
+  		var hash = document.location.hash;
+  		hash = hash.substr(1);
+  		if(!hash){  			
+  			hash = "search";
+  			window.location.hash = hash;
+  		}
   		initialFilters();  				
   	});
 
@@ -673,10 +659,13 @@
   	}); 
 
 	$( document ).ready(function() {
-		{% if current_user.is_authenticated %}
+		var hash = document.location.hash;
+		if(hash=="#search"){
 			buildFilters("True");
+			$("#initialView").hide();
 			$("#homepage").show();
-		{% endif %}    	
+
+		}
 	});
 
 	$( function() {

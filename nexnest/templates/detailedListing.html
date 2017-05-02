@@ -63,44 +63,46 @@
 					</div>
 				{% endif %}
 			</div>
-			{% if not current_user in listing.landLordsAsUsers() %}
-			<hr>
-			<div class="row hidden-md-down">
-				<div class="col-xs-12 col-lg-3" style="text-align:left">
-					<a href="{{ url_for('indexs.index') }}" class="btn btn-primary">Contact Landlord</a>
+			{% if current_user.is_authenticated %}
+				{% if not current_user in listing.landLordsAsUsers() %}
+				<hr>
+				<div class="row hidden-md-down">
+					<div class="col-xs-12 col-lg-3" style="text-align:left">
+						<a href="{{ url_for('indexs.index') }}" class="btn btn-primary">Contact Landlord</a>
+					</div>
+					<div class="col-xs-12 col-lg-3 col-centered">					
+			            <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#selectGroupForTourModal">Request Tour</a>
+					</div>
+					<div class="col-xs-12 col-lg-3 col-centered">
+						<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#selectGroupForHouseModal">Request House</a>
+					</div>
+					<div class="col-xs-12 col-lg-3" style="text-align:right">
+						<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestListingModal">Favorite For Group</a>
+					</div>
 				</div>
-				<div class="col-xs-12 col-lg-3 col-centered">					
-		            <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#selectGroupForTourModal">Request Tour</a>
+				<div class="row hidden-lg-up">
+					<div class="col-xs-12 col-md-6 col-lg-3 col-centered">
+						<a href="{{ url_for('indexs.index') }}" class="btn btn-primary" style="width: 160.31px;">Contact Landlord</a>
+					</div>
+					<br><br>
+					<div class="col-xs-12 col-md-6 col-lg-3 col-centered">					
+			            <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#selectGroupForTourModal" style="width: 160.31px;">Request Tour</a>
+					</div>
+					<br><br>
+					<div class="col-xs-12 col-md-6 col-lg-3 col-centered">
+						<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#selectGroupForHouseModal" style="width: 160.31px;">Request House</a>
+					</div>
+					<br><br>
+					<div class="col-xs-12 col-md-6 col-lg-3 col-centered">
+						<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestListingModal" style="width: 160.31px;">Favorite For Group</a>
+					</div>
 				</div>
-				<div class="col-xs-12 col-lg-3 col-centered">
-					<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#selectGroupForHouseModal">Request House</a>
-				</div>
-				<div class="col-xs-12 col-lg-3" style="text-align:right">
-					<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestListingModal">Favorite For Group</a>
-				</div>
-			</div>
-			<div class="row hidden-lg-up">
-				<div class="col-xs-12 col-md-6 col-lg-3 col-centered">
-					<a href="{{ url_for('indexs.index') }}" class="btn btn-primary" style="width: 160.31px;">Contact Landlord</a>
-				</div>
-				<br><br>
-				<div class="col-xs-12 col-md-6 col-lg-3 col-centered">					
-		            <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#selectGroupForTourModal" style="width: 160.31px;">Request Tour</a>
-				</div>
-				<br><br>
-				<div class="col-xs-12 col-md-6 col-lg-3 col-centered">
-					<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#selectGroupForHouseModal" style="width: 160.31px;">Request House</a>
-				</div>
-				<br><br>
-				<div class="col-xs-12 col-md-6 col-lg-3 col-centered">
-					<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestListingModal" style="width: 160.31px;">Favorite For Group</a>
-				</div>
-			</div>
-			{% endif %}
-			{% if current_user in listing.landLordsAsUsers() %}
-				<a href="{{url_for('listings.cloneListing', listingID=listing.id)}}" class="btn btn-primary">Clone Listing</a>
-				{% if listing.isEditableBy(current_user) %}
-					<a href="{{url_for('listings.editListing', listingID=listing.id)}}" class="btn btn-primary">Edit Listing</a>
+				{% endif %}
+				{% if current_user in listing.landLordsAsUsers() %}
+					<a href="{{url_for('listings.cloneListing', listingID=listing.id)}}" class="btn btn-primary">Clone Listing</a>
+					{% if listing.isEditableBy(current_user) %}
+						<a href="{{url_for('listings.editListing', listingID=listing.id)}}" class="btn btn-primary">Edit Listing</a>
+					{% endif %}
 				{% endif %}
 			{% endif %}
 			
