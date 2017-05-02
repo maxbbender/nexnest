@@ -73,8 +73,8 @@ class ListingSchool(Base):
             logger.debug(pformat(walkingResponse))
 
             if walkingResponse['status'] == 'OK' and walkingResponse['rows'][0]['elements'][0]['status'] == 'OK':
-                self.driving_time = math.ceil(walkingResponse['rows'][0]['elements'][0]['duration']['value'] / 60)
-                self.driving_miles = round((walkingResponse['rows'][0]['elements'][0]['distance']['value'] / 1609.34), 1)
+                self.walking_time = math.ceil(walkingResponse['rows'][0]['elements'][0]['duration']['value'] / 60)
+                self.walking_miles = round((walkingResponse['rows'][0]['elements'][0]['distance']['value'] / 1609.34), 1)
             else:
                 logger.warning('Could not calculate walking time from %r to %r' % (self.listing, self.school))
                 logger.warning('Status from googlemaps : %s' % walkingResponse['status'])
