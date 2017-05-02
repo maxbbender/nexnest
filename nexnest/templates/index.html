@@ -390,6 +390,7 @@
     	    	    $("#listingsGoHere").LoadingOverlay("hide");
     	    	}, 1000);
     	    	displayListings(data.listings);
+    	    	//call map init with lat, lng of school
     	    	mapUpdate(data.listings);
     	    },
     	    failure: function(errMsg) {
@@ -489,6 +490,7 @@
 	    	    	    $("#listingsGoHere").LoadingOverlay("hide");
 	    	    	}, 1000);
 	    	    	displayListings(data.listings);
+	    	    	//call map init with lat, lng of school
 	    	    	mapUpdate(data.listings);
 	    	    },
 	    	    failure: function(errMsg) {
@@ -742,7 +744,7 @@
   	};
   			
   			
-  	function initMap() {	
+  	function initMap() {
   	  	var schoolLatLng = {lat: 41.7225603, lng: -73.9324651};
   	  	var myOptions = {
   	      	zoom: 15,
