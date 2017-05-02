@@ -15,3 +15,16 @@ def allSchoolsAsStrings():
         schoolStringArray.append(school.name)
 
     return schoolStringArray
+
+
+def allSchools():
+    logger.debug('allSchoolsAsStringsWithCord()')
+
+    allSchools = School.query.all()
+
+    schoolDictArray = []
+
+    for school in allSchools:
+        schoolDictArray.append(school.serialize)
+
+    return schoolDictArray

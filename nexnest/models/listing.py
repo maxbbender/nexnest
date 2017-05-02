@@ -137,7 +137,7 @@ class Listing(Base):
             lat=None,
             lng=None,
             banner_photo_url=None,
-            show=False,
+            show=True,
             active=False):
 
         self.street = street
@@ -202,7 +202,7 @@ class Listing(Base):
 
         if lat is None and lng is None:
 
-            gmaps = googlemaps.Client(key='AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w')
+            gmaps = googlemaps.Client(key=app.config['GOOGLE_MAPS_KEY'])
 
             geocode = gmaps.geocode(self.address)
 

@@ -15,6 +15,8 @@ schools = Table('schools', meta,
                 Column('zip_code', String(length=5)),
                 Column('phone', String(length=10)),
                 Column('website', Text()),
+                Column('lat', Numeric()),
+                Column('lng', Numeric()),
                 Column('date_created', DateTime()),
                 Column('date_modified', DateTime()))
 

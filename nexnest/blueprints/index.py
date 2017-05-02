@@ -7,7 +7,7 @@ from nexnest.application import session
 from nexnest.models.listing import Listing
 from nexnest.models.user import User
 from nexnest.utils.email import send_email
-from nexnest.utils.school import allSchoolsAsStrings
+from nexnest.utils.school import allSchoolsAsStrings, allSchools
 
 
 indexs = Blueprint('indexs', __name__, template_folder='../templates')
