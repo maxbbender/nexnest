@@ -365,6 +365,9 @@ def editListing(listingID):
                 # Lets add the photos
                 uploadedFiles = request.files.getlist("bannerPicture")
                 for file in uploadedFiles:
+                    if file.filename == '':
+                        continue
+
                     if file and allowed_file(file.filename):
                         extension = os.path.splitext(file.filename)[1]
                         filename = "listing" + str(listingID) + "banner" + idGenerator() + extension
@@ -379,7 +382,7 @@ def editListing(listingID):
                         currentListing.banner_photo_url = '/uploads/listings/%s/bannerPhoto/%s' % (listingID, filename)
                         session.commit()
                     else:
-                        flash("Error saving file %s" % file.filename, 'error')
+                        flash("Error saving file %s" % file.filename, 'danger')
 
                 flash('Listing Updated', 'info')
                 return redirect(url_for('listings.viewListing',
@@ -413,9 +416,8 @@ def upload(listingID):
 
     # Can this listing be changed by the current user
     if listing.isEditableBy(current_user):
-        listingUploadFolder = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listing.id))
-
         try:
+            listingUploadFolder = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listing.id))
             if not os.path.exists(listingUploadFolder):
                 os.makedirs(listingUploadFolder)
 
@@ -500,6 +502,9 @@ def uploadPhotos(listingID):
                 # Banner Photo Upload
                 uploadedFiles = request.files.getlist("bannerPicture")
                 for file in uploadedFiles:
+                    if file.filename == '':
+                        continue
+
                     if file and allowed_file(file.filename):
                         extension = os.path.splitext(file.filename)[1]
                         filename = "listing" + listingID + "banner" + idGenerator() + extension
@@ -514,7 +519,7 @@ def uploadPhotos(listingID):
                         listing.banner_photo_url = '/uploads/listings/%s/bannerPhoto/%s' % (listingID, filename)
                         session.commit()
                     else:
-                        flash("Error saving file %s" % file.filename, 'error')
+                        flash("Error saving file %s" % file.filename, 'danger')
 
                 if form.nextAction.data == 'checkout':
                     return redirect(url_for('landlords.landlordDashboard'))
