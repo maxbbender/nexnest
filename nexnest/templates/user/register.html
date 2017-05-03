@@ -119,12 +119,29 @@ $( document ).ready(function() {
       {% endfor %}
     };
 
-    var $el = $("#school");
-    $el.empty(); // remove old options
-    $.each(newOptions, function(key,value) {
-      $el.append($("<option></option>")
-         .attr("value", value).text(key));
-    });
+      check = $("#landlordRegister").prop("checked");
+      if(check) {
+          $("#collegeField").hide();
+          $('#school').removeAttr('required');
+          $("#landlord").val("landlord");
+          $("#submitRegistration").text("Register as Landlord");
+      } else {
+          $("#collegeField").show();
+          $('#school').attr('required', 'required');
+          var $el = $("#school");
+          $el.empty(); // remove old options
+          var newOptions = {
+            {% for school in schools %}
+              '{{school}}': '{{school}}',
+            {% endfor %}
+          };
+          $.each(newOptions, function(key,value) {
+              $el.append($("<option></option>")
+           .attr("value", value).text(key));
+          });
+          $("#landlord").val("tenant");
+          $("#submitRegistration").text("Register as Tenant");
+      }
 });
 
 function submitForm(){

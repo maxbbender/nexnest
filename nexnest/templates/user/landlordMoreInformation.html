@@ -119,45 +119,7 @@
 {% block scripts %}
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w&libraries=places&callback=initAutocomplete" async defer></script>
 <script>
-$("#landlordRegister").change(function () {
-    check = $("#landlordRegister").prop("checked");
-    if(check) {
-        $("#collegeField").hide();
-        $('#school').removeAttr('required');
-        var $el = $("#school");
-        $el.empty(); // remove old options
-    } else {
-        $("#collegeField").show();
-        $('#school').attr('required', 'required');
-        var $el = $("#school");
-        $el.empty(); // remove old options
-        var newOptions = {
-          {% for school in schools %}
-            '{{school}}': '{{school}}',
-          {% endfor %}
-        };
-        $.each(newOptions, function(key,value) {
-            $el.append($("<option></option>")
-         .attr("value", value).text(key));
-        });
-    }
-});
 
-$( document ).ready(function() {
-    var newOptions = {
-      {% for school in schools %}
-        '{{school}}': '{{school}}',
-      {% endfor %}
-    };
-
-    var $el = $("#school");
-    $el.empty(); // remove old options
-    $.each(newOptions, function(key,value) {
-      $el.append($("<option></option>")
-         .attr("value", value).text(key));
-    });
-    $("#user_id").val({{userID}});
-});
 
 var placeSearch, autocomplete;
 var componentForm = {
