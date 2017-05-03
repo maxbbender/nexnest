@@ -82,7 +82,7 @@ class RegistrationForm(RedirectForm):
 
     fname = StringField('First Name', [InputRequired()])
     lname = StringField('Last Name', [InputRequired()])
-    school = StringField('School', [InputRequired()])
+    school = SelectField('School', choices=schools)
     submit = SubmitField('Register')
 
 

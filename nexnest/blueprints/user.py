@@ -15,7 +15,7 @@ from nexnest.models.listing_favorite import ListingFavorite
 from nexnest.models.listing import Listing
 
 from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm, CreateGroupForm, EmailPreferencesForm
-
+from nexnest.utils.school import allSchoolsAsStrings
 from nexnest.utils.password import check_password
 from nexnest.utils.flash import flash_errors
 from nexnest.utils.file import allowed_file
@@ -38,10 +38,10 @@ def register():
         if current_user.is_authenticated:
             return redirect(url_for('indexs.index'))
 
-        schools = [r for r, in session.query(School.name).all()]
+        #schools = [r for r, in session.query(School.name).all()]
         return render_template('register.html',
-                               registration_form=RegistrationForm(),
-                               schools=schools)
+                               form=RegistrationForm(),
+                               schools=allSchoolsAsStrings())
     else:  # Post
         registerForm = RegistrationForm(request.form)
 
@@ -58,23 +58,26 @@ def register():
                                fname=registerForm.fname.data,
                                lname=registerForm.lname.data,
                                school=school)
+            else: 
+                newUser = User(email=registerForm.email.data,
+                               password=registerForm.password.data,
+                               fname=registerForm.fname.data,
+                               lname=registerForm.lname.data)
 
-                session.add(newUser)
-                session.commit()
+            session.add(newUser)
+            session.commit()
 
-                # Notification Preference Table init
-                session.add(NotificationPreference(user=newUser))
-                session.commit()
+            # Notification Preference Table init
+            session.add(NotificationPreference(user=newUser))
+            session.commit()
 
-                emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(newUser.email), _external=True)
-                newUser.sendEmail('generic',
-                                  'Click the link to confirm your account <a href="%s">Click Here</a>' % emailConfirmURL)
+            emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(newUser.email), _external=True)
+            newUser.sendEmail('generic',
+                              'Click the link to confirm your account <a href="%s">Click Here</a>' % emailConfirmURL)
 
-                return redirect(url_for('users.emailConfirmNotice', email=registerForm.email.data))
-            else:
-                flash("School you selected doesn't exist", 'warning')
+            return redirect(url_for('users.emailConfirmNotice', email=registerForm.email.data))
 
-        return render_template('register.html', registration_form=registerForm)
+        return render_template('register.html', form=registerForm)
 
 
 @users.route('/login', methods=['GET', 'POST'])
@@ -158,7 +161,7 @@ def viewUser(userID):
     form = EmailPreferencesForm(request.form)
     user = session.query(User).filter_by(id=userID).first()
     currentPreferences = session.query(
-        NotificationPreference).filter_by(user_id=userID).first()
+    NotificationPreference).filter_by(user_id=userID).first()
     userFavorites = session.query(ListingFavorite).filter_by(user=current_user).all()
     myGroups = current_user.accepted_groups
     logger.debug(currentPreferences)
