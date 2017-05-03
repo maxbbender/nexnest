@@ -222,6 +222,38 @@
 		        	                <br>
 		        	                <div class="tab-content">
 		        	                    <div class="tab-pane selected-tab first-tab active" id="currentlyOccupiedTab" role="tabpanel" style="padding: 0px;">
+        	                            	<div class="row">
+        	                            		<div class="col-xs-0 col-md-1"></div>
+        	                            		<div class="col-xs-12 col-md-10" style="width: 100%;">
+        	                            			<div class="card">
+        	                            				<div class="card-header" style="background: #569cdd;">
+        	                            					<div class="row">
+        	                            						<div class="col-xs-12">
+									                    			<h3 style="font-size: 3.5vh;"><strong>Your New Listing!!</strong></h3>
+									                    		</div>
+									                    	</div>
+									                    </div>
+									                    <div class="card-block">
+										                    <div class="row">
+										                    	<div class="hidden-md-down col-lg-4">
+										                    		<a href="{{url_for('listings.createListing')}}">
+										                    			<img src="/static/img/defaultHouse.png" class="listingImg">
+										                    		</a>
+										                    	</div>
+										                    	<div class="col-xs-12 col-lg-8">
+										                    		<h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>10,000</strong> per bed per semester</h3>
+										                    		<h3 style="font-size: 3.0vh;"><strong>?<i class="fa fa-bed" aria-hidden="true"></i>
+										                    		&nbsp;
+										                    		?<i class="fa fa-bath" aria-hidden="true"></i></strong></h3>
+										                    		<br>
+										                    		<h3 style="font-size: 3.0vh;"><strong>Occupied By: Future Tenants</strong></h3>
+										                    		<a href="{{url_for('listings.createListing')}}" class="btn btn-primary">Create This Listing</a>
+										                    	</div>
+										                    </div>
+									                    </div>
+									                </div>
+								                </div>
+							                </div>
 		        	                    	{% if currentHouses|length > 0 %}
 		        	                            {% for house in currentHouses %}
 		        	                            	<div class="row">
