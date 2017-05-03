@@ -1053,7 +1053,9 @@
         showPreview: true,
         overwriteInitial: true,
         initialPreview: [
+            {% if bannerPath %}
             "/uploads/listings//{{listingID}}/bannerPhoto/{{ bannerPath }}",
+            {% endif %}
         ],
         initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
         initialPreviewFileType: 'image', // image is the default and can be overridden in config below
