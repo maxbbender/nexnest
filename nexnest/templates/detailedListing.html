@@ -642,15 +642,16 @@
 
     function favoriteLisitng(groupID, listingID){
 		$.ajax({
-	    type: "GET",
-	    url: "/group/"+groupID+"/favoriteListing/"+listingID,
-	    success: function(data){	    	    	
-	    	alert("Listing Suggested To Group");
-	    },
-	    failure: function(errMsg) {
-	        alert(errMsg);
-	    }
-	});
+		    type: "GET",
+		    url: "/group/"+groupID+"/favoriteListing/"+listingID,
+		    success: function(data){	    	    	
+		    	alert("Listing Suggested To Group");
+		    },
+		    failure: function(errMsg) {
+		        alert(errMsg);
+		    }
+		});
+    }
 
     var groups = {};
     $('.galleryItem').each(function() {
