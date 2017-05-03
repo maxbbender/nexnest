@@ -135,8 +135,8 @@
                                                                             <div class="imageContainer" style="width: 100%;">
                                                                                 <div class="image">
                                                                                     <a href="{{ url_for('listings.viewListing', listingID=favorite.listing.id) }}">
-                                                                                    {% if favorite.listing.getBannerPhotoURL() %}
-                                                                                        <img src="{{favorite.listing.getBannerPhotoURL()}}" class="listingImg card-img-top">
+                                                                                    {% if favorite.listing.banner_photo_url %}
+                                                                                        <img src="{{favorite.listing.banner_photo_url}}" class="listingImg card-img-top">
                                                                                     {% else %}
                                                                                         <img src="/static/img/defaultHouse.png" class="listingImg card-img-top">
                                                                                     {% endif %}

@@ -15,8 +15,6 @@
 	    vertical-align: middle;
 	   }
 	</style>
-	{{search}}
-	{% if not search == "search" %}
     <!-- !!NOT LOGGED IN!! -->
     <div id="initialView">
 	    <div class="row">
@@ -108,7 +106,6 @@
 			</div>
 		</div>
 	</div>
-	{% endif %}
 	<div id="homepage" class="row m-x-auto" style="display: none;">
 		<div class="col-md-12 col-lg-12 col-xl-7">
 			<div class="row hidden-sm-up">
@@ -391,7 +388,8 @@
     	    	    $("#listingsGoHere").LoadingOverlay("hide");
     	    	}, 1000);
     	    	displayListings(data.listings, data.featuredListings);
-    	    	//call map init with lat, lng of school
+    	    	console.log(data.school.lat);
+    	    	console.log(data.school.lng);
     	    	mapUpdate(data.listings, data.school.lat, data.school.lng);
     	    },
     	    failure: function(errMsg) {
@@ -664,7 +662,6 @@
 			buildFilters("True");
 			$("#initialView").hide();
 			$("#homepage").show();
-
 		}
 	});
 
@@ -772,7 +769,6 @@
   		map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
   		 		
   	}
-  	initMap();
 
   	function mapUpdate(listings, lat, long){
   		// first we clear the map
@@ -790,11 +786,11 @@
   	}	
 
   	function addMarker(id, lat, long, type, info){
-  		console.log(id);
-  		console.log(lat);
-  		console.log(long);
-  		console.log(type);
-  		console.log(info);
+  		// console.log(id);
+  		// console.log(lat);
+  		// console.log(long);
+  		// console.log(type);
+  		// console.log(info);
   		
   		var marker = new google.maps.Marker({
   			id: id,

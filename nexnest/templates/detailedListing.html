@@ -4,7 +4,7 @@
 		<div class="col-xs-0 col-md-2 col-lg-2"></div>
 		<div class="col-xs-12 col-md-8 col-lg-8" style="padding-left: 40px;">
 			<div class="row">
-				{% if listing.bannerPhotoURL %}
+				{% if listing.banner_photo_url %}
 					<a class="hidden-xs-down test-popup-link" href="{{pictures[0]}}" style="width: 100%;">
 						<img src="{{bannerPhoto}}" style="height: 40vh; width: 90%; margin-left: 5%;">
 					</a>
@@ -12,7 +12,7 @@
 						<img src="{{bannerPhoto}}" style="height: 30vh; width: 100%;">
 					</a>
 				 {% else %}
-					<a class="test-popup-link" href="/static/img/testHouse.jpg" style="width: 100%;">
+					<a class="test-popup-link" href="/static/img/defaultHouse.png" style="width: 100%;">
 						<img src="/static/img/defaultHouse.png" style="height: 350px; width: 100%;">
 					</a>
 				 {% endif %}
@@ -641,8 +641,16 @@
     }
 
     function favoriteLisitng(groupID, listingID){
-
-    }
+		$.ajax({
+	    type: "GET",
+	    url: "/group/"+groupID+"/favoriteListing/"+listingID,
+	    success: function(data){	    	    	
+	    	alert("Listing Suggested To Group");
+	    },
+	    failure: function(errMsg) {
+	        alert(errMsg);
+	    }
+	});
 
     var groups = {};
     $('.galleryItem').each(function() {

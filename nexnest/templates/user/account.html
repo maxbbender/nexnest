@@ -698,6 +698,11 @@
                             <div class="row">
                                 <div class="col-xs-0 col-md-1"></div>
                                 <div class="col-xs-12 col-md-10" style="width: 100%">
+                                    <div class="row">
+                                        <div class="col-xs-12" id="favorited{{favorite.listing.id}}">
+
+                                        </div>
+                                    </div>
                                     <div class="card">
                                         <div class="card-header">
                                             <div class="row">
@@ -843,7 +848,22 @@
 {% block scripts %}
 <script>
     function favoriteLisitng(groupID, listingID){
-        alert("alert for "+groupID +" " + listingID)
-    }
+        $.ajax({
+            type: "GET",
+            url: "/group/"+groupID+"/favoriteListing/"+listingID,
+            success: function(data){
+                $("#favorited"+listingID).append(
+                `<div class="alert alert-info alert-dismissible show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    <strong>Succesfully Suggested To Your Group!</strong>
+                </div>`);
+            },
+            failure: function(errMsg) {
+                alert(errMsg);
+            }
+        });
+    };
 </script>
 {% endblock %}
