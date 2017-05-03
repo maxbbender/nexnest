@@ -75,7 +75,7 @@ class User(Base):
                  password,
                  fname,
                  lname,
-                 school,
+                 school=None,
                  role=None,
                  bio=None,
                  website=None,
@@ -85,8 +85,8 @@ class User(Base):
                  profile_image=None,
                  email_confirmed=False
                  ):
-
-        self.school_id = school.id
+        if school is not None:
+            self.school_id = school.id
         self.username = email.split("@")[0]
         self.email = email
 

@@ -82,7 +82,8 @@ class RegistrationForm(RedirectForm):
 
     fname = StringField('First Name', [InputRequired()])
     lname = StringField('Last Name', [InputRequired()])
-    school = SelectField('School', choices=schools)
+    school = SelectField('School', [Optional()], choices=schools)
+    landlord = HiddenField('Landlord')
     submit = SubmitField('Register')
 
 class LandlordMoreInfoForm(RedirectForm):
@@ -96,6 +97,7 @@ class LandlordMoreInfoForm(RedirectForm):
     zip_code = StringField('Zipcode', [Length(min=5, max=5), InputRequired()])
     account_number = IntegerField('Bank Account Number', [InputRequired()])
     routing_number = IntegerField('Bank Routing Number', [InputRequired()])
+    user_id = HiddenField('user')
 
 class ProfilePictureForm(RedirectForm):
     profilePicture = FileField('Profile Picture', validators=[FileRequired()])

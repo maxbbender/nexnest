@@ -13,6 +13,7 @@ from nexnest.models.notification import Notification
 from nexnest.models.notification_preference import NotificationPreference
 from nexnest.models.listing_favorite import ListingFavorite
 from nexnest.models.listing import Listing
+from nexnest.models.landlord import Landlord
 
 from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm, CreateGroupForm, EmailPreferencesForm, LandlordMoreInfoForm
 from nexnest.utils.school import allSchoolsAsStrings
@@ -46,57 +47,83 @@ def register():
         registerForm = RegistrationForm(request.form)
 
         if registerForm.validate():
-            # First make sure that the school is valid
-            school = session.query(School) \
-                .filter(func.lower(School.name) == registerForm.school.data.lower()) \
-                .first()
+            #Determine if registering as tenant or landlord
+            userType = registerForm.landlord.data
 
-            if school is not None:
-                # School Exists
-                newUser = User(email=registerForm.email.data,
-                               password=registerForm.password.data,
-                               fname=registerForm.fname.data,
-                               lname=registerForm.lname.data,
-                               school=school)
-            else: 
+            if userType == "landlord":
                 newUser = User(email=registerForm.email.data,
                                password=registerForm.password.data,
                                fname=registerForm.fname.data,
                                lname=registerForm.lname.data)
+                session.add(newUser)
+                session.commit()
 
-            session.add(newUser)
-            session.commit()
+                #Make them a Landlord
 
-            # Notification Preference Table init
-            session.add(NotificationPreference(user=newUser))
-            session.commit()
+                # Notification Preference Table init
+                session.add(NotificationPreference(user=newUser))
+                session.commit()
 
-            emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(newUser.email), _external=True)
-            newUser.sendEmail('generic',
-                              'Click the link to confirm your account <a href="%s">Click Here</a>' % emailConfirmURL)
+                return redirect(url_for('users.landlordInformation', userID=newUser.id))
 
-            return redirect(url_for('users.emailConfirmNotice', email=registerForm.email.data))
+            else:
+                school = session.query(School) \
+                    .filter(func.lower(School.name) == registerForm.school.data.lower()) \
+                    .first()
 
-        return render_template('register.html', form=registerForm)
+                if school is not None:
+                    # School Exists
+                    newUser = User(email=registerForm.email.data,
+                                   password=registerForm.password.data,
+                                   fname=registerForm.fname.data,
+                                   lname=registerForm.lname.data,
+                                   school=school)
+                    session.add(newUser)
+                    session.commit()
+
+                    # Notification Preference Table init
+                    session.add(NotificationPreference(user=newUser))
+                    session.commit()
+                    
+                    emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(newUser.email), _external=True)
+                    newUser.sendEmail('generic',
+                                      'Click the link to confirm your account <a href="%s">Click Here</a>' % emailConfirmURL)
+
+                    return redirect(url_for('users.emailConfirmNotice', email=registerForm.email.data))            
+        flash_errors(registerForm)
+        return render_template('register.html', form=registerForm, schools=allSchoolsAsStrings())
     
 
-@users.route('/register/landlordInformation', methods=['GET', 'POST'])
-def landlordInformation():
-    if current_user.isLandlord:
-        if request.method == 'GET':
+@users.route('/register/<userID>/landlordInformation', methods=['GET', 'POST'])
+def landlordInformation(userID):
+    if request.method == 'GET':
 
-            return render_template('landlordMoreInformation.html',
-                                   form=LandlordMoreInfoForm())
-        else:  # Post
-            moreInformationForm = LandlordMoreInfoForm(request.form)
+        return render_template('landlordMoreInformation.html',
+                               form=LandlordMoreInfoForm(),
+                               userID=userID)
+    else:  # Post
+        moreInformationForm = LandlordMoreInfoForm(request.form)
 
-            if moreInformationForm.validate():
-                flash('Theoretically this all worked', 'info')
-                #MAX DO YOUR MAGIC HERE
+        if moreInformationForm.validate():
+            user = session.query(User).filter_by(id=userID).first()
+            newLandlord = Landlord(user=user,
+                               street=moreInformationForm.street.data,
+                               city=moreInformationForm.city.data,
+                               state=moreInformationForm.state.data,
+                               zip_code=moreInformationForm.zip_code.data,
+                               check_pay=True,
+                               online_pay=True)
+            session.add(newLandlord)
+            session.commit()
+            flash('Theoretically this all worked', 'info')
+            emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(user.email), _external=True)
+            user.sendEmail('generic',
+                              'Click the link to confirm your account <a href="%s">Click Here</a>' % emailConfirmURL)
 
-            return render_template('landlordMoreInformation.html', form=moreInformationForm)
-    else:
-        flash('We only need this information from landlords', 'warning')
+            return redirect(url_for('users.emailConfirmNotice', email=user.email))
+            #MAX DO YOUR MAGIC HERE
+        flash_errors(moreInformationForm)
+        return render_template('/landlordMoreInformation.html', form=moreInformationForm, userID=userID)
 
 @users.route('/login', methods=['GET', 'POST'])
 def login():

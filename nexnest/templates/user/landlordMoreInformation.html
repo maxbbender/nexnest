@@ -9,7 +9,7 @@
                 <div class="card" style="width:100%; border: none;">
                     <h3 class="card-header">We Just Need A Little More Information</h3>
                     <div class="card-block">
-        				<form id="moreInformationForm" action="{{url_for('users.landlordInformation')}}" method="POST">
+        				<form id="moreInformationForm" action="{{url_for('users.landlordInformation', userID=userID)}}" method="POST">
         					{{form.csrf_token}}
                             <fieldset>
                                 <legend>Address:</legend>
@@ -105,6 +105,7 @@
                                     </div>
                                 </div>
                             </fieldset>
+                            {{form.user_id}}
 						  	<p>
 						  		<button type="button" class="btn btn-primary" onClick="submitForm()">Register As Landlord</button>
 						  	</p>
@@ -155,6 +156,7 @@ $( document ).ready(function() {
       $el.append($("<option></option>")
          .attr("value", value).text(key));
     });
+    $("#user_id").val({{userID}});
 });
 
 var placeSearch, autocomplete;
