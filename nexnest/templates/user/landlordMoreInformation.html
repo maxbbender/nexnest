@@ -1,0 +1,287 @@
+{% extends "base.html" %}
+{% block content %}
+    <br>
+    <div class="row m-x-auto">
+        <div class="col-xs-1 col-sm-2 col-md-2 col-lg-2 col-xl-4">
+        </div>
+        <div class="col-xs-10 col-sm-8 col-md-8 col-lg-8 col-xl-4">
+            <div class="row">
+                <div class="card" style="width:100%; border: none;">
+                    <h3 class="card-header">We Just Need A Little More Information</h3>
+                    <div class="card-block">
+        				<form id="moreInformationForm" action="{{url_for('users.landlordInformation')}}" method="POST">
+        					{{form.csrf_token}}
+                            <fieldset>
+                                <legend>Address:</legend>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div id="locationField">
+                                            <input class="form-control" id="autocomplete" placeholder="Start Typing Your Address To AutoFill" onFocus="geolocate()" type="text"></input>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback">Street Address</label>
+                                            {{form.street(class='form-control', required='required')}}
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback">City</label>
+                                            {{form.city(class='form-control', required='required')}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label">State</label>
+                                            {{form.state(class='form-control', required='required')}}
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback">Zip Code</label>
+                                            {{form.zip_code(class='form-control', required='required', maxlength='5')}}
+                                            <!-- <input id="zip_code" required="required" maxlength="5" name="zip_code" type="text" class="form-control" /> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <legend>Details About You:</legend>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback">Telephone Number</label>
+                                            {{form.phone(class='form-control', required='required', type="tel")}}
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback">Date of Birth</label>
+                                            {{form.date_of_birth(class='form-control', required='required', type='date')}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback">Last Four Digits of SSN</label>
+                                            {{form.ssn(class='form-control', required='required', maxlength='4')}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <legend>Information To Recieve Rent Payments:</legend>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback">Bank Account Number</label>
+                                            {{form.account_number(class='form-control', required='required')}}
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback">Routing Number</label>
+                                            {{form.routing_number(class='form-control', required='required')}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                             <fieldset>
+                                <legend>Your Availabilty for Tours:</legend>
+                                <div class="row">
+                                    <div class="card" style="width:100%; border: none;">
+                                        <div class="card-block">
+                                            Select the times you are available for tours on an average week. This simply will suggest these times to prospective tenants. It does not prevent them from requesting other time slots
+                                            <br>
+                                            <div id="day-schedule"></div>
+                                            <br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+						  	<p>
+						  		<button type="button" class="btn btn-primary" onClick="submitForm()">Register As Landlord</button>
+						  	</p>
+        				</form>            
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w&libraries=places&callback=initAutocomplete" async defer></script>
+<script>
+$("#landlordRegister").change(function () {
+    check = $("#landlordRegister").prop("checked");
+    if(check) {
+        $("#collegeField").hide();
+        $('#school').removeAttr('required');
+        var $el = $("#school");
+        $el.empty(); // remove old options
+    } else {
+        $("#collegeField").show();
+        $('#school').attr('required', 'required');
+        var $el = $("#school");
+        $el.empty(); // remove old options
+        var newOptions = {
+          {% for school in schools %}
+            '{{school}}': '{{school}}',
+          {% endfor %}
+        };
+        $.each(newOptions, function(key,value) {
+            $el.append($("<option></option>")
+         .attr("value", value).text(key));
+        });
+    }
+});
+
+$( document ).ready(function() {
+    var newOptions = {
+      {% for school in schools %}
+        '{{school}}': '{{school}}',
+      {% endfor %}
+    };
+
+    var $el = $("#school");
+    $el.empty(); // remove old options
+    $.each(newOptions, function(key,value) {
+      $el.append($("<option></option>")
+         .attr("value", value).text(key));
+    });
+});
+
+var placeSearch, autocomplete;
+var componentForm = {
+    street_number: 'short_name',
+    route: 'long_name',
+    locality: 'long_name',
+    administrative_area_level_1: 'short_name',
+    country: 'long_name',
+    postal_code: 'short_name'
+};
+
+function initAutocomplete() {
+    // Create the autocomplete object, restricting the search to geographical
+    // location types.
+    autocomplete = new google.maps.places.Autocomplete(
+        /** @type {!HTMLInputElement} */
+        (document.getElementById('autocomplete')), {
+            types: ['geocode']
+        });
+
+    // When the user selects an address from the dropdown, populate the address
+    // fields in the form.
+    autocomplete.addListener('place_changed', fillInAddress);
+}
+
+function fillInAddress() {
+    // Get the place details from the autocomplete object.
+    var place = autocomplete.getPlace();
+    var street_number;
+    var street_name;
+    var street;
+    var city;
+    var state;
+    var zipcode;
+    //get all the info we need
+    console.log(place);
+    for(var i = 0; i < place.address_components.length; i++){
+        if(place.address_components[i].types[0] == "postal_code"){
+            zipcode = place.address_components[i].long_name;
+        }
+        else if(place.address_components[i].types[0] == "street_number"){
+            street_number = place.address_components[i].long_name;
+        }
+        else if(place.address_components[i].types[0] == "route"){
+            street_name = place.address_components[i].long_name;
+        }
+        else if(place.address_components[i].types[0] == "neighborhood"){
+            city = place.address_components[i].long_name;
+        }
+        else if(place.address_components[i].types[0] == "locality"){
+            city = place.address_components[i].long_name;
+        }
+        else if(place.address_components[i].types[0] == "administrative_area_level_1"){
+            state = place.address_components[i].short_name;
+        }
+    }
+    street = street_number + " " + street_name;
+
+    //fill in all the fields
+    $("#street").val(street);
+    $("#city").val(city);
+    $("#state").val(state);
+    $("#zip_code").val(zipcode);
+    
+    // for (var component in componentForm) {
+    //     document.getElementById(component).value = '';
+    //     document.getElementById(component).disabled = false;
+    // }
+
+    // // Get each component of the address from the place details
+    // // and fill the corresponding field on the form.
+    // console.log(place.address_components)
+    // for (var i = 0; i < place.address_components.length; i++) {
+    //     var addressType = place.address_components[i].types[0];
+    //     if (componentForm[addressType]) {
+    //         var val = place.address_components[i][componentForm[addressType]];
+    //         document.getElementById(addressType).value = val;
+    //     }
+    // }
+}
+
+function geolocate() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var geolocation = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+            var circle = new google.maps.Circle({
+                center: geolocation,
+                radius: position.coords.accuracy
+            });
+            autocomplete.setBounds(circle.getBounds());
+        });
+    }
+}
+
+(function ($) {
+  $("#day-schedule").dayScheduleSelector({
+    /*
+    days: [1, 2, 3, 5, 6],
+    interval: 15,
+    startTime: '09:50',
+    endTime: '21:06'
+    */
+  });
+  $("#day-schedule").on('selected.artsy.dayScheduleSelector', function (e, selected) {
+    console.log(selected);
+  })
+  $("#day-schedule").data('artsy.dayScheduleSelector').deserialize({
+    '0': [['09:00', '10:00'], ['13:00', '14:00']]
+  });
+})($);
+
+
+function submitForm(){
+    //Get avaliable time slots
+    $( ".time-slot" ).each(function( index ) {
+      if($( this ).attr( "data-selected" )){
+        var day = $(this).attr("data-day");
+        var time = $(this).attr("data-time");
+        console.log("Day: " + day + " Time: " + time);
+      }
+    });
+    $("form#moreInformationForm").submit();
+}
+
+</script>
+{% endblock %}

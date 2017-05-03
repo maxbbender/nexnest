@@ -14,7 +14,7 @@ from nexnest.models.notification_preference import NotificationPreference
 from nexnest.models.listing_favorite import ListingFavorite
 from nexnest.models.listing import Listing
 
-from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm, CreateGroupForm, EmailPreferencesForm
+from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm, CreateGroupForm, EmailPreferencesForm, LandlordMoreInfoForm
 from nexnest.utils.school import allSchoolsAsStrings
 from nexnest.utils.password import check_password
 from nexnest.utils.flash import flash_errors
@@ -78,7 +78,25 @@ def register():
             return redirect(url_for('users.emailConfirmNotice', email=registerForm.email.data))
 
         return render_template('register.html', form=registerForm)
+    
 
+@users.route('/register/landlordInformation', methods=['GET', 'POST'])
+def landlordInformation():
+    if current_user.isLandlord:
+        if request.method == 'GET':
+
+            return render_template('landlordMoreInformation.html',
+                                   form=LandlordMoreInfoForm())
+        else:  # Post
+            moreInformationForm = LandlordMoreInfoForm(request.form)
+
+            if moreInformationForm.validate():
+                flash('Theoretically this all worked', 'info')
+                #MAX DO YOUR MAGIC HERE
+
+            return render_template('landlordMoreInformation.html', form=moreInformationForm)
+    else:
+        flash('We only need this information from landlords', 'warning')
 
 @users.route('/login', methods=['GET', 'POST'])
 def login():

@@ -85,6 +85,17 @@ class RegistrationForm(RedirectForm):
     school = SelectField('School', choices=schools)
     submit = SubmitField('Register')
 
+class LandlordMoreInfoForm(RedirectForm):
+    phone = IntegerField('Phone Number', [InputRequired()])
+    date_of_birth = DateField('Date of Birth', [InputRequired()])
+    ssn = IntegerField('Last 4 Digits of Socail Security Number', [InputRequired()])
+    street = StringField('Street Address', [
+                         Length(min=2, max=50), InputRequired()])
+    city = StringField('City', [Length(min=2, max=50), InputRequired()])
+    state = SelectField('State', choices=statesLong)
+    zip_code = StringField('Zipcode', [Length(min=5, max=5), InputRequired()])
+    account_number = IntegerField('Bank Account Number', [InputRequired()])
+    routing_number = IntegerField('Bank Routing Number', [InputRequired()])
 
 class ProfilePictureForm(RedirectForm):
     profilePicture = FileField('Profile Picture', validators=[FileRequired()])
