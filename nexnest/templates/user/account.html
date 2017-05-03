@@ -823,13 +823,26 @@
             type: "GET",
             url: "/group/"+groupID+"/favoriteListing/"+listingID,
             success: function(data){
-                $("#favorited"+listingID).append(
-                `<div class="alert alert-info alert-dismissible show" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    <strong>Succesfully Suggested To Your Group!</strong>
-                </div>`);
+                if(data.results.success == false){
+                    $("#favorited"+listingID).empty();
+                    $("#favorited"+listingID).append(
+                    `<div class="alert alert-info alert-dismissible show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        <strong>This listing has already been suggested to this group</strong>
+                    </div>`);
+                }
+                else{
+                    $("#favorited"+listingID).empty();
+                    $("#favorited"+listingID).append(
+                    `<div class="alert alert-success alert-dismissible show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        <strong>Succesfully Suggested To Your Group!</strong>
+                    </div>`);
+                }                
             },
             failure: function(errMsg) {
                 alert(errMsg);
