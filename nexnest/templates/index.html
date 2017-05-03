@@ -19,42 +19,43 @@
 	{% if not search == "search" %}
     <!-- !!NOT LOGGED IN!! -->
     <div id="initialView">
-	    <div class="row" style="padding-left: 15px;">
-	    	<div class="col-xl-12">
+	    <div class="row">
+	    	<div class="col-xl-1"></div>
+	    	<div class="col-lg-12 col-xl-10">
 		    	<div class="card card-inverse">
 		    		<img class="card-img" src="/static/img/testHouse7.jpg" alt="Card image" style="width: 100%;">
 		    		<div class="card-img-overlay" style="display: flex; flex-direction: column; justify-content: center;">
-		    			<div class="row" style="margin-top: -150px;">
+		    			<div class="hidden-xs-down row" style="margin-top: -4vh;">
 		    				<h1 style="color: white; padding-left: 10%;">Insert Tagline from Nate and Alex Here</h1>
 		    			</div>
-		    			<div class="row justify-content-center" style="align-items: flex-end; padding-top: 150px;">
-		    				<div class="col-xl-3" style="left: 8vw;">
+		    			<div class="row justify-content-center" style="align-items: flex-end; padding-top: 12vh;">
+		    				<div class="col-xs-7 col-md-8 col-lg-3 col-xl-3" style="left: 0vw;">
 		    					<label for="school">College</label>
-	    					    <select class="form-control" id="school" style="width: 75%;">
+	    					    <select class="form-control" id="school" style="width: 85%;">
 	    					    	{% for school in schools %}
 	    					      		<option value="{{school}}">{{school}}</option>
 	    					    	{% endfor %}
 	    					    </select>
 		    				</div>
-		    				<div class="col-xl-3" style="left: 8vw;">
+		    				<div class="hidden-md-down col-lg-3 col-xl-3" style="left: 0vw;">
 		    					<label for="when">When</label>
-	    					    <select class="form-control" id="when" style="width: 75%;">
+	    					    <select class="form-control" id="when" style="width: 85%;">
 	    					      	<option value="2017-2018 School Year">2017-2018 School Year</option>
 	    					      	<option value="2018 Summer">2018 Summer</option>
 	    					      	<option value="2018-2019 School Year">2018-2019 School Year</option>
 	    					      	<option value="2019 Summer">2019 Summer</option>
 	    					    </select>
 		    				</div>
-		    				<div class="col-xl-3" style="left: 8vw;">
+		    				<div class="hidden-md-down col-lg-3 col-xl-3" style="left: 0vw;">
 		    					<label for="bedrooms">Bedrooms</label>
-	    					    <select class="form-control" id="rooms" style="width: 75%;">
+	    					    <select class="form-control" id="rooms" style="width: 85%;">
 	    					      	<option value="1">1</option>
 	    					      	<option value="2">2</option>
 	    					      	<option value="3">3</option>
 	    					      	<option value="4+">4+</option>
 	    					    </select>
 		    				</div>
-		    				<div class="col-xl-1" style="left: 8vw;">
+		    				<div class="col-xs-2 col-md-2 col-xl-1" style="left: 2vw;">
 		    					<button id="initialSearchButton" class="btn btn-primary">Search</button>
 		    				</div>
 		    			</div>
@@ -62,51 +63,50 @@
 		    	</div>
 		    </div>
 	    </div>
-	    <div class="row" style="margin-left: 15px;">
-	    	<div class="col-xs-12" style="text-align: center;">
-	    		<h1>Built For Students</h1>
-	    	</div>
-	    </div>
-	    <div class="row" style="margin-left: 15px;">
-	    	<div class="col-xl-4" style="text-align: center;">
-	    		<i class="fa fa-home fa-3x" aria-hidden="true"></i>
-	    		<br>
-	    		Wsdfojhsdfhjod ojha ojh asfdojhasd ojhasdojhas dhjo asjoh jhoas dhjas oh asdohjasd jhosad jasd hj hjasohjas odhasd oashdo s
-	    	</div>
-	    	<div class="col-xl-4" style="text-align: center;">
-	    		<i class="fa fa-users fa-3x" aria-hidden="true"></i>
-	    		<br>
-	    		Wsdfojhsdfhjod ojha ojh asfdojhasd ojhasdojhas dhjo asjoh jhoas dhjas oh asdohjasd jhosad jasd hj hjasohjas odhasd oashdo s
-	    	</div>
-	    	<div class="col-xl-4" style="text-align: center;">
-	    		<i class="fa fa-usd fa-3x" aria-hidden="true"></i>
-	    		<br>
-	    		Wsdfojhsdfhjod ojha ojh asfdojhasd ojhasdojhas dhjo asjoh jhoas dhjas oh asdohjasd jhosad jasd hj hjasohjas odhasd oashdo s
-	    	</div>
-	    </div>
-	    <br><br>
-	    <div class="row" style="margin-left: 15px;">
-	    	<div class="col-xs-12" style="text-align: center;">
-	    		<h1>Insert Thing Here</h1>
-	    	</div>
-	    </div>
-	    <div class="row" style="margin-left: 15px;">
-	    	<div class="col-xl-4" style="text-align: center;">
-	    		<i class="fa fa-calendar fa-3x" aria-hidden="true"></i>
-	    		<br>
-	    		Wsdfojhsdfhjod ojha ojh asfdojhasd ojhasdojhas dhjo asjoh jhoas dhjas oh asdohjasd jhosad jasd hj hjasohjas odhasd oashdo s
-	    	</div>
-	    	<div class="col-xl-4" style="text-align: center;">
-	    		<i class="fa fa-handshake-o fa-3x" aria-hidden="true"></i>
-	    		<br>
-	    		Wsdfojhsdfhjod ojha ojh asfdojhasd ojhasdojhas dhjo asjoh jhoas dhjas oh asdohjasd jhosad jasd hj hjasohjas odhasd oashdo s
-	    	</div>
-	    	<div class="col-xl-4" style="text-align: center;">
-	    		<i class="fa fa-comments fa-3x" aria-hidden="true"></i>
-	    		<br>
-	    		Wsdfojhsdfhjod ojha ojh asfdojhasd ojhasdojhas dhjo asjoh jhoas dhjas oh asdohjasd jhosad jasd hj hjasohjas odhasd oashdo s
-	    	</div>
-	    </div>
+	    <div class="row">
+	    	<div class="col-xl-1"></div>
+	    	<div class="col-lg-12 col-xl-10">
+			    <div class="row" style="padding-top: 15px;">
+			    	<div class="col-xs-12" style="text-align: center;">
+			    		<h1>NexNest - Off Campus Housing</h1>
+			    	</div>
+			    </div>
+			    <div class="row">
+			    	<div class="col-xl-4" style="text-align: center; padding-top: 15px;">
+			    		<i class="fa fa-home fa-3x" aria-hidden="true"></i>
+			    		<br>
+			    		Post Your Properties
+			    	</div>
+			    	<div class="col-xl-4" style="text-align: center; padding-top: 15px;">
+			    		<i class="fa fa-users fa-3x" aria-hidden="true"></i>
+			    		<br>
+			    		Create A Group
+			    	</div>
+			    	<div class="col-xl-4" style="text-align: center; padding-top: 15px;">
+			    		<i class="fa fa-usd fa-3x" aria-hidden="true"></i>
+			    		<br>
+			    		Pay Rent Online
+			    	</div>
+			    </div>
+			    <div class="row">
+			    	<div class="col-xl-4" style="text-align: center; padding-top: 15px;">
+			    		<i class="fa fa-calendar fa-3x" aria-hidden="true"></i>
+			    		<br>
+			    		Schedule Property Tours
+			    	</div>
+			    	<div class="col-xl-4" style="text-align: center; padding-top: 15px;">
+			    		<i class="fa fa-handshake-o fa-3x" aria-hidden="true"></i>
+			    		<br>
+			    		Request Your Dream House
+			    	</div>
+			    	<div class="col-xl-4" style="text-align: center; padding-top: 15px;">
+			    		<i class="fa fa-comments fa-3x" aria-hidden="true"></i>
+			    		<br>
+			    		Communicate With Friends
+			    	</div>
+			    </div>
+			</div>
+		</div>
 	</div>
 	{% endif %}
 	<div id="homepage" class="row m-x-auto" style="display: none;">
@@ -392,7 +392,7 @@
     	    	}, 1000);
     	    	displayListings(data.listings, data.featuredListings);
     	    	//call map init with lat, lng of school
-    	    	mapUpdate(data.listings);
+    	    	mapUpdate(data.listings, data.school.lat, data.school.lng);
     	    },
     	    failure: function(errMsg) {
     	        alert(errMsg);
@@ -494,7 +494,7 @@
 	    	    	}, 1000);
 	    	    	displayListings(data.listings, data.featuredListings);
 	    	    	//call map init with lat, lng of school
-	    	    	mapUpdate(data.listings);
+	    	    	mapUpdate(data.listings, data.school.lat, data.school.lng);
 	    	    },
 	    	    failure: function(errMsg) {
 	    	        alert(errMsg);
@@ -774,12 +774,15 @@
   	}
   	initMap();
 
-  	function mapUpdate(listings){
+  	function mapUpdate(listings, lat, long){
   		// first we clear the map
   		clearMarkers();
-  		console.log(listings);
-  		console.log(listings.length);
-
+  		// console.log(listings);
+  		// console.log(listings.length);
+  		console.log(lat);
+  		console.log(long);
+  		schoolLatLng = {lat: lat, lng: long};
+  		map.setCenter(schoolLatLng);  		
   		$.each(listings, function(index, listing) {
   			addMarker(listing.id, listing.lat, listing.long, listing.propertyType, '<div style="overflow: auto;"><div id="iw-container"><div class="iw-title"><b>'+listing.address+'</b></div><div class="iw-content"><a href="'+listing.url+'"><img src="'+listing.bannerPhotoURL+'" style="height: 50px;" alt="'+listing.address+'"></a><p><b>[TBD] Miles to Campus</b><br><br>"'+listing.description+'"</p><p style="clear:both;"></p><table class="special"><tbody><tr><td>'+listing.numBedrooms+' Beds</td><td>'+listing.numFullBaths+' Baths</td><td><a href="'+listing.url+'">View</a></td></tr></tbody></table></div><div class="iw-bottom-gradient"></div></div></div>');
   		});

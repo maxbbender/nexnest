@@ -367,6 +367,7 @@
 		      			<div class="row">
 		      				<div class="col-xs-1"></div>
 		      				<div class="col-xs-10">
+		      					{% if current_user.is_authenticated %}
 		      					{% for group in groups %}
 			      					<div class="card" style="width:100%;">
 			      					    <h3 class="card-header">{{ group.name }}</h3>
@@ -402,6 +403,7 @@
 			      						});
 			      					</script>
 		      					{% endfor %}
+		      					{% endif %}
 		      				</div>
 		      			</div>
 		      		</div>
@@ -426,6 +428,7 @@
 		      			<div class="row">
 		      				<div class="col-xs-1"></div>
 		      				<div class="col-xs-10">
+		      					{% if current_user.is_authenticated %}
 		      					{% for group in groups %}
 			      					<div class="card" style="width:100%;">
 			      					    <h3 class="card-header">{{ group.name }}</h3>
@@ -455,6 +458,7 @@
 			      						});
 			      					</script>
 		      					{% endfor %}
+		      					{% endif %}
 		      				</div>
 		      			</div>
 		      		</div>
@@ -518,6 +522,7 @@
 		      			<div class="row">
 		      				<div class="col-xs-1"></div>
 		      				<div class="col-xs-10">
+		      					{% if current_user.is_authenticated %}
 		      					{% for group in groups %}
 			      					<div class="card" style="width:100%;">
 			      					    <h3 class="card-header">{{ group.name }}</h3>
@@ -547,6 +552,7 @@
 			      						});
 			      					</script>
 		      					{% endfor %}
+		      					{% endif %}
 		      				</div>
 		      			</div>
 		      		</div>

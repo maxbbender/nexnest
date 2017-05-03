@@ -164,3 +164,8 @@ notificationTypes = [
     'group_user',
     'group_listing'
 ]
+
+schools = [
+    ('SUNY at Fredonia', 'SUNY at Fredonia'),
+    ('Marist', 'Marist')
+]

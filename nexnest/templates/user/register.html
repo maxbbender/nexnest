@@ -12,18 +12,68 @@
                     <div class="card-block">
         				{% from "_formhelpers.html" import render_field %}
         				<form action="{{url_for('users.register')}}" method="POST">
-        					{{registration_form.csrf_token}}
-							  	<dl>
-								    {{ render_field(registration_form.email, class="form-control", type="email") }}
-								    {{ render_field(registration_form.fname, class="form-control", type="text") }}
-				                    {{ render_field(registration_form.lname, class="form-control", type="text") }}
-                                    {{ render_field(registration_form.school, class="form-control", type="text") }}
-				                    {{ render_field(registration_form.password, class="form-control", type="password") }}
-				                    {{ render_field(registration_form.confirm, class="form-control", type="password") }}
-							  	</dl>
-							  	<p>
-							  		<input type='submit' value='Register' class="btn btn-info">
-							  	</p>
+        					{{form.csrf_token}}
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="funkyradio">
+                                        <div class="funkyradio-primary">
+                                            <input type="checkbox" name="checkbox" id="landlordRegister"/>
+                                            <label for="landlordRegister">Register as Landlord/Property Owner</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label form-control-feedback">Email</label>
+                                        {{form.email(class='form-control', required='required', type="email")}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label form-control-feedback">First Name</label>
+                                        {{form.fname(class='form-control', required='required')}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label form-control-feedback">Last Name</label>
+                                        {{form.lname(class='form-control', required='required')}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" id="collegeField">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label form-control-feedback">College</label>
+                                        {{form.school(class='form-control', required='required')}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label form-control-feedback">Password</label>
+                                        {{form.password(class='form-control', required='required', type="password")}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label form-control-feedback">Confirm Password</label>
+                                        {{form.confirm(class='form-control', required='required', type="password")}}
+                                    </div>
+                                </div>
+                            </div>
+						  	<p>
+						  		<input type='submit' value='Register' class="btn btn-info">
+						  	</p>
         				</form>            
                     </div>
                 </div>
@@ -33,13 +83,44 @@
 {% endblock %}
 {% block scripts %}
 <script>
-var schools = [
-    {% for school in schools %}
-    '{{school}}',
-    {% endfor %}
-]
-$('#school').autocomplete({
-    source : schools
+$("#landlordRegister").change(function () {
+    check = $("#landlordRegister").prop("checked");
+    if(check) {
+        $("#collegeField").hide();
+        $('#school').removeAttr('required');
+        var $el = $("#school");
+        $el.empty(); // remove old options
+    } else {
+        $("#collegeField").show();
+        $('#school').attr('required', 'required');
+        var $el = $("#school");
+        $el.empty(); // remove old options
+        var newOptions = {
+          {% for school in schools %}
+            '{{school}}': '{{school}}',
+          {% endfor %}
+        };
+        $.each(newOptions, function(key,value) {
+            $el.append($("<option></option>")
+         .attr("value", value).text(key));
+        });
+    }
 });
+
+$( document ).ready(function() {
+    var newOptions = {
+      {% for school in schools %}
+        '{{school}}': '{{school}}',
+      {% endfor %}
+    };
+
+    var $el = $("#school");
+    $el.empty(); // remove old options
+    $.each(newOptions, function(key,value) {
+      $el.append($("<option></option>")
+         .attr("value", value).text(key));
+    });
+});
+
 </script>
 {% endblock %}
