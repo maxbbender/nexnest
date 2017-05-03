@@ -155,10 +155,12 @@ class ListingForm(RedirectForm):
     pictures = FileField('Pictures for Listing')
     bannerPicture = FileField('Pictures for Listing')
 
+
 class PhotoForm(RedirectForm):
     pictures = FileField('Pictures for Listing')
     bannerPicture = FileField('Pictures for Listing')
     nextAction = HiddenField('Next')
+
 
 class CreateGroupForm(RedirectForm):
     name = StringField('Group Name:', [Length(min=2, max=50), InputRequired()])
@@ -254,6 +256,7 @@ class PreCheckoutForm(RedirectForm):
     json = HiddenField('Lease')
     # couponCode = StringField('Coupon Code', validators=[Optional()])
 
+
 class EmailPreferencesForm(RedirectForm):
     direct_message_email = BooleanField('direct_message')
     tour_message_email = BooleanField('tour_message')
@@ -274,7 +277,6 @@ class EmailPreferencesForm(RedirectForm):
     house_email = BooleanField('house')
     group_listing_accept_email = BooleanField('group_listing_accept')
     group_listing_deny_email = BooleanField('group_listing_deny')
-    group_listing_completed_email = BooleanField('group_listing_completed')
     direct_message_notification = BooleanField('direct_message')
     tour_message_notification = BooleanField('tour_message')
     group_message_notification = BooleanField('group_message_email')
@@ -294,8 +296,3 @@ class EmailPreferencesForm(RedirectForm):
     house_notification = BooleanField('house')
     group_listing_accept_notification = BooleanField('group_listing_accept')
     group_listing_deny_notification = BooleanField('group_listing_deny')
-    group_listing_completed_notification = BooleanField('group_listing_completed')
-
-
-    
-    

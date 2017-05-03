@@ -69,8 +69,8 @@ class NotificationPreference(Base):
     group_listing_deny_notification = db.Column(db.Boolean)  # D
     group_listing_deny_email = db.Column(db.Boolean)  # D
 
-    group_listing_completed_notification = db.Column(db.Boolean)  # D
-    group_listing_completed_email = db.Column(db.Boolean)  # D
+    # group_listing_completed_notification = db.Column(db.Boolean)  # D
+    # group_listing_completed_email = db.Column(db.Boolean)  # D
 
     house_notification = db.Column(db.Boolean)  # D
     house_email = db.Column(db.Boolean)  # D
@@ -149,8 +149,8 @@ class NotificationPreference(Base):
         self.group_listing_deny_notification = True
         self.group_listing_deny_email = True
 
-        self.group_listing_completed_notification = True
-        self.group_listing_completed_email = False
+        # self.group_listing_completed_notification = True
+        # self.group_listing_completed_email = False
 
     def __repr__(self):
         return '<NotificationPreferences %d | User %r>' % (self.id, self.user)

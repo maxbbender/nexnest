@@ -5,12 +5,9 @@ from migrate import *
 meta = MetaData()
 # Column('XXXX', String(120)),
 platform_reports = Table('platform_reports', meta,
-                         Column('id', Integer(),
+                         Column('report_id', Integer(),
                                 primary_key=True,
-                                nullable=False),
-                         Column('url', Text()),
-                         Column('page_name', Text()),
-                         Column('report_id', Integer()))
+                                nullable=False))
 
 
 def upgrade(migrate_engine):

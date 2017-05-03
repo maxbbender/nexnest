@@ -2,6 +2,7 @@ from nexnest import app
 from nexnest.application import session
 from nexnest.models.notification_preference import NotificationPreference
 from nexnest.models.user import User
+from nexnest.models.report import Report
 from nexnest.models.group import Group
 from nexnest.models.listing import Listing
 from nexnest.models.message import Message
@@ -24,6 +25,11 @@ from nexnest.models.group_user import GroupUser
 from nexnest.models.coupon import Coupon
 from nexnest.models.listing_favorite import ListingFavorite
 from nexnest.models.transaction import *
+from nexnest.models.report_landlord import ReportLandlord
+from nexnest.models.report_listing import ReportListing
+from nexnest.models.report_group import ReportGroup
+from nexnest.models.platform_report import PlatformReport
+
 
 from flask import redirect, url_for
 from flask_admin import Admin
@@ -70,4 +76,8 @@ admin.add_view(AdminModelView(ListingSchool, session))
 admin.add_view(AdminModelView(LandlordListing, session))
 admin.add_view(AdminModelView(NotificationPreference, session))
 admin.add_view(AdminModelView(ListingFavorite, session))
-
+admin.add_view(AdminModelView(Report, session))
+admin.add_view(AdminModelView(ReportLandlord, session))
+admin.add_view(AdminModelView(ReportGroup, session))
+admin.add_view(AdminModelView(ReportListing, session))
+admin.add_view(AdminModelView(PlatformReport, session))

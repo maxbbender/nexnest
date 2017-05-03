@@ -195,8 +195,6 @@ def viewUser(userID):
             currentPreferences.group_listing_email = form.group_listing_email.data
             currentPreferences.group_listing_accept_email = form.group_listing_accept_email.data
             currentPreferences.group_listing_deny_email = form.group_listing_deny_email.data
-            currentPreferences.group_listing_completed_email = form.group_listing_completed_email.data
-
             currentPreferences.direct_message_notification = form.direct_message_notification.data
             currentPreferences.tour_message_notification = form.tour_message_notification.data
             currentPreferences.group_message_notification = form.group_message_notification.data
@@ -214,7 +212,6 @@ def viewUser(userID):
             currentPreferences.group_listing_notification = form.group_listing_notification.data
             currentPreferences.group_listing_accept_notification = form.group_listing_accept_notification.data
             currentPreferences.group_listing_deny_notification = form.group_listing_deny_notification.data
-            currentPreferences.group_listing_completed_notification = form.group_listing_completed_notification.data
             session.commit()
 
             flash('Preferences Updated', 'success')

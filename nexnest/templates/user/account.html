@@ -639,35 +639,6 @@
                                     </div>
                                 </div>
                                 {% endif %}
-                                {% if not current_user.isLandlord %}
-                                <div class="row">
-                                    <div class="col-xs-4" style="padding-top: 30px;">
-                                        <strong>Property Request Completed(House is Yours)</strong>
-                                    </div>
-                                    <div class="col-xs-3">
-                                        <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="tour_denied_label">Notification</label>
-                                            <div class="checkbox">
-                                                <label style="font-size: 1.5em">
-                                                    {{form.house_notification(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-3">
-                                        <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="tour_denied_label">Email</label>
-                                            <div class="checkbox">
-                                                <label style="font-size: 1.5em">
-                                                    {{form.house_email(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endif %}
                                 <hr>
                                 <input type='submit' value='Update Preferences' class="btn btn-primary">
                             </div>                    

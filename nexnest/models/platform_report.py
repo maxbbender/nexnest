@@ -1,25 +1,29 @@
 from nexnest.application import db
 
-from .base import Base
+from nexnest.models.report import Report
 
 
-# class PostReport(Base):
-class PlatformReport(Base):
+class PlatformReport(Report):
     __tablename__ = 'platform_reports'
-    id = db.Column(db.Integer, primary_key=True)
-    url = db.Column(db.Text)
-    page_name = db.Column(db.Text)
-    report_id = db.Column(db.Integer, db.ForeignKey('reports.id'))
+    report_id = db.Column(db.Integer, db.ForeignKey('reports.id'), primary_key=True)
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'platform',
+    }
 
     def __init__(
             self,
-            url,
-            page_name,
-            report
+            title,
+            content,
+            user,
+            sourceURL=None,
     ):
-        self.url = url
-        self.page_name = page_name
-        self.report = report
+        super().__init__(
+            title=title,
+            content=content,
+            user=user,
+            sourceURL=sourceURL
+        )
 
     def __repr__(self):
         return '<Platform Report %r>' % self.id

@@ -90,6 +90,7 @@ class Listing(Base):
     individualFavorite = relationship('ListingFavorite', backref='listing')
     listingTransactionListing = relationship("ListingTransactionListing", backref='listing')
     schools = relationship("ListingSchool", back_populates='listing')
+    reports = relationship("ReportListing", backref='listing')
 
     def __init__(
             self,

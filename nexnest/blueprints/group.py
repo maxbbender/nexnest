@@ -357,7 +357,7 @@ def favoriteListing(groupID, listingID):
         .filter_by(group_id=groupID, listing_id=listingID)\
         .first()
 
-    if favoriteCount is not None:
+    if favoriteCount is None:
 
         group = session.query(Group).filter_by(id=groupID).first()
         listing = session.query(Listing).filter_by(id=listingID).first()

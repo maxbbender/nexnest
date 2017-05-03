@@ -5,6 +5,7 @@ from nexnest.application import db, session
 
 from nexnest.models.base import Base
 from nexnest.models.security_deposit import SecurityDeposit
+# from nexnest.models.report_landlord import Report 
 
 
 class Landlord(Base):
@@ -19,6 +20,7 @@ class Landlord(Base):
     state = db.Column(db.String(2))
     zip_code = db.Column(db.String(5))
     listings = relationship("LandlordListing", back_populates='landlord')
+    reports = relationship("ReportLandlord", backref='landlord')
 
     def __init__(self,
                  user,
@@ -373,7 +375,6 @@ class Landlord(Base):
 
     def getUnBookedHousesJSON(self):
         unBookedHouses = []
-        currDate = date.today()
         for listing in self.getListings():
             if not listing.hasHouse():
                 listingObject = {'listing': listing.serialize}
