@@ -615,7 +615,8 @@
 	var selectedDateTimes = [];
     var $datePicker = $("div#datepicker");
     var landlordAvailability = [{day: 1, time: '8:00AM'}, {day: 2, time: '8:00AM'}, {day: 4, time: '8:00AM'}, {day: 2, time: '10:00AM'}, {day: 4, time: '9:00AM'}, {day: 5, time: '2:00PM'}, {day: 5, time: '3:00PM'}, {day: 5, time: '4:00PM'}, {day: 5, time: '5:00PM'}];
-
+    var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+    ];
     var flags = [];
     var availableDays= [];
     for(var i=0; i<landlordAvailability.length; i++) {
@@ -662,10 +663,11 @@
         	console.log($datePicker.datepicker('getDate'));
         	var date = $datePicker.datepicker('getDate');
         	var month = date.getUTCMonth() +1;
+        	var monthName = monthNames[month-1];
         	var day = date.getDate();
         	var year = date.getUTCFullYear();
         	var dayOfWeek = date.getUTCDay();
-       		var returnDate = ""+year+"_"+month+"_"+day;
+       		var returnDate = ""+monthName+" "+day+" "+year;
        		console.log(returnDate);
         	console.log(dayOfWeek);
         	var alreadySelectedTimes = returnTimes(selectedDateTimes, returnDate)
