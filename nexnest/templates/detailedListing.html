@@ -676,17 +676,21 @@
         	    if (landlordAvailability[i].day == dayOfWeek)
         	    {
         	    	timesShown+= `<div class="col-xs-4">
-    						 <div class="form-check form-check-inline">
-									<label class="form-check-label">
-						    		<input class="form-check-input tourtime" type="checkbox" onClick="addTime('`+returnDate+`','`+landlordAvailability[i].time+`')" id="date_`+returnDate+"_time_"+landlordAvailability[i].time+`" value="`+landlordAvailability[i].time+`"`;
-						    		for(var k=0; k<alreadySelectedTimes.length; k++){
-						    			if(alreadySelectedTimes[k]==landlordAvailability[i].time){
-						    				timesShown+= `checked`;
-						    			}
-						    		}
-						    		timesShown+= `>`+ landlordAvailability[i].time+`
-						  		</label>
-							</div>
+    						 <div class="form-group">
+    						 		<label class="control-label form-control-feedback" id="timelabel"style="font-size: 1.5em">`+ landlordAvailability[i].time+`</label>
+									<div class="checkbox">
+										<label style="font-size: 1.5em">
+							    		<input class="form-check-input tourtime" type="checkbox" onClick="addTime('`+returnDate+`','`+landlordAvailability[i].time+`')" id="date_`+returnDate+"_time_"+landlordAvailability[i].time+`" value="`+landlordAvailability[i].time+`"`;
+							    		for(var k=0; k<alreadySelectedTimes.length; k++){
+							    			if(alreadySelectedTimes[k]==landlordAvailability[i].time){
+							    				timesShown+= `checked`;
+							    			}
+							    		}
+							    		timesShown+= `>
+							    		<span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+							  			</label>
+									</div>
+								</div>
 						 </div>`;
 				}
 			}
