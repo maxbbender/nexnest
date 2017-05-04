@@ -654,13 +654,13 @@
     });
 
 	 function addTime(date, time){
-	 	console.log(checkDateTime(selectedDateTimes, date, time));
+	 	//console.log(checkDateTime(selectedDateTimes, date, time));
 	 	if(checkDateTime(selectedDateTimes, date, time) == false){
 	 		var nextDateTime = {date: date, time: time};
 	 		selectedDateTimes.push(nextDateTime);
 	 	}
 	 	else{
-
+	 		console.log('already exists');
 	 	}
 	 	console.log(selectedDateTimes);
 	 }
@@ -678,6 +678,7 @@
 	        {
 	        	if (obj[i].time == time)
 	        	{
+	        		selectedDateTimes.splice(i,1);
 	            	return true;
 	        	}
 	        }
