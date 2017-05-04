@@ -498,8 +498,10 @@
 			      					  
 			      					  
 			      					</div>
+			      					<br>
 			      					<div id="validTimes"></div>
 			      					{% from "_formhelpers.html" import render_field %}
+			      					<br>
 			      					{{ render_field(requestTourForm.description, class="form-control", type="text") }}
 		      					</form>  
 		      				</div>
@@ -668,7 +670,7 @@
 									<label class="form-check-label">
 						    		<input class="form-check-input tourtime" type="checkbox" onClick="addTime('`+returnDate+`','`+landlordAvailability[i].time+`')" id="inlineCheckbox1" value="`+landlordAvailability[i].time+`"`;
 						    		for(var k=0; k<alreadySelectedTimes.length; k++){
-						    			if(alreadySelectedTimes[k]==landlordAvailability[i]){
+						    			if(alreadySelectedTimes[k]==landlordAvailability[i].time){
 						    				timesShown+= `checked`;
 						    			}
 						    		}
@@ -728,7 +730,9 @@
 	    return times;
 	}
 
-
+	$( document ).ready(function() {
+	    $(".ui-datepicker").css("margin","auto");
+	});
 
     //Request Tour Modal
     $('#requestTourModal').on('show.bs.modal', function (event) {
