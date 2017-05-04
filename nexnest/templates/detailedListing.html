@@ -502,7 +502,7 @@
 			      					<div id="validTimes"></div>
 			      					<br>
 			      					<div id="doIShowTimeInput" style="display: none;">
-			      						<input id="selectedTourTimes" type="text" value="" data-role="tagsinput">
+			      						<input id="selectedTourTimes" class="selectedTourTimes" type="text" value="" data-role="tagsinput">
 			      					</div>
 
 			      					{% from "_formhelpers.html" import render_field %}
@@ -703,6 +703,8 @@
 	 		$('#selectedTourTimes').tagsinput('add', ""+ nextDateTime.date + " @ " +nextDateTime.time);
 	 	}
 	 	else{
+	 		var nextDateTime = {date: date, time: time};
+	 		$('#selectedTourTimes').tagsinput('remove', ""+ nextDateTime.date + " @ " +nextDateTime.time);
 	 		console.log('already exists');
 	 	}
 	 	console.log(selectedDateTimes);
@@ -745,6 +747,7 @@
 
 	$( document ).ready(function() {
 	    $(".ui-datepicker").css("margin","auto");
+	    $('.selectedTourTimes').attr('readonly', 'readonly');
 	});
 
 	$('input').on('itemRemoved', function(event) {
@@ -759,7 +762,7 @@
 	  console.log(time);
 	  checkDateTime(selectedDateTimes, date, time);
 	  console.log(selectedDateTimes);
-	  $("#date_"+date+"_time_"+time).hide();
+	  $("#date_"+date+"_time_"+time).prop('checked', false);
 	  console.log("#date_"+date+"_time_"+time);
 	  var elementExists = document.getElementById("date_"+date+"_time_"+time);
 	  console.log(elementExists);
