@@ -492,12 +492,13 @@
 		      					    {{ requestTourForm.csrf_token }}
 		      					    {{ requestTourForm.group_tour_id }}
 		      					    {{ requestTourForm.listing_id(value=listing.id) }}
-		      					    {{ requestTourForm.requestedDateTime() }}		      					
-			      					<p class="flatpickr input-group" data-wrap="true" data-clickOpens="false">
-			      						<input id="tourRequestTime" placeholder="Pick date" data-input style="background-color: inherit;">
-			      						<a class="btn input-btn" style="border-color: #ddd;" data-toggle><i class="fa fa-calendar" aria-hidden="true"></i></a>
-			      						<a class="btn input-btn" style="border-color: #ddd;" data-clear><i class="fa fa-times" aria-hidden="true"></i></a>
-			      					</p>
+		      					    {{ requestTourForm.requestedDateTime() }}		
+		      					    <input type="text" id="datep" />      					
+			      					<div id="datepicker">
+			      					  
+			      					  
+			      					</div>
+			      					<div id="validTimes"></div>
 			      					{% from "_formhelpers.html" import render_field %}
 			      					{{ render_field(requestTourForm.description, class="form-control", type="text") }}
 		      					</form>  
@@ -604,16 +605,32 @@
 {% endblock %}
 {% block scripts %}
 <script>
-    $(document).ready(function() {
-        flatpickr(".flatpickr", {
-        	enableTime: true,
-        	altInput: true,
-        	altFormat: "F j, Y h:i K",
-        	minuteIncrement: 15,
-        	disable: [{from: "0001-01-01",
-        			  to: "today"}]
+
+    var $datePicker = $("div#datepicker");
+    var validTimes = ['8:00 A.M', '9:00 A.M', '10:00 A.M', '11:00 A.M', '12:00 P.M', '1:00 P.M', '2:00 P.M', '3:00 P.M', '4:00 P.M', '5:00 P.M'];
+
+    $datePicker.datepicker({
+        changeMonth: true,
+        changeYear: true,
+        inline: true,
+        altField: "#datep",
+     }).change(function(e){
+        setTimeout(function(){
+        	$("#validTimes").empty();
+        	var timesShown =`<div class="row">`;
+        	for(var i=0; i<validTimes.length; i++){
+        		timesShown+= `<div class="col-xs-4">
+        						 <div class="form-check form-check-inline">
+  									<label class="form-check-label">
+							    		<input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">`+ validTimes[i] +`
+							  		</label>
+								</div>
+							 </div>`
+        	}
+        	timesShown+= `</div>`;
+			console.log(timesShown);
+            $("#validTimes").append(timesShown); 
         });
-        $('.flatpickr-calendar').css('z-index', 99999999999999);
     });
 
     //Request Tour Modal
@@ -621,7 +638,7 @@
       var button = $(event.relatedTarget);
       var modal = $(this);
       var group = $(event.relatedTarget).data('group');
-      modal.find('.modal-title').text('Request This House');
+      modal.find('.modal-title').text('Request To Tour This Property');
       modal.find('#groupNumber').text(group);
     })
 

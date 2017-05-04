@@ -715,3 +715,15 @@ button.link {
   color: #fff;
   background-color: #5bc0de;
 }
+
+#datep {
+    display: none;
+}
+
+.ui-datepicker-calendar tbody td > a.hover-calendar-cell {
+    border: 1px solid #074e91;
+    background: #5bacf7 url(images/ui-bg_glass_15_5bacf7_1x400.png) 50% 50% repeat-x;
+    font-weight: normal;
+    color: #1a1a1a;
+}
+#addon{background-color:#999; width:100%}
