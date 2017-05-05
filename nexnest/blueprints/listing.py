@@ -779,27 +779,6 @@ def searchListingsAJAX():
         else:
             listingDict['isFavorited'] = False
 
-        # # Driving and Walking Time
-        # listingSchool = ListingSchool.query.filter_by(listing=listing).all()
-
-        # if listingSchool is not None:
-        #     listingSchoolArray = []
-
-        #     for ls in listingSchool:
-        #         lsDict = {'school': ls.school.name}
-
-        #         times = {
-        #             'drivingMiles': ls.driving_miles,
-        #             'drivingTime': ls.driving_time,
-        #             'walkingMiles': ls.walking_miles,
-        #             'walkingTime': ls.walking_time
-        #         }
-
-        #         lsDict['times'] = times
-
-        #         listingSchoolArray.append(lsDict)
-
-        #     listingDict['schoolDistances'] = listingSchoolArray
         listingSchool = ListingSchool.query.filter_by(listing=listing, school=school).first()
 
         if listingSchool is not None:
@@ -830,11 +809,22 @@ def searchListingsAJAX():
         else:
             listingDict['isFavorited'] = False
 
-        featuredJSONList.append(listingDict)
+        listingSchool = ListingSchool.query.filter_by(listing=listing, school=school).first()
 
-    # logger.debug("Featured Listings")
-    # for tempDict in featuredJSONList:
-    #     pprint(tempDict)
+        if listingSchool is not None:
+            if listingSchool.driving_time is not None:
+                listingDict['drivingTime'] = float(listingSchool.driving_time)
+
+            if listingSchool.driving_miles is not None:
+                listingDict['drivingMiles'] = float(listingSchool.driving_miles)
+
+            if listingSchool.walking_time is not None:
+                listingDict['walkingTime'] = float(listingSchool.walking_time)
+
+            if listingSchool.walking_miles is not None:
+                listingDict['walkingMiles'] = float(listingSchool.walking_miles)
+
+        featuredJSONList.append(listingDict)
 
     school = School.query.filter_by(name=postedJSON['school']).first()
 
