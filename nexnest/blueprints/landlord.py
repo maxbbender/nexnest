@@ -174,7 +174,13 @@ def isEditable(listingID):
 @landlords.route('/landlord/updateAvailability', methods=['POST'])
 @login_required
 def updateAvailability():
-    print('JSONFIFIFIF %r' % request.get_json())
-    availabilityJSON = request.get_json(force=True)
-    logger.debug('RecievedJSON %r' % availabilityJSON)
-    return jsonify({'success': True})
+    if request.get_json() is not None:
+        availabilityJSON = request.get_json(force=True)
+        logger.debug('RecievedJSON %r' % availabilityJSON)
+
+        if '0' in availabilityJSON:
+            if len(availabilityJSON['0']) > 0:
+
+        return jsonify({'success': True})
+    else:
+        return jsonify({'success': False, 'message': 'Invalid Request (JSON is None)'})

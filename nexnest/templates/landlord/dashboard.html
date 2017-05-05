@@ -3320,13 +3320,16 @@
 	    console.log(returnDict);
         console.log(JSON.stringify(returnDict))
 
-        $.post('/landlord/updateAvailability', JSON.stringify(returnDict), function(data) {
-            console.log(data)
-        }, 'json');
-
-        // $.post('/landlord/updateAvailability', returnDict, function(data) {
-        //     console.log(data)
-        // }, 'json');
+        $.ajax({
+          type: "POST",
+          contentType: "application/json; charset=utf-8",
+          url: "/landlord/updateAvailability",
+          data: JSON.stringify(returnDict),
+          success: function (data) {
+          	console.log(data);
+          },
+          dataType: "json"
+        });
 
 
 
