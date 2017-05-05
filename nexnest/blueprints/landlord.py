@@ -201,7 +201,7 @@ def getAvailability(landlordID=None):
     for i in range(7):
         availabilities = Availability.query \
             .filter_by(landlord_id=landlordID, day=i) \
-            .order_by(Availability.time.desc()) \
+            .order_by(Availability.time.asc()) \
             .all()
 
         for avail in availabilities:
