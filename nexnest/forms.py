@@ -86,6 +86,7 @@ class RegistrationForm(RedirectForm):
     landlord = HiddenField('Landlord')
     submit = SubmitField('Register')
 
+
 class LandlordMoreInfoForm(RedirectForm):
     phone = IntegerField('Phone Number', [InputRequired()])
     date_of_birth = DateField('Date of Birth', [InputRequired()])
@@ -98,6 +99,7 @@ class LandlordMoreInfoForm(RedirectForm):
     account_number = IntegerField('Bank Account Number', [InputRequired()])
     routing_number = IntegerField('Bank Routing Number', [InputRequired()])
     user_id = HiddenField('user')
+
 
 class ProfilePictureForm(RedirectForm):
     profilePicture = FileField('Profile Picture', validators=[FileRequired()])
@@ -309,3 +311,25 @@ class EmailPreferencesForm(RedirectForm):
     house_notification = BooleanField('house')
     group_listing_accept_notification = BooleanField('group_listing_accept')
     group_listing_deny_notification = BooleanField('group_listing_deny')
+
+
+class ReportForm(RedirectForm):
+    title = StringField('Subject of Report', validators=[Optional()])
+    content = TextAreaField('Describe what went wrong or the feedback you have!', validators=[InputRequired()])
+    sourceURL = StringField('The URL of where you had your issue if any', validators=[Optional()])
+
+
+class PlatformReportForm(ReportForm):
+    pass
+
+
+class ListingReportForm(ReportForm):
+    listing_id = HiddenField('listingID', validators=[InputRequired()])
+
+
+class LandlordReportForm(ReportForm):
+    landlord_id = HiddenField('landlordID', validators=[InputRequired()])
+
+
+class GroupReportForm(ReportForm):
+    group_id = HiddenField('groupID', validators=[InputRequired()])

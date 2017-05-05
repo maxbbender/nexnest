@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+{% from "_formhelpers.html" import render_field %}
+<form method="POST" action="/platformReport/create">
+{{ form.csrf_token }}
+{{ render_field(form.title, class="form-control") }}
+{{ render_field(form.content, class="form-control")}}
+{{ render_field(form.sourceURL, class="form-control")}}
+<input type="submit" value='Submit Report'>
+</form>
+{% endblock %}
