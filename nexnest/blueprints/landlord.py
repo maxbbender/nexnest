@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, url_for, flash, render_template, jsonify, request
+from flask import Blueprint, redirect, url_for, flash, render_template, jsonify, request, abort
 
 from flask_login import login_required, current_user
 
@@ -7,157 +7,147 @@ from nexnest.application import session
 from nexnest.models.landlord import Landlord
 from nexnest.models.listing import Listing
 from nexnest.models.landlord_listing import LandlordListing
+from nexnest.models.availability import Availability
 from nexnest.forms import TourDateChangeForm, PreCheckoutForm
+
+from dateutil import parser
 
 landlords = Blueprint('landlords',
                       __name__,
                       template_folder='../templates/landlord')
 
 
+@landlords.before_request
+def isLandlord():
+    if not current_user.is_authenticated:
+        if request.is_xhr:
+            return jsonify({'success': False, 'message': 'Permissions Error'})
+        else:
+            abort(403)
+
+    if not current_user.isLandlord:
+        if request.is_xhr:
+            return jsonify({'success': False, 'message': 'Permissions Error'})
+        else:
+            abort(403)
+
+
 @landlords.route('/landlord/dashboard')
 @login_required
 def landlordDashboard():
     dateChangeForm = TourDateChangeForm()
-    if current_user.isLandlord:
-        landlord = session.query(Landlord) \
-            .filter_by(user_id=current_user.id) \
-            .first()
+    landlord = session.query(Landlord) \
+        .filter_by(user_id=current_user.id) \
+        .first()
 
-        nonActiveListings = []
-        for listing in landlord.getListings():
-            if not listing.active:
-                nonActiveListings.append(listing)
+    nonActiveListings = []
+    for listing in landlord.getListings():
+        if not listing.active:
+            nonActiveListings.append(listing)
 
-        unAcceptedHousingRequests, acceptedHousingRequests, completedHousingRequests = landlord.getHousingRequests()
-        openMaintenanceRequests, inProgressMaintenanceRequests, completedMaintenanceRequests = landlord.getMaintenanceRequests()
-        currentHouses, futureHouses, unBookedHouses = landlord.getHouses()
+    unAcceptedHousingRequests, acceptedHousingRequests, completedHousingRequests = landlord.getHousingRequests()
+    openMaintenanceRequests, inProgressMaintenanceRequests, completedMaintenanceRequests = landlord.getMaintenanceRequests()
+    currentHouses, futureHouses, unBookedHouses = landlord.getHouses()
 
-        requestedTours, scheduledTours = landlord.getActiveTours()
+    requestedTours, scheduledTours = landlord.getActiveTours()
 
-        return render_template('dashboard.html',
-                               landlord=landlord,
-                               dateChangeForm=dateChangeForm,
-                               listings=landlord.getListings(),
-                               requestedTours=requestedTours,
-                               scheduledTours=scheduledTours,
-                               unAcceptedHousingRequests=unAcceptedHousingRequests,
-                               acceptedHousingRequests=acceptedHousingRequests,
-                               completedHousingRequests=completedHousingRequests,
-                               currentHouses=currentHouses,
-                               futureHouses=futureHouses,
-                               unBookedHouses=unBookedHouses,
-                               openMaintenanceRequests=openMaintenanceRequests,
-                               inProgressMaintenanceRequests=inProgressMaintenanceRequests,
-                               completedMaintenanceRequests=completedMaintenanceRequests,
-                               preCheckoutForm=PreCheckoutForm(),
-                               listingsToCheckout=nonActiveListings)
-    else:
-        flash("You are not a landlord", 'warning')
-        return redirect(url_for('indexs.index'))
+    return render_template('dashboard.html',
+                           landlord=landlord,
+                           dateChangeForm=dateChangeForm,
+                           listings=landlord.getListings(),
+                           requestedTours=requestedTours,
+                           scheduledTours=scheduledTours,
+                           unAcceptedHousingRequests=unAcceptedHousingRequests,
+                           acceptedHousingRequests=acceptedHousingRequests,
+                           completedHousingRequests=completedHousingRequests,
+                           currentHouses=currentHouses,
+                           futureHouses=futureHouses,
+                           unBookedHouses=unBookedHouses,
+                           openMaintenanceRequests=openMaintenanceRequests,
+                           inProgressMaintenanceRequests=inProgressMaintenanceRequests,
+                           completedMaintenanceRequests=completedMaintenanceRequests,
+                           preCheckoutForm=PreCheckoutForm(),
+                           listingsToCheckout=nonActiveListings)
 
 
 @landlords.route('/landlord/requestedTours/JSON')
 @login_required
 def requestedToursJSON():
-    if current_user.isLandlord:
-        landlord = session.query(Landlord) \
-            .filter_by(user_id=current_user.id) \
-            .first()
+    landlord = session.query(Landlord) \
+        .filter_by(user_id=current_user.id) \
+        .first()
 
-        return jsonify(requestedTours=landlord.getRequestedToursJSON())
-    else:
-        return jsonify(requestedTours={'error': 'Invalid Permissions'})
+    return jsonify(requestedTours=landlord.getRequestedToursJSON())
 
 
 @landlords.route('/landlord/scheduledTours/JSON')
 @login_required
 def scheduledToursJSON():
-    if current_user.isLandlord:
-        landlord = session.query(Landlord) \
-            .filter_by(user_id=current_user.id) \
-            .first()
+    landlord = session.query(Landlord) \
+        .filter_by(user_id=current_user.id) \
+        .first()
 
-        return jsonify(scheduledTours=landlord.getScheduledToursJSON())
-    else:
-        return jsonify(scheduledTours={'error': 'Invalid Permissions'})
+    return jsonify(scheduledTours=landlord.getScheduledToursJSON())
 
 
 @landlords.route('/landlord/unAcceptedGroupListings/JSON')
 @login_required
 def unAcceptedGroupListingsJSON():
-    if current_user.isLandlord:
-        landlord = session.query(Landlord) \
-            .filter_by(user_id=current_user.id) \
-            .first()
+    landlord = session.query(Landlord) \
+        .filter_by(user_id=current_user.id) \
+        .first()
 
-        return jsonify(unAcceptedGroupListings=landlord.getUnAcceptedGroupListingsJSON())
-    else:
-        return jsonify(unAcceptedGroupListings={'error': 'Invalid Permissions'})
+    return jsonify(unAcceptedGroupListings=landlord.getUnAcceptedGroupListingsJSON())
 
 
 @landlords.route('/landlord/acceptedGroupListings/JSON')
 @login_required
 def acceptedGroupListingsJSON():
-    if current_user.isLandlord:
-        landlord = session.query(Landlord) \
-            .filter_by(user_id=current_user.id) \
-            .first()
+    landlord = session.query(Landlord) \
+        .filter_by(user_id=current_user.id) \
+        .first()
 
-        return jsonify(acceptedGroupListings=landlord.getAcceptedGroupListingsJSON())
-    else:
-        return jsonify(acceptedGroupListings={'error': 'Invalid Permissions'})
+    return jsonify(acceptedGroupListings=landlord.getAcceptedGroupListingsJSON())
 
 
 @landlords.route('/landlord/openMaintenanceRequests/JSON')
 @login_required
 def openMaintenanceRequestsJSON():
-    if current_user.isLandlord:
-        landlord = session.query(Landlord) \
-            .filter_by(user_id=current_user.id) \
-            .first()
+    landlord = session.query(Landlord) \
+        .filter_by(user_id=current_user.id) \
+        .first()
 
-        return jsonify(openMaintenanceRequests=landlord.getOpenMaintenanceJSON())
-    else:
-        return jsonify(openMaintenanceRequests={'error': 'Invalid Permissions'})
+    return jsonify(openMaintenanceRequests=landlord.getOpenMaintenanceJSON())
 
 
 @landlords.route('/landlord/inProgressMaintenanceRequests/JSON')
 @login_required
 def inProgressMaintenanceRequestsJSON():
-    if current_user.isLandlord:
-        landlord = session.query(Landlord) \
-            .filter_by(user_id=current_user.id) \
-            .first()
+    landlord = session.query(Landlord) \
+        .filter_by(user_id=current_user.id) \
+        .first()
 
-        return jsonify(inProgressMaintenanceRequests=landlord.getInProgressMaintenanceJSON())
-    else:
-        return jsonify(inProgressMaintenanceRequests={'error': 'Invalid Permissions'})
+    return jsonify(inProgressMaintenanceRequests=landlord.getInProgressMaintenanceJSON())
 
 
 @landlords.route('/landlord/completedMaintenanceRequests/JSON')
 @login_required
 def completedMaintenanceRequestsJSON():
-    if current_user.isLandlord:
-        landlord = session.query(Landlord) \
-            .filter_by(user_id=current_user.id) \
-            .first()
+    landlord = session.query(Landlord) \
+        .filter_by(user_id=current_user.id) \
+        .first()
 
-        return jsonify(completedMaintenanceRequests=landlord.getCompletedMaintenanceJSON())
-    else:
-        return jsonify(completedMaintenanceRequests={'error': 'Invalid Permissions'})
+    return jsonify(completedMaintenanceRequests=landlord.getCompletedMaintenanceJSON())
 
 
 @landlords.route('/landlord/unBookedHouses/JSON')
 @login_required
 def unBookedHousesJSON():
-    if current_user.isLandlord:
-        landlord = session.query(Landlord) \
-            .filter_by(user_id=current_user.id) \
-            .first()
+    landlord = session.query(Landlord) \
+        .filter_by(user_id=current_user.id) \
+        .first()
 
-        return jsonify(unBookedHouses=landlord.getUnBookedHousesJSON())
-    else:
-        return jsonify(unBookedHouses={'error': 'Invalid Permissions'})
+    return jsonify(unBookedHouses=landlord.getUnBookedHousesJSON())
 
 
 @landlords.route('/landlord/<listingID>/isEditable/AJAX')
@@ -174,12 +164,26 @@ def isEditable(listingID):
 @landlords.route('/landlord/updateAvailability', methods=['POST'])
 @login_required
 def updateAvailability():
+    landlord = Landlord.query.filter_by(user=current_user).first()
+
     if request.get_json() is not None:
         availabilityJSON = request.get_json(force=True)
-        logger.debug('RecievedJSON %r' % availabilityJSON)
+        logger.debug('availabilityJSON %r' % availabilityJSON)
 
-        if '0' in availabilityJSON:
-            if len(availabilityJSON['0']) > 0:
+        # Remove current availability
+        Availability.query.filter_by(landlord=landlord).delete()
+
+        daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+
+        for i in range(7):
+            day = str(i)
+            if day in availabilityJSON:
+                if len(availabilityJSON[day]) > 0:
+                    for time in availabilityJSON[day]:
+                        time = parser.parse(time).time()
+                        newAvailability = Availability(landlord, time, daysOfWeek[i])
+                        session.add(newAvailability)
+                        session.commit()
 
         return jsonify({'success': True})
     else:

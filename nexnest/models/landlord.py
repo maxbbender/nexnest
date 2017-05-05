@@ -5,7 +5,7 @@ from nexnest.application import db, session
 
 from nexnest.models.base import Base
 from nexnest.models.security_deposit import SecurityDeposit
-# from nexnest.models.report_landlord import Report 
+# from nexnest.models.report_landlord import Report
 
 
 class Landlord(Base):
@@ -21,6 +21,7 @@ class Landlord(Base):
     zip_code = db.Column(db.String(5))
     listings = relationship("LandlordListing", back_populates='landlord')
     reports = relationship("ReportLandlord", backref='landlord')
+    availabilities = relationship("Availability", backref='landlord')
 
     def __init__(self,
                  user,
