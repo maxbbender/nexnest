@@ -78,7 +78,7 @@ app.register_blueprint(errors)
 app.register_blueprint(notifications)
 app.register_blueprint(reports)
 
-from nexnest.forms import LoginForm, PasswordChangeForm, ProfilePictureForm
+from nexnest.forms import LoginForm, PasswordChangeForm, ProfilePictureForm, PlatformReportForm
 
 
 @app.context_processor
@@ -99,7 +99,8 @@ def insert_login_form():
                     notifications=notifications,
                     numUnviewedNotifications=numUnviewedNotifications,
                     numUnviewedMessages=numUnviewedMessages,
-                    notificationMessages=messages)
+                    notificationMessages=messages,
+                    platformReportForm=PlatformReportForm())
     else:
         login_form = LoginForm()
         return dict(login_form=login_form)
