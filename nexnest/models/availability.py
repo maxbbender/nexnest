@@ -26,7 +26,7 @@ class Availability(Base):
     @property
     def serialize(self):
         return {
-            'time': self.time.strftime('%I:%M%p'),
+            'time': self.time.strftime('%I:%M%p').lstrip("0").replace(" 0", " "),
             'day': self.day
         }
         # if self.day == 'sunday':
