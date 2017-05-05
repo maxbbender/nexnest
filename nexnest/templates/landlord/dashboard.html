@@ -3251,12 +3251,6 @@
         endTime: '21:06'
         */
       });
-      $("#day-schedule").on('selected.artsy.dayScheduleSelector', function (e, selected) {
-        console.log(selected);
-      })
-      $("#day-schedule").data('artsy.dayScheduleSelector').deserialize({
-        '0': [['09:00', '10:00'], ['13:00', '14:00']]
-      });
     })($);
 
     function updateAvailibilty(){
