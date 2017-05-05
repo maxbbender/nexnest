@@ -11,7 +11,7 @@
   background-color: transparent;
   text-align: right;
   position: relative;
-  top: -12px;
+  top: 0px;
 }
 
 .schedule-rows td[data-selected],
