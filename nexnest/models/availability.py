@@ -29,17 +29,3 @@ class Availability(Base):
             'time': self.time.strftime('%I:%M%p').lstrip("0").replace(" 0", " "),
             'day': self.day
         }
-        # if self.day == 'sunday':
-        #     returnDict['day'] = 0
-        # elif self.day == 'monday':
-        #     returnDict['day'] = 1
-        # elif self.day == 'tuesday':
-        #     returnDict['day'] = 1
-        # elif self.day == 'wed':
-        #     returnDict['day'] = 1
-        # elif self.day == 'monday':
-        #     returnDict['day'] = 1
-        # elif self.day == 'monday':
-        #     returnDict['day'] = 1
-        # elif self.day == 'monday':
-        #     returnDict['day'] = 1
