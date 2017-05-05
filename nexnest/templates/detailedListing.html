@@ -681,6 +681,7 @@
         	var day = date.getDate();
         	var year = date.getUTCFullYear();
         	var dayOfWeek = date.getUTCDay();
+        	var dateForMax = ""+month+"/"+day+"/"+year;
        		var returnDate = ""+monthName+" "+day+" "+year;
        		console.log(returnDate);
         	console.log(dayOfWeek);
@@ -696,7 +697,7 @@
     						 		<label class="control-label form-control-feedback" id="timelabel"style="font-size: 1.5em">`+ landlordAvailability[i].time+`</label>
 									<div class="checkbox">
 										<label style="font-size: 1.5em">
-							    		<input class="form-check-input tourtime" type="checkbox" onClick="addTime('`+returnDate+`','`+landlordAvailability[i].time+`')" id="date_`+returnDate+"_time_"+landlordAvailability[i].time+`" value="`+landlordAvailability[i].time+`"`;
+							    		<input class="form-check-input tourtime" type="checkbox" onClick="addTime('`+returnDate+`','`+dateForMax+`','`+landlordAvailability[i].time+`')" id="date_`+returnDate+"_time_"+landlordAvailability[i].time+`" value="`+landlordAvailability[i].time+`"`;
 							    		for(var k=0; k<alreadySelectedTimes.length; k++){
 							    			if(alreadySelectedTimes[k]==landlordAvailability[i].time){
 							    				timesShown+= `checked`;
@@ -715,16 +716,15 @@
         });
     });
 
-	 function addTime(date, time){
+	 function addTime(date, dateForMax, time){
 	 	$("#doIShowTimeInput").show();
-	 	if(checkDateTime(selectedDateTimes, date, time) == false){
-	 		var nextDateTime = {date: date, time: time};
+	 	if(checkDateTime(selectedDateTimes, dateForMax, time) == false){
+	 		var nextDateTime = ""+dateForMax + " " + time;
 	 		selectedDateTimes.push(nextDateTime);
-	 		$('#selectedTourTimes').tagsinput('add', ""+ nextDateTime.date + " @ " +nextDateTime.time);
+	 		$('#selectedTourTimes').tagsinput('add', ""+ date + " @ " +time);
 	 	}
 	 	else{
-	 		var nextDateTime = {date: date, time: time};
-	 		$('#selectedTourTimes').tagsinput('remove', ""+ nextDateTime.date + " @ " +nextDateTime.time);
+	 		$('#selectedTourTimes').tagsinput('remove', ""+ date + " @ " +time);
 	 		console.log('already exists');
 	 	}
 	 	console.log(selectedDateTimes);
@@ -737,16 +737,14 @@
 
 	function checkDateTime(obj, date, time)
 	{
+		//debugger;
 		console.log(obj);
 	    for (i = 0; i < obj.length; i++ )
 	    {
-	        if (obj[i].date == date)
-	        {
-	        	if (obj[i].time == time)
-	        	{
-	        		selectedDateTimes.splice(i,1);
-	            	return true;
-	        	}
+	        if (obj[i] == ""+date+ " " + time)
+	        {	        	
+        		selectedDateTimes.splice(i,1);
+            	return true;	        	
 	        }
 	    }
 	    return false;
