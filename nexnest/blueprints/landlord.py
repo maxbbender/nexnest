@@ -161,7 +161,7 @@ def isEditable(listingID):
         return jsonify(results={'success': False, 'message': 'Permissions Error'})
 
 
-@landlords.route('/landlord/updateAvailability', methods=['POST'])
+@landlords.route('/landlord/updateAvailability/', methods=['POST'])
 @login_required
 def updateAvailability():
     landlord = Landlord.query.filter_by(user=current_user).first()
@@ -190,14 +190,17 @@ def updateAvailability():
         return jsonify({'success': False, 'message': 'Invalid Request (JSON is None)'})
 
 
-@landlords.route('/landlord/getAvailability/JSON', methods=['GET'])
+@landlords.route('/landlord/getAvailability/JSON/<landlordID>', methods=['GET'])
 @login_required
-def getAvailability():
+def getAvailability(landlordID=None):
+    if landlordID is None:
+        landlordID = current_user.id
+
     availabilityList = []
 
     for i in range(7):
         availabilities = Availability.query \
-            .filter_by(landlord_id=current_user.id, day=i) \
+            .filter_by(landlord_id=landlordID, day=i) \
             .order_by(Availability.time.desc()) \
             .all()
 
