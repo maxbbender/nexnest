@@ -9,7 +9,7 @@ avail = Table('availability', meta,
                      primary_key=True, nullable=False),
               Column('time', Time(),
                      primary_key=True, nullable=False),
-              Column('day', Text(), primary_key=True, nullable=False))
+              Column('day', Integer(), primary_key=True, nullable=False))
 
 
 def upgrade(migrate_engine):

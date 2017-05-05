@@ -7,7 +7,7 @@ class Availability(Base):
     __tablename__ = 'availability'
     landlord_id = db.Column(db.Integer, db.ForeignKey('landlords.user_id'), primary_key=True)
     time = db.Column(db.Time(), primary_key=True)
-    day = db.Column(db.Text(), primary_key=True)
+    day = db.Column(db.Integer, primary_key=True)
 
     def __init__(
             self,
@@ -22,3 +22,24 @@ class Availability(Base):
 
     def __repr__(self):
         return '<Availability Landlord %r | Time %r>' % (self.landlord, self.time)
+
+    @property
+    def serialize(self):
+        return {
+            'time': self.time.strftime('%I:%M%p'),
+            'day': self.day
+        }
+        # if self.day == 'sunday':
+        #     returnDict['day'] = 0
+        # elif self.day == 'monday':
+        #     returnDict['day'] = 1
+        # elif self.day == 'tuesday':
+        #     returnDict['day'] = 1
+        # elif self.day == 'wed':
+        #     returnDict['day'] = 1
+        # elif self.day == 'monday':
+        #     returnDict['day'] = 1
+        # elif self.day == 'monday':
+        #     returnDict['day'] = 1
+        # elif self.day == 'monday':
+        #     returnDict['day'] = 1

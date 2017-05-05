@@ -173,7 +173,7 @@ def updateAvailability():
         # Remove current availability
         Availability.query.filter_by(landlord=landlord).delete()
 
-        daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+        # daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
 
         for i in range(7):
             day = str(i)
@@ -181,10 +181,27 @@ def updateAvailability():
                 if len(availabilityJSON[day]) > 0:
                     for time in availabilityJSON[day]:
                         time = parser.parse(time).time()
-                        newAvailability = Availability(landlord, time, daysOfWeek[i])
+                        newAvailability = Availability(landlord, time, day)
                         session.add(newAvailability)
                         session.commit()
 
         return jsonify({'success': True})
     else:
         return jsonify({'success': False, 'message': 'Invalid Request (JSON is None)'})
+
+
+@landlords.route('/landlord/getAvailability/JSON', methods=['GET'])
+@login_required
+def getAvailability():
+    availabilityList = []
+
+    for i in range(7):
+        availabilities = Availability.query \
+            .filter_by(landlord_id=current_user.id, day=i) \
+            .order_by(Availability.time.desc()) \
+            .all()
+
+        for avail in availabilities:
+            availabilityList.append(avail.serialize)
+
+    return jsonify(availabilityList)
