@@ -1,0 +1,49 @@
+<div class="modal fade" id="listingReportModal" tabindex="-1" role="dialog" aria-labelledby="report" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="listingReport"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form action="{{url_for('reports.createListingReport')}}" method='POST'>
+                            {{ListingReportForm.csrf_token}}
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label form-control-feedback"><h4><strong>Title of Report</strong></h4></label>
+                                        {{ListingReportForm.title(class='form-control', required='required', type="text")}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label form-control-feedback"><strong>What aspects of this listing do you believe to be inaccurate? Please be as specfic as possible</strong></label>
+                                        {{ListingReportForm.content(class="form-control", type="text", required="required", rows="5")}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label form-control-feedback"><strong>URL of Listing</strong></label>
+                                        {{ListingReportForm.sourceURL(class="form-control", type="url")}}
+                                    </div>
+                                </div>
+                            </div>
+                            {{ListingReportForm.listing_id}}
+                            <p>
+                                <input type='submit' value='Submit Report' class="btn btn-primary">
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

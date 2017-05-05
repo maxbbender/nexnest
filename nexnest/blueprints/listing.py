@@ -13,7 +13,7 @@ from sqlalchemy import or_
 from nexnest import logger
 from nexnest.application import session, app, csrf
 
-from nexnest.forms import ListingForm, SuggestListingForm, TourForm, GroupListingForm, PhotoForm
+from nexnest.forms import ListingForm, SuggestListingForm, TourForm, GroupListingForm, PhotoForm, ListingReportForm
 from nexnest.models.listing import Listing
 from nexnest.models.listing_school import ListingSchool
 from nexnest.models.landlord_listing import LandlordListing
@@ -44,7 +44,8 @@ def viewListing(listingID):
                            groups=myGroups,
                            title='Listing',
                            pictures=listing.getPhotoURLs(),
-                           bannerPhoto=listing.getBannerPhotoURL())
+                           bannerPhoto=listing.getBannerPhotoURL(),
+                           ListingReportForm=ListingReportForm())
 
 
 @listings.route('/listing/create', methods=['GET', 'POST'])
@@ -524,10 +525,13 @@ def uploadPhotos(listingID):
                         flash("Error saving file %s" % file.filename, 'danger')
 
                 if form.nextAction.data == 'checkout':
+                    flash('Listing Created!', 'success')
                     return redirect(url_for('landlords.landlordDashboard'))
                 elif form.nextAction.data == 'createNew':
+                    flash('Listing Created!', 'success')
                     return redirect(url_for('listings.createListing'))
                 elif form.nextAction.data == 'createCopy':
+                    flash('Listing Created!', 'success')
                     selectedSchools = session.query(ListingSchool).filter_by(listing=listingID).all()
                     # Get Pictures
                     return render_template('/landlord/createListing.html',

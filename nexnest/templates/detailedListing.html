@@ -49,7 +49,7 @@
 		<div class="col-xs-1 col-md-2 col-lg-2"></div>
 		<div class="col-xs-10 col-md-8 col-lg-8">
 			<div class="row">
-				<div class="col-xs-9">
+				<div class="col-xs-8">
 					<br>					
 					<h4>{{ listing.street }},
 					<br>
@@ -57,10 +57,23 @@
 					<h5>${{ listing.price }} Per Bedroom Per {{ listing.rent_due }}</h5>
 				</div>
 				{% if listing.floor_plan_url %}
-					<div class="col-xs-3" style="text-align: right;">
+					<div class="col-xs-4" style="text-align: right;">
 						<br>
 						<a class="btn btn-primary" href="{{listing.floor_plan_url}}">Floor Plan</a>
+						{% if current_user.is_authenticated %}
+						{% if not current_user in listing.landLordsAsUsers() %}
+							<a href="#" data-toggle="modal" data-target="#listingReportModal"><i class="fa fa-3x fa-exclamation-triangle" title="Report This Listing" aria-hidden="true" style="margin-top: 6%; color: orange; padding-left: 15px; position: relative; top: 9px;"></i></a>
+						{% endif %}
+					{% endif %}
 					</div>
+				{% else %}
+					{% if current_user.is_authenticated %}
+						{% if not current_user in listing.landLordsAsUsers() %}
+							<div class="col-xs-4" style="text-align: right;">
+								<a href="#" data-toggle="modal" data-target="#listingReportModal"><i class="fa fa-3x fa-exclamation-triangle" title="Report This Listing" aria-hidden="true" style="margin-top: 13%; color: orange;"></i></a>
+							</div>
+						{% endif %}
+					{% endif %}
 				{% endif %}
 			</div>
 			{% if current_user.is_authenticated %}
@@ -354,7 +367,7 @@
 					</div>
 				</div>
 			</div>
-			{% endif %}			
+			{% endif %}	
 		</div>
 	</div>
 
@@ -418,6 +431,7 @@
 		    	</div>
 		  	</div>
 		</div>
+		{% include 'listingReportModal.html' %}
 		<!-- Tour Request Select Group Modal -->
 		<div class="modal fade" id="selectGroupForTourModal" tabindex="-1" role="dialog" aria-labelledby="selectGroupForTourModal" aria-hidden="true">
 		  	<div class="modal-dialog" role="document">
@@ -791,6 +805,15 @@
       modal.find('.modal-title').text('Request to live at this {{listing.property_type}}');
       modal.find('#groupNumberHouse').text(group);
     })
+
+    //Listing Report
+    $('#listingReportModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget)
+      var modal = $(this)
+      modal.find('.modal-title').text('Report This Listing');
+      var url = window.location.href;
+      $("#sourceURL").val(url);
+    });
 
     function submitTourForm() {
     	$("#group_tour_id").val($("#groupNumber").text());

@@ -103,6 +103,7 @@ def insert_login_form():
                     platformReportForm=PlatformReportForm())
     else:
         login_form = LoginForm()
-        return dict(login_form=login_form)
+        return dict(login_form=login_form,
+                    platformReportForm=PlatformReportForm())
 
 import nexnest.admin  # pylint: disable=unused-import
