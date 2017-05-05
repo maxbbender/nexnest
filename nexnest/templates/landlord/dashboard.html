@@ -3260,13 +3260,53 @@
     })($);
 
     function updateAvailibilty(){
+    	var day0 = [];
+    	var day1 = [];
+    	var day2 = [];
+    	var day3 = [];
+    	var day4 = [];
+    	var day5 = [];
+    	var day6 = [];
+
 	    $( ".time-slot" ).each(function( index ) {
 	      if($( this ).attr( "data-selected" )){
 	      	var day = $(this).attr("data-day");
 	      	var time = $(this).attr("data-time");
 	      	console.log("Day: " + day + " Time: " + time);
+	      	if(day == 0){
+	      		day0.push(time);
+	      	}
+	      	else if(day == 1){
+	      		day1.push(time);
+	      	}
+	      	else if(day == 2){
+	      		day2.push(time);
+	      	}
+	      	else if(day == 3){
+	      		day3.push(time);
+	      	}
+	      	else if(day == 4){
+	      		day4.push(time);
+	      	}
+			else if(day == 5){
+	      		day5.push(time);
+	      	}
+	      	else if(day == 6){
+	      		day6.push(time);
+	      	}
 	      }
 	    });
+	    var returnDict = {
+	    	0: day0,
+	    	1: day1,
+	    	2: day2,
+	    	3: day3,
+	    	4: day4,
+	    	5: day5,
+	    	6: day6
+	    };
+	    console.log(returnDict);
+	    //console.log(day0);
 	}
 
 	$("#unbooked_time_range_select").change(function() {

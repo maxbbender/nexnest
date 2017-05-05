@@ -59,7 +59,7 @@
 
     $.each(generateDates(start, end, interval), function (i, d) {
       var daysInARow = $.map(new Array(days.length), function (_, i) {
-        return '<td class="time-slot" data-time="' + hhmm(d) + '" data-day="' + days[i] + '" style="border: 1px solid black;"></td>'
+        return '<td class="time-slot" data-time="' + hmmAmPm(d) + '" data-day="' + days[i] + '" style="border: 1px solid black;"></td>'
       }).join();
 
       $el.append('<tr><td class="time-label">' + hmmAmPm(d) + '</td>' + daysInARow + '</tr>');
@@ -258,7 +258,8 @@
     var hours = date.getHours()
       , minutes = date.getMinutes()
       , ampm = hours >= 12 ? 'pm' : 'am';
-    return hours + ':' + ('0' + minutes).slice(-2) + ampm;
+    var notMilitaryHours = moment(hours.toString(), "HH").format("hh");
+    return notMilitaryHours + ':' + ('0' + minutes).slice(-2) + ampm;
   }
 
   /**
@@ -267,9 +268,12 @@
    * @returns {String} Time in HH:mm format, e.g. '09:30'
    */
   function hhmm(date) {
+    console.log("date:" + date);
     var hours = date.getHours()
-      , minutes = date.getMinutes();
-    return ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2);
+    var minutes = date.getMinutes();
+    //console.log(hours);
+    var notMilitaryHours = moment(hours.toString(), "HH").format("hh");
+    return ('0' + notMilitaryHours).slice(-2) + ':' + ('0' + minutes).slice(-2);
   }
 
   function hhmmToSecondsSinceMidnight(hhmm) {
