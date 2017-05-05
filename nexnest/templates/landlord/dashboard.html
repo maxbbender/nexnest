@@ -3232,6 +3232,17 @@
         })
     }
 
+    var csrf_token = "{{ csrf_token() }}";
+
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrf_token);
+            }
+        }
+    });
+
+
     function getJSON(){
     	requestURL = '/landlord/acceptedGroupListings/JSON'
 
@@ -3299,8 +3310,23 @@
 	    	5: day5,
 	    	6: day6
 	    };
+        console.log(typeof(returnDict))
 	    console.log(returnDict);
-	    //console.log(day0);
+        console.log(JSON.stringify(returnDict))
+
+        $.ajax({
+          type: "POST",
+          contentType: "application/json; charset=utf-8",
+          url: "/landlord/updateAvailability",
+          data: JSON.stringify(returnDict),
+          success: function (data) {
+          	console.log(data);
+          },
+          dataType: "json"
+        });
+
+
+
 	}
 
 	$("#unbooked_time_range_select").change(function() {

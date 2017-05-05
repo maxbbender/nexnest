@@ -20,12 +20,13 @@ from nexnest.utils.school import allSchoolsAsStrings
 import googlemaps
 from apiclient.discovery import build
 
+from dateutil import parser
+
+gmaps = googlemaps.Client(key='AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w')
 
 user = user.User.query.first()
 print(user)
 
-gmaps = googlemaps.Client(key='AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w')
-
-listing = listing.Listing.query.first()
-
-pprint(listing.serialize)
+a = parser.parse('09:00am')
+print(a)
+print(type(a))

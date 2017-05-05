@@ -29,6 +29,7 @@ from nexnest.models.report_landlord import ReportLandlord
 from nexnest.models.report_listing import ReportListing
 from nexnest.models.report_group import ReportGroup
 from nexnest.models.platform_report import PlatformReport
+from nexnest.models.availability import Availability
 
 
 from flask import redirect, url_for
@@ -81,3 +82,4 @@ admin.add_view(AdminModelView(ReportLandlord, session))
 admin.add_view(AdminModelView(ReportGroup, session))
 admin.add_view(AdminModelView(ReportListing, session))
 admin.add_view(AdminModelView(PlatformReport, session))
+admin.add_view(AdminModelView(Availability, session))
