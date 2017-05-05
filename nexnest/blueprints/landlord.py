@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, url_for, flash, render_template, jsonify
+from flask import Blueprint, redirect, url_for, flash, render_template, jsonify, request
 
 from flask_login import login_required, current_user
 
@@ -169,3 +169,12 @@ def isEditable(listingID):
         return jsonify(results={'success': True})
     else:
         return jsonify(results={'success': False, 'message': 'Permissions Error'})
+
+
+@landlords.route('/landlord/updateAvailability', methods=['POST'])
+@login_required
+def updateAvailability():
+    print('JSONFIFIFIF %r' % request.get_json())
+    availabilityJSON = request.get_json(force=True)
+    logger.debug('RecievedJSON %r' % availabilityJSON)
+    return jsonify({'success': True})
