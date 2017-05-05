@@ -161,7 +161,7 @@ def isEditable(listingID):
         return jsonify(results={'success': False, 'message': 'Permissions Error'})
 
 
-@landlords.route('/landlord/updateAvailability/', methods=['POST'])
+@landlords.route('/landlord/updateAvailability', methods=['POST'])
 @login_required
 def updateAvailability():
     landlord = Landlord.query.filter_by(user=current_user).first()
