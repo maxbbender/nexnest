@@ -891,11 +891,18 @@
 		        	    <div class="row">
 		        	        <div class="card" style="width:100%; border: none;">
 		        	            <div class="card-block">
-		        	            	Select the times you are available for tours on an average week. This simply will suggest these times to prospective tenants. It does not prevent them from requesting other time slots
+		        	            	Select the times you are available for tours on an average week. Prospective tenants will only be able to request tours during times you have marked as being available.
 		        	            	<br>
 		        	            	<div id="day-schedule"></div>
 		        	            	<br>
-		        	            	<button class="btn btn-primary" onClick="updateAvailibilty()">Update Availabilty</button>
+		        	            	<div class="row">
+		        	            		<div class="col-xs-6" id="availabilityUpdatedSuccesfully">
+
+		        	            		</div>
+		        	            	</div>
+		        	            	<br><br>
+		        	            	<button id="updateTourAvailabilty" class="btn btn-primary" onClick="updateAvailibilty()">Update Availabilty</button>
+		        	            	<button id="updateTourAvailabiltyLoading" class="btn btn-primary" disabled style="display: none; width: 162.16px;"><i class="fa fa-spin fa-spinner" aria-hidden="true"></i></button>
 		        	            </div>
 		        	        </div>
 		        	    </div>
@@ -3347,6 +3354,20 @@
           data: JSON.stringify(returnDict),
           success: function (data) {
           	console.log(data);
+          	$("#updateTourAvailabilty").hide();
+          	$("#updateTourAvailabiltyLoading").show();
+          	setTimeout(function () {
+        		$("#updateTourAvailabiltyLoading").hide();
+        		$("#updateTourAvailabilty").show();
+        		$("#availabilityUpdatedSuccesfully").empty();
+        		$("#availabilityUpdatedSuccesfully").append(
+        		`<div class="alert alert-success alert-dismissible show" role="alert">
+        		    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        		        <span aria-hidden="true">&times;</span>
+        		      </button>
+        		    <strong>Availibilty Updated!</strong>
+        		</div>`);
+        	}, 1500);
           },
           dataType: "json"
         });
