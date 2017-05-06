@@ -8,7 +8,7 @@ import factory
 from factory.fuzzy import FuzzyInteger
 from faker import Faker
 
-from datetime import date
+from datetime import date, datetime
 
 import random
 
@@ -190,8 +190,6 @@ class TourFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     listing = factory.SubFactory(ListingFactory)
     group = factory.SubFactory(GroupFactory)
-    time_requested = factory.LazyAttribute(
-        lambda x: fake.date_time_this_year(before_now=False, after_now=True))
 
 
 class TourMessageFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -313,3 +311,14 @@ class NotificationPreferenceFactory(factory.alchemy.SQLAlchemyModelFactory):
         sqlalchemy_session = session
 
     user = factory.SubFactory(UserFactory)
+
+
+class TourTimeFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = tour_time.TourTime
+        sqlalchemy_session = session
+
+
+    tour = factory.SubFactory(TourFactory)
+
+    dateTimeRequested

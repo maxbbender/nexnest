@@ -252,8 +252,7 @@ for i in range(10):
 # Won't show in landlords active tours because listing1 is
 # already completed
 t1 = TourFactory(listing=listing1, group=group4)
-t2 = TourFactory(listing=listing2, group=group4,
-                 time_requested=fake.date_time_this_year(before_now=True))
+t2 = TourFactory(listing=listing2, group=group4)
 t3 = TourFactory(listing=listing2, group=group5)
 t4 = TourFactory(listing=listing4, group=group5)
 t5 = TourFactory(listing=listing5, group=group6)

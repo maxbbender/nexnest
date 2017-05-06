@@ -93,7 +93,7 @@ class Tour(Base):
 
             if landlord.notificationPreference.tour_create_email:
                 landlord.sendEmail(emailType='generic',
-                                   message='A new Tour ')
+                                   message='A new Tour has been requested for %s' % self.listing.address)
 
     def genConfirmNotifications(self):
         for user in self.group.acceptedUsers:
