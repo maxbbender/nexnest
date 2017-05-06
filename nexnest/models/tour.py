@@ -58,7 +58,6 @@ class Tour(Base):
             'lastRequested': self.last_requested,
             'tourConfirmed': self.tour_confirmed,
             'url': '/tour/view/%d' % self.id,
-            'timeRequested': self.time_requested.strftime("%B %d, %Y %I:%M %p"),
             'group': self.group.serialize,
             'requestedTimes': self.requestedTimes
         }

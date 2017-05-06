@@ -324,11 +324,11 @@ class Listing(Base):
 
     @property
     def hasTours(self):
-        if not self.hasHouse():
-            if len(self.tours):
+        if not self.hasHouse() and not self.hasAcceptedGroupListing:
+            if len(self.tours) > 0:
                 return True
-        else:
-            return False
+
+        return False
 
     @property
     def address(self):

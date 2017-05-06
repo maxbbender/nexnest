@@ -72,9 +72,8 @@ class Landlord(Base):
                     if tour.declined:
                         continue
 
-                    if tour.time_requested >= datetime.now():
-                        if not tour.tour_confirmed:
-                            tourList.append(tour.serialize())
+                    if not tour.tour_confirmed:
+                        tourList.append(tour.serialize())
 
                 if len(tourList) > 0:
                     requestedToursObject['tours'] = tourList
@@ -96,9 +95,8 @@ class Landlord(Base):
                     if tour.declined:
                         continue
 
-                    if tour.time_requested >= datetime.now():
-                        if tour.tour_confirmed:
-                            tourList.append(tour.serialize())
+                    if tour.tour_confirmed:
+                        tourList.append(tour.serialize())
 
                 if len(tourList) > 0:
                     scheduledToursObject['tours'] = tourList
@@ -112,7 +110,7 @@ class Landlord(Base):
         scheduledTours = []
 
         for listing in self.getListings():
-            if not listing.hasHouse():
+            if listing.hasTours:
                 requestedToursObject = {'listing': listing}
                 scheduledToursObject = {'listing': listing}
 
@@ -123,11 +121,10 @@ class Landlord(Base):
                     if tour.declined:
                         continue
 
-                    if tour.time_requested >= datetime.now():
-                        if tour.tour_confirmed:
-                            schTours.append(tour)
-                        else:
-                            rqTours.append(tour)
+                    if tour.tour_confirmed:
+                        schTours.append(tour)
+                    else:
+                        rqTours.append(tour)
 
                 if len(rqTours) > 0:
                     requestedToursObject['tours'] = rqTours

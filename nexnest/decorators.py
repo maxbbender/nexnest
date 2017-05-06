@@ -4,6 +4,7 @@ from flask_login import current_user
 from nexnest import logger
 
 from nexnest.models.tour import Tour
+from nexnest.models.group import Group
 
 
 def isLandlord(f):
@@ -50,13 +51,29 @@ def tour_viewable(f):
 def group_editable(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if 'tourID' in kwargs:
-            tour = Tour.query.filter_by(id=int(kwargs['tourID'])).first()
+        if 'groupID' in kwargs:
+            group = Group.query.filter_by(id=int(kwargs['groupID'])).first()
 
-            if tour is None:
+            if group is None:
                 abort(404)
 
-            if not tour.isEditableBy(g.user, False):
+            if not group.isEditableBy(g.user, False):
+                abort(403)
+
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+def group_viewable(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'groupID' in kwargs:
+            group = Group.query.filter_by(id=int(kwargs['groupID'])).first()
+
+            if group is None:
+                abort(404)
+
+            if not group.isViewableBy(g.user, False):
                 abort(403)
 
         return f(*args, **kwargs)
