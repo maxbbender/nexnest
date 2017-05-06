@@ -11,6 +11,8 @@ from nexnest.models.report_listing import ReportListing
 from nexnest.models.report_landlord import ReportLandlord
 from nexnest.models.report_group import ReportGroup
 
+from nexnest.utils.flash import flash_errors
+
 from nexnest.forms import PlatformReportForm, ListingReportForm, LandlordReportForm, GroupReportForm
 
 
@@ -31,11 +33,10 @@ def createPlatformReport():
         session.commit()
 
         flash('Your report has been forwarded to NexNest Administrators!', 'success')
+    else:
+        flash_errors(form)
 
-        return form.redirect()
-
-    return render_template('platformReport.html',
-                           form=form)
+    return form.redirect()
 
 
 @reports.route('/listingReport/create', methods=['GET', 'POST'])
@@ -57,10 +58,10 @@ def createListingReport():
 
         flash('Your report for the listing at %s has been made. NexNest Admins will be looking into it!' % listing.address, 'success')
 
-        return form.redirect()
+    else:
+        flash_errors(form)
 
-    return render_template('listingReport.html',
-                           form=form)
+    return form.redirect()
 
 
 @reports.route('/landlordReport/create', methods=['GET', 'POST'])
@@ -82,10 +83,10 @@ def createLandlordReport():
 
         flash('Your report has been recieved. NexNest Admins will be looking into it!', 'success')
 
-        return form.redirect()
+    else:
+        flash_errors(form)
 
-    return render_template('landlordReport.html',
-                           form=form)
+    return form.redirect()
 
 
 @reports.route('/groupReport/create', methods=['GET', 'POST'])
@@ -105,5 +106,7 @@ def createGroupReport():
 
         flash('Your report has been received. NexNest Admins will be looking into it!', 'success')
 
-    return render_template('groupReport.html',
-                           form=form)
+    else:
+        flash_errors(form)
+
+    return form.redirect()
