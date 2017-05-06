@@ -62,7 +62,7 @@
 						<a class="btn btn-primary" href="{{listing.floor_plan_url}}">Floor Plan</a>
 						{% if current_user.is_authenticated %}
 						{% if not current_user in listing.landLordsAsUsers() %}
-							<a href="#" data-toggle="modal" data-target="#listingReportModal"><i class="fa fa-3x fa-exclamation-triangle" title="Report This Listing" aria-hidden="true" style="margin-top: 6%; color: orange; padding-left: 15px; position: relative; top: 9px;"></i></a>
+							<a href="#" class="btn btn-danger" data-toggle="modal" data-target="#listingReportModal"><i class="fa fa-x fa-exclamation-triangle" title="Report This Listing" aria-hidden="true" style="color: white; padding-left: 15px; position: relative; top: 9px;"></i> Report Listing</a>
 						{% endif %}
 					{% endif %}
 					</div>
@@ -70,7 +70,7 @@
 					{% if current_user.is_authenticated %}
 						{% if not current_user in listing.landLordsAsUsers() %}
 							<div class="col-xs-4" style="text-align: right;">
-								<a href="#" data-toggle="modal" data-target="#listingReportModal"><i class="fa fa-3x fa-exclamation-triangle" title="Report This Listing" aria-hidden="true" style="margin-top: 13%; color: orange;"></i></a>
+								<a href="#" class="btn btn-danger" data-toggle="modal" data-target="#listingReportModal"><i class="fa fa fa-exclamation-triangle" title="Report This Listing" aria-hidden="true" style="color: white;"></i> Report Listing</a>
 							</div>
 						{% endif %}
 					{% endif %}

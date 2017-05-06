@@ -189,7 +189,7 @@ def updateAvailability():
     else:
         return jsonify({'success': False, 'message': 'Invalid Request (JSON is None)'})
 
-
+@landlords.route('/landlord/getAvailability/JSON', methods=['GET'])
 @landlords.route('/landlord/getAvailability/JSON/<landlordID>', methods=['GET'])
 @login_required
 def getAvailability(landlordID=None):

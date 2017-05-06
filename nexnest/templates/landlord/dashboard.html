@@ -3253,6 +3253,8 @@
         })
     }
 
+    
+
     (function ($) {
       $("#day-schedule").dayScheduleSelector({
         /*
@@ -3262,6 +3264,30 @@
         endTime: '21:06'
         */
       });
+      	requestURL="/landlord/getAvailability/JSON";
+      	$.getJSON(requestURL, function(data) {
+  	    	//Fill in the boxes that should be filled in
+  	    	console.log(data);
+  	        $( ".time-slot" ).each(function( index ) {
+  	        	for(var i=0; i< data.length; i++){
+  	        		if($( this ).attr( "data-day" ) == data[i].day){          			
+  	        			if($( this ).attr( "data-time" ) == data[i].time){
+  	        				$( this ).attr( "data-selected", "selected" );
+  	        			}
+  	        		}
+  	        	}
+  	        });
+      	});
+     //  	var testAvailabilty = [
+  			// {
+  			// 	"day": 0,
+  			// 	"time": "10:00AM"
+  			// },
+  			// {
+  			// 	"day": 1,
+  			// 	"time": "10:00AM"
+  			// },
+     //  	];
     })($);
 
     function updateAvailibilty(){
@@ -3324,9 +3350,6 @@
           },
           dataType: "json"
         });
-
-
-
 	}
 
 	$("#unbooked_time_range_select").change(function() {

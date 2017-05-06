@@ -257,8 +257,11 @@
   function hmmAmPm(date) {
     var hours = date.getHours()
       , minutes = date.getMinutes()
-      , ampm = hours >= 12 ? 'pm' : 'am';
+      , ampm = hours >= 12 ? 'PM' : 'AM';
     var notMilitaryHours = moment(hours.toString(), "HH").format("hh");
+    if(notMilitaryHours.charAt(0)=="0"){
+      notMilitaryHours = notMilitaryHours.substr(1);
+    }
     return notMilitaryHours + ':' + ('0' + minutes).slice(-2) + ampm;
   }
 
