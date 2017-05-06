@@ -817,6 +817,7 @@
       modal.find('.modal-title').text('Report This Listing');
       var url = window.location.href;
       $("#sourceURL").val(url);
+      $("#listing_id").val({{listing.id}})
     });
 
     function submitTourForm() {

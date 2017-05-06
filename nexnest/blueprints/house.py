@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 
 from nexnest.application import session
 
-from nexnest.forms import HouseMessageForm, MaintenanceRequestForm, MaintenanceRequestMessageForm
+from nexnest.forms import HouseMessageForm, MaintenanceRequestForm, MaintenanceRequestMessageForm, GroupReportForm, LandlordReportForm
 from nexnest.models.house import House
 from nexnest.models.house_message import HouseMessage
 from nexnest.models.maintenance import Maintenance
@@ -45,7 +45,9 @@ def view(id):
                                    messages=messages,
                                    maintenanceRequests=maintenanceRequests,
                                    messageForm=messageForm,
-                                   maintenanceRequestForm=maintenanceRequestForm)
+                                   maintenanceRequestForm=maintenanceRequestForm,
+                                   GroupReportForm=GroupReportForm(),
+                                   LandlordReportForm=LandlordReportForm())
         else:
             flash("This house is not occupied", "warning")
     else:
