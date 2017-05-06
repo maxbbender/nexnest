@@ -236,3 +236,39 @@ def getTourTimes(tourID):
         tourTimeList.append(tourTime.serialize)
 
     return jsonify({'tourTimes': tourTimeList})
+
+
+@tours.route('/tour/confirmTime/<tourID>/<tourTime>')
+@login_required
+@tour_editable
+def confirmTourTime(tourID, tourTime):
+    tour = Tour.query.filter_by(id=tourID).first_or_404()
+    logger.debug('tour %r' % tour)
+
+    if not tour.hasConfirmedTourTime:
+
+        tourTimeToConfirm = parser.parse(tourTime)
+        logger.debug('tourTimeToConfirm %r' % tourTimeToConfirm)
+
+        tourTime = TourTime.query \
+            .filter_by(tour=tour,
+                       date_time_requested=tourTimeToConfirm) \
+            .first_or_404()
+
+        logger.debug('Found TourTime %r' % tourTime)
+
+        tourTime.confirmed = True
+        session.commit()
+
+    else:
+        if request.is_xhr:
+            return jsonify({'success': False, 'message': 'Tour time has already been confirmed!'})
+        else:
+            flash('Tour time has already been confirmed', 'info')
+            return redirect(url_for('tours.viewTour', tourID=tourID))
+
+    if request.is_xhr:
+        return jsonify({'success': True})
+    else:
+        flash('Tour time confirmed!', 'success')
+        return redirect(url_for('tours.viewTour', tourID=tourID))

@@ -22,6 +22,7 @@ class TourTime(Base):
     ):
         self.date_time_requested = dateTimeRequested
         self.tour = tour
+        self.confirmed = False
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
         self.date_created = now

@@ -65,6 +65,22 @@ class Tour(Base):
 
         return tour
 
+    @property
+    def confirmedTourTime(self):
+        for tourTime in self.tourTimes:
+            if tourTime.confirmed:
+                return tourTime
+
+        return None
+
+    @property
+    def hasConfirmedTourTime(self):
+        for tourTime in self.tourTimes:
+            if tourTime.confirmed:
+                return True
+
+        return False
+
     def isViewableBy(self, user, toFlash=True):
         if user in self.group.getUsers() or user in self.listing.landLordsAsUsers():
             return True

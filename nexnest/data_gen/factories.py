@@ -318,7 +318,15 @@ class TourTimeFactory(factory.alchemy.SQLAlchemyModelFactory):
         model = tour_time.TourTime
         sqlalchemy_session = session
 
-
     tour = factory.SubFactory(TourFactory)
+    dateTimeRequested = factory.LazyAttribute(lambda x: fake.date_time_this_month(before_now=False, after_now=True))
 
-    dateTimeRequested
+
+class AvailabilityFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = availability.Availability
+        sqlalchemy_session = session
+
+    landlord = factory.SubFactory(LandlordFactory)
+    time = factory.LazyAttribute(lambda x: fake.time(pattern="%H:0:0"))
+    day = FuzzyInteger(0, 6)
