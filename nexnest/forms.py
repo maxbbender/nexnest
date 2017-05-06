@@ -53,7 +53,7 @@ class TourMessageForm(RedirectForm):
 class TourForm(RedirectForm):
     group_tour_id = HiddenField('group_id', [InputRequired()])
     listing_id = HiddenField('listing_id', [InputRequired()])
-    description = TextAreaField('Message to Landlord',
+    description = TextAreaField('Include a brief message to acompany your tour request',
                                 [Length(min=1, max=1500), InputRequired()])
     requestedDateTime = HiddenField(
         'Date and time you would like to tour the house')
