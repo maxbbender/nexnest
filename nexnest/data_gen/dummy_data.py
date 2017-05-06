@@ -6,6 +6,10 @@ from nexnest.models import *
 
 from faker import Faker
 
+from datetime import datetime
+
+from random import randint
+
 fake = Faker()
 
 # Schools
@@ -53,6 +57,19 @@ for user in user.User.query.all():
 landlord1 = LandlordFactory(user=landlord)
 
 session.commit()
+
+for i in range(15):
+    newAvailability = AvailabilityFactory(landlord=landlord1)
+
+    count = availability.Availability.query.filter_by(landlord=newAvailability.landlord,
+                                                      time=newAvailability.time,
+                                                      day=newAvailability.day).count()
+
+    if count == 0:
+        session.commit()
+    else:
+        newAvailability = None
+
 
 # LISTINGS
 start_date = fake.date_time_this_year(before_now=True)
@@ -252,8 +269,7 @@ for i in range(10):
 # Won't show in landlords active tours because listing1 is
 # already completed
 t1 = TourFactory(listing=listing1, group=group4)
-t2 = TourFactory(listing=listing2, group=group4,
-                 time_requested=fake.date_time_this_year(before_now=True))
+t2 = TourFactory(listing=listing2, group=group4)
 t3 = TourFactory(listing=listing2, group=group5)
 t4 = TourFactory(listing=listing4, group=group5)
 t5 = TourFactory(listing=listing5, group=group6)
@@ -284,6 +300,28 @@ tn4 = NotificationFactory(target_user=landlord,
                           target_model_id=t4.id)
 
 session.commit()
+
+allTours = tour.Tour.query.all()
+
+for tour in allTours:
+    landLordAvailabilities = availability.Availability.query.filter_by(landlord=landlord1).all()
+
+    for i in range(randint(1, 4)):
+
+        randomIndex = randint(0, len(landLordAvailabilities) - 1)
+        newTourTime = TourTimeFactory(tour=tour)
+
+        newTourTime.date_time_requested.replace(hour=landLordAvailabilities[randomIndex].time.hour,
+                                                minute=landLordAvailabilities[randomIndex].time.minute,
+                                                second=landLordAvailabilities[randomIndex].time.second)
+
+        timeCheck = tour_time.TourTime.query \
+            .filter_by(tour=tour,
+                       date_time_requested=newTourTime.date_time_requested) \
+            .count()
+
+        if timeCheck == 0:
+            session.commit()
 
 
 # TOUR MESSAGES (t1)

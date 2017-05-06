@@ -75,15 +75,16 @@ def createGroup():
     return form.redirect()
 
 
-@groups.route('/group/view/<group_id>')
+@groups.route('/group/view/<groupID>')
 @login_required
-def viewGroup(group_id):
+def viewGroup(groupID):
     # First lets check that the current user is apart of the group
-    group = session.query(Group).filter_by(id=group_id).first()
+    group = Group.query.filter_by(id=groupID).first_or_404()
+
     housingRequests = group.housingRequests
 
     invite_form = InviteGroupForm()
-    message_form = GroupMessageForm(group_id=group_id)
+    message_form = GroupMessageForm(group_id=groupID)
 
     # Lets get the group's messages
     messages = session.query(GroupMessage). \

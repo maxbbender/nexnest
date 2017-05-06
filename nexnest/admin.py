@@ -30,6 +30,7 @@ from nexnest.models.report_listing import ReportListing
 from nexnest.models.report_group import ReportGroup
 from nexnest.models.platform_report import PlatformReport
 from nexnest.models.availability import Availability
+from nexnest.models.tour_time import TourTime
 
 
 from flask import redirect, url_for
@@ -83,3 +84,4 @@ admin.add_view(AdminModelView(ReportGroup, session))
 admin.add_view(AdminModelView(ReportListing, session))
 admin.add_view(AdminModelView(PlatformReport, session))
 admin.add_view(AdminModelView(Availability, session))
+admin.add_view(AdminModelView(TourTime, session))

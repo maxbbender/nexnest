@@ -27,6 +27,6 @@ gmaps = googlemaps.Client(key='AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w')
 user = user.User.query.first()
 print(user)
 
-a = parser.parse('09:00am')
+a = parser.parse('5/9/2017 09:00am')
 print(a)
 print(type(a))
