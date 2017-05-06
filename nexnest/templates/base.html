@@ -195,6 +195,7 @@
         {% else %}
             {% include 'loginModel.html' %}
         {% endif %}
+        {% include 'platformReportModal.html' %}
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
         {% block scripts %}
         {% endblock %}
@@ -360,15 +361,25 @@
               var modal = $(this)
               modal.find('.modal-title').text('Login to NexNest')
             });
+            //Password Change Modal
             $('#passwordChangeModal').on('show.bs.modal', function (event) {
               var button = $(event.relatedTarget)
               var modal = $(this)
               modal.find('.modal-title').text('Change Password')
             });
+            //Avatar Change Modal
             $('#changeAvatarModal').on('show.bs.modal', function (event) {
               var button = $(event.relatedTarget)
               var modal = $(this)
               modal.find('.modal-title').text('Change Profile Picture')
+            });
+            //Platform Report
+            $('#platformReportModal').on('show.bs.modal', function (event) {
+              var button = $(event.relatedTarget)
+              var modal = $(this)
+              modal.find('.modal-title').text('Give us Your Feedback!');
+              var url = window.location.href;
+              $("#sourceURL").val(url);
             });
             $(".noti").click(function(event){
                 var type = $(event.currentTarget).attr("data-type")

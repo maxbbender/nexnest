@@ -1,0 +1,30 @@
+<div class="modal fade" id="platformReportModal" tabindex="-1" role="dialog" aria-labelledby="report" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="platformReport"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        {% from "_formhelpers.html" import render_field %}
+                        <form action="{{url_for('reports.createPlatformReport')}}" method='POST'>
+                            <dl>
+                                {{platformReportForm.csrf_token}}
+                                {{ render_field(platformReportForm.title, class="form-control", type="text", required="required") }}
+                                {{ render_field(platformReportForm.content, class="form-control", type="text", required="required", rows="5") }}
+                                {{ render_field(platformReportForm.sourceURL, class="form-control", type="url") }}
+                            </dl>
+                            <p>
+                                <input type='submit' value='Submit Report' class="btn btn-primary">
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -891,11 +891,18 @@
 		        	    <div class="row">
 		        	        <div class="card" style="width:100%; border: none;">
 		        	            <div class="card-block">
-		        	            	Select the times you are available for tours on an average week. This simply will suggest these times to prospective tenants. It does not prevent them from requesting other time slots
+		        	            	Select the times you are available for tours on an average week. Prospective tenants will only be able to request tours during times you have marked as being available.
 		        	            	<br>
 		        	            	<div id="day-schedule"></div>
 		        	            	<br>
-		        	            	<button class="btn btn-primary" onClick="updateAvailibilty()">Update Availabilty</button>
+		        	            	<div class="row">
+		        	            		<div class="col-xs-6" id="availabilityUpdatedSuccesfully">
+
+		        	            		</div>
+		        	            	</div>
+		        	            	<br><br>
+		        	            	<button id="updateTourAvailabilty" class="btn btn-primary" onClick="updateAvailibilty()">Update Availabilty</button>
+		        	            	<button id="updateTourAvailabiltyLoading" class="btn btn-primary" disabled style="display: none; width: 162.16px;"><i class="fa fa-spin fa-spinner" aria-hidden="true"></i></button>
 		        	            </div>
 		        	        </div>
 		        	    </div>
@@ -3253,6 +3260,8 @@
         })
     }
 
+    
+
     (function ($) {
       $("#day-schedule").dayScheduleSelector({
         /*
@@ -3262,12 +3271,30 @@
         endTime: '21:06'
         */
       });
-      $("#day-schedule").on('selected.artsy.dayScheduleSelector', function (e, selected) {
-        console.log(selected);
-      })
-      $("#day-schedule").data('artsy.dayScheduleSelector').deserialize({
-        '0': [['09:00', '10:00'], ['13:00', '14:00']]
-      });
+      	requestURL="/landlord/getAvailability/JSON";
+      	$.getJSON(requestURL, function(data) {
+  	    	//Fill in the boxes that should be filled in
+  	    	console.log(data);
+  	        $( ".time-slot" ).each(function( index ) {
+  	        	for(var i=0; i< data.length; i++){
+  	        		if($( this ).attr( "data-day" ) == data[i].day){          			
+  	        			if($( this ).attr( "data-time" ) == data[i].time){
+  	        				$( this ).attr( "data-selected", "selected" );
+  	        			}
+  	        		}
+  	        	}
+  	        });
+      	});
+     //  	var testAvailabilty = [
+  			// {
+  			// 	"day": 0,
+  			// 	"time": "10:00AM"
+  			// },
+  			// {
+  			// 	"day": 1,
+  			// 	"time": "10:00AM"
+  			// },
+     //  	];
     })($);
 
     function updateAvailibilty(){
@@ -3327,12 +3354,23 @@
           data: JSON.stringify(returnDict),
           success: function (data) {
           	console.log(data);
+          	$("#updateTourAvailabilty").hide();
+          	$("#updateTourAvailabiltyLoading").show();
+          	setTimeout(function () {
+        		$("#updateTourAvailabiltyLoading").hide();
+        		$("#updateTourAvailabilty").show();
+        		$("#availabilityUpdatedSuccesfully").empty();
+        		$("#availabilityUpdatedSuccesfully").append(
+        		`<div class="alert alert-success alert-dismissible show" role="alert">
+        		    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        		        <span aria-hidden="true">&times;</span>
+        		      </button>
+        		    <strong>Availibilty Updated!</strong>
+        		</div>`);
+        	}, 1500);
           },
           dataType: "json"
         });
-
-
-
 	}
 
 	$("#unbooked_time_range_select").change(function() {

@@ -18,7 +18,6 @@ reports = Blueprint('reports', __name__, template_folder='../templates/reports')
 
 
 @reports.route('/platformReport/create', methods=['GET', 'POST'])
-@login_required
 def createPlatformReport():
     form = PlatformReportForm()
 

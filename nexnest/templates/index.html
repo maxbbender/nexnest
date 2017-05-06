@@ -390,7 +390,7 @@
     	    	displayListings(data.listings, data.featuredListings);
     	    	console.log(data.school.lat);
     	    	console.log(data.school.lng);
-    	    	mapUpdate(data.listings, data.school.lat, data.school.lng);
+    	    	mapUpdate(data.listings, data.featuredListings, data.school.lat, data.school.lng);
     	    },
     	    failure: function(errMsg) {
     	        alert(errMsg);
@@ -492,7 +492,7 @@
 	    	    	}, 1000);
 	    	    	displayListings(data.listings, data.featuredListings);
 	    	    	//call map init with lat, lng of school
-	    	    	mapUpdate(data.listings, data.school.lat, data.school.lng);
+	    	    	mapUpdate(data.listings, data.featuredListings, data.school.lat, data.school.lng);
 	    	    },
 	    	    failure: function(errMsg) {
 	    	        alert(errMsg);
@@ -617,7 +617,7 @@
 			</div>`;
 			$("#listingsGoHere").append(`<div class="col-md-6" style="padding-left: 15px; padding-bottom: 30px">` + nextListing + `</div>`);
 		});
-		if(listings.length == 0){
+		if(listings.length == 0 && featuredListings.length == 0){
 			$("#listingsGoHere").append(`<div class="alert alert-info" role="alert" style="width: 100%; text-align: center;">
     	            						<strong>No Listings Match The Selected Filters. Try Expanding Your Search</strong>
     	            					 </div>`);
@@ -770,7 +770,7 @@
   		 		
   	}
 
-  	function mapUpdate(listings, lat, long){
+  	function mapUpdate(listings, featuredListings, lat, long){
   		// first we clear the map
   		clearMarkers();
   		// console.log(listings);
@@ -778,10 +778,16 @@
   		console.log(lat);
   		console.log(long);
   		schoolLatLng = {lat: lat, lng: long};
-  		map.setCenter(schoolLatLng);  		
-  		$.each(listings, function(index, listing) {
-  			addMarker(listing.id, listing.lat, listing.long, listing.propertyType, '<div style="overflow: auto;"><div id="iw-container"><div class="iw-title"><b>'+listing.address+'</b></div><div class="iw-content"><a href="'+listing.url+'"><img src="'+listing.bannerPhotoURL+'" style="height: 50px;" alt="'+listing.address+'"></a><p><b>[TBD] Miles to Campus</b><br><br>"'+listing.description+'"</p><p style="clear:both;"></p><table class="special"><tbody><tr><td>'+listing.numBedrooms+' Beds</td><td>'+listing.numFullBaths+' Baths</td><td><a href="'+listing.url+'">View</a></td></tr></tbody></table></div><div class="iw-bottom-gradient"></div></div></div>');
-  		});
+  		if(lat != undefined){
+  			map.setCenter(schoolLatLng);
+  			$.each(listings, function(index, listing) {
+  			addMarker(listing.id, listing.lat, listing.long, listing.propertyType, '<div style="overflow: auto;"><div id="iw-container"><div class="iw-title"><b>'+listing.address+'</b></div><div class="iw-content"><a href="'+listing.url+'"><img src="'+listing.bannerPhotoURL+'" style="height: 100px;" alt="'+listing.address+'"></a><p><b>'+ listing.drivingMiles +' Miles to Campus</b><br><br>"'+listing.description+'"</p><p style="clear:both;"></p><table class="special"><tbody><tr><td>'+listing.numBedrooms+' Beds</td><td>'+listing.numFullBaths+' Baths</td><td><a href="'+listing.url+'">View</a></td></tr></tbody></table></div><div class="iw-bottom-gradient"></div></div></div>');
+  			});
+  			$.each(featuredListings, function(index, listing) {
+  			addMarker(listing.id, listing.lat, listing.long, listing.propertyType, '<div style="overflow: auto;"><div id="iw-container"><div class="iw-title"><b>'+listing.address+'</b></div><div class="iw-content"><a href="'+listing.url+'"><img src="'+listing.bannerPhotoURL+'" style="height: 100px;" alt="'+listing.address+'"></a><p><b>"'+ listing.drivingMiles +'" Miles to Campus</b><br><br>"'+listing.description+'"</p><p style="clear:both;"></p><table class="special"><tbody><tr><td>'+listing.numBedrooms+' Beds</td><td>'+listing.numFullBaths+' Baths</td><td><a href="'+listing.url+'">View</a></td></tr></tbody></table></div><div class="iw-bottom-gradient"></div></div></div>');
+  			});
+
+  		}
   		$("#map").css('position', 'fixed');
   	}	
 

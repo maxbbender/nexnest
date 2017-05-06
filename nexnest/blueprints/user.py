@@ -14,6 +14,7 @@ from nexnest.models.notification_preference import NotificationPreference
 from nexnest.models.listing_favorite import ListingFavorite
 from nexnest.models.listing import Listing
 from nexnest.models.landlord import Landlord
+from nexnest.models.availability import Availability
 
 from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm, CreateGroupForm, EmailPreferencesForm, LandlordMoreInfoForm
 from nexnest.utils.school import allSchoolsAsStrings
@@ -580,3 +581,25 @@ def unFavoriteListing(listingID):
     session.delete(listingFavorite)
     session.commit()
     return jsonify("true")
+
+
+
+@users.route('/landlord/getAvailability/JSON', methods=['GET'])
+@users.route('/landlord/getAvailability/JSON/<landlordID>', methods=['GET'])
+@login_required
+def getAvailability(landlordID=None):
+    if landlordID is None:
+        landlordID = current_user.id
+
+    availabilityList = []
+
+    for i in range(7):
+        availabilities = Availability.query \
+            .filter_by(landlord_id=landlordID, day=i) \
+            .order_by(Availability.time.asc()) \
+            .all()
+
+        for avail in availabilities:
+            availabilityList.append(avail.serialize)
+
+    return jsonify(availabilityList)
