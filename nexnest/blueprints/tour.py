@@ -2,6 +2,7 @@ from flask import Blueprint, request, redirect, flash, render_template, url_for,
 
 from flask_login import current_user, login_required
 
+from nexnest import logger
 from nexnest.application import session
 
 from nexnest.forms import TourForm, TourMessageForm, TourDateChangeForm
@@ -10,10 +11,16 @@ from nexnest.models.tour import Tour
 from nexnest.models.listing import Listing
 from nexnest.models.group import Group
 from nexnest.models.tour_message import TourMessage
+from nexnest.models.tour_time import TourTime
 
 from nexnest.utils.flash import flash_errors
+from nexnest.decorators import tour_editable
 
 from sqlalchemy import desc
+
+import json
+
+from dateutil import parser
 
 tours = Blueprint('tours', __name__, template_folder='../templates/tour')
 
@@ -42,8 +49,7 @@ def createTour():
                     # At this point we have a valid group and listing
                     # to create the tour request
                     newTour = Tour(listing=listing,
-                                   group=group,
-                                   time_requested=tourForm.requestedDateTime.data)
+                                   group=group)
 
                     session.add(newTour)
                     session.commit()
@@ -59,6 +65,17 @@ def createTour():
                     session.commit()
 
                     newTour.genNotifications()
+
+                    # Generate Tour Times
+                    tourTimeJSON = json.loads(tourForm.requestedDateTime.data)
+                    logger.debug('tourTimeJSON %r' % tourTimeJSON)
+                    for time in tourTimeJSON:
+                        timeObject = parser.parse(time)
+                        newTourTime = TourTime(newTour, timeObject)
+                        session.add(newTourTime)
+                        session.commit()
+
+                        logger.debug('time: %s | timeObject %r' % (time, timeObject))
 
                     flash('Tour Request Created', 'info')
                     return redirect(url_for('tours.viewTour', tourID=newTour.id))
@@ -107,37 +124,12 @@ def viewTour(tourID):
         return redirect(url_for('indexs.index'))
 
 
-# NOTIFICATIONS IMPLEMENTED
 @tours.route('/tour/<tourID>/confirm')
-@login_required
-def confirmTour(tourID):
-    tour = session.query(Tour) \
-        .filter_by(id=tourID) \
-        .first()
-
-    if tour is not None:
-        if tour.isEditableBy(current_user):
-            tour.tour_confirmed = True
-            session.commit()
-            flash("Tour Confirmed", 'success')
-
-            tour.genConfirmNotifications()
-            return redirect(url_for('tours.viewTour', tourID=tourID))
-        else:
-            flash("You are not allowed to confirm this tour", 'warning')
-            return redirect(request.url)
-    else:
-        flash("Tour does not exist", 'warning')
-        return redirect(request.url)
-
-
-# NOTIFICATIONS IMPLEMENTED
 @tours.route('/tour/<tourID>/confirm/ajax')
 @login_required
-def confirmTourAJAX(tourID):
-    tour = session.query(Tour) \
-        .filter_by(id=tourID) \
-        .first()
+@tour_editable
+def confirmTour(tourID):
+    tour = Tour.query.filter_by(id=tourID).first_or_404()
 
     errorMessage = None
 
@@ -148,13 +140,20 @@ def confirmTourAJAX(tourID):
 
             tour.genConfirmNotifications()
 
-            return jsonify(results={'success': True})
+            if request.is_xhr:
+                return jsonify(results={'success': True})
+            else:
+                return redirect(url_for('tours.viewTour', tourID=tourID))
         else:
             errorMessage = 'Permissions Error'
     else:
         errorMessage = 'Invalid Reqeuest'
 
-    return jsonify(results={'success': False, 'message': errorMessage})
+    if request.is_xhr:
+        return jsonify(results={'success': False, 'message': errorMessage})
+    else:
+        flash(errorMessage, 'danger')
+        return redirect(url_for('tours.viewTour', tourID=tourID))
 
 
 # NOTIFICATIONS IMPLEMENTED
@@ -296,3 +295,11 @@ def unDeclineTourAJAX(tourID):
         errorMessage = 'Invalid Reqeuest'
 
     return jsonify(results={'success': False, 'message': errorMessage})
+
+
+# @tours.route('/tour/<tourID>/getTourTimes')
+# @login_required
+# def getTourTimes(tourID):
+#     tour = Tour.query.filter_by(id=tourID).first_or_404()
+
+#     if tour.isViewableBy(current_user):

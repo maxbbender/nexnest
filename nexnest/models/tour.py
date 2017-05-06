@@ -16,24 +16,21 @@ class Tour(Base):
     id = db.Column(db.Integer, primary_key=True)
     listing_id = db.Column(db.Integer, db.ForeignKey('listings.id'))
     group_id = db.Column(db.Integer, db.ForeignKey('groups.id'))
-    time_requested = db.Column(db.DateTime)
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
     tour_confirmed = db.Column(db.Boolean)
     last_requested = db.Column(db.String(8))
     declined = db.Column(db.Boolean)
     messages = relationship('TourMessage', backref='tour')
+    tourTimes = relationship('TourTime', backref='tour')
 
     def __init__(
             self,
             listing,
-            group,
-            time_requested
+            group
     ):
         self.listing = listing
         self.group = group
-
-        self.time_requested = time_requested
 
         self.last_requested = 'group'
         self.tour_confirmed = False
@@ -52,13 +49,18 @@ class Tour(Base):
         for user in self.group.acceptedUsers:
             group_users.append(user.shortSerialize)
 
+        requestedTimes = []
+        for time in self.tourTimes:
+            requestedTimes.append(time.serialize)
+
         tour = {
             'id': self.id,
             'lastRequested': self.last_requested,
             'tourConfirmed': self.tour_confirmed,
             'url': '/tour/view/%d' % self.id,
             'timeRequested': self.time_requested.strftime("%B %d, %Y %I:%M %p"),
-            'group': self.group.serialize
+            'group': self.group.serialize,
+            'requestedTimes': self.requestedTimes
         }
 
         return tour
