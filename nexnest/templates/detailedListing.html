@@ -628,107 +628,113 @@
 <script>
 	var selectedDateTimes = [];
     var $datePicker = $("div#datepicker");
-    var landlordAvailability = [{day: 1, time: '8:00AM'}, {day: 2, time: '8:00AM'}, {day: 4, time: '8:00AM'}, {day: 2, time: '10:00AM'}, {day: 4, time: '9:00AM'}, {day: 5, time: '2:00PM'}, {day: 5, time: '3:00PM'}, {day: 5, time: '4:00PM'}, {day: 5, time: '5:00PM'}];
-    var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
-    ];
-    var flags = [];
-    var availableDays= [];
-    for(var i=0; i<landlordAvailability.length; i++) {
-        if( flags[landlordAvailability[i].day]) continue;
-        flags[landlordAvailability[i].day] = true;
-        availableDays.push(landlordAvailability[i].day);
-    }
-    console.log(availableDays);
+	requestURL="/landlord/getAvailability/JSON/{{listing.landLordsAsUsers()[0].id}}";
+	$.getJSON(requestURL, function(data) {
+    	var landlordAvailability = data;
+	
+    // var landlordAvailability = [{day: 1, time: '8:00AM'}, {day: 2, time: '8:00AM'}, {day: 4, time: '8:00AM'}, {day: 2, time: '10:00AM'}, {day: 4, time: '9:00AM'}, {day: 5, time: '2:00PM'}, {day: 5, time: '3:00PM'}, {day: 5, time: '4:00PM'}, {day: 5, time: '5:00PM'}];
+	    var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+	    ];
+	    var flags = [];
+	    var availableDays= [];
+	    for(var i=0; i<landlordAvailability.length; i++) {
+	        if( flags[landlordAvailability[i].day]) continue;
+	        flags[landlordAvailability[i].day] = true;
+	        availableDays.push(landlordAvailability[i].day);
+	    }
+	    console.log(availableDays);
 
-    $datePicker.datepicker({ 
-        changeMonth: true,
-        changeYear: true,
-        inline: true,
-        altField: "#datep",
-        beforeShowDay:function(date){ 
-                       var day = date.getDay();
-                       if(availableDays.length == 7){
-                       		return [(day == availableDays[0] || day == availableDays[1] || day == availableDays[2] || day == availableDays[3] || day == availableDays[4] || day == availableDays[5] || day == availableDays[6]),""];
-                       }
-                       else if(availableDays.length == 6){
-                       		return [(day == availableDays[0] || day == availableDays[1] || day == availableDays[2] || day == availableDays[3] || day == availableDays[4] || day == availableDays[5]),""];
-                       }
-                       else if(availableDays.length == 5){
-                       		return [(day == availableDays[0] || day == availableDays[1] || day == availableDays[2] || day == availableDays[3] || day == availableDays[4]),""];
-                       }
-                       else if(availableDays.length == 4){
-                       		return [(day == availableDays[0] || day == availableDays[1] || day == availableDays[2] || day == availableDays[3]),""];
-                       }
-                       else if(availableDays.length == 3){
-                       		return [(day == availableDays[0] || day == availableDays[1] || day == availableDays[2]),""];
-                       }
-                       else if(availableDays.length == 2){
-                       		return [(day == availableDays[0] || day == availableDays[1]),""];
-                       }
-                       else if(availableDays.length == 1){
-                       		return [(day == availableDays[0]),""];
-                       }
-                       
-        }   
-     }).change(function(e){
-        setTimeout(function(){
-        	$("#validTimes").empty();
-        	console.log(landlordAvailability);
-        	console.log($datePicker.datepicker('getDate'));
-        	var date = $datePicker.datepicker('getDate');
-        	var month = date.getUTCMonth() +1;
-        	var monthName = monthNames[month-1];
-        	var day = date.getDate();
-        	var year = date.getUTCFullYear();
-        	var dayOfWeek = date.getUTCDay();
-        	var dateForMax = ""+month+"/"+day+"/"+year;
-       		var returnDate = ""+monthName+" "+day+" "+year;
-       		console.log(returnDate);
-        	console.log(dayOfWeek);
-        	var alreadySelectedTimes = returnTimes(selectedDateTimes, returnDate)
-        	console.log(alreadySelectedTimes);
-        	var timesShown =`<div class="row">`;
-        	for (var i = 0; i < landlordAvailability.length; i++ )
-        	{
-        	    if (landlordAvailability[i].day == dayOfWeek)
-        	    {
-        	    	timesShown+= `<div class="col-xs-4">
-    						 <div class="form-group">
-    						 		<label class="control-label form-control-feedback" id="timelabel"style="font-size: 1.5em">`+ landlordAvailability[i].time+`</label>
-									<div class="checkbox">
-										<label style="font-size: 1.5em">
-							    		<input class="form-check-input tourtime" type="checkbox" onClick="addTime('`+returnDate+`','`+dateForMax+`','`+landlordAvailability[i].time+`')" id="date_`+returnDate+"_time_"+landlordAvailability[i].time+`" value="`+landlordAvailability[i].time+`"`;
-							    		for(var k=0; k<alreadySelectedTimes.length; k++){
-							    			if(alreadySelectedTimes[k]==landlordAvailability[i].time){
-							    				timesShown+= `checked`;
-							    			}
-							    		}
-							    		timesShown+= `>
-							    		<span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-							  			</label>
+	    $datePicker.datepicker({ 
+	        changeMonth: true,
+	        changeYear: true,
+	        inline: true,
+	        altField: "#datep",
+	        beforeShowDay:function(date){ 
+	                       var day = date.getDay();
+	                       if(availableDays.length == 7){
+	                       		return [(day == availableDays[0] || day == availableDays[1] || day == availableDays[2] || day == availableDays[3] || day == availableDays[4] || day == availableDays[5] || day == availableDays[6]),""];
+	                       }
+	                       else if(availableDays.length == 6){
+	                       		return [(day == availableDays[0] || day == availableDays[1] || day == availableDays[2] || day == availableDays[3] || day == availableDays[4] || day == availableDays[5]),""];
+	                       }
+	                       else if(availableDays.length == 5){
+	                       		return [(day == availableDays[0] || day == availableDays[1] || day == availableDays[2] || day == availableDays[3] || day == availableDays[4]),""];
+	                       }
+	                       else if(availableDays.length == 4){
+	                       		return [(day == availableDays[0] || day == availableDays[1] || day == availableDays[2] || day == availableDays[3]),""];
+	                       }
+	                       else if(availableDays.length == 3){
+	                       		return [(day == availableDays[0] || day == availableDays[1] || day == availableDays[2]),""];
+	                       }
+	                       else if(availableDays.length == 2){
+	                       		return [(day == availableDays[0] || day == availableDays[1]),""];
+	                       }
+	                       else if(availableDays.length == 1){
+	                       		return [(day == availableDays[0]),""];
+	                       }
+	                       
+	        }   
+	     }).change(function(e){
+	        setTimeout(function(){
+	        	$("#validTimes").empty();
+	        	console.log(landlordAvailability);
+	        	console.log($datePicker.datepicker('getDate'));
+	        	var date = $datePicker.datepicker('getDate');
+	        	var month = date.getUTCMonth() +1;
+	        	var monthName = monthNames[month-1];
+	        	var day = date.getDate();
+	        	var year = date.getUTCFullYear();
+	        	var dayOfWeek = date.getUTCDay();
+	        	var dateForMax = ""+month+"/"+day+"/"+year;
+	       		var returnDate = ""+monthName+" "+day+" "+year;
+	       		console.log(returnDate);
+	        	console.log(dayOfWeek);
+	        	var alreadySelectedTimes = returnTimes(selectedDateTimes, returnDate)
+	        	console.log(alreadySelectedTimes);
+	        	var timesShown =`<div class="row">`;
+	        	for (var i = 0; i < landlordAvailability.length; i++ )
+	        	{
+	        	    if (landlordAvailability[i].day == dayOfWeek)
+	        	    {
+	        	    	timesShown+= `<div class="col-xs-4">
+	    						 <div class="form-group">
+	    						 		<label class="control-label form-control-feedback" id="timelabel"style="font-size: 1.5em">`+ landlordAvailability[i].time+`</label>
+										<div class="checkbox">
+											<label style="font-size: 1.5em">
+								    		<input class="form-check-input tourtime" type="checkbox" onClick="addTime('`+returnDate+`','`+dateForMax+`','`+landlordAvailability[i].time+`')" id="date_`+returnDate+"_time_"+landlordAvailability[i].time+`" value="`+landlordAvailability[i].time+`"`;
+								    		for(var k=0; k<alreadySelectedTimes.length; k++){
+								    			if(alreadySelectedTimes[k]==landlordAvailability[i].time){
+								    				timesShown+= `checked`;
+								    			}
+								    		}
+								    		timesShown+= `>
+								    		<span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+								  			</label>
+										</div>
 									</div>
-								</div>
-						 </div>`;
+							 </div>`;
+					}
 				}
-			}
-        	timesShown+= `</div>`;
-	        $("#validTimes").append(timesShown);
-        });
-    });
+	        	timesShown+= `</div>`;
+		        $("#validTimes").append(timesShown);
+	        });
+	    });
+	    $(".ui-datepicker").css("margin","auto");
+	});
 
-	 function addTime(date, dateForMax, time){
-	 	$("#doIShowTimeInput").show();
-	 	if(checkDateTime(selectedDateTimes, dateForMax, time) == false){
-	 		var nextDateTime = ""+dateForMax + " " + time;
-	 		selectedDateTimes.push(nextDateTime);
-	 		$('#selectedTourTimes').tagsinput('add', ""+ date + " @ " +time);
-	 	}
-	 	else{
-	 		$('#selectedTourTimes').tagsinput('remove', ""+ date + " @ " +time);
-	 		console.log('already exists');
-	 	}
-	 	console.log(selectedDateTimes);
-	 }
+	function addTime(date, dateForMax, time){
+		$("#doIShowTimeInput").show();
+		if(checkDateTime(selectedDateTimes, dateForMax, time) == false){
+			var nextDateTime = ""+dateForMax + " " + time;
+			selectedDateTimes.push(nextDateTime);
+			$('#selectedTourTimes').tagsinput('add', ""+ date + " @ " +time);
+		}
+		else{
+			$('#selectedTourTimes').tagsinput('remove', ""+ date + " @ " +time);
+			console.log('already exists');
+		}
+		console.log(selectedDateTimes);
+	}
 
 
 	function checkKeyPair(obj, key, value){
