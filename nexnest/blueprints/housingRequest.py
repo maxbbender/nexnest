@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 
 from nexnest.application import session
 
-from nexnest.forms import GroupListingForm, GroupListingMessageForm, LeaseUploadForm
+from nexnest.forms import GroupListingForm, GroupListingMessageForm, LeaseUploadForm, GroupReportForm, LandlordReportForm
 from nexnest.models.group import Group
 from nexnest.models.group_listing import GroupListing
 from nexnest.models.group_listing_message import GroupListingMessage
@@ -105,7 +105,9 @@ def view(id):
                                    messages=messages,
                                    messageForm=messageForm,
                                    leaseUploadForm=leaseUploadForm,
-                                   hasLease=housingRequest.hasLease())
+                                   hasLease=housingRequest.hasLease(),
+                                   GroupReportForm=GroupReportForm(),
+                                   LandlordReportForm=LandlordReportForm())
     else:
         flash("Housing Request does not exist", "warning")
 
