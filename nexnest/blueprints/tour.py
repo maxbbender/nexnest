@@ -204,6 +204,8 @@ def confirmTourTime(tourID, tourTime):
         tour.confirmed = True
         session.commit()
 
+        tour.genConfirmNotifications()
+
     else:
         if request.is_xhr:
             return jsonify({'success': False, 'message': 'Tour time has already been confirmed!'})
@@ -236,6 +238,15 @@ def updateTourTimes(tourID):
             newTourTime = TourTime(tour, timeObject)
             session.add(newTourTime)
             session.commit()
+
+        if tour.last_requested == 'group':
+            tour.last_requested = 'landlord'
+        elif tour.last_requested == 'landlord':
+            tour.last_request = 'group'
+        else:
+            logger.error('updateTourTimes() :  Unknown last_requested %s' % tour.last_requested)
+
+        tour.genTimeChangeNotifications()
     else:
         errorMessage = 'The tour for %s has already been scheduled! You cannot change the tour times.'
 
