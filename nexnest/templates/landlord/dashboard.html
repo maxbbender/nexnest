@@ -1229,18 +1229,19 @@
         		$("#undoAcceptTourDiv"+id).fadeOut(300);
         	}, 8000);
         }, getRandomInt(1000, 3000));
-
+        var chosenTime;
+        $( ".timeselector" ).each(function( index ) {
+			if($(this).attr("data-tourid") == id){
+				if($(this).hasClass("btn-primary")){
+					chosenTime=$(this).val();
+				}
+			}
+		});
         // Send AJAX request to backend
-        requestURL = '/tour/' + id + '/confirm/ajax';
+        requestURL = '/tour/confirmTime/'+id+'/'+chosenTime
         $.getJSON(requestURL, function(data) {
-            results = data['results'];
-            // alert(data['results'].success);
-            if (results.success == true){ 
-                //refresh scheduled tours tab
-                getScheduledToursJSON();
-            } else {
-                alert('IT DIDN"T WORK.... why idk. but here is the error message : ' + results.message);
-            }
+            results = data;
+            console.log(data);
         });
         $("#doIShowDiv"+surroundingID).html("hide");
         $("#numberOfRequestedTours"+surroundingID).html(count-1);
@@ -2983,8 +2984,15 @@
         	            			</div>
         	            			<div class="row">
         	            				<div class="col-xl-12">
-        	            					Requested Date and Time: `+ tour.timeRequested +`
-        	            				</div>
+        	            					The Group has requested any of these times. Please choose one:
+        	            					<br>
+        	            					<div class="row">`;
+        	            				for(var i=0; i<requestedTimes.tourTimes.length; i++){
+        	            					individualElement+= `<div class="col-xs-6 col-md-4 col-lg-3" style="padding-top: 10px;">
+        	            											<button class="btn btn-secondary timeselector" data-tourid="`+tour.id+`" value="`+requestedTimes.tourTimes[i].dateTimeRequested+`">`+requestedTimes.tourTimes[i].dateTimeRequested+`</button>
+        	            										</div>`;
+        	            				}
+        	            				individualElement+= `</div></div>
         	            			</div>
         	            			<br>
         	            			<div class="row">
@@ -2994,7 +3002,7 @@
         	            							individualElement += `
         	            								<div class="col-lg-4 col-centered" style="padding-right: 15px; padding-bottom: 5px; ">
                     	            					<div id="acceptTourButton`+ tour.id +`">
-                    	            						<button id="acceptTourBtn`+ tour.id +`" class="btn btn-success" style="width: 166.5px;" onclick="acceptTour(`+ tour.id +`, `+ requestedTourObject.listing.id +`, '`+ requestedTourObject.listing.street +`')">Accept Tour</button>
+                    	            						<button id="acceptTourBtn`+ tour.id +`" class="btn btn-success" disabled style="width: 166.5px;" onclick="acceptTour(`+ tour.id +`, `+ requestedTourObject.listing.id +`, '`+ requestedTourObject.listing.street +`')">Accept Tour</button>
                     	            					</div>
                     	            					<div id="acceptTourLoading`+ tour.id +`" style="display: none;">
                     	            						<button class="btn btn-success" style="width: 166.5px;">
@@ -3459,8 +3467,24 @@
             if(anythingChosen == false){
             	$("#unBookedGoHere").append(`<div class="alert alert-info" role="alert"><strong>You Don't have any listings that are not booked for this time period. <a href="/listing/create">Create one?</a></strong></div>`);
 	        }
-        })
+        });
 	}
+
+	//Stuff for tour time selection
+	$(document).on('click', '.timeselector', function () {
+		var currentTour = $(this).attr("data-tourid");
+		$( ".timeselector" ).each(function( index ) {
+			if($(this).attr("data-tourid") == currentTour){
+				console.log('hi');
+				$(this).removeClass("btn-primary");
+				$(this).removeClass("btn-secondary");
+				$(this).addClass("btn-secondary");
+			}
+		});
+		$(this).removeClass("btn-secondary");
+		$(this).addClass("btn-primary");
+		$('#acceptTourBtn'+currentTour).removeAttr("disabled");
+	});
 
 </script>
 {% endblock %}
