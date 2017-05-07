@@ -3,6 +3,7 @@ from datetime import datetime as dt
 from sqlalchemy import event
 from flask import flash
 
+from nexnest import logger
 from nexnest.application import db, session
 from nexnest.models.base import Base
 from nexnest.models.message import Message
@@ -423,7 +424,7 @@ class Notification(Base):
                 .first()
 
             if returnObject is not None:
-                message = 'A tour for %s has been scheduled for %s' % (returnObject.listing.address, returnObject.confirmedTour.humanString)
+                message = 'A tour for %s has been scheduled for %s' % (returnObject.listing.address, returnObject.confirmedTourTime.humanString)
 
                 redirectURL = '/tour/view/%d' % returnObject.id
 
@@ -435,7 +436,7 @@ class Notification(Base):
                 .first()
 
             if returnObject is not None:
-                message = 'Your request for a tour at %s has been denied' % returnObject.listing.street
+                message = 'Your request for a tour at %s has been denied or canceled' % returnObject.listing.street
 
                 redirectURL = '/group/view/%d' % returnObject.group.id
 

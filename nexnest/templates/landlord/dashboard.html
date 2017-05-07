@@ -1238,10 +1238,20 @@
 			}
 		});
         // Send AJAX request to backend
-        requestURL = '/tour/confirmTime/'+id+'/'+chosenTime
-        $.getJSON(requestURL, function(data) {
-            results = data;
-            console.log(data);
+        console.log('chosenTime : ' + chosenTime)
+        console.log('dateTimeParse : ' + Date.parse(chosenTime))
+        requestURL = '/tour/confirmTime/'+ id
+        $.ajax({
+          type: "POST",
+          contentType: "application/json; charset=utf-8",
+          url: requestURL,
+          data: JSON.stringify({tourTime: chosenTime}),
+          success: function (data) {
+          	console.log('Success for confirmTime')
+          	console.log('Returned Data ')
+          	console.log(data)
+          },
+          dataType: "json"
         });
         $("#doIShowDiv"+surroundingID).html("hide");
         $("#numberOfRequestedTours"+surroundingID).html(count-1);

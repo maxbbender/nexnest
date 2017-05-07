@@ -227,30 +227,6 @@
         </div>
     </div>
 
-    <!--Confirm Tour Modal-->
-    <div class="modal fade" id="confirmTourModal" tabindex="-1" role="dialog" aria-labelledby="confirmTour" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h4 class="modal-title"></h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <p class="card-text">Are you sure you want to schedule a tour for {{ tour.time_requested }}?</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <a href="{{ url_for('tours.confirmTour', tourID=tour.id) }}" class="btn btn-primary">Confirm Tour</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!--Suggest Different Time Tour Modal-->
     <div class="modal fade" id="suggestTimeTourModal" tabindex="-1" role="dialog" aria-labelledby="suggestTimeTour" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -265,7 +241,7 @@
                     <div class="row">
                         <div class="col-xs-1"></div>
                         <div class="col-xs-10">
-                            <form id="request_tour_time_change" action="{{url_for('tours.updateTime', tourID=tour.id)}}" method="POST">
+                            <form id="request_tour_time_change" action="" method="POST">
                                 {{ dateChangeForm.csrf_token }}
                                 {{ dateChangeForm.input_id }}
                                 {{ dateChangeForm.requestedDateTime() }}                             
@@ -303,7 +279,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="{{ url_for('tours.confirmTour', tourID=tour.id) }}" class="btn btn-danger">Decline Tour</a>
+                    <a href="{{ url_for('tours.declineTourAJAX', tourID=tour.id) }}" class="btn btn-danger">Decline Tour</a>
                 </div>
             </div>
         </div>
@@ -327,7 +303,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="{{ url_for('tours.confirmTour', tourID=tour.id) }}" class="btn btn-danger">Cancel Tour</a>
+                    <a href="{{ url_for('tours.declineTourAJAX', tourID=tour.id) }}" class="btn btn-danger">Cancel Tour</a>
                 </div>
             </div>
         </div>
