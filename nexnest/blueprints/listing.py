@@ -832,7 +832,17 @@ def searchListingsAJAX():
 
     school = School.query.filter_by(name=postedJSON['school']).first()
 
+    returnDict = {'listings': listingJSONList,
+                  'featuredListings': featuredJSONList}
+
     if school is not None:
-        return jsonify(school=school.serialize, listings=listingJSONList, featuredListings=featuredJSONList)
+        returnDict['school'] = school.serialize
     else:
-        return jsonify(school=None, listings=listingJSONList, featuredListings=featuredJSONList)
+        returnDict['school'] = None
+
+    if current_user.is_authenticated:
+        returnDict['currentUserSchool'] = current_user.school.serialize
+    else:
+        returnDict['currentUserSchool'] = None
+
+    return jsonify(returnDict)

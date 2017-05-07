@@ -377,6 +377,7 @@
 		    image       : "",
 		    fontawesome : "fa fa-spinner fa-spin"
 		});
+        console.log('JSON Filters : ' + JSON.stringify(filters))
 		$.ajax({
     	    type: "POST",
     	    url: "/listing/search/AJAX",
@@ -478,6 +479,7 @@
 				    fontawesome : "fa fa-spinner fa-spin"
 				});
 	    	}
+            console.log('JSON Filters : ' + JSON.stringify(filters))
 	    	$.ajax({
 	    	    type: "POST",
 	    	    url: "/listing/search/AJAX",
