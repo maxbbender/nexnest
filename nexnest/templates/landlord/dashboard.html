@@ -2988,7 +2988,7 @@
         	            					<br>
         	            					<div class="row">`;
         	            				for(var i=0; i<requestedTimes.tourTimes.length; i++){
-        	            					individualElement+= `<div class="col-xs-6 col-md-4 col-lg-3" style="padding-top: 10px;">
+        	            					individualElement+= `<div class="col-xs-6 col-md-4 col-lg-4" style="padding-top: 10px;">
         	            											<button class="btn btn-secondary timeselector" data-tourid="`+tour.id+`" value="`+requestedTimes.tourTimes[i].dateTimeRequested+`">`+requestedTimes.tourTimes[i].dateTimeRequested+`</button>
         	            										</div>`;
         	            				}
@@ -3475,7 +3475,6 @@
 		var currentTour = $(this).attr("data-tourid");
 		$( ".timeselector" ).each(function( index ) {
 			if($(this).attr("data-tourid") == currentTour){
-				console.log('hi');
 				$(this).removeClass("btn-primary");
 				$(this).removeClass("btn-secondary");
 				$(this).addClass("btn-secondary");

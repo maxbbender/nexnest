@@ -5,7 +5,7 @@ from flask_login import current_user, login_required
 from nexnest import logger
 from nexnest.application import session
 
-from nexnest.forms import TourForm, TourMessageForm, TourDateChangeForm
+from nexnest.forms import TourForm, TourMessageForm, TourDateChangeForm, LandlordReportForm, GroupReportForm
 
 from nexnest.models.tour import Tour
 from nexnest.models.listing import Listing
@@ -106,7 +106,9 @@ def viewTour(tourID):
                            landlords=tour.listing.landLordsAsUsers(),
                            messages=messages,
                            messageForm=messageForm,
-                           dateChangeForm=dateChangeForm
+                           dateChangeForm=dateChangeForm,
+                           LandlordReportForm=LandlordReportForm(),
+                           GroupReportForm=GroupReportForm()
                            )
 
 
