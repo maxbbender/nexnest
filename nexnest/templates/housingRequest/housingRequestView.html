@@ -42,6 +42,19 @@
 	        	        </a>
 	        	    </li>
         	    {% endif %}
+                {% if current_user in landlords %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" style="padding-left: 10px;" data-toggle="modal" data-target="#groupReportModal">
+                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i><span class="hidden-md-down">Report Group</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" style="padding-left: 10px;" data-toggle="modal" data-target="#landlordReportModal">
+                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i><span class="hidden-md-down">Report Landlord</span>
+                        </a>
+                    </li>
+                {% endif %}
         	</ul>
         </div>
     </div>
@@ -437,6 +450,8 @@
     </div>
 </div>
 
+{% include 'groupReportModal.html' %}
+{% include 'landlordReportModal.html' %}
 
 {% endblock %}
 {% block scripts %}
@@ -475,6 +490,22 @@
       var modal = $(this);
       modal.find('.modal-title').text('Back Out');
     })
+
+    //Group Report
+    $('#groupReportModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget)
+      var modal = $(this)
+      modal.find('.modal-title').text('Report This Group');
+      $("#group_id").val({{ housingRequest.group.id }});
+    });
+
+    //Landlord Report
+    $('#landlordReportModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget)
+      var modal = $(this)
+      modal.find('.modal-title').text('Report Your Landlord');
+      $("#landlord_id").val({{ housingRequest.listing.landLordsAsUsers()[0].id }});      
+    });
 
     function getNumberOfTenants(){
         return parseFloat($("#numGroupMembers").html()) || 0;

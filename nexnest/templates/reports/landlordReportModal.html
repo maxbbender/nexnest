@@ -1,0 +1,41 @@
+<div class="modal fade" id="landlordReportModal" tabindex="-1" role="dialog" aria-labelledby="report" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="landlordReport"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form action="{{url_for('reports.createLandlordReport')}}" method='POST'>
+                            {{LandlordReportForm.csrf_token}}
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label form-control-feedback"><h4><strong>Title of Report</strong></h4></label>
+                                        {{LandlordReportForm.title(class='form-control', required='required', type="text")}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group">
+                                        <label class="control-label form-control-feedback"><strong>What has this landlord done that you wish to report them? Please be as specfic as possible for us to investigate</strong></label>
+                                        {{LandlordReportForm.content(class="form-control", type="text", required="required", rows="5")}}
+                                    </div>
+                                </div>
+                            </div>
+                            {{LandlordReportForm.landlord_id}}
+                            <p>
+                                <input type='submit' value='Submit Report' class="btn btn-primary">
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

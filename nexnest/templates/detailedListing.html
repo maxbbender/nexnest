@@ -685,7 +685,7 @@
 	        	var day = date.getDate();
 	        	var year = date.getUTCFullYear();
 	        	var dayOfWeek = date.getUTCDay();
-	        	var dateForMax = ""+month+"/"+day+"/"+year;
+	        	var dateForMax = ""+month+"-"+day+"-"+year;
 	       		var returnDate = ""+monthName+" "+day+" "+year;
 	       		console.log(returnDate);
 	        	console.log(dayOfWeek);
@@ -817,6 +817,7 @@
       modal.find('.modal-title').text('Report This Listing');
       var url = window.location.href;
       $("#sourceURL").val(url);
+      $("#listing_id").val({{listing.id}})
     });
 
     function submitTourForm() {
