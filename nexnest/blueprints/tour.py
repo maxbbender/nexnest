@@ -273,3 +273,38 @@ def confirmTourTime(tourID, tourTime):
     else:
         flash('Tour time confirmed!', 'success')
         return redirect(url_for('tours.viewTour', tourID=tourID))
+
+
+@tours.route('/tour/<tourID>/updateTourTimes', methods=['GET', 'POST'])
+@login_required
+@tour_editable
+def updateTourTimes(tourID):
+    tour = Tour.query.filter_by(id=tourID).first_or_404()
+
+    errorMessage = None
+    if not tour.tour_confirmed:
+        newTourTimes = request.get_json(force=True)
+
+        # Delete all current tourTimes
+        TourTime.query.filter_by(tour=tour).delete()
+
+        for time in newTourTimes:
+            timeObject = parser.parse(time)
+            newTourTime = TourTime(tour, timeObject)
+            session.add(newTourTime)
+            session.commit()
+    else:
+        errorMessage = 'The tour for %s has already been scheduled! You cannot change the tour times.'
+
+    if errorMessage is None:
+        if request.is_xhr:
+            return jsonify({'success': True, 'message': 'You have successfully requested new times to tour %s.' % tour.listing.address})
+        else:
+            flash('You have successfully requested new times to tour %s.' % tour.listing.address, 'success')
+            return redirect(url_for('tours.viewTour', tourID=tourID))
+    else:
+        if request.is_xhr:
+            return jsonify({'success': False, 'message': errorMessage})
+        else:
+            flash(errorMessage, 'danger')
+            return redirect(url_for('tours.viewTour', tourID=tourID))
