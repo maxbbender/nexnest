@@ -34,13 +34,17 @@ class TourTime(Base):
     @property
     def serialize(self):
         return {
-            'dateTimeRequested': self.humanString,
+            'dateTimeRequested': self.humanISOComplaintString,
             'confirmed': self.confirmed
         }
 
     @property
+    def humanISOComplaintString(self):
+        return self.date_time_requested.strftime('%a, %b %-d %Y %I:%M%p')
+
+    @property
     def humanString(self):
-        return self.date_time_requested.strftime('%a %b %-m, %y at %I:%M%p')
+        return self.date_time_requested.strftime('%a %b %-d, %y at %I:%M%p')
 
 
 def update_date_modified(mapper, connection, target):

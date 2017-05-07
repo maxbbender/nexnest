@@ -58,8 +58,9 @@ landlord1 = LandlordFactory(user=landlord)
 
 session.commit()
 
-for i in range(15):
+for i in range(10):
     newAvailability = AvailabilityFactory(landlord=landlord1)
+    # newAvailability.time.second = 0
 
     count = availability.Availability.query.filter_by(landlord=newAvailability.landlord,
                                                       time=newAvailability.time,
@@ -311,9 +312,11 @@ for tour in allTours:
         randomIndex = randint(0, len(landLordAvailabilities) - 1)
         newTourTime = TourTimeFactory(tour=tour)
 
-        newTourTime.date_time_requested.replace(hour=landLordAvailabilities[randomIndex].time.hour,
-                                                minute=landLordAvailabilities[randomIndex].time.minute,
-                                                second=landLordAvailabilities[randomIndex].time.second)
+        newTourTime.date_time_requested = newTourTime.date_time_requested \
+            .replace(hour=landLordAvailabilities[randomIndex].time.hour,
+                     minute=landLordAvailabilities[randomIndex].time.minute,
+                     second=0,
+                     microsecond=0)
 
         timeCheck = tour_time.TourTime.query \
             .filter_by(tour=tour,

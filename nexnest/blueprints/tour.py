@@ -136,6 +136,7 @@ def createMessage():
     return form.redirect()
 
 
+@tours.route('/tour/<tourID>/decline')
 @tours.route('/tour/<tourID>/decline/ajax')
 @login_required
 @tour_editable
@@ -183,17 +184,26 @@ def getTourTimes(tourID):
     return jsonify({'tourTimes': tourTimeList})
 
 
-@tours.route('/tour/confirmTime/<tourID>/<tourTime>')
+@tours.route('/tour/confirmTime/<tourID>', methods=['POST'])
 @login_required
 @tour_editable
-def confirmTourTime(tourID, tourTime):
+def confirmTourTime(tourID):
+    logger.debug('Incoming tourID %r' % tourID)
     tour = Tour.query.filter_by(id=tourID).first_or_404()
     logger.debug('tour %r' % tour)
 
     if not tour.hasConfirmedTourTime:
+        json = request.get_json()
+        logger.debug('request.get_json : %r' % json)
 
-        tourTimeToConfirm = parser.parse(tourTime)
+        tourTimeToConfirm = parser.parse(json['tourTime'])
         logger.debug('tourTimeToConfirm %r' % tourTimeToConfirm)
+
+        allTourTimesForTour = TourTime.query.filter_by(tour=tour).all()
+        logger.debug('allTourTimesForTour %r' % allTourTimesForTour)
+
+        for tempTourTime in allTourTimesForTour:
+            logger.debug('TourTime DateTime Requested %r' % tempTourTime.date_time_requested)
 
         tourTime = TourTime.query \
             .filter_by(tour=tour,
@@ -203,8 +213,12 @@ def confirmTourTime(tourID, tourTime):
         logger.debug('Found TourTime %r' % tourTime)
 
         tourTime.confirmed = True
-        tour.confirmed = True
+        logger.debug('setting tour_confirmed to true pre %r' % tour.tour_confirmed)
+        tour.tour_confirmed = True
+        logger.debug('post %r' % tour.tour_confirmed)
         session.commit()
+
+        tour.genConfirmNotifications()
 
     else:
         if request.is_xhr:
@@ -238,6 +252,15 @@ def updateTourTimes(tourID):
             newTourTime = TourTime(tour, timeObject)
             session.add(newTourTime)
             session.commit()
+
+        if tour.last_requested == 'group':
+            tour.last_requested = 'landlord'
+        elif tour.last_requested == 'landlord':
+            tour.last_request = 'group'
+        else:
+            logger.error('updateTourTimes() :  Unknown last_requested %s' % tour.last_requested)
+
+        tour.genTimeChangeNotifications()
     else:
         errorMessage = 'The tour for %s has already been scheduled! You cannot change the tour times.'
 

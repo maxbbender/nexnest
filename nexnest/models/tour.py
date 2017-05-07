@@ -92,7 +92,7 @@ class Tour(Base):
         if user == self.group.leader or user in self.listing.landLordsAsUsers():
             return True
         elif toFlash:
-            flash("Permissions Error")
+            flash("Permissions Error", 'danger')
 
         return False
 
