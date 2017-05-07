@@ -201,6 +201,7 @@ def confirmTourTime(tourID, tourTime):
         logger.debug('Found TourTime %r' % tourTime)
 
         tourTime.confirmed = True
+        tour.confirmed = True
         session.commit()
 
     else:
