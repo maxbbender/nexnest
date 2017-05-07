@@ -61,6 +61,7 @@ def createTour():
             newTour.genNotifications()
 
             # Generate Tour Times
+            logger.debug('tourForm.requestedDateTime.data %s' % tourForm.requestedDateTime.data)
             tourTimeJSON = json.loads(tourForm.requestedDateTime.data)
             logger.debug('tourTimeJSON %r' % tourTimeJSON)
             for time in tourTimeJSON:
