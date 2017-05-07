@@ -59,7 +59,7 @@ class Tour(Base):
             'tourConfirmed': self.tour_confirmed,
             'url': '/tour/view/%d' % self.id,
             'group': self.group.serialize,
-            'requestedTimes': self.requestedTimes
+            'requestedTimes': requestedTimes
         }
 
         return tour
