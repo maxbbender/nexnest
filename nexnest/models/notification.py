@@ -213,12 +213,9 @@ class Notification(Base):
 
                 return message, returnObject, redirectURL
 
-
-        
         # ----------------------------------
         # --- Group Listings (HouseReq) ----
         # ----------------------------------
-        
 
         elif self.notif_type == 'group_listing':
             returnObject = session.query(GroupListing) \
@@ -274,11 +271,9 @@ class Notification(Base):
 
                 return message, returnObject, redirectURL
 
-        
         # ---------------------------
         # --------- Reports ---------
         # ---------------------------
-        
 
         elif self.notif_type == 'platform_report':
             returnObject = session.query(PlatformReport) \
@@ -295,11 +290,10 @@ class Notification(Base):
 
                 return message, returnObject, redirectURL
 
-        
         # ------------------------
         # --------- USER ---------
         # ------------------------
-        
+
         elif self.notif_type == 'friend':
             returnObject = session.query(Friend) \
                 .filter_by(target_user_id=self.target_model_id) \
@@ -328,14 +322,11 @@ class Notification(Base):
 
                 return message, returnObject, redirectURL
 
-
-        
         # -----------------------
         # -------- HOUSE --------
         # -----------------------
         # If a house request has been accepted + completed, a house
         # notification gets created.
-        
 
         elif self.notif_type == 'house':
             returnObject = session.query(House) \
@@ -350,11 +341,9 @@ class Notification(Base):
 
                 return message, returnObject, redirectURL
 
-        
         # -----------------------------
         # -------- Maintenance --------
         # -----------------------------
-        
 
         elif self.notif_type == 'maintenance':
             returnObject = session.query(Maintenance) \
@@ -392,11 +381,10 @@ class Notification(Base):
 
                 return message, returnObject, redirectURL
 
-        
         # ----------------------
         # -------- TOUR --------
         # ----------------------
-        
+
         elif self.notif_type == 'tour':
             returnObject = session.query(Tour) \
                 .filter_by(id=self.target_model_id) \
@@ -409,7 +397,6 @@ class Notification(Base):
 
                 return message, returnObject, redirectURL
 
-       
         elif self.notif_type == 'new_tour_time':
             returnObject = session.query(Tour) \
                 .filter_by(id=self.target_model_id) \
@@ -436,7 +423,7 @@ class Notification(Base):
                 .first()
 
             if returnObject is not None:
-                message = 'Your tour has been confirmed!'
+                message = 'A tour for %s has been scheduled for %s' % (returnObject.listing.address, returnObject.confirmedTour.humanString)
 
                 redirectURL = '/tour/view/%d' % returnObject.id
 

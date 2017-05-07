@@ -110,64 +110,6 @@ def viewTour(tourID):
                            )
 
 
-@tours.route('/tour/<tourID>/confirm')
-@tours.route('/tour/<tourID>/confirm/ajax')
-@login_required
-@tour_editable
-def confirmTour(tourID):
-    tour = Tour.query.filter_by(id=tourID).first_or_404()
-
-    tour.tour_confirmed = True
-    session.commit()
-
-    tour.genConfirmNotifications()
-
-    if request.is_xhr:
-        return jsonify(results={'success': True})
-    else:
-        return redirect(url_for('tours.viewTour', tourID=tourID))
-
-
-@tours.route('/tour/<tourID>/unConfirm/ajax')
-@login_required
-@tour_editable
-def unConfirmTourAJAX(tourID):
-    tour = Tour.query.filter_by(id=tourID).first_or_404()
-
-    tour.tour_confirmed = False
-    session.commit()
-
-    tour.undoConfirmNotifications()
-
-    return jsonify(results={'success': True})
-
-
-@tours.route('/tour/<tourID>/updateDate', methods=['POST'])
-@login_required
-@tour_editable
-def updateTime(tourID):
-    tour = Tour.query.filter_by(id=tourID).first_or_404()
-
-    form = TourDateChangeForm(request.form)
-
-    if form.validate():
-        tour.time_requested = form.requestedDateTime.data
-
-        if tour.last_requested == 'group':
-            tour.last_requested = 'landlord'
-        else:
-            tour.last_requested = 'group'
-
-        tour.genTimeChangeNotifications()
-
-        session.commit()
-    else:
-        flash_errors(form)
-        form.redirect()
-
-    return redirect(url_for('tours.viewTour', tourID=tourID))
-
-
 @tours.route('/tour/createMessage', methods=['POST'])
 @login_required
 @tour_viewable
