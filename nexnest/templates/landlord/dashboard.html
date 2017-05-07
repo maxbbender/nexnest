@@ -2928,13 +2928,6 @@
             $.each(requestedTours, function(index, requestedTourObject) {
             	//console.log(requestedTourObject);
             	//console.log(requestedTourObject.listing.street);
-            	toursURL = '/tour/'+ requestedTourObject.listing.id +'/getTourTimes'
-            	var requestedTimes;
-            	$.getJSON(toursURL, function(data) {
-            		requestedTimes = data;
-            	});
-            	console.log("requestedTimes");
-            	console.log(requestedTimes);
 
             var outerDiv =`
             	<div id="numberOfRequestedTours`+ requestedTourObject.listing.id +`" style="display: none;">`+ requestedTourObject.tourCount +`</div>
@@ -2964,6 +2957,17 @@
             	requestedToursElements = outerDiv;
 
             	$.each(requestedTourObject.tours, function(index, tour) {
+            	var requestedTimes;
+            	$.ajax({
+            		url: '/tour/'+ tour.id +'/getTourTimes',
+            		async: false,
+            		dataType: 'json',
+            		success: function(data){
+            			requestedTimes = data;
+            		}
+            	});
+            	console.log("requestedTimes");
+            	console.log(requestedTimes);
             		var membersNotLeaderCount = parseInt(tour.group.userCount) -1;
             		individualElement = `
             		<div class="row" id="requestedTour`+ tour.id +`">
