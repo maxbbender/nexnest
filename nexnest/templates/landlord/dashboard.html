@@ -2912,6 +2912,7 @@
 
     function getTourRequestsJSON() {
     	requestURL = '/landlord/requestedTours/JSON'
+
     	$("#requestedToursTab").empty();
 
     	$.getJSON(requestURL, function(data) {
@@ -2927,6 +2928,13 @@
             $.each(requestedTours, function(index, requestedTourObject) {
             	//console.log(requestedTourObject);
             	//console.log(requestedTourObject.listing.street);
+            	toursURL = '/tour/'+ requestedTourObject.listing.id +'/getTourTimes'
+            	var requestedTimes;
+            	$.getJSON(toursURL, function(data) {
+            		requestedTimes = data;
+            	});
+            	console.log("requestedTimes");
+            	console.log(requestedTimes);
 
             var outerDiv =`
             	<div id="numberOfRequestedTours`+ requestedTourObject.listing.id +`" style="display: none;">`+ requestedTourObject.tourCount +`</div>
