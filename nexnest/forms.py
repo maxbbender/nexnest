@@ -219,11 +219,11 @@ class InviteGroupForm(RedirectForm):
 class PasswordChangeForm(RedirectForm):
     oldPassword = PasswordField('Old Password', [InputRequired()])
 
-    newPassword = PasswordField('Password',
+    newPassword = PasswordField('New Password',
                                 [InputRequired(),
                                  EqualTo('newPasswordConfirm',
                                          message="Passwords must match")])
-    newPasswordConfirm = PasswordField('Confirm Password', [InputRequired()])
+    newPasswordConfirm = PasswordField('Confirm New Password', [InputRequired()])
 
 
 class GroupListingForm(RedirectForm):
