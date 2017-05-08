@@ -345,6 +345,9 @@
 	var listings = [];
 	//create the timer for loading screen
 	var loadingScreenTimer;
+	$( document ).ready(function() {
+
+	});
 
 	$("#priceSlider").change(function() {
 		var prices = $("#priceSlider").val().split(',');
@@ -353,7 +356,6 @@
 		$("#minPriceDisplay").text("$"+minPrice);
 		$("#maxPriceDisplay").text("$"+maxPrice);
   	}); 
-
 
 	function showMoreFilters(){
 		$("#moreFilters").toggle();
@@ -397,6 +399,7 @@
     	        alert(errMsg);
     	    }
     	});
+    	initMap();
 	}
 
 	$("#advancedSearch").click(function() {
@@ -662,11 +665,13 @@
 
 	$( document ).ready(function() {
 		var hash = document.location.hash;
-		if(hash=="#search"){
-			buildFilters("True");
+		if(hash=="#search"){			
+			//buildFilters("True");
 			$("#initialView").hide();
 			$("#homepage").show();
+			initialFilters();
 		}
+		//initMap();
 	});
 
 	$( function() {
@@ -770,6 +775,7 @@
   	       div.innerHTML = '<img src="' + icon + '"> ' + name;
   	       legend.appendChild(div);
   	    }
+
   		map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
   		 		
   	}
@@ -828,6 +834,6 @@
   	   }
   	}
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlGruIdIOTEk9uMtdJVY6Zg5aEFzo72IA&callback=initMap" type="text/javascript" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlGruIdIOTEk9uMtdJVY6Zg5aEFzo72IA" type="text/javascript"></script>
 {% endblock %}
 
