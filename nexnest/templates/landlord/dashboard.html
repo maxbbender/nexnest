@@ -912,40 +912,40 @@
 		</div>
 	</div>
 </div>
+<div id="currentTour" style="display: none;"></div>
 
-<!--Suggest Different Time Tour Modal-->
-<div class="modal fade" id="suggestTimeTourModal" tabindex="-1" role="dialog" aria-labelledby="suggestTimeTour" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title"></h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-xs-1"></div>
-                    <div class="col-xs-10">
-                        <form id="request_tour_time_change" action="#" method="POST">
-                            {{ dateChangeForm.csrf_token }}
-                            {{ dateChangeForm.input_id }}
-                            {{ dateChangeForm.requestedDateTime() }}                             
-                            <p class="flatpickr input-group" data-wrap="true" data-clickOpens="false">
-                                <input id="tourRequestTime" placeholder="Pick date" data-input style="background-color: inherit;">
-                                <a class="btn input-btn" style="border-color: #ddd;" data-toggle><i class="fa fa-calendar" aria-hidden="true"></i></a>
-                                <a class="btn input-btn" style="border-color: #ddd;" data-clear><i class="fa fa-times" aria-hidden="true"></i></a>
-                            </p>
-                        </form>  
-                    </div>
+<div class="modal fade" id="suggestTimeTourModal" tabindex="-1" role="dialog" aria-labelledby="timeChange" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">                  
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="timeChange"></h4>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <a href="#" id="requestTimeLink" class="btn btn-primary" onclick="#">Request Time</a>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-1"></div>
+                        <div class="col-xs-10">
+                            <input type="text" id="datep" />
+                            <div id="datepicker">
+                            </div>
+                            <br>
+                            <div id="validTimes"></div>
+                            <br>
+                            <div id="doIShowTimeInput" style="display: none;">
+                                <input id="selectedTourTimes" class="selectedTourTimes" type="text" value="" data-role="tagsinput">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="groupNumber" style="display: none;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onClick="suggestDifferentTimes()" data-dismiss="modal">Suggest These Times</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 <!--Package Options Modal-->
     <div class="modal fade" id="packageDescriptionModal" tabindex="-1" role="dialog" aria-labelledby="packageDescriptionModal" aria-hidden="true">
@@ -1241,7 +1241,7 @@
         console.log('chosenTime : ' + chosenTime)
         console.log('dateTimeParse : ' + Date.parse(chosenTime))
         requestURL = '/tour/confirmTime/'+ id
-        
+
         $.ajax({
           type: "POST",
           contentType: "application/json; charset=utf-8",
@@ -1251,6 +1251,7 @@
           	console.log('Success for confirmTime')
           	console.log('Returned Data ')
           	console.log(data)
+          	getScheduledToursJSON();
           },
           dataType: "json"
         });
@@ -2264,15 +2265,18 @@
 	   });
 	});
 
-    //Suggest Tour Time Modal
     $('#suggestTimeTourModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget);
       var modal = $(this);
-      var tour = $(event.relatedTarget).data('tourid');
-      var group = $(event.relatedTarget).data('groupid');
-      $("#request_tour_time_change").attr('action', "/tour/"+tour+"/updateDate");
-      $("#requestTimeLink").attr('onClick', "submitTimeChangeForm("+group+")");      
-      modal.find('.modal-title').text('Request Different Time For Tour');
+      console.log(selectedDateTimes);
+      selectedDateTimes.length = 0;
+      console.log(selectedDateTimes);
+      $('#selectedTourTimes').tagsinput('removeAll');
+      $("#validTimes").empty();
+      $("#currentTour").val($(button).attr("data-tourid"));
+      $("#currentTour").innerHTML = "hi";
+      console.log($("#currentTour").val());
+      modal.find('.modal-title').text('Suggest Different Tour Times');
     })
 
     //Package Option Modal
@@ -2283,11 +2287,6 @@
     })
 
 
-    function submitTimeChangeForm(id) {
-        $("#input_id").val(id);
-        $("#requestedDateTime").val($("#tourRequestTime").val());
-        $("#request_tour_time_change").submit()
-    }
 
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
@@ -2992,19 +2991,36 @@
         	            					<h3 style="font-size: 3.5vh;"><strong>`+ tour.group.name +` </strong>(`+ tour.group.userCount +` Members)
         	            					<a class="btn btn-primary hidden-sm-down" href="`+ tour.url +`" style="float: right;">More Info</a></h3>
         	            				</div>
-        	            			</div>
-        	            			<div class="row">
-        	            				<div class="col-xl-12">
+        	            			</div>`;
+        	            			if(tour.lastRequested != "landlord"){
+	        	            			individualElement+= `
+	        	            			<div class="row">
+	        	            				<div class="col-xl-12">
         	            					The Group has requested any of these times. Please choose one:
-        	            					<br>
-        	            					<div class="row">`;
-        	            				for(var i=0; i<requestedTimes.tourTimes.length; i++){
-        	            					individualElement+= `<div class="col-xs-6 col-md-4 col-lg-4" style="padding-top: 10px;">
-        	            											<button class="btn btn-secondary timeselector" data-tourid="`+tour.id+`" value="`+requestedTimes.tourTimes[i].dateTimeRequested+`">`+requestedTimes.tourTimes[i].dateTimeRequested+`</button>
-        	            										</div>`;
-        	            				}
-        	            				individualElement+= `</div></div>
-        	            			</div>
+	        	            					<br>
+	        	            					<div class="row">`;
+	        	            					for(var i=0; i<requestedTimes.tourTimes.length; i++){
+	        	            						individualElement+= `<div class="col-xs-6 col-md-4 col-lg-4" style="padding-top: 10px;">
+	        	            											<button class="btn btn-secondary timeselector" data-tourid="`+tour.id+`" value="`+requestedTimes.tourTimes[i].dateTimeRequested+`">`+requestedTimes.tourTimes[i].dateTimeRequested+`</button>
+	        	            										</div>`;
+	        	            					}
+	        	            				individualElement+= `</div></div>`;
+        	            			}
+        	            			else if(tour.lastRequested == "landlord"){
+	        	            			individualElement+= `
+	        	            			<div class="row">
+	        	            				<div class="col-xl-12">
+        	            					You offered them these times:
+	        	            					<br>
+	        	            					<div class="row">`;
+	        	            					for(var i=0; i<requestedTimes.tourTimes.length; i++){
+	        	            						individualElement+= `<div class="col-xs-6 col-md-4 col-lg-4" style="padding-top: 10px;">
+	        	            											<button class="btn btn-secondary timeselector" style="pointer-events: none;" data-tourid="`+tour.id+`" value="`+requestedTimes.tourTimes[i].dateTimeRequested+`">`+requestedTimes.tourTimes[i].dateTimeRequested+`</button>
+	        	            										</div>`;
+	        	            					}
+	        	            				individualElement+= `</div></div>`;
+        	            			}
+        	            			individualElement+= `</div>
         	            			<br>
         	            			<div class="row">
         	            				<div class="col-xs-12">
@@ -3028,7 +3044,7 @@
         	            						else{
         	            							individualElement += `
         	            								<div class="col-lg-4 col-centered" style="padding-left: 15px; padding-right: 15px; padding-bottom: 5px;">
-        	            									<button class="btn btn-secondary" style="width: 166.5px;" disabled>Waiting For Group</button>
+        	            									<button class="btn btn-secondary" style="width: 166.5px; pointer-events: none;">Waiting For Group</button>
         	            								</div>
         	            							`;
         	            						}
@@ -3178,6 +3194,7 @@
             	scheduledToursElements = outerDiv;
 
             	$.each(scheduledTourObject.tours, function(index, tour) {
+            		console.log(tour);
             		var membersNotLeaderCount = parseInt(tour.group.userCount) -1;
             		individualElement = `
             		<div class="row" id="scheduledTour`+ tour.id +`">
@@ -3495,6 +3512,153 @@
 		$(this).addClass("btn-primary");
 		$('#acceptTourBtn'+currentTour).removeAttr("disabled");
 	});
+
+	var selectedDateTimes = [];
+	var $datePicker = $("div#datepicker");
+	
+	var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+	];
+	var validTourTimes = ["8:00AM", "9:00AM", "10:00AM", "11:00AM", "12:00PM", "1:00PM", "2:00PM", "3:00PM", "4:00PM", "5:00PM", "6:00PM", "7:00PM"]
+	
+
+	$datePicker.datepicker({ 
+	    changeMonth: true,
+	    changeYear: true,
+	    inline: true,
+	    altField: "#datep"   
+	 }).change(function(e){
+	    setTimeout(function(){
+	        $("#validTimes").empty();
+	        console.log($datePicker.datepicker('getDate'));
+	        var date = $datePicker.datepicker('getDate');
+	        var month = date.getUTCMonth() +1;
+	        var monthName = monthNames[month-1];
+	        var day = date.getDate();
+	        var year = date.getUTCFullYear();
+	        var dayOfWeek = date.getUTCDay();
+	        var dateForMax = ""+month+"-"+day+"-"+year;
+	        var returnDate = ""+monthName+" "+day+" "+year;
+	        console.log(returnDate);
+	        console.log(dayOfWeek);
+	        var alreadySelectedTimes = returnTimes(selectedDateTimes, dateForMax)
+	        console.log(alreadySelectedTimes);
+	        var timesShown =`<div class="row">`;
+	        for (var i = 0; i < validTourTimes.length; i++ )
+	        {
+	            timesShown+= `<div class="col-xs-4">
+	                 <div class="form-group">
+	                    <label class="control-label form-control-feedback" id="timelabel"style="font-size: 1.5em">`+ validTourTimes[i]+`</label>
+	                    <div class="checkbox">
+	                        <label style="font-size: 1.5em">
+	                        <input class="form-check-input tourtime" type="checkbox" onClick="addTime('`+returnDate+`','`+dateForMax+`','`+validTourTimes[i]+`')" id="date_`+returnDate+"_time_"+validTourTimes[i]+`" value="`+validTourTimes[i]+`"`;
+	                        for(var k=0; k<alreadySelectedTimes.length; k++){
+	                            if(alreadySelectedTimes[k]==validTourTimes[i]){
+	                                timesShown+= `checked`;
+	                            }
+	                        }
+	                        timesShown+= `>
+	                        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+	                        </label>
+	                    </div>
+	                </div>
+	             </div>`;
+	        }
+	        timesShown+= `</div>`;
+	        $("#validTimes").append(timesShown);
+	    });
+	});
+	$(".ui-datepicker").css("margin","auto");
+
+	function addTime(date, dateForMax, time){
+	    $("#doIShowTimeInput").show();
+	    if(checkDateTime(selectedDateTimes, dateForMax, time) == false){
+	        var nextDateTime = ""+dateForMax + " " + time;
+	        selectedDateTimes.push(nextDateTime);
+	        $('#selectedTourTimes').tagsinput('add', ""+ date + " @ " +time);
+	    }
+	    else{
+	        $('#selectedTourTimes').tagsinput('remove', ""+ date + " @ " +time);
+	        console.log('already exists');
+	    }
+	    console.log(selectedDateTimes);
+	}
+
+
+	function checkKeyPair(obj, key, value){
+	    return obj.hasOwnProperty(key);
+	}
+
+	function checkDateTime(obj, date, time)
+	{
+	    //debugger;
+	    console.log(obj);
+	    for (i = 0; i < obj.length; i++ )
+	    {
+	        if (obj[i] == ""+date+ " " + time)
+	        {               
+	            selectedDateTimes.splice(i,1);
+	            return true;                
+	        }
+	    }
+	    return false;
+	}
+
+	function returnTimes(obj, date)
+    {
+        console.log(obj);
+        
+        var times= [];
+        for (i = 0; i < obj.length; i++ )
+        {   console.log(obj[i].split(" ")[0]);
+            console.log(date.toString());
+            if (obj[i].split(" ")[0] == date.toString())
+            {
+                times.push(obj[i].split(" ")[1]);
+            }
+        }
+        return times;
+    }
+
+	$( document ).ready(function() {
+	    $(".ui-datepicker").css("margin","auto");
+	    $('.selectedTourTimes').attr('readonly', 'readonly');
+	});
+
+	$('input').on('itemRemoved', function(event) {
+	  console.log(event);
+	  var removedItem = event.item;
+	  var fields = removedItem.split('@');
+	  var date = fields[0];
+	  date = date.trim();
+	  var time = fields[1];
+	  time = time.trim();
+	  console.log(date);
+	  console.log(time);
+	  checkDateTime(selectedDateTimes, date, time);
+	  console.log(selectedDateTimes);
+	  $("#date_"+date+"_time_"+time).prop('checked', false);
+	  console.log("#date_"+date+"_time_"+time);
+	  var elementExists = document.getElementById("date_"+date+"_time_"+time);
+	  console.log(elementExists);
+	});
+
+	function suggestDifferentTimes(){
+		var selectedTour = $("#currentTour").val();
+        requestURL = "/tour/"+selectedTour+"/updateTourTimes"
+        $.ajax({
+          type: "POST",
+          contentType: "application/json; charset=utf-8",
+          url: requestURL,
+          data: JSON.stringify(selectedDateTimes),
+          success: function (data) {
+            console.log('Success for confirmTime')
+            console.log('Returned Data ')
+            console.log(data)
+          },
+          dataType: "json"
+        });
+        getTourRequestsJSON();
+    }
 
 </script>
 {% endblock %}
