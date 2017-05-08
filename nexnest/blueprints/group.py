@@ -19,6 +19,7 @@ from nexnest.models.group_listing_favorite import GroupListingFavorite
 from nexnest.models.house import House
 from nexnest.models.group_listing_message import GroupListingMessage
 from nexnest.models.notification import Notification
+from nexnest.decorators import group_viewable, group_editable
 
 from nexnest.utils.flash import flash_errors
 
@@ -42,18 +43,6 @@ def createGroup():
                 groupHasConflict = group
                 conflict = True
                 break
-            # if form.start_date.data < group.start_date and form.end_date.data > group.start_date:
-            #     # If I start before the group start, but end anywhere after
-            #     # group start, this conflicts with current group
-            #     groupHasConflict = group
-            #     conflict = True
-            #     break
-            # elif form.start_date.data >= group.start_date and form.start_date.data <= group.end_date:
-            #     # If I start after the group starts, but not after group ends,
-            #     # also conflict with current group
-            #     groupHasConflict = group
-            #     conflict = True
-            #     break
 
         if not conflict:
             newGroup = Group(name=form.name.data,
@@ -77,6 +66,7 @@ def createGroup():
 
 @groups.route('/group/view/<groupID>')
 @login_required
+@group_viewable
 def viewGroup(groupID):
     # First lets check that the current user is apart of the group
     group = Group.query.filter_by(id=groupID).first_or_404()
@@ -102,171 +92,88 @@ def viewGroup(groupID):
         .order_by(asc(House.date_created)) \
         .first()
 
-    if group in current_user.accepted_groups:
-
-        return render_template('group/viewGroup.html',
-                               group=group,
-                               housingRequests=housingRequests,
-                               favoritedListings=group.displayedFavorites(),
-                               invite_form=invite_form,
-                               messages=messages,
-                               tours=tours,
-                               message_form=message_form,
-                               house=house)
-
-    else:
-        flash("You are not a part of %s" % group.name, 'warning')
-        return redirect(url_for('indexs.index'))
+    return render_template('group/viewGroup.html',
+                           group=group,
+                           housingRequests=housingRequests,
+                           favoritedListings=group.displayedFavorites(),
+                           invite_form=invite_form,
+                           messages=messages,
+                           tours=tours,
+                           message_form=message_form,
+                           house=house)
 
 
-# NOTIFICATIONS IMPLEMENTED
 @groups.route('/group/invite', methods=['POST'])
 @login_required
+@group_editable
 def invite():
-    if request.method == 'POST':
-        form = InviteGroupForm(request.form)
-        # print("@groups.invite() form.group_id.data : %s" % form.group_id.data)
-        if form.validate():
-            group = session.query(Group) \
-                .filter_by(id=int(form.group_id.data)) \
-                .first()
+    form = InviteGroupForm(request.form)
+    if form.validate():
+        group = Group.query.filter_by(id=int(form.group_id.data)).first_or_404()
 
-            # Is the current user apart of the group
-            if group.isViewableBy(current_user):
-                user = session.query(User) \
-                    .filter_by(id=int(form.user_id.data)) \
-                    .first()
+        user = User.query.filter_by(id=int(form.user_id.data)).first_or_404()
 
-                newGroupUser = GroupUser(group, user)
+        newGroupUser = GroupUser(group, user)
 
-                session.add(newGroupUser)
-                session.commit()
-                return redirect(url_for('groups.viewGroup',
-                                        group_id=form.group_id.data))
-            else:
-                flash("Unable to invite a user to a group you are not apart of",
-                      'warning')
-                return redirect(url_for('indexs.index'))
-        else:
-            flash_errors(form)
-            return redirect(url_for('groups.viewGroup',
-                                    group_id=form.group_id.data))
+        session.add(newGroupUser)
+        session.commit()
+        return form.redirect()
+    else:
+        flash_errors(form)
+        return redirect(url_for('groups.viewGroup',
+                                group_id=form.group_id.data))
 
 
-# NOTIFICATIONS IMPLEMENTED
 @groups.route('/group/message/create', methods=['POST'])
 @login_required
+@group_viewable
 def createMessage():
     message_form = GroupMessageForm(request.form)
 
     if message_form.validate():
-        group = session.query(Group). \
-            filter_by(id=message_form.group_id.data). \
-            first()
-        if group in current_user.accepted_groups:
+        group = Group.query.filter_by(id=int(message_form.group_id.data)).first_or_404()
 
-            newMessage = GroupMessage(group=group,
-                                      user=current_user,
-                                      content=message_form.content.data)
+        newMessage = GroupMessage(group=group,
+                                  user=current_user,
+                                  content=message_form.content.data)
 
-            session.add(newMessage)
-            session.commit()
+        session.add(newMessage)
+        session.commit()
 
-            newMessage.genNotifications()
-        else:
-            flash("Unable to post a message to a group you are not apart of",
-                  'warning')
-            return redirect(url_for('indexs.index'))
+        newMessage.genNotifications()
     else:
         flash_errors(message_form)
 
     return message_form.redirect()
-    # return redirect(url_for('groups.viewGroup',
-    #                         group_id=message_form.group_id.data))
 
 
-# NOTIFICATIONS IMPLEMENTED
-# DEPRECATED DON"T USE
-# @groups.route('/group/suggestListing', methods=['POST'])
-# @login_required
-# def suggestListing():
-
-#     if request.method == 'POST':
-#         form = SuggestListingForm(request.form)
-#         if form.validate():
-#             group = session.query(Group).filter_by(
-#                 id=int(form.group_id.data)).first()
-
-#             # Is the current user apart of the group?
-#             if group in current_user.accepted_groups:
-#                 listing = session.query(Listing).filter_by(
-#                     id=int(form.listing_id.data)).first()
-
-#                 groupListing = session.query(GroupListing).filter_by(
-#                     group_id=group.id, listing_id=listing.id).first()
-
-#                 if not groupListing:
-#                     newGroupListing = GroupListing(group, listing)
-#                     session.add(newGroupListing)
-#                     session.commit()
-#                     flash("This listing has been suggested to %s" %
-#                           group.name, 'info')
-#                 else:
-#                     flash("This listing has already been suggested to " +
-#                           group.name + " by someone", 'info')
-#             else:
-#                 flash("Unable to suggest a listing to a group you are not apart of",
-#                       'warning')
-#                 return redirect(url_for('indexs.index'))
-#         else:
-#             flash("Errors validating Suggest Listing Invite form", 'danger')
-
-#     return redirect(url_for('listings.viewListing',
-#                             listingID=form.listing_id.data))
-
-# NOTIFICATIONS IMPLEMENTED
 @groups.route('/group/leave/<groupID>')
 @login_required
+@group_viewable
 def leaveGroup(groupID):
-    groupToLeave = session.query(Group) \
-        .filter_by(id=groupID) \
-        .first()
+    groupToLeave = Group.query.filter_by(id=groupID).first_or_404()
 
-    groupUserCount = session.query(GroupUser) \
-        .filter_by(group_id=groupToLeave.id,
-                   user_id=current_user.id,
-                   accepted=True) \
-        .count()
-
-    # Does the group exist?
-    if groupToLeave is not None:
-        # Is the user a part of the group?
-        if groupUserCount == 1:
-            if current_user.leaveGroup(groupToLeave):
-                flash("You have left %s" % groupToLeave.name, 'success')
-                return redirect(url_for('indexs.index'))
-            else:
-                return redirect(url_for('groups.viewGroup',
-                                        group_id=groupToLeave.id))
-        else:
-            flash("You are not apart of %s" % groupToLeave.name, 'danger')
+    if current_user in groupToLeave.acceptedUsers:
+        if current_user.leaveGroup(groupToLeave):
+            flash("You have left %s" % groupToLeave.name, 'success')
             return redirect(url_for('indexs.index'))
+        else:
+            return redirect(url_for('groups.viewGroup',
+                                    group_id=groupToLeave.id))
+
+    if request.is_xhr:
+        return jsonify({'success': True})
     else:
-        flash("Group you are trying to leave doesn't exist", 'danger')
         return redirect(url_for('indexs.index'))
 
 
 @groups.route('/group/<group_id>/assignLeader/<user_id>')
 @login_required
-def assignNewLeader(group_id, user_id):
-    group = session.query(Group).filter_by(id=group_id).first()
-
-    # Is the current user the leader of this group
-    if group.leader_id == current_user.id:
-        group.leader_id = user_id
-        session.commit()
-    else:
-        flash("Only group leader can re-assign the leader", 'danger')
+@group_editable
+def assignNewLeader(groupID, userID):
+    group = Group.query.filter_by(id=groupID).first_or_404()
+    group.leader_id = userID
+    session.commit()
 
     return redirect(url_for('groups.viewGroup',
                             group_id=group.id))
@@ -274,109 +181,35 @@ def assignNewLeader(group_id, user_id):
 
 @groups.route('/group/<groupID>/removeMember/<userID>')
 @login_required
+@group_editable
 def removeMember(groupID, userID):
-    group = session.query(Group) \
-        .filter_by(id=groupID) \
-        .first()
+    groupUser = GroupUser.query.fitler_by(group_id=groupID, user_id=userID).first_or_404()
 
-    if group is not None:
-        if group.isEditableBy(current_user):
-            groupUser = session.query(GroupUser) \
-                .filter_by(group_id=groupID, user_id=userID) \
-                .first()
-
-            if groupUser is not None:
-                groupUser.accepted = False
-                groupUser.show = False
-                session.commit()
-            else:
-                flash("User is not a part of the group", 'info')
-    else:
-        flash("Group does not exist", 'error')
-        return redirect(url_for('indexs.index'))
+    groupUser.accepted = False
+    groupUser.show = False
+    session.commit()
 
     return redirect(url_for('groups.viewGroup', group_id=groupID))
 
 
-# THIS IS DONE IN THE HOUSE REQUEST BLUEPRINT
-# NOTIFICATIONS IMPLEMENTED
-# @groups.route('/group/requestListing', methods=['POST'])
-# @login_required
-# def requestListing():
-#     rLForm = GroupListingForm(request.form)
-#     if rLForm.validate():
-#         group = session.query(Group) \
-#             .filter_by(id=rLForm.groupID.data) \
-#             .first()
-
-#         if group is not None:
-
-#             # Can the current user take actions on the group?
-#             if group.isEditableBy(current_user):
-#                 listing = session.query(Listing) \
-#                     .filter_by(id=rLForm.listingID.data) \
-#                     .first()
-
-#                 if listing is not None:
-#                     newGL = GroupListing(group=group,
-#                                          listing=listing)
-#                     session.add(newGL)
-#                     session.commit()
-
-#                     newGL.genNotifications()
-
-#                     newGLM = GroupListingMessage(groupListing=newGL,
-#                                                  user=current_user,
-#                                                  content=rLForm.reqDescription.data)
-
-#                     session.add(newGLM)
-#                     session.commit()
-#                     flash("You have requested to live at this listing!", 'success')
-
-#                     # Invalidate all open group invitations
-#                     newGL.group.invalidateOpenInvitations()
-
-#                     return redirect(url_for('housingRequests.view', id=newGL.id))
-#                 else:
-#                     flash("Listing does not exist", 'warning')
-#         else:
-#             flash("Group does not exist", 'warning')
-
-#     else:
-#         flash_errors(rLForm)
-
-#     return rLForm.redirect()
-
-
-# NOTIFICATIONS IMPLEMENTED
 @groups.route('/group/<groupID>/favoriteListing/<listingID>', methods=['GET'])
 @login_required
+@group_viewable
 def favoriteListing(groupID, listingID):
-    group = session.query(Group).filter_by(id=groupID).first()
-    errorMessage = None
-    favoriteCount = session.query(GroupListingFavorite) \
+    favoriteCount = GroupListingFavorite.query \
         .filter_by(group_id=groupID, listing_id=listingID)\
-        .first()
+        .count()
 
-    if favoriteCount is None:
+    errorMessage = None
 
-        group = session.query(Group).filter_by(id=groupID).first()
-        listing = session.query(Listing).filter_by(id=listingID).first()
-
-        if group is not None and listing is not None:
-            if group.isViewableBy(user=current_user, toFlash=False):
-                newGLF = GroupListingFavorite(group=group,
-                                              listing=listing,
-                                              user=current_user)
-                session.add(newGLF)
-                session.commit()
-
-                return jsonify(results={'success': True})
-
-            else:
-                errorMessage = 'Permissions Error'
-        else:
-            errorMessage = 'Invalid Request'
+    if favoriteCount == 0:
+        group = Group.query.filter_by(id=groupID).first_or_404()
+        listing = Listing.query.filter_by(id=listingID).first_or_404()
+        newGLF = GroupListingFavorite(group=group,
+                                      listing=listing,
+                                      user=current_user)
+        session.add(newGLF)
+        session.commit()
     else:
         if not favoriteCount.show:
             favoriteCount.show = True
@@ -384,7 +217,18 @@ def favoriteListing(groupID, listingID):
         else:
             errorMessage = 'Listing has already been favorited by your group'
 
-    return jsonify(results={'success': False, 'message': errorMessage})
+    if errorMessage is None:
+        if request.is_xhr:
+            return jsonify(results={'success': True})
+        else:
+            flash('Listing has been favorited', 'success')
+            return redirect(url_for('groups.viewGroup', groupID=groupID))
+    else:
+        if request.is_xhr:
+            return jsonify(results={'success': False, 'message': errorMessage})
+        else:
+            flash(errorMessage, 'success')
+            return redirect(url_for('groups.viewGroup', groupID=groupID))
 
 
 @groups.route('/group/favoriteListing/<favoriteListingID>/show', methods=['GET'])

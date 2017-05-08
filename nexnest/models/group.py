@@ -64,25 +64,6 @@ class Group(Base):
     def __repr__(self):
         return '<Group %r - %r>' % (self.id, self.name)
 
-    def addUserToGroup(self, user):
-        # First we want to check how many users are a part
-        # of the group already. Max users 6
-        num_users = session.query(GroupUser).filter_by(
-            group_id=self.id).count()
-
-        if num_users < 6:
-            newGroupUser = GroupUser(self, user)
-            session.add(newGroupUser)
-            session.commit()
-        else:
-            flash("Group Size Limit Reached")
-
-    def removeUser(self, user):
-        user = session.query(GroupUser).filter_by(group_id=self.id, user_id=user.id).first()
-        session.delete(user)
-        session.commit()
-        return True
-
     @property
     def serialize(self, groupListingID=None):
         group_users = []
@@ -142,6 +123,25 @@ class Group(Base):
             if groupListing.group_show:
                 housingRequests.append(groupListing)
         return housingRequests
+
+    def addUserToGroup(self, user):
+        # First we want to check how many users are a part
+        # of the group already. Max users 6
+        num_users = session.query(GroupUser).filter_by(
+            group_id=self.id).count()
+
+        if num_users < 6:
+            newGroupUser = GroupUser(self, user)
+            session.add(newGroupUser)
+            session.commit()
+        else:
+            flash("Group Size Limit Reached")
+
+    def removeUser(self, user):
+        user = session.query(GroupUser).filter_by(group_id=self.id, user_id=user.id).first()
+        session.delete(user)
+        session.commit()
+        return True
 
     def getUsers(self):
         users = []
