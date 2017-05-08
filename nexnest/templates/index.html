@@ -333,7 +333,7 @@
 				</div>
 			</div>		
 		</div>
-		<div id="map" class="hidden-lg-down col-xl-5" style="height: 80vh; position: fixed; left: 59vw;">
+		<div id="map" class="hidden-lg-down col-xl-5" style="height: 80vh; position: fixed; left: 58vw;">
 		</div>
 		<div id="legend"><h3>Legend</h3></div>
 	</div>
@@ -835,34 +835,28 @@
   		if(lat != undefined){
   			map.setCenter(schoolLatLng);
   			$.each(listings, function(index, listing) {
-  			addMarker(listing.id, listing.lat, listing.long, listing.propertyType, '<div style="overflow: auto;"><div id="iw-container"><div class="iw-title"><b>'+listing.address+'</b></div><div class="iw-content"><a href="'+listing.url+'"><img src="'+listing.bannerPhotoURL+'" style="height: 100px;" alt="'+listing.address+'"></a><p><b>'+ listing.drivingMiles +' Miles to Campus</b><br><br>"'+listing.description+'"</p><p style="clear:both;"></p><table class="special"><tbody><tr><td>'+listing.numBedrooms+' Beds</td><td>'+listing.numFullBaths+' Baths</td><td><a href="'+listing.url+'">View</a></td></tr></tbody></table></div><div class="iw-bottom-gradient"></div></div></div>');
+  			addMarker(listing.id, listing.lat, listing.long, listing.propertyType, '<a href="'+listing.url+'"><img src="'+listing.bannerPhotoURL+'" alt="'+listing.address+'" width="300px" height="auto"></a><h2>$'+listing.pricePerSemester+' per bedroom per '+listing.priceTerm+'</h2><span style="float: left;">'+listing.numBedrooms+' Bed / '+listing.numFullBaths+' Bath</span><span style="float: right"><a href="'+listing.url+'">View this Listing</a></span>');
   			});
   			$.each(featuredListings, function(index, listing) {
-  			addMarker(listing.id, listing.lat, listing.long, listing.propertyType, '<div style="overflow: auto;"><div id="iw-container"><div class="iw-title"><b>'+listing.address+'</b></div><div class="iw-content"><a href="'+listing.url+'"><img src="'+listing.bannerPhotoURL+'" style="height: 100px;" alt="'+listing.address+'"></a><p><b>"'+ listing.drivingMiles +'" Miles to Campus</b><br><br>"'+listing.description+'"</p><p style="clear:both;"></p><table class="special"><tbody><tr><td>'+listing.numBedrooms+' Beds</td><td>'+listing.numFullBaths+' Baths</td><td><a href="'+listing.url+'">View</a></td></tr></tbody></table></div><div class="iw-bottom-gradient"></div></div></div>');
+  			addMarker(listing.id, listing.lat, listing.long, listing.propertyType, '<a href="'+listing.url+'"><img src="'+listing.bannerPhotoURL+'" alt="'+listing.address+'" width="300px" height="auto"></a><h2>$'+listing.pricePerSemester+' per bedroom per '+listing.priceTerm+'</h2><span style="float: left;">'+listing.numBedrooms+' Bed / '+listing.numFullBaths+' Bath</span><span style="float: right"><a href="'+listing.url+'">View this Listing</a></span>');
   			});
 
   		}
+  		var markerCluster = new MarkerClusterer(map, markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
   		$("#map").css('position', 'fixed');
   	}	
 
   	function addMarker(id, lat, long, type, info){
-  		// console.log(id);
-  		// console.log(lat);
-  		// console.log(long);
-  		// console.log(type);
-  		// console.log(info);
-  		
-  		var marker = new google.maps.Marker({
-  			id: id,
-  			position: new google.maps.LatLng(lat, long),
-  			map: map,
-  			icon: icons[type].icon
-  		});
-  		console.log(marker);
-  		marker.addListener('click', function() {
-  			new google.maps.InfoWindow({content: info}).open(map, marker);
-  		});
-  		markers[id] = marker;  
+  	    var marker = new google.maps.Marker({
+  	        id: id,
+  	        position: new google.maps.LatLng(lat, long),
+  	        map: map,
+  	        icon: icons[type].icon
+  	    });
+  	    marker.addListener('click', function() {
+  	        new google.maps.InfoWindow({content: info}).open(map, marker);
+  	    });
+  	    markers.push(marker);  
   	}
   	// Removes the markers from the map, preps for refresh   
   	function clearMarkers(id) { 
@@ -878,6 +872,7 @@
   	   }
   	}
 </script>
+<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlGruIdIOTEk9uMtdJVY6Zg5aEFzo72IA" type="text/javascript"></script>
 {% endblock %}
 
