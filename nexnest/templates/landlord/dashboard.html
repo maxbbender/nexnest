@@ -197,8 +197,7 @@
             </form>
 		    <div class="tab-pane active" id="occupiedListingsTab" role="tabpanel" style="padding: 0px;">
 		    	<div class="row">
-			    	<div class="col-xs-0 col-md-1"></div>
-			    	<div class="col-xs-12 col-md-10" style="width: 100%">
+			    	<div class="col-xs-12 col-md-12" style="width: 100%">
 				    	<div class="callout-block text-center fade-in-b">
 				    		<h1 style="font-size: 3.5vh;">Booked Listings</h1>
 				    	</div>
@@ -206,8 +205,7 @@
 			    </div>
 		    	<br>
 		    	<div class="row">
-		        	<div class="col-xs-0 col-md-1"></div>
-		        	<div class="col-xs-12 col-md-10 col-lg-10 col-xl-10" style="padding-left: 15px;">
+		        	<div class="col-xs-12 col-md-12 col-lg-12 col-xl-12" style="padding-left: 15px;">
 		        	    <div class="row">
 		        	        <div class="card" style="width:100%; border: none;">
 		        	            <div class="card-block">
@@ -2326,8 +2324,7 @@
                 </div>
                 <div class="card-block">
                 	<div class="row">
-                		<div class="col-xs-0 col-md-1"></div>
-                		<div class="col-xs-12 col-md-10">
+                		<div class="col-xs-12 col-md-12">
                 			<strong>
                 				<h2 class="hidden-sm-up" style="font-size: 2.5vh;">New Maintenance Requests for this listing: </h2>
                 				<h2 class="hidden-xs-down" style="font-size: 3.5vh;">New Maintenance Requests for this listing: </h2>
@@ -2340,8 +2337,7 @@
             	$.each(maintenanceRequestObject.maintenanceRequests, function(index, maintenanceRequest) {
             		individualElement = `
             		<div class="row" id="openRequest`+maintenanceRequest.id+`">
-    					<div class="col-xl-1"></div>
-    					<div class="col-xl-10">
+    					<div class="col-xl-12">
 	        				<div class="card">
                     			<div class="card-header">
                     				<div class="row">
@@ -2450,8 +2446,7 @@
                     </div>
                     <div class="card-block">
                     	<div class="row">
-                    		<div class="col-xl-1"></div>
-                    		<div class="col-xl-10">
+                    		<div class="col-xl-12">
                     			<strong>
                     				<h2 class="hidden-sm-up" style="font-size: 2.5vh;">In-progress Maintenance Requests for this listing: </h2>
                     				<h2 class="hidden-xs-down" style="font-size: 3.5vh;">In-Progress Maintenance Requests for this listing: </h2>
@@ -2465,8 +2460,7 @@
             	$.each(maintenanceRequestObject.maintenanceRequests, function(index, maintenanceRequest) {
             		individualElement = `
             		<div class="row" id="inProgress`+ maintenanceRequest.id +`">
-    					<div class="col-xl-1"></div>
-    					<div class="col-xl-10">
+    					<div class="col-xl-12">
 	        				<div class="card">
                     			<div class="card-header">
                     				<div class="row">
@@ -2561,8 +2555,7 @@
 	                </div>
 	                <div class="card-block">
 	                	<div class="row">
-	                		<div class="col-xl-1"></div>
-	                		<div class="col-xl-10">
+	                		<div class="col-xl-12">
 	                			<strong>
 	                				<h2 class="hidden-sm-up" style="font-size: 2.5vh;">Completed Maintenance Requests for this listing: </h2>
 	                				<h2 class="hidden-xs-down" style="font-size: 3.5vh;">Completed Maintenance Requests for this listing: </h2>
@@ -2576,8 +2569,7 @@
             	$.each(maintenanceRequestObject.maintenanceRequests, function(index, maintenanceRequest) {
             		individualElement = `
             		<div class="row" id="completed`+ maintenanceRequest.id +`">
-    					<div class="col-xl-1"></div>
-    					<div class="col-xl-10">
+    					<div class="col-xl-12">
 	        				<div class="card">
                     			<div class="card-header">
                     				<div class="row">
@@ -2646,8 +2638,7 @@
 	                </div>
 	                <div class="card-block">
 	                	<div class="row">
-	                		<div class="col-xs-0 col-md-1"></div>
-	                		<div class="col-xs-12 col-md-10">
+	                		<div class="col-xs-12 col-md-12">
 	                			<strong>
 	                				<h2 class="hidden-sm-up" style="font-size: 2.5vh;">Group(s) Requesting This Listing: </h2>
 	                				<h2 class="hidden-xs-down" style="font-size: 3.5vh;">Group(s) Requesting This Listing: </h2>
@@ -2662,8 +2653,7 @@
             		var membersNotLeaderCount = parseInt(houseRequest.group.userCount) -1;
             		individualElement = `
             		<div class="row" id="unAcceptedRequest`+ houseRequest.id +`">
-    					<div class="col-xs-0 col-md-1"></div>
-    					<div class="col-xs-12 col-md-10" style="padding-left: 0px; padding-right: 0px;">
+    					<div class="col-xs-12 col-md-12" style="padding-left: 0px; padding-right: 0px;">
 	        				<div class="card">
                     			<div class="card-header">
                     				<div class="row">
@@ -3000,7 +2990,7 @@
 	        	            					<br>
 	        	            					<div class="row">`;
 	        	            					for(var i=0; i<requestedTimes.tourTimes.length; i++){
-	        	            						individualElement+= `<div class="col-xs-6 col-md-4 col-lg-4" style="padding-top: 10px;">
+	        	            						individualElement+= `<div class="col-xs-6 col-md-6 col-lg-4" style="padding-top: 10px;">
 	        	            											<button class="btn btn-secondary timeselector" data-tourid="`+tour.id+`" value="`+requestedTimes.tourTimes[i].dateTimeRequested+`">`+requestedTimes.tourTimes[i].dateTimeRequested+`</button>
 	        	            										</div>`;
 	        	            					}
@@ -3014,7 +3004,7 @@
 	        	            					<br>
 	        	            					<div class="row">`;
 	        	            					for(var i=0; i<requestedTimes.tourTimes.length; i++){
-	        	            						individualElement+= `<div class="col-xs-6 col-md-4 col-lg-4" style="padding-top: 10px;">
+	        	            						individualElement+= `<div class="col-xs-6 col-md-6 col-lg-4" style="padding-top: 10px;">
 	        	            											<button class="btn btn-secondary timeselector" style="pointer-events: none;" data-tourid="`+tour.id+`" value="`+requestedTimes.tourTimes[i].dateTimeRequested+`">`+requestedTimes.tourTimes[i].dateTimeRequested+`</button>
 	        	            										</div>`;
 	        	            					}
