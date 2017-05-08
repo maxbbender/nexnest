@@ -432,7 +432,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-xs-12">
-                            <p class="card-text">Are you sure you want to decline giving {{ tour.group.name }} a tour and not just <a href="#" data-toggle="modal" data-target="#suggestTimeTourModal" data-dismiss="modal">schedule a different date and time?</a></p>
+                            <p class="card-text">Are you sure you want to decline giving {{ tour.group.name }} a tour and not just <a href="#" data-toggle="modal" data-target="#timeChangeModal" data-dismiss="modal">schedule a different date and time?</a></p>
                         </div>
                     </div>
                 </div>
@@ -508,7 +508,7 @@
             var returnDate = ""+monthName+" "+day+" "+year;
             console.log(returnDate);
             console.log(dayOfWeek);
-            var alreadySelectedTimes = returnTimes(selectedDateTimes, returnDate)
+            var alreadySelectedTimes = returnTimes(selectedDateTimes, dateForMax)
             console.log(alreadySelectedTimes);
             var timesShown =`<div class="row">`;
             for (var i = 0; i < validTourTimes.length; i++ )
@@ -549,8 +549,6 @@
             console.log('already exists');
         }
         console.log(selectedDateTimes);
-        $("#requestedDateTime").val(JSON.stringify(selectedDateTimes));
-        console.log($("#requestedDateTime").val());
     }
 
 
@@ -575,12 +573,15 @@
 
     function returnTimes(obj, date)
     {
+        console.log(obj);
+        
         var times= [];
         for (i = 0; i < obj.length; i++ )
-        {
-            if (obj[i].date == date)
+        {   console.log(obj[i].split(" ")[0]);
+            console.log(date.toString());
+            if (obj[i].split(" ")[0] == date.toString())
             {
-                times.push(obj[i].time);
+                times.push(obj[i].split(" ")[1]);
             }
         }
         return times;

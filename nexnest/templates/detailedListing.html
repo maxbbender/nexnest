@@ -689,7 +689,7 @@
 	       		var returnDate = ""+monthName+" "+day+" "+year;
 	       		console.log(returnDate);
 	        	console.log(dayOfWeek);
-	        	var alreadySelectedTimes = returnTimes(selectedDateTimes, returnDate)
+	        	var alreadySelectedTimes = returnTimes(selectedDateTimes, dateForMax)
 	        	console.log(alreadySelectedTimes);
 	        	var timesShown =`<div class="row">`;
 	        	for (var i = 0; i < landlordAvailability.length; i++ )
@@ -760,12 +760,15 @@
 
 	function returnTimes(obj, date)
 	{
+		console.log(obj);
+        
 		var times= [];
 	    for (i = 0; i < obj.length; i++ )
-	    {
-	        if (obj[i].date == date)
+	    {	console.log(obj[i].split(" ")[0]);
+	    	console.log(date.toString());
+	        if (obj[i].split(" ")[0] == date.toString())
 	        {
-	        	times.push(obj[i].time);
+	        	times.push(obj[i].split(" ")[1]);
 	        }
 	    }
 	    return times;
