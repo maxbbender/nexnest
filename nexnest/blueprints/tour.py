@@ -259,7 +259,7 @@ def updateTourTimes(tourID):
             tour.last_request = 'group'
         else:
             logger.error('updateTourTimes() :  Unknown last_requested %s' % tour.last_requested)
-
+        session.commit()
         tour.genTimeChangeNotifications()
     else:
         errorMessage = 'The tour for %s has already been scheduled! You cannot change the tour times.'

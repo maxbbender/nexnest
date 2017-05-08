@@ -57,7 +57,11 @@
                 <div class="callout-block text-center fade-in-b">
                     <h2 style="font-size: 3.0vh;">
                         {% if tour.tour_confirmed %}
-                        <b>Tour of {{ tour.listing.street }}, {{ tour.listing.city }} {{ tour.listing.state }} {{ tour.listing.zip_code }}</b>
+                            {% if tour.declined %}
+                                <b style="color: red;">TOUR HAS BEEN CANCELLED</b>
+                            {% else %}
+                                <b>Tour of {{ tour.listing.street }}, {{ tour.listing.city }} {{ tour.listing.state }} {{ tour.listing.zip_code }}</b>
+                            {% endif %}
                         {% else %}
                             <b>Tour requested for {{ tour.listing.street }}, {{ tour.listing.city }} {{ tour.listing.state }} {{ tour.listing.zip_code }}</b>
                         {% endif %}
@@ -76,32 +80,44 @@
                                 <div class="card-block">
                                     <div class="row">
                                 {% if tour.tour_confirmed %}
-                                    <p class="card-text"><strong>Tour is scheduled for:</strong> {{ tour.time_requested }}</p>
+                                    {% if tour.declined %}
+                                        
+                                    {% else %}
+                                        <p class="card-text"><strong>Tour is scheduled for:</strong> {{tour.confirmedTourTime.humanISOComplaintString}}</p>
+                                    {% endif %}
                                 {% endif %}
                                 <div class="row">
                                     <div class="col-xl-12">
                                         {% if tour.group.leader_id == current_user.id %}
                                             {% if tour.last_requested == 'landlord' %}
                                                 <strong>Tour Status:</strong>
-                                                {% if tour.tour_confirmed %}                                                    
-                                                    <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
-                                                    <br>
-                                                    Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour<br><br>
-                                                        <div class="row">
-                                                            <div class="col-xs-12 col-md-6 col-lg-4">
-                                                                <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour</a>
+                                                {% if tour.tour_confirmed %}  
+                                                    {% if tour.declined %}
+                                                        <b style="color: red;">TOUR HAS BEEN CANCELLED</b>
+                                                    {% else %}                                                  
+                                                        <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                                        <br>
+                                                        Tour has been confirmed for {{tour.confirmedTourTime.humanISOComplaintString}}. Please arrive at the property at this time to meet for the tour<br><br>
+                                                            <div class="row">
+                                                                <div class="col-xs-12 col-md-6 col-lg-4">
+                                                                    <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour</a>
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                        {% endif %}
                                                 {% else %}
                                                     <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the you to confrim the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                     <br><br>
-                                                    Waiting for the you to confirm the requested time or suggest a different one<br>
-                                                    <div class="row">
+                                                    The Landlord has propsed these times for the tour, please select one or suggest different times<br>
+                                                    <div class="row requestedTimes">
+                                                        
+                                                    </div>
+                                                    <br><br>
+                                                    <div class="row" style="padding-top: 10px;">
                                                         <div class="col-xs-12 col-xl-4" style="padding-bottom: 5px;">
-                                                            <a href='#' class="btn btn-success confirmtime" data-toggle="modal" data-target="#confirmTourModal" style="width: 196px;">Confirm Time</a>
+                                                            <a href='#' class="btn btn-secondary confirmtime" data-toggle="modal" data-target="#confirmTourModal" style="width: 196px; pointer-events: none;">Confirm Time</a>
                                                         </div>
                                                         <div class="col-xs-12 col-xl-4" style="padding-bottom: 5px;">
-                                                            <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestTimeTourModal" style="width: 196px;">Suggest Different Time</a>
+                                                            <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#timeChangeModal" style="width: 196px;">Suggest Different Time</a>
                                                         </div>
                                                         <div class="col-xs-12 col-xl-4" style="padding-bottom: 5px;">
                                                             <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal" style="width: 196px;">Cancel Tour Request</a>
@@ -112,21 +128,25 @@
                                                 <p class="card-text">
                                                     <strong>Tour Status:</strong>
                                                     {% if tour.tour_confirmed %}
-                                                        <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
-                                                        <br>
-                                                        Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour
-                                                        <br><br>
-                                                        <div class="row">
-                                                            <div class="col-xs-12 col-md-6 col-lg-4">
-                                                                <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour Request</a>
+                                                        {% if tour.declined %}
+                                                            <b style="color: red;">TOUR HAS BEEN CANCELLED</b>
+                                                        {% else %}
+                                                            <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                                            <br>
+                                                            Tour has been confirmed for {{tour.confirmedTourTime.humanISOComplaintString}}. Please arrive at the property at this time to meet for the tour
+                                                            <br><br>
+                                                            <div class="row" style="padding-top: 10px;">
+                                                                <div class="col-xs-12 col-md-6 col-lg-4">
+                                                                    <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour Request</a>
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                        {% endif %}
                                                     {% else %}
                                                         <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the landlord to confrim your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                         <br>
                                                         Waiting for the landlord to confirm your requested time or suggest a different one
                                                         <br><br>
-                                                        <div class="row">
+                                                        <div class="row" style="padding-top: 10px;">
                                                             <div class="col-xs-12 col-md-6 col-lg-4">
                                                                 <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour Request</a>
                                                             </div>
@@ -138,21 +158,25 @@
                                             {% if tour.last_requested == 'group' %}
                                                 <strong>Tour Status:</strong>
                                                 {% if tour.tour_confirmed %}
-                                                    <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
-                                                    <br>
-                                                    Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour
-                                                    <br><br>
-                                                    <div class="row">
-                                                        <div class="col-xs-12 col-md-6 col-lg-4">
-                                                            <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour</a>
+                                                    {% if tour.declined %}
+                                                        <b style="color: red;">TOUR HAS BEEN CANCELLED</b>
+                                                    {% else %}
+                                                        <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                                        <br>
+                                                        Tour has been confirmed for {{tour.confirmedTourTime.humanISOComplaintString}}. Please arrive at the property at this time to meet for the tour
+                                                        <br><br>
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-md-6 col-lg-4">
+                                                                <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour</a>
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    {% endif %}
                                                 {% else %}
                                                     <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the you to confirm the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                     <br>
                                                     Waiting for the you to select one of the requested times or choose another one
                                                     <br><br>
-                                                    <div class="row" id="requestedTimes">
+                                                    <div class="row requestedTimes">
                                                         
                                                     </div>
                                                     <br><br>
@@ -161,7 +185,7 @@
                                                             <a href='#' class="btn btn-secondary confirmtime" data-toggle="modal" data-target="#confirmTourModal" style="width: 196px; pointer-events: none;">Confirm Time</a>
                                                         </div>
                                                         <div class="col-xs-12 col-lg-6 col-xl-4" style="padding-bottom: 5px;">
-                                                            <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestTimeTourModal" style="width: 196px;">Suggest Different Time</a>
+                                                            <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#timeChangeModal" style="width: 196px;">Suggest Different Time</a>
                                                         </div>
                                                         <div class="col-xs-12 col-lg-6 col-xl-4" style="padding-bottom: 5px;">
                                                             <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#declineTourModal" style="width: 196px;">Decline Tour</a>
@@ -171,14 +195,18 @@
                                             {% else %}
                                                 <strong>Tour Status:</strong>
                                                 {% if tour.tour_confirmed %}
-                                                    <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
-                                                    <br>
-                                                    Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour
+                                                    {% if tour.declined %}
+                                                        <b style="color: red;">TOUR HAS BEEN CANCELLED</b>
+                                                    {% else %}
+                                                        <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                                        <br>
+                                                        Tour has been confirmed for {{tour.confirmedTourTime.humanISOComplaintString}}. Please arrive at the property at this time to meet for the tour
+                                                    {% endif %}
                                                 {% else %}
                                                     <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the group leader to confirm your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                     <br><br>
                                                     Waiting for the group leader to confirm your requested time or suggest a different one<br>
-                                                    <div class="row">
+                                                    <div class="row" style="padding-top: 10px;">
                                                         <div class="col-xs-12 col-md-6 col-lg-4">
                                                             <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour Request</a>
                                                         </div>
@@ -189,9 +217,13 @@
                                         {% else %}
                                             <strong>Tour Status:</strong>
                                             {% if tour.tour_confirmed %}
-                                                <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
-                                                <br>
-                                                Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour
+                                                {% if tour.declined %}
+                                                        <b style="color: red;">TOUR HAS BEEN CANCELLED</b>
+                                                    {% else %}
+                                                    <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                                    <br>
+                                                    Tour has been confirmed for {{tour.confirmedTourTime.humanISOComplaintString}}. Please arrive at the property at this time to meet for the tour
+                                                {% endif %}
                                             {% else %}
                                                 {% if tour.last_requested == 'group' %}
                                                     <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Request Pending</b>" data-placement="top" data-content="Waiting for the landlord to confirm your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
@@ -353,6 +385,40 @@
         </div>
     </div>
 
+    <!--Request Tour Modal-->
+    <div class="modal fade" id="timeChangeModal" tabindex="-1" role="dialog" aria-labelledby="timeChange" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">                  
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="timeChange"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-1"></div>
+                        <div class="col-xs-10">
+                            <input type="text" id="datep" />
+                            <div id="datepicker">
+                            </div>
+                            <br>
+                            <div id="validTimes"></div>
+                            <br>
+                            <div id="doIShowTimeInput" style="display: none;">
+                                <input id="selectedTourTimes" class="selectedTourTimes" type="text" value="" data-role="tagsinput">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="groupNumber" style="display: none;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onClick="suggestDifferentTimes()" data-dismiss="modal">Suggest These Times</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!--Decline Tour Modal-->
     <div class="modal fade" id="declineTourModal" tabindex="-1" role="dialog" aria-labelledby="declineTour" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -371,7 +437,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="{{ url_for('tours.declineTourAJAX', tourID=tour.id) }}" class="btn btn-danger">Decline Tour</a>
+                    <a href="/tour/{{tour.id}}/decline" class="btn btn-danger">Decline Tour</a>
                 </div>
             </div>
         </div>
@@ -395,7 +461,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="{{ url_for('tours.declineTourAJAX', tourID=tour.id) }}" class="btn btn-danger">Cancel Tour</a>
+                    <a href="/tour/{{tour.id}}/decline" class="btn btn-danger">Cancel Tour</a>
                 </div>
             </div>
         </div>
@@ -403,7 +469,149 @@
 
 {% endblock %}
 {% block scripts %}
+<script type="text/javascript">
+   var csrf_token = "{{ csrf_token() }}";
+
+   $.ajaxSetup({
+       beforeSend: function(xhr, settings) {
+           if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+               xhr.setRequestHeader("X-CSRFToken", csrf_token);
+           }
+       }
+   });
+</script>
 <script>
+    var selectedDateTimes = [];
+    var $datePicker = $("div#datepicker");
+    
+    var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+    ];
+    var validTourTimes = ["8:00AM", "9:00AM", "10:00AM", "11:00AM", "12:00PM", "1:00PM", "2:00PM", "3:00PM", "4:00PM", "5:00PM", "6:00PM", "7:00PM"]
+    
+
+    $datePicker.datepicker({ 
+        changeMonth: true,
+        changeYear: true,
+        inline: true,
+        altField: "#datep"   
+     }).change(function(e){
+        setTimeout(function(){
+            $("#validTimes").empty();
+            console.log($datePicker.datepicker('getDate'));
+            var date = $datePicker.datepicker('getDate');
+            var month = date.getUTCMonth() +1;
+            var monthName = monthNames[month-1];
+            var day = date.getDate();
+            var year = date.getUTCFullYear();
+            var dayOfWeek = date.getUTCDay();
+            var dateForMax = ""+month+"-"+day+"-"+year;
+            var returnDate = ""+monthName+" "+day+" "+year;
+            console.log(returnDate);
+            console.log(dayOfWeek);
+            var alreadySelectedTimes = returnTimes(selectedDateTimes, returnDate)
+            console.log(alreadySelectedTimes);
+            var timesShown =`<div class="row">`;
+            for (var i = 0; i < validTourTimes.length; i++ )
+            {
+                timesShown+= `<div class="col-xs-4">
+                     <div class="form-group">
+                        <label class="control-label form-control-feedback" id="timelabel"style="font-size: 1.5em">`+ validTourTimes[i]+`</label>
+                        <div class="checkbox">
+                            <label style="font-size: 1.5em">
+                            <input class="form-check-input tourtime" type="checkbox" onClick="addTime('`+returnDate+`','`+dateForMax+`','`+validTourTimes[i]+`')" id="date_`+returnDate+"_time_"+validTourTimes[i]+`" value="`+validTourTimes[i]+`"`;
+                            for(var k=0; k<alreadySelectedTimes.length; k++){
+                                if(alreadySelectedTimes[k]==validTourTimes[i]){
+                                    timesShown+= `checked`;
+                                }
+                            }
+                            timesShown+= `>
+                            <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                            </label>
+                        </div>
+                    </div>
+                 </div>`;
+            }
+            timesShown+= `</div>`;
+            $("#validTimes").append(timesShown);
+        });
+    });
+    $(".ui-datepicker").css("margin","auto");
+
+    function addTime(date, dateForMax, time){
+        $("#doIShowTimeInput").show();
+        if(checkDateTime(selectedDateTimes, dateForMax, time) == false){
+            var nextDateTime = ""+dateForMax + " " + time;
+            selectedDateTimes.push(nextDateTime);
+            $('#selectedTourTimes').tagsinput('add', ""+ date + " @ " +time);
+        }
+        else{
+            $('#selectedTourTimes').tagsinput('remove', ""+ date + " @ " +time);
+            console.log('already exists');
+        }
+        console.log(selectedDateTimes);
+        $("#requestedDateTime").val(JSON.stringify(selectedDateTimes));
+        console.log($("#requestedDateTime").val());
+    }
+
+
+    function checkKeyPair(obj, key, value){
+        return obj.hasOwnProperty(key);
+    }
+
+    function checkDateTime(obj, date, time)
+    {
+        //debugger;
+        console.log(obj);
+        for (i = 0; i < obj.length; i++ )
+        {
+            if (obj[i] == ""+date+ " " + time)
+            {               
+                selectedDateTimes.splice(i,1);
+                return true;                
+            }
+        }
+        return false;
+    }
+
+    function returnTimes(obj, date)
+    {
+        var times= [];
+        for (i = 0; i < obj.length; i++ )
+        {
+            if (obj[i].date == date)
+            {
+                times.push(obj[i].time);
+            }
+        }
+        return times;
+    }
+
+    $( document ).ready(function() {
+        $(".ui-datepicker").css("margin","auto");
+        $('.selectedTourTimes').attr('readonly', 'readonly');
+    });
+
+    $('input').on('itemRemoved', function(event) {
+      console.log(event);
+      var removedItem = event.item;
+      var fields = removedItem.split('@');
+      var date = fields[0];
+      date = date.trim();
+      var time = fields[1];
+      time = time.trim();
+      console.log(date);
+      console.log(time);
+      checkDateTime(selectedDateTimes, date, time);
+      console.log(selectedDateTimes);
+      $("#date_"+date+"_time_"+time).prop('checked', false);
+      console.log("#date_"+date+"_time_"+time);
+      var elementExists = document.getElementById("date_"+date+"_time_"+time);
+      console.log(elementExists);
+    });
+
+
+
+
     $(document).ready(function() {
         var requestedTimes;
         $.ajax({
@@ -415,7 +623,7 @@
             }
         });
         for(var i=0; i<requestedTimes.tourTimes.length; i++){
-            $("#requestedTimes").append(
+            $(".requestedTimes").append(
                 `<div class="col-xs-6 col-md-4 col-lg-4" style="padding-top: 10px;">
                     <button class="btn btn-secondary timeselector" style="width: 224px;" value="`+requestedTimes.tourTimes[i].dateTimeRequested+`">`+requestedTimes.tourTimes[i].dateTimeRequested+`</button>
             </div>`);
@@ -449,6 +657,15 @@
       modal.find('.card-text').text('Are you sure you want to confirm a tour for '+ chosenTime + "?");
     })
 
+    //Confirm Tour Modal
+    $('#timeChangeModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      var modal = $(this);
+      var chosenTime;
+      modal.find('.modal-title').text('Suggest Different Tour Times');
+    })
+    
+
 
     //Decline Tour Modal
     $('#declineTourModal').on('show.bs.modal', function (event) {
@@ -463,13 +680,23 @@
       var modal = $(this);
       modal.find('.modal-title').text('Cancel Tour');
     })
+    
+    //Group Report
+    $('#groupReportModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget)
+      var modal = $(this)
+      modal.find('.modal-title').text('Report This Group');
+      $("#group_id").val({{ tour.group.id }});
+    });
 
+    //Landlord Report
+    $('#landlordReportModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget)
+      var modal = $(this)
+      modal.find('.modal-title').text('Report Your Landlord');
+      $("#landlord_id").val({{ tour.listing.landLordsAsUsers()[0].id }});      
+    });
 
-    function submitTimeChangeForm(id) {
-        $("#input_id").val(id);
-        $("#requestedDateTime").val($("#tourRequestTime").val());
-        $("#request_tour_time_change").submit()
-    }
 
     function confirmTour(){
         var chosenTime;
@@ -479,11 +706,20 @@
             }
         });
         // Send AJAX request to backend
-        requestURL = '/tour/confirmTime/{{tour.id}}/'+chosenTime
-        $.getJSON(requestURL, function(data) {
-            results = data;
-            console.log(data);
+        requestURL = '/tour/confirmTime/{{tour.id}}'
+        $.ajax({
+          type: "POST",
+          contentType: "application/json; charset=utf-8",
+          url: requestURL,
+          data: JSON.stringify({tourTime: chosenTime}),
+          success: function (data) {
+            console.log('Success for confirmTime')
+            console.log('Returned Data ')
+            console.log(data)
+          },
+          dataType: "json"
         });
+        window.location.href=window.location.href;
     }
 
     $(document).on('click', '.timeselector', function () {
@@ -498,6 +734,23 @@
         $('.confirmtime').addClass("btn-success");
         $('.confirmtime').css({ 'pointer-events' : ''});
     });
+
+    function suggestDifferentTimes(){
+        requestURL = "/tour/{{tour.id}}/updateTourTimes"
+        $.ajax({
+          type: "POST",
+          contentType: "application/json; charset=utf-8",
+          url: requestURL,
+          data: JSON.stringify(selectedDateTimes),
+          success: function (data) {
+            console.log('Success for confirmTime')
+            console.log('Returned Data ')
+            console.log(data)
+          },
+          dataType: "json"
+        });
+        window.location.href=window.location.href;
+    }
 
 </script>
 {% endblock %}

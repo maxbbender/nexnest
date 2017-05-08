@@ -1241,6 +1241,7 @@
         console.log('chosenTime : ' + chosenTime)
         console.log('dateTimeParse : ' + Date.parse(chosenTime))
         requestURL = '/tour/confirmTime/'+ id
+        
         $.ajax({
           type: "POST",
           contentType: "application/json; charset=utf-8",
