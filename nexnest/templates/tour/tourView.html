@@ -309,21 +309,15 @@
                                 </div>
                             </div>
                             <!-- Messages -->
-                            {% for message in messages %}
-                                {% include 'tour/message.html' %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="rentTab" role="tabpanel" style="padding: 0px;">
-                        <div class="row">
-                            <div class="card" style="width:100%;">
-                                <h3 class="card-header">Rent</h3>
-                                <div class="card-block">
-                                    <div class="row">
-                                        Info about rent due date and link to pay rent here
-                                    </div>
+                            {% if messages |length == 0 %}
+                                <div class="alert alert-info" role="alert">
+                                  <strong>No Messages Yet!</strong>Be the first one
                                 </div>
-                            </div>
+                            {% else %}
+                                {% for message in messages %}
+                                    {% include 'tour/message.html' %}
+                                {% endfor %}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -350,9 +344,15 @@
                     </div>
                 </div>
                 <!-- Messages -->
-                {% for message in messages %}
-                    {% include 'tour/message.html' %}
-                {% endfor %}
+                {% if messages |length == 0 %}
+                    <div class="alert alert-info" role="alert">
+                      <strong>No Messages Yet! </strong>Be the first one
+                    </div>
+                {% else %}
+                    {% for message in messages %}
+                        {% include 'tour/message.html' %}
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
     </div>

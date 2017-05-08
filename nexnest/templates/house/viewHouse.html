@@ -206,9 +206,15 @@
     	    			        </div>
     	    			    </div>
     	    			    <!-- Messages -->
-						    {% for message in messages %}
-						        {% include 'house/message.html' %}
-						    {% endfor %}
+    	    			    {% if messages |length == 0 %}
+    	    			        <div class="alert alert-info" role="alert">
+    	    			          <strong>No Messages Yet! </strong>Be the first one
+    	    			        </div>
+    	    			    {% else %}
+    	    			        {% for message in messages %}
+    	    			            {% include 'house/message.html' %}
+    	    			        {% endfor %}
+    	    			    {% endif %}
 				    	</div>
 				    </div>
 				    <div class="tab-pane" id="rentTab" role="tabpanel" style="padding: 0px;">
@@ -247,9 +253,15 @@
 			        </div>
 			    </div>
 			    <!-- Messages -->
-			    {% for message in messages %}
-			        {% include 'house/message.html' %}
-			    {% endfor %}
+                {% if messages |length == 0 %}
+                    <div class="alert alert-info" role="alert">
+                      <strong>No Messages Yet! </strong>Be the first one
+                    </div>
+                {% else %}
+                    {% for message in messages %}
+                        {% include 'house/message.html' %}
+                    {% endfor %}
+                {% endif %}
     		</div>
     	</div>
     </div>

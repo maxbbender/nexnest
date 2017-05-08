@@ -271,9 +271,15 @@
                             </div>
                         {% endif %}
                         <!-- Messages -->
-                        {% for message in messages %}
-                            {% include 'housingRequest/message.html' %}
-                        {% endfor %}
+                        {% if messages |length == 0 %}
+                            <div class="alert alert-info" role="alert">
+                              <strong>No Messages Yet! </strong>Be the first one
+                            </div>
+                        {% else %}
+                            {% for message in messages %}
+                                {% include 'housingRequest/message.html' %}
+                            {% endfor %}
+                        {% endif %}
 				    </div>
                     <div class="tab-pane" id="propertyTab" role="tabpanel" style="padding: 0px;">
                         <div class="row">
@@ -322,9 +328,15 @@
 			    	</div>
 			    {% endif %}
 			    <!-- Messages -->
-			    {% for message in messages %}
-			        {% include 'housingRequest/message.html' %}
-			    {% endfor %}
+                {% if messages |length == 0 %}
+                    <div class="alert alert-info" role="alert">
+                      <strong>No Messages Yet! </strong>Be the first one
+                    </div>
+                {% else %}
+                    {% for message in messages %}
+                        {% include 'housingRequest/message.html' %}
+                    {% endfor %}
+                {% endif %}
     		</div>
     	</div>
     </div>
