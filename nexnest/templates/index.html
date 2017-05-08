@@ -466,6 +466,7 @@
     	filters.sortBy = $("#sortBy").val();
     	// console.log('Filters')
     	// console.log(JSON.stringify(filters));
+
     	if(refresh == 'True'){
     		$("#listingsGoHere").LoadingOverlay("show", {
 			    image       : "",
@@ -473,6 +474,7 @@
 			});
     	}
     	loadingScreenTimer = setTimeout(function () {
+    		$("#listingsGoHere").LoadingOverlay("hide");
     		if(refresh != 'True'){
 		    	$("#listingsGoHere").LoadingOverlay("show", {
 				    image       : "",
