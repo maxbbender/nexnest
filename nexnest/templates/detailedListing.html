@@ -489,7 +489,7 @@
 		</div>
 
 		<!--Request Tour Modal-->
-		<div class="modal fade" id="requestTourModal" tabindex="-1" role="dialog" aria-labelledby="requestTour" aria-hidden="true">
+		<div class="modal fade" id="requestTourModal" tabindex="-1" role="dialog" aria-labelledby="requestTour" aria-hidden="true" style="display: absolute;">
 		  	<div class="modal-dialog" role="document">
 		    	<div class="modal-content">
 		      		<div class="modal-header">		      		
@@ -801,6 +801,7 @@
       var group = $(event.relatedTarget).data('group');
       modal.find('.modal-title').text('Request To Tour This Property');
       modal.find('#groupNumber').text(group);
+      modal.css('position', 'absolute');
     })
 
     //Request House Modal
