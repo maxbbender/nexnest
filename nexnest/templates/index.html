@@ -347,6 +347,44 @@
 	var loadingScreenTimer;
 	$( document ).ready(function() {
 
+		var sessionStorageSchool = sessionStorage.getItem('school');
+		var sessionStorageBedrooms = sessionStorage.getItem('bedrooms');
+		var sessionStorageTerm = sessionStorage.getItem('term');
+		var sessionStorageMinPrice = sessionStorage.getItem('minprice');
+		var sessionStorageMaxPrice = sessionStorage.getItem('maxprice');
+		var sessionStorageSortBy = sessionStorage.getItem('sortby');
+		// console.log(sessionStorageSchool);
+		// console.log(sessionStorageBedrooms);
+		// console.log(sessionStorageTerm);
+		// console.log(sessionStorageMinPrice);
+		// console.log(sessionStorageMaxPrice);
+		// console.log(sessionStorageSortBy);
+		if(sessionStorageSchool != undefined){
+			$('#school').val(sessionStorageSchool);
+			$('#school2').val(sessionStorageSchool);
+		}
+		if(sessionStorageBedrooms != undefined){
+			$('#rooms').val(sessionStorageBedrooms);
+			$('#rooms2').val(sessionStorageBedrooms);
+		}
+		if(sessionStorageTerm != undefined){
+			$('#when').val(sessionStorageTerm);
+			$('#when2').val(sessionStorageTerm);
+		}
+		if(sessionStorageMinPrice != undefined){
+			priceSlider.setValue([parseInt(sessionStorageMinPrice), parseInt(sessionStorageMaxPrice)]);
+		}
+		if(sessionStorageMinPrice != undefined){
+			$("#minPriceDisplay").text("$"+sessionStorageMinPrice);
+		}
+		if(sessionStorageMaxPrice != undefined){
+			$("#maxPriceDisplay").text("$"+sessionStorageMaxPrice);
+		}
+		if(sessionStorageSortBy != undefined){
+			$("#sortBy").val(sessionStorageSortBy);
+		}
+		
+		
 	});
 
 	$("#priceSlider").change(function() {
@@ -355,6 +393,8 @@
 		var maxPrice = prices[1];
 		$("#minPriceDisplay").text("$"+minPrice);
 		$("#maxPriceDisplay").text("$"+maxPrice);
+		sessionStorage.setItem('minprice', minPrice);
+		sessionStorage.setItem('maxprice', maxPrice);
   	}); 
 
 	function showMoreFilters(){
@@ -413,8 +453,11 @@
 		console.log('Building the filters')
 		var filters = {};
     	filters.school = $("#school2 option:selected").text();
+    	sessionStorage.setItem('school', $("#school2 option:selected").text());
     	filters.term = $("#when2 option:selected").text();
+    	sessionStorage.setItem('term', $("#when2 option:selected").val());
     	filters.bedrooms = parseInt($("#rooms2").val(), 10);
+    	sessionStorage.setItem('bedrooms', $("#rooms2 option:selected").val());
     	var prices = $("#priceSlider").val().split(',');
 		filters.minPrice = parseInt(prices[0], 10);
 		filters.maxPrice = parseInt(prices[1], 10);
@@ -467,6 +510,7 @@
     	}    	
 
     	filters.sortBy = $("#sortBy").val();
+    	sessionStorage.setItem('sortby', $("#sortBy").val());
     	// console.log('Filters')
     	// console.log(JSON.stringify(filters));
 
