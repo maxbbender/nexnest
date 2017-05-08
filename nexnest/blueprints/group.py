@@ -256,10 +256,10 @@ def leaveGroup(groupID):
         return redirect(url_for('indexs.index'))
 
 
-@groups.route('/group/<group_id>/assignLeader/<user_id>')
+@groups.route('/group/<groupID>/assignLeader/<user_id>')
 @login_required
-def assignNewLeader(group_id, user_id):
-    group = session.query(Group).filter_by(id=group_id).first()
+def assignNewLeader(groupID, user_id):
+    group = session.query(Group).filter_by(id=groupID).first()
 
     # Is the current user the leader of this group
     if group.leader_id == current_user.id:
@@ -269,7 +269,7 @@ def assignNewLeader(group_id, user_id):
         flash("Only group leader can re-assign the leader", 'danger')
 
     return redirect(url_for('groups.viewGroup',
-                            group_id=group.id))
+                            groupID=group.id))
 
 
 @groups.route('/group/<groupID>/removeMember/<userID>')

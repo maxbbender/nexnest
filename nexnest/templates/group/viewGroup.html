@@ -91,16 +91,16 @@
                                             <strong>Current Group Members:</strong>
                                             {% for user in group.acceptedUsers %}                                    
                                                 {% include 'group/member.html' %}
-                                            {% endfor %}                        
-                                            {% if group.unAcceptedUsers %}
+                                            {% endfor %}
                                             {% if group.leader_id == current_user.id %}
                                                 <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#changeGroupLeaderModal">Change Group Leader</a>
                                                 <br><br>
                                             {% endif %}
-                                            <strong>Invited Members:</strong>
-                                            {% for user in group.unAcceptedUsers %}
-                                                {% include 'group/member.html' %}
-                                            {% endfor %}
+                                            {% if group.unAcceptedUsers %}
+                                                <strong>Invited Members:</strong>
+                                                {% for user in group.unAcceptedUsers %}
+                                                    {% include 'group/member.html' %}
+                                                {% endfor %}
                                             {% endif %}
                                         </div>
                                     </div>
