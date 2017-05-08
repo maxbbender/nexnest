@@ -12,59 +12,59 @@
                 </li>
                 {% if current_user.landlord[0].hasListingsToCheckout %}
 	                <li class="nav-item">
-	        	        <a class="nav-link left-panel active" style="padding-left: 10px;" id="checkoutTab2" data-toggle="tab" href="#checkoutTab" role="tab">
+	        	        <a class="nav-link left-panel active" style="padding-left: 5px;" id="checkoutTab2" data-toggle="tab" href="#checkoutTab" role="tab">
 	        	        	<i class="fa fa-shopping-cart" aria-hidden="true"></i><span class="hidden-md-down">Checkout</span>
 	        	        </a>
 	        	    </li>
 	        	    <li class="nav-item">
-	        	        <a class="nav-link left-panel" style="padding-left: 10px;" href="{{url_for('listings.createListing')}}">
+	        	        <a class="nav-link left-panel" style="padding-left: 5px;" href="{{url_for('listings.createListing')}}">
 	        	        	<i class="fa fa-plus" aria-hidden="true"></i><span class="hidden-md-down">Create Listing</span>
 	        	        </a>
         	        </li>
 	        	    <li class="nav-item">
-	        	        <a class="nav-link left-panel" style="padding-left: 10px;" id="occupiedListingsTab2" data-toggle="tab" href="#occupiedListingsTab" role="tab">
-	        	        	<i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">Occupied Listings</span>
+	        	        <a class="nav-link left-panel" style="padding-left: 5px;" id="occupiedListingsTab2" data-toggle="tab" href="#occupiedListingsTab" role="tab">
+	        	        	<i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">Occupied</span>
 	        	        </a>
         	    	</li>
         	    {% else %}
         	    	<li class="nav-item">
-	        	        <a class="nav-link left-panel" style="padding-left: 10px;" href="{{url_for('listings.createListing')}}">
+	        	        <a class="nav-link left-panel" style="padding-left: 5px;" href="{{url_for('listings.createListing')}}">
 	        	        	<i class="fa fa-plus" aria-hidden="true"></i><span class="hidden-md-down">Create Listing</span>
 	        	        </a>
         	        </li>
 	        	    <li class="nav-item">
-	        	        <a class="nav-link left-panel active" style="padding-left: 10px;" id="occupiedListingsTab2" data-toggle="tab" href="#occupiedListingsTab" role="tab">
-	        	        	<i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">Occupied Listings</span>
+	        	        <a class="nav-link left-panel active" style="padding-left: 5px;" id="occupiedListingsTab2" data-toggle="tab" href="#occupiedListingsTab" role="tab">
+	        	        	<i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">Occupied</span>
 	        	        </a>
         	    	</li>
         	    {% endif %}
         	    <li class="nav-item">
-        	        <a class="nav-link left-panel" style="padding-left: 10px;" id="unOccupiedListingsTab2" data-toggle="tab" href="#unOccupiedListingsTab" role="tab">
-        	        	<i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">Un-Booked Listings</span>
+        	        <a class="nav-link left-panel" style="padding-left: 5px;" id="unOccupiedListingsTab2" data-toggle="tab" href="#unOccupiedListingsTab" role="tab">
+        	        	<i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">Un-Booked</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
-        	        <a class="nav-link left-panel" style="padding-left: 10px;" id="toursTab2" data-toggle="tab" href="#toursTab" role="tab">
+        	        <a class="nav-link left-panel" style="padding-left: 5px;" id="toursTab2" data-toggle="tab" href="#toursTab" role="tab">
         	        	<i class="fa fa-calendar" aria-hidden="true"></i><span class="hidden-md-down">Tours</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
-        	        <a class="nav-link left-panel" style="padding-left: 10px;" id="requestsTab2" data-toggle="tab" href="#requestsTab" role="tab">
+        	        <a class="nav-link left-panel" style="padding-left: 5px;" id="requestsTab2" data-toggle="tab" href="#requestsTab" role="tab">
         	        	<i class="fa fa-handshake-o" aria-hidden="true"></i><span class="hidden-md-down">Listing Requests</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
-        	        <a class="nav-link left-panel" style="padding-left: 10px;" id="maintenanceTab2" data-toggle="tab" href="#maintenanceTab" role="tab">
-        	        	<i class="fa fa-wrench" aria-hidden="true"></i><span class="hidden-md-down">Maintenance Requests</span>
+        	        <a class="nav-link left-panel" style="padding-left: 5px;" id="maintenanceTab2" data-toggle="tab" href="#maintenanceTab" role="tab">
+        	        	<i class="fa fa-wrench" aria-hidden="true"></i><span class="hidden-md-down">Maintenance</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
-        	        <a class="nav-link left-panel" style="padding-left: 10px;" id="paymentTab2" data-toggle="tab" href="#paymentTab" role="tab">
+        	        <a class="nav-link left-panel" style="padding-left: 5px;" id="paymentTab2" data-toggle="tab" href="#paymentTab" role="tab">
         	        	<i class="fa fa-usd" aria-hidden="true"></i><span class="hidden-md-down">Payment Portal</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
-        	        <a class="nav-link left-panel" style="padding-left: 10px;" id="availabilityTab2" data-toggle="tab" href="#availabilityTab" role="tab">
+        	        <a class="nav-link left-panel" style="padding-left: 5px;" id="availabilityTab2" data-toggle="tab" href="#availabilityTab" role="tab">
         	        	<i class="fa fa-calendar" aria-hidden="true"></i><span class="hidden-md-down">My Availability</span>
         	        </a>
         	    </li>
