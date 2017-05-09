@@ -5,12 +5,12 @@
 		<div class="col-xs-12 ">
 			{% if acceptedGroups|length == 0 and invitedGroups|length == 0 %}
 				<div class="alert alert-info" role="alert" style="text-align: center;">
-				  <strong>You are not currently part of any groups!</strong> If you want to be a group leader you can <a href="{{ url_for('groups.createGroup') }}"> Create a New Group</a> you can then begin inviting people to your group
+				  <strong>You are not a part of any groups!</strong> <a href="{{ url_for('groups.createGroup') }}"> Create a New Group</a> to invite your friends to join!
 				</div>
 			{% endif %}
 			{% if acceptedGroups|length == 0 and invitedGroups|length != 0 %}
 				<div class="alert alert-info" role="alert" style="text-align: center;">
-				  <strong>You are not currently part of any groups!</strong> If you want to be a group leader you can <a href="{{ url_for('groups.createGroup') }}"> Create a New Group</a> you can then begin inviting people to your group. Or you may accept one of the pending invites you have to join a group
+				  <strong>You are not currently part of any groups!</strong> Either <a href="{{ url_for('groups.createGroup') }}"> Create a New Group</a> or accept a pending invitation to join a group!
 				</div>
 			{% endif %}
 		</div>
@@ -20,7 +20,11 @@
 		</div>
 		<div class="col-xs-11 col-sm-10 col-md-8 col-lg-8 col-xl-6">
 			<div class="row">
-				<a class="nav-link btn btn-primary" href="#" data-toggle="modal" data-target="#createGroupModal">Create New Group!</a>
+				{% if acceptedGroups|length == 0 and invitedGroups|length == 0 %}
+				{% else %}
+					<a class="nav-link btn btn-primary" href="#" data-toggle="modal" data-target="#createGroupModal">Create New Group!</a>
+				{% endif %}
+
 			</div>
 			<br>
 			{% if acceptedGroups %}

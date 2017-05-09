@@ -17,12 +17,12 @@
                                 {{ createGroupForm.csrf_token }}
                                 {{ render_field(createGroupForm.name, class="form-control", type="text") }}
                                 <p id="groupNameHelpBlock" class="form-text text-muted">
-                                  Landlords will be able to see the name of your group so be sure to choose something you are ok with them seeing.
+                                  Note: Landlords will be able to see your group name. Please choose accordingly.
                                 </p>
                                 {{ render_field(createGroupForm.time_frame, class="form-control")}}
                             </dl>
                             <p>
-                                <input type='submit' value='Create Group' class="btn btn-info">
+                                <input type='submit' value='Create Group' class="btn btn-primary">
                             </p>
                         </form>
                     </div>
