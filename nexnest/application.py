@@ -89,10 +89,10 @@ def insert_login_form():
         # messages, notifications = current_user.unreadNotifications()
         notifications = current_user.getNotifications()
         messages = current_user.getMessageNotifications()
+        houses = current_user.houseList
 
         numUnviewedNotifications = current_user.getUnreadNotificationCount()
         numUnviewedMessages = current_user.getUnreadMessageNotificationCount()
-
 
         return dict(passwordChangeForm=passwordChangeForm,
                     avatarChangeForm=avatarChangeForm,
@@ -100,7 +100,8 @@ def insert_login_form():
                     numUnviewedNotifications=numUnviewedNotifications,
                     numUnviewedMessages=numUnviewedMessages,
                     notificationMessages=messages,
-                    platformReportForm=PlatformReportForm())
+                    platformReportForm=PlatformReportForm(),
+                    houses=houses)
     else:
         login_form = LoginForm()
         return dict(login_form=login_form,

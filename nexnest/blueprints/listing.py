@@ -111,16 +111,17 @@ def createListing():
                 conflictingDates = False
                 conflictingListing = None
                 for listing in otherListingsWithSameAddress:
-                    newListingStartDate = datetime.datetime.strptime(newListing.start_date, "%Y-%m-%d").date()
-                    newListingEndDate = datetime.datetime.strptime(newListing.end_date, "%Y-%m-%d").date()
-                    if newListingStartDate <= listing.end_date and newListingStartDate >= listing.start_date:
-                        conflictingListing = listing
-                        conflictingDates = True
-                        break
-                    elif newListingStartDate <= listing.start_date and newListingEndDate >= listing.start_date:
-                        conflictingListing = listing
-                        conflictingDates = True
-                        break
+                    if listing.active:
+                        newListingStartDate = datetime.datetime.strptime(newListing.start_date, "%Y-%m-%d").date()
+                        newListingEndDate = datetime.datetime.strptime(newListing.end_date, "%Y-%m-%d").date()
+                        if newListingStartDate <= listing.end_date and newListingStartDate >= listing.start_date:
+                            conflictingListing = listing
+                            conflictingDates = True
+                            break
+                        elif newListingStartDate <= listing.start_date and newListingEndDate >= listing.start_date:
+                            conflictingListing = listing
+                            conflictingDates = True
+                            break
 
                 if not conflictingDates:
 

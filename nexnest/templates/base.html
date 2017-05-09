@@ -42,6 +42,16 @@
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 	<body>
+        HOUSE LIST<br>
+        {% if houses|length > 1 %}
+            {% for house in houses %}
+                House Address : {{house.address}}<br>
+                URL : {{house.url}}<br>
+                <hr>
+            {% endfor %}
+        {% else %}
+        NO HOUSES
+        {% endif %}
 		<nav class="navbar navbar-light bg-faded" style="max-height: 62px;">
             <a class="navbar-brand" href="/index" style="padding-top: 0px;">
                 <img src="/static/img/testlogo.png" style="height: 50px;" alt="logo">

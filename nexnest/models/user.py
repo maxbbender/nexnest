@@ -2,7 +2,7 @@ from datetime import datetime as dt
 
 from sqlalchemy.orm import relationship
 
-from flask import flash, render_template
+from flask import flash, render_template, url_for
 
 from nexnest import logger
 from nexnest.application import db, session
@@ -202,6 +202,23 @@ class User(Base):
     @property
     def isAdmin(self):
         return self.role == 'admin'
+
+    @property
+    def houseList(self):
+        houseList = []
+        for groupUser in self.groups:
+            if groupUser.accepted:
+                houseObject = {}
+                group = groupUser.group
+
+                if len(group.house) > 0:
+                    house = group.house[0]
+                    houseObject['address'] = house.listing.address
+                    houseObject['url'] = url_for('houses.view', id=house.id)
+
+                    houseList.append(houseObject)
+
+        return houseList
 
     def get_id(self):
         try:
