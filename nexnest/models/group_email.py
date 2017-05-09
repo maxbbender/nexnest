@@ -12,6 +12,7 @@ class GroupEmail(Base):
     id = db.Column(db.Integer, primary_key=True)
     group_id = db.Column(db.Integer, db.ForeignKey('groups.id'))
     email = db.Column(db.Text)
+    used = db.Column(db.Boolean)
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
 
@@ -22,6 +23,7 @@ class GroupEmail(Base):
     ):
         self.group = group
         self.email = email
+        self.used = False
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels

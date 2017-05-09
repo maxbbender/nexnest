@@ -57,7 +57,7 @@ def group_editable(f):
             if group is None:
                 abort(404)
 
-            if not group.isEditableBy(g.user, False):
+            if not group.isEditableBy(current_user, False):
                 abort(403)
 
         return f(*args, **kwargs)
@@ -73,7 +73,7 @@ def group_viewable(f):
             if group is None:
                 abort(404)
 
-            if not group.isViewableBy(g.user, False):
+            if not group.isViewableBy(current_user, False):
                 abort(403)
 
         return f(*args, **kwargs)

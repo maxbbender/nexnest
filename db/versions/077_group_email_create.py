@@ -8,6 +8,7 @@ groupEmails = Table('group_emails', meta,
                     Column('id', Integer(), primary_key=True, nullable=False),
                     Column('group_id', Integer()),
                     Column('email', Text()),
+                    Column('used', Boolean()),
                     Column('date_created', DateTime()),
                     Column('date_modified', DateTime()))
 

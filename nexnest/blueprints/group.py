@@ -294,7 +294,7 @@ def inviteUserByEmail(groupID, emailAddress):
     groupEmailCheck = GroupEmail.query.filter_by(group=group, email=emailAddress).count()
     errorMessage = None
     if groupEmailCheck == 0:
-        message = 'You have received an invitation to join %s, a group at NexNest! Click <a href="%s">here</a> to join' % (group.name, url_for())
+        message = 'You have received an invitation to join %s, a group at NexNest! Click <a href="%s">here</a> to join' % (group.name, url_for('groups.acceptEmailInvite', _external=True))
         send_email(subject='NexNest - Group Invitation',
                            sender='no_reply@nexnest.com',
                            recipients=[emailAddress],
@@ -329,11 +329,12 @@ def inviteUserByEmail(groupID, emailAddress):
 def acceptEmailInvite():
     groupEmail = GroupEmail.query.filter_by(email=current_user.email).first_or_404()
 
-    groupUserCheck = GroupUser.query.filter_by(group=groupEmail, user=current_user).count()
+    groupUserCheck = GroupUser.query.filter_by(group=groupEmail.group, user=current_user).count()
     errorMessage = None
     if groupUserCheck == 0:
         newGroupUser = GroupUser(groupEmail.group, current_user)
         newGroupUser.accepted = True
+        groupEmail.used = True
         session.add(newGroupUser)
         session.commit()
     else:

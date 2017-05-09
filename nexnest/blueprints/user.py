@@ -7,6 +7,8 @@ from nexnest.application import session, csrf
 
 from nexnest.models.user import User
 from nexnest.models.group import Group
+from nexnest.models.group_email import GroupEmail
+from nexnest.models.group_user import GroupUser
 from nexnest.models.school import School
 from nexnest.models.direct_message import DirectMessage
 from nexnest.models.notification import Notification
@@ -151,6 +153,24 @@ def login():
                     if check_password(user, login_form.password.data):
                         if user.email_confirmed:
                             login_user(user)
+
+                            # See if they have any pending group email invites
+                            groupEmailInvites = GroupEmail.query.filter_by(email=user.email, used=False).all()
+
+                            if len(groupEmailInvites) > 0:
+                                for groupEmail in groupEmailInvites:
+                                    groupUserCheck = GroupUser.query.filter_by(group=groupEmail.group, user=user).count()
+                                    errorMessage = None
+                                    if groupUserCheck == 0:
+                                        newGroupUser = GroupUser(groupEmail.group, user)
+                                        newGroupUser.accepted = True
+                                        groupEmail.used = True
+                                        session.add(newGroupUser)
+                                        session.commit()
+                                    else:
+                                        groupEmail.used = True
+                                        session.commit()
+
                         else:
                             flash('You must confirm your email before logging in', 'danger')
                     else:
