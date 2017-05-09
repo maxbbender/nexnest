@@ -3221,7 +3221,7 @@
 				                    		<strong>Tour Status: </strong>
 				                    		Confirmed
 				                    		<br>
-				                    		Please Arrive at the property on `+ tour.confirmedTourTime.humanString +` to meet for this tour
+				                    		Please Arrive at the property on `+ tour.confirmedTime.dateTimeRequested +` to meet for this tour
 				                    		<br><br>
 											<div id="allMembersScheduledTour`+ tour.id +`" style="display: none;">`;
 				                    		$.each(tour.group.users, function(index, user) {
