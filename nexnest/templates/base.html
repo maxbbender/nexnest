@@ -18,7 +18,7 @@
         <link rel="stylesheet" href="{{url_for('static', filename='css/magicsuggest-min.css')}}">
         <link rel="stylesheet" href="{{url_for('static', filename='css/fileinput.css')}}">
         <link rel="stylesheet" href="{{url_for('static', filename='css/dayScheduler.css')}}">
-        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Amaranth:700" rel="stylesheet">
         <script src="{{url_for('static', filename='js/flatpickr.js')}}"></script>        
 	    <script src="{{url_for('static', filename='js/jquery-latest.js')}}"></script>        
         <script src="{{url_for('static', filename='js/bootstrap-validator.js')}}"></script>
@@ -42,16 +42,6 @@
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 	<body>
-        HOUSE LIST<br>
-        {% if houses|length > 1 %}
-            {% for house in houses %}
-                House Address : {{house.address}}<br>
-                URL : {{house.url}}<br>
-                <hr>
-            {% endfor %}
-        {% else %}
-        NO HOUSES
-        {% endif %}
 		<nav class="navbar navbar-light bg-faded" style="max-height: 62px;">
             <a class="navbar-brand" href="/index" style="padding-top: 0px;">
                 <img src="/static/img/testlogo.png" style="height: 50px;" alt="logo">
@@ -161,6 +151,14 @@
                                 {% if current_user.isLandlord %}
                                     <a class="dropdown-item" href="{{ url_for('landlords.landlordDashboard') }}">My Dashboard</a>
                                 {% else %}
+                                    {% if houses|length == 1 %}
+                                        <a class="dropdown-item" href="{{houses[0].url}}">My House</a>
+                                    {% elif houses|length > 1 %}
+                                        <a class="dropdown-item" href="#" id="showMoreHouses">My Houses</a>
+                                            {% for house in houses %}
+                                                <a class="dropdown-item moreHouses" href="{{house.url}}" style="display: none;">-{{house.address}}</a>
+                                            {% endfor %}
+                                    {% endif %}
 				                    <a class="dropdown-item" href="{{ url_for('users.myGroups') }}">My Groups</a>
                                 {% endif %}
 				                <a class="dropdown-item" href="{{ url_for('users.viewUser', userID=current_user.id) }}">My Account</a>
@@ -590,8 +588,10 @@
                 });
             });
             
-
-            
+            $("#showMoreHouses").click(function(e) {
+                 e.stopPropagation(); 
+                $(".moreHouses").show();
+            });
 		</script>
 	</body>
 </html>
