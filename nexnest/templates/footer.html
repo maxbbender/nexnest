@@ -1,15 +1,36 @@
-<footer class="footer" style="position: relative; bottom: 0; width: 100%; height: 100px; background-color: #f5f5f5;">
+<footer class="footer" style="position: relative; bottom: 0; width: 100%; background-color: #f5f5f5;">
 	<div class="row">
 		<div class="col-xs-4" style="text-align: center;">
-			Contact Us
+			Logo
 			<br>
-			<a href="#" data-toggle="modal" data-target="#platformReportModal">Give Us Feedback</a>
+			Follow us on 
+				<img src="/static/img/fbLogo.png" style="width: 25px;">
+				<img src="/static/img/instagramLogo.png" style="width: 25px;">
+				<img src="/static/img/twitterLogo.png" style="width: 25px;">
+			<br>
+			2017 &copy; Nexnest, LLC
 		</div>
 		<div class="col-xs-4" style="text-align: center;">
-			About Us
+			<a href="#">Contact Us</a>
+			<br>
+			<a href="#">About Us</a>
+			<br>
+			<a href="#">Terms of Service</a>
+			<br>
+			<a href="#">Privacy Policy</a>
+			<br>
+			{% if current_user.is_authenticated %}
+				{% if current_user.isLandlord %}
+					<a href="#">Pricing</a>
+				{% endif %}
+			{% endif %}
 		</div>
 		<div class="col-xs-4" style="text-align: center;">
-			FAQ
+			<a href="#">FAQ</a>
+			<br>
+			<a href="#">Help</a>
+			<br>
+			<a href="#" data-toggle="modal" data-target="#platformReportModal">Report Issue</a>
 		</div>
 	</div>
 </footer>
