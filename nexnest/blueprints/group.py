@@ -59,7 +59,7 @@ def createGroup():
 
             flash('Group Created', 'success')
 
-            return redirect(url_for('groups.viewGroup', group_id=newGroup.id))
+            return redirect(url_for('groups.viewGroup', groupID=newGroup.id))
         else:
             flash("Conflict with Group %s. Cannot create group in same time period as %s. Start(%s) End(%s)" %
                   (groupHasConflict.name,
@@ -126,7 +126,7 @@ def invite():
     else:
         flash_errors(form)
         return redirect(url_for('groups.viewGroup',
-                                group_id=form.group_id.data))
+                                groupID=form.group_id.data))
 
 
 @groups.route('/group/message/create', methods=['POST'])
@@ -164,7 +164,7 @@ def leaveGroup(groupID):
             return redirect(url_for('indexs.index'))
         else:
             return redirect(url_for('groups.viewGroup',
-                                    group_id=groupToLeave.id))
+                                    groupID=groupToLeave.id))
 
     if request.is_xhr:
         return jsonify({'success': True})
@@ -194,7 +194,7 @@ def removeMember(groupID, userID):
     groupUser.show = False
     session.commit()
 
-    return redirect(url_for('groups.viewGroup', group_id=groupID))
+    return redirect(url_for('groups.viewGroup', groupID=groupID))
 
 
 @groups.route('/group/<groupID>/favoriteListing/<listingID>', methods=['GET'])
