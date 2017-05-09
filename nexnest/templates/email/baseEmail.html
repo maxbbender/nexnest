@@ -1,5 +1,7 @@
-<p>Dear {{user.name}},</p><br>
-
+{% if user %}
+    <p>Dear {{user.name}},</p><br>
+{% else %}
+    <p>Hello Friend,</p>
 {% block message %}
 {% endblock %}
 <br>

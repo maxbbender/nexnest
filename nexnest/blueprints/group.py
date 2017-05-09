@@ -4,6 +4,8 @@ from flask import Blueprint, jsonify
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
 
+from nexnest import logger
+
 from nexnest.forms import CreateGroupForm, InviteGroupForm, SuggestListingForm, GroupMessageForm, GroupListingForm
 
 from nexnest.application import session
@@ -19,9 +21,12 @@ from nexnest.models.group_listing_favorite import GroupListingFavorite
 from nexnest.models.house import House
 from nexnest.models.group_listing_message import GroupListingMessage
 from nexnest.models.notification import Notification
+from nexnest.models.group_email import GroupEmail
+
 from nexnest.decorators import group_viewable, group_editable
 
 from nexnest.utils.flash import flash_errors
+from nexnest.utils.email import send_email
 
 
 groups = Blueprint('groups', __name__, template_folder='../templates')
@@ -277,3 +282,72 @@ def favoriteListingHide(favoriteListingID):
         errorMessage = 'Invalid Request'
 
     return jsonify(results={'success': False, 'message': errorMessage})
+
+
+@groups.route('/group/<groupID>/inviteByEmail/<emailAddress>')
+@login_required
+@group_editable
+def inviteUserByEmail(groupID, emailAddress):
+    group = Group.query.filter_by(id=groupID).first_or_404()
+
+    # First make sure this user hasn't already been invited by email
+    groupEmailCheck = GroupEmail.query.filter_by(group=group, email=emailAddress).count()
+    errorMessage = None
+    if groupEmailCheck == 0:
+        message = 'You have received an invitation to join %s, a group at NexNest! Click <a href="%s">here</a> to join' % (group.name, url_for())
+        send_email(subject='NexNest - Group Invitation',
+                           sender='no_reply@nexnest.com',
+                           recipients=[emailAddress],
+                           html_body=render_template('email/generic.html',
+                                                     user=None,
+                                                     message=message))
+
+        newGroupEmail = GroupEmail(group, emailAddress)
+        session.add(newGroupEmail)
+        session.commit()
+        logger.debug('newGroupEmail %r' % newGroupEmail)
+    else:
+        logger.info('User %r just tried to invite %s a second time' % (current_user, emailAddress))
+        errorMessage = 'You have already sent an invite to this email!'
+
+    if errorMessage is None:
+        if request.is_xhr:
+            return jsonify({'success': True})
+        else:
+            flash('Sent email to %s inviting them to your group!' % emailAddress, 'success')
+            return redirect(url_for('groups.viewGroup', groupID=groupID))
+    else:
+        if request.is_xhr:
+            return jsonify({'success': False, 'message': errorMessage})
+        else:
+            flash(errorMessage, 'danger')
+            return redirect(url_for('groups.viewGroup', groupID=groupID))
+
+
+@groups.route('/group/confirmEmailInvite')
+@login_required
+def acceptEmailInvite():
+    groupEmail = GroupEmail.query.filter_by(email=current_user.email).first_or_404()
+
+    groupUserCheck = GroupUser.query.filter_by(group=groupEmail, user=current_user).count()
+    errorMessage = None
+    if groupUserCheck == 0:
+        newGroupUser = GroupUser(groupEmail.group, current_user)
+        newGroupUser.accepted = True
+        session.add(newGroupUser)
+        session.commit()
+    else:
+        errorMessage = 'You are already a part of this group!'
+
+    if errorMessage is None:
+        if request.is_xhr:
+            return jsonify({'success': True})
+        else:
+            flash('You have joined %s!' % groupEmail.group.name, 'success')
+            return redirect(url_for('groups.viewGroup', groupID=groupEmail.group.id))
+    else:
+        if request.is_xhr:
+            return jsonify({'success': False, 'message': errorMessage})
+        else:
+            flash(errorMessage, 'danger')
+            return redirect(url_for('groups.viewGroup', groupID=groupEmail.group.id))
