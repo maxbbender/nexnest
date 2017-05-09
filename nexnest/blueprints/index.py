@@ -8,6 +8,7 @@ from nexnest.models.listing import Listing
 from nexnest.models.user import User
 from nexnest.utils.email import send_email
 from nexnest.utils.school import allSchoolsAsStrings, allSchools
+from nexnest.static.dataSets import valid_time_frames
 
 
 indexs = Blueprint('indexs', __name__, template_folder='../templates')
@@ -33,7 +34,8 @@ def index():
                            listings=allListings,
                            featuredListings=featuredListings,
                            title='NexNest',
-                           schools=allSchoolsAsStrings())
+                           schools=allSchoolsAsStrings(),
+                           validTimeFrames=valid_time_frames)
 
 
 @indexs.route('/test')

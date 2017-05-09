@@ -15,7 +15,7 @@
 	    vertical-align: middle;
 	   }
 	</style>
-    <!-- !!NOT LOGGED IN!! -->
+    <!-- !!NOT LOGGED IN!! -->    
     <div id="initialView">
 	    <div class="row">
 	    	<div class="col-xl-1"></div>
@@ -38,10 +38,13 @@
 		    				<div class="hidden-md-down col-lg-3 col-xl-3" style="left: 0vw;">
 		    					<label for="when">When</label>
 	    					    <select class="form-control" id="when" style="width: 85%;">
-	    					      	<option value="2017-2018 School Year">2017-2018 School Year</option>
+	    					    	{% for timeFrame in validTimeFrames %}
+	    					    		<option value="{{timeFrame[0]}}">{{timeFrame[1]}}</option>
+	    					    	{% endfor %}
+	    					      	<!-- <option value="2017-2018 School Year">2017-2018 School Year</option>
 	    					      	<option value="2018 Summer">2018 Summer</option>
 	    					      	<option value="2018-2019 School Year">2018-2019 School Year</option>
-	    					      	<option value="2019 Summer">2019 Summer</option>
+	    					      	<option value="2019 Summer">2019 Summer</option> -->
 	    					    </select>
 		    				</div>
 		    				<div class="hidden-md-down col-lg-3 col-xl-3" style="left: 0vw;">
@@ -369,7 +372,6 @@
 			$('#rooms2').val(sessionStorageBedrooms);
 		}
 		if(sessionStorageTerm != undefined){
-			$('#when').val(sessionStorageTerm);
 			$('#when2').val(sessionStorageTerm);
 		}
 		if(sessionStorageMinPrice != undefined){
@@ -716,7 +718,6 @@
 			$("#homepage").show();
 			initialFilters();
 		}
-		//initMap();
 	});
 
 	$( function() {

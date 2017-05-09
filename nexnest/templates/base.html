@@ -75,14 +75,15 @@
                                             alt="Profile Image" class="img-responsive" style="height: 100px;" />
                                         <p class="text-center small">
                                             <a href="#" data-toggle="modal" data-target="#changeAvatarModal">Change Avatar</a>
+                                        </p>
                                     </div>
                                     <div class="col-md-7">
-                                        <span>{{current_user.fname}} {{current_user.lname}}</span>
+                                        <span><strong>{{current_user.fname}} {{current_user.lname}}</strong></span>
                                         <p class="text-muted small">
                                             {{current_user.email}}</p>
                                         <div class="divider">
                                         </div>
-                                        <a href="{{url_for('users.viewUser', userID=current_user.id)}}" class="btn btn-primary btn-sm active">View Profile</a>
+                                        <a href="{{url_for('users.viewUser', userID=current_user.id)}}" class="btn btn-primary btn-sm">My Account</a>
                                     </div>
                                 </div>
                             </div>
@@ -90,10 +91,10 @@
                                 <div class="navbar-footer-content">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <a class="btn btn-default btn-sm pull-right" href="#" data-toggle="modal" data-target="#passwordChangeModal">Change Password</a>
+                                            <a class="btn btn-primary btn-sm pull-right" href="#" data-toggle="modal" data-target="#passwordChangeModal">Change Password</a>
                                         </div>
                                         <div class="col-md-6">
-                                            <a href="{{url_for('users.logout')}}" class="btn btn-default btn-sm pull-right">Sign Out</a>
+                                            <a href="{{url_for('users.logout')}}" class="btn btn-primary btn-sm pull-right">Sign Out</a>
                                         </div>
                                     </div>
                                 </div>
@@ -149,22 +150,22 @@
 			                <i class="fa fa-bars fa-2x dropdown-toggle" style="padding-top: 4px;" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
 			                <div class="dropdown-menu dropdown-menu-right" style="overflow:hidden; top: 51px; right: -16px;" aria-labelledby="dropdownMenuButton">
                                 {% if current_user.isLandlord %}
-                                    <a class="dropdown-item" href="{{ url_for('landlords.landlordDashboard') }}">My Dashboard</a>
+                                    <a class="dropdown-item" href="{{ url_for('landlords.landlordDashboard') }}"><strong class="hamburgerMenuItem">My Dashboard</strong></a>
                                 {% else %}
                                     {% if houses|length == 1 %}
-                                        <a class="dropdown-item" href="{{houses[0].url}}">My House</a>
+                                        <a class="dropdown-item" href="{{houses[0].url}}"><strong class="hamburgerMenuItem">My House</strong></a>
                                     {% elif houses|length > 1 %}
-                                        <a class="dropdown-item" href="#" id="showMoreHouses">My Houses</a>
+                                        <a class="dropdown-item" href="#" id="showMoreHouses"><strong class="hamburgerMenuItem">My Houses</strong></a>
                                             {% for house in houses %}
-                                                <a class="dropdown-item moreHouses" href="{{house.url}}" style="display: none;">-{{house.address}}</a>
+                                                <a class="dropdown-item moreHouses" href="{{house.url}}" style="display: none;"><strong class="hamburgerMenuItem">-{{house.address}}</strong></a>
                                             {% endfor %}
                                     {% endif %}
-				                    <a class="dropdown-item" href="{{ url_for('users.myGroups') }}">My Groups</a>
+				                    <a class="dropdown-item" href="{{ url_for('users.myGroups') }}"><strong class="hamburgerMenuItem">My Groups</strong></a>
                                 {% endif %}
-				                <a class="dropdown-item" href="{{ url_for('users.viewUser', userID=current_user.id) }}">My Account</a>
-                                <a class="dropdown-item" href="{{ url_for('users.directMessagesAll') }}">My Messages</a>
+				                <a class="dropdown-item" href="{{ url_for('users.viewUser', userID=current_user.id) }}"><strong class="hamburgerMenuItem">My Account</strong></a>
+                                <a class="dropdown-item" href="{{ url_for('users.directMessagesAll') }}"><strong class="hamburgerMenuItem">My Messages</strong></a>
                                 <div class="dropdown-divider hidden-sm-up"></div>
-                                <a class="dropdown-item hidden-sm-up" href="{{url_for('users.logout')}}">Logout</a>
+                                <a class="dropdown-item hidden-sm-up" href="{{url_for('users.logout')}}"><strong class="hamburgerMenuItem">Logout</strong></a>
 		                	</div>
 		               </div>
 	               </li>
