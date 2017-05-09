@@ -324,7 +324,7 @@ def searchForUser(username):
 def acceptGroupInvite(groupID):
     group = session.query(Group).filter_by(id=groupID).first()
     current_user.accept_group_invite(group)
-    return redirect(url_for('groups.viewGroup', group_id=group.id))
+    return redirect(url_for('groups.viewGroup', groupID=group.id))
 
 
 @users.route('/user/declineGroupInvite/<groupID>')
@@ -332,7 +332,11 @@ def acceptGroupInvite(groupID):
 def declineGroupInvite(groupID):
     group = session.query(Group).filter_by(id=groupID).first()
     current_user.decline_group_invite(group)
-    return redirect(url_for('groups.myGroups'))
+
+    if request.is_xhr:
+        return jsonify({'success': True})
+    else:
+        return redirect(url_for('users.myGroups'))
 
 
 @users.route('/user/search/<username>/<group_id>')
