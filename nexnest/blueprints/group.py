@@ -80,6 +80,7 @@ def viewGroup(groupID):
 
     invite_form = InviteGroupForm()
     message_form = GroupMessageForm(group_id=groupID)
+    message_form.next.data = url_for('groups.viewGroup', groupID=groupID)
 
     # Lets get the group's messages
     messages = session.query(GroupMessage). \
