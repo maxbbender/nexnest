@@ -3,7 +3,7 @@ from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
 
 from nexnest import logger
-from nexnest.application import session, csrf
+from nexnest.application import session, csrf, app
 
 from nexnest.models.user import User
 from nexnest.models.group import Group
@@ -182,9 +182,8 @@ def login():
         else:
             flash_errors(login_form)
 
-        if login_form.next.data == '':
-            if user.isLandlord:
-                return redirect('/landlord/dashboard')
+        if user.isLandlord:
+            return redirect('/landlord/dashboard')
 
         return login_form.redirect()
 
