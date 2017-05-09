@@ -13,6 +13,7 @@
         				{% from "_formhelpers.html" import render_field %}
         				<form id="registerForm" action="{{url_for('users.register')}}" method="POST">
         					{{form.csrf_token}}
+                            <label class="control-label form-control-feedback">Register As</label>
                             <div class="btn-group" data-toggle="buttons" style="display: flex;">
                                 <label class="btn btn-outline-primary active" id="registerAsTenant">
                                     <input type="radio" checked autocomplete="off"> <i class="fa fa-graduation-cap" aria-hidden="true"></i> Tenant
@@ -21,6 +22,7 @@
                                     <input type="radio" autocomplete="off"><i class="fa fa-home" aria-hidden="true"></i>  Landlord
                                 </label>
                             </div>
+                            <br>
                             <div class="row">
                                 <div class="col-xs-12">
                                     <div class="form-group">

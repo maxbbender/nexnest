@@ -5,7 +5,7 @@
         	<strong>Group Leader: </strong>{{ group.leader.fname }} {{ group.leader.lname }}
         </p>
     	<p class="card-text">
-    		Intended Lease Period: {{ group.target_time_period }}
+    		Lease Period: {{ group.target_time_period }}
     	</p>
     	<strong>Current Group Members:</strong>
     	{% for user in group.acceptedUsers %}

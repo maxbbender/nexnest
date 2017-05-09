@@ -3195,7 +3195,7 @@
                     				<div class="row">
 	                    				<div class="col-xs-12 col-xl-10">
         	            					<h3 style="font-size: 3.5vh;"><strong>`+ tour.group.name +`</strong>(`+ tour.group.userCount +` Members)</h3>
-        	            					Confirmed Date and Time: `+ tour.timeRequested +`
+        	            					Confirmed Date and Time: `+ tour.confirmedTime.dateTimeRequested +`
         	            					<br><br>
         	            					<div class="row">
         	            						<div class="col-12 col-md-auto">
@@ -3221,7 +3221,7 @@
 				                    		<strong>Tour Status: </strong>
 				                    		Confirmed
 				                    		<br>
-				                    		Please Arrive at the property on `+ tour.timeRequested +` to meet for this tour
+				                    		Please Arrive at the property on `+ tour.confirmedTime.dateTimeRequested +` to meet for this tour
 				                    		<br><br>
 											<div id="allMembersScheduledTour`+ tour.id +`" style="display: none;">`;
 				                    		$.each(tour.group.users, function(index, user) {
