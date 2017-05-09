@@ -62,6 +62,9 @@ class Tour(Base):
             'requestedTimes': requestedTimes
         }
 
+        if self.hasConfirmedTourTime:
+            tour['confirmedTime'] = self.confirmedTourTime.serialize
+
         return tour
 
     @property
