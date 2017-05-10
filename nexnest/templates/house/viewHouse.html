@@ -97,6 +97,11 @@
 				    	        </div>				    	        
 				    	        <div class="card-block">
 				    	            <div class="row">
+                                        {% if maintenanceRequests |length == 0 %}
+                                            <div class="alert alert-info" role="alert">
+                                              <strong>No Maintenance Requests Yet!</strong>
+                                            </div>
+                                        {% endif %}
 				    	            	{% for request in maintenanceRequests %}
 			    	            			<div class="col-xs-12">
 			    	            				<div class="card">
