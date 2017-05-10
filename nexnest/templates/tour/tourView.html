@@ -90,7 +90,7 @@
                                     <div class="col-xl-12">
                                         {% if tour.group.leader_id == current_user.id %}
                                             {% if tour.last_requested == 'landlord' %}
-                                                <strong>Tour Status:</strong>
+                                                <strong><h4>Tour Status:</h4></strong>
                                                 {% if tour.tour_confirmed %}  
                                                     {% if tour.declined %}
                                                         <b style="color: red;">TOUR HAS BEEN CANCELLED</b>
@@ -146,6 +146,15 @@
                                                         <br>
                                                         Waiting for the landlord to confirm your requested time or suggest a different one
                                                         <br><br>
+                                                        <p class="card-text"><strong>Your group has requested a tour at one of these times:</strong><br></p>
+                                                        <div class="row">
+                                                            {% for time in tour.tourTimes %}
+                                                                <div class="col-xs-6 col-md-6 col-lg-6" style="padding-top: 10px;">
+                                                                    <button class="btn btn-secondary timeselector" style="pointer-events: none;" value="{{time.date_time_requested}}">{{time.humanString}}</button>
+                                                                </div>
+                                                            {% endfor %}
+                                                        </div>
+                                                        <br>
                                                         <div class="row" style="padding-top: 10px;">
                                                             <div class="col-xs-12 col-md-6 col-lg-4">
                                                                 <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour Request</a>
@@ -206,6 +215,15 @@
                                                     <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the group leader to confirm your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                     <br><br>
                                                     Waiting for the group leader to confirm your requested time or suggest a different one<br>
+                                                    <br>
+                                                    <strong>You offered these times:</strong>
+                                                    <div class="row">
+                                                        {% for time in tour.tourTimes %}
+                                                            <div class="col-xs-6 col-md-6 col-lg-6" style="padding-top: 10px;">
+                                                                <button class="btn btn-secondary timeselector" style="pointer-events: none;" value="{{time.date_time_requested}}">{{time.humanString}}</button>
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
                                                     <div class="row" style="padding-top: 10px;">
                                                         <div class="col-xs-12 col-md-6 col-lg-4">
                                                             <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour Request</a>
@@ -229,10 +247,28 @@
                                                     <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Request Pending</b>" data-placement="top" data-content="Waiting for the landlord to confirm your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                     <br>
                                                     Waiting for the landlord to confirm your requested time or suggest a different one
+                                                    <br><br>
+                                                    <strong>Your Group Leader offered these times:</strong>
+                                                    <div class="row">
+                                                        {% for time in tour.tourTimes %}
+                                                            <div class="col-xs-6 col-md-6 col-lg-6" style="padding-top: 10px;">
+                                                                <button class="btn btn-secondary timeselector" style="pointer-events: none;" value="{{time.date_time_requested}}">{{time.humanString}}</button>
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
                                                 {% else %}
                                                     <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Request Pending</b>" data-placement="top" data-content="The landlord has proposed a different time. Waiting for your group leader to make a decision"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                     <br>
                                                     The landlord has proposed a different time. Waiting for your group leader to make a decision
+                                                    <br><br>
+                                                    <strong>The Landlord offered these times:</strong>
+                                                    <div class="row">
+                                                        {% for time in tour.tourTimes %}
+                                                            <div class="col-xs-6 col-md-6 col-lg-6" style="padding-top: 10px;">
+                                                                <button class="btn btn-secondary timeselector" style="pointer-events: none;" value="{{time.date_time_requested}}">{{time.humanString}}</button>
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
                                                 {% endif %}
                                             {% endif %}
                                         {% endif %}
