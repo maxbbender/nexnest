@@ -17,7 +17,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#suggestedListingsTab" role="tab" style="padding-left: 10px;"">
-                        <i class="fa fa-star" aria-hidden="true"></i><span class="hidden-md-down">Suggested Listings</span>
+                        <i class="fa fa-star" aria-hidden="true"></i><span class="hidden-md-down">Favorites</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -90,6 +90,10 @@
                                                 {{invite_form.group_id(value=group.id)}}
                                                 {{invite_form.user_id}}
                                             </form>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-xl-10">
                                             <span class="" id="userSearchUL"></span>
                                             {% endif %}
                                             <strong>Current Group Members:</strong>
@@ -444,7 +448,7 @@
                     <div class="tab-pane hidden-lg-up" id="messagesTab" role="tabpanel" style="padding: 0px;">
                         <div class="card" style="width:100%;">
                             <h3 class="card-header" style="font-size: 3.5vh;">Group Message:</h3>
-                            <div class="card-block">
+                            <div class="card-block" style="padding-bottom: 0px;">
                                 <!-- Add new message -->
                                 <div class="form-group">
                                     <form action="{{url_for('groups.createMessage')}}" method='POST'>
@@ -476,7 +480,7 @@
             <div class="col-md-5 hidden-md-down">
                 <div class="card" style="width:100%;">
                     <h3 class="card-header">Messages:</h3>
-                    <div class="card-block">
+                    <div class="card-block" style="padding-bottom: 0px;">
                         <!-- Add new message -->
                         <div class="form-group">
                             <form action="{{url_for('groups.createMessage')}}" method='POST'>
@@ -684,6 +688,12 @@
             html: true,
             trigger: 'focus',
             template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title" style="background-color: #ec971f; text-align: center; color: #ffffff;"></h3><div class="popover-content"></div></div>'
+        });
+
+        $( ".timeago" ).each(function( index ) {
+            var unformattedTime = $(this).html();
+            var formattedTime = moment.utc(unformattedTime).fromNow();
+            $(this).html(formattedTime);
         });
     });
 </script>

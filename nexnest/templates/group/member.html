@@ -1,14 +1,19 @@
 <div class="card" style="width: 100%">
     <div class="card-block">
-        <div class="row">
+        <div class="row" style="align-items: center;">
             <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
                 <img src="{{user.profile_image}}" alt="Profile Image" class="img-responsive" style="height: 100%; max-width: 50px;" />
             </div>
             <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-10">
-                <div class="row">
+                <div class="row" style="align-items: flex-end;">
                     <div class="col-xs-12 col-lg-8">
                         <div class="row">
-                                <h2 style="font-size: 3.0vh">{{ user.fname }} {{ user.lname }}</h2>
+                            <h2 style="font-size: 3.0vh">
+                                {{ user.fname }} {{ user.lname }}
+                                {% if group.leader_id == user.id %}
+                                    <i class="fa fa-user" aria-hidden="true"></i>
+                                {% endif %}
+                            </h2>
                         </div>
                     </div>
                     <div class="col-xs-12 col-lg-4">                            

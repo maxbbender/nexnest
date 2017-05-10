@@ -16,7 +16,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-xs-12 col-lg-6">
+		<div class="col-xs-12 col-xl-6">
 			<div class="row">
 				<div class="col-xs-1"></div>
 				<div class="col-xs-10">
@@ -31,7 +31,7 @@
 	</div>
 	<br><br>
 	<div class="row">
-		<div class="col-xs-12 col-lg-6">
+		<div class="col-xs-12 col-xl-6">
 			<div class="row">
 				<div class="col-xs-1"></div>
 				<div class="col-xs-10">
@@ -50,23 +50,31 @@
 						{% endfor %}
 					</div>
 					<br>
+					{% else %}
+						<div class="alert alert-info" role="alert" style="text-align: center;">
+						  <strong>Not Currently A Part of Any Groups</strong>
+						</div>
 					{% endif %}
 				</div>
 			</div>
 		</div>
-		<div class="col-xs-12 col-lg-6">
+		<div class="col-xs-12 col-xl-6">
 			<div class="row">
 				<div class="col-xs-1"></div>
 				<div class="col-xs-10">
+					<hr class="hidden-lg-up">
+					<div class="row">
+						<h1>Group Invites:</h1>
+					</div>
 					{% if invitedGroups %}
-						<hr class="hidden-lg-up">
-						<div class="row">
-							<h1>Group Invites:</h1>
-						</div>
 						<div class="row">
 							{% for group in invitedGroups %}
 								{% include "group/invitedGroup.html" %}
 							{% endfor %}
+						</div>
+					{% else %}
+						<div class="alert alert-info" role="alert" style="text-align: center;">
+						  <strong>No Pending Group Invites</strong>
 						</div>
 					{% endif %}
 				</div>

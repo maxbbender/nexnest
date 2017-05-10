@@ -13,7 +13,7 @@
         				{% from "_formhelpers.html" import render_field %}
         				<form id="registerForm" action="{{url_for('users.register')}}" method="POST">
         					{{form.csrf_token}}
-                            <label class="control-label form-control-feedback">Register As</label>
+                            <label class="control-label form-control-feedback">Sign Up As</label>
                             <div class="btn-group" data-toggle="buttons" style="display: flex;">
                                 <label class="btn btn-outline-primary active" id="registerAsTenant">
                                     <input type="radio" checked autocomplete="off"> <i class="fa fa-graduation-cap" aria-hidden="true"></i> Tenant
@@ -73,7 +73,7 @@
                             </div>
                             {{form.landlord}}
 						  	<p>
-						  		<button id="submitRegistration" type="button" style="float: right;" class="btn btn-primary" onClick="submitForm()">Register As Tenant</button>
+						  		<button id="submitRegistration" type="button" style="float: right;" class="btn btn-primary" onClick="submitForm()">Sign Up As Tenant</button>
 						  	</p>
         				</form>            
                     </div>
@@ -90,7 +90,7 @@ $("#registerAsLandlord").change(function () {
     var $el = $("#school");
     $el.empty(); // remove old options
     $("#landlord").val("landlord");
-    $("#submitRegistration").text("Register as Landlord");
+    $("#submitRegistration").text("Sign Up as Landlord");
 });
 
 $("#registerAsTenant").change(function () {
@@ -108,7 +108,7 @@ $("#registerAsTenant").change(function () {
      .attr("value", value).text(key));
     });
     $("#landlord").val("tenant");
-    $("#submitRegistration").text("Register as Tenant");
+    $("#submitRegistration").text("Sign Up as Tenant");
 });
 
 $( document ).ready(function() {
@@ -139,7 +139,7 @@ $( document ).ready(function() {
            .attr("value", value).text(key));
           });
           $("#landlord").val("tenant");
-          $("#submitRegistration").text("Register as Tenant");
+          $("#submitRegistration").text("Sign Up as Tenant");
       }
 });
 

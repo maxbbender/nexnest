@@ -322,11 +322,14 @@ select.form-control:not([size]):not([multiple]) {
 .delete{
   position : absolute;
     display:none;
-    top:3%; 
+    top:0%; 
     width:40px;
     margin:0 auto;
     right:0px;
     z-index:100
+}
+.delete:hover {
+  color: red;
 }
 
 .vertical-center {
