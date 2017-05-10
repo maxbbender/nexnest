@@ -52,11 +52,11 @@
                     {% if current_user %}
                         {% if not current_user.is_authenticated %}
                     <!-- !!NOT LOGGED IN!! -->
-			  		<li class="nav-item">
-			      		<a class="nav-link" href="{{url_for('users.register')}}">Sign Up</a>
+			  		<li class="nav-item" style="padding-top: 5px;">
+			      		<a class="nav-link btn btn-primary" href="{{url_for('users.register')}}">Sign Up</a>
 			    	</li>
-			    	<li class="nav-item">
-			      		<a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal">Sign In</a>
+			    	<li class="nav-item" style="padding-top: 5px;">
+			      		<a class="nav-link btn btn-primary" href="#" data-toggle="modal" data-target="#loginModal">Sign In</a>
 			    	</li>
                         {% else %}
                     <!-- LOGGED IN -->
@@ -72,15 +72,15 @@
                                <div class="row">
                                    <div class="col-md-5">
                                         <img src="{{current_user.profile_image}}"
-                                            alt="Profile Image" class="img-responsive" style="height: 100px;" />
-                                        <p class="text-center small">
-                                            <a href="#" data-toggle="modal" data-target="#changeAvatarModal">Change Avatar</a>
+                                            alt="Profile Image" class="img-responsive" style="height: 120px;" />
+                                        <p class="text-center small" style="text-align: center; padding-left: 10px;">
+                                            <a href="#" data-toggle="modal" data-target="#changeAvatarModal">Change Picture</a>
                                         </p>
                                     </div>
                                     <div class="col-md-7">
-                                        <span><strong>{{current_user.fname}} {{current_user.lname}}</strong></span>
-                                        <p class="text-muted small">
-                                            {{current_user.email}}</p>
+                                        <span><strong><h5>{{current_user.fname}} {{current_user.lname}}</h5></strong></span>
+                                        <h6 class="text-muted">
+                                            {{current_user.email}}</h6>
                                         <div class="divider">
                                         </div>
                                         <a href="{{url_for('users.viewUser', userID=current_user.id)}}" class="btn btn-primary btn-sm">My Account</a>
