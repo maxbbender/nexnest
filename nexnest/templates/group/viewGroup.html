@@ -33,7 +33,7 @@
                 {% if housingRequests %}
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#listingRequestsTab" role="tab" style="padding-left: 10px;"">
-                            <i class="fa fa-plus-square-o" aria-hidden="true"></i><span class="hidden-md-down">Listing Requests</span>
+                            <i class="fa fa-handshake-o" aria-hidden="true"></i><span class="hidden-md-down">Listing Requests</span>
                         </a>
                     </li>
                 {% endif %}
@@ -52,9 +52,9 @@
             <div class="col-xs-12">
                 <div class="callout-block text-center fade-in-b">
                     <h1 style="font-size: 3.0vh">
-                        <b>{{ group.name }}</b>({{ group.acceptedUsers|length }} Members)
+                        <b>{{ group.name }}</b>
                     </h1>
-                    <p><small>Intended Lease Period: {{ group.target_time_period }}</small></p>
+                    <p><small>{{ group.target_time_period }}</small></p>
                 </div>
             </div>
         </div>
@@ -65,7 +65,11 @@
                     <div class="tab-pane active" id="membersTab" role="tabpanel" style="padding: 0px;">
                         <div class="row">
                             <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); font-size: 3.5vh;">Members</h3>
+                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); font-size: 3.5vh;">Members ({{ group.acceptedUsers|length }})
+                                {% if group.leader_id == current_user.id %}
+                                    <a href='#' class="btn btn-primary" style="float: right;" data-toggle="modal" data-target="#changeGroupLeaderModal">Change Group Leader</a>
+                                {% endif %}
+                                </h3>
                                 <div class="card-block">
                                     <div class="row">
                                         <div class="col-xl-12">
@@ -91,11 +95,8 @@
                                             <strong>Current Group Members:</strong>
                                             {% for user in group.acceptedUsers %}                                    
                                                 {% include 'group/member.html' %}
-                                            {% endfor %}
-                                            {% if group.leader_id == current_user.id %}
-                                                <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#changeGroupLeaderModal">Change Group Leader</a>
-                                                <br><br>
-                                            {% endif %}
+                                            {% endfor %}                                            
+                                            <br><br>
                                             {% if group.unAcceptedUsers %}
                                                 <strong>Invited Members:</strong>
                                                 {% for user in group.unAcceptedUsers %}
@@ -149,14 +150,15 @@
                                                                                 {% endif %}
                                                                             </div>
                                                                         </div>
+                                                                        <br>
                                                                         <span style="font-size: 2.0vh;">
                                                                         <div class="row">
                                                                             <div class="col-xs-6">
-                                                                                {{ favorite.listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
+                                                                                {{ favorite.listing.num_bedrooms }} <i class="fa fa-bed" aria-hidden="true"></i>
                                                                                 &nbsp;
-                                                                                {{ favorite.listing.num_full_baths }}<i class="fa fa-bath" aria-hidden="true"></i>
+                                                                                {{ favorite.listing.num_full_baths }} <i class="fa fa-bath" aria-hidden="true"></i>
                                                                                 <br>
-                                                                                ${{ favorite.listing.price }} per {{ favorite.listing.rent_due }}
+                                                                                ${{ favorite.listing.price }} per Bedroom/{{ favorite.listing.rent_due }}
                                                                             </div>
                                                                             <div class="col-xs-6" style="text-align: right;">
                                                                                 {{ favorite.listing.street }}
@@ -169,13 +171,8 @@
                                                                                 <br>
                                                                                 <strong> Property Description: </strong> {{ favorite.listing.description }}
                                                                             </div>
-                                                                        </div>                                                                        
-                                                                        <div class="row hidden-xs-down">
-                                                                            <br>
-                                                                            <div class="col-xl-4">
-                                                                                <strong>Time Period of Rental:</strong> {{ favorite.listing.time_period }}
-                                                                            </div>
-                                                                        </div>                                                                        
+                                                                        </div>
+                                                                        <br>
                                                                         <div class="row hidden-xs-down">
                                                                             <br>                                                     
                                                                             <div class="col-xl-5">
@@ -184,22 +181,7 @@
                                                                             <div class="col-xl-5">
                                                                                 <strong>Lease End Date:</strong> {{ favorite.listing.end_date }}
                                                                             </div>
-                                                                        </div>
-                                                                        <div class="row hidden-xs-down">
-                                                                            {% if favorite.listing.rent_due == "semester" %}
-                                                                                <div class="col-xl-5">
-                                                                                    <strong>First Semester Rent Due:</strong> {{ favorite.listing.first_semester_rent_due_date }}
-                                                                                </div>
-                                                                                <div class="col-xl-5">
-                                                                                    <strong>Second Semester Rent Due:</strong> {{ favorite.listing.second_semester_rent_due_date }}
-                                                                                </div>                                                               
-                                                                            {% elif favorite.listing.rent_due == "monthly" %}
-                                                                                <div class="col-xl-5">
-                                                                                    <strong>Rent Due: </strong>1st of each month
-                                                                                </div>
-                                                                            {% endif %}
-                                                                        </div>
-                                                                        </span>
+                                                                        </div>                                                                        
                                                                     </div>
                                                                 </div>
                                                             </div>     
@@ -245,10 +227,6 @@
                                                     <div class="card-block">
                                                         <div class="row">
                                                             <div class="col-xs-12 col-sm-12 col-md-5">
-                                                                <strong>Tour For:</strong>
-                                                                <br>
-                                                                {{ tour.listing.street }}
-                                                                <br><br>
                                                                 {% if tour.group.leader_id == current_user.id %}
                                                                     {% if tour.last_requested == 'landlord' %}
                                                                         <strong>Tour Status:</strong>
@@ -497,7 +475,7 @@
             </div>
             <div class="col-md-5 hidden-md-down">
                 <div class="card" style="width:100%;">
-                    <h3 class="card-header">Type your message:</h3>
+                    <h3 class="card-header">Messages:</h3>
                     <div class="card-block">
                         <!-- Add new message -->
                         <div class="form-group">
@@ -510,7 +488,7 @@
                                 </div>
                                 <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
                                     <div class="col-xs-12">
-                                        <input class="btn btn-primary" type="submit" value="Respond">
+                                        <input class="btn btn-primary" type="submit" value="Send">
                                     </div>                                    
                                 </div>
                             </form>

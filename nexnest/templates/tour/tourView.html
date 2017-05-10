@@ -12,12 +12,12 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" style="padding-left: 10px;" data-toggle="tab" href="#tourTab" role="tab">
-                        <i class="fa fa-wrench" aria-hidden="true"></i><span class="hidden-md-down">The Tour</span>
+                        <i class="fa fa-info-circle" aria-hidden="true"></i><span class="hidden-md-down">Status</span>
                     </a>
                 </li>                
                 <li class="nav-item">
                     <a class="nav-link" style="padding-left: 10px;" data-toggle="tab" href="#propertyTab" role="tab">
-                        <i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">The Property</span>
+                        <i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">Property</span>
                     </a>
                 </li>
                 {% if current_user in landlords %}
@@ -262,7 +262,7 @@
                             <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
                                 <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
                                     {% if current_user in landlords %}
-                                        Members
+                                        {{ tour.group.name }} ({{tour.group.acceptedUsers|length}})
                                     {% endif %}
                                 </h3>
                                 <div class="card-block">
@@ -271,7 +271,6 @@
                                             <div class="row">
                                                 <div class="col-xs-12">
                                                     {% if current_user in landlords %}
-                                                        <p class="card-text" style="font-size: 3.0vh;"><strong>Group Name: {{ tour.group.name }}</strong></p>
                                                         {% with group=tour.group %}
                                                             {% for user in group.acceptedUsers %}                                    
                                                                 {% include 'house/smallMember.html' %}
@@ -289,7 +288,11 @@
                     <div class="tab-pane hidden-lg-up" id="messagesTab" role="tabpanel" style="padding: 0px;">
                         <div class="row">
                             <div class="card" style="width:100%;">
-                                <h3 class="card-header" style="font-size: 3.5vh;">Group Message with Landlord:</h3>
+                                {% if current_user in landlords %}
+                                    <h3 class="card-header" style="font-size: 3.5vh;">Group Message with Tenants:</h3>
+                                {% else %}
+                                    <h3 class="card-header" style="font-size: 3.5vh;">Group Message with Landlord:</h3>
+                                {% endif %}
                                 <div class="card-block">
                                     <!-- Add new message -->
                                     <div class="form-group">
@@ -311,7 +314,7 @@
                             <!-- Messages -->
                             {% if messages |length == 0 %}
                                 <div class="alert alert-info" role="alert">
-                                  <strong>No Messages Yet!</strong>Be the first one
+                                    <strong>No Messages Yet, start the conversation</strong>
                                 </div>
                             {% else %}
                                 {% for message in messages %}
@@ -324,7 +327,11 @@
             </div>
             <div class="col-md-5 hidden-md-down">
                 <div class="card" style="width:100%;">
-                    <h3 class="card-header" style="font-size: 3.0vh">Group Message with Landlord:</h3>
+                    {% if current_user in landlords %}
+                        <h3 class="card-header" style="font-size: 3.5vh;">Group Message with Tenants:</h3>
+                    {% else %}
+                        <h3 class="card-header" style="font-size: 3.5vh;">Group Message with Landlord:</h3>
+                    {% endif %}
                     <div class="card-block">
                         <!-- Add new message -->
                         <div class="form-group">
@@ -346,7 +353,7 @@
                 <!-- Messages -->
                 {% if messages |length == 0 %}
                     <div class="alert alert-info" role="alert">
-                      <strong>No Messages Yet! </strong>Be the first one
+                        <strong>No Messages Yet, start the conversation</strong>
                     </div>
                 {% else %}
                     {% for message in messages %}

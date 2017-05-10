@@ -1,36 +1,42 @@
 <footer class="footer" style="position: relative; bottom: 0; width: 100%; background-color: #f5f5f5;">
 	<div class="row">
 		<div class="col-xs-4" style="text-align: center;">
-			<img src="/static/img/testlogo.png" style="height: 50px;" alt="logo">
-			<br>
-			Follow us on 
-				<img src="/static/img/fbLogo.png" style="width: 25px;">
-				<img src="/static/img/instagramLogo.png" style="width: 25px;">
-				<img src="/static/img/twitterLogo.png" style="width: 25px;">
-			<br>
-			2017 &copy; Nexnest, LLC
+			<div style="display: inline-block; text-align: left">
+				<img src="/static/img/testlogo.png" style="height: 50px;" alt="logo">
+				<br>
+				Follow us on 
+					<img src="/static/img/fbLogo.png" style="width: 25px;">
+					<img src="/static/img/instagramLogo.png" style="width: 25px;">
+					<img src="/static/img/twitterLogo.png" style="width: 25px;">
+				<br>
+				2017 &copy; Nexnest, LLC
+			</div>
 		</div>
 		<div class="col-xs-4" style="text-align: center;">
-			<a href="#">Contact Us</a>
-			<br>
-			<a href="#">About Us</a>
-			<br>
-			<a href="#">Terms of Service</a>
-			<br>
-			<a href="#">Privacy Policy</a>
-			<br>
-			{% if current_user.is_authenticated %}
-				{% if current_user.isLandlord %}
-					<a href="#">Pricing</a>
+			<div style="display: inline-block; text-align: left">
+				<a href="#"><strong>Contact Us</strong></a>
+				<br>
+				<a href="#"><strong>About Us</strong></a>
+				<br>
+				<a href="#"><strong>Terms of Service</strong></a>
+				<br>
+				<a href="#"><strong>Privacy Policy</strong></a>
+				<br>
+				{% if current_user.is_authenticated %}
+					{% if current_user.isLandlord %}
+						<a href="#"><strong>Pricing</strong></a>
+					{% endif %}
 				{% endif %}
-			{% endif %}
+			</div>
 		</div>
 		<div class="col-xs-4" style="text-align: center;">
-			<a href="#">FAQ</a>
-			<br>
-			<a href="#">Help</a>
-			<br>
-			<a href="#" data-toggle="modal" data-target="#platformReportModal">Report Issue</a>
+			<div style="display: inline-block; text-align: left">
+				<a href="#"><strong>FAQ</strong></a>
+				<br>
+				<a href="#"><strong>Help</strong></a>
+				<br>
+				<a href="#" data-toggle="modal" data-target="#platformReportModal"><strong>Report Issue</strong></a>
+			</div>
 		</div>
 	</div>
 </footer>

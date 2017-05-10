@@ -8,13 +8,7 @@
                 <div class="row">
                     <div class="col-xs-12 col-lg-8">
                         <div class="row">
-                            <a href="{{ url_for('users.viewUser', userID=user.id) }}">
                                 <h2 style="font-size: 3.0vh">{{ user.fname }} {{ user.lname }}</h2>
-                            </a>
-                            {% if group.leader_id == user.id %}
-                                <h6 class="hidden-sm-down" style="padding-top: 8px; padding-left: 5px;"><span class="tag tag-primary">Group Leader</span></h6>
-                                <h6 class="hidden-md-up" style="padding-top: 8px; padding-left: 5px;"><span class="tag tag-primary">Leader</span></h6>
-                            {% endif %}
                         </div>
                     </div>
                     <div class="col-xs-12 col-lg-4">                            
