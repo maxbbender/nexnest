@@ -801,3 +801,8 @@ button.link {
 .hamburgerMenuItem{
   font-size: 20px;
 }
+
+.footerItem{
+  font-size: 25px;
+  padding-bottom: 5px;
+}
