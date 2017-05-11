@@ -12,8 +12,12 @@
         	<li>{{ user.fname }} {{ user.lname }}</li>
         {% endfor %}
         <br>
-    	<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#AcceptInviteModal{{group.id}}">Join Group</a>
-    	<a href='#' class="btn btn-danger" data-toggle="modal" data-target="#DeclineInviteModal{{group.id}}">Decline</a>
+        <div class="row">
+        	<div class="col-xs-12" style="text-align: right;">
+    			<a href='#' class="btn btn-danger" data-toggle="modal" data-target="#DeclineInviteModal{{group.id}}">Decline</a>
+    			<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#AcceptInviteModal{{group.id}}">Join Group</a>
+    		</div>
+    	</div>
     </div>
 </div>
 
