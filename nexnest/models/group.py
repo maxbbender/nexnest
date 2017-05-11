@@ -126,7 +126,7 @@ class Group(Base):
         return housingRequests
 
     @property
-    def hasAcceptedGroupListings(self):
+    def hasAcceptedHouseRequest(self):
         for groupListing in self.listing:
             if groupListing.accepted:
                 return True

@@ -335,6 +335,10 @@ class Listing(Base):
         return '%s, %s %s, %s' % (self.street, self.city, self.state, self.zip_code)
 
     @property
+    def hasAcceptedHouseRequest(self):
+        return self.hasAcceptedGroupListing
+
+    @property
     def briefAddress(self):
         return self.address[:22] + "..."
 
