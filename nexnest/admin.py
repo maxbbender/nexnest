@@ -60,6 +60,9 @@ admin = Admin(app, name='Nexnest', template_mode='bootstrap3')
 admin.add_view(AdminModelView(User, session))
 admin.add_view(AdminModelView(Landlord, session))
 admin.add_view(AdminModelView(School, session))
+admin.add_view(AdminModelView(NotificationPreference, session))
+admin.add_view(AdminModelView(Availability, session))
+admin.add_view(AdminModelView(TourTime, session))
 
 # ----------------------
 # -------GROUPS---------
@@ -107,9 +110,6 @@ admin.add_view(AdminModelView(PlatformReport, session))
 # ------------------
 admin.add_view(AdminModelView(Notification, session))
 admin.add_view(AdminModelView(SecurityDeposit, session))
+admin.add_view(AdminModelView(Coupon, session))
 admin.add_view(AdminModelView(House, session))
 admin.add_view(AdminModelView(Maintenance, session))
-admin.add_view(AdminModelView(Coupon, session))
-admin.add_view(AdminModelView(NotificationPreference, session))
-admin.add_view(AdminModelView(Availability, session))
-admin.add_view(AdminModelView(TourTime, session))
