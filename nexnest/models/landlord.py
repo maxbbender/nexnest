@@ -67,7 +67,6 @@ class Landlord(Base):
             else:
                 sortedListings[listing.time_period_date_range] = [listing]
 
-
     def getRequestedToursJSON(self):
         requestedTours = []
 

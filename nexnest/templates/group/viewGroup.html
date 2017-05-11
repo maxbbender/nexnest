@@ -241,8 +241,8 @@
                                                     <div class="card-block">
                                                         <div class="card" style="width: 100%; border: none;">
                                                             <a href="{{ url_for('listings.viewListing', listingID=tour.listing.id) }}">
-                                                                {% if tour.listing.getBannerPhotoURL() %}
-                                                                    <img src="{{tour.listing.getBannerPhotoURL()}}" class="listingImg">
+                                                                {% if tour.listing.banner_photo_url %}
+                                                                    <img src="{{tour.listing.banner_photo_url}}" class="listingImg">
                                                                 {% else %}
                                                                     <img src="/static/img/defaultHouse.png" class="listingImg">
                                                                 {% endif %}
@@ -375,8 +375,8 @@
                                                     <div class="card-block">
                                                         <div class="card" style="width: 100%; border: none;">
                                                             <a href="{{ url_for('housingRequests.view', id=request.id) }}">
-                                                                {% if request.listing.getBannerPhotoURL() %}
-                                                                    <img src="{{request.listing.getBannerPhotoURL()}}" class="listingImg card-img-top">
+                                                                {% if request.listing.banner_photo_url %}
+                                                                    <img src="{{request.listing.banner_photo_url}}" class="listingImg card-img-top">
                                                                 {% else %}
                                                                     <img src="/static/img/defaultHouse.png" class="listingImg card-img-top">
                                                                 {% endif %}

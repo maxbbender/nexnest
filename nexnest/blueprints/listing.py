@@ -47,7 +47,7 @@ def viewListing(listingID):
                            groups=myGroups,
                            title='Listing',
                            pictures=listing.getPhotoURLs(),
-                           bannerPhoto=listing.getBannerPhotoURL(),
+                           bannerPhoto=listing.banner_photo_url,
                            ListingReportForm=ListingReportForm())
 
 
@@ -622,6 +622,8 @@ def uploadPhotos(listingID):
                     bannerPathList = os.listdir(bannerlistingPicturePath)
                     if len(bannerPathList) > 0:
                         bannerPath = bannerPathList[0]
+                        listing.banner_photo_url = '/uploads/listings/%s/bannerPhoto/%s' % (listing.id, bannerPath)
+                        session.commit()
                         logger.debug("NewListing bannerPath %r" % bannerPath)
 
             else:
@@ -633,7 +635,7 @@ def uploadPhotos(listingID):
                                    title='Upload Photos',
                                    listingID=listingID,
                                    picturePaths=picturePaths,
-                                   bannerPath=bannerPath
+                                   bannerPath=listing.banner_photo_url
                                    )
     else:
         flash("Only Landlords can upload photos", 'warning')

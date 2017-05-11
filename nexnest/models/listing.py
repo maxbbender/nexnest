@@ -273,7 +273,7 @@ class Listing(Base):
             'timePeriod': self.time_period,
             'timePeriodDateRange': self.time_period_date_range,
             'priceTerm': self.rent_due,
-            'bannerPhotoURL': self.getBannerPhotoURL(),
+            'bannerPhotoURL': self.banner_photo_url,
             'lat': float(self.lat),
             'long': float(self.lng)
         }
@@ -384,8 +384,8 @@ class Listing(Base):
 
         return landlords
 
-    def isLandlord(self, current_user):
-        return current_user in self.landLordsAsUsers
+    def isLandlord(self, user):
+        return user in self.landLordsAsUsers
 
     def getPhotoURLs(self):
         photoURLs = []
