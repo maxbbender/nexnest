@@ -24,6 +24,8 @@ from nexnest.utils.file import allowed_file, isPDF
 from nexnest.utils.school import allSchoolsAsStrings
 from nexnest.utils.misc import idGenerator
 
+from sqlalchemy.sql.expression import func
+
 from pprint import pprint
 
 listings = Blueprint('listings', __name__, template_folder='../templates')
@@ -560,6 +562,8 @@ def uploadPhotos(listingID):
 def searchListingsAJAX():
     logger.debug("@listings.route('/listing/search/AJAX")
     postedJSON = request.get_json(force=True)
+    logger.debug("Incoming POSTEDJSON")
+    logger.debug(pprint(postedJSON))
 
     # Required Fields : `bedrooms` | `minPrice` | `maxPrice` | `priceTerm` | `school`
     allListings = session.query(Listing).filter(Listing.active == True,
@@ -703,7 +707,13 @@ def searchListingsAJAX():
             logger.error("No Listing Types were defined to search for")
 
     standardListings = allListings.filter(Listing.featured == False).all()
-    featuredListings = allListings.filter(Listing.featured == True).limit(2).all()
+    featuredListings = allListings.filter(Listing.featured == True).order_by(func.random()).limit(2).all()
+
+    unAddedFeaturedListings = allListings.filter(Listing.featured == True).all()
+
+    for listing in unAddedFeaturedListings:
+        if listing not in featuredListings:
+            standardListings.append(listing)
 
     logger.debug("Standard allListings %r" % standardListings)
     logger.debug("Featured allListings %r" % featuredListings)
@@ -849,27 +859,29 @@ def searchListingsAJAX():
     return jsonify(returnDict)
 
 
-@listings.route('/listings/getAddresses')
+@listings.route('/listings/getAddresses/<schoolName>')
 @login_required
-def getListingAddresses():
-    if current_user.school is not None:
-        logger.debug("Looking for listings that have school %r" % current_user.school)
-        listings = Listing.query. \
-            join(Listing.schools). \
-            filter(ListingSchool.school_id == current_user.school_id). \
-            filter(Listing.active == True). \
-            all()
-
-        logger.debug('listings %r' % listings)
-
-        returnListingList = []
-
-        for listing in listings:
-            serialiedListing = listing.serialize
-            returnListingList.append({'address': serialiedListing['address'], 'id': listing.id})
-
-        return jsonify({'listings': returnListingList})
+def getListingAddresses(schoolName=None):
+    schoolToSearch = None
+    if schoolName is None:
+        if current_user.school is not None:
+            schoolToSearch = current_user.school
     else:
-        logger.warning('User does not have any schools')
+        schoolToSearch = School.query.fitler_by(name=schoolName).first_or_404()
 
-    return jsonify({'success': False})
+    logger.debug("Looking for listings that have school %r" % current_user.school)
+    listings = Listing.query. \
+        join(Listing.schools). \
+        filter(ListingSchool.school_id == schoolToSearch.id). \
+        filter(Listing.active == True). \
+        all()
+
+    logger.debug('listings %r' % listings)
+
+    returnListingList = []
+
+    for listing in listings:
+        serialiedListing = listing.serialize
+        returnListingList.append({'address': serialiedListing['address'], 'id': listing.id})
+
+    return jsonify({'listings': returnListingList})
