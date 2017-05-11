@@ -353,3 +353,31 @@ def acceptEmailInvite():
         else:
             flash(errorMessage, 'danger')
             return redirect(url_for('groups.viewGroup', groupID=groupEmail.group.id))
+
+
+@groups.route('/group/deleteGroup/<groupID>')
+@login_required
+@group_editable
+def deleteGroup(groupID):
+    errorMessage = None
+    group = Group.query.fitler_by(id=groupID).first_or_404()
+
+    # There can't be any users in the group if it is to be deleted
+    if len(group.users) == 1:
+        session.delete(group)
+        session.commit()
+    else:
+        errorMessage = 'You cannot delete %s because there are still other members in it. Delete them or assign a new group leader' % group.name
+
+    if errorMessage is None:
+        if request.is_xhr:
+            return jsonify({'success': True})
+        else:
+            flash('Successfully deleted %s' % group.name, 'success')
+            return redirect(url_for('indexs.index'))
+    else:
+        if request.is_xhr:
+            return jsonify({'success': False, 'message': errorMessage})
+        else:
+            flash(errorMessage, 'danger')
+            return redirect(url_for('indexs.index'))
