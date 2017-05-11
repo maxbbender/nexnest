@@ -291,7 +291,7 @@ def editListing(listingID):
                                    schools=allSchoolsAsStrings(),
                                    selectedSchools=selectedSchools,
                                    picturePaths=picturePaths,
-                                   bannerPath=bannerPath)
+                                   bannerPath=currentListing.banner_photo_url)
         else:  # POST
             form = ListingForm(request.form)
 
@@ -402,7 +402,7 @@ def editListing(listingID):
                                        schools=allSchoolsAsStrings(),
                                        selectedSchools=selectedSchools,
                                        picturePaths=picturePaths,
-                                       bannerPath=bannerPath)
+                                       bannerPath=currentListing.banner_photo_url)
     else:
         flash("You are not the landlord of this listing", 'warning')
 
