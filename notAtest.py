@@ -27,4 +27,4 @@ gmaps = googlemaps.Client(key='AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w')
 user = user.User.query.filter_by(id=2).first()
 print(user)
 
-print(user.hasHouse)
+print(os.listdir(os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(1), 'pictures')))

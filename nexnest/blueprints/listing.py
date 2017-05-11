@@ -2,6 +2,7 @@ import os
 import json
 import re
 import datetime
+from shutil import copy2
 
 from flask import Blueprint
 from flask import render_template, request, redirect, url_for, flash, jsonify
@@ -223,7 +224,7 @@ def createListing():
 def cloneListing(listingID):
     listingToClone = Listing.query.filter_by(id=listingID).first_or_404()
 
-    if listingToClone.isEditableBy(current_user):
+    if listingToClone.isCloneableBy(current_user):
         # Get colleges associated with the listing
         selectedSchools = ListingSchool.query.filter_by(listing=listingToClone).all()
 
@@ -491,7 +492,8 @@ def deleteBannerPhoto(listingID, filename):
 @login_required
 def uploadPhotos(listingID):
     listing = Listing.query.filter_by(id=listingID).first_or_404()
-
+    bannerPath = None
+    picturePaths = None
     if listing.isEditableBy(current_user):
         if request.method == 'POST':
             form = PhotoForm(request.form)
@@ -546,11 +548,92 @@ def uploadPhotos(listingID):
             else:
                 return jsonify("Do something Smart Here")
         else:
+            # Does the current listing have any listing photos?
+            logger.debug("Trying to copy photos from one listing to another")
+
+            # Listing Folder Path
+            folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
+
+            # Get the pictures from the listing
+            listingPicturePath = os.path.join(folderPath, 'pictures')
+            if os.path.exists(listingPicturePath):
+                picturePaths = os.listdir(listingPicturePath)
+                logger.debug("NewListing picturePaths %r" % picturePaths)
+            else:
+                picturePaths = None
+
+            # Is there any pictures for the listing
+            # if not lets try to find another listing with the same address and copy it's pictures
+            if picturePaths is not None and len(picturePaths) == 0:
+
+                # Are there other listings with the same address?
+                otherListing = Listing.query.filter_by(city=listing.city,
+                                                       state=listing.state,
+                                                       street=listing.street,
+                                                       zip_code=listing.zip_code) \
+                    .first()
+
+                logger.debug("Found listing with same address %r" % otherListing)
+
+                if otherListing is not None:
+                    # Let's get the photos from that listing and copy them over....
+                    otherListingPictureFolder = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(otherListing.id), 'pictures')
+                    otherListingPicturePaths = os.listdir(otherListingPictureFolder)
+
+                    logger.debug('Other Listing otherListingPicturePaths : %r' % otherListingPicturePaths)
+
+                    for picture in otherListingPicturePaths:
+                        copy2(os.path.join(otherListingPictureFolder, picture), listingPicturePath)
+
+                picturePaths = os.listdir(listingPicturePath)
+
+                logger.debug("Copied photos!")
+                logger.debug("NewListing picturePaths %r" % picturePaths)
+
+            # Get the bannerPhoto from the listing
+            bannerlistingPicturePath = os.path.join(folderPath, 'bannerPhoto')
+            if os.path.exists(bannerlistingPicturePath):
+                bannerPathList = os.listdir(bannerlistingPicturePath)
+
+                if len(bannerPathList) > 0:
+                    bannerPath = bannerPathList[0]
+                    logger.debug("Found Banner Photos %r" % bannerPath)
+                else:
+                    # Let's see if there are other listings w/ same address
+                    otherListing = Listing.query.filter_by(city=listing.city,
+                                                           state=listing.state,
+                                                           street=listing.street,
+                                                           zip_code=listing.zip_code) \
+                        .first()
+
+                    logger.debug("Found listing with same address %r" % otherListing)
+
+                    if otherListing is not None:
+                        otherListingBannerFolder = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(otherListing.id), 'bannerPhoto')
+                        otherListingBannerPaths = os.listdir(otherListingBannerFolder)
+
+                        logger.debug('Other Listing otherListingBannerPaths : %r' % otherListingBannerPaths)
+
+                        for picture in otherListingBannerPaths:
+                            copy2(os.path.join(otherListingBannerFolder, picture), bannerlistingPicturePath)
+
+                        logger.debug('Copied Photos!')
+
+                    bannerPathList = os.listdir(bannerlistingPicturePath)
+                    if len(bannerPathList) > 0:
+                        bannerPath = bannerPathList[0]
+                        logger.debug("NewListing bannerPath %r" % bannerPath)
+
+            else:
+                bannerPath = None
+
             form = PhotoForm()
             return render_template('/landlord/uploadPhotos.html',
                                    form=form,
                                    title='Upload Photos',
-                                   listingID=listingID
+                                   listingID=listingID,
+                                   picturePaths=picturePaths,
+                                   bannerPath=bannerPath
                                    )
     else:
         flash("Only Landlords can upload photos", 'warning')

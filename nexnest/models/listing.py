@@ -351,6 +351,12 @@ class Listing(Base):
 
         return False
 
+    def isCloneableBy(self, user):
+        if user in self.landLordsAsUsers():
+            return True
+
+        return False
+
     def isViewableBy(self, user):
         if self.isEditableBy(user):
             return True
