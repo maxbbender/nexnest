@@ -127,7 +127,7 @@ class Group(Base):
 
     @property
     def hasAcceptedHouseRequest(self):
-        for groupListing in self.listing:
+        for groupListing in self.listings:
             if groupListing.accepted:
                 return True
 
