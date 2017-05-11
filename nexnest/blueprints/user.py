@@ -50,7 +50,7 @@ def register():
         registerForm = RegistrationForm(request.form)
 
         if registerForm.validate():
-            #Determine if registering as tenant or landlord
+            # Determine if registering as tenant or landlord
             userType = registerForm.landlord.data
 
             if userType == "landlord":
@@ -61,7 +61,7 @@ def register():
                 session.add(newUser)
                 session.commit()
 
-                #Make them a Landlord
+                # Make them a Landlord
 
                 # Notification Preference Table init
                 session.add(NotificationPreference(user=newUser))
@@ -87,15 +87,15 @@ def register():
                     # Notification Preference Table init
                     session.add(NotificationPreference(user=newUser))
                     session.commit()
-                    
+
                     emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(newUser.email), _external=True)
                     newUser.sendEmail('generic',
                                       'Click the link to confirm your account <a href="%s">Click Here</a>' % emailConfirmURL)
 
-                    return redirect(url_for('users.emailConfirmNotice', email=registerForm.email.data))            
+                    return redirect(url_for('users.emailConfirmNotice', email=registerForm.email.data))
         flash_errors(registerForm)
         return render_template('register.html', form=registerForm, schools=allSchoolsAsStrings())
-    
+
 
 @users.route('/register/<userID>/landlordInformation', methods=['GET', 'POST'])
 def landlordInformation(userID):
@@ -110,29 +110,29 @@ def landlordInformation(userID):
         if moreInformationForm.validate():
             user = session.query(User).filter_by(id=userID).first()
             newLandlord = Landlord(user=user,
-                               street=moreInformationForm.street.data,
-                               city=moreInformationForm.city.data,
-                               state=moreInformationForm.state.data,
-                               zip_code=moreInformationForm.zip_code.data,
-                               check_pay=True,
-                               online_pay=True)
+                                   street=moreInformationForm.street.data,
+                                   city=moreInformationForm.city.data,
+                                   state=moreInformationForm.state.data,
+                                   zip_code=moreInformationForm.zip_code.data,
+                                   check_pay=moreInformationForm.check_pay.data,
+                                   online_pay=moreInformationForm.online_pay.data)
+
             session.add(newLandlord)
             session.commit()
             flash('Theoretically this all worked', 'info')
             emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(user.email), _external=True)
             user.sendEmail('generic',
-                              'Click the link to confirm your account <a href="%s">Click Here</a>' % emailConfirmURL)
+                           'Click the link to confirm your account <a href="%s">Click Here</a>' % emailConfirmURL)
 
             return redirect(url_for('users.emailConfirmNotice', email=user.email))
-            #MAX DO YOUR MAGIC HERE
+            # MAX DO YOUR MAGIC HERE
         flash_errors(moreInformationForm)
         return render_template('/landlordMoreInformation.html', form=moreInformationForm, userID=userID)
+
 
 @users.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        # print(request.args['next'])
-        # print(request.args.get['next'])
         loginForm = LoginForm()
         if request.args.get('next') is not None:
             loginForm.nextURL.data = request.args['next']
@@ -227,7 +227,7 @@ def viewUser(userID):
         form = EmailPreferencesForm(request.form)
         user = session.query(User).filter_by(id=userID).first()
         currentPreferences = session.query(
-        NotificationPreference).filter_by(user_id=userID).first()
+            NotificationPreference).filter_by(user_id=userID).first()
         userFavorites = session.query(ListingFavorite).filter_by(user=current_user).all()
         myGroups = current_user.accepted_groups
         logger.debug(currentPreferences)
@@ -607,7 +607,6 @@ def unFavoriteListing(listingID):
     session.delete(listingFavorite)
     session.commit()
     return jsonify("true")
-
 
 
 @users.route('/landlord/getAvailability/JSON', methods=['GET'])

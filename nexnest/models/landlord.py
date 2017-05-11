@@ -19,6 +19,8 @@ class Landlord(Base):
     city = db.Column(db.Text)
     state = db.Column(db.String(2))
     zip_code = db.Column(db.String(5))
+    dob = db.Column(db.Date)
+    phone = db.Column(db.Text)
     listings = relationship("LandlordListing", back_populates='landlord')
     reports = relationship("ReportLandlord", backref='landlord')
     availabilities = relationship("Availability", backref='landlord')
@@ -30,7 +32,9 @@ class Landlord(Base):
                  street,
                  city,
                  state,
-                 zip_code):
+                 zip_code,
+                 dob,
+                 phone):
 
         self.user = user
         self.user_id = user.id
@@ -40,6 +44,8 @@ class Landlord(Base):
         self.city = city
         self.state = state
         self.zip_code = zip_code
+        self.dob = dob
+        self.phone = phone
 
     def __repr__(self):
         return '<Landlord %r>' % self.user_id
@@ -66,7 +72,6 @@ class Landlord(Base):
                 sortedListings[listing.time_period_date_range].append(listing)
             else:
                 sortedListings[listing.time_period_date_range] = [listing]
-
 
     def getRequestedToursJSON(self):
         requestedTours = []

@@ -69,25 +69,14 @@
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback">Last Four Digits of SSN</label>
-                                            {{form.ssn(class='form-control', required='required', maxlength='4')}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </fieldset>
-                            <fieldset>
-                                <legend>Information To Recieve Rent Payments:</legend>
-                                <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                                        <div class="form-group">
-                                            <label class="control-label form-control-feedback">Bank Account Number</label>
-                                            {{form.account_number(class='form-control', required='required')}}
+                                            <label class="control-label form-control-feedback">Check Payments</label>
+                                            {{form.check_pay(class='form-control', required='required', type="checkbox")}}
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback">Routing Number</label>
-                                            {{form.routing_number(class='form-control', required='required')}}
+                                            <label class="control-label form-control-feedback">Online Payments</label>
+                                            {{form.online_pay(class='form-control', required='required', type='checkbox')}}
                                         </div>
                                     </div>
                                 </div>
@@ -106,6 +95,7 @@
                                 </div>
                             </fieldset>
                             {{form.user_id}}
+                            {{form.availabilities}}
 						  	<p>
 						  		<button type="button" class="btn btn-primary" onClick="submitForm()">Register As Landlord</button>
 						  	</p>

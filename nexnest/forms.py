@@ -95,9 +95,10 @@ class LandlordMoreInfoForm(RedirectForm):
     city = StringField('City', [Length(min=2, max=50), InputRequired()])
     state = SelectField('State', choices=statesLong)
     zip_code = StringField('Zipcode', [Length(min=5, max=5), InputRequired()])
-    account_number = IntegerField('Bank Account Number', [InputRequired()])
-    routing_number = IntegerField('Bank Routing Number', [InputRequired()])
     user_id = HiddenField('user')
+    availabilities = HiddenField('availabilities', validators=[InputRequired()])
+    check_pay = BooleanField('Do you accept rent payments via checks?')
+    online_pay = BooleanField('Do you accept rent payments via NexNest?')
 
 
 class ProfilePictureForm(RedirectForm):

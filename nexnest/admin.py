@@ -54,36 +54,62 @@ class AdminModelView(ModelView):
 admin = Admin(app, name='Nexnest', template_mode='bootstrap3')
 
 # Register the Views
+# ----------------------
+# -------USERS---------
+# ----------------------
 admin.add_view(AdminModelView(User, session))
-admin.add_view(AdminModelView(Group, session))
-admin.add_view(AdminModelView(Listing, session))
-admin.add_view(AdminModelView(Message, session))
 admin.add_view(AdminModelView(Landlord, session))
 admin.add_view(AdminModelView(School, session))
+
+# ----------------------
+# -------GROUPS---------
+# ----------------------
+admin.add_view(AdminModelView(Group, session))
+admin.add_view(AdminModelView(GroupUser, session))
+admin.add_view(AdminModelView(GroupListingFavorite, session))
+admin.add_view(AdminModelView(GroupEmail, session))
+admin.add_view(AdminModelView(GroupListing, session))
 admin.add_view(AdminModelView(Tour, session))
+
+
+# ----------------------
+# ------LISTINGS--------
+# ----------------------
+admin.add_view(AdminModelView(Listing, session))
+admin.add_view(AdminModelView(ListingTransaction, session))
+admin.add_view(AdminModelView(ListingTransactionListing, session))
+admin.add_view(AdminModelView(ListingSchool, session))
+admin.add_view(AdminModelView(ListingFavorite, session))
+admin.add_view(AdminModelView(LandlordListing, session))
+
+
+# ----------------------
+# ------MESSAGES--------
+# ----------------------
+admin.add_view(AdminModelView(Message, session))
 admin.add_view(AdminModelView(TourMessage, session))
 admin.add_view(AdminModelView(GroupMessage, session))
 admin.add_view(AdminModelView(DirectMessage, session))
-admin.add_view(AdminModelView(GroupListing, session))
-admin.add_view(AdminModelView(Notification, session))
-admin.add_view(AdminModelView(GroupListingFavorite, session))
-admin.add_view(AdminModelView(SecurityDeposit, session))
-admin.add_view(AdminModelView(House, session))
-admin.add_view(AdminModelView(Maintenance, session))
 admin.add_view(AdminModelView(GroupListingMessage, session))
-admin.add_view(AdminModelView(GroupUser, session))
-admin.add_view(AdminModelView(ListingTransaction, session))
-admin.add_view(AdminModelView(ListingTransactionListing, session))
-admin.add_view(AdminModelView(Coupon, session))
-admin.add_view(AdminModelView(ListingSchool, session))
-admin.add_view(AdminModelView(LandlordListing, session))
-admin.add_view(AdminModelView(NotificationPreference, session))
-admin.add_view(AdminModelView(ListingFavorite, session))
+
+# ---------------------
+# ------REPORTS--------
+# ---------------------
 admin.add_view(AdminModelView(Report, session))
 admin.add_view(AdminModelView(ReportLandlord, session))
 admin.add_view(AdminModelView(ReportGroup, session))
 admin.add_view(AdminModelView(ReportListing, session))
 admin.add_view(AdminModelView(PlatformReport, session))
+
+
+# ------------------
+# ------MISC--------
+# ------------------
+admin.add_view(AdminModelView(Notification, session))
+admin.add_view(AdminModelView(SecurityDeposit, session))
+admin.add_view(AdminModelView(House, session))
+admin.add_view(AdminModelView(Maintenance, session))
+admin.add_view(AdminModelView(Coupon, session))
+admin.add_view(AdminModelView(NotificationPreference, session))
 admin.add_view(AdminModelView(Availability, session))
 admin.add_view(AdminModelView(TourTime, session))
-admin.add_view(AdminModelView(GroupEmail, session))

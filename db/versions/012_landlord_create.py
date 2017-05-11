@@ -13,7 +13,9 @@ landlords = Table('landlords', meta,
                   Column('street', Text()),
                   Column('city', Text()),
                   Column('state', String(length=2)),
-                  Column('zip_code', String(length=5)))
+                  Column('zip_code', String(length=5)),
+                  Column('phone', Text()),
+                  Column('dob', Date()))
 
 
 def upgrade(migrate_engine):
