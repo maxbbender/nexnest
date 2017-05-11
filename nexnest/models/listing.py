@@ -334,6 +334,10 @@ class Listing(Base):
     def address(self):
         return '%s, %s %s, %s' % (self.street, self.city, self.state, self.zip_code)
 
+    @property
+    def briefAddress(self):
+        return self.address[:22] + "..."
+
     def isEditableBy(self, user):
         if self.hasHouse() or self.hasAcceptedGroupListing:
             return False
@@ -400,6 +404,13 @@ class Listing(Base):
 
     def hasHouse(self):
         return len(self.house) > 0
+
+    def isForSchool(self, school):
+        for listingSchool in self.schools:
+            if listingSchool.school == school:
+                return True
+
+        return False
 
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument

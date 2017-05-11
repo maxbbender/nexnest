@@ -847,3 +847,29 @@ def searchListingsAJAX():
         returnDict['currentUserSchool'] = None
 
     return jsonify(returnDict)
+
+
+@listings.route('/listings/getAddresses')
+@login_required
+def getListingAddresses():
+    if current_user.school is not None:
+        logger.debug("Looking for listings that have school %r" % current_user.school)
+        listings = Listing.query. \
+            join(Listing.schools). \
+            filter(ListingSchool.school_id == current_user.school_id). \
+            filter(Listing.active == True). \
+            all()
+
+        logger.debug('listings %r' % listings)
+
+        returnListingList = []
+
+        for listing in listings:
+            serialiedListing = listing.serialize
+            returnListingList.append({'address': serialiedListing['address'], 'id': listing.id})
+
+        return jsonify({'listings': returnListingList})
+    else:
+        logger.warning('User does not have any schools')
+
+    return jsonify({'success': False})
