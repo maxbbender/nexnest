@@ -125,6 +125,14 @@ class Group(Base):
                 housingRequests.append(groupListing)
         return housingRequests
 
+    @property
+    def hasAcceptedGroupListings(self):
+        for groupListing in self.listing:
+            if groupListing.accepted:
+                return True
+
+        return False
+
     def addUserToGroup(self, user):
         # First we want to check how many users are a part
         # of the group already. Max users 6

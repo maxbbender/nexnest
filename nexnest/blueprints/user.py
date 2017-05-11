@@ -1,9 +1,9 @@
 from flask import Blueprint
-from flask import render_template, request, redirect, url_for, flash, jsonify
+from flask import render_template, request, redirect, url_for, flash, jsonify, abort
 from flask_login import login_user, logout_user, current_user, login_required
 
 from nexnest import logger
-from nexnest.application import session, csrf
+from nexnest.application import session, csrf, app
 
 from nexnest.models.user import User
 from nexnest.models.group import Group
@@ -182,9 +182,8 @@ def login():
         else:
             flash_errors(login_form)
 
-        if login_form.next.data == '':
-            if user.isLandlord:
-                return redirect('/landlord/dashboard')
+        if user.isLandlord:
+            return redirect('/landlord/dashboard')
 
         return login_form.redirect()
 
@@ -223,73 +222,76 @@ def emailConfirm(payload):
 @login_required
 def viewUser(userID):
     # fake lisiting for testing
+    if current_user.id == userID:
 
-    form = EmailPreferencesForm(request.form)
-    user = session.query(User).filter_by(id=userID).first()
-    currentPreferences = session.query(
-    NotificationPreference).filter_by(user_id=userID).first()
-    userFavorites = session.query(ListingFavorite).filter_by(user=current_user).all()
-    myGroups = current_user.accepted_groups
-    logger.debug(currentPreferences)
-    form = EmailPreferencesForm(obj=currentPreferences)
+        form = EmailPreferencesForm(request.form)
+        user = session.query(User).filter_by(id=userID).first()
+        currentPreferences = session.query(
+        NotificationPreference).filter_by(user_id=userID).first()
+        userFavorites = session.query(ListingFavorite).filter_by(user=current_user).all()
+        myGroups = current_user.accepted_groups
+        logger.debug(currentPreferences)
+        form = EmailPreferencesForm(obj=currentPreferences)
 
-    if request.method == 'GET':
-        return render_template('/user/account.html',
-                               user=user,
-                               form=form,
-                               title=user.fname,
-                               userFavorites=userFavorites,
-                               groups=myGroups
-                               )
-
-    else:
-        if form.validate():
-            currentPreferences.direct_message_email = form.direct_message_email.data
-            currentPreferences.tour_message_email = form.tour_message_email.data
-            currentPreferences.group_message_email = form.group_message_email.data
-            currentPreferences.house_message_email = form.house_message_email.data
-            currentPreferences.maintenance_message_email = form.maintenance_message_email.data
-            currentPreferences.tour_time_email = form.tour_time_email.data
-            currentPreferences.tour_confirmed_email = form.tour_confirmed_email.data
-            currentPreferences.tour_denied_email = form.tour_denied_email.data
-            currentPreferences.maintenance_email = form.maintenance_email.data
-            currentPreferences.maintenance_inProgress_email = form.maintenance_inProgress_email.data
-            currentPreferences.maintenance_completed_email = form.maintenance_completed_email.data
-            currentPreferences.rent_due_email = form.rent_due_email.data
-            currentPreferences.rent_paid_email = form.rent_paid_email.data
-            currentPreferences.group_user_email = form.group_user_email.data
-            currentPreferences.group_listing_email = form.group_listing_email.data
-            currentPreferences.group_listing_accept_email = form.group_listing_accept_email.data
-            currentPreferences.group_listing_deny_email = form.group_listing_deny_email.data
-            currentPreferences.direct_message_notification = form.direct_message_notification.data
-            currentPreferences.tour_message_notification = form.tour_message_notification.data
-            currentPreferences.group_message_notification = form.group_message_notification.data
-            currentPreferences.house_message_notification = form.house_message_notification.data
-            currentPreferences.maintenance_message_notification = form.maintenance_message_notification.data
-            currentPreferences.tour_time_notification = form.tour_time_notification.data
-            currentPreferences.tour_confirmed_notification = form.tour_confirmed_notification.data
-            currentPreferences.tour_denied_notification = form.tour_denied_notification.data
-            currentPreferences.maintenance_notification = form.maintenance_notification.data
-            currentPreferences.maintenance_inProgress_notification = form.maintenance_inProgress_notification.data
-            currentPreferences.maintenance_completed_notification = form.maintenance_completed_notification.data
-            currentPreferences.rent_due_notification = form.rent_due_notification.data
-            currentPreferences.rent_paid_notification = form.rent_paid_notification.data
-            currentPreferences.group_user_notification = form.group_user_notification.data
-            currentPreferences.group_listing_notification = form.group_listing_notification.data
-            currentPreferences.group_listing_accept_notification = form.group_listing_accept_notification.data
-            currentPreferences.group_listing_deny_notification = form.group_listing_deny_notification.data
-            session.commit()
-
-            flash('Preferences Updated', 'success')
+        if request.method == 'GET':
             return render_template('/user/account.html',
                                    user=user,
                                    form=form,
-                                   title=user.fname
+                                   title=user.fname,
+                                   userFavorites=userFavorites,
+                                   groups=myGroups
                                    )
+
         else:
-            flash_errors(form)
-            return redirect(url_for('users.viewUser',
-                                    userID=userID))
+            if form.validate():
+                currentPreferences.direct_message_email = form.direct_message_email.data
+                currentPreferences.tour_message_email = form.tour_message_email.data
+                currentPreferences.group_message_email = form.group_message_email.data
+                currentPreferences.house_message_email = form.house_message_email.data
+                currentPreferences.maintenance_message_email = form.maintenance_message_email.data
+                currentPreferences.tour_time_email = form.tour_time_email.data
+                currentPreferences.tour_confirmed_email = form.tour_confirmed_email.data
+                currentPreferences.tour_denied_email = form.tour_denied_email.data
+                currentPreferences.maintenance_email = form.maintenance_email.data
+                currentPreferences.maintenance_inProgress_email = form.maintenance_inProgress_email.data
+                currentPreferences.maintenance_completed_email = form.maintenance_completed_email.data
+                currentPreferences.rent_due_email = form.rent_due_email.data
+                currentPreferences.rent_paid_email = form.rent_paid_email.data
+                currentPreferences.group_user_email = form.group_user_email.data
+                currentPreferences.group_listing_email = form.group_listing_email.data
+                currentPreferences.group_listing_accept_email = form.group_listing_accept_email.data
+                currentPreferences.group_listing_deny_email = form.group_listing_deny_email.data
+                currentPreferences.direct_message_notification = form.direct_message_notification.data
+                currentPreferences.tour_message_notification = form.tour_message_notification.data
+                currentPreferences.group_message_notification = form.group_message_notification.data
+                currentPreferences.house_message_notification = form.house_message_notification.data
+                currentPreferences.maintenance_message_notification = form.maintenance_message_notification.data
+                currentPreferences.tour_time_notification = form.tour_time_notification.data
+                currentPreferences.tour_confirmed_notification = form.tour_confirmed_notification.data
+                currentPreferences.tour_denied_notification = form.tour_denied_notification.data
+                currentPreferences.maintenance_notification = form.maintenance_notification.data
+                currentPreferences.maintenance_inProgress_notification = form.maintenance_inProgress_notification.data
+                currentPreferences.maintenance_completed_notification = form.maintenance_completed_notification.data
+                currentPreferences.rent_due_notification = form.rent_due_notification.data
+                currentPreferences.rent_paid_notification = form.rent_paid_notification.data
+                currentPreferences.group_user_notification = form.group_user_notification.data
+                currentPreferences.group_listing_notification = form.group_listing_notification.data
+                currentPreferences.group_listing_accept_notification = form.group_listing_accept_notification.data
+                currentPreferences.group_listing_deny_notification = form.group_listing_deny_notification.data
+                session.commit()
+
+                flash('Preferences Updated', 'success')
+                return render_template('/user/account.html',
+                                       user=user,
+                                       form=form,
+                                       title=user.fname
+                                       )
+            else:
+                flash_errors(form)
+                return redirect(url_for('users.viewUser',
+                                        userID=userID))
+    else:
+        abort(404)
 
 
 @users.route('/user/edit/info', methods=['GET', 'POST'])

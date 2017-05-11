@@ -59,6 +59,15 @@ class Landlord(Base):
 
         return listings
 
+    def getSortedListings(self):
+        sortedListings = {}
+        for listing in self.getListings:
+            if listing.time_period_date_range in sortedListings:
+                sortedListings[listing.time_period_date_range].append(listing)
+            else:
+                sortedListings[listing.time_period_date_range] = [listing]
+
+
     def getRequestedToursJSON(self):
         requestedTours = []
 
