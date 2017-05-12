@@ -1,20 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
 	<br>
-	<div class="row" style="width: 100%;">
-		<div class="col-xs-12 ">
-			{% if acceptedGroups|length == 0 and invitedGroups|length == 0 %}
-				<div class="alert alert-info" role="alert" style="text-align: center;">
-				  <strong>You are not a part of any groups!</strong> <a href="{{ url_for('groups.createGroup') }}"> Create a New Group</a> to invite your friends to join!
-				</div>
-			{% endif %}
-			{% if acceptedGroups|length == 0 and invitedGroups|length != 0 %}
-				<div class="alert alert-info" role="alert" style="text-align: center;">
-				  <strong>You are not currently part of any groups!</strong> Either <a href="{{ url_for('groups.createGroup') }}"> Create a New Group</a> or accept a pending invitation to join a group!
-				</div>
-			{% endif %}
-		</div>
-	</div>
 	<div class="row">
 		<div class="col-xs-12 col-xl-6">
 			<div class="row">
@@ -29,6 +15,21 @@
 			</div>
 		</div>
 	</div>
+	<br>
+	<div class="row" style="width: 100%;">
+		<div class="col-xs-12 ">
+			{% if acceptedGroups|length == 0 and invitedGroups|length == 0 %}
+				<div class="alert alert-info" role="alert" style="text-align: center;">
+				  <strong>You are not a part of any groups!</strong> <a href="{{ url_for('groups.createGroup') }}"> Create a New Group</a> to invite your friends to join!
+				</div>
+			{% endif %}
+			{% if acceptedGroups|length == 0 and invitedGroups|length != 0 %}
+				<div class="alert alert-info" role="alert" style="text-align: center;">
+				  <strong>You are not currently part of any groups!</strong> Either <a href="{{ url_for('groups.createGroup') }}"> Create a New Group</a> or accept a pending invitation to join a group!
+				</div>
+			{% endif %}
+		</div>
+	</div>	
 	<br><br>
 	<div class="row">
 		<div class="col-xs-12 col-xl-6">
@@ -41,7 +42,7 @@
 							<h1>My Groups:</h1>
 						</div>
 						<div class="col-xs-4">
-							<a class="btn btn-primary" href="#" data-toggle="modal" data-target="#createGroupModal" style="float: right;">Create New Group</a>
+							<a class="btn btn-primary" href="#" data-toggle="modal" data-target="#createGroupModal" style="float: right;"><i class="fa fa-plus" aria-hidden="true"></i> Create New Group</a>
 						</div>
 					</div>
 					<div class="row">
@@ -50,14 +51,11 @@
 						{% endfor %}
 					</div>
 					<br>
-					{% else %}
-						<div class="alert alert-info" role="alert" style="text-align: center;">
-						  <strong>Not Currently A Part of Any Groups</strong>
-						</div>
 					{% endif %}
 				</div>
 			</div>
 		</div>
+		{% if acceptedGroups|length >= 0 and invitedGroups|length > 0 %}
 		<div class="col-xs-12 col-xl-6">
 			<div class="row">
 				<div class="col-xs-1"></div>
@@ -80,6 +78,7 @@
 				</div>
 			</div>
 		</div>
+		{% endif %}
 	</div>
 	{% include 'group/createGroupModal.html' %}
 {% endblock %}
