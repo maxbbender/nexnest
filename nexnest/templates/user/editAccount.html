@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-	<br>
 	<div class="row m-x-auto">
 		<div class="col-xs-0 col-lg-3"></div>
 		<div class="col-xs-12 col-lg-6">
@@ -9,7 +8,7 @@
 			{{form.csrf_token}}
 			  	<dl>
 				    {{ render_field(form.fname, class="form-control", type="text") }}
-				    {{ render_field(form.lname, class="form-control", type="text") }}				    				    
+				    {{ render_field(form.lname, class="form-control", type="text") }}			    
 				    {{ render_field(form.school, class="form-control") }}
 				    {{ render_field(form.email, class="form-control", type="email") }}	
 				    {{ render_field(form.phone, class="form-control", type="tel") }}

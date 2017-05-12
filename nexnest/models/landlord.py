@@ -19,8 +19,6 @@ class Landlord(Base):
     city = db.Column(db.Text)
     state = db.Column(db.String(2))
     zip_code = db.Column(db.String(5))
-    dob = db.Column(db.Date)
-    phone = db.Column(db.Text)
     listings = relationship("LandlordListing", back_populates='landlord')
     reports = relationship("ReportLandlord", backref='landlord')
     availabilities = relationship("Availability", backref='landlord')
@@ -44,8 +42,6 @@ class Landlord(Base):
         self.city = city
         self.state = state
         self.zip_code = zip_code
-        self.dob = dob
-        self.phone = phone
 
     def __repr__(self):
         return '<Landlord %r>' % self.user_id

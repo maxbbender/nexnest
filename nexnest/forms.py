@@ -199,17 +199,26 @@ class DirectMessageForm(RedirectForm):
 
 class EditAccountForm(RedirectForm):
     fname = StringField(
-        'First Name<span style="color: red;"> (Required)</span>', [InputRequired()])
+        'First Name', [InputRequired()])
     lname = StringField(
-        'Last Name<span style="color: red;"> (Required)</span>', [InputRequired()])
+        'Last Name', [InputRequired()])
     school = StringField(
-        'School Attending<span style="color: red;"> (Required)</span>', [InputRequired()])
+        'School Attending', [InputRequired()])
     dob = StringField('Date of Birth')
     bio = TextAreaField('If you wish provide a short personal bio')
     phone = StringField('Phone Number')
-    email = StringField('Email<span style="color: red;"> (Required)</span>',
+    email = StringField('Email',
                         [InputRequired("You must enter an email address"),
                          Email("Email must be valid format")])
+
+
+class LandlordEditAccountForm(EditAccountForm):
+    online_pay = BooleanField('Accept Online Payments')
+    check_pay = BooleanField('Accept Check Payments')
+    street = StringField('Street Address')
+    city = StringField('City')
+    state = StringField('State')
+    zip_code = StringField('Zip Code')
 
 
 class InviteGroupForm(RedirectForm):

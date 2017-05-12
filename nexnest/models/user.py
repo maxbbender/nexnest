@@ -117,7 +117,7 @@ class User(Base):
         self.email_confirmed = email_confirmed
 
     def __repr__(self):
-        return '<User %r | %s>' % (self.username, self.name)
+        return '<User %r | %s(%d)>' % (self.username, self.name, self.id)
 
     @property
     def serialize(self):

@@ -18,12 +18,14 @@ from nexnest.models.listing import Listing
 from nexnest.models.landlord import Landlord
 from nexnest.models.availability import Availability
 
-from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm, CreateGroupForm, EmailPreferencesForm, LandlordMoreInfoForm
+from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm, CreateGroupForm, EmailPreferencesForm, LandlordMoreInfoForm, LandlordEditAccountForm
 from nexnest.utils.school import allSchoolsAsStrings
 from nexnest.utils.password import check_password
 from nexnest.utils.flash import flash_errors
 from nexnest.utils.file import allowed_file
 from nexnest.utils.email import generate_confirmation_token, confirm_token
+
+from nexnest.decorators import user_editable
 
 from sqlalchemy import func, asc, or_, and_
 
@@ -119,6 +121,11 @@ def landlordInformation(userID):
 
             session.add(newLandlord)
             session.commit()
+
+            newLandlord.user.dob = moreInformationForm.date_of_birth.data
+            newLandlord.user.phone = moreInformationForm.phone.data
+            session.commit()
+
             flash('Theoretically this all worked', 'info')
             emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(user.email), _external=True)
             user.sendEmail('generic',
@@ -222,7 +229,7 @@ def emailConfirm(payload):
 @login_required
 def viewUser(userID):
     # fake lisiting for testing
-    if current_user.id == userID:
+    if current_user.id == int(userID):
 
         form = EmailPreferencesForm(request.form)
         user = session.query(User).filter_by(id=userID).first()
@@ -291,23 +298,47 @@ def viewUser(userID):
                 return redirect(url_for('users.viewUser',
                                         userID=userID))
     else:
+        logger.warning('User %r attempted to access user_ids page %s' % (current_user, userID))
         abort(404)
 
 
 @users.route('/user/edit/info', methods=['GET', 'POST'])
 @login_required
+@user_editable
 def editAccountInfo():
-    editForm = EditAccountForm(request.data, obj=current_user)
-    editForm.school.data = current_user.school.name
+    if current_user.isLandlord
+    form = EditAccountForm(request.form)
 
-    if request.method == 'POST' and editForm.validate():
-        editForm.populate_obj(current_user)
+    if form.validate_on_submit():
+        flash('Successfully updated your account', 'success')
+        current_user.fname = form.fname.data
+        current_user.lname = form.lname.data
+
+        if form.dob.data != '':
+            current_user.dob = form.dob.data
+
+        current_user.bio = form.bio.data
+        current_user.phone = form.phone.data
+        current_user.email = form.email.data
+
+        if form.school.data != current_user.school.name:
+            school = School.query.filter_by(name=form.school.data).first()
+
+            if school is not None:
+                current_user.school_id = school.id
+                session.commit()
+
         session.commit()
+
         return redirect(url_for('users.viewUser', userID=current_user.id))
+    else:
+        flash_errors(form)
 
     schools = [r for r, in session.query(School.name).all()]
+    form = EditAccountForm(request.form, obj=current_user)
+    form.school.data = current_user.school.name
     return render_template('editAccount.html',
-                           form=editForm,
+                           form=form,
                            title='Edit Account',
                            schools=schools)
 
