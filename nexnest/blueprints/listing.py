@@ -945,16 +945,16 @@ def searchListingsAJAX():
 
 
 @listings.route('/listings/getAddresses/<schoolName>')
-@login_required
+# @login_required
 def getListingAddresses(schoolName=None):
     schoolToSearch = None
-    if schoolName is None:
-        if current_user.school is not None:
-            schoolToSearch = current_user.school
-    else:
-        schoolToSearch = School.query.fitler_by(name=schoolName).first_or_404()
+    # if schoolName is None:
+    #     if current_user.school is not None:
+    #         schoolToSearch = current_user.school
+    # else:
+    schoolToSearch = School.query.filter_by(name=schoolName).first_or_404()
 
-    logger.debug("Looking for listings that have school %r" % current_user.school)
+    # logger.debug("Looking for listings that have school %r" % current_user.school)
     listings = Listing.query. \
         join(Listing.schools). \
         filter(ListingSchool.school_id == schoolToSearch.id). \
@@ -967,6 +967,6 @@ def getListingAddresses(schoolName=None):
 
     for listing in listings:
         serialiedListing = listing.serialize
-        returnListingList.append({'address': serialiedListing['address'], 'id': listing.id})
+        returnListingList.append({'value': serialiedListing['address'], 'id': listing.id})
 
     return jsonify({'listings': returnListingList})

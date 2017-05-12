@@ -87,6 +87,38 @@ listing5 = ListingFactory()
 listing5.active = True
 listing6 = ListingFactory()
 
+listing7 = ListingFactory(num_bedrooms=8, street="76 Taylor Avenue", city="poughkeepsie", state="NY", zip_code="12601", 
+  banner_photo_url="/uploads/listings/7/bannerPhoto/listing7banner71B3CM.jpg", property_type="house", lat=41.71359820000001, lng=-73.9244261,
+  featured=True)
+listing7.active = True
+
+listing8 = ListingFactory(num_bedrooms=5, street="17 West Cedar", city="poughkeepsie", state="NY", zip_code="12601", 
+  banner_photo_url="/uploads/listings/8/bannerPhoto/listing8bannerX919KS.jpg", property_type="house", lat=41.720629, lng=-73.92391909999998,
+  featured=True)
+listing8.active = True
+
+listing9 = ListingFactory(num_bedrooms=4, street="4 Riverview Circle", city="poughkeepsie", state="NY", zip_code="12601", 
+  banner_photo_url="/uploads/listings/9/bannerPhoto/listing9bannerPhoto.jpg", property_type="house", lat=41.73865, lng=-73.93280900000002)
+listing9.active = True
+
+listing10 = ListingFactory(num_bedrooms=4, street="70 Taylor Avenue", city="poughkeepsie", state="NY", zip_code="12601", 
+  banner_photo_url="/uploads/listings/10/bannerPhoto/listing10bannerPhoto.jpg", property_type="house", lat=41.71352869999999, lng=-73.9246923)
+listing10.active = True
+
+listing11 = ListingFactory(num_bedrooms=5, street="18 West Cedar", city="poughkeepsie", state="NY", zip_code="12601", 
+  banner_photo_url="/uploads/listings/11/bannerPhoto/listing11bannerPhoto.png", property_type="house", lat=41.7202834, lng=-73.9236699)
+listing11.active = True
+
+listing12 = ListingFactory(num_bedrooms=6, street="12 West Cedar", city="poughkeepsie", state="NY", zip_code="12601", 
+  banner_photo_url="/uploads/listings/12/bannerPhoto/listing12bannerPhoto.png", property_type="house", lat=41.720173, lng=-73.92314390000001)
+listing12.active = True
+
+listing13 = ListingFactory(num_bedrooms=2, street="168 Fulton Street", city="poughkeepsie", state="NY", zip_code="12601", 
+  banner_photo_url="/uploads/listings/13/bannerPhoto/listing13bannerPhoto.png", property_type="apartment", lat=41.725445, lng=-73.91618599999998)
+listing13.active = True
+
+
+
 session.commit()
 
 # LANDLORD LISTINGS
@@ -96,28 +128,36 @@ landlordListing3 = LandlordListingFactory(landlord=landlord1, listing=listing3)
 landlordListing4 = LandlordListingFactory(landlord=landlord1, listing=listing4)
 landlordListing5 = LandlordListingFactory(landlord=landlord1, listing=listing5)
 landlordListing6 = LandlordListingFactory(landlord=landlord1, listing=listing6)
+landlordListing7 = LandlordListingFactory(landlord=landlord1, listing=listing7)
+landlordListing8 = LandlordListingFactory(landlord=landlord1, listing=listing8)
+landlordListing9 = LandlordListingFactory(landlord=landlord1, listing=listing9)
+landlordListing10 = LandlordListingFactory(landlord=landlord1, listing=listing10)
+landlordListing11 = LandlordListingFactory(landlord=landlord1, listing=listing11)
+landlordListing12 = LandlordListingFactory(landlord=landlord1, listing=listing12)
+landlordListing13 = LandlordListingFactory(landlord=landlord1, listing=listing13)
 
 session.commit()
 
 # LISTING SCHOOLS
 allListings = session.query(listing.Listing).all()
 for Alisting in allListings:
-    newListingSchool = ListingSchoolFactory(listing=Alisting)
+    marist = session.query(school.School).filter_by(name='Marist').first()
+    newListingSchool = ListingSchoolFactory(listing=Alisting, school=marist)
     session.commit()
 
 
-listingSchool = session.query(listing_school.ListingSchool).filter_by(listing_id=2).first()
+#listingSchool = session.query(listing_school.ListingSchool).filter_by(listing_id=2).first()
 
-if listingSchool is not None:
-    marist = session.query(school.School).filter_by(name='Marist').first()
+# if listingSchool is not None:
+#     marist = session.query(school.School).filter_by(name='Marist').first()
 
-    if marist is not None:
-        newListingSchool = ListingSchoolFactory(listing=listingSchool.listing, school=marist)
-        session.commit()
-    else:
-        logger.warning('Could not find Marist for dummy data generation')
-else:
-    logger.warning('Could not find listing to add another school to')
+#     if marist is not None:
+#         newListingSchool = ListingSchoolFactory(listing=listingSchool.listing, school=marist)
+#         session.commit()
+#     else:
+#         logger.warning('Could not find Marist for dummy data generation')
+# else:
+#     logger.warning('Could not find listing to add another school to')
 
 
 # GROUP
