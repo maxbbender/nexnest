@@ -71,6 +71,7 @@
                                 {% endif %}
                                 </h3>
                                 <div class="card-block">
+                                    {% if not group.hasAcceptedHouseRequest %}
                                     <div class="row">
                                         <div class="col-xl-12">
                                             <!-- Group Leader Actions -->
@@ -92,6 +93,7 @@
                                             </form>
                                         </div>
                                     </div>
+                                    {% endif %}
                                     <div class="row">
                                         <div class="col-xs-12 col-xl-10">
                                             <span class="" id="userSearchUL"></span>
@@ -465,7 +467,6 @@
                                                                     {% endfor %}
                                                                 {% endif %}
                                                                 <br>
-                                                                <hr>
                                                                 <span>You and the landlord must make arrangements to sign leases and pay your security deposits if they are required. After that has happened the landlord will confirm the listing and you will have this listing for {{ request.listing.start_date }} - {{ request.listing.end_date }}. </span>                       
                                                             {% else %}
                                                                 <h4><strong>Status of request:</strong></h4>
