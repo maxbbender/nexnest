@@ -336,12 +336,19 @@
                                         </div>
                                     </div>
                                     <div class="media-body">
-                                        <strong class="notification-title"> `+message.message+` </strong>
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                <strong class="notification-title"> `+message.messageObject.user.fname + " " + message.messageObject.user.lname +` </strong>
+                                            </div>
+                                            <div class="col-xs-6" style="text-align: right;">
+                                                <span class="tag tag-default">New Message</span>
+                                            </div>
+                                        </div>
                                         <p class="notification-desc">`+message.messageObject.contentBrief+`</p>
                                         <div class="notification-meta">
                                             <div class="row">
                                                 <div class="col-xs-8">
-                                                    <small class="timestamp">`+ message.messageObject.date +`</small>
+                                                    <small class="timestamp timeago">`+ message.messageObject.date +`</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -358,6 +365,12 @@
                    else{
                         $("#doIShowMoreMessages").hide();
                    }
+                });
+                $( ".timeago" ).each(function( index ) {
+                    var unformattedTime = $(this).html();
+                    console.log(unformattedTime);
+                    var formattedTime = moment.utc(unformattedTime).fromNow();
+                    $(this).html(formattedTime);
                 });
             });
             $(document).on('click', '.dropdown-notifications', function (e) {

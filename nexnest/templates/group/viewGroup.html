@@ -71,11 +71,11 @@
                                 {% endif %}
                                 </h3>
                                 <div class="card-block">
-                                    {% if not group.hasAcceptedHouseRequest %}
                                     <div class="row">
                                         <div class="col-xl-12">
                                             <!-- Group Leader Actions -->
                                             {% if group.leader_id == current_user.id %}
+                                            {% if not group.hasAcceptedHouseRequest %}
                                             <br>
                                             <strong>Invite User to Group:</strong>
                                             <div class="row">
@@ -86,18 +86,18 @@
                                             <p id="searchHelpBlock" class="form-text text-muted">
                                                 Search by Username (first part of email)
                                             </p>                        
+                                            <span class="" id="userSearchUL"></span>
                                             <form id="invite_user" action="{{url_for('groups.invite')}}" method="POST">
                                                 {{invite_form.csrf_token}}
                                                 {{invite_form.group_id(value=group.id)}}
                                                 {{invite_form.user_id}}
                                             </form>
+                                            {% endif %}
+                                            {% endif %}
                                         </div>
                                     </div>
-                                    {% endif %}
                                     <div class="row">
                                         <div class="col-xs-12 col-xl-10">
-                                            <span class="" id="userSearchUL"></span>
-                                            {% endif %}
                                             <strong>Current Group Members:</strong>
                                             {% for user in group.acceptedUsers %}                                    
                                                 {% include 'group/member.html' %}
