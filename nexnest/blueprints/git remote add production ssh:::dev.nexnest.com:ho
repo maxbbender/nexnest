@@ -1,1 +1,1 @@
-git remote add production ssh://root@dev.nexnest.com/home/nexnest/nexnest.git
+git remote add stage ssh://nexnest@dev.nexnest.com/home/nexnest/nexnest
