@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 
 from flask import flash, render_template, url_for
 
-from nexnest import logger
+from nexnest import logger, app
 from nexnest.application import db, session
 from nexnest.utils.password import hash_password
 from nexnest.utils.email import send_email
@@ -37,6 +37,7 @@ class User(Base):
     school_id = db.Column(db.Integer(), db.ForeignKey('schools.id'))
     active = db.Column(db.Boolean)
     email_confirmed = db.Column(db.Boolean)
+    landlord_info_filled = db.Column(db.Boolean)
     # twitter_token = db.Column(db.Text)
     # twitter_secret = db.Column(db.Text)
     # sentDM = relationship('DirectMessage',  # direct_message.DirectMessage
@@ -83,7 +84,8 @@ class User(Base):
                  phone=None,
                  dob=None,
                  profile_image=None,
-                 email_confirmed=False
+                 email_confirmed=False,
+                 landlord_info_filled=True
                  ):
         if school is not None:
             self.school_id = school.id
@@ -114,7 +116,13 @@ class User(Base):
         self.date_created = now
         self.date_modified = now
         self.active = True
-        self.email_confirmed = email_confirmed
+
+        if app.config['TESTING']:
+            self.email_confirmed = True
+        else:
+            self.email_confirmed = email_confirmed
+
+        self.landlord_info_filled = landlord_info_filled
 
     def __repr__(self):
         return '<User %r | %s(%d)>' % (self.username, self.name, self.id)
@@ -334,3 +342,12 @@ class User(Base):
                        html_body=render_template('email/generic.html',
                                                  user=self,
                                                  message=message))
+
+    def isEditableBy(self, user, toFlash=False):
+        if user.id == self.id:
+            return True
+
+        if toFlash:
+            flash('Permissions Error', 'danger')
+
+        return False

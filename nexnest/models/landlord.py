@@ -25,14 +25,12 @@ class Landlord(Base):
 
     def __init__(self,
                  user,
-                 online_pay,
-                 check_pay,
-                 street,
-                 city,
-                 state,
-                 zip_code,
-                 dob,
-                 phone):
+                 online_pay=False,
+                 check_pay=False,
+                 street=None,
+                 city=None,
+                 state=None,
+                 zip_code=None):
 
         self.user = user
         self.user_id = user.id

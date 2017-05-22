@@ -35,6 +35,9 @@ def isLandlord():
 @landlords.route('/landlord/dashboard')
 @login_required
 def landlordDashboard():
+    if not current_user.landlord_info_filled:
+        return redirect(url_for('users.landlordInformation'))
+        
     dateChangeForm = TourDateChangeForm()
     landlord = session.query(Landlord) \
         .filter_by(user_id=current_user.id) \

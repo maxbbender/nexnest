@@ -89,14 +89,14 @@ class RegistrationForm(RedirectForm):
 class LandlordMoreInfoForm(RedirectForm):
     phone = IntegerField('Phone Number', [InputRequired()])
     date_of_birth = DateField('Date of Birth', [InputRequired()])
-    ssn = IntegerField('Last 4 Digits of Socail Security Number', [InputRequired()])
+    # ssn = IntegerField('Last 4 Digits of Socail Security Number', [InputRequired()])
     street = StringField('Street Address', [
                          Length(min=2, max=50), InputRequired()])
     city = StringField('City', [Length(min=2, max=50), InputRequired()])
     state = SelectField('State', choices=statesLong)
     zip_code = StringField('Zipcode', [Length(min=5, max=5), InputRequired()])
     user_id = HiddenField('user')
-    availabilities = HiddenField('availabilities', validators=[InputRequired()])
+    availabilities = HiddenField('availabilities', validators=[Optional()])
     check_pay = BooleanField('Do you accept rent payments via checks?')
     online_pay = BooleanField('Do you accept rent payments via NexNest?')
 

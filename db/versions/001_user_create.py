@@ -30,7 +30,8 @@ users = Table('users',
               Column('date_modified', DateTime(),
                      nullable=False),
               Column('active', Boolean()),
-              Column('email_confirmed', Boolean()))
+              Column('email_confirmed', Boolean()),
+              Column('landlord_info_filled', Boolean()))
 
 
 def upgrade(migrate_engine):
