@@ -1,5 +1,5 @@
 # NextNest LLC
-test
+
 Database
 ======
 We are going to use Postgres for our backend. If you don't have it installed.... then figure it out :)
@@ -50,6 +50,12 @@ Make sure you have CPU virtualization turned on in your BIOS. Usually it is turn
 3. Once that is done running ssh into the machine by typing `vagrant ssh`
 4. cd to our mounted project directory at `/vagrant` so ... `cd /vagrant`
 5. Type `make install` to install all the python packages and initialize our database!
+
+
+Production Setup
+======
+`git remote add stage ssh://nexnest@dev.nexnest.com/home/nexnest/nexnest`
+
 
 
 
