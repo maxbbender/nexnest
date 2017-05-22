@@ -70,7 +70,7 @@
             </div>
         </div>
         <br>
-        <div class="row">           
+        <div class="row">
             <div class="col-xs-12 col-lg-7" style="padding-left: 35px;">
                 <div class="tab-content">
                     <div class="tab-pane active" id="tourTab" role="tabpanel" style="padding: 0px;">
@@ -92,7 +92,7 @@
                                             {% if tour.last_requested == 'landlord' %}
                                                 {% if tour.tour_confirmed %}  
                                                     {% if tour.declined %}
-                                                        <b style="color: red;">TOUR HAS BEEN CANCELLED</b>
+                                                        <strong><h1>Tour Status: <b style="color: red;">TOUR HAS BEEN CANCELLED</b> </h1></strong>
                                                     {% else %}
                                                         <strong><h1>Tour Status:
                                                             <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
@@ -131,7 +131,7 @@
                                                 <p class="card-text">                                                    
                                                     {% if tour.tour_confirmed %}
                                                         {% if tour.declined %}
-                                                            <b style="color: red;">TOUR HAS BEEN CANCELLED</b>
+                                                            <strong><h1>Tour Status: <b style="color: red;">TOUR HAS BEEN CANCELLED</b> </h1></strong>
                                                         {% else %}
                                                             <strong><h1>Tour Status:
                                                                 <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
@@ -173,7 +173,7 @@
                                             {% if tour.last_requested == 'group' %}
                                                 {% if tour.tour_confirmed %}
                                                     {% if tour.declined %}
-                                                        <b style="color: red;">TOUR HAS BEEN CANCELLED</b>
+                                                        <strong><h1>Tour Status: <b style="color: red;">TOUR HAS BEEN CANCELLED</b> </h1></strong>
                                                     {% else %}
                                                         <strong><h1>Tour Status:
                                                             <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
@@ -213,7 +213,7 @@
                                             {% else %}
                                                 {% if tour.tour_confirmed %}
                                                     {% if tour.declined %}
-                                                        <b style="color: red;">TOUR HAS BEEN CANCELLED</b>
+                                                        <strong><h1>Tour Status: <b style="color: red;">TOUR HAS BEEN CANCELLED</b> </h1></strong>
                                                     {% else %}
                                                         <strong><h1>Tour Status:
                                                             <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
@@ -247,7 +247,7 @@
                                         {% else %}
                                             {% if tour.tour_confirmed %}
                                                 {% if tour.declined %}
-                                                        <b style="color: red;">TOUR HAS BEEN CANCELLED</b>
+                                                        <strong><h1>Tour Status: <b style="color: red;">TOUR HAS BEEN CANCELLED</b> </h1></strong>
                                                     {% else %}
                                                     <strong><h1>Tour Status:
                                                         <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
