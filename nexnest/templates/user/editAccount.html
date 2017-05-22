@@ -8,12 +8,25 @@
 			{{form.csrf_token}}
 			  	<dl>
 				    {{ render_field(form.fname, class="form-control", type="text") }}
-				    {{ render_field(form.lname, class="form-control", type="text") }}			    
-				    {{ render_field(form.school, class="form-control") }}
+				    {{ render_field(form.lname, class="form-control", type="text") }}
 				    {{ render_field(form.email, class="form-control", type="email") }}	
 				    {{ render_field(form.phone, class="form-control", type="tel") }}
 				    {{ render_field(form.dob, class="form-control", type="date") }}
-				    {{ render_field(form.bio, class="form-control", type="text", rows=5) }}		    
+				    {{ render_field(form.bio, class="form-control", type="text", rows=5) }}		
+
+				    {% if current_user.isLandlord %}  
+				    <h1>Address</h1>  
+				    {{ render_field(form.street, class="form-control", type="text") }}		
+				    {{ render_field(form.city, class="form-control", type="text") }}		
+				    {{ render_field(form.state, class="form-control", type="text") }}		
+				    {{ render_field(form.zip_code, class="form-control", type="text") }}
+
+				    <h1>Payment</h1>	
+				    {{ render_field(form.check_pay, class="form-control", type="checkbox") }}		
+				    {{ render_field(form.online_pay, class="form-control", type="checkbox") }}	
+				   	{% else %}
+				   	{{ render_field(form.school, class="form-control") }}
+				   	{% endif %}	
 			  	</dl>
 			  	<p>
 			  		<input type='submit' value='Edit Information' class="btn btn-info">
@@ -23,14 +36,18 @@
 	</div>
 {% endblock %}
 {% block scripts %}
-<script>
-var schools = [
-    {% for school in schools %}
-    '{{school}}',
-    {% endfor %}
-]
-$('#school').autocomplete({
-    source : schools
-});
-</script>
+
+	{% if schools %}
+		<script>
+		var schools = [
+		    {% for school in schools %}
+		    '{{school}}',
+		    {% endfor %}
+		]
+		$('#school').autocomplete({
+		    source : schools
+		});
+		</script>
+	{% endif %}
+
 {% endblock %}

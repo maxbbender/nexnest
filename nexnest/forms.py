@@ -203,7 +203,7 @@ class EditAccountForm(RedirectForm):
     lname = StringField(
         'Last Name', [InputRequired()])
     school = StringField(
-        'School Attending', [InputRequired()])
+        'School Attending', [Optional()])
     dob = StringField('Date of Birth')
     bio = TextAreaField('If you wish provide a short personal bio')
     phone = StringField('Phone Number')

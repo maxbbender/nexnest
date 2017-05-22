@@ -99,6 +99,7 @@ def register():
         return render_template('register.html', form=registerForm, schools=allSchoolsAsStrings())
 
 
+# BRAINTREE UPDATE
 @users.route('/register/<userID>/landlordInformation', methods=['GET', 'POST'])
 def landlordInformation(userID):
     if request.method == 'GET':
@@ -306,8 +307,13 @@ def viewUser(userID):
 @login_required
 @user_editable
 def editAccountInfo():
-    if current_user.isLandlord
-    form = EditAccountForm(request.form)
+    landlord = None
+    currentUserIsLandlord = current_user.isLandlord
+    if currentUserIsLandlord:
+        landlord = Landlord.query.filter_by(user=current_user).first()
+        form = LandlordEditAccountForm(request.form)
+    else:
+        form = EditAccountForm(request.form)
 
     if form.validate_on_submit():
         flash('Successfully updated your account', 'success')
@@ -321,12 +327,19 @@ def editAccountInfo():
         current_user.phone = form.phone.data
         current_user.email = form.email.data
 
-        if form.school.data != current_user.school.name:
-            school = School.query.filter_by(name=form.school.data).first()
+        if currentUserIsLandlord:
+            landlord.online_pay = form.online_pay.data
+            landlord.check_pay = form.check_pay.data
+            landlord.street = form.street.data
+            landlord.city = form.city.data
+            landlord.zip_code = form.zip_code.data
+            landlord.state = form.state.data
+        else:
+            if form.school.data != current_user.school.name:
+                school = School.query.filter_by(name=form.school.data).first()
 
-            if school is not None:
-                current_user.school_id = school.id
-                session.commit()
+                if school is not None:
+                    current_user.school_id = school.id
 
         session.commit()
 
@@ -334,13 +347,28 @@ def editAccountInfo():
     else:
         flash_errors(form)
 
-    schools = [r for r, in session.query(School.name).all()]
-    form = EditAccountForm(request.form, obj=current_user)
-    form.school.data = current_user.school.name
-    return render_template('editAccount.html',
-                           form=form,
-                           title='Edit Account',
-                           schools=schools)
+    if currentUserIsLandlord:
+        form = LandlordEditAccountForm(request.form, obj=landlord)
+
+        form.fname.data = current_user.fname
+        form.lname.data = current_user.lname
+        form.dob.data = current_user.dob
+        form.bio.data = current_user.bio
+        form.phone.data = current_user.phone
+        form.email.data = current_user.email
+
+        return render_template( 'editAccount.html',
+                               form=form,
+                               title='Edit Account',
+                               schools=None)
+    else:
+        schools = [r for r, in session.query(School.name).all()]
+        form = EditAccountForm(request.form, obj=current_user)
+        form.school.data = current_user.school.name
+        return render_template('editAccount.html',
+                               form=form,
+                               title='Edit Account',
+                               schools=schools)
 
 
 @users.route('/user/search/<username>')
