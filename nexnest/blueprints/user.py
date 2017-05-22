@@ -18,12 +18,14 @@ from nexnest.models.listing import Listing
 from nexnest.models.landlord import Landlord
 from nexnest.models.availability import Availability
 
-from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm, CreateGroupForm, EmailPreferencesForm, LandlordMoreInfoForm
+from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm, CreateGroupForm, EmailPreferencesForm, LandlordMoreInfoForm, LandlordEditAccountForm
 from nexnest.utils.school import allSchoolsAsStrings
 from nexnest.utils.password import check_password
 from nexnest.utils.flash import flash_errors
 from nexnest.utils.file import allowed_file
 from nexnest.utils.email import generate_confirmation_token, confirm_token
+
+from nexnest.decorators import user_editable
 
 from sqlalchemy import func, asc, or_, and_
 
@@ -50,7 +52,7 @@ def register():
         registerForm = RegistrationForm(request.form)
 
         if registerForm.validate():
-            #Determine if registering as tenant or landlord
+            # Determine if registering as tenant or landlord
             userType = registerForm.landlord.data
 
             if userType == "landlord":
@@ -61,7 +63,7 @@ def register():
                 session.add(newUser)
                 session.commit()
 
-                #Make them a Landlord
+                # Make them a Landlord
 
                 # Notification Preference Table init
                 session.add(NotificationPreference(user=newUser))
@@ -87,16 +89,17 @@ def register():
                     # Notification Preference Table init
                     session.add(NotificationPreference(user=newUser))
                     session.commit()
-                    
+
                     emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(newUser.email), _external=True)
                     newUser.sendEmail('generic',
                                       'Click the link to confirm your account <a href="%s">Click Here</a>' % emailConfirmURL)
 
-                    return redirect(url_for('users.emailConfirmNotice', email=registerForm.email.data))            
+                    return redirect(url_for('users.emailConfirmNotice', email=registerForm.email.data))
         flash_errors(registerForm)
         return render_template('register.html', form=registerForm, schools=allSchoolsAsStrings())
-    
 
+
+# BRAINTREE UPDATE
 @users.route('/register/<userID>/landlordInformation', methods=['GET', 'POST'])
 def landlordInformation(userID):
     if request.method == 'GET':
@@ -110,29 +113,34 @@ def landlordInformation(userID):
         if moreInformationForm.validate():
             user = session.query(User).filter_by(id=userID).first()
             newLandlord = Landlord(user=user,
-                               street=moreInformationForm.street.data,
-                               city=moreInformationForm.city.data,
-                               state=moreInformationForm.state.data,
-                               zip_code=moreInformationForm.zip_code.data,
-                               check_pay=True,
-                               online_pay=True)
+                                   street=moreInformationForm.street.data,
+                                   city=moreInformationForm.city.data,
+                                   state=moreInformationForm.state.data,
+                                   zip_code=moreInformationForm.zip_code.data,
+                                   check_pay=moreInformationForm.check_pay.data,
+                                   online_pay=moreInformationForm.online_pay.data)
+
             session.add(newLandlord)
             session.commit()
+
+            newLandlord.user.dob = moreInformationForm.date_of_birth.data
+            newLandlord.user.phone = moreInformationForm.phone.data
+            session.commit()
+
             flash('Theoretically this all worked', 'info')
             emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(user.email), _external=True)
             user.sendEmail('generic',
-                              'Click the link to confirm your account <a href="%s">Click Here</a>' % emailConfirmURL)
+                           'Click the link to confirm your account <a href="%s">Click Here</a>' % emailConfirmURL)
 
             return redirect(url_for('users.emailConfirmNotice', email=user.email))
-            #MAX DO YOUR MAGIC HERE
+            # MAX DO YOUR MAGIC HERE
         flash_errors(moreInformationForm)
         return render_template('/landlordMoreInformation.html', form=moreInformationForm, userID=userID)
+
 
 @users.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        # print(request.args['next'])
-        # print(request.args.get['next'])
         loginForm = LoginForm()
         if request.args.get('next') is not None:
             loginForm.nextURL.data = request.args['next']
@@ -222,12 +230,12 @@ def emailConfirm(payload):
 @login_required
 def viewUser(userID):
     # fake lisiting for testing
-    if current_user.id == userID:
+    if current_user.id == int(userID):
 
         form = EmailPreferencesForm(request.form)
         user = session.query(User).filter_by(id=userID).first()
         currentPreferences = session.query(
-        NotificationPreference).filter_by(user_id=userID).first()
+            NotificationPreference).filter_by(user_id=userID).first()
         userFavorites = session.query(ListingFavorite).filter_by(user=current_user).all()
         myGroups = current_user.accepted_groups
         logger.debug(currentPreferences)
@@ -291,25 +299,76 @@ def viewUser(userID):
                 return redirect(url_for('users.viewUser',
                                         userID=userID))
     else:
+        logger.warning('User %r attempted to access user_ids page %s' % (current_user, userID))
         abort(404)
 
 
 @users.route('/user/edit/info', methods=['GET', 'POST'])
 @login_required
+@user_editable
 def editAccountInfo():
-    editForm = EditAccountForm(request.data, obj=current_user)
-    editForm.school.data = current_user.school.name
+    landlord = None
+    currentUserIsLandlord = current_user.isLandlord
+    if currentUserIsLandlord:
+        landlord = Landlord.query.filter_by(user=current_user).first()
+        form = LandlordEditAccountForm(request.form)
+    else:
+        form = EditAccountForm(request.form)
 
-    if request.method == 'POST' and editForm.validate():
-        editForm.populate_obj(current_user)
+    if form.validate_on_submit():
+        flash('Successfully updated your account', 'success')
+        current_user.fname = form.fname.data
+        current_user.lname = form.lname.data
+
+        if form.dob.data != '':
+            current_user.dob = form.dob.data
+
+        current_user.bio = form.bio.data
+        current_user.phone = form.phone.data
+        current_user.email = form.email.data
+
+        if currentUserIsLandlord:
+            landlord.online_pay = form.online_pay.data
+            landlord.check_pay = form.check_pay.data
+            landlord.street = form.street.data
+            landlord.city = form.city.data
+            landlord.zip_code = form.zip_code.data
+            landlord.state = form.state.data
+        else:
+            if form.school.data != current_user.school.name:
+                school = School.query.filter_by(name=form.school.data).first()
+
+                if school is not None:
+                    current_user.school_id = school.id
+
         session.commit()
-        return redirect(url_for('users.viewUser', userID=current_user.id))
 
-    schools = [r for r, in session.query(School.name).all()]
-    return render_template('editAccount.html',
-                           form=editForm,
-                           title='Edit Account',
-                           schools=schools)
+        return redirect(url_for('users.viewUser', userID=current_user.id))
+    else:
+        flash_errors(form)
+
+    if currentUserIsLandlord:
+        form = LandlordEditAccountForm(request.form, obj=landlord)
+
+        form.fname.data = current_user.fname
+        form.lname.data = current_user.lname
+        form.dob.data = current_user.dob
+        form.bio.data = current_user.bio
+        form.phone.data = current_user.phone
+        form.email.data = current_user.email
+
+        return render_template( 'editAccount.html',
+                               form=form,
+                               title='Edit Account',
+                               schools=None)
+    else:
+        schools = [r for r, in session.query(School.name).all()]
+        form = EditAccountForm(request.form, obj=current_user)
+        form.school.data = current_user.school.name
+        return render_template('editAccount.html',
+                               form=form,
+                               title='Edit Account',
+                               schools=schools)
 
 
 @users.route('/user/search/<username>')
@@ -607,7 +666,6 @@ def unFavoriteListing(listingID):
     session.delete(listingFavorite)
     session.commit()
     return jsonify("true")
-
 
 
 @users.route('/landlord/getAvailability/JSON', methods=['GET'])

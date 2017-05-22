@@ -30,7 +30,9 @@ class Landlord(Base):
                  street,
                  city,
                  state,
-                 zip_code):
+                 zip_code,
+                 dob,
+                 phone):
 
         self.user = user
         self.user_id = user.id
