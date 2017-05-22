@@ -357,7 +357,7 @@ def editAccountInfo():
         form.phone.data = current_user.phone
         form.email.data = current_user.email
 
-        return render_template( 'editAccount.html',
+        return render_template('editAccount.html',
                                form=form,
                                title='Edit Account',
                                schools=None)
