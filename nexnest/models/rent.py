@@ -1,4 +1,5 @@
 from sqlalchemy import event
+from sqlalchemy.orm import relationship
 
 from datetime import datetime as dt
 
@@ -13,8 +14,10 @@ class Rent(Base):
     house_id = db.Column(db.Integer, db.ForeignKey('houses.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     date_due = db.Column(db.Date())
+    completed = db.Column(db.Boolean)
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
+    transaction = relationship("RentTransaction", uselist=False, back_populates='rent')
 
     def __init__(
             self,

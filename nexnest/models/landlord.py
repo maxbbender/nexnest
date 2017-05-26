@@ -19,6 +19,7 @@ class Landlord(Base):
     city = db.Column(db.Text)
     state = db.Column(db.String(2))
     zip_code = db.Column(db.String(5))
+    has_braintree_acc = db.Column(db.Boolean)
     listings = relationship("LandlordListing", back_populates='landlord')
     reports = relationship("ReportLandlord", backref='landlord')
     availabilities = relationship("Availability", backref='landlord')
@@ -30,7 +31,8 @@ class Landlord(Base):
                  street=None,
                  city=None,
                  state=None,
-                 zip_code=None):
+                 zip_code=None,
+                 has_braintree_acc=False):
 
         self.user = user
         self.user_id = user.id
@@ -40,6 +42,7 @@ class Landlord(Base):
         self.city = city
         self.state = state
         self.zip_code = zip_code
+        self.has_braintree_acc = has_braintree_acc
 
     def __repr__(self):
         return '<Landlord %r>' % self.user_id

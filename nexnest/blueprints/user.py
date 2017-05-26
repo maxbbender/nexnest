@@ -136,8 +136,6 @@ def landlordInformation():
 
             session.commit()
 
-            flash('Theoretically this all worked', 'info')
-
             availabilityJSON = json.loads(moreInformationForm.availabilities.data)
             logger.debug('availabilityJSON %r' % availabilityJSON)
 
@@ -152,7 +150,8 @@ def landlordInformation():
                             session.commit()
 
             flash('Your Information was successfully saved!', 'success')
-            return moreInformationForm.redirect()
+            return redirect(url_for('landlords.landlordDashboard'))
+            # return moreInformationForm.redirect()
 
         flash_errors(moreInformationForm)
         return render_template('/landlordMoreInformation.html', form=moreInformationForm, userID=userID)
