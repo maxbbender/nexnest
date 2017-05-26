@@ -32,6 +32,7 @@ from nexnest.models.platform_report import PlatformReport
 from nexnest.models.availability import Availability
 from nexnest.models.tour_time import TourTime
 from nexnest.models.group_email import GroupEmail
+from nexnest.models.rent import Rent
 
 
 from flask import redirect, url_for
@@ -74,7 +75,6 @@ admin.add_view(AdminModelView(GroupEmail, session))
 admin.add_view(AdminModelView(GroupListing, session))
 admin.add_view(AdminModelView(Tour, session))
 
-
 # ----------------------
 # ------LISTINGS--------
 # ----------------------
@@ -84,7 +84,6 @@ admin.add_view(AdminModelView(ListingTransactionListing, session))
 admin.add_view(AdminModelView(ListingSchool, session))
 admin.add_view(AdminModelView(ListingFavorite, session))
 admin.add_view(AdminModelView(LandlordListing, session))
-
 
 # ----------------------
 # ------MESSAGES--------
@@ -104,6 +103,12 @@ admin.add_view(AdminModelView(ReportGroup, session))
 admin.add_view(AdminModelView(ReportListing, session))
 admin.add_view(AdminModelView(PlatformReport, session))
 
+# -------------------
+# ------HOUSE--------
+# -------------------
+admin.add_view(AdminModelView(House, session))
+admin.add_view(AdminModelView(Rent, session))
+admin.add_view(AdminModelView(Maintenance, session))
 
 # ------------------
 # ------MISC--------
@@ -111,5 +116,3 @@ admin.add_view(AdminModelView(PlatformReport, session))
 admin.add_view(AdminModelView(Notification, session))
 admin.add_view(AdminModelView(SecurityDeposit, session))
 admin.add_view(AdminModelView(Coupon, session))
-admin.add_view(AdminModelView(House, session))
-admin.add_view(AdminModelView(Maintenance, session))

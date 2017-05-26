@@ -38,38 +38,25 @@ class User(Base):
     active = db.Column(db.Boolean)
     email_confirmed = db.Column(db.Boolean)
     landlord_info_filled = db.Column(db.Boolean)
-    # twitter_token = db.Column(db.Text)
-    # twitter_secret = db.Column(db.Text)
-    # sentDM = relationship('DirectMessage',  # direct_message.DirectMessage
-    #                       lazy='dynamic',
-    #                       backref='source_user',
-    #                       foreign_keys=direct_message.DirectMessage.source_user_id
-    #                       # foreign_keys='[DirectMessage.source_user_id]',
-    #                       )
-    # sentMessages = relationship('Message', backref='user')
     recievedDM = relationship('DirectMessage',
                               lazy='dynamic',
                               backref='target_user',
-                              # foreign_keys=direct_message.DirectMessage.target_user_id
                               foreign_keys='DirectMessage.target_user_id',
                               )
     groups = relationship("GroupUser", back_populates='user')
     groupLeader = relationship("Group", backref='leader')
-    # groupMessages = relationship("GroupMessage", backref='user')
-    # houseMessages = relationship("HouseMessage", backref='user')
     landlord = relationship('Landlord', backref='user')
-    # tourMessages = relationship("TourMessage", backref='user')
-    # groupListingMessages = relationship("GroupListingMessage", backref='user')
     securityDeposits = relationship("SecurityDeposit", backref='user')
-    # maintenanceMessages = relationship("MaintenanceMessage", backref='user')
     maintenanceRequests = relationship("Maintenance", backref='user')
     notifications = relationship("Notification", backref='user', lazy="dynamic")
     messages = relationship('Message', backref='user')
     groupListingFavorites = relationship('GroupListingFavorite', backref='user')
     transactions = relationship('Transaction', backref='user')
-    notificationPreference = relationship('NotificationPreference', uselist=False, back_populates='user')
+    notificationPreference = relationship('NotificationPreference',
+                                          uselist=False, back_populates='user')
     individualFavorites = relationship('ListingFavorite', backref='user')
     reports = relationship('Report', backref='user')
+    rent = relationship('Rent', backref='user')
 
     def __init__(self,
                  email,

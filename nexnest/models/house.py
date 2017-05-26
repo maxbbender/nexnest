@@ -20,6 +20,7 @@ class House(Base):
     date_modified = db.Column(db.DateTime)
     messages = relationship("HouseMessage", backref='house')
     maintenanceRequests = relationship("Maintenance", backref='house')
+    rent = relationship('Rent', backref='house')
 
     def __init__(
             self,

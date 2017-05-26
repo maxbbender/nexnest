@@ -14,8 +14,6 @@ import os
 
 import googlemaps
 
-from flask_login import current_user
-
 
 class Listing(Base):
     __tablename__ = 'listings'
@@ -51,6 +49,8 @@ class Listing(Base):
     apartment_number = db.Column(db.Integer)
     disabled = db.Column(db.Boolean)
     property_type = db.Column(db.Text)
+
+    # monthly | semester
     rent_due = db.Column(db.String(20))
     first_semester_rent_due_date = db.Column(db.Date)
     second_semester_rent_due_date = db.Column(db.Date)
