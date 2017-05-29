@@ -88,7 +88,7 @@ class RegistrationForm(RedirectForm):
 
 class LandlordMoreInfoForm(RedirectForm):
     phone = IntegerField('Phone Number', [InputRequired()])
-    date_of_birth = DateField('Date of Birth', [InputRequired()])
+    date_of_birth = HiddenField('Date of Birth', [InputRequired()])
     ssn = IntegerField('Last 4 Digits of Socail Security Number', [InputRequired()])
     street = StringField('Street Address', [
                          Length(min=2, max=50), InputRequired()])

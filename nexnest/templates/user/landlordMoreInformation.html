@@ -61,9 +61,12 @@
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                                        <div class="form-group">
+                                        <div class="form-inline">
                                             <label class="control-label form-control-feedback">Date of Birth</label>
-                                            {{form.date_of_birth(class='form-control', required='required', type='date')}}
+                                            <br>
+                                            <select id="dobmonth" class='form-control'></select>
+                                            <select id="dobday" class='form-control'></select>                                            
+                                            <select id="dobyear" class='form-control'></select>
                                         </div>
                                     </div>
                                 </div>
@@ -95,6 +98,7 @@
                                     </div>
                                 </div>
                             </fieldset>
+                            {{form.date_of_birth}}
                             {{form.user_id}}
                             {{form.availabilities}}
 						  	<p>
@@ -225,6 +229,26 @@ function geolocate() {
   });
 })($);
 
+$(document).ready(function(){
+    $.dobPicker({
+        // Selectopr IDs
+        daySelector: '#dobday',
+        monthSelector: '#dobmonth',
+        yearSelector: '#dobyear',
+
+        // Default option values
+        dayDefault: 'Day',
+        monthDefault: 'Month',
+        yearDefault: 'Year',
+
+        // Minimum age
+        minimumAge: 0,
+
+        // Maximum age
+        maximumAge: 115
+    });
+});
+
 
 function submitForm(){
     //Get avaliable time slots
@@ -235,7 +259,13 @@ function submitForm(){
         console.log("Day: " + day + " Time: " + time);
       }
     });
-    $("form#moreInformationForm").submit();
+    //get date of birth and set it
+    var day = $("#dobday").val();
+    var month = $("#dobmonth").val();
+    var year = $("#dobyear").val();
+    $("#date_of_birth").val(month+"-"+day+"-"+year);
+    console.log($("#date_of_birth").val());
+    //$("form#moreInformationForm").submit();
 }
 
 </script>
