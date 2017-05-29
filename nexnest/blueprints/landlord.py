@@ -8,7 +8,8 @@ from nexnest.models.landlord import Landlord
 from nexnest.models.listing import Listing
 from nexnest.models.landlord_listing import LandlordListing
 from nexnest.models.availability import Availability
-from nexnest.forms import TourDateChangeForm, PreCheckoutForm
+from nexnest.forms import TourDateChangeForm, PreCheckoutForm, LandlordPaymentAccountForm
+from nexnest.utils.flash import flash_errors
 
 from dateutil import parser
 
@@ -192,10 +193,19 @@ def updateAvailability():
     else:
         return jsonify({'success': False, 'message': 'Invalid Request (JSON is None)'})
 
+
 # @landlords.route('/landlord/createPaymentAccount', methods=['GET', 'POST'])
 # @login_required
 # def createPaymentAcocunt():
 #     landlord = Landlord.query.filter_by(user=current_user).first_or_404()
 
-#     i
+#     form = LandlordPaymentAccountForm(request.form)
+
+#     if form.validate_on_submit():
+#         logger.debug("Create Payment Account Form is Valid")
+#     else:
+#         flash_errors(form)
+
+#     return render_template('paymentInformation.html',
+#                            form=form)
 
