@@ -6,7 +6,7 @@
         </div>
         <div class="col-xs-10 col-sm-8 col-md-8 col-lg-8 col-xl-4">
             <div class="row">
-                <div class="card" style="width:100%;">
+                <div class="card" style="width:100%; border: none;">
                     <h3 class="card-header">Login to NexNest</h3>
                     <div class="card-block">
         				{% from "_formhelpers.html" import render_field %}
@@ -17,13 +17,24 @@
 				                    {{ render_field(login_form.password, class="form-control", type="password") }}
 							  	</dl>
                                 {{login_form.next}}
-							  	<p>
-							  		<input type='submit' value='Login' class="btn btn-info">
-							  	</p>
+							  	<div class="row" style="float: right;">
+                                    <a href="{{url_for('users.register')}}" class="btn btn-primary" style="margin-right: 15px;">Need to Register?</a>
+							  		<input type='submit' value='Login' class="btn btn-primary">
+							  	</div>
         				</form>            
                     </div>
                 </div>
             </div>
         </div>
     </div>
+{% endblock %}
+{% block scripts %}
+<script>
+    //To pass the next variable into bender
+    $( document ).ready(function() {
+        var a = location.href; 
+        var b = a.substring(a.indexOf("?")+6);
+        console.log(b);
+    });
+</script>
 {% endblock %}
