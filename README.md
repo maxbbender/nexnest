@@ -13,25 +13,25 @@ While developing we will only need 2 users, the test and development. Don't both
 
 **nextnest_development**
 
-`createuser -U postgres -h localhost -E -p 5432 -d -w nextnest_development`
+`createuser -U postgres -h localhost -E -p 5432 -d -w nexnest_development`
 
-`sudo -u postgres psql -U postgres -c "alter user nextnest_development with password 'domislove';"`
+`sudo -u postgres psql -U postgres -c "alter user nexnest_development with password 'domislove';"`
 
 **nextnest_test**
 
-`createuser -U postgres -h localhost -E -p 5432 -d -w nextnest_test`
+`createuser -U postgres -h localhost -E -p 5432 -d -w nexnest_test`
 
-`sudo -u postgres psql -U postgres -c "alter user nextnest_test with password 'domislove';"`
+`sudo -u postgres psql -U postgres -c "alter user nexnest_test with password 'domislove';"`
 
 ## Database Setup
 
 **nextnest_development**
 
-`createdb -U nextnest_development -O nextnest_development -h localhost -p 5432 nextnest_development`
+`createdb -U nexnest_development -O nexnest_development -h localhost -p 5432 nexnest_development`
 
 **nextnest_test**
 
-`createdb -U nextnest_test -O nextnest_test -h localhost -p 5432 nextnest_test`
+`createdb -U nexnest_test -O nexnest_test -h localhost -p 5432 nexnest_test`
 
 Vagrant
 =======
