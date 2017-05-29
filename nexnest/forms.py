@@ -348,10 +348,9 @@ class LandlordPaymentAccountForm(RedirectForm):
     legalBusinessName = StringField('Legal Business Name', validators=[Optional()])
     dbaBusinessName = StringField('DBA Business Name', [Optional()])
     taxID = StringField('Tax ID', [Optional()])
-    businessStreet = StringFields('Street', [Optional()])
+    businessStreet = StringField('Street', [Optional()])
     businessCity = StringField('City', [Optional()])
     businessZip = StringField('Zip Code', [Optional()])
     businessState = SelectField('State', choices=statesLong, validators=[Optional()])
     accountNumber = StringField('Recieving Account Number')
     routingNumber = StringField('Routing Number')
-    
