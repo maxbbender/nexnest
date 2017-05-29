@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required
 
-from nexnest import app
+from nexnest import app, logger
 from nexnest.forms import LoginForm
 from nexnest.application import session
 from nexnest.models.listing import Listing
@@ -46,4 +46,5 @@ def test():
     # emailSend = user.sendEmail(emailType='message', message='domislove')
     # print(emailSend)
     # return render_template('test.html')
+    logger.error("TESTING ERROR")
     return str(app.config['TESTING'])

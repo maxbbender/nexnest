@@ -35,6 +35,9 @@ def isLandlord():
 @landlords.route('/landlord/dashboard')
 @login_required
 def landlordDashboard():
+    if not current_user.landlord_info_filled:
+        return redirect(url_for('users.landlordInformation'))
+
     dateChangeForm = TourDateChangeForm()
     landlord = session.query(Landlord) \
         .filter_by(user_id=current_user.id) \
@@ -188,3 +191,11 @@ def updateAvailability():
         return jsonify({'success': True})
     else:
         return jsonify({'success': False, 'message': 'Invalid Request (JSON is None)'})
+
+# @landlords.route('/landlord/createPaymentAccount', methods=['GET', 'POST'])
+# @login_required
+# def createPaymentAcocunt():
+#     landlord = Landlord.query.filter_by(user=current_user).first_or_404()
+
+#     i
+

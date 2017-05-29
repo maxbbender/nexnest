@@ -13,7 +13,8 @@ landlords = Table('landlords', meta,
                   Column('street', Text()),
                   Column('city', Text()),
                   Column('state', String(length=2)),
-                  Column('zip_code', String(length=5)))
+                  Column('zip_code', String(length=5)),
+                  Column('has_braintree_acc', Boolean()))
 
 
 def upgrade(migrate_engine):
