@@ -177,9 +177,7 @@
 		{% with flashedMessages = get_flashed_messages() %}
 		  {% if flashedMessages %}
 		    <ul>
-		    {% for flashedMessage in flashedMessages %}
-		        {% include 'flash.html' %}
-		    {% endfor %}
+		      {% include 'flash.html' %}
 		    </ul>
 		  {% endif %}
 		{% endwith %}

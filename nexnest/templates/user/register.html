@@ -11,14 +11,14 @@
                     <h3 class="card-header">Sign Up for NexNest</h3>
                     <div class="card-block">
         				{% from "_formhelpers.html" import render_field %}
-        				<form id="registerForm" action="{{url_for('users.register')}}" method="POST">
+        				<form id="registerForm" action="{{url_for('users.register')}}" method="POST" autocomplete="off">
         					{{form.csrf_token}}
                             <label class="control-label form-control-feedback">Sign Up As</label>
                             <div class="btn-group" data-toggle="buttons" style="display: flex;">
-                                <label class="btn btn-outline-primary active" id="registerAsTenant">
+                                <label class="btn btn-outline-primary active" id="registerAsTenant" style="font-size: 20px;">
                                     <input type="radio" checked autocomplete="off"> <i class="fa fa-graduation-cap" aria-hidden="true"></i> Tenant
                                 </label>
-                                <label class="btn btn-outline-primary" id="registerAsLandlord">
+                                <label class="btn btn-outline-primary" id="registerAsLandlord" style="font-size: 20px;">
                                     <input type="radio" autocomplete="off"><i class="fa fa-home" aria-hidden="true"></i>  Landlord
                                 </label>
                             </div>
@@ -28,6 +28,9 @@
                                     <div class="form-group">
                                         <label class="control-label form-control-feedback">First Name</label>
                                         {{form.fname(class='form-control', required='required')}}
+                                        <p id="validFname" style="display: none;" class="form-text text-muted">
+                                            *Please Enter Your First Name(Must contain at least 1 letter)
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -36,6 +39,9 @@
                                     <div class="form-group">
                                         <label class="control-label form-control-feedback">Last Name</label>
                                         {{form.lname(class='form-control', required='required')}}
+                                        <p id="validLname" style="display: none;" class="form-text text-muted">
+                                            *Please Enter Your Last Name(Must contain at least 1 letter)
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -52,14 +58,31 @@
                                     <div class="form-group">
                                         <label class="control-label form-control-feedback">Email</label>
                                         {{form.email(class='form-control', required='required', type="email")}}
+                                        <p id="validEmail" style="display: none;" class="form-text text-muted">
+                                            *Please Enter a Valid Email Address. EX. joesmith@gmail.com
+                                        </p>  
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-xs-12">
                                     <div class="form-group">
+                                        <input class="password-autocomplete-disabler" type="text" disabled style="display: none;">
                                         <label class="control-label form-control-feedback">Password</label>
-                                        {{form.password(class='form-control', required='required', type="password")}}
+                                        {{form.password(class='form-control', required='required', type="password", autocomplete="new-password")}}
+                                        <p id="passwordValidation" style="display: none;" class="form-text text-muted">
+                                            *Password must: Be at least 8 characters long, Contain 1 Number, Contain 1 Upper Case Letter
+                                        </p>                                        
+                                    </div>
+                                </div>
+                                <div style="position: relative; width: 0; height: 0">
+                                    <div id="pswd_info">
+                                        <h4>Password must meet the following requirements:</h4>
+                                        <ul style="padding: 0px;">
+                                            <li id="capital" class="invalidPassword" style="list-style-type:none;">At least <strong>one capital letter</strong></li>
+                                            <li id="number" class="invalidPassword" style="list-style-type:none;">At least <strong>one number</strong></li>
+                                            <li id="length" class="invalidPassword" style="list-style-type:none;">Be at least <strong>8 characters</strong></li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
@@ -68,6 +91,9 @@
                                     <div class="form-group">
                                         <label class="control-label form-control-feedback">Confirm Password</label>
                                         {{form.confirm(class='form-control', required='required', type="password")}}
+                                        <p id="matchPasswords" style="display: none;" class="form-text text-muted">
+                                            *Passwords Must Match
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -81,6 +107,7 @@
             </div>
         </div>
     </div>
+    <br><br><br><br><br><br>
 {% endblock %}
 {% block scripts %}
 <script>
@@ -113,44 +140,174 @@ $("#registerAsTenant").change(function () {
 
 $( document ).ready(function() {
     var newOptions = {
-      {% for school in schools %}
+        {% for school in schools %}
         '{{school}}': '{{school}}',
-      {% endfor %}
+        {% endfor %}        
     };
 
-      check = $("#registerAsLandlord").hasClass("active");
-      if(check) {
-          $("#collegeField").hide();
-          $('#school').removeAttr('required');
-          $("#landlord").val("landlord");
-          $("#submitRegistration").text("Register as Landlord");
-      } else {
-          $("#collegeField").show();
-          $('#school').attr('required', 'required');
-          var $el = $("#school");
-          $el.empty(); // remove old options
-          var newOptions = {
-            {% for school in schools %}
-              '{{school}}': '{{school}}',
-            {% endfor %}
-          };
-          $.each(newOptions, function(key,value) {
-              $el.append($("<option></option>")
-           .attr("value", value).text(key));
-          });
-          $("#landlord").val("tenant");
-          $("#submitRegistration").text("Sign Up as Tenant");
-      }
+    var registerAs = sessionStorage.getItem('registerAs');
+    console.log(registerAs);
+    if(registerAs == "landlord"){
+        $("#registerAsLandlord").addClass("active");
+        $("#registerAsTenant").removeClass("active");
+    }
+
+    check = $("#registerAsLandlord").hasClass("active");
+    if(check) {
+      $("#collegeField").hide();
+      $('#school').removeAttr('required');
+      $("#landlord").val("landlord");
+      $("#submitRegistration").text("Register as Landlord");
+    } else {
+      $("#collegeField").show();
+      $('#school').attr('required', 'required');
+      var $el = $("#school");
+      $el.empty(); // remove old options
+      var newOptions = {
+        {% for school in schools %}
+          '{{school}}': '{{school}}',
+        {% endfor %}
+      };
+      $.each(newOptions, function(key,value) {
+          $el.append($("<option></option>")
+       .attr("value", value).text(key));
+      });
+      $("#landlord").val("tenant");
+      $("#submitRegistration").text("Sign Up as Tenant");
+    }
+
+    $('input[type=password]').keyup(function() {
+        //validate the password as being typed
+        var pswd = $(this).val();
+        //validate the length
+        if ( pswd.length < 8 ) {
+            $('#length').removeClass('validPassword').addClass('invalidPassword');
+        } else {
+            $('#length').removeClass('invalidPassword').addClass('validPassword');
+        }
+        //validate capital letter
+        if ( pswd.match(/[A-Z]/) ) {
+            $('#capital').removeClass('invalidPassword').addClass('validPassword');
+        } else {
+            $('#capital').removeClass('validPassword').addClass('invalidPassword');
+        }
+
+        //validate number
+        if ( pswd.match(/\d/) ) {
+            $('#number').removeClass('invalidPassword').addClass('validPassword');
+        } else {
+            $('#number').removeClass('validPassword').addClass('invalidPassword');
+        }        
+    }).focus(function() {
+        $('#pswd_info').show();
+    }).blur(function() {
+        $('#pswd_info').hide();
+    });
 });
 
+function isEmail(email){
+    var emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return emailReg.test(email);
+}
+
+function isName(name){
+    var nameRegex = /[a-zA-Z]/;
+    return nameRegex.test(name);
+}
+
 function submitForm(){
+    var validForm = true;
     check = $("#registerAsLandlord").hasClass("active");
     if(check) {
         $("#landlord").val("landlord");
+        sessionStorage.setItem('registerAs', 'landlord');
     } else {
         $("#landlord").val("tenant");
+        sessionStorage.setItem('registerAs', 'tenant');
     }
-    $("form#registerForm").submit();
+    //First we need to validate everything they have entered
+    //Lets start with email
+    var email = $("#email").val();
+    if(isEmail(email) == false){
+        validForm = false;
+        $("#validEmail").show();
+        $("#email").closest(".form-group").addClass("has-danger");
+        $("#email").closest(".form-group").addClass("has-error");
+    }
+    else{
+        $("#validEmail").hide();
+        $("#email").closest(".form-group").removeClass("has-danger");
+        $("#email").closest(".form-group").removeClass("has-error");
+    }
+    //Lets make sure they entered something in the name field
+    var fname = $("#fname").val();
+    var lname = $("#lname").val();
+
+    if(isName(fname) == false){
+        validForm = false;
+        $("#validFname").show();
+        $("#fname").closest(".form-group").addClass("has-danger");
+        $("#fname").closest(".form-group").addClass("has-error");
+    }
+    else{
+        $("#validFname").hide();
+        $("#fname").closest(".form-group").removeClass("has-danger");
+        $("#fname").closest(".form-group").removeClass("has-error");
+    }
+
+    if(isName(lname) == false){
+        validForm = false;
+        $("#validLname").show();
+        $("#lname").closest(".form-group").addClass("has-danger");
+        $("#lname").closest(".form-group").addClass("has-error");
+    }
+    else{
+        $("#validLname").hide();
+        $("#lname").closest(".form-group").removeClass("has-danger");
+        $("#lname").closest(".form-group").removeClass("has-error");
+    }
+
+    //password validation
+    //8 characters one uppercase and one lower
+    var password = $("#password").val();
+    var confirm = $("#confirm").val();
+    //Ensure password matches
+    if(password == confirm){
+        //passsword matches, remove errors and prompt
+        $("#password").closest(".form-group").removeClass("has-danger");
+        $("#password").closest(".form-group").removeClass("has-error");
+        $("#confirm").closest(".form-group").removeClass("has-danger");
+        $("#confirm").closest(".form-group").removeClass("has-error");
+        $("#matchPasswords").hide();
+
+        //Ensure Password is strong enough
+        if(( password.length >= 8 ) && password.match(/[A-Z]/) && password.match(/\d/)){            
+            $("#password").closest(".form-group").removeClass("has-danger");
+            $("#password").closest(".form-group").removeClass("has-error");
+            $("#passwordValidation").hide();
+        }
+        else{
+            console.log(password.length < 8);
+            console.log(password.match(/[A-Z]/));
+            console.log(password.match(/\d/));
+            $("#password").closest(".form-group").addClass("has-danger");
+            $("#password").closest(".form-group").addClass("has-error");
+            $("#passwordValidation").show();
+            validForm = false;
+        }
+    }
+    else{
+        $("#password").closest(".form-group").addClass("has-danger");
+        $("#password").closest(".form-group").addClass("has-error");
+        $("#confirm").closest(".form-group").addClass("has-danger");
+        $("#confirm").closest(".form-group").addClass("has-error");
+        $("#matchPasswords").show();
+        validForm = false;
+    }
+
+    if(validForm){
+        $("form#registerForm").submit();
+    }
 }
 
 </script>

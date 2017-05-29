@@ -809,3 +809,59 @@ button.link {
   font-size: 25px;
   padding-bottom: 5px;
 }
+
+#pswd_info {
+    position:absolute;
+    top:-210px;
+    right:60px;
+    width:250px;
+    padding:15px;
+    background:#fefefe;
+    font-size:.875em;
+    border-radius:5px;
+    box-shadow:0 1px 3px #ccc;
+    border:1px solid #ddd;
+    display:none;
+    z-index:1000000;
+}
+
+#pswd_info h4 {
+    margin:0 0 10px 0;
+    padding:0;
+    font-weight:normal;    
+}
+
+#pswd_info::after {
+    content: "\25BC";
+    position:absolute;
+    bottom:-12px;
+    left:45%;
+    font-size:14px;
+    line-height:14px;
+    color:#ddd;
+    text-shadow:none;
+    display:block;
+}
+
+.invalidPassword {
+    line-height:24px;
+    color:#ec3f41;
+}
+.invalidPassword:before {
+    content: "\f00d";
+    font-family: FontAwesome;
+    line-height:24px;
+    color:#ec3f41;
+    padding-right: 5px;
+}
+.validPassword {
+    line-height:24px;
+    color:#3a7d34;
+}
+.validPassword:before {
+    content: "\f00c";
+    font-family: FontAwesome;
+    line-height:24px;
+    color:#3a7d34;
+    padding-right: 5px;
+}
