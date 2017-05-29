@@ -865,3 +865,19 @@ button.link {
     color:#3a7d34;
     padding-right: 5px;
 }
+
+.hamburger-menu{
+  overflow: visible;
+}
+
+.hamburger-menu:before {
+  content: "\25B2";
+  position:absolute;
+  top:-19px;
+  left:80%;
+  font-size:24px;
+  line-height:14px;
+  color:#ddd;
+  text-shadow:none;
+  display:block;
+}

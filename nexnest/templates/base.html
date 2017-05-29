@@ -149,7 +149,7 @@
 			  		<li class="nav-item">
 		                <div class="dropdown">
 			                <i class="fa fa-bars fa-2x dropdown-toggle" style="padding-top: 4px;" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
-			                <div class="dropdown-menu dropdown-menu-right hamburger-menu" style="overflow:hidden; top: 51px; right: -16px;" aria-labelledby="dropdownMenuButton">
+			                <div class="dropdown-menu dropdown-menu-right hamburger-menu" style="top: 51px; right: -16px;" aria-labelledby="dropdownMenuButton">
                                 {% if current_user.isLandlord %}
                                     <a class="dropdown-item" href="{{ url_for('landlords.landlordDashboard') }}"><strong class="hamburgerMenuItem">My Dashboard</strong></a>
                                 {% else %}
