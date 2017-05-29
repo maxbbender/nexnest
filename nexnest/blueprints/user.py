@@ -340,13 +340,7 @@ def editAccountInfo():
     if form.validate_on_submit():
         flash('Successfully updated your account', 'success')
         current_user.fname = form.fname.data
-        current_user.lname = form.lname.data
-
-        if form.dob.data != '':
-            current_user.dob = form.dob.data
-
-        current_user.bio = form.bio.data
-        current_user.phone = form.phone.data
+        current_user.lname = form.lname.data        
         current_user.email = form.email.data
 
         if currentUserIsLandlord:
@@ -356,6 +350,10 @@ def editAccountInfo():
             landlord.city = form.city.data
             landlord.zip_code = form.zip_code.data
             landlord.state = form.state.data
+            if form.date_of_birth.data != '':
+                current_user.dob = form.date_of_birth.data
+            current_user.phone = form.phone.data
+
         else:
             if form.school.data != current_user.school.name:
                 school = School.query.filter_by(name=form.school.data).first()
@@ -374,15 +372,15 @@ def editAccountInfo():
 
         form.fname.data = current_user.fname
         form.lname.data = current_user.lname
-        form.dob.data = current_user.dob
-        form.bio.data = current_user.bio
+        form.date_of_birth.data = current_user.dob
         form.phone.data = current_user.phone
         form.email.data = current_user.email
 
         return render_template('editAccount.html',
                                form=form,
                                title='Edit Account',
-                               schools=None)
+                               schools=None,
+                               dob=current_user.dob)
     else:
         schools = [r for r, in session.query(School.name).all()]
         form = EditAccountForm(request.form, obj=current_user)

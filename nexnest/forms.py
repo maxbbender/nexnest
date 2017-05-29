@@ -201,11 +201,7 @@ class EditAccountForm(RedirectForm):
         'First Name', [InputRequired()])
     lname = StringField(
         'Last Name', [InputRequired()])
-    school = StringField(
-        'School Attending', [Optional()])
-    dob = StringField('Date of Birth')
-    bio = TextAreaField('If you wish provide a short personal bio')
-    phone = StringField('Phone Number')
+    school = SelectField('School', [Optional()], choices=schools)    
     email = StringField('Email',
                         [InputRequired("You must enter an email address"),
                          Email("Email must be valid format")])
@@ -218,6 +214,8 @@ class LandlordEditAccountForm(EditAccountForm):
     city = StringField('City')
     state = StringField('State')
     zip_code = StringField('Zip Code')
+    date_of_birth = HiddenField('Date of Birth', [InputRequired()])
+    phone = StringField('Phone Number')
 
 
 class InviteGroupForm(RedirectForm):
