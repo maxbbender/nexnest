@@ -347,6 +347,7 @@ for tour in allTours:
     landLordAvailabilities = availability.Availability.query.filter_by(landlord=landlord1).all()
 
     for i in range(randint(1, 4)):
+        print('All TourTime', tour_time.TourTime.query.all())
 
         randomIndex = randint(0, len(landLordAvailabilities) - 1)
         newTourTime = TourTimeFactory(tour=tour)
@@ -357,13 +358,22 @@ for tour in allTours:
                      second=0,
                      microsecond=0)
 
+        print('newTourTime', newTourTime)
+
         timeCheck = tour_time.TourTime.query \
             .filter_by(tour=tour,
                        date_time_requested=newTourTime.date_time_requested) \
             .count()
 
-        if timeCheck == 0:
+        print('timeCheck', timeCheck)
+
+
+
+        if timeCheck == 1:
             session.commit()
+        else:
+            session.delete(newTourTime)
+            newTourTime = None
 
 
 # TOUR MESSAGES (t1)
