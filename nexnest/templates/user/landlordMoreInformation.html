@@ -57,28 +57,41 @@
                                         <label class="control-label form-control-feedback">Telephone Number</label>
                                         {{form.phone(class='form-control', required='required', type="tel")}}
                                     </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                                        <div class="form-inline">
-                                            <label class="control-label form-control-feedback">Date of Birth</label>
-                                            <br>
-                                            <select id="dobmonth" class='form-control'></select>
-                                            <select id="dobday" class='form-control'></select>                                            
-                                            <select id="dobyear" class='form-control'></select>
-                                        </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                    <div class="form-inline">
+                                        <label class="control-label form-control-feedback">Date of Birth</label>
+                                        <br>
+                                        <select id="dobmonth" class='form-control'></select>
+                                        <select id="dobday" class='form-control'></select>                                            
+                                        <select id="dobyear" class='form-control'></select>
                                     </div>
                                 </div>
                             </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>How You Accept Rent:</legend>
                             <div class="row">
                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                     <div class="form-group">
                                         <label class="control-label form-control-feedback">Check Payments</label>
-                                        {{form.check_pay(class='form-control', required='required', type="checkbox")}}
+                                        <div class="checkbox">
+                                            <label style="font-size: 1.5em">
+                                                {{form.check_pay(class='form-control form-check-input')}}
+                                                <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                     <div class="form-group">
                                         <label class="control-label form-control-feedback">Online Payments</label>
-                                        {{form.online_pay(class='form-control', required='required', type='checkbox')}}
+                                        <div class="checkbox">
+                                            <label style="font-size: 1.5em">
+                                                {{form.online_pay(class='form-control form-check-input')}}
+                                                <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
