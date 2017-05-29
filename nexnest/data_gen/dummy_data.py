@@ -60,24 +60,16 @@ session.commit()
 
 for i in range(10):
     newAvailability = AvailabilityFactory(landlord=landlord1)
-    print('Trying to create an availability', newAvailability)
     # newAvailability.time.second = 0
 
-    print("All Availabilities", availability.Availability.query.all())
     count = availability.Availability.query.filter_by(landlord=newAvailability.landlord,
                                                       time=newAvailability.time).count()
 
-    print('Availability Count ', count)
-
     if count == 1:
-        print('committing')
         session.commit()
     else:
         session.delete(newAvailability)
         newAvailability = None
-        print('not commiting setting newAvailbitiy', newAvailability)
-
-print('finished')
 
 
 # LISTINGS
