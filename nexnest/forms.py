@@ -212,7 +212,7 @@ class LandlordEditAccountForm(EditAccountForm):
     check_pay = BooleanField('Accept Check Payments')
     street = StringField('Street Address')
     city = StringField('City')
-    state = StringField('State')
+    state = SelectField('State', choices=statesLong)
     zip_code = StringField('Zip Code')
     date_of_birth = HiddenField('Date of Birth', [InputRequired()])
     phone = StringField('Phone Number')
