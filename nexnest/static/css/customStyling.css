@@ -881,3 +881,34 @@ button.link {
   text-shadow:none;
   display:block;
 }
+
+.myMessage{
+  margin-bottom: 30px;
+  border-width: medium;
+  border-color: #2b4767;
+}
+.myMessage:after {
+  content: "\25BC";
+  position:relative;
+  top:34px;
+  left:95%;
+  font-size:39px;
+  line-height:14px;
+  color:#2b4767;
+  text-shadow:none;
+}
+.otherUserMessage{
+  margin-bottom: 30px;
+  border-width: medium;
+  border-color: #f9c76a;
+}
+.otherUserMessage:after {
+  content: "\25BC";
+  position:relative;
+  top:34px;
+  left:-5px;
+  font-size:39px;
+  line-height:14px;
+  color:#f9c76a;
+  text-shadow:none;  
+}

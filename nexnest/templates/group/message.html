@@ -1,4 +1,8 @@
-<div class="card" style="width: 100%;">
+{% if current_user.id == message.user.id %}
+<div class="card myMessage" style="width: 100%;">
+{% else %}
+<div class="card otherUserMessage" style="width: 100%;">
+{% endif %}
     <div class="card-block">
         <div class="row">
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-2" style="height: 50px;">
