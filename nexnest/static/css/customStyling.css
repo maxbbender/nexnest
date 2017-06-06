@@ -874,7 +874,7 @@ button.link {
   content: "\25B2";
   position:absolute;
   top:-19px;
-  left:80%;
+  left:78%;
   font-size:24px;
   line-height:14px;
   color:#ddd;
@@ -911,4 +911,43 @@ button.link {
   line-height:14px;
   color:#f9c76a;
   text-shadow:none;  
+}
+
+.customTooltip {
+    position: relative;
+    display: inline-block;
+}
+
+/* Tooltip text */
+.customTooltip .customTooltiptext {
+    visibility: hidden;
+    width: 150px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -75px;
+ 
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+}
+
+.customTooltip .customTooltiptext::after {
+    content: " ";
+    position: absolute;
+    top: 100%; /* At the bottom of the tooltip */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.customTooltip:hover .customTooltiptext {
+    visibility: visible;
 }
