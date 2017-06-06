@@ -264,7 +264,7 @@
                                     <div class="notification-meta">
                                         <div class="row">
                                             <div class="col-xs-8">
-                                                <small class="timestamp">`+notification.date+`</small>
+                                                <small class="timestamp">`+ moment.utc(notification.date).fromNow() +`</small>
                                             </div>
                                         </div>
                                     </div>
@@ -311,7 +311,7 @@
                                     <div class="notification-meta">
                                         <div class="row">
                                             <div class="col-xs-8">
-                                                <small class="timestamp timeago">`+ message.messageObject.date +` </small>
+                                                <small class="timestamp timeago">`+ moment.utc(message.messageObject.date).fromNow() +` </small>
                                             </div>
                                         </div>
                                     </div>
@@ -347,7 +347,7 @@
                                         <div class="notification-meta">
                                             <div class="row">
                                                 <div class="col-xs-8">
-                                                    <small class="timestamp timeago">`+ message.messageObject.date +`</small>
+                                                    <small class="timestamp timeago">`+ moment.utc(message.messageObject.date).fromNow() +`</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -505,7 +505,7 @@
                                     <div class="notification-meta">
                                         <div class="row">
                                             <div class="col-xs-8">
-                                                <small class="timestamp">`+notification.date+`</small>
+                                                <small class="timestamp">`+ moment.utc(notification.date).fromNow() +`</small>
                                             </div>
                                         </div>
                                     </div>
@@ -552,7 +552,7 @@
                                     <div class="notification-meta">
                                         <div class="row">
                                             <div class="col-xs-8">
-                                                <small class="timestamp">`+ message.messageObject.date +` </small>
+                                                <small class="timestamp">`+ moment.utc(message.messageObject.date).fromNow() +` </small>
                                             </div>
                                         </div>
                                     </div>
@@ -581,7 +581,7 @@
                                         <div class="notification-meta">
                                             <div class="row">
                                                 <div class="col-xs-8">
-                                                    <small class="timestamp">`+ message.messageObject.date +`</small>
+                                                    <small class="timestamp">`+ moment.utc(message.messageObject.date).fromNow() +`</small>
                                                 </div>
                                             </div>
                                         </div>
