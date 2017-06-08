@@ -60,12 +60,12 @@
         </div>
         <br>
         <div class="row">
-            <div class="col-xs-12 col-lg-7" style="padding-left: 35px;">
+            <div class="col-xs-12 col-lg-7" style="padding-left: 15px;">
                 <div class="tab-content">
                     <div class="tab-pane active" id="membersTab" role="tabpanel" style="padding: 0px;">
                         <div class="row">
                             <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); font-size: 3.5vh;">Members ({{ group.acceptedUsers|length }})
+                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); font-size: 3.5vh; margin-left: 20px;">Members ({{ group.acceptedUsers|length }})
                                 {% if group.leader_id == current_user.id %}
                                     <a href='#' class="btn btn-primary" style="float: right;" data-toggle="modal" data-target="#changeGroupLeaderModal">Change Group Leader</a>
                                 {% endif %}
