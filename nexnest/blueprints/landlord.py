@@ -13,6 +13,8 @@ from nexnest.utils.flash import flash_errors
 
 from dateutil import parser
 
+from pprint import pprint, pformat
+
 landlords = Blueprint('landlords',
                       __name__,
                       template_folder='../templates/landlord')
@@ -194,18 +196,51 @@ def updateAvailability():
         return jsonify({'success': False, 'message': 'Invalid Request (JSON is None)'})
 
 
-# @landlords.route('/landlord/createPaymentAccount', methods=['GET', 'POST'])
-# @login_required
-# def createPaymentAcocunt():
-#     landlord = Landlord.query.filter_by(user=current_user).first_or_404()
+@landlords.route('/landlord/createPaymentAccount', methods=['GET', 'POST'])
+@login_required
+def createPaymentAcocunt():
+    landlord = Landlord.query.filter_by(user=current_user).first_or_404()
 
-#     form = LandlordPaymentAccountForm(request.form)
+    form = LandlordPaymentAccountForm(request.form)
 
-#     if form.validate_on_submit():
-#         logger.debug("Create Payment Account Form is Valid")
-#     else:
-#         flash_errors(form)
+    if form.validate_on_submit():
+        logger.debug("Create Payment Account Form is Valid")
+        braintreePayload = {}
 
-#     return render_template('paymentInformation.html',
-#                            form=form)
+        braintreeIndividual = {
+            'first_name': landlord.user.fname,
+            'last_name': landlord.user.lname,
+            'email': landlord.user.email,
+            'phone': landlord.user.phone,
+            'date_of_birth': landlord.user.dob.strftime("%Y-%m-%d")
+        }
 
+        braintreeIndividual['address'] = {
+            'street_address': landlord.street,
+            'locality': landlord.city,
+            'region': landlord.state,
+            'postal_code': landlord.zip_code
+        }
+
+        braintreePayload['individual'] = braintreeIndividual
+
+        if form.legalBusinessName.data != '':
+
+            braintreePayload['business'] = {
+                'legal_name': form.legalBusinessName.data,
+                'tax_id': form.taxID.data
+            }
+
+        braintreePayload['funding'] = {
+            'destination': 'bank',
+            'account_number': form.accountNumber.data,
+            'routing_number': form.routingNumber.data
+        }
+
+        logger.debug('Braintree Payload')
+        logger.debug(pformat(braintreePayload))
+    else:
+        flash_errors(form)
+
+    return render_template('paymentInformation.html',
+                           form=form)

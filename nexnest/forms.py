@@ -87,9 +87,8 @@ class RegistrationForm(RedirectForm):
 
 
 class LandlordMoreInfoForm(RedirectForm):
-    phone = IntegerField('Phone Number', [InputRequired()])
+    phone = StringField('Phone Number', [InputRequired()])
     date_of_birth = DateField('Date of Birth', [InputRequired()])
-    # ssn = IntegerField('Last 4 Digits of Socail Security Number', [InputRequired()])
     street = StringField('Street Address', [
                          Length(min=2, max=50), InputRequired()])
     city = StringField('City', [Length(min=2, max=50), InputRequired()])
@@ -98,7 +97,7 @@ class LandlordMoreInfoForm(RedirectForm):
     user_id = HiddenField('user')
     availabilities = HiddenField('availabilities', validators=[Optional()])
     check_pay = BooleanField('Do you accept rent payments via checks?')
-    online_pay = BooleanField('Do you accept rent payments via NexNest?')
+    online_pay = BooleanField('Do you accept rent payments through NexNest?')
 
 
 class ProfilePictureForm(RedirectForm):
@@ -346,11 +345,6 @@ class GroupReportForm(ReportForm):
 
 class LandlordPaymentAccountForm(RedirectForm):
     legalBusinessName = StringField('Legal Business Name', validators=[Optional()])
-    dbaBusinessName = StringField('DBA Business Name', [Optional()])
     taxID = StringField('Tax ID', [Optional()])
-    businessStreet = StringField('Street', [Optional()])
-    businessCity = StringField('City', [Optional()])
-    businessZip = StringField('Zip Code', [Optional()])
-    businessState = SelectField('State', choices=statesLong, validators=[Optional()])
     accountNumber = StringField('Recieving Account Number')
     routingNumber = StringField('Routing Number')

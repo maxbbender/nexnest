@@ -243,7 +243,7 @@ def emailConfirm(payload):
     else:
         user.email_confirmed = True
         session.commit()
-        flash('You have confirmed your account. Thanks!', 'success')
+        flash('You have confirmed your account, you can now log in!', 'success')
 
     return redirect(url_for('indexs.index'))
 
