@@ -60,12 +60,12 @@
         </div>
         <br>
         <div class="row">
-            <div class="col-xs-12 col-lg-7" style="padding-left: 35px;">
+            <div class="col-xs-12 col-lg-7" style="padding-left: 15px;">
                 <div class="tab-content">
                     <div class="tab-pane active" id="membersTab" role="tabpanel" style="padding: 0px;">
                         <div class="row">
                             <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); font-size: 3.5vh;">Members ({{ group.acceptedUsers|length }})
+                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); font-size: 3.5vh; margin-left: 20px;">Members ({{ group.acceptedUsers|length }})
                                 {% if group.leader_id == current_user.id %}
                                     <a href='#' class="btn btn-primary" style="float: right;" data-toggle="modal" data-target="#changeGroupLeaderModal">Change Group Leader</a>
                                 {% endif %}
@@ -348,7 +348,7 @@
                     </div>
                     <div class="tab-pane" id="listingRequestsTab" role="tabpanel" style="padding: 0px;">
                         <div class="row">
-                            <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+                            <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125); margin-left: 20px;">
                                 <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); width: 100%;">Property Requests</h3>
                                 <div class="card-block">
                                     <div class="row" style="width: 100%;">
@@ -485,7 +485,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane hidden-lg-up" id="messagesTab" role="tabpanel" style="padding: 0px;">
+                    <div class="tab-pane hidden-lg-up" id="messagesTab" role="tabpanel" style="padding: 0px; overflow-y: auto;">
                         <div class="card" style="width:100%;">
                             <h3 class="card-header" style="font-size: 3.5vh;">Group Message:</h3>
                             <div class="card-block" style="padding-bottom: 0px;">
@@ -523,7 +523,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-5 hidden-md-down">
+            <div class="col-md-5 hidden-md-down" style="overflow-y: auto;">
                 <div class="card" style="width:100%;">
                     <h3 class="card-header">Messages:</h3>
                     <div class="card-block" style="padding-bottom: 0px;">
@@ -752,11 +752,11 @@
             template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title" style="background-color: #ec971f; text-align: center; color: #ffffff;"></h3><div class="popover-content"></div></div>'
         });
 
-        $( ".timeago" ).each(function( index ) {
-            var unformattedTime = $(this).html();
-            var formattedTime = moment.utc(unformattedTime).fromNow();
-            $(this).html(formattedTime);
-        });
+        // $( ".timeago" ).each(function( index ) {
+        //     var unformattedTime = $(this).html();
+        //     var formattedTime = moment.utc(unformattedTime).fromNow();
+        //     $(this).html(formattedTime);
+        // });
     });
 </script>
 {% endblock %}

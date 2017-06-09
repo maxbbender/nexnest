@@ -87,8 +87,8 @@ class RegistrationForm(RedirectForm):
 
 
 class LandlordMoreInfoForm(RedirectForm):
-    phone = StringField('Phone Number', [InputRequired()])
     date_of_birth = DateField('Date of Birth', [InputRequired()])
+    date_of_birth = HiddenField('Date of Birth', [InputRequired()])
     street = StringField('Street Address', [
                          Length(min=2, max=50), InputRequired()])
     city = StringField('City', [Length(min=2, max=50), InputRequired()])
@@ -201,11 +201,7 @@ class EditAccountForm(RedirectForm):
         'First Name', [InputRequired()])
     lname = StringField(
         'Last Name', [InputRequired()])
-    school = StringField(
-        'School Attending', [Optional()])
-    dob = StringField('Date of Birth')
-    bio = TextAreaField('If you wish provide a short personal bio')
-    phone = StringField('Phone Number')
+    school = SelectField('School', [Optional()], choices=schools)    
     email = StringField('Email',
                         [InputRequired("You must enter an email address"),
                          Email("Email must be valid format")])
@@ -216,8 +212,10 @@ class LandlordEditAccountForm(EditAccountForm):
     check_pay = BooleanField('Accept Check Payments')
     street = StringField('Street Address')
     city = StringField('City')
-    state = StringField('State')
+    state = SelectField('State', choices=statesLong)
     zip_code = StringField('Zip Code')
+    date_of_birth = HiddenField('Date of Birth', [InputRequired()])
+    phone = StringField('Phone Number')
 
 
 class InviteGroupForm(RedirectForm):

@@ -809,3 +809,145 @@ button.link {
   font-size: 25px;
   padding-bottom: 5px;
 }
+
+#pswd_info {
+    position:absolute;
+    top:-210px;
+    right:60px;
+    width:250px;
+    padding:15px;
+    background:#fefefe;
+    font-size:.875em;
+    border-radius:5px;
+    box-shadow:0 1px 3px #ccc;
+    border:1px solid #ddd;
+    display:none;
+    z-index:1000000;
+}
+
+#pswd_info h4 {
+    margin:0 0 10px 0;
+    padding:0;
+    font-weight:normal;    
+}
+
+#pswd_info::after {
+    content: "\25BC";
+    position:absolute;
+    bottom:-12px;
+    left:45%;
+    font-size:14px;
+    line-height:14px;
+    color:#ddd;
+    text-shadow:none;
+    display:block;
+}
+
+.invalidPassword {
+    line-height:24px;
+    color:#ec3f41;
+}
+.invalidPassword:before {
+    content: "\f00d";
+    font-family: FontAwesome;
+    line-height:24px;
+    color:#ec3f41;
+    padding-right: 5px;
+}
+.validPassword {
+    line-height:24px;
+    color:#3a7d34;
+}
+.validPassword:before {
+    content: "\f00c";
+    font-family: FontAwesome;
+    line-height:24px;
+    color:#3a7d34;
+    padding-right: 5px;
+}
+
+.hamburger-menu{
+  overflow: visible;
+}
+
+.hamburger-menu:before {
+  content: "\25B2";
+  position:absolute;
+  top:-19px;
+  left:78%;
+  font-size:24px;
+  line-height:14px;
+  color:#ddd;
+  text-shadow:none;
+  display:block;
+}
+
+.myMessage{
+  margin-bottom: 30px;
+  border-width: medium;
+  border-color: #2b4767;
+}
+.myMessage:after {
+  content: "\25BC";
+  position:relative;
+  top:34px;
+  left:95%;
+  font-size:39px;
+  line-height:14px;
+  color:#2b4767;
+  text-shadow:none;
+}
+.otherUserMessage{
+  margin-bottom: 30px;
+  border-width: medium;
+  border-color: #f9c76a;
+}
+.otherUserMessage:after {
+  content: "\25BC";
+  position:relative;
+  top:34px;
+  left:-5px;
+  font-size:39px;
+  line-height:14px;
+  color:#f9c76a;
+  text-shadow:none;  
+}
+
+.customTooltip {
+    position: relative;
+    display: inline-block;
+}
+
+/* Tooltip text */
+.customTooltip .customTooltiptext {
+    visibility: hidden;
+    width: 150px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -75px;
+ 
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+}
+
+.customTooltip .customTooltiptext::after {
+    content: " ";
+    position: absolute;
+    top: 100%; /* At the bottom of the tooltip */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.customTooltip:hover .customTooltiptext {
+    visibility: visible;
+}

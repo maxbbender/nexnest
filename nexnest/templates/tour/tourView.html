@@ -70,8 +70,8 @@
             </div>
         </div>
         <br>
-        <div class="row">           
-            <div class="col-xs-12 col-lg-7" style="padding-left: 35px;">
+        <div class="row">
+            <div class="col-xs-12 col-lg-7" style="padding-left: 20px;">
                 <div class="tab-content">
                     <div class="tab-pane active" id="tourTab" role="tabpanel" style="padding: 0px;">
                         <div class="row">
@@ -92,7 +92,7 @@
                                             {% if tour.last_requested == 'landlord' %}
                                                 {% if tour.tour_confirmed %}  
                                                     {% if tour.declined %}
-                                                        <b style="color: red;">TOUR HAS BEEN CANCELLED</b>
+                                                        <strong><h1>Tour Status: <b style="color: red;">TOUR HAS BEEN CANCELLED</b> </h1></strong>
                                                     {% else %}
                                                         <strong><h1>Tour Status:
                                                             <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
@@ -131,7 +131,7 @@
                                                 <p class="card-text">                                                    
                                                     {% if tour.tour_confirmed %}
                                                         {% if tour.declined %}
-                                                            <b style="color: red;">TOUR HAS BEEN CANCELLED</b>
+                                                            <strong><h1>Tour Status: <b style="color: red;">TOUR HAS BEEN CANCELLED</b> </h1></strong>
                                                         {% else %}
                                                             <strong><h1>Tour Status:
                                                                 <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
@@ -173,7 +173,7 @@
                                             {% if tour.last_requested == 'group' %}
                                                 {% if tour.tour_confirmed %}
                                                     {% if tour.declined %}
-                                                        <b style="color: red;">TOUR HAS BEEN CANCELLED</b>
+                                                        <strong><h1>Tour Status: <b style="color: red;">TOUR HAS BEEN CANCELLED</b> </h1></strong>
                                                     {% else %}
                                                         <strong><h1>Tour Status:
                                                             <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
@@ -213,7 +213,7 @@
                                             {% else %}
                                                 {% if tour.tour_confirmed %}
                                                     {% if tour.declined %}
-                                                        <b style="color: red;">TOUR HAS BEEN CANCELLED</b>
+                                                        <strong><h1>Tour Status: <b style="color: red;">TOUR HAS BEEN CANCELLED</b> </h1></strong>
                                                     {% else %}
                                                         <strong><h1>Tour Status:
                                                             <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
@@ -247,7 +247,7 @@
                                         {% else %}
                                             {% if tour.tour_confirmed %}
                                                 {% if tour.declined %}
-                                                        <b style="color: red;">TOUR HAS BEEN CANCELLED</b>
+                                                        <strong><h1>Tour Status: <b style="color: red;">TOUR HAS BEEN CANCELLED</b> </h1></strong>
                                                     {% else %}
                                                     <strong><h1>Tour Status:
                                                         <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
@@ -357,7 +357,7 @@
                                             </div>
                                             <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
                                                 <div class="col-xs-12">
-                                                    <input class="btn btn-primary" type="submit" value="Respond">
+                                                    <input class="btn btn-primary" type="submit" value="Send">
                                                 </div>                                    
                                             </div>
                                         </form>
@@ -378,7 +378,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-5 hidden-md-down">
+            <div class="col-md-5 hidden-md-down" style="overflow-y: auto;">
                 <div class="card" style="width:100%;">
                     {% if current_user in landlords %}
                         <h3 class="card-header" style="font-size: 3.5vh;">Group Message with Tenants:</h3>
@@ -396,7 +396,7 @@
                                 </div>
                                 <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
                                     <div class="col-xs-12">
-                                        <input class="btn btn-primary" type="submit" value="Respond">
+                                        <input class="btn btn-primary" type="submit" value="Send">
                                     </div>                                    
                                 </div>
                             </form>

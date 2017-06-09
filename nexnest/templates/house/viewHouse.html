@@ -78,7 +78,7 @@
     	</div>
     	<br>
     	<div class="row">    		
-    		<div class="col-xs-12 col-lg-7" style="padding-left: 35px;">
+    		<div class="col-xs-12 col-lg-7" style="padding-left: 20px;">
 			    <div class="tab-content">
 				    <div class="tab-pane active" id="maintenanceTab" role="tabpanel" style="padding: 0px;">
 				    	<div class="row">
@@ -124,7 +124,7 @@
 					    	            				<br>
 					    	            				<div class="row">
 					    	            					<div class="col-xs-12">
-					    	            						<span style="font-size: 2.5vh;">
+					    	            						<span>
 						    	            						<strong>Date Submitted:</strong> {{ request.date_created }}
 						    	            						<br>
 						    	            						<strong>Submitted By:</strong> {{ request.user.fname }} {{ request.user.lname }}
@@ -236,7 +236,7 @@
 				    </div>
 				</div>
     		</div>
-    		<div class="col-md-5 hidden-md-down">
+    		<div class="col-md-5 hidden-md-down" style="overflow-y: auto;">
 			    <div class="card" style="width:100%;">
 			        <h3 class="card-header" style="font-size: 3.0vh">Group Message with Landlord:</h3>
 			        <div class="card-block">
