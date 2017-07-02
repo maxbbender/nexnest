@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<br>
+<div class="row">
+	<div class="col-xs-0 col-md-2 col-lg-4">
+	</div>
+	<div class="col-xs-12 col-md-8 col-lg-4">
+		<div class="card">
+			<div class="card-header">
+				<h1>Frequently Asked Questions</h1>
+			</div>
+			<div class="card-block">
+				<div class="question">
+					<strong>What is NexNest?</strong>
+					<div class="answer" style="display: none;">
+						Nexnest is a platform for connecting college students looking for off campus housing and landlords
+					</div>
+					<hr>
+				</div>
+
+				<div class="question">
+					<strong>What schools are supported?</strong>
+					<div class="answer" style="display: none;">
+						Nexnest is a platform for connecting college students looking for off campus housing and landlords
+					</div>
+					<hr>
+				</div>
+
+				<div class="question">
+					<strong>When are you coming to my school?</strong>
+					<div class="answer" style="display: none;">
+						As soon as we can, please let us know what school you want us to come to and get all your friends to do the same. The more people who ask the quicker we can make it happen
+					</div>
+					<hr>
+				</div>
+
+				<div class="question">
+					<strong>How much does it cost me?</strong>
+					<div class="answer" style="display: none;">
+						Nexnest is a platform for connecting college students looking for off campus housing and landlords
+					</div>
+					<hr>
+				</div>
+
+
+			</div>
+		</div>		
+	</div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+	function expandAnswer( event ) {
+		var target = $( event.target );
+		target = target.parent();
+		target = target.children( ".answer" );
+		target.toggle();
+	}
+	$( ".question" ).click( expandAnswer );
+</script>
+{% endblock %}
