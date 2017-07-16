@@ -38,5 +38,12 @@ def rentCheckout():
     print(nonceFromTheClient)
 
     # Create the BrainTree Transaction
-    braintree.Transaction.sale({})
-    return nonceFromTheClient
+    result = braintree.Transaction.sale({
+        'amount': str(rent.amount),
+        'payment_method_nonce': nonceFromTheClient,
+        'options': {
+            "submit_for_settlement": True
+        }
+    })
+    print(result)
+    return result

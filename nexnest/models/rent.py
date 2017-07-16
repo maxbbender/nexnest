@@ -41,14 +41,14 @@ class Rent(Base):
     def __repr__(self):
         return '<Rent ~ House %r | User %r>' % (self.house, self.user)
 
-    def isEditableBy(self, user):
-        if user in self.user or user in self.house.listing.landLordsAsUsers():
+    def isEditableBy(self, user, toFlash=True):
+        if user == self.user or user in self.house.listing.landLordsAsUsers():
             return True
 
         return False
 
-    def isViewableBy(self, user):
-        return self.isEditableBy(user)
+    def isViewableBy(self, user, toFlash=True):
+        return self.isEditableBy(user, toFlash)
 
 
 def update_date_modified(mapper, connection, target):
