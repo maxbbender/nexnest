@@ -297,11 +297,19 @@ for i in range(10):
         target_user = random.choice(userMessageList)
 
     dm = DirectMessageFactory(source_user=source_user, target_user=target_user)
+    dm1 = DirectMessageFactory(source_user=target_user, target_user=source_user)
+    dm2 = DirectMessageFactory(source_user=source_user, target_user=target_user)
 
     # Direct Messages Notifications
     dmn = NotificationFactory(target_user=target_user,
                               notif_type='direct_message',
                               target_model_id=source_user.id)
+    dmn1 = NotificationFactory(target_user=target_user,
+                               notif_type='direct_message',
+                               target_model_id=source_user.id)
+    dmn2 = NotificationFactory(target_user=target_user,
+                               notif_type='direct_message',
+                               target_model_id=source_user.id)
     session.commit()
 
 
@@ -366,8 +374,6 @@ for tour in allTours:
             .count()
 
         print('timeCheck', timeCheck)
-
-
 
         if timeCheck == 1:
             session.commit()

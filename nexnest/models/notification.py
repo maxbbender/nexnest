@@ -88,6 +88,8 @@ class Notification(Base):
         if self.category in ['direct_message', 'generic_message']:
             dictToReturn['messageObject'] = Message.query.filter_by(id=self.target_model_id).first().serialize
 
+        # IF THERE IS A LISTING ASSOCIATED W/ NOTIFICATION INCLUDE IT IN SERALIZE
+
         return dictToReturn
 
     @property

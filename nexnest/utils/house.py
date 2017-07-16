@@ -18,22 +18,21 @@ def createHouse(listing, group):
 
         for user in house.tenants:
             while currentDate < listing.end_date:
-            	dateDue = currentDate.replace(day=1)
+                dateDue = currentDate.replace(day=1)
 
-            	newRent = Rent(house, user, dateDue)
-            	# session.add(newRent)
-            	session.commit()
-            	pass
+                newRent = Rent(house, user, dateDue)
+                # session.add(newRent)
+                session.commit()
+                pass
 
     else:
-    	for user in house.tenants:
-    		firstSemesterRent = Rent(house, user, listing.first_semester_rent_due_date)
-    		session.add(firstSemesterRent)
+        for user in house.tenants:
+            firstSemesterRent = Rent(house, user, listing.first_semester_rent_due_date)
+            session.add(firstSemesterRent)
 
-    		secondSemesterRent = Rent(house, user, listing.second_semester_rent_due_date)
-    		session.add(secondSemesterRent)
+            secondSemesterRent = Rent(house, user, listing.second_semester_rent_due_date)
+            session.add(secondSemesterRent)
 
-    		session.commit()
+            session.commit()
 
     return house
-
