@@ -25,25 +25,14 @@ from dateutil import parser
 
 import json
 
+import datetime
+
 gmaps = googlemaps.Client(key='AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w')
 
 landlord = user.User.query.filter_by(id=1).first()
 otherUser = user.User.query.filter_by(id=7).first()
 
-DirectMessage = direct_message.DirectMessage
+date1 = datetime.datetime(2017, 2, 1)
+date2 = datetime.datetime(2016, 3, 1)
 
-allSourcedMessages = DirectMessage.query.filter_by(user=landlord).all()
-
-print('sourced')
-pprint(allSourcedMessages)
-
-allMessages = DirectMessage.query \
-    .filter(or_(and_(DirectMessage.user_id == landlord.id,
-                     DirectMessage.target_user_id == otherUser.id),
-                and_(DirectMessage.user_id == otherUser.id,
-                     DirectMessage.target_user_id == landlord.id))) \
-    .order_by(asc(DirectMessage.date_created)) \
-    .all()
-
-print('all')
-pprint(allMessages)
+print(((date1-date2).days)/30)

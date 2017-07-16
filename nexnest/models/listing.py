@@ -191,7 +191,8 @@ class Listing(Base):
             self.price_per_month = self.price
             self.price_per_semester = self.price * 6
         elif self.rent_due == 'semester':
-            self.price_per_month = self.price / 6
+            numMonths = int((self.end_date - self.start_date).days / 30)
+            self.price_per_month = self.price / numMonths
             self.price_per_semester = self.price
         else:
             logger.error('Unknown Rent Due Value while create listing : %s' % self.rent_due)

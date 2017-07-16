@@ -1,0 +1,33 @@
+{% extends "base.html" %} {% block content %}
+
+<head>
+    <meta charset="utf-8">
+    <script src="https://js.braintreegateway.com/web/dropin/1.4.0/js/dropin.min.js"></script>
+</head>
+
+<body>
+    <div id="dropin-container"></div>
+    <button id="submit-button">Request payment method</button>
+    <form id="nonceForm" action="{{url_for('rents.rentCheckout')}}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <input type="hidden" name='payment_method_nonce' id='paymentNonce'>
+        <input type="hidden" name='rentID' value="{{rentID}}">
+    </form>
+    <script>
+    var button = document.querySelector('#submit-button');
+
+    braintree.dropin.create({
+        authorization: 'eyJ2ZXJzaW9uIjoyLCJhdXRob3JpemF0aW9uRmluZ2VycHJpbnQiOiIyOThlMmEzOTRiNzA3MGRlZDE0Mzg2MjhhNDM1MzI1MzRmYzlhODkzNzg5ZDJlZmYxZTVhNmVjMjhjMWE3MzZhfGNyZWF0ZWRfYXQ9MjAxNy0wNy0xNlQyMDoxOTo0OS4xNjY5NDQwMjgrMDAwMFx1MDAyNm1lcmNoYW50X2lkPTk1ZDlnOTVkenRkc2dra2hcdTAwMjZwdWJsaWNfa2V5PWZkdGs4dzlxYnB2cXI2a24iLCJjb25maWdVcmwiOiJodHRwczovL2FwaS5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tOjQ0My9tZXJjaGFudHMvOTVkOWc5NWR6dGRzZ2traC9jbGllbnRfYXBpL3YxL2NvbmZpZ3VyYXRpb24iLCJjaGFsbGVuZ2VzIjpbXSwiZW52aXJvbm1lbnQiOiJzYW5kYm94IiwiY2xpZW50QXBpVXJsIjoiaHR0cHM6Ly9hcGkuc2FuZGJveC5icmFpbnRyZWVnYXRld2F5LmNvbTo0NDMvbWVyY2hhbnRzLzk1ZDlnOTVkenRkc2dra2gvY2xpZW50X2FwaSIsImFzc2V0c1VybCI6Imh0dHBzOi8vYXNzZXRzLmJyYWludHJlZWdhdGV3YXkuY29tIiwiYXV0aFVybCI6Imh0dHBzOi8vYXV0aC52ZW5tby5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tIiwiYW5hbHl0aWNzIjp7InVybCI6Imh0dHBzOi8vY2xpZW50LWFuYWx5dGljcy5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tLzk1ZDlnOTVkenRkc2dra2gifSwidGhyZWVEU2VjdXJlRW5hYmxlZCI6dHJ1ZSwicGF5cGFsRW5hYmxlZCI6dHJ1ZSwicGF5cGFsIjp7ImRpc3BsYXlOYW1lIjoiTmV4bmVzdCIsImNsaWVudElkIjpudWxsLCJwcml2YWN5VXJsIjoiaHR0cDovL2V4YW1wbGUuY29tL3BwIiwidXNlckFncmVlbWVudFVybCI6Imh0dHA6Ly9leGFtcGxlLmNvbS90b3MiLCJiYXNlVXJsIjoiaHR0cHM6Ly9hc3NldHMuYnJhaW50cmVlZ2F0ZXdheS5jb20iLCJhc3NldHNVcmwiOiJodHRwczovL2NoZWNrb3V0LnBheXBhbC5jb20iLCJkaXJlY3RCYXNlVXJsIjpudWxsLCJhbGxvd0h0dHAiOnRydWUsImVudmlyb25tZW50Tm9OZXR3b3JrIjp0cnVlLCJlbnZpcm9ubWVudCI6Im9mZmxpbmUiLCJ1bnZldHRlZE1lcmNoYW50IjpmYWxzZSwiYnJhaW50cmVlQ2xpZW50SWQiOiJtYXN0ZXJjbGllbnQzIiwiYmlsbGluZ0FncmVlbWVudHNFbmFibGVkIjp0cnVlLCJtZXJjaGFudEFjY291bnRJZCI6Im5leG5lc3QiLCJjdXJyZW5jeUlzb0NvZGUiOiJVU0QifSwiY29pbmJhc2VFbmFibGVkIjpmYWxzZSwibWVyY2hhbnRJZCI6Ijk1ZDlnOTVkenRkc2dra2giLCJ2ZW5tbyI6Im9mZiJ9',
+        container: '#dropin-container'
+    }, function(createErr, instance) {
+        button.addEventListener('click', function() {
+            instance.requestPaymentMethod(function(err, payload) {
+                // Submit payload.nonce to your server
+                $('#paymentNonce').val(payload.nonce);
+                $('#nonceForm').submit();
+            });
+        });
+    });
+    </script>
+</body>
+{% endblock %}
