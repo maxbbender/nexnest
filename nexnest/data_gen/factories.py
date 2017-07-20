@@ -43,6 +43,8 @@ class UserFactory(factory.alchemy.SQLAlchemyModelFactory):
     school = factory.SubFactory(SchoolFactory)
     role = 'user'
     email_confirmed = True
+    dob = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
+    phone = '1234567890'
 
 
 class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -111,8 +113,6 @@ class LandlordFactory(factory.alchemy.SQLAlchemyModelFactory):
     city = factory.LazyAttribute(lambda x: fake.city())
     state = factory.LazyAttribute(lambda x: fake.state_abbr())
     zip_code = factory.LazyAttribute(lambda x: fake.zipcode())
-    dob = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
-    phone = '123-456-7890'
 
 
 class LandlordListingFactory(factory.alchemy.SQLAlchemyModelFactory):

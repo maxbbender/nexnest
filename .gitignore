@@ -5,6 +5,7 @@ venv/
 *.glue
 *.sublime*
 nexnest/uploads/*
+nexnest/log/*
 nosetests.xml
 coverage.xml
 pylint.out

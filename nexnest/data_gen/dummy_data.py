@@ -63,12 +63,12 @@ for i in range(10):
     # newAvailability.time.second = 0
 
     count = availability.Availability.query.filter_by(landlord=newAvailability.landlord,
-                                                      time=newAvailability.time,
-                                                      day=newAvailability.day).count()
+                                                      time=newAvailability.time).count()
 
-    if count == 0:
+    if count == 1:
         session.commit()
     else:
+        session.delete(newAvailability)
         newAvailability = None
 
 
@@ -87,36 +87,35 @@ listing5 = ListingFactory()
 listing5.active = True
 listing6 = ListingFactory()
 
-listing7 = ListingFactory(num_bedrooms=8, street="76 Taylor Avenue", city="poughkeepsie", state="NY", zip_code="12601", 
-  banner_photo_url="/uploads/listings/7/bannerPhoto/listing7banner71B3CM.jpg", property_type="house", lat=41.71359820000001, lng=-73.9244261,
-  featured=True)
+listing7 = ListingFactory(num_bedrooms=8, street="76 Taylor Avenue", city="poughkeepsie", state="NY", zip_code="12601",
+                          banner_photo_url="/uploads/listings/7/bannerPhoto/listing7banner71B3CM.jpg", property_type="house", lat=41.71359820000001, lng=-73.9244261,
+                          featured=True)
 listing7.active = True
 
-listing8 = ListingFactory(num_bedrooms=5, street="17 West Cedar", city="poughkeepsie", state="NY", zip_code="12601", 
-  banner_photo_url="/uploads/listings/8/bannerPhoto/listing8bannerX919KS.jpg", property_type="house", lat=41.720629, lng=-73.92391909999998,
-  featured=True)
+listing8 = ListingFactory(num_bedrooms=5, street="17 West Cedar", city="poughkeepsie", state="NY", zip_code="12601",
+                          banner_photo_url="/uploads/listings/8/bannerPhoto/listing8bannerX919KS.jpg", property_type="house", lat=41.720629, lng=-73.92391909999998,
+                          featured=True)
 listing8.active = True
 
-listing9 = ListingFactory(num_bedrooms=4, street="4 Riverview Circle", city="poughkeepsie", state="NY", zip_code="12601", 
-  banner_photo_url="/uploads/listings/9/bannerPhoto/listing9bannerPhoto.jpg", property_type="house", lat=41.73865, lng=-73.93280900000002)
+listing9 = ListingFactory(num_bedrooms=4, street="4 Riverview Circle", city="poughkeepsie", state="NY", zip_code="12601",
+                          banner_photo_url="/uploads/listings/9/bannerPhoto/listing9bannerPhoto.jpg", property_type="house", lat=41.73865, lng=-73.93280900000002)
 listing9.active = True
 
-listing10 = ListingFactory(num_bedrooms=4, street="70 Taylor Avenue", city="poughkeepsie", state="NY", zip_code="12601", 
-  banner_photo_url="/uploads/listings/10/bannerPhoto/listing10bannerPhoto.jpg", property_type="house", lat=41.71352869999999, lng=-73.9246923)
+listing10 = ListingFactory(num_bedrooms=4, street="70 Taylor Avenue", city="poughkeepsie", state="NY", zip_code="12601",
+                           banner_photo_url="/uploads/listings/10/bannerPhoto/listing10bannerPhoto.jpg", property_type="house", lat=41.71352869999999, lng=-73.9246923)
 listing10.active = True
 
-listing11 = ListingFactory(num_bedrooms=5, street="18 West Cedar", city="poughkeepsie", state="NY", zip_code="12601", 
-  banner_photo_url="/uploads/listings/11/bannerPhoto/listing11bannerPhoto.png", property_type="house", lat=41.7202834, lng=-73.9236699)
+listing11 = ListingFactory(num_bedrooms=5, street="18 West Cedar", city="poughkeepsie", state="NY", zip_code="12601",
+                           banner_photo_url="/uploads/listings/11/bannerPhoto/listing11bannerPhoto.png", property_type="house", lat=41.7202834, lng=-73.9236699)
 listing11.active = True
 
-listing12 = ListingFactory(num_bedrooms=6, street="12 West Cedar", city="poughkeepsie", state="NY", zip_code="12601", 
-  banner_photo_url="/uploads/listings/12/bannerPhoto/listing12bannerPhoto.png", property_type="house", lat=41.720173, lng=-73.92314390000001)
+listing12 = ListingFactory(num_bedrooms=6, street="12 West Cedar", city="poughkeepsie", state="NY", zip_code="12601",
+                           banner_photo_url="/uploads/listings/12/bannerPhoto/listing12bannerPhoto.png", property_type="house", lat=41.720173, lng=-73.92314390000001)
 listing12.active = True
 
-listing13 = ListingFactory(num_bedrooms=2, street="168 Fulton Street", city="poughkeepsie", state="NY", zip_code="12601", 
-  banner_photo_url="/uploads/listings/13/bannerPhoto/listing13bannerPhoto.png", property_type="apartment", lat=41.725445, lng=-73.91618599999998)
+listing13 = ListingFactory(num_bedrooms=2, street="168 Fulton Street", city="poughkeepsie", state="NY", zip_code="12601",
+                           banner_photo_url="/uploads/listings/13/bannerPhoto/listing13bannerPhoto.png", property_type="apartment", lat=41.725445, lng=-73.91618599999998)
 listing13.active = True
-
 
 
 session.commit()
@@ -348,6 +347,7 @@ for tour in allTours:
     landLordAvailabilities = availability.Availability.query.filter_by(landlord=landlord1).all()
 
     for i in range(randint(1, 4)):
+        print('All TourTime', tour_time.TourTime.query.all())
 
         randomIndex = randint(0, len(landLordAvailabilities) - 1)
         newTourTime = TourTimeFactory(tour=tour)
@@ -358,13 +358,22 @@ for tour in allTours:
                      second=0,
                      microsecond=0)
 
+        print('newTourTime', newTourTime)
+
         timeCheck = tour_time.TourTime.query \
             .filter_by(tour=tour,
                        date_time_requested=newTourTime.date_time_requested) \
             .count()
 
-        if timeCheck == 0:
+        print('timeCheck', timeCheck)
+
+
+
+        if timeCheck == 1:
             session.commit()
+        else:
+            session.delete(newTourTime)
+            newTourTime = None
 
 
 # TOUR MESSAGES (t1)

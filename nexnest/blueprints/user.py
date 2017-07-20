@@ -35,6 +35,10 @@ import os
 
 from itsdangerous import BadSignature
 
+import json
+
+from dateutil import parser
+
 users = Blueprint('users', __name__, template_folder='../templates/user')
 
 
@@ -44,11 +48,10 @@ def register():
         if current_user.is_authenticated:
             return redirect(url_for('indexs.index'))
 
-        #schools = [r for r, in session.query(School.name).all()]
         return render_template('register.html',
                                form=RegistrationForm(),
                                schools=allSchoolsAsStrings())
-    else:  # Post
+    else:
         registerForm = RegistrationForm(request.form)
 
         if registerForm.validate():
@@ -59,7 +62,8 @@ def register():
                 newUser = User(email=registerForm.email.data,
                                password=registerForm.password.data,
                                fname=registerForm.fname.data,
-                               lname=registerForm.lname.data)
+                               lname=registerForm.lname.data,
+                               landlord_info_filled=False)
                 session.add(newUser)
                 session.commit()
 
@@ -69,7 +73,9 @@ def register():
                 session.add(NotificationPreference(user=newUser))
                 session.commit()
 
-                return redirect(url_for('users.landlordInformation', userID=newUser.id))
+                newLandlord = Landlord(newUser)
+                session.add(newLandlord)
+                session.commit()
 
             else:
                 school = session.query(School) \
@@ -90,50 +96,63 @@ def register():
                     session.add(NotificationPreference(user=newUser))
                     session.commit()
 
-                    emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(newUser.email), _external=True)
-                    newUser.sendEmail('generic',
-                                      'Click the link to confirm your account <a href="%s">Click Here</a>' % emailConfirmURL)
+                    # emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(newUser.email), _external=True)
+                    # newUser.sendEmail('generic',
+                    #                   'Click the link to confirm your account <a href="%s">Click Here</a>' % emailConfirmURL)
 
-                    return redirect(url_for('users.emailConfirmNotice', email=registerForm.email.data))
+            emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(newUser.email), _external=True)
+            newUser.sendEmail('generic',
+                              'Click the link to confirm your account <a href="%s">Click Here</a>' % emailConfirmURL)
+
+            return redirect(url_for('users.emailConfirmNotice', email=registerForm.email.data))
+
         flash_errors(registerForm)
         return render_template('register.html', form=registerForm, schools=allSchoolsAsStrings())
 
 
 # BRAINTREE UPDATE
-@users.route('/register/<userID>/landlordInformation', methods=['GET', 'POST'])
-def landlordInformation(userID):
-    if request.method == 'GET':
+@users.route('/register/landlordInformation', methods=['GET', 'POST'])
+@login_required
+@user_editable
+def landlordInformation():
+    landlord = Landlord.query.filter_by(user=current_user).first_or_404()
 
+    if request.method == 'GET':
         return render_template('landlordMoreInformation.html',
-                               form=LandlordMoreInfoForm(),
-                               userID=userID)
+                               form=LandlordMoreInfoForm(obj=landlord))
     else:  # Post
         moreInformationForm = LandlordMoreInfoForm(request.form)
 
         if moreInformationForm.validate():
-            user = session.query(User).filter_by(id=userID).first()
-            newLandlord = Landlord(user=user,
-                                   street=moreInformationForm.street.data,
-                                   city=moreInformationForm.city.data,
-                                   state=moreInformationForm.state.data,
-                                   zip_code=moreInformationForm.zip_code.data,
-                                   check_pay=moreInformationForm.check_pay.data,
-                                   online_pay=moreInformationForm.online_pay.data)
+            landlord.street = moreInformationForm.street.data
+            landlord.city = moreInformationForm.city.data
+            landlord.state = moreInformationForm.state.data
+            landlord.zip_code = moreInformationForm.zip_code.data
+            landlord.check_pay = moreInformationForm.check_pay.data
+            landlord.online_pay = moreInformationForm.online_pay.data
+            landlord.user.dob = moreInformationForm.date_of_birth.data
+            landlord.user.phone = moreInformationForm.phone.data
+            landlord.user.landlord_info_filled = True
 
-            session.add(newLandlord)
             session.commit()
 
-            newLandlord.user.dob = moreInformationForm.date_of_birth.data
-            newLandlord.user.phone = moreInformationForm.phone.data
-            session.commit()
+            availabilityJSON = json.loads(moreInformationForm.availabilities.data)
+            logger.debug('availabilityJSON %r' % availabilityJSON)
 
-            flash('Theoretically this all worked', 'info')
-            emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(user.email), _external=True)
-            user.sendEmail('generic',
-                           'Click the link to confirm your account <a href="%s">Click Here</a>' % emailConfirmURL)
+            for i in range(7):
+                day = str(i)
+                if day in availabilityJSON:
+                    if len(availabilityJSON[day]) > 0:
+                        for time in availabilityJSON[day]:
+                            time = parser.parse(time).time()
+                            newAvailability = Availability(landlord, time, day)
+                            session.add(newAvailability)
+                            session.commit()
 
-            return redirect(url_for('users.emailConfirmNotice', email=user.email))
-            # MAX DO YOUR MAGIC HERE
+            flash('Your Information was successfully saved!', 'success')
+            return redirect(url_for('landlords.landlordDashboard'))
+            # return moreInformationForm.redirect()
+
         flash_errors(moreInformationForm)
         return render_template('/landlordMoreInformation.html', form=moreInformationForm, userID=userID)
 
@@ -191,7 +210,10 @@ def login():
             flash_errors(login_form)
 
         if user.isLandlord:
-            return redirect('/landlord/dashboard')
+            if user.landlord_info_filled:
+                return redirect('/landlord/dashboard')
+            else:
+                return redirect(url_for('users.landlordInformation'))
 
         return login_form.redirect()
 
@@ -318,13 +340,7 @@ def editAccountInfo():
     if form.validate_on_submit():
         flash('Successfully updated your account', 'success')
         current_user.fname = form.fname.data
-        current_user.lname = form.lname.data
-
-        if form.dob.data != '':
-            current_user.dob = form.dob.data
-
-        current_user.bio = form.bio.data
-        current_user.phone = form.phone.data
+        current_user.lname = form.lname.data        
         current_user.email = form.email.data
 
         if currentUserIsLandlord:
@@ -334,6 +350,10 @@ def editAccountInfo():
             landlord.city = form.city.data
             landlord.zip_code = form.zip_code.data
             landlord.state = form.state.data
+            if form.date_of_birth.data != '':
+                current_user.dob = form.date_of_birth.data
+            current_user.phone = form.phone.data
+
         else:
             if form.school.data != current_user.school.name:
                 school = School.query.filter_by(name=form.school.data).first()
@@ -352,15 +372,15 @@ def editAccountInfo():
 
         form.fname.data = current_user.fname
         form.lname.data = current_user.lname
-        form.dob.data = current_user.dob
-        form.bio.data = current_user.bio
+        form.date_of_birth.data = current_user.dob
         form.phone.data = current_user.phone
         form.email.data = current_user.email
 
         return render_template('editAccount.html',
                                form=form,
                                title='Edit Account',
-                               schools=None)
+                               schools=None,
+                               dob=current_user.dob)
     else:
         schools = [r for r, in session.query(School.name).all()]
         form = EditAccountForm(request.form, obj=current_user)

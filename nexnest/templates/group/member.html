@@ -11,7 +11,10 @@
                             <h2 style="font-size: 3.0vh">
                                 {{ user.fname }} {{ user.lname }}
                                 {% if group.leader_id == user.id %}
-                                    <i class="fa fa-user" aria-hidden="true"></i>
+                                    <div class="customTooltip">
+                                        <i class="fa fa-user" aria-hidden="true"></i>                                    
+                                        <span class="customTooltiptext">Group Leader</span>
+                                    </div>
                                 {% endif %}
                             </h2>
                         </div>

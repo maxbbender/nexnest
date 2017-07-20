@@ -14,6 +14,7 @@ from nexnest.models.security_deposit import SecurityDeposit
 
 from nexnest.utils.flash import flash_errors
 from nexnest.utils.file import isPDF
+from nexnest.utils.house import createHouse
 
 from werkzeug.utils import secure_filename
 
@@ -215,12 +216,7 @@ def confirmRequest(id):
 
             flash('Your House Request for %s has been completed! Welcome to your new house!' % groupListing.listing.street, 'success')
 
-            # Create the House Object
-            house = House(listing=groupListing.listing,
-                          group=groupListing.group)
-
-            session.add(house)
-            session.commit()
+            house = createHouse(groupListing.listing, groupListing.group)
 
             groupListing.genCompletedNotifications()
 
@@ -466,12 +462,7 @@ def completeHousingRequestAJAX(id):
             groupListing.listing.show = False
             session.commit()
 
-            # Create the House Object
-            house = House(listing=groupListing.listing,
-                          group=groupListing.group)
-
-            session.add(house)
-            session.commit()
+            createHouse(groupListing.listing, groupListing.group)
 
             groupListing.genCompletedNotifications()
 

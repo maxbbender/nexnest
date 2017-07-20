@@ -42,11 +42,15 @@ class Message(Base):
         return self.content[0:50] + "..."
 
     @property
+    def reallyBrief(self):
+        return self.content[0:40] + "..."
+
+    @property
     def serialize(self):
         return {
             'id': self.id,
             'content': self.content,
-            'contentBrief': self.brief,
+            'contentBrief': self.reallyBrief,
             'user': self.user.serialize,
             'date': self.date_created.strftime('%B-%d-%y')
         }

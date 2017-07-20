@@ -160,3 +160,33 @@ class ListingTransactionListing(Base):
     def __repr__(self):
         return 'ListingTransactionListings %d ~ ListingID %d | ListingTransactionID %d' % \
             (self.id, self.listing_id, self.listing_transactions_id)
+
+
+class RentTransaction(Transaction):
+    __tablename__ = 'rent_transactions'
+    id = db.Column(db.Integer, db.ForeignKey('transactions.id'), primary_key=True)
+    rent_id = db.Column(db.Integer, db.ForeignKey('rents.id'))
+    rent = relationship("Rent", back_populates="transaction")
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'rent',
+    }
+
+    def __init__(
+            self,
+            user,
+            status='open',
+            success=False,
+            braintree_transaction_id=None,
+            coupon=None
+    ):
+
+        super().__init__(
+            braintree_transaction_id=braintree_transaction_id,
+            status=status,
+            success=success,
+            user=user
+        )
+
+    def __repr__(self):
+        return 'Rent Transaction %d ~ Rent %r' % (self.id, self.rent)

@@ -21,14 +21,14 @@
 	    	<div class="col-xl-1"></div>
 	    	<div class="col-lg-12 col-xl-10">
 		    	<div class="card card-inverse">
-		    		<img class="card-img" src="/static/img/testHouse7.jpg" alt="Card image" style="width: 100%;">
+		    		<img class="card-img" src="/static/img/banner.jpg" alt="Card image" style="width: 100%;">
 		    		<div class="card-img-overlay" style="display: flex; flex-direction: column; justify-content: center;">
-		    			<div class="hidden-xs-down row" style="margin-top: -4vh;">
-		    				<h1 style="color: white; padding-left: 10%;">Insert Tagline from Nate and Alex Here</h1>
+		    			<div class="hidden-xs-down row" style="margin-top: -18vh;">
+		    				<h1 style="color: white; padding-left: 10%; font-size: 72px;">Don't Just Wing It</h1>
 		    			</div>
-		    			<div class="row justify-content-center" style="align-items: flex-end; padding-top: 12vh;">
+		    			<div class="row justify-content-center" style="align-items: flex-end; padding-top: 23vh;">
 		    				<div class="col-xs-7 col-md-8 col-lg-3 col-xl-3" style="left: 0vw;">
-		    					<label for="school">Location</label>
+		    					<label for="school"><h1 style="color: #fea700"><strong>Location</strong></h1></label>
 	    					    <select class="form-control" id="school" style="width: 85%;">
 	    					    	{% for school in schools %}
 	    					      		<option value="{{school}}">{{school}}</option>
@@ -36,7 +36,7 @@
 	    					    </select>
 		    				</div>
 		    				<div class="hidden-md-down col-lg-3 col-xl-3" style="left: 0vw;">
-		    					<label for="when">When</label>
+		    					<label for="when"><h1 style="color: #284565"><strong>When</strong></h1></label>
 	    					    <select class="form-control" id="when" style="width: 85%;">
 	    					    	{% for timeFrame in validTimeFrames %}
 	    					    		<option value="{{timeFrame[0]}}">{{timeFrame[1]}}</option>
@@ -48,7 +48,7 @@
 	    					    </select>
 		    				</div>
 		    				<div class="hidden-md-down col-lg-3 col-xl-3" style="left: 0vw;">
-		    					<label for="bedrooms">Bedrooms</label>
+		    					<label for="bedrooms"><h1 style="color: #52ab81"><strong>Bedrooms</strong></h1></label>
 	    					    <select class="form-control" id="rooms" style="width: 85%;">
 	    					      	<option value="1">1</option>
 	    					      	<option value="2">2</option>
@@ -76,35 +76,41 @@
 			    	<div class="col-xl-4" style="text-align: center; padding-top: 15px;">
 			    		<i class="fa fa-users fa-3x" aria-hidden="true"></i>
 			    		<br>
-			    		<h4>Create A Group</h4>
+			    		<h3><strong>Create A Group</strong></h3>
+			    		Browse, favorite and share listings with a group of your friends
 			    	</div>
 			    	<div class="col-xl-4" style="text-align: center; padding-top: 15px;">
 			    		<i class="fa fa-calendar fa-3x" aria-hidden="true"></i>
 			    		<br>
-			    		<h4>Schedule Property Tours</h4>
+			    		<h3><strong>Schedule Property Tours</strong></h3>
+			    		View a property at a time that’s convenient for you
 			    	</div>
-			    	<div class="col-xl-4" style="text-align: center; padding-top: 15px;">
-			    		<i class="fa fa-usd fa-3x" aria-hidden="true"></i>
-			    		<br>
-			    		<h4>Pay Rent Online</h4>
-			    	</div>
-			    </div>
-			    <div class="row">
-			    	
 			    	<div class="col-xl-4" style="text-align: center; padding-top: 15px;">
 			    		<i class="fa fa-handshake-o fa-3x" aria-hidden="true"></i>
 			    		<br>
-			    		<h4>Apply Online</h4>
+			    		<h3><strong>Apply Online</strong></h3>
+			    		Request to live at a property that you and your friends are interested in
+			    	</div>
+			    </div>
+			    <br><br>
+			    <div class="row">			    	
+			    	<div class="col-xl-4" style="text-align: center; padding-top: 15px;">
+			    		<i class="fa fa-usd fa-3x" aria-hidden="true"></i>
+			    		<br>
+			    		<h3><strong>Pay Rent Online</strong></h3>
+			    		Easily pay your rent online by credit/debit card, wire transfer or PayPal
 			    	</div>
 			    	<div class="col-xl-4" style="text-align: center; padding-top: 15px;">
 			    		<i class="fa fa-wrench fa-3x" aria-hidden="true"></i>
 			    		<br>
-			    		<h4>Create Maintenance Requests</h4>
+			    		<h3><strong>Create Maintenance Requests</strong></h3>
+			    		Quickly inform your landlord of maintenance issues in an accessible way
 			    	</div>
 			    	<div class="col-xl-4" style="text-align: center; padding-top: 15px;">
 			    		<i class="fa fa-home fa-3x" aria-hidden="true"></i>
 			    		<br>
-			    		<h4>Post Your Properties</h4>
+			    		<h3><strong>Post Your Properties</strong></h3>
+			    		List your properties to secure tenants for multiple rental periods
 			    	</div>
 			    </div>
 			</div>

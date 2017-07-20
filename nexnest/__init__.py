@@ -1,8 +1,9 @@
 # Nexnest Application Startpoint
 
 # OS Functions
+import os
 from os import environ
-from os.path import join, dirname
+from os.path import join, dirname, exists
 
 from dotenv import load_dotenv
 
@@ -41,13 +42,36 @@ logger.setLevel(logging.DEBUG)
 ch = logging.StreamHandler(sys.stdout)
 ch.setLevel(logging.DEBUG)
 
+
+# print(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'error.log'))
+
+if not exists(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'error.log')):
+    with open(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'error.log'), 'w') as f:
+        f.write('')
+
+
+if not exists(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'debug.log')):
+    with open(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'debug.log'), 'w') as f:
+        f.write('')
+
+
+errorHandler = logging.FileHandler(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'error.log'), 'r+')
+errorHandler.setLevel(logging.ERROR)
+
+errorHandlerD = logging.FileHandler(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'debug.log'), 'r+')
+errorHandlerD.setLevel(logging.DEBUG)
+
 # create formatter and add it to the handlers
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 ch.setFormatter(formatter)
+errorHandler.setFormatter(formatter)
+errorHandlerD.setFormatter(formatter)
 
 # add the handlers to the logger
 logger.addHandler(ch)
+logger.addHandler(errorHandler)
+logger.addHandler(errorHandlerD)
 
 mail = Mail(app)
 
