@@ -21,14 +21,14 @@
 	    	<div class="col-xl-1"></div>
 	    	<div class="col-lg-12 col-xl-10">
 		    	<div class="card card-inverse">
-		    		<img class="card-img" src="/static/img/testHouse7.jpg" alt="Card image" style="width: 100%;">
+		    		<img class="card-img" src="/static/img/banner.jpg" alt="Card image" style="width: 100%;">
 		    		<div class="card-img-overlay" style="display: flex; flex-direction: column; justify-content: center;">
-		    			<div class="hidden-xs-down row" style="margin-top: -4vh;">
-		    				<h1 style="color: white; padding-left: 10%;">Don't Just Wing It</h1>
+		    			<div class="hidden-xs-down row" style="margin-top: -18vh;">
+		    				<h1 style="color: white; padding-left: 10%; font-size: 72px;">Don't Just Wing It</h1>
 		    			</div>
-		    			<div class="row justify-content-center" style="align-items: flex-end; padding-top: 12vh;">
+		    			<div class="row justify-content-center" style="align-items: flex-end; padding-top: 23vh;">
 		    				<div class="col-xs-7 col-md-8 col-lg-3 col-xl-3" style="left: 0vw;">
-		    					<label for="school">Location</label>
+		    					<label for="school"><h1 style="color: #fea700"><strong>Location</strong></h1></label>
 	    					    <select class="form-control" id="school" style="width: 85%;">
 	    					    	{% for school in schools %}
 	    					      		<option value="{{school}}">{{school}}</option>
@@ -36,7 +36,7 @@
 	    					    </select>
 		    				</div>
 		    				<div class="hidden-md-down col-lg-3 col-xl-3" style="left: 0vw;">
-		    					<label for="when">When</label>
+		    					<label for="when"><h1 style="color: #284565"><strong>When</strong></h1></label>
 	    					    <select class="form-control" id="when" style="width: 85%;">
 	    					    	{% for timeFrame in validTimeFrames %}
 	    					    		<option value="{{timeFrame[0]}}">{{timeFrame[1]}}</option>
@@ -48,7 +48,7 @@
 	    					    </select>
 		    				</div>
 		    				<div class="hidden-md-down col-lg-3 col-xl-3" style="left: 0vw;">
-		    					<label for="bedrooms">Bedrooms</label>
+		    					<label for="bedrooms"><h1 style="color: #52ab81"><strong>Bedrooms</strong></h1></label>
 	    					    <select class="form-control" id="rooms" style="width: 85%;">
 	    					      	<option value="1">1</option>
 	    					      	<option value="2">2</option>
