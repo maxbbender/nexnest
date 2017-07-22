@@ -951,3 +951,11 @@ button.link {
 .customTooltip:hover .customTooltiptext {
     visibility: visible;
 }
+
+.question {
+  cursor: pointer;
+}
+
+.question strong:hover{
+  border-bottom:1px solid #444;
+}

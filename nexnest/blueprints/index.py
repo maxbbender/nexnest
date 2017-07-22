@@ -48,3 +48,8 @@ def test():
     # return render_template('test.html')
     logger.error("TESTING ERROR")
     return str(app.config['TESTING'])
+
+@indexs.route('/faq')
+def faq():
+  return render_template('faq.html',                           
+                           title='FAQ')
