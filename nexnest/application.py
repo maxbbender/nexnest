@@ -64,6 +64,7 @@ from nexnest.blueprints.error import errors
 from nexnest.blueprints.notification import notifications
 from nexnest.blueprints.report import reports
 from nexnest.blueprints.rent import rents
+from nexnest.blueprints.siteAdmin import siteAdmin as siteAdminBlueprint
 
 app.register_blueprint(base)
 app.register_blueprint(indexs)
@@ -79,7 +80,7 @@ app.register_blueprint(errors)
 app.register_blueprint(notifications)
 app.register_blueprint(reports)
 app.register_blueprint(rents)
-
+app.register_blueprint(siteAdminBlueprint, url_prefix='/siteAdmin')
 from nexnest.forms import LoginForm, PasswordChangeForm, ProfilePictureForm, PlatformReportForm
 
 

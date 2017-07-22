@@ -201,7 +201,7 @@ class EditAccountForm(RedirectForm):
         'First Name', [InputRequired()])
     lname = StringField(
         'Last Name', [InputRequired()])
-    school = SelectField('School', [Optional()], choices=schools)    
+    school = SelectField('School', [Optional()], choices=schools)
     email = StringField('Email',
                         [InputRequired("You must enter an email address"),
                          Email("Email must be valid format")])
@@ -346,3 +346,10 @@ class LandlordPaymentAccountForm(RedirectForm):
     taxID = StringField('Tax ID', [Optional()])
     accountNumber = StringField('Recieving Account Number')
     routingNumber = StringField('Routing Number')
+
+
+class CreateCouponForm(RedirectForm):
+    couponKey = StringField('Coupon Key')
+    unlimited = BooleanField('Unlimited', validators=[Optional()])
+    uses = IntegerField('Number of Uses', validators=[Optional()])
+    percentageOff = IntegerField('Percentage Off (15 would be 15% off)')
