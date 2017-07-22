@@ -6,6 +6,7 @@ from nexnest import logger
 from nexnest.models.tour import Tour
 from nexnest.models.group import Group
 from nexnest.models.user import User
+from nexnest.models.rent import Rent
 
 
 def isLandlord(f):
@@ -91,6 +92,38 @@ def user_editable(f):
                 abort(404)
 
             if not user.isEditableBy(current_user, False):
+                abort(403)
+
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+def rent_editable(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'rentID' in kwargs:
+            rent = Rent.query.filter_by(id=int(kwargs['rentID'])).first()
+
+            if rent is None:
+                abort(404)
+
+            if not rent.isEditableBy(current_user, False):
+                abort(403)
+
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+def rent_viewable(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'rentID' in kwargs:
+            rent = Rent.query.filter_by(id=int(kwargs['rentID'])).first()
+
+            if rent is None:
+                abort(404)
+
+            if not rent.isViewableBy(current_user, False):
                 abort(403)
 
         return f(*args, **kwargs)

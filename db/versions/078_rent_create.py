@@ -9,6 +9,7 @@ rents = Table('rents', meta,
               Column('house_id', Integer()),
               Column('user_id', Integer()),
               Column('date_due', Date()),
+              Column('amount', Integer()),
               Column('completed', Boolean()),
               Column('date_created', DateTime()),
               Column('date_modified', DateTime()))

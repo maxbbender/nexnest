@@ -2,6 +2,9 @@ import string
 import random
 from faker import Faker
 
+import datetime
+import calendar
+
 fake = Faker()
 
 
@@ -14,3 +17,11 @@ def randomTime():
     time.minute = 0
     time.second = 0
     return time
+
+
+def add_months(sourcedate, months):
+    month = sourcedate.month - 1 + months
+    year = int(sourcedate.year + month / 12)
+    month = month % 12 + 1
+    day = min(sourcedate.day, calendar.monthrange(year, month)[1])
+    return datetime.date(year, month, day)

@@ -91,7 +91,9 @@ class User(Base):
         self.dob = dob
 
         if role is None:
-            role = 'user'
+            self.role = 'user'
+        else:
+            self.role = role
 
         if profile_image is None:
             self.profile_image = "https://api.adorable.io/avatars/120/" + self.username

@@ -191,6 +191,7 @@ class Listing(Base):
             self.price_per_month = self.price
             self.price_per_semester = self.price * 6
         elif self.rent_due == 'semester':
+            # numMonths = int((self.end_date - self.start_date).days / 30)
             self.price_per_month = self.price / 6
             self.price_per_semester = self.price
         else:

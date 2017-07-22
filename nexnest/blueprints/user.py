@@ -154,7 +154,7 @@ def landlordInformation():
             # return moreInformationForm.redirect()
 
         flash_errors(moreInformationForm)
-        return render_template('/landlordMoreInformation.html', form=moreInformationForm, userID=userID)
+        return render_template('/landlordMoreInformation.html', form=moreInformationForm, userID=landlord.user.id)
 
 
 @users.route('/login', methods=['GET', 'POST'])
@@ -243,7 +243,7 @@ def emailConfirm(payload):
     else:
         user.email_confirmed = True
         session.commit()
-        flash('You have confirmed your account. Thanks!', 'success')
+        flash('You have confirmed your account, you can now log in!', 'success')
 
     return redirect(url_for('indexs.index'))
 
@@ -340,7 +340,7 @@ def editAccountInfo():
     if form.validate_on_submit():
         flash('Successfully updated your account', 'success')
         current_user.fname = form.fname.data
-        current_user.lname = form.lname.data        
+        current_user.lname = form.lname.data
         current_user.email = form.email.data
 
         if currentUserIsLandlord:
@@ -449,43 +449,58 @@ def searchForGroupUser(username, group_id):
 @users.route('/user/directMessages')
 @login_required
 def directMessagesAll():
-    userList = []
-    direct_messages = session.query(DirectMessage.target_user_id) \
-        .filter_by(source_user_id=current_user.id) \
-        .order_by('date_created desc') \
-        .group_by(DirectMessage.target_user_id) \
-        .limit(1)
+    allMessages = []
 
-    for dm in direct_messages:
-        user = session.query(User).filter_by(id=dm).first()
-        userList.append(user)
+    sentDirectMessages = DirectMessage.query.filter_by(user=current_user) \
+        .distinct(DirectMessage.target_user_id) \
+        .all()
+
+    logger.debug('sentDirectMessages %r' % sentDirectMessages)
+
+    allMessages = sentDirectMessages
+
+    recievedDirectMessages = DirectMessage.query.filter_by(target_user_id=current_user.id) \
+        .distinct(DirectMessage.user_id) \
+        .all()
+
+    messageUserIDList = []
+
+    for message in sentDirectMessages:
+        messageUserIDList.append(message.target_user_id)
+
+
+    newDirectMessages = []
+
+    for message in recievedDirectMessages:
+        if message.user_id not in messageUserIDList:
+            newDirectMessages.append(message)
+
+    logger.debug('allMessages %r' % allMessages)
+    logger.debug('newDirectMessages %r' % newDirectMessages)
 
     return render_template('directMessageAll.html',
-                           users=userList)
+                           directMessages=allMessages,
+                           newDirectMessages=newDirectMessages)
 
 
-@users.route('/user/directMessages/<user_id>')
+@users.route('/user/directMessages/<userID>')
 @login_required
-def directMessagesIndividual(user_id):
-    target_user = session.query(User) \
-        .filter_by(id=user_id) \
-        .first()
+def directMessagesIndividual(userID):
+    targetUser = User.query.filter_by(id=userID).first_or_404()
 
-    dm = session.query(DirectMessage) \
-        .filter(or_(
-            (and_(DirectMessage.source_user_id == current_user.id,
-                  DirectMessage.target_user_id == user_id)),
-            (and_(DirectMessage.target_user_id == current_user.id,
-                  DirectMessage.source_user_id == user_id)))) \
+    allMessages = DirectMessage.query \
+        .filter(or_(and_(DirectMessage.user_id == current_user.id,
+                         DirectMessage.target_user_id == targetUser.id),
+                    and_(DirectMessage.user_id == targetUser.id,
+                         DirectMessage.target_user_id == current_user.id))) \
         .order_by(asc(DirectMessage.date_created)) \
         .all()
 
-    msgForm = DirectMessageForm(target_user_id=user_id)
+    logger.debug('allMessages %r' % allMessages)
 
     return render_template('directMessageIndividual.html',
-                           target_user=target_user,
-                           dm=dm,
-                           msgForm=msgForm)
+                           targetUser=targetUser,
+                           messages=allMessages)
 
 
 @users.route('/user/directMessages/create', methods=['POST'])

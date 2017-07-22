@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<form action="{{url_for('siteAdmin.createCoupon')}}" method="POST">
+    <div class="row">
+        <div class="col-xs-0 col-xl-1"></div>
+        <div class="col-xs-12 col-xl-10">
+            {% from "_formhelpers.html" import render_field %}
+            <form action="{{url_for('groups.createGroup')}}" method='POST'>
+                <dl>
+                    {{ form.csrf_token }}
+                    {{ render_field(form.couponKey, class="form-control", type="text") }}
+                    {{ render_field(form.percentageOff, class="form-control", type="number") }}
+                    {{ render_field(form.unlimited, class="form-control", type="checkbox") }}
+                    {{ render_field(form.uses, class="form-control", type="number") }}
+                </dl>
+                <p>
+                    <input type='submit' value='Create Coupon' class="btn btn-primary" style="float: right;">
+                </p>
+            </form>
+        </div>
+    </div>
+</form>
+{% endblock %}

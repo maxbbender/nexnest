@@ -15,6 +15,7 @@ class Rent(Base):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     date_due = db.Column(db.Date())
     completed = db.Column(db.Boolean)
+    amount = db.Column(db.Integer)
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
     transaction = relationship("RentTransaction", uselist=False, back_populates='rent')
@@ -24,11 +25,13 @@ class Rent(Base):
             house,
             user,
             dateDue,
+            amount
     ):
 
         self.house = house
         self.user = user
         self.date_due = dateDue
+        self.amount = amount
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
@@ -37,6 +40,15 @@ class Rent(Base):
 
     def __repr__(self):
         return '<Rent ~ House %r | User %r>' % (self.house, self.user)
+
+    def isEditableBy(self, user, toFlash=True):
+        if user == self.user or user in self.house.listing.landLordsAsUsers():
+            return True
+
+        return False
+
+    def isViewableBy(self, user, toFlash=True):
+        return self.isEditableBy(user, toFlash)
 
 
 def update_date_modified(mapper, connection, target):

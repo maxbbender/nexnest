@@ -19,18 +19,20 @@ from pprint import pprint
 from nexnest.utils.school import allSchoolsAsStrings
 import googlemaps
 from apiclient.discovery import build
+from sqlalchemy import func, asc, or_, and_
 
 from dateutil import parser
 
 import json
 
+import datetime
+
 gmaps = googlemaps.Client(key='AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w')
 
-user = user.User.query.filter_by(id=2).first()
-print(user)
+landlord = user.User.query.filter_by(id=1).first()
+otherUser = user.User.query.filter_by(id=7).first()
 
-jsonString = '{"0":["9:00AM","10:00AM","11:00AM","12:00PM","1:00PM","2:00PM","3:00PM","4:00PM","5:00PM","6:00PM","7:00PM"],"1":["10:00AM","1:00PM","2:00PM","3:00PM"],"2":["10:00AM","11:00AM","12:00PM","1:00PM","2:00PM"],"3":["11:00AM","12:00PM","1:00PM","2:00PM","3:00PM"],"4":[],"5":[],"6":[]}'
+date1 = datetime.datetime(2017, 2, 1)
+date2 = datetime.datetime(2016, 3, 1)
 
-json = json.loads(jsonString)
-
-pprint(json)
+print(((date1-date2).days)/30)
