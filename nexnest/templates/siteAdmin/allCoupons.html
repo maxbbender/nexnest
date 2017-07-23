@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<table>
+	<tr>
+		<th>ID</th>
+		<th>Unlimited</th>
+		<th>Uses</th>
+		<th>Percentage Off</th>
+	</tr>
+
+
+{% for coupon in coupons %}
+	<tr>
+		<td>{{coupon.id}}</td>
+		<td>{{coupon.unlimited}}</td>
+		<td>{{coupon.uses}}</td>
+		<td>{{coupon.percentage_off}}</td>
+	</tr>
+{% endfor %}
+</table>
+{% endblock %}
