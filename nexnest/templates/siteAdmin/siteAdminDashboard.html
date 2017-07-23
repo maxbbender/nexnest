@@ -1,4 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
-Landlord Dashboard
+	<div class="row">
+		<div class="col-xs-0 col-md-1 col-lg-3"></div>
+        <div class="col-xs-12 col-md-10 col-lg-6 col-xl-6">
+        	<h1>Coupons</h1>
+        	<a href="{{url_for('siteAdmin.createCoupon')}}">
+        		Create New Coupon
+        	</a>
+        	<br>
+        	<a href="{{url_for('siteAdmin.createCoupon')}}">
+        		View Current Coupons
+        	</a>
+        </div>
+    </div>
+	
 {% endblock %}

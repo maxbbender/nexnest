@@ -349,7 +349,7 @@ class LandlordPaymentAccountForm(RedirectForm):
 
 
 class CreateCouponForm(RedirectForm):
-    couponKey = StringField('Coupon Key')
+    couponKey = StringField('Coupon Key', validators=[InputRequired()])
     unlimited = BooleanField('Unlimited', validators=[Optional()])
     uses = IntegerField('Number of Uses', validators=[Optional()])
     percentageOff = IntegerField('Percentage Off (15 would be 15% off)')

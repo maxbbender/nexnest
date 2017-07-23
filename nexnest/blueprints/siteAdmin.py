@@ -48,6 +48,7 @@ def createCoupon():
                                    unlimited=True)
                 session.add(newCoupon)
                 session.commit()
+                flash('Cpupon Created!', 'success')
 
             else:
                 newCoupon = Coupon(percentage_off=form.percentageOff.data,
@@ -56,6 +57,7 @@ def createCoupon():
                                    uses=form.uses.data)
                 session.add(newCoupon)
                 session.commit()
+                flash('Cpupon Created!', 'success')
         else:
             flash('Coupon already exists', 'danger')
             return form.redirect()
