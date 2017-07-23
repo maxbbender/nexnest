@@ -1,17 +1,15 @@
-from flask import Blueprint, render_template, abort, jsonify, request, flash
-from flask_login import login_required, current_user
-
+from flask import (Blueprint, abort, flash, jsonify, render_template, request,
+                   url_fo)
+from flask_login import current_user, login_required
 from nexnest.application import session
 from nexnest.forms import CreateCouponForm
+from nexnest.models.coupon import Coupon
+from nexnest.models.user import User
 from nexnest.utils.coupon import couponExists
 from nexnest.utils.misc import idGenerator
 
-
-from nexnest.models.coupon import Coupon
-from nexnest.models.user import User
-
-
-siteAdmin = Blueprint('siteAdmin', __name__, template_folder='../templates/siteAdmin')
+siteAdmin = Blueprint('siteAdmin', __name__,
+                      template_folder='../templates/siteAdmin')
 
 
 @siteAdmin.before_request
@@ -77,10 +75,10 @@ def randomCouponKey():
     while keyCount > 0:
         newRandomKey = idGenerator()
 
-        keyCount = session.query(Coupon).filter_by(coupon_key=newRandomKey).count()
+        keyCount = session.query(Coupon).filter_by(
+            coupon_key=newRandomKey).count()
 
     return jsonify({'couponKey': newRandomKey})
-
 
 
 @siteAdmin.route('/allCoupons', methods=['GET'])
@@ -92,6 +90,36 @@ def allCoupons():
                            coupons=coupons)
 
 
+@siteAdmin.route('/coupon/<couponID>/updateUses/<numUses>')
+@login_required
+def updateCouponUses(couponID, numUses):
+    coupon = Coupon.query.filter_by(id=couponID).first_or_404()
+
+    coupon.uses = numUses
+    session.commit()
+
+    return redirect()
+
+
+@siteAdmin.route('/coupon/<couponID>/delete')
+@login_required
+def deleteCoupon(couponID):
+    coupon = Coupon.query.filter_by(id=couponID).first()
+
+    if coupon is None:
+        if request.is_xhr:
+            return jsonify({'success': False, 'message': "Coupon doesn\'t exist"})
+        else:
+            flash("Coupon doesn't exist", 'danger')
+    else:
+        session.delete(coupon)
+        session.commit()
+        if request.is_xhr:
+            return jsonify({'success': True})
+        else:
+            flash('Coupon Deleted', 'success')
+
+    return redirect(url_for('siteAdmin.siteAdminDashboard'))
 
 
 @siteAdmin.route('/searchUsers/lastName/<lastName>')
@@ -105,12 +133,6 @@ def searchUsersByLastName(lastName):
         userReturnArray.append(user.serialize)
 
     return jsonify({'users': userReturnArray})
-
-
-
-
-
-
 
 
 # @siteAdmin.route('/resetPassword/<userID>/')
