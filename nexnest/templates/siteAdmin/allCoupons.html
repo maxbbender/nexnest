@@ -1,21 +1,45 @@
 {% extends 'base.html' %}
-{% block content %}
-<table>
-	<tr>
-		<th>ID</th>
-		<th>Unlimited</th>
-		<th>Uses</th>
-		<th>Percentage Off</th>
-	</tr>
-
-
-{% for coupon in coupons %}
-	<tr>
-		<td>{{coupon.id}}</td>
-		<td>{{coupon.unlimited}}</td>
-		<td>{{coupon.uses}}</td>
-		<td>{{coupon.percentage_off}}</td>
-	</tr>
-{% endfor %}
-</table>
+	{% block content %}
+	<div class="row">
+		<div class="col-xs-0 col-md-2">
+		</div>
+		<div class="col-xs-12 col-md-8">
+			<div class="row">
+				<div class="col-xs-3">
+					<h2><strong>Key</strong></h2>
+				</div>
+				<div class="col-xs-3">
+					<h2><strong># of uses</strong></h2>
+				</div>
+				<div class="col-xs-3">
+					<h2><strong>% off</strong></h2>
+				</div>
+				<div class="col-xs-3">
+					<h2><strong>Remove</strong></h2>
+				</div>
+			</div>
+			<hr>
+			{% for coupon in coupons %}
+				<div class="row">
+					<div class="col-xs-3">
+						<strong>{{coupon.coupon_key}}</strong>
+					</div>
+					<div class="col-xs-3">
+						{% if coupon.uses == true %}
+							Unlimited
+						{% else %}
+							{{coupon.uses}}
+						{% endif %}
+					</div>
+					<div class="col-xs-3">
+						{{coupon.percentage_off}}%
+					</div>
+					<div class="col-xs-3">
+						<button id="{{coupon.id}}" class="btn btn-danger">Delete</button>
+					</div>
+				</div>
+				<hr>
+			{% endfor %}
+		</div>
+	</div>
 {% endblock %}
