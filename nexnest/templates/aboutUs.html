@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<br>
+<div class="row">
+	<div class="hidden-sm-down col-md-4 col-lg-3 col-xl-2 faqVR">
+		<h1 class="faqHeading">Navigate</h1>
+		<hr class="faqHR">
+		<a href="#" class="faqNav"><h3><strong>About Us</strong></h3></a>
+		<a href="#" class="faqNav"><h3><strong>Contact Us</strong></h3></a>
+		<br>
+		<h1 class="faqHeading">Help</h1>
+		<hr class="faqHR">
+		<a href="#" class="faqNav"><h3><strong>FAQ</strong></h3></a>
+		<a href="#" class="faqNav"><h3><strong>Terms of Use</strong></h3></a>
+		<a href="#" class="faqNav"><h3><strong>Privacy Policy</strong></h3></a>
+		<a href="#" class="faqNav"><h3><strong>Report Issue</strong></h3></a>
+	</div>
+	<div class="col-xs-12 col-xs-12 col-md-8 col-lg-9 col-xl-10">
+		<div class="row">
+			<div class="col-lg-2"></div>
+			<div class="col-lg-8">
+				<center>
+					<h1 class="faqHeading">It’s time for a renovation.</h1>
+					<span style="color: #52ab81; font-size: 30px;">Whether it’s a <strong>new</strong> semester or a <strong>new</strong> school - why are you 
+					searching for your next college rental the <strong><i>old</i></strong> way? 
+					At nexnest, we’re here to help.
+					<br><br>
+					Our mission is to help you create the greatest college experience
+					possible, and we believe that starts here; with finding your next home.
+					Nexnest was created in WNY <strong>by college students, for college students.</strong>
+					With your needs in mind, we hope to serve your community by showing students
+					what the off-campus lifestyle has to offer. Because the best four to six years of
+					your life shouldn’t be left up to chance. <strong style="color: #fea700;">Don’t just wing it.</strong></span>
+					<br><br>
+					<img src="/static/img/colorLogo.png" height="250px;">
+				</center>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+	function expandAnswer( event ) {
+		var target = $( event.target );
+		target = target.closest(".question").first();
+		target = target.children( ".answer" ).first();
+		target.toggle();
+	}
+
+	$( ".question" ).click( expandAnswer );
+
+</script>
+{% endblock %}

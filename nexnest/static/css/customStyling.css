@@ -961,5 +961,21 @@ button.link {
 }
 
 .question strong:hover{
-  border-bottom:1px solid #444;
+  border-bottom:1px solid #5686c5;
+}
+
+.faqHeading {
+  color: #fea700;
+}
+
+.faqNav {
+  color: #5686c5;
+}
+
+.faqHR {
+  border: #52ab81 1px solid;
+}
+
+.faqVR {
+  border-right: #52ab81 medium solid;
 }

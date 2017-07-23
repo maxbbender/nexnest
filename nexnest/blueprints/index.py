@@ -53,3 +53,8 @@ def test():
 def faq():
   return render_template('faq.html',                           
                            title='FAQ')
+
+@indexs.route('/aboutUs')
+def aboutUs():
+  return render_template('aboutUs.html',                           
+                           title='About Us')
