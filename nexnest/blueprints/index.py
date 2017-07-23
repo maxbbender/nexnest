@@ -58,3 +58,13 @@ def faq():
 def aboutUs():
   return render_template('aboutUs.html',                           
                            title='About Us')
+
+@indexs.route('/privacyPolicy')
+def privacyPolicy():
+  return render_template('privacyPolicy.html',                           
+                           title='Privacy Policy')
+
+@indexs.route('/termsConditions')
+def termsConditions():
+  return render_template('termsConditions.html',                           
+                           title='Terms and Conditions')

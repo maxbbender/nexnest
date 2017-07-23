@@ -39,16 +39,3 @@
 	</div>
 </div>
 {% endblock %}
-{% block scripts %}
-<script>
-	function expandAnswer( event ) {
-		var target = $( event.target );
-		target = target.closest(".question").first();
-		target = target.children( ".answer" ).first();
-		target.toggle();
-	}
-
-	$( ".question" ).click( expandAnswer );
-
-</script>
-{% endblock %}
