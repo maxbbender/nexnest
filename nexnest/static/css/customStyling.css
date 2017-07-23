@@ -956,6 +956,10 @@ button.link {
   cursor: pointer;
 }
 
+.questionHeading {
+  color: #5686c5;
+}
+
 .question strong:hover{
   border-bottom:1px solid #444;
 }
