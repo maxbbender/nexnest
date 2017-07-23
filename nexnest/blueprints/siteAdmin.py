@@ -82,6 +82,18 @@ def randomCouponKey():
     return jsonify({'couponKey': newRandomKey})
 
 
+
+@siteAdmin.route('/allCoupons', methods=['GET'])
+@login_required
+def allCoupons():
+    coupons = Coupon.query.all()
+
+    return render_template('/allCoupons.html',
+                           coupons=coupons)
+
+
+
+
 @siteAdmin.route('/searchUsers/lastName/<lastName>')
 @login_required
 def searchUsersByLastName(lastName):
@@ -93,6 +105,12 @@ def searchUsersByLastName(lastName):
         userReturnArray.append(user.serialize)
 
     return jsonify({'users': userReturnArray})
+
+
+
+
+
+
 
 
 # @siteAdmin.route('/resetPassword/<userID>/')
