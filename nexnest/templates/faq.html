@@ -5,15 +5,15 @@
 	<div class="hidden-sm-down col-md-4 col-lg-3 col-xl-2 faqVR">
 		<h1 class="faqHeading">Navigate</h1>
 		<hr class="faqHR">
-		<a href="#" class="faqNav"><h3><strong>About Us</strong></h3></a>
+		<a href="{{url_for('indexs.aboutUs')}}" class="faqNav"><h3><strong>About Us</strong></h3></a>
 		<a href="#" class="faqNav"><h3><strong>Contact Us</strong></h3></a>
 		<br>
 		<h1 class="faqHeading">Help</h1>
 		<hr class="faqHR">
-		<a href="#" class="faqNav"><h3><strong>FAQ</strong></h3></a>
-		<a href="#" class="faqNav"><h3><strong>Terms of Use</strong></h3></a>
-		<a href="#" class="faqNav"><h3><strong>Privacy Policy</strong></h3></a>
-		<a href="#" class="faqNav"><h3><strong>Report Issue</strong></h3></a>
+		<a href="{{url_for('indexs.faq')}}" class="faqNav"><h3><strong>FAQ</strong></h3></a>
+		<a href="{{url_for('indexs.termsConditions')}}" class="faqNav"><h3><strong>Terms of Use</strong></h3></a>
+		<a href="{{url_for('indexs.privacyPolicy')}}" class="faqNav"><h3><strong>Privacy Policy</strong></h3></a>
+		<a href="#" class="faqNav" data-toggle="modal" data-target="#platformReportModal"><h3><strong>Report Issue</strong></h3></a>
 	</div>
 	<div class="col-xs-12 col-xs-12 col-md-8 col-lg-9 col-xl-10">
 		<div class="card" style="border: none;">
