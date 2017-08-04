@@ -1,5 +1,5 @@
 from flask import (Blueprint, abort, flash, jsonify, render_template, request,
-                   url_fo)
+                   url_for)
 from flask_login import current_user, login_required
 from nexnest.application import session
 from nexnest.forms import CreateCouponForm

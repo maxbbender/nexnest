@@ -127,7 +127,7 @@ class ListingForm(RedirectForm):
     num_full_baths = IntegerField(
         'Number of Full Bathrooms', [InputRequired()])
     num_half_baths = IntegerField(
-        'Number of Half Bathrooms', [InputRequired()])
+        'Number of Half Bathrooms', [Optional()])
     price = IntegerField('Price per Bedroom per Semester', [InputRequired()])
     square_footage = IntegerField('Square Footage of House', [Optional()])
     parking = SelectField('What Parking is Available',
@@ -148,7 +148,7 @@ class ListingForm(RedirectForm):
     garbage_service = BooleanField('Is garbage service included?')
     security_service = BooleanField('Is there a security service provided?')
     description = TextAreaField('Please provide a detailed description of the property', [
-                                Length(min=1, max=1500), InputRequired()])
+                                Length(min=0, max=1500), Optional()])
     property_type = SelectField('Property Type', choices=propertyTypes)
     rent_due = SelectField('How often is rent due?', choices=rentDue)
     first_semester_rent_due_date = DateField(
