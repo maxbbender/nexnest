@@ -23,14 +23,11 @@ notificationPreference = Table('notification_preferences', meta,
                                Column('tour_confirmed_email', Boolean()),
                                Column('maintenance_notification', Boolean()),
                                Column('maintenance_email', Boolean()),
-                               Column(
-                                   'maintenance_inProgress_notification', Boolean()),
+                               Column('maintenance_inProgress_notification', Boolean()),
                                Column('maintenance_inProgress_email', Boolean()),
-                               Column(
-                                   'maintenance_completed_notification', Boolean()),
+                               Column('maintenance_completed_notification', Boolean()),
                                Column('maintenance_completed_email', Boolean()),
-                               Column(
-                                   'maintenance_message_notification', Boolean()),
+                               Column('maintenance_message_notification', Boolean()),
                                Column('maintenance_message_email', Boolean()),
                                Column('rent_due_notification', Boolean()),
                                Column('rent_due_email', Boolean()),
@@ -46,14 +43,11 @@ notificationPreference = Table('notification_preferences', meta,
                                Column('tour_denied_email', Boolean()),
                                Column('tour_create_notification', Boolean()),
                                Column('tour_create_email', Boolean()),
-                               Column(
-                                   'group_listing_accept_notification', Boolean()),
+                               Column('group_listing_accept_notification', Boolean()),
                                Column('group_listing_accept_email', Boolean()),
-                               Column(
-                                   'group_listing_deny_notification', Boolean()),
-                               Column('group_listing_deny_email', Boolean())
-                               Column(
-                                   'group_user_completed_notification', Boolean()),
+                               Column('group_listing_deny_notification', Boolean()),
+                               Column('group_listing_deny_email', Boolean()),
+                               Column('group_user_completed_notification', Boolean()),
                                Column('group_user_completed_email', Boolean()))
 
 # Column('group_listing_completed_notification', Boolean()),
@@ -65,9 +59,7 @@ def upgrade(migrate_engine):
     notificationPreference.create()
 
     users = Table('users', meta, autoload=True)
-    ForeignKeyConstraint(
-        columns=[notificationPreference.c.user_id],
-        refcolumns=[users.c.id]).create()
+    ForeignKeyConstraint(columns=[notificationPreference.c.user_id], refcolumns=[users.c.id]).create()
     pass
 
 
