@@ -51,3 +51,18 @@ class GroupUser(Base):
     def __repr__(self):
         return '<GroupUser ~ Group %r | User %r>' % \
             (self.group_id, self.user_id)
+
+    def genNotifications(self):
+        for user in self.group.acceptedUsers:
+            if user is not self.user:
+
+                if user.notificationPreference.group_user_completed_notification:
+                    newNotif = Notification(notif_type='group_user_completed',
+                                            target_model_id=self.id,
+                                            target_user=user)
+                    session.add(newNotif)
+                    session.commit()
+
+                if user.notificationPreference.maintenance_email:
+                    user.sendEmail(emailType='generic',
+                                   message='%s has been added to group %s' % (self.user.name, self.group.name))

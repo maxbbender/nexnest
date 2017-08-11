@@ -1,17 +1,15 @@
 from datetime import datetime as dt
 
-from sqlalchemy.orm import relationship
-
 from flask import flash, render_template, url_for
-
-from nexnest import logger, app
+from nexnest import app, logger
 from nexnest.application import db, session
-from nexnest.utils.password import hash_password
-from nexnest.utils.email import send_email
-from nexnest.models.group_user import GroupUser
 from nexnest.models.group_listing import GroupListing
-from nexnest.models.notification import Notification
+from nexnest.models.group_user import GroupUser
 from nexnest.models.landlord import Landlord
+from nexnest.models.notification import Notification
+from nexnest.utils.email import send_email
+from nexnest.utils.password import hash_password
+from sqlalchemy.orm import relationship
 
 from .base import Base
 
@@ -48,9 +46,11 @@ class User(Base):
     landlord = relationship('Landlord', backref='user')
     securityDeposits = relationship("SecurityDeposit", backref='user')
     maintenanceRequests = relationship("Maintenance", backref='user')
-    notifications = relationship("Notification", backref='user', lazy="dynamic")
+    notifications = relationship(
+        "Notification", backref='user', lazy="dynamic")
     messages = relationship('Message', backref='user')
-    groupListingFavorites = relationship('GroupListingFavorite', backref='user')
+    groupListingFavorites = relationship(
+        'GroupListingFavorite', backref='user')
     transactions = relationship('Transaction', backref='user')
     notificationPreference = relationship('NotificationPreference',
                                           uselist=False, back_populates='user')
@@ -231,6 +231,7 @@ class User(Base):
 
         if group_user is not None:
             group_user.accepted = True
+            group_user.genNotifications()
             session.commit()
             flash("Group invite accepted", 'info')
         else:
