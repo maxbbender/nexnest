@@ -1,9 +1,6 @@
-from sqlalchemy.orm import relationship
-
-from nexnest.application import db
+from nexnest.application import db, session
 from nexnest.models.notification import Notification
-
-from nexnest.application import session
+from sqlalchemy.orm import relationship
 
 from .base import Base
 

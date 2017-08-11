@@ -1,12 +1,11 @@
 from datetime import datetime as dt
 
-from sqlalchemy import event
 from flask import flash
-
 from nexnest import logger
 from nexnest.application import db, session
 from nexnest.models.base import Base
 from nexnest.models.message import Message
+from sqlalchemy import event
 
 
 class Notification(Base):
@@ -65,7 +64,8 @@ class Notification(Base):
         else:
             self.category = 'generic_notification'
 
-        message, returnObject, redirectURL = self.getNotification()  # pylint: disable=unused-variable
+        message, returnObject, redirectURL = self.getNotification(
+        )  # pylint: disable=unused-variable
         self.message = message
         self.redirect_url = redirectURL
 
@@ -86,7 +86,8 @@ class Notification(Base):
         }
 
         if self.category in ['direct_message', 'generic_message']:
-            dictToReturn['messageObject'] = Message.query.filter_by(id=self.target_model_id).first().serialize
+            dictToReturn['messageObject'] = Message.query.filter_by(
+                id=self.target_model_id).first().serialize
 
         # IF THERE IS A LISTING ASSOCIATED W/ NOTIFICATION INCLUDE IT IN SERALIZE
 
@@ -94,7 +95,8 @@ class Notification(Base):
 
     @property
     def returnObject(self):
-        message, returnObject, redirectURL = self.getNotification()  # pylint: disable=unused-variable
+        message, returnObject, redirectURL = self.getNotification(
+        )  # pylint: disable=unused-variable
         return returnObject
 
     @property
@@ -225,13 +227,21 @@ class Notification(Base):
                 .filter_by(id=self.target_model_id) \
                 .first()
 
+            if returnObject is not None:
+                message = "New House Request from %s#%s" % \
+                    (returnObject.group.name, returnObject.listing.briefBriefStreet)
+
+                redirectURL = '/group/view/%d' % returnObject.group.id
+
+                return message, returnObject, redirectURL
+
         elif self.notif_type == 'group_listing_favorite':
             returnObject = session.query(GroupListingFavorite) \
                 .filter_by(id=self.target_model_id) \
                 .first()
 
             if returnObject is not None:
-                message = "%s has favorited a new listing in %s" % \
+                message = "%s has favorited a new listing.#%s" % \
                     (returnObject.user.name, returnObject.group.name)
 
                 redirectURL = '/group/view/%d' % returnObject.group.id
@@ -244,7 +254,7 @@ class Notification(Base):
                 .first()
 
             if returnObject is not None:
-                message = "Your house request has been accepted!"
+                message = "Congratulations! Your housing request has been accepted."
 
                 redirectURL = '/houseRequest/view/%d' % returnObject.id
 
@@ -256,7 +266,7 @@ class Notification(Base):
                 .first()
 
             if returnObject is not None:
-                message = "Your house request for %s has been denied" % returnObject.listing.street
+                message = "Were sorry, your housing request has been denied."
 
                 redirectURL = '/'
 
@@ -268,7 +278,8 @@ class Notification(Base):
                 .first()
 
             if returnObject is not None:
-                message = "%s has paid their security deposit!" % returnObject.user.name
+                message = "%s has paid their security deposit.#%s" % (
+                    returnObject.user.name, returnObject.groupListing.listing.briefBriefStreet)
 
                 redirectURL = '/houseRequest/view/%d' % returnObject.groupListing.id
 
@@ -325,6 +336,19 @@ class Notification(Base):
 
                 return message, returnObject, redirectURL
 
+        elif self.notif_type == 'group_user_completed':
+            returnObject = session.query(Group) \
+                .filter_by(id=self.target_model_id) \
+                .first()
+
+            if returnObject is not None:
+                message = "%s has been added to %s#%s" %  \
+                    (returnObject.name, returnObject.leader.fname)
+
+                redirectURL = '/group/view/%d' % returnObject.id
+
+                return message, returnObject, redirectURL
+
         # -----------------------
         # -------- HOUSE --------
         # -----------------------
@@ -354,7 +378,7 @@ class Notification(Base):
                 .first()
 
             if returnObject is not None:
-                message = "There is a new maintenance request for your listing"
+                message = "New Maintenance Request for %s" % returnObject.listing.briefStreet
 
                 redirectURL = '/house/maintenanceRequest/%d/view' % returnObject.id
 
@@ -366,7 +390,8 @@ class Notification(Base):
                 .first()
 
             if returnObject is not None:
-                message = "Your landlord has marked your maintenance request as In Progress!"
+                message = "Maintenance Request#Status: In Progress#%s#%d" % (
+                    returnObject.humanRequestType, returnObject.id)
 
                 redirectURL = '/house/maintenanceRequest/%d/view' % returnObject.id
 
@@ -378,7 +403,8 @@ class Notification(Base):
                 .first()
 
             if returnObject is not None:
-                message = "Your landlord has marked your maintenance request as Completed!"
+                message = "Maintenance Request#Status: Completed#%s#%d" % (
+                    returnObject.humanRequestType, returnObject.id)
 
                 redirectURL = '/house/maintenanceRequest/%d/view' % returnObject.id
 
@@ -394,7 +420,8 @@ class Notification(Base):
                 .first()
 
             if returnObject is not None:
-                message = "A new tour has been requested for your listing"
+                message = "New Tour Request from %s#%s" % (
+                    returnObject.group.name, returnObject.listing.briefBriefStreet)
 
                 redirectURL = '/tour/view/%d' % returnObject.id
 
@@ -406,7 +433,8 @@ class Notification(Base):
                 .first()
 
             if returnObject is not None:
-                message = "A revised tour time has been requested for a tour."
+                message = "New Tour Time Requested from %s#%s" % (
+                    returnObject.tour.group.name, returnObject.tour.listing.briefBriefStreet)
 
                 redirectURL = '/tour/view/%d' % returnObject.id
 
@@ -426,7 +454,8 @@ class Notification(Base):
                 .first()
 
             if returnObject is not None:
-                message = 'A tour for %s has been scheduled for %s' % (returnObject.listing.address, returnObject.confirmedTourTime.humanString)
+                message = 'Tour Scheduled for %s#%s' % (
+                    returnObject.confirmedTourTime.humanString, returnObject.listing.briefBriefStreet)
 
                 redirectURL = '/tour/view/%d' % returnObject.id
 
@@ -438,7 +467,7 @@ class Notification(Base):
                 .first()
 
             if returnObject is not None:
-                message = 'Your request for a tour at %s has been denied or canceled' % returnObject.listing.street
+                message = 'Your Tour has been denied.#%s' % returnObject.listing.briefBriefStreet
 
                 redirectURL = '/group/view/%d' % returnObject.group.id
 
