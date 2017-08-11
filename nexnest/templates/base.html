@@ -157,7 +157,7 @@
                                     {% elif houses|length > 1 %}
                                         <a class="dropdown-item" href="#" id="showMoreHouses"><strong class="hamburgerMenuItem">My Houses</strong></a>
                                             {% for house in houses %}
-                                                <a class="dropdown-item moreHouses" href="{{house.url}}" style="display: none;"><strong class="hamburgerMenuItem">-{{house.address}}</strong></a>
+                                                <a class="dropdown-item moreHouses" href="{{house.url}}" style="display: none;"><strong class="hamburgerMenuItem extraHouse">-{{house.address}}</strong></a>
                                             {% endfor %}
                                     {% endif %}
 				                    <a class="dropdown-item" href="{{ url_for('users.myGroups') }}"><strong class="hamburgerMenuItem">My Groups</strong></a>
@@ -703,6 +703,11 @@
             $("#showMoreHouses").click(function(e) {
                  e.stopPropagation(); 
                 $(".moreHouses").show();
+            });
+
+            //limit text shown of each house
+            $(".extraHouse").text(function(index, currentText) {
+                return currentText.substr(0, 10);
             });
 		</script>
 	</body>
