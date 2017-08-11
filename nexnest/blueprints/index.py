@@ -68,3 +68,10 @@ def privacyPolicy():
 def termsConditions():
   return render_template('termsConditions.html',                           
                            title='Terms and Conditions')
+
+
+#TEST FOR EMAILS
+@indexs.route('/groupMessageEmail')
+def groupMessageEmail():
+  return render_template('email/newGroupMessageEmail.html',                           
+                           title='Email')
