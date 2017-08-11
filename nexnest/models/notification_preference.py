@@ -1,12 +1,11 @@
 
-from sqlalchemy import event
-from sqlalchemy.orm import relationship
-
 from datetime import datetime as dt
 
 from nexnest.application import db
-
 from nexnest.models.base import Base
+from sqlalchemy import event
+from sqlalchemy.orm import relationship
+
 # _notification = db.Column(db.Boolean)
 # _email = db.Column(db.Boolean)
 
@@ -77,6 +76,9 @@ class NotificationPreference(Base):
 
     tour_create_notification = db.Column(db.Boolean)  # D
     tour_create_email = db.Column(db.Boolean)  # D
+
+    group_user_completed_notification = db.Column(db.Boolean)  # D
+    group_user_completed_email = db.Column(db.Boolean)  # D
 
     user = relationship('User', back_populates='notificationPreference')
 
@@ -151,6 +153,9 @@ class NotificationPreference(Base):
 
         # self.group_listing_completed_notification = True
         # self.group_listing_completed_email = False
+
+        self.group_user_completed_notification = True
+        self.group_user_completed_email = False
 
     def __repr__(self):
         return '<NotificationPreferences %d | User %r>' % (self.id, self.user)
