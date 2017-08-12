@@ -293,6 +293,10 @@ class Listing(Base):
         return self.street[:22] + '...'
 
     @property
+    def briefBriefStreet(self):
+        return self.street[:15]
+
+    @property
     def pricePerMonth(self):
         if self.rent_due == 'montly':
             return self.price
