@@ -378,7 +378,7 @@ class Notification(Base):
                 .first()
 
             if returnObject is not None:
-                message = "New Maintenance Request for %s" % returnObject.listing.briefStreet
+                message = "New Maintenance Request for %s" % returnObject.house.listing.briefStreet
 
                 redirectURL = '/house/maintenanceRequest/%d/view' % returnObject.id
 
@@ -434,7 +434,7 @@ class Notification(Base):
 
             if returnObject is not None:
                 message = "New Tour Time Requested from %s#%s" % (
-                    returnObject.tour.group.name, returnObject.tour.listing.briefBriefStreet)
+                    returnObject.group.name, returnObject.listing.briefBriefStreet)
 
                 redirectURL = '/tour/view/%d' % returnObject.id
 

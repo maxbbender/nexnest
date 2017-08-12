@@ -58,20 +58,20 @@ def upgrade(migrate_engine):
     meta.bind = migrate_engine
     notificationPreference.create()
 
-    users = Table('users', meta, autoload=True)
-    ForeignKeyConstraint(
-        columns=[notificationPreference.c.user_id],
-        refcolumns=[users.c.id]).create()
+    # users = Table('users', meta, autoload=True)
+    # ForeignKeyConstraint(
+    #     columns=[notificationPreference.c.user_id],
+    #     refcolumns=[users.c.id]).create()
     pass
 
 
 def downgrade(migrate_engine):
     meta.bind = migrate_engine
 
-    users = Table('users', meta, autoload=True)
-    ForeignKeyConstraint(
-        columns=[notificationPreference.c.user_id],
-        refcolumns=[users.c.id]).drop()
+    # users = Table('users', meta, autoload=True)
+    # ForeignKeyConstraint(
+    #     columns=[notificationPreference.c.user_id],
+    #     refcolumns=[users.c.id]).drop()
 
     notificationPreference.drop()
     pass
