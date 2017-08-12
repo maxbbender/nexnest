@@ -40,19 +40,20 @@ class GroupUser(Base):
         self.accepted = False
         self.show = True
 
-        # We create a notification for the target user.
-        notif = Notification(target_user=user,
-                             target_model_id=group.id,
-                             notif_type='group_user')
-
-        session.add(notif)
-        session.commit()
-
     def __repr__(self):
         return '<GroupUser ~ Group %r | User %r>' % \
             (self.group_id, self.user_id)
 
     def genNotifications(self):
+        # We create a notification for the target user.
+        notif = Notification(target_user=self.user,
+                             target_model_id=self.group_id,
+                             notif_type='group_user')
+
+        session.add(notif)
+        session.commit()
+
+    def genCompletedNotifications(self):
         for user in self.group.acceptedUsers:
             if user is not self.user:
 

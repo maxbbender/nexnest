@@ -231,7 +231,7 @@ class User(Base):
 
         if group_user is not None:
             group_user.accepted = True
-            group_user.genNotifications()
+            group_user.genCompletedNotifications()
             session.commit()
             flash("Group invite accepted", 'info')
         else:

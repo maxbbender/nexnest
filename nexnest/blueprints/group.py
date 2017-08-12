@@ -117,6 +117,8 @@ def invite():
 
         session.add(newGroupUser)
         session.commit()
+
+        newGroupUser.genNotifications()
         return form.redirect()
     else:
         flash_errors(form)
@@ -338,7 +340,7 @@ def acceptEmailInvite():
         newGroupUser = GroupUser(groupEmail.group, current_user)
         newGroupUser.accepted = True
         groupEmail.used = True
-        newGroupUser.genNotifications()
+        newGroupUser.genCompletedNotifications()
         session.add(newGroupUser)
         session.commit()
     else:

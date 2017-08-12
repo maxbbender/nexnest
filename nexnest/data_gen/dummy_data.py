@@ -260,7 +260,10 @@ groupuser26.accepted = True
 
 session.commit()
 
-# GROUP LISTING FAVORITES
+for groupUser in group_user.GroupUser.query.all():
+    groupUser.genNotifications()
+
+    # GROUP LISTING FAVORITES
 for listing in listings:
     user = random.choice(group1AcceptedUsers)
 
