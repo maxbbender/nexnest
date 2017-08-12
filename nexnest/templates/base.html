@@ -26,6 +26,7 @@
 	    <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
         <script src="{{url_for('static', filename='js/jquery.magnific-popup.js')}}"></script>
         <script src="{{url_for('static', filename='js/sly.min.js')}}"></script>
+        <script src="{{url_for('static', filename='js/displayNotifications.js')}}"></script>
         <script src="{{url_for('static', filename='js/rangeslider.js')}}"></script>        
         <script src="{{url_for('static', filename='js/bootstrap-slider.js')}}"></script>
         <script src="{{url_for('static', filename='js/magicsuggest-min.js')}}"></script>
@@ -212,73 +213,14 @@
                 requestURL = "/user/getNotifications/1";
                 $.getJSON(requestURL, function(data) {
                     notifications = data['notifications'];
-                    notificationDetails = data['paginateDetails'];
-                   
-                   $.each(notifications, function(index, notification) {
-                    //console.log(notification);
-                    var newNotification = `<a href="`+ notification.redirectURL +`" id="`+ notification.id +`" data-type="`+ notification.notifType +`" data-redirect="`+ notification.redirectURL +`" class="noti">`;
-                        if(notification.viewed == false){
-                            newNotification += `<li class="notification" style="background-color: aliceblue;">`;
-                        }
-                        else{
-                            newNotification += `<li class="notification">`;
-                        }
-                            newNotification += `<div class="media">
-                                <div class="media-left vertical-center" style="text-align: center;">
-                                    <div class="media-object">`;
-                                        if(notification.notifType == "maintenance"){
-                                            newNotification += `<i class="fa fa-wrench fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }
-                                        else if(notification.notifType == "tour"){
-                                            newNotification += `<i class="fa fa-calendar fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }
-                                        else if(notification.notifType == "security_deposit"){
-                                            newNotification += `<i class="fa fa-usd fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }    
-                                        else if(notification.notifType == "group_listing"){
-                                            newNotification += `<i class="fa fa-handshake-o fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }
-                                        else if(notification.notifType == "house"){
-                                            newNotification += `<i class="fa fa-home fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }
-                                        else if(notification.notifType == "group_user"){
-                                            newNotification += `<i class="fa fa-user fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }
-                                        else if(notification.notifType == "group_listing_favorite"){
-                                            newNotification += `<i class="fa fa-star fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }
-                                        else if(notification.notifType == "new_tour_time"){
-                                            newNotification += `<i class="fa fa-clock-o fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }
-                                        else if(notification.notifType == "rent_reminder"){
-                                            newNotification += `<i class="fa fa-usd fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }
-                                        else{
-                                            newNotification += `<i class="fa fa-bell fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }
-                                    newNotification += `</div>
-                                </div>
-                                <div class="media-body">
-                                    <strong class="notification-title">`+ notification.message +`</strong>
-                                    <div class="notification-meta">
-                                        <div class="row">
-                                            <div class="col-xs-8">
-                                                <small class="timestamp">`+ moment.utc(notification.date).fromNow() +`</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </a>`;
-                    $("#notificationArea").append(newNotification);
-                   });
-                   if(notificationDetails.hasNext == true){
+                    notificationDetails = data['paginateDetails'];                   
+                    DisplayNotifications();
+                    if(notificationDetails.hasNext == true){
                         $("#doIShowMoreNotifications").show();
-                   }
-                   else{
+                    }
+                    else{
                         $("#doIShowMoreNotifications").hide();
-                   }
+                    }
                 });
 
 
@@ -292,7 +234,7 @@
                    $.each(notifications, function(index, message) {
                     if(message.category == "generic_message"){
                         console.log(message);
-                        var newNotification = `<a href="`+ message.redirectURL +`" id="`+ message.id +`" class="noti" style="text-decoration: none;">`;
+                        var newNotification = `<a href="`+ message.redirectURL +`" id="`+ message.id +`" class="noti" data-redirect="`+ message.redirectURL +`" style="text-decoration: none;">`;
                             if(message.viewed == false){
                                 newNotification += `<li class="notification" style="background-color: aliceblue;">`;
                             }
@@ -362,7 +304,7 @@
                     </a>`;
                     }
                     else{
-                        var newNotification = `<a href="`+message.redirectURL+`" id="`+message.id+`" class="noti" style="text-decoration: none;">`;
+                        var newNotification = `<a href="`+message.redirectURL+`" id="`+message.id+`" class="noti" data-redirect="`+ message.redirectURL +`" style="text-decoration: none;">`;
                             if(message.viewed == false){
                                 newNotification += `<li class="notification" style="background-color: aliceblue;">`;
                             }
@@ -449,12 +391,33 @@
               var url = window.location.href;
               $("#sourceURL").val(url);
             });
-            $(".noti").click(function(event){
+
+            $(document).on('click','.noti', function (event) {
+                event.preventDefault();
+                console.log('clicked');
                 var type = $(event.currentTarget).attr("data-type")
                 var redirect = $(event.currentTarget).attr("data-redirect")
                 $.ajax({
                     type: "GET",
-                    url: "/notification/"+ event.currentTarget.id +"/allRead/AJAX",
+                    url: "/notification/"+ event.currentTarget.id +"/read/AJAX",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(data){
+                        window.location.replace(redirect)
+                    },
+                    failure: function(errMsg) {
+                        console.log(errMsg);
+                    }
+                });
+            });
+
+            $(".noti").click(function(event){
+                console.log('clicked');
+                var type = $(event.currentTarget).attr("data-type")
+                var redirect = $(event.currentTarget).attr("data-redirect")
+                $.ajax({
+                    type: "GET",
+                    url: "/notification/"+ event.currentTarget.id +"/read/AJAX",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function(data){
@@ -502,65 +465,7 @@
                     notifications = data['notifications'];
                     notificationDetails = data['paginateDetails'];
                    
-                   $.each(notifications, function(index, notification) {
-                    //console.log(notification);
-                    var newNotification = `<a href="`+ notification.redirectURL +`" id="`+ notification.id +`" data-type="`+ notification.notifType +`" data-redirect="`+ notification.redirectURL +`" class="noti">`;
-                        if(notification.viewed == false){
-                            newNotification += `<li class="notification" style="background-color: aliceblue;">`;
-                        }
-                        else{
-                            newNotification += `<li class="notification">`;
-                        }
-                            newNotification += `<div class="media">
-                                <div class="media-left vertical-center" style="text-align: center;">
-                                    <div class="media-object">`;
-                                        if(notification.notifType == "maintenance"){
-                                            newNotification += `<i class="fa fa-wrench fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }
-                                        else if(notification.notifType == "tour"){
-                                            newNotification += `<i class="fa fa-calendar fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }
-                                        else if(notification.notifType == "security_deposit"){
-                                            newNotification += `<i class="fa fa-usd fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }    
-                                        else if(notification.notifType == "group_listing"){
-                                            newNotification += `<i class="fa fa-home fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }
-                                        else if(notification.notifType == "house"){
-                                            newNotification += `<i class="fa fa-handshake-o fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }
-                                        else if(notification.notifType == "group_user"){
-                                            newNotification += `<i class="fa fa-user fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }
-                                        else if(notification.notifType == "group_listing_favorite"){
-                                            newNotification += `<i class="fa fa-star fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }
-                                        else if(notification.notifType == "new_tour_time"){
-                                            newNotification += `<i class="fa fa-clock-o fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }
-                                        else if(notification.notifType == "rent_reminder"){
-                                            newNotification += `<i class="fa fa-usd fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }
-                                        else{
-                                            newNotification += `<i class="fa fa-bell fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }
-                                    newNotification += `</div>
-                                </div>
-                                <div class="media-body">
-                                    <strong class="notification-title">`+ notification.message +`</strong>
-                                    <div class="notification-meta">
-                                        <div class="row">
-                                            <div class="col-xs-8">
-                                                <small class="timestamp">`+ moment.utc(notification.date).fromNow() +`</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </a>`;
-                    $("#notificationArea").append(newNotification);
-                   });
+                   DisplayNotifications();
                    if(notificationDetails.hasNext == true){
                         $("#doIShowMoreNotifications").show();
                    }
@@ -579,7 +484,7 @@
                    $.each(notifications, function(index, message) {
                     if(message.category == "generic_message"){
                         console.log(message);
-                        var newNotification = `<a href="`+ message.redirectURL +`" id="`+ message.id +`" class="noti" style="text-decoration: none;">`;
+                        var newNotification = `<a href="`+ message.redirectURL +`" id="`+ message.id +`" class="noti" data-redirect="`+ message.redirectURL +`" style="text-decoration: none;">`;
                             if(message.viewed == false){
                                 newNotification += `<li class="notification" style="background-color: aliceblue;">`;
                             }
@@ -649,7 +554,7 @@
                     </a>`;
                     }
                     else{
-                        var newNotification = `<a href="`+message.redirectURL+`" id="`+message.id+`" class="noti" style="text-decoration: none;">`;
+                        var newNotification = `<a href="`+message.redirectURL+`" id="`+message.id+`" class="noti" data-redirect="`+ message.redirectURL +`" style="text-decoration: none;">`;
                             if(message.viewed == false){
                                 newNotification += `<li class="notification" style="background-color: aliceblue;">`;
                             }
