@@ -1,15 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
-	{% if newDirectMessages|length > 1 %}
-		<h1> New Direct Messages ! </h1>
+<h1> New Direct Messages ! </h1>
+	{% if newDirectMessages|length > 0 %}
+		
 		{% for message in newDirectMessages %}
+		<h4>Source User: {{message.user.name}}</h4>
+		<h4>Target User: {{message.target_user.name}}</h4>
+		<p>Message : {{message.content}}</p>
+		<br>
+		{% endfor %}
+	{% else %}
+	<strong>No new direct messages</strong>
+	{% endif %}
 
-
-	{% for message in directMessages %}
-		{% if cu}
-	<h1>Source User: {{message.user.name}}</h1>
-	<h1>Target User: {{message.target_user.name}}</h1>
-	<p>Message : {{message.content}}</p>
-	<br>
-	{% endfor %}
+<h1> All Messages </h1>
+	{% if directMessages|length > 0 %}
+		{% for message in directMessages %}
+		<h4>Source User: {{message.user.name}}</h4>
+		<h4>Target User: {{message.target_user.name}}</h4>
+		<p>Message : {{message.content}}</p>
+		<br>
+		{% endfor %}
+	{% endif %}
 {% endblock %}

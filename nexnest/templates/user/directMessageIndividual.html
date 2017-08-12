@@ -16,4 +16,19 @@
 {% for message in messages %}
     {% include 'user/message.html' %}
 {% endfor %}
+
+<div class="form-group">
+    <form action="{{url_for('users.createDirectMessage')}}" method="POST">
+    {{form.csrf_token}}
+    {{form.target_user_id(value=targetUser.id)}}
+    <div class="row">
+        {{form.content(class="form-control", rows=5)}}
+    </div>
+    <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
+        <div class="col-xs-12">
+            <input class="btn btn-primary" type="submit" value="Respond">
+        </div>                                    
+    </div>
+</div>
+
 {% endblock %}
