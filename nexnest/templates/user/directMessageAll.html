@@ -9,7 +9,7 @@
 				{% if current_user.id == message.user.id %}
 					<a href="{{url_for('users.directMessagesIndividual', userID=message.target_user.id)}}" style="text-decoration: none; color: #5686c5;">
 				{% else %}
-					<a href="{{url_for('users.directMessagesIndividual', userID=message.user.id)}}">
+					<a href="{{url_for('users.directMessagesIndividual', userID=message.user.id)}}" style="text-decoration: none; color: #5686c5;">
 				{% endif %}
 				<div class="card" style="width: 100%; border-color: #50ae82; border-width: thick; margin-bottom: -22px;">
 				    <div class="card-block" style="padding-bottom: 0px;">

@@ -1,43 +1,37 @@
-from flask import Blueprint
-from flask import render_template, request, redirect, url_for, flash, jsonify, abort
-from flask_login import login_user, logout_user, current_user, login_required
+import json
+import os
 
+from dateutil import parser
+from flask import (Blueprint, abort, flash, jsonify, redirect, render_template,
+                   request, url_for)
+from flask_login import current_user, login_required, login_user, logout_user
+from itsdangerous import BadSignature
 from nexnest import logger
-from nexnest.application import session, csrf, app
-
-from nexnest.models.user import User
+from nexnest.application import app, csrf, session
+from nexnest.decorators import user_editable
+from nexnest.forms import (CreateGroupForm, DirectMessageForm, EditAccountForm,
+                           EmailPreferencesForm, LandlordEditAccountForm,
+                           LandlordMoreInfoForm, LoginForm, PasswordChangeForm,
+                           ProfilePictureForm, RegistrationForm)
+from nexnest.models.availability import Availability
+from nexnest.models.direct_message import DirectMessage
 from nexnest.models.group import Group
 from nexnest.models.group_email import GroupEmail
 from nexnest.models.group_user import GroupUser
-from nexnest.models.school import School
-from nexnest.models.direct_message import DirectMessage
+from nexnest.models.landlord import Landlord
+from nexnest.models.listing import Listing
+from nexnest.models.listing_favorite import ListingFavorite
 from nexnest.models.notification import Notification
 from nexnest.models.notification_preference import NotificationPreference
-from nexnest.models.listing_favorite import ListingFavorite
-from nexnest.models.listing import Listing
-from nexnest.models.landlord import Landlord
-from nexnest.models.availability import Availability
-
-from nexnest.forms import RegistrationForm, LoginForm, EditAccountForm, DirectMessageForm, ProfilePictureForm, PasswordChangeForm, CreateGroupForm, EmailPreferencesForm, LandlordMoreInfoForm, LandlordEditAccountForm
-from nexnest.utils.school import allSchoolsAsStrings
-from nexnest.utils.password import check_password
-from nexnest.utils.flash import flash_errors
+from nexnest.models.school import School
+from nexnest.models.user import User
+from nexnest.utils.email import confirm_token, generate_confirmation_token
 from nexnest.utils.file import allowed_file
-from nexnest.utils.email import generate_confirmation_token, confirm_token
-
-from nexnest.decorators import user_editable
-
-from sqlalchemy import func, asc, or_, and_
-
+from nexnest.utils.flash import flash_errors
+from nexnest.utils.password import check_password
+from nexnest.utils.school import allSchoolsAsStrings
+from sqlalchemy import and_, asc, func, or_, desc
 from werkzeug.utils import secure_filename
-
-import os
-
-from itsdangerous import BadSignature
-
-import json
-
-from dateutil import parser
 
 users = Blueprint('users', __name__, template_folder='../templates/user')
 
@@ -100,7 +94,8 @@ def register():
                     # newUser.sendEmail('generic',
                     #                   'Click the link to confirm your account <a href="%s">Click Here</a>' % emailConfirmURL)
 
-            emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(newUser.email), _external=True)
+            emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(
+                newUser.email), _external=True)
             newUser.sendEmail('generic',
                               'Click the link to confirm your account <a href="%s">Click Here</a>' % emailConfirmURL)
 
@@ -136,7 +131,8 @@ def landlordInformation():
 
             session.commit()
 
-            availabilityJSON = json.loads(moreInformationForm.availabilities.data)
+            availabilityJSON = json.loads(
+                moreInformationForm.availabilities.data)
             logger.debug('availabilityJSON %r' % availabilityJSON)
 
             for i in range(7):
@@ -182,14 +178,17 @@ def login():
                             login_user(user)
 
                             # See if they have any pending group email invites
-                            groupEmailInvites = GroupEmail.query.filter_by(email=user.email, used=False).all()
+                            groupEmailInvites = GroupEmail.query.filter_by(
+                                email=user.email, used=False).all()
 
                             if len(groupEmailInvites) > 0:
                                 for groupEmail in groupEmailInvites:
-                                    groupUserCheck = GroupUser.query.filter_by(group=groupEmail.group, user=user).count()
+                                    groupUserCheck = GroupUser.query.filter_by(
+                                        group=groupEmail.group, user=user).count()
                                     errorMessage = None
                                     if groupUserCheck == 0:
-                                        newGroupUser = GroupUser(groupEmail.group, user)
+                                        newGroupUser = GroupUser(
+                                            groupEmail.group, user)
                                         newGroupUser.accepted = True
                                         groupEmail.used = True
                                         session.add(newGroupUser)
@@ -199,7 +198,8 @@ def login():
                                         session.commit()
 
                         else:
-                            flash('You must confirm your email before logging in', 'danger')
+                            flash(
+                                'You must confirm your email before logging in', 'danger')
                     else:
                         flash("Error validating login credentials", 'danger')
                 else:
@@ -258,7 +258,8 @@ def viewUser(userID):
         user = session.query(User).filter_by(id=userID).first()
         currentPreferences = session.query(
             NotificationPreference).filter_by(user_id=userID).first()
-        userFavorites = session.query(ListingFavorite).filter_by(user=current_user).all()
+        userFavorites = session.query(
+            ListingFavorite).filter_by(user=current_user).all()
         myGroups = current_user.accepted_groups
         logger.debug(currentPreferences)
         form = EmailPreferencesForm(obj=currentPreferences)
@@ -321,7 +322,8 @@ def viewUser(userID):
                 return redirect(url_for('users.viewUser',
                                         userID=userID))
     else:
-        logger.warning('User %r attempted to access user_ids page %s' % (current_user, userID))
+        logger.warning('User %r attempted to access user_ids page %s' %
+                       (current_user, userID))
         abort(404)
 
 
@@ -453,6 +455,7 @@ def directMessagesAll():
 
     sentDirectMessages = DirectMessage.query.filter_by(user=current_user) \
         .distinct(DirectMessage.target_user_id) \
+        .order_by(DirectMessage.target_user_id, desc(DirectMessage.date_created)) \
         .all()
 
     logger.debug('sentDirectMessages %r' % sentDirectMessages)
@@ -461,6 +464,7 @@ def directMessagesAll():
 
     recievedDirectMessages = DirectMessage.query.filter_by(target_user_id=current_user.id) \
         .distinct(DirectMessage.user_id) \
+        .order_by(DirectMessage.user_id, desc(DirectMessage.date_created)) \
         .all()
 
     messageUserIDList = []
@@ -468,19 +472,24 @@ def directMessagesAll():
     for message in sentDirectMessages:
         messageUserIDList.append(message.target_user_id)
 
-
-    newDirectMessages = []
-
     for message in recievedDirectMessages:
         if message.user_id not in messageUserIDList:
-            newDirectMessages.append(message)
+            allMessages.append(message)
+        else:
+            messageToCheck = None
+
+            # Check to see if recieved message was sooner than sent
+            for idx, sentMessage in enumerate(allMessages):
+                if message.user_id == sentMessage.target_user_id:
+                    if message.date_created > sentMessage.date_created:
+                        allMessages.remove(sentMessage)
+                        allMessages.insert(idx, message)
+                    break
 
     logger.debug('allMessages %r' % allMessages)
-    logger.debug('newDirectMessages %r' % newDirectMessages)
 
     return render_template('directMessageAll.html',
-                           directMessages=allMessages,
-                           newDirectMessages=newDirectMessages)
+                           directMessages=allMessages)
 
 
 @users.route('/user/directMessages/<userID>')
@@ -622,7 +631,8 @@ def getNotifications(page=1):
 
     numUnviewed = current_user.getUnreadNotificationCount()
 
-    returnDict = {'numUnviewed': numUnviewed, 'notifications': allNotificationList}
+    returnDict = {'numUnviewed': numUnviewed,
+                  'notifications': allNotificationList}
 
     paginateDict = {
         'hasNext': allNotifications.has_next,
@@ -658,7 +668,8 @@ def getMessageNotifications(page=1):
 
     numUnviewed = current_user.getUnreadMessageNotificationCount()
 
-    returnDict = {'numUnviewed': numUnviewed, 'notifications': allNotificationList}
+    returnDict = {'numUnviewed': numUnviewed,
+                  'notifications': allNotificationList}
 
     paginateDict = {
         'hasNext': allNotifications.has_next,
@@ -678,7 +689,8 @@ def favoriteListing(listingID):
     listing = session.query(Listing).filter_by(id=listingID).first_or_404()
 
     # Make sure one doesn't already exist
-    lf = ListingFavorite.query.filter_by(listing=listing, user=current_user).first()
+    lf = ListingFavorite.query.filter_by(
+        listing=listing, user=current_user).first()
 
     if lf is None:
         logger.debug("Listing %r" % listing)
@@ -701,7 +713,8 @@ def unFavoriteListing(listingID):
     listing = session.query(Listing).filter_by(id=listingID).first_or_404()
 
     logger.debug("Listing %r" % listing)
-    listingFavorite = session.query(ListingFavorite).filter_by(listing=listing, user=current_user).first()
+    listingFavorite = session.query(ListingFavorite).filter_by(
+        listing=listing, user=current_user).first()
 
     logger.debug("ListingFavorite %r" % listingFavorite)
     session.delete(listingFavorite)
