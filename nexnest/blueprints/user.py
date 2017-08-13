@@ -504,7 +504,7 @@ def directMessagesIndividual(userID):
                          DirectMessage.target_user_id == targetUser.id),
                     and_(DirectMessage.user_id == targetUser.id,
                          DirectMessage.target_user_id == current_user.id))) \
-        .order_by(asc(DirectMessage.date_created)) \
+        .order_by(desc(DirectMessage.date_created)) \
         .all()
 
     logger.debug('allMessages %r' % allMessages)
