@@ -136,6 +136,7 @@ class Notification(Base):
         from nexnest.models.tour import Tour
         from nexnest.models.tour_message import TourMessage
         from nexnest.models.group_user import GroupUser
+        from nexnest.models.user import User
 
         message = None
         returnObject = None
@@ -147,13 +148,13 @@ class Notification(Base):
         ------------------------
         '''
         if self.notif_type == 'direct_message':
-            returnObject = session.query(DirectMessage) \
-                .filter_by(user_id=self.target_model_id) \
+            returnObject = session.query(User) \
+                .filter_by(id=self.target_model_id) \
                 .first()
 
             if returnObject is not None:
-                message = "Direct Message from %s" % returnObject.user.name
-                redirectURL = '/user/directMessages/%d' % returnObject.user.id
+                message = "Direct Message from %s" % returnObject.name
+                redirectURL = '/user/directMessages'
 
                 return message, returnObject, redirectURL
 

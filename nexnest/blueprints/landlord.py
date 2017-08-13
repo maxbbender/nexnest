@@ -57,6 +57,8 @@ def landlordDashboard():
 
     requestedTours, scheduledTours = landlord.getActiveTours()
 
+    
+
     return render_template('dashboard.html',
                            landlord=landlord,
                            dateChangeForm=dateChangeForm,

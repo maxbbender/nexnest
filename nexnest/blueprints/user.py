@@ -488,6 +488,8 @@ def directMessagesAll():
 def directMessagesIndividual(userID):
     targetUser = User.query.filter_by(id=userID).first_or_404()
 
+    form = DirectMessageForm()
+
     allMessages = DirectMessage.query \
         .filter(or_(and_(DirectMessage.user_id == current_user.id,
                          DirectMessage.target_user_id == targetUser.id),
@@ -500,7 +502,8 @@ def directMessagesIndividual(userID):
 
     return render_template('directMessageIndividual.html',
                            targetUser=targetUser,
-                           messages=allMessages)
+                           messages=allMessages,
+                           form=form)
 
 
 @users.route('/user/directMessages/create', methods=['POST'])
@@ -516,11 +519,14 @@ def createDirectMessage():
         newDM = DirectMessage(current_user, target_user, dmForm.content.data)
         session.add(newDM)
         session.commit()
+
+        newDM.genNotifications()
+        session.commit()
     else:
         flash_errors(dmForm)
 
     return redirect(url_for('users.directMessagesIndividual',
-                            user_id=dmForm.target_user_id.data))
+                            userID=dmForm.target_user_id.data))
 
 
 @users.route('/user/groups', methods=['GET', 'POST'])

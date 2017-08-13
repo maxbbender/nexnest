@@ -17,8 +17,8 @@ class NotificationPreference(Base):
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
 
-    direct_message_notification = db.Column(db.Boolean)
-    direct_message_email = db.Column(db.Boolean)
+    direct_message_notification = db.Column(db.Boolean)  # D
+    direct_message_email = db.Column(db.Boolean)  # D
 
     tour_message_notification = db.Column(db.Boolean)  # D
     tour_message_email = db.Column(db.Boolean)         # D
