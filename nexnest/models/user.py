@@ -314,15 +314,40 @@ class User(Base):
             .distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed) \
             .count()
 
-
     # Icon , Message , Title
     def sendEmail(self, emailType, message):
         logger.debug('User.sendEmail()')
         logger.debug('EmailType %s' % emailType)
+        icon, title, subject = None, None, None
 
-        # if emailType == ''
+        if emailType == 'tourRequest':
+            icon = 'calendar'
+            title = 'tour request'
+            subject = 'Tour Request'
+            
+        elif emailType == 'tourConfirmed':
+            icon = 'calendar'
+            title = 'tour request approved'
+            subject = 'Tour Request Approved'
 
+        elif emailType == 'tourDenied':
+            icon = 'calendar'
+            title = 'tour request update'
+            subject = 'Tour Request Update'
 
+        elif emailType == 'tourTimeChange':
+            icon = 'calendar'
+            title = 'new tour time request'
+            subject = 'Tour Request Update'
+
+        send_email(subject='NexNest - %s' % subject,
+                   sender='no_reply@nexnest.com',
+                   recipients=[self.email],
+                   html_body=render_template('email/emailTemplate.html',
+                                             user=self,
+                                             messageContent=message,
+                                             icon=icon,
+                                             messageType=title))
 
         # fullMessage = None
         # if emailType == 'message':

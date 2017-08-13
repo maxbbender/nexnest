@@ -32,6 +32,6 @@ gmaps = googlemaps.Client(key='AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w')
 landlord = user.User.query.filter_by(id=1).first()
 otherUser = user.User.query.filter_by(id=7).first()
 
-tour = tour.Tour.query.filter_by(id=7).first()
+tour = tour.Tour.query.filter_by(id=5).first()
 
-print(tour.genTourEmailCreatedContent(user=otherUser))
+print(tour.genTourEmailTimeChangeContent(user=otherUser))
