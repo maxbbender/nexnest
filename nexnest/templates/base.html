@@ -233,7 +233,6 @@
                    
                    $.each(notifications, function(index, message) {
                     if(message.category == "generic_message"){
-                        console.log(message);
                         var newNotification = `<a href="`+ message.redirectURL +`" id="`+ message.id +`" class="noti" data-redirect="`+ message.redirectURL +`" style="text-decoration: none;">`;
                             if(message.viewed == false){
                                 newNotification += `<li class="notification" style="background-color: aliceblue;">`;
