@@ -48,7 +48,9 @@ notificationPreference = Table('notification_preferences', meta,
                                Column('group_listing_deny_notification', Boolean()),
                                Column('group_listing_deny_email', Boolean()),
                                Column('group_user_completed_notification', Boolean()),
-                               Column('group_user_completed_email', Boolean()))
+                               Column('group_user_completed_email', Boolean()),
+                               Column('group_listing_favorite_notification', Boolean()),
+                               Column('group_listing_favorite_email', Boolean()))
 
 # Column('group_listing_completed_notification', Boolean()),
 # Column('group_listing_completed_email', Boolean())

@@ -32,6 +32,10 @@ gmaps = googlemaps.Client(key='AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w')
 landlord = user.User.query.filter_by(id=1).first()
 otherUser = user.User.query.filter_by(id=7).first()
 
-tour = tour.Tour.query.filter_by(id=7).first()
+# tour = tour.Tour.query.filter_by(id=5).first()
+# maintenancess = maintenance.Maintenance.query.first()
+gl = group_listing.GroupListing.query.first()
 
-print(tour.genTourEmailCreatedContent(user=otherUser))
+print(gl.genEmailDeniedContent(otherUser))
+print(gl.genEmailAcceptedContent(otherUser))
+print(gl.genEmailCreateContent(otherUser))

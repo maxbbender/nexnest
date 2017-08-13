@@ -314,15 +314,85 @@ class User(Base):
             .distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed) \
             .count()
 
-
     # Icon , Message , Title
     def sendEmail(self, emailType, message):
         logger.debug('User.sendEmail()')
         logger.debug('EmailType %s' % emailType)
+        icon, title, subject = None, None, None
 
-        # if emailType == ''
+        if emailType == 'tourRequest':
+            icon = 'calendar'
+            title = 'tour request'
+            subject = 'Tour Request'
 
+        elif emailType == 'tourConfirmed':
+            icon = 'calendar'
+            title = 'tour request approved'
+            subject = 'Tour Request Approved'
 
+        elif emailType == 'tourDenied':
+            icon = 'calendar'
+            title = 'tour request update'
+            subject = 'Tour Request Update'
+
+        elif emailType == 'tourTimeChange':
+            icon = 'calendar'
+            title = 'new tour time request'
+            subject = 'Tour Request Update'
+
+        elif emailType == 'maintenanceCreate':
+            icon = 'wrench'
+            title = 'maintenance request'
+            subject = 'Maintenance Request'
+
+        elif emailType == 'maintenanceInProgress':
+            icon = 'wrench'
+            title = 'maintenance request'
+            subject = 'Maintenance Request Update'
+
+        elif emailType == 'maintenanceCompleted':
+            icon = 'wrench'
+            title = 'maintenance request'
+            subject = 'Maintenance Request Update'
+
+        elif emailType == 'maintenanceMessage':
+            icon = 'comments'
+            title = 'new message | maintenance'
+            subject = 'Maintenance Message'
+
+        elif emailType == 'groupListingCreate':
+            icon = 'home'
+            title = 'house request'
+            subject = 'House Request'
+
+        elif emailType == 'groupListingDenied':
+            icon = 'times-circle'
+            title = 'housing request denied'
+            subject = 'House Request Update'
+
+        elif emailType == 'groupListingAccepted':
+            icon = 'check'
+            title = 'housing request approved'
+            subject = 'House Request Update'
+
+        elif emailType == 'groupUserCompleted':
+            icon = 'user'
+            title = 'new group user'
+            subject = 'Group Update'
+
+        elif emailType == 'groupListingFavorite':
+            icon = 'thumbs-up'
+            title = 'Listing Favorite'
+            subject = 'Listing Favorite'
+
+        send_email(subject='NexNest - %s' % subject,
+                   sender='no_reply@nexnest.com',
+                   recipients=[self.email],
+                   html_body=render_template('email/emailTemplate.html',
+                                             user=self,
+                                             messageContent=message,
+                                             icon=icon,
+                                             messageType=title))
 
         # fullMessage = None
         # if emailType == 'message':
