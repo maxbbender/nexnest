@@ -314,24 +314,31 @@ class User(Base):
             .distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed) \
             .count()
 
+
+    # Icon , Message , Title
     def sendEmail(self, emailType, message):
         logger.debug('User.sendEmail()')
         logger.debug('EmailType %s' % emailType)
+
+        # if emailType == ''
+
+
+
         # fullMessage = None
-        if emailType == 'message':
-            send_email(subject='NexNest - New Message',
-                       sender='no_reply@nexnest.com',
-                       recipients=[self.email],
-                       html_body=render_template('email/newMessage.html',
-                                                 user=self,
-                                                 message=message))
-        elif emailType == 'generic':
-            send_email(subject='NexNest - New Message',
-                       sender='no_reply@nexnest.com',
-                       recipients=[self.email],
-                       html_body=render_template('email/generic.html',
-                                                 user=self,
-                                                 message=message))
+        # if emailType == 'message':
+        #     send_email(subject='NexNest - New Message',
+        #                sender='no_reply@nexnest.com',
+        #                recipients=[self.email],
+        #                html_body=render_template('email/newGroupMessageEmail.html',
+        #                                          user=self,
+        #                                          message=message))
+        # elif emailType == 'generic':
+        #     send_email(subject='NexNest - New Message',
+        #                sender='no_reply@nexnest.com',
+        #                recipients=[self.email],
+        #                html_body=render_template('email/generic.html',
+        #                                          user=self,
+        #                                          message=message))
 
     def isEditableBy(self, user, toFlash=False):
         if user.id == self.id:

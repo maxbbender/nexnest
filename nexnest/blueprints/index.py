@@ -41,37 +41,35 @@ def index():
 @indexs.route('/test')
 @login_required
 def test():
-    # send_email('Dom', 'no_reply@nexnest.com', ['maxbbender@gmail.com'], 'Hey You', None)
-    # user = User.query.first()
-    # emailSend = user.sendEmail(emailType='message', message='domislove')
-    # print(emailSend)
-    # return render_template('test.html')
-    logger.error("TESTING ERROR")
-    return str(app.config['TESTING'])
+    return render_template('test.html')
+
 
 @indexs.route('/faq')
 def faq():
-  return render_template('faq.html',                           
+    return render_template('faq.html',
                            title='FAQ')
+
 
 @indexs.route('/aboutUs')
 def aboutUs():
-  return render_template('aboutUs.html',                           
+    return render_template('aboutUs.html',
                            title='About Us')
+
 
 @indexs.route('/privacyPolicy')
 def privacyPolicy():
-  return render_template('privacyPolicy.html',                           
+    return render_template('privacyPolicy.html',
                            title='Privacy Policy')
+
 
 @indexs.route('/termsConditions')
 def termsConditions():
-  return render_template('termsConditions.html',                           
+    return render_template('termsConditions.html',
                            title='Terms and Conditions')
 
 
-#TEST FOR EMAILS
+# TEST FOR EMAILS
 @indexs.route('/groupMessageEmail')
 def groupMessageEmail():
-  return render_template('email/newGroupMessageEmail.html',                           
+    return render_template('email/newGroupMessageEmail.html',
                            title='Email')

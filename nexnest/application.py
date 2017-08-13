@@ -93,6 +93,7 @@ def insert_login_form():
     if current_user.is_authenticated:
         passwordChangeForm = PasswordChangeForm()
         avatarChangeForm = ProfilePictureForm()
+        dmForm = DirectMessageForm()
         # messages, notifications = current_user.unreadNotifications()
         notifications = current_user.getNotifications()
         messages = current_user.getMessageNotifications()
@@ -109,10 +110,14 @@ def insert_login_form():
                     notificationMessages=messages,
                     platformReportForm=PlatformReportForm(),
                     DirectMessageForm=DirectMessageForm(),
-                    houses=houses)
+                    houses=houses,
+                    dmForm=dmForm)
     else:
         login_form = LoginForm()
+        dmForm = DirectMessageForm()
+
         return dict(login_form=login_form,
-                    platformReportForm=PlatformReportForm())
+                    platformReportForm=PlatformReportForm(),
+                    dmForm=dmForm)
 
 import nexnest.admin  # pylint: disable=unused-import

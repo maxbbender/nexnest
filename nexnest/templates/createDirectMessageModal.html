@@ -13,9 +13,9 @@
                         {% from "_formhelpers.html" import render_field %}
                         <form action="{{url_for('users.createDirectMessage')}}" method='POST'>
                             <dl>
-                                {{DirectMessageForm.csrf_token}}
-                                {{DirectMessageForm.target_user_id}}
-                                {{DirectMessageForm.content(class="form-control", type="text", required="required", rows="5", placeholder="Type Message")}}
+                                {{dmForm.csrf_token}}
+                                {{dmForm.target_user_id}}
+                                {{dmForm.content(class="form-control", type="text", required="required", rows="5", placeholder="Type Message")}}
                             </dl>
                             <div class="row">
                                 <div class="col-xs-12" style="text-align: right;">

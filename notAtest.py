@@ -32,7 +32,6 @@ gmaps = googlemaps.Client(key='AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w')
 landlord = user.User.query.filter_by(id=1).first()
 otherUser = user.User.query.filter_by(id=7).first()
 
-date1 = datetime.datetime(2017, 2, 1)
-date2 = datetime.datetime(2016, 3, 1)
+tour = tour.Tour.query.filter_by(id=7).first()
 
-print(((date1-date2).days)/30)
+print(tour.genTourEmailCreatedContent(user=otherUser))

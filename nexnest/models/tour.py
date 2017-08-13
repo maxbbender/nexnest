@@ -83,6 +83,23 @@ class Tour(Base):
 
         return False
 
+    @property
+    def groupedTourTimes(self):
+        tourDicts = []
+
+        for tourTime in self.tourTimes:
+            foundDate = next((item for item in tourDicts if item["date"] == tourTime.humanDateOnlyString), None)
+
+            if foundDate is not None:
+                foundDate['times'].append(tourTime.humanTimeOnlyString)
+            else:
+                tourDicts.append({'date': tourTime.humanDateOnlyString, 'times' : [tourTime.humanTimeOnlyString]})
+
+        return tourDicts
+
+
+
+
     def isViewableBy(self, user, toFlash=True):
         if user in self.group.getUsers() or user in self.listing.landLordsAsUsers():
             return True
@@ -110,7 +127,7 @@ class Tour(Base):
                 session.commit()
 
             if landlord.notificationPreference.tour_create_email:
-                landlord.sendEmail(emailType='generic',
+                landlord.sendEmail(emailType='tourRequest',
                                    message='A new Tour has been requested for %s' % self.listing.address)
 
     def genConfirmNotifications(self):
@@ -190,6 +207,38 @@ class Tour(Base):
                        target_model_id=self.id) \
             .delete()
         session.commit()
+
+
+    # EMAIL FUNCTION
+    def genTourEmailCreatedContent(self, user):
+        emailString = """
+            <h4>Hi %s</h4>
+            <br>
+            You have recieved a tour request for %s<br>
+            The following times have been requested by %s<br>
+
+            """ % (user.name, self.listing.briefStreet, self.group.leader.name)
+
+
+        for tourTimeDict in self.groupedTourTimes:
+            emailString += """
+                <div style="padding-left:40px">
+                    <strong>%s</strong><br>
+            """ % tourTimeDict['date']
+
+            for time in tourTimeDict['times']:
+                emailString += "%s<br>" % time
+
+
+            emailString += "</div><br>"
+
+        emailString += """
+        If you'd like to message Jerry before approving the tour, click <a href="https://nexnest.com/user/directMessages/%d">here</a><br>
+
+            Click <a href="https://nexnest.com/landlord/dashboard">here</a> to visit all tour requests.<br><br>
+        """ % user.id
+
+        return emailString
 
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument

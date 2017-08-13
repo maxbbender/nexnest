@@ -46,6 +46,14 @@ class TourTime(Base):
     def humanString(self):
         return self.date_time_requested.strftime('%a %b %-d, %y at %I:%M%p')
 
+    @property
+    def humanDateOnlyString(self):
+        return self.date_time_requested.strftime('%a %b %-d, %y')
+
+    @property
+    def humanTimeOnlyString(self):
+        return self.date_time_requested.strftime('%I:%M%p')
+
 
 def update_date_modified(mapper, connection, target):
     # 'target' is the inserted object
