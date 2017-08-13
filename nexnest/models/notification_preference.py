@@ -80,6 +80,9 @@ class NotificationPreference(Base):
     group_user_completed_notification = db.Column(db.Boolean)  # D
     group_user_completed_email = db.Column(db.Boolean)  # D
 
+    group_listing_favorite_notification = db.Column(db.Boolean)  # D
+    group_listing_favorite_email = db.Column(db.Boolean)  # D
+
     user = relationship('User', back_populates='notificationPreference')
 
     def __init__(
@@ -95,7 +98,7 @@ class NotificationPreference(Base):
 
         # Notification Preference Defaults
         self.direct_message_notification = True
-        self.direct_message_notification = False
+        self.direct_message_email = False
 
         self.tour_message_notification = True
         self.tour_message_email = False
@@ -156,6 +159,9 @@ class NotificationPreference(Base):
 
         self.group_user_completed_notification = True
         self.group_user_completed_email = False
+
+        self.group_listing_favorite_notification = True
+        self.group_listing_favorite_email = False
 
     def __repr__(self):
         return '<NotificationPreferences %d | User %r>' % (self.id, self.user)

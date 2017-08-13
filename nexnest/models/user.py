@@ -355,6 +355,36 @@ class User(Base):
             title = 'maintenance request'
             subject = 'Maintenance Request Update'
 
+        elif emailType == 'maintenanceMessage':
+            icon = 'comments'
+            title = 'new message | maintenance'
+            subject = 'Maintenance Message'
+
+        elif emailType == 'groupListingCreate':
+            icon = 'home'
+            title = 'house request'
+            subject = 'House Request'
+
+        elif emailType == 'groupListingDenied':
+            icon = 'times-circle'
+            title = 'housing request denied'
+            subject = 'House Request Update'
+
+        elif emailType == 'groupListingAccepted':
+            icon = 'check'
+            title = 'housing request approved'
+            subject = 'House Request Update'
+
+        elif emailType == 'groupUserCompleted':
+            icon = 'user'
+            title = 'new group user'
+            subject = 'Group Update'
+
+        elif emailType == 'groupListingFavorite':
+            icon = 'thumbs-up'
+            title = 'Listing Favorite'
+            subject = 'Listing Favorite'
+
         send_email(subject='NexNest - %s' % subject,
                    sender='no_reply@nexnest.com',
                    recipients=[self.email],

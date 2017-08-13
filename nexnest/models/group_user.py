@@ -46,12 +46,13 @@ class GroupUser(Base):
 
     def genNotifications(self):
         # We create a notification for the target user.
-        notif = Notification(target_user=self.user,
-                             target_model_id=self.group_id,
-                             notif_type='group_user')
+        if self.user.notificationPreference.group_user_notification:
+            notif = Notification(target_user=self.user,
+                                 target_model_id=self.group_id,
+                                 notif_type='group_user')
 
-        session.add(notif)
-        session.commit()
+            session.add(notif)
+            session.commit()
 
     def genCompletedNotifications(self):
         for user in self.group.acceptedUsers:
@@ -64,6 +65,30 @@ class GroupUser(Base):
                     session.add(newNotif)
                     session.commit()
 
-                if user.notificationPreference.maintenance_email:
-                    user.sendEmail(emailType='generic',
-                                   message='%s has been added to group %s' % (self.user.name, self.group.name))
+                if user.notificationPreference.group_user_completed_email:
+                    user.sendEmail(emailType='groupUserCompleted',
+                                   message=self.genCompletedEmailContent(user))
+
+    def genCompletedEmailContent(self, user):
+        return """
+        <div class="row">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-10">
+                <span>Hi  %s ,</span>
+                <br><br>
+                <span>
+                    A new birdie has joined your nest! %s has joined %s
+                    <br><br>
+                    Don’t just wing it! Chat, favorite and share listings with your housemates to find the perfect college rental for you and your friends.
+                    <br><br>
+                    <a href="https://nexnest.com/group/view/%d">Click here</a> to view the group or <a href="https://nexnest.com/index#search">start searching</a> for listings in your area
+                </span>
+                <br><br>
+            </div>
+        </div>
+        """ % (
+            user.fname,
+            self.user.name,
+            self.group.name,
+            self.group.id
+        )
