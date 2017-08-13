@@ -85,7 +85,7 @@ app.register_blueprint(notifications)
 app.register_blueprint(reports)
 app.register_blueprint(rents)
 app.register_blueprint(siteAdminBlueprint, url_prefix='/siteAdmin')
-from nexnest.forms import LoginForm, PasswordChangeForm, ProfilePictureForm, PlatformReportForm
+from nexnest.forms import LoginForm, PasswordChangeForm, ProfilePictureForm, PlatformReportForm, DirectMessageForm
 
 
 @app.context_processor
@@ -108,6 +108,7 @@ def insert_login_form():
                     numUnviewedMessages=numUnviewedMessages,
                     notificationMessages=messages,
                     platformReportForm=PlatformReportForm(),
+                    DirectMessageForm=DirectMessageForm(),
                     houses=houses)
     else:
         login_form = LoginForm()
