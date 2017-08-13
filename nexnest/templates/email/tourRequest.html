@@ -1,0 +1,38 @@
+<div class="row">
+	<div class="col-xs-1"></div>
+	<div class="col-xs-10">
+		<span>Hi  {{firstName}} ,</span>
+		<br><br>
+		<span>
+			You have recieved a tour request for {{address}} .
+			<br>
+			The following tour times have been requested by {{ReqestersName}} :
+			<br><br>
+		</span>
+		<div class="row">
+			<div class="col-xs-1"></div>
+			<div class="col-xs-10">
+			{% for day in days %}
+			 <br>
+				<strong> Monday, May 17th, 2017</strong>
+				<br>
+				{% for time in times %}
+					 12:00 pm 
+					<br>
+				{% endfor %}
+				<br>
+			{% endfor %}
+			</div>
+		</div>
+		<span>
+			<br>
+			If you would like to message {{ReqestersName}} before approving a tour. <a href="linkToMessageRequester">Click Here</a>
+			<br>
+			<a href="{{urlFor(landlordDashboard)}}">Click here</a> to visit all tour requests
+		</span>
+		<br><br>
+		Sincerely,
+		<br>
+		<h2>The <img src="/static/img/textLogo.png" style="height: 25px; margin-bottom: 5px;"> crew </h2>
+	</div>
+</div>
