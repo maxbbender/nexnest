@@ -1,18 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-<h1> New Direct Messages ! </h1>
-	{% if newDirectMessages|length > 0 %}
-		
-		{% for message in newDirectMessages %}
-		<h4>Source User: {{message.user.name}}</h4>
-		<h4>Target User: {{message.target_user.name}}</h4>
-		<p>Message : {{message.content}}</p>
-		<br>
-		{% endfor %}
-	{% else %}
-	<strong>No new direct messages</strong>
-	{% endif %}
-
 <h1> All Messages </h1>
 	{% if directMessages|length > 0 %}
 		{% for message in directMessages %}
