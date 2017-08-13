@@ -24,11 +24,13 @@
 		    		<img class="card-img" src="/static/img/banner.jpg" alt="Card image" style="width: 100%;">
 		    		<div class="card-img-overlay" style="display: flex; flex-direction: column; justify-content: center;">
 		    			<div class="hidden-xs-down row" style="margin-top: -18vh;">
-		    				<h1 style="color: white; padding-left: 10%; font-size: 72px;">Don't Just Wing It</h1>
+		    				<div class="col-xs-12">
+		    					<h1 style="color: white; padding-left: 10%; font-size: 72px;">Don't Just Wing It</h1>
+		    				</div>
 		    			</div>
 		    			<div class="row justify-content-center" style="align-items: flex-end; padding-top: 23vh;">
 		    				<div class="col-xs-7 col-md-8 col-lg-3 col-xl-3" style="left: 0vw;">
-		    					<label for="school"><h1 style="color: #fea700"><strong>Location</strong></h1></label>
+		    					<label for="school"><h1 style="color: #fea700;"><strong>Location</strong></h1></label>
 	    					    <select class="form-control" id="school" style="width: 85%;">
 	    					    	{% for school in schools %}
 	    					      		<option value="{{school}}">{{school}}</option>
@@ -36,7 +38,7 @@
 	    					    </select>
 		    				</div>
 		    				<div class="hidden-md-down col-lg-3 col-xl-3" style="left: 0vw;">
-		    					<label for="when"><h1 style="color: #284565"><strong>When</strong></h1></label>
+		    					<label for="when"><h1 style="color: #52ab81;"><strong>When</strong></h1></label>
 	    					    <select class="form-control" id="when" style="width: 85%;">
 	    					    	{% for timeFrame in validTimeFrames %}
 	    					    		<option value="{{timeFrame[0]}}">{{timeFrame[1]}}</option>
@@ -48,12 +50,12 @@
 	    					    </select>
 		    				</div>
 		    				<div class="hidden-md-down col-lg-3 col-xl-3" style="left: 0vw;">
-		    					<label for="bedrooms"><h1 style="color: #52ab81"><strong>Bedrooms</strong></h1></label>
+		    					<label for="bedrooms"><h1 style="color: #284565;"><strong>Bedrooms</strong></h1></label>
 	    					    <select class="form-control" id="rooms" style="width: 85%;">
 	    					      	<option value="1">1</option>
 	    					      	<option value="2">2</option>
 	    					      	<option value="3">3</option>
-	    					      	<option value="4+">4+</option>
+	    					      	<option value="4+" selected="selected">4+</option>
 	    					    </select>
 		    				</div>
 		    				<div class="col-xs-2 col-md-2 col-xl-1" style="left: 2vw;">
