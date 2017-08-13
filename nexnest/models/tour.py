@@ -139,7 +139,7 @@ class Tour(Base):
 
             if user.notificationPreference.tour_confirmed_email:
                 user.sendEmail(emailType='tourConfirmed',
-                               message=self.genTourEmailConfirmedContent)
+                               message=self.genTourEmailConfirmedContent())
 
     def undoConfirmNotifications(self):
         session.query(Notification) \

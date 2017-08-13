@@ -324,7 +324,7 @@ class User(Base):
             icon = 'calendar'
             title = 'tour request'
             subject = 'Tour Request'
-            
+
         elif emailType == 'tourConfirmed':
             icon = 'calendar'
             title = 'tour request approved'
@@ -339,6 +339,21 @@ class User(Base):
             icon = 'calendar'
             title = 'new tour time request'
             subject = 'Tour Request Update'
+
+        elif emailType == 'maintenanceCreate':
+            icon = 'wrench'
+            title = 'maintenance request'
+            subject = 'Maintenance Request'
+
+        elif emailType == 'maintenanceInProgress':
+            icon = 'wrench'
+            title = 'maintenance request'
+            subject = 'Maintenance Request Update'
+
+        elif emailType == 'maintenanceCompleted':
+            icon = 'wrench'
+            title = 'maintenance request'
+            subject = 'Maintenance Request Update'
 
         send_email(subject='NexNest - %s' % subject,
                    sender='no_reply@nexnest.com',
