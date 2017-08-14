@@ -462,11 +462,14 @@ def completeHousingRequestAJAX(id):
             groupListing.listing.show = False
             session.commit()
 
-            createHouse(groupListing.listing, groupListing.group)
+            newHouse = createHouse(groupListing.listing, groupListing.group)
 
-            groupListing.genCompletedNotifications()
+            if newHouse is not None:
 
-            return jsonify(results={'success': True})
+                groupListing.genCompletedNotifications()
+                return jsonify(results={'success': True})
+            else:
+                return jsonify(results={'success': False, 'message': 'House has already been created!'})
         else:
             errorMessage = 'Permissions Error'
     else:

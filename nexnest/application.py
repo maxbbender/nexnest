@@ -27,6 +27,10 @@ login_manager.login_view = '/login'
 
 import braintree
 
+# Manager (for shell commands)
+
+
+
 
 braintree.Configuration.configure(braintree.Environment.Sandbox,
                                   merchant_id="95d9g95dztdsgkkh",
@@ -63,6 +67,8 @@ from nexnest.blueprints.commerce import commerce
 from nexnest.blueprints.error import errors
 from nexnest.blueprints.notification import notifications
 from nexnest.blueprints.report import reports
+from nexnest.blueprints.rent import rents
+from nexnest.blueprints.siteAdmin import siteAdmin as siteAdminBlueprint
 
 app.register_blueprint(base)
 app.register_blueprint(indexs)
@@ -77,8 +83,9 @@ app.register_blueprint(commerce)
 app.register_blueprint(errors)
 app.register_blueprint(notifications)
 app.register_blueprint(reports)
-
-from nexnest.forms import LoginForm, PasswordChangeForm, ProfilePictureForm, PlatformReportForm
+app.register_blueprint(rents)
+app.register_blueprint(siteAdminBlueprint, url_prefix='/siteAdmin')
+from nexnest.forms import LoginForm, PasswordChangeForm, ProfilePictureForm, PlatformReportForm, DirectMessageForm
 
 
 @app.context_processor
@@ -86,6 +93,7 @@ def insert_login_form():
     if current_user.is_authenticated:
         passwordChangeForm = PasswordChangeForm()
         avatarChangeForm = ProfilePictureForm()
+        dmForm = DirectMessageForm()
         # messages, notifications = current_user.unreadNotifications()
         notifications = current_user.getNotifications()
         messages = current_user.getMessageNotifications()
@@ -101,10 +109,15 @@ def insert_login_form():
                     numUnviewedMessages=numUnviewedMessages,
                     notificationMessages=messages,
                     platformReportForm=PlatformReportForm(),
-                    houses=houses)
+                    DirectMessageForm=DirectMessageForm(),
+                    houses=houses,
+                    dmForm=dmForm)
     else:
         login_form = LoginForm()
+        dmForm = DirectMessageForm()
+
         return dict(login_form=login_form,
-                    platformReportForm=PlatformReportForm())
+                    platformReportForm=PlatformReportForm(),
+                    dmForm=dmForm)
 
 import nexnest.admin  # pylint: disable=unused-import

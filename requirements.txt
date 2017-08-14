@@ -38,3 +38,7 @@ braintree
 
 google-api-python-client
 googlemaps
+
+alembic
+Flask-Script
+Flask-Migrate

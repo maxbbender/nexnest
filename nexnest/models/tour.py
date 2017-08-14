@@ -83,6 +83,20 @@ class Tour(Base):
 
         return False
 
+    @property
+    def groupedTourTimes(self):
+        tourDicts = []
+
+        for tourTime in self.tourTimes:
+            foundDate = next((item for item in tourDicts if item["date"] == tourTime.humanDateOnlyString), None)
+
+            if foundDate is not None:
+                foundDate['times'].append(tourTime.humanTimeOnlyString)
+            else:
+                tourDicts.append({'date': tourTime.humanDateOnlyString, 'times': [tourTime.humanTimeOnlyString]})
+
+        return tourDicts
+
     def isViewableBy(self, user, toFlash=True):
         if user in self.group.getUsers() or user in self.listing.landLordsAsUsers():
             return True
@@ -110,8 +124,8 @@ class Tour(Base):
                 session.commit()
 
             if landlord.notificationPreference.tour_create_email:
-                landlord.sendEmail(emailType='generic',
-                                   message='A new Tour has been requested for %s' % self.listing.address)
+                landlord.sendEmail(emailType='tourRequest',
+                                   message=self.genTourEmailCreatedContent(user=landlord))
 
     def genConfirmNotifications(self):
         for user in self.group.acceptedUsers:
@@ -124,8 +138,8 @@ class Tour(Base):
                 session.commit()
 
             if user.notificationPreference.tour_confirmed_email:
-                user.sendEmail(emailType='generic',
-                               message='Your tour has been confirmed')
+                user.sendEmail(emailType='tourConfirmed',
+                               message=self.genTourEmailConfirmedContent())
 
     def undoConfirmNotifications(self):
         session.query(Notification) \
@@ -147,8 +161,8 @@ class Tour(Base):
                     session.commit()
 
                 if user.notificationPreference.tour_time_email:
-                    user.sendEmail(emailType='generic',
-                                   message='A new time has been requested for your tour.')
+                    user.sendEmail(emailType='tourTimeChange',
+                                   message=self.genTourEmailTimeChangeContent(user))
 
         else:
             for user in self.listing.landLordsAsUsers():
@@ -161,8 +175,8 @@ class Tour(Base):
                     session.commit()
 
                 if user.notificationPreference.tour_time_email:
-                    user.sendEmail(emailType='generic',
-                                   message='A new time has been requested for your tour.')
+                    user.sendEmail(emailType='tourTimeChange',
+                                   message=self.genTourEmailTimeChangeContent(user))
 
     def undoTimeChangeNotifications(self):
         session.query(Notification) \
@@ -181,8 +195,8 @@ class Tour(Base):
                 session.commit()
 
             if user.notificationPreference.tour_denied_email:
-                user.sendEmail(emailType='generic',
-                               message='Your request to tour the house at %s has been denied' % self.house.listing.address)
+                user.sendEmail(emailType='tourDenied',
+                               message=self.genTourEmailDeniedContent(user=user))
 
     def undoDeniedNotifications(self):
         session.query(Notification) \
@@ -190,6 +204,75 @@ class Tour(Base):
                        target_model_id=self.id) \
             .delete()
         session.commit()
+
+    # EMAIL FUNCTION
+    def genTourEmailCreatedContent(self, user):
+        emailString = """
+            <h4>Hi %s</h4>
+            <br>
+            You have recieved a tour request for %s<br>
+            The following times have been requested by %s<br>
+
+            """ % (user.name, self.listing.briefStreet, self.group.leader.name)
+
+        for tourTimeDict in self.groupedTourTimes:
+            emailString += """
+                <div style="padding-left:40px">
+                    <strong>%s</strong><br>
+            """ % tourTimeDict['date']
+
+            for time in tourTimeDict['times']:
+                emailString += "%s<br>" % time
+
+            emailString += "</div><br>"
+
+        emailString += """
+        If you'd like to message Jerry before approving the tour, click <a href="https://nexnest.com/user/directMessages/%d">here</a><br>
+
+            Click <a href="https://nexnest.com/landlord/dashboard">here</a> to visit all tour requests.<br><br>
+        """ % user.id
+
+        return emailString
+
+    def genTourEmailConfirmedContent(self):
+        return  """
+        <strong>Congratulations!</strong> The following tour time was approved by %s for %s on:
+        <br><br>
+        <div style="padding-left:20px">
+        <strong>%s</strong><br>
+        <strong>%s</strong>
+        </div>
+        <br><br>
+        A reminder will be sent to you on the morning of your scheduled tour!<br><br>
+        Feel free to contact the landlord by clicking <a href="https://nexnest.com/user/directMessages/%d">here</a> with any additional questions<br><br>
+        Thanks for choosing <a href="https://nexnest.com">nexnest.com</a>.
+        """ % (self.listing.landLordsAsUsers()[0].name,
+               self.listing.briefStreet,
+               self.confirmedTourTime.humanDateOnlyString,
+               self.confirmedTourTime.humanTimeOnlyString,
+               self.listing.landLordsAsUsers()[0].id)
+
+    def genTourEmailDeniedContent(self, user):
+        return """
+        Hello %s,<br>
+        We are sorery to inform you that your tour request was denied for %s. This listing may have been booked or is no longer available for rent from the owner.<br><br>
+        Don't let that stop your housing search! Visit <a href="https://nexnest.com">nexnest.com</a> to find the newest available rentals in your area.<br><br>
+        """ % (user.name, self.listing.briefStreet)
+
+    def genTourEmailTimeChangeContent(self, user):
+        return """
+        Hi %s,<br><br>
+        A new tour time has been requested for %s<br><br>
+        Click <a href="https://nexnest.com/tour/view/%d">here</a> or the link below to confirm, decline or suggest a new time.<br><br>
+        <a href="https://nexnest.com/tour/view/%d">https://nexnest.com/tour/view/%d></a><br><br>
+        We hope you tour the property soon! Thanks for using <a href="https://nexnest.com">nexnest.com</a><br><br>
+        """ % (
+            user.name,
+            self.listing.briefStreet,
+            self.id,
+            self.id,
+            self.id
+        )
 
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument

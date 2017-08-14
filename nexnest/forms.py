@@ -87,7 +87,7 @@ class RegistrationForm(RedirectForm):
 
 
 class LandlordMoreInfoForm(RedirectForm):
-    phone = IntegerField('Phone Number', [InputRequired()])
+    date_of_birth = DateField('Date of Birth', [InputRequired()])
     date_of_birth = HiddenField('Date of Birth', [InputRequired()])
     street = StringField('Street Address', [
                          Length(min=2, max=50), InputRequired()])
@@ -97,7 +97,7 @@ class LandlordMoreInfoForm(RedirectForm):
     user_id = HiddenField('user')
     availabilities = HiddenField('availabilities', validators=[Optional()])
     check_pay = BooleanField('Do you accept rent payments via checks?')
-    online_pay = BooleanField('Do you accept rent payments via NexNest?')
+    online_pay = BooleanField('Do you accept rent payments through NexNest?')
 
 
 class ProfilePictureForm(RedirectForm):
@@ -127,7 +127,7 @@ class ListingForm(RedirectForm):
     num_full_baths = IntegerField(
         'Number of Full Bathrooms', [InputRequired()])
     num_half_baths = IntegerField(
-        'Number of Half Bathrooms', [InputRequired()])
+        'Number of Half Bathrooms', [Optional()])
     price = IntegerField('Price per Bedroom per Semester', [InputRequired()])
     square_footage = IntegerField('Square Footage of House', [Optional()])
     parking = SelectField('What Parking is Available',
@@ -148,7 +148,7 @@ class ListingForm(RedirectForm):
     garbage_service = BooleanField('Is garbage service included?')
     security_service = BooleanField('Is there a security service provided?')
     description = TextAreaField('Please provide a detailed description of the property', [
-                                Length(min=1, max=1500), InputRequired()])
+                                Length(min=0, max=1500), Optional()])
     property_type = SelectField('Property Type', choices=propertyTypes)
     rent_due = SelectField('How often is rent due?', choices=rentDue)
     first_semester_rent_due_date = DateField(
@@ -201,7 +201,7 @@ class EditAccountForm(RedirectForm):
         'First Name', [InputRequired()])
     lname = StringField(
         'Last Name', [InputRequired()])
-    school = SelectField('School', [Optional()], choices=schools)    
+    school = SelectField('School', [Optional()], choices=schools)
     email = StringField('Email',
                         [InputRequired("You must enter an email address"),
                          Email("Email must be valid format")])
@@ -343,11 +343,13 @@ class GroupReportForm(ReportForm):
 
 class LandlordPaymentAccountForm(RedirectForm):
     legalBusinessName = StringField('Legal Business Name', validators=[Optional()])
-    dbaBusinessName = StringField('DBA Business Name', [Optional()])
     taxID = StringField('Tax ID', [Optional()])
-    businessStreet = StringField('Street', [Optional()])
-    businessCity = StringField('City', [Optional()])
-    businessZip = StringField('Zip Code', [Optional()])
-    businessState = SelectField('State', choices=statesLong, validators=[Optional()])
     accountNumber = StringField('Recieving Account Number')
     routingNumber = StringField('Routing Number')
+
+
+class CreateCouponForm(RedirectForm):
+    couponKey = StringField('Coupon Key', validators=[InputRequired()])
+    unlimited = BooleanField('Unlimited', validators=[Optional()])
+    uses = IntegerField('Number of Uses', validators=[Optional()])
+    percentageOff = IntegerField('Percentage Off (15 would be 15% off)')

@@ -57,3 +57,6 @@ test_setup:
 	createdb -U nexnest_test -O nexnest_test -h localhost -p 5432 nexnest_test
 	NEXNEST_ENV=test python db/manage.py version_control
 	NEXNEST_ENV=test python db/manage.py upgrade
+
+shell:
+	python manage.py shell

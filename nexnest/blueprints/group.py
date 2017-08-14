@@ -1,33 +1,26 @@
-from sqlalchemy import asc, desc
-
-from flask import Blueprint, jsonify
-from flask import render_template, request, redirect, url_for, flash
+from flask import (Blueprint, flash, jsonify, redirect, render_template,
+                   request, url_for)
 from flask_login import current_user, login_required
-
 from nexnest import logger
-
-from nexnest.forms import CreateGroupForm, InviteGroupForm, SuggestListingForm, GroupMessageForm, GroupListingForm
-
 from nexnest.application import session
-
+from nexnest.decorators import group_editable, group_viewable
+from nexnest.forms import (CreateGroupForm, GroupListingForm, GroupMessageForm,
+                           InviteGroupForm, SuggestListingForm)
 from nexnest.models.group import Group
-from nexnest.models.group_user import GroupUser
-from nexnest.models.group_listing import GroupListing
-from nexnest.models.user import User
-from nexnest.models.listing import Listing
-from nexnest.models.group_message import GroupMessage
-from nexnest.models.tour import Tour
-from nexnest.models.group_listing_favorite import GroupListingFavorite
-from nexnest.models.house import House
-from nexnest.models.group_listing_message import GroupListingMessage
-from nexnest.models.notification import Notification
 from nexnest.models.group_email import GroupEmail
-
-from nexnest.decorators import group_viewable, group_editable
-
-from nexnest.utils.flash import flash_errors
+from nexnest.models.group_listing import GroupListing
+from nexnest.models.group_listing_favorite import GroupListingFavorite
+from nexnest.models.group_listing_message import GroupListingMessage
+from nexnest.models.group_message import GroupMessage
+from nexnest.models.group_user import GroupUser
+from nexnest.models.house import House
+from nexnest.models.listing import Listing
+from nexnest.models.notification import Notification
+from nexnest.models.tour import Tour
+from nexnest.models.user import User
 from nexnest.utils.email import send_email
-
+from nexnest.utils.flash import flash_errors
+from sqlalchemy import asc, desc
 
 groups = Blueprint('groups', __name__, template_folder='../templates')
 
@@ -115,7 +108,8 @@ def viewGroup(groupID):
 def invite():
     form = InviteGroupForm(request.form)
     if form.validate():
-        group = Group.query.filter_by(id=int(form.group_id.data)).first_or_404()
+        group = Group.query.filter_by(
+            id=int(form.group_id.data)).first_or_404()
 
         user = User.query.filter_by(id=int(form.user_id.data)).first_or_404()
 
@@ -123,6 +117,8 @@ def invite():
 
         session.add(newGroupUser)
         session.commit()
+
+        newGroupUser.genNotifications()
         return form.redirect()
     else:
         flash_errors(form)
@@ -137,7 +133,8 @@ def createMessage():
     message_form = GroupMessageForm(request.form)
 
     if message_form.validate():
-        group = Group.query.filter_by(id=int(message_form.group_id.data)).first_or_404()
+        group = Group.query.filter_by(
+            id=int(message_form.group_id.data)).first_or_404()
 
         newMessage = GroupMessage(group=group,
                                   user=current_user,
@@ -189,7 +186,8 @@ def assignNewLeader(groupID, userID):
 @login_required
 @group_editable
 def removeMember(groupID, userID):
-    groupUser = GroupUser.query.fitler_by(group_id=groupID, user_id=userID).first_or_404()
+    groupUser = GroupUser.query.fitler_by(
+        group_id=groupID, user_id=userID).first_or_404()
 
     groupUser.accepted = False
     groupUser.show = False
@@ -292,10 +290,12 @@ def inviteUserByEmail(groupID, emailAddress):
     group = Group.query.filter_by(id=groupID).first_or_404()
 
     # First make sure this user hasn't already been invited by email
-    groupEmailCheck = GroupEmail.query.filter_by(group=group, email=emailAddress).count()
+    groupEmailCheck = GroupEmail.query.filter_by(
+        group=group, email=emailAddress).count()
     errorMessage = None
     if groupEmailCheck == 0:
-        message = 'You have received an invitation to join %s, a group at NexNest! Click <a href="%s">here</a> to join' % (group.name, url_for('groups.acceptEmailInvite', _external=True))
+        message = 'You have received an invitation to join %s, a group at NexNest! Click <a href="%s">here</a> to join' % (
+            group.name, url_for('groups.acceptEmailInvite', _external=True))
         send_email(subject='NexNest - Group Invitation',
                            sender='no_reply@nexnest.com',
                            recipients=[emailAddress],
@@ -308,14 +308,16 @@ def inviteUserByEmail(groupID, emailAddress):
         session.commit()
         logger.debug('newGroupEmail %r' % newGroupEmail)
     else:
-        logger.info('User %r just tried to invite %s a second time' % (current_user, emailAddress))
+        logger.info('User %r just tried to invite %s a second time' %
+                    (current_user, emailAddress))
         errorMessage = 'You have already sent an invite to this email!'
 
     if errorMessage is None:
         if request.is_xhr:
             return jsonify({'success': True})
         else:
-            flash('Sent email to %s inviting them to your group!' % emailAddress, 'success')
+            flash('Sent email to %s inviting them to your group!' %
+                  emailAddress, 'success')
             return redirect(url_for('groups.viewGroup', groupID=groupID))
     else:
         if request.is_xhr:
@@ -328,14 +330,17 @@ def inviteUserByEmail(groupID, emailAddress):
 @groups.route('/group/confirmEmailInvite')
 @login_required
 def acceptEmailInvite():
-    groupEmail = GroupEmail.query.filter_by(email=current_user.email).first_or_404()
+    groupEmail = GroupEmail.query.filter_by(
+        email=current_user.email).first_or_404()
 
-    groupUserCheck = GroupUser.query.filter_by(group=groupEmail.group, user=current_user).count()
+    groupUserCheck = GroupUser.query.filter_by(
+        group=groupEmail.group, user=current_user).count()
     errorMessage = None
     if groupUserCheck == 0:
         newGroupUser = GroupUser(groupEmail.group, current_user)
         newGroupUser.accepted = True
         groupEmail.used = True
+        newGroupUser.genCompletedNotifications()
         session.add(newGroupUser)
         session.commit()
     else:

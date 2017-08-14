@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block content %}
+<form action="{{url_for('siteAdmin.createCoupon')}}" method="POST">
+    <div class="row">
+        <div class="col-xs-0 col-md-1 col-lg-3"></div>
+        <div class="col-xs-12 col-md-10 col-lg-6 col-xl-6">
+            {% from "_formhelpers.html" import render_field %}
+            <form id="CreateCouponForm" action="{{url_for('groups.createGroup')}}" method='POST'>
+                <dl>
+                    {{ form.csrf_token }}
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-8">
+                            {{ render_field(form.couponKey, class="form-control", type="text") }}
+                        </div>
+                        <div class="col-xs-12 col-md-4" style="align-self: center; padding-top: 23px;">
+                            <button class="btn btn-primary" name="randomKey" id="randomKey">Random Key</button>
+                        </div>
+                    </div>
+                    <div id="alreadyUsed" class="row" style="display: none; padding-left: 15px;">
+                        <span style="color: red;">This Coupon Key has already been used</span>
+                    </div>
+                    {{ render_field(form.percentageOff, class="form-control", type="number") }}
+                    <div id="discountTooHigh" class="row" style="display: none; padding-left: 15px;">
+                        <span style="color: red;">Discount must be below 100%</span>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label class="control-label form-control-feedback" id="unlimited_label"><strong>Unlimited Uses?</strong></label>
+                                <div class="checkbox">
+                                    <label style="font-size: 1.5em">
+                                        {{form.unlimited(class='form-control form-check-input')}}
+                                        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{ render_field(form.uses, class="form-control", type="number") }}
+                </dl>
+            </form>
+            <button type="button" name="createCoupon" id="createCoupon" class="btn btn-primary" style="float: right;">Create Coupon</button>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $('input[name="unlimited"]').on('click', function(){
+        if ( $(this).is(':checked') ) {
+            $('input[name="uses"]').hide();
+            $("label[for='uses']").hide();
+        } 
+        else {
+            $('input[name="uses"]').show();
+            $("label[for='uses']").show();
+        }
+    });
+
+    $("#randomKey").click(function(){
+        event.preventDefault();
+        var request = "/siteAdmin/getRandomCouponKey";
+        $.get(request, function(data, status){
+            var random = data.couponKey;
+            $("#couponKey").val(random);
+        });
+    });
+    
+    $("#createCoupon").click(function(){
+        var enteredKey = $("#couponKey").val();
+        var enteredDiscount = $("#percentageOff").val();
+        var request = `/coupon/${enteredKey}/check`;
+        $.get(request, function(data, status){
+            var hasCouponBeenUsed = data.results.validCoupon;
+            console.log(hasCouponBeenUsed);
+            if(!hasCouponBeenUsed){
+                if(enteredDiscount < 100){
+                    $("form:first").submit();
+                }
+                else{
+                    $("#discountTooHigh").show();
+                }
+            }
+            else{
+                $("#alreadyUsed").show();
+            }
+        });
+    });
+</script>
+{% endblock %}
+

@@ -1,12 +1,11 @@
 
-from sqlalchemy import event
-from sqlalchemy.orm import relationship
-
 from datetime import datetime as dt
 
 from nexnest.application import db
-
 from nexnest.models.base import Base
+from sqlalchemy import event
+from sqlalchemy.orm import relationship
+
 # _notification = db.Column(db.Boolean)
 # _email = db.Column(db.Boolean)
 
@@ -18,8 +17,8 @@ class NotificationPreference(Base):
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
 
-    direct_message_notification = db.Column(db.Boolean)
-    direct_message_email = db.Column(db.Boolean)
+    direct_message_notification = db.Column(db.Boolean)  # D
+    direct_message_email = db.Column(db.Boolean)  # D
 
     tour_message_notification = db.Column(db.Boolean)  # D
     tour_message_email = db.Column(db.Boolean)         # D
@@ -78,6 +77,12 @@ class NotificationPreference(Base):
     tour_create_notification = db.Column(db.Boolean)  # D
     tour_create_email = db.Column(db.Boolean)  # D
 
+    group_user_completed_notification = db.Column(db.Boolean)  # D
+    group_user_completed_email = db.Column(db.Boolean)  # D
+
+    group_listing_favorite_notification = db.Column(db.Boolean)  # D
+    group_listing_favorite_email = db.Column(db.Boolean)  # D
+
     user = relationship('User', back_populates='notificationPreference')
 
     def __init__(
@@ -93,7 +98,7 @@ class NotificationPreference(Base):
 
         # Notification Preference Defaults
         self.direct_message_notification = True
-        self.direct_message_notification = False
+        self.direct_message_email = False
 
         self.tour_message_notification = True
         self.tour_message_email = False
@@ -151,6 +156,12 @@ class NotificationPreference(Base):
 
         # self.group_listing_completed_notification = True
         # self.group_listing_completed_email = False
+
+        self.group_user_completed_notification = True
+        self.group_user_completed_email = False
+
+        self.group_listing_favorite_notification = True
+        self.group_listing_favorite_email = False
 
     def __repr__(self):
         return '<NotificationPreferences %d | User %r>' % (self.id, self.user)

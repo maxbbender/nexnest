@@ -188,8 +188,8 @@ class GroupListing(Base):
                 session.commit()
 
             if landlord.notificationPreference.group_listing_email:
-                landlord.sendEmail(emailType='generic',
-                                   message='A new request to live at %s has been made!' % self.listing.address)
+                landlord.sendEmail(emailType='groupListingCreate',
+                                   message=self.genEmailCreateContent(landlord))
 
     def genAcceptedNotifications(self):
         for user in self.group.acceptedUsers:
@@ -202,8 +202,8 @@ class GroupListing(Base):
                 session.commit()
 
             if user.notificationPreference.group_listing_accept_email:
-                user.sendEmail(emailType='generic',
-                               message='Your request to live at %s has been accepted! Now you must sign the lease and pay all security deposits!' % self.listing.address)
+                user.sendEmail(emailType='groupListingAccepted',
+                               message=self.genEmailAcceptedContent(user))
 
     def undoAcceptedNotifications(self):
         session.query(Notification) \
@@ -224,8 +224,8 @@ class GroupListing(Base):
                 session.commit()
 
             if user.notificationPreference.group_listing_deny_email:
-                user.sendEmail(emailType='generic',
-                               message='Your request to live at %s has been denied' % self.listing.address)
+                user.sendEmail(emailType='groupListingDenied',
+                               message=self.genEmailDeniedContent(user))
 
     def undoDeniedNotifications(self):
         session.query(Notification) \
@@ -236,33 +236,78 @@ class GroupListing(Base):
         session.commit()
 
     def genCompletedNotifications(self):
-        # for user in self.group.acceptedUsers:
-
-        #     if user.notificationPreference.group_listing_completed_notification:
-        #         newNotif = Notification(notif_type='group_listing_completed',
-        #                                 target_user=user,
-        #                                 target_model_id=self.id)
-        #         session.add(newNotif)
-        #         session.commit()
-
-        #     if user.notificationPreference.group_listing_completed_email:
-        #         user.sendEmail(emailType='generic',
-        #                        message='Your request to live at %s has been marked as completed! Welcome to your new house' % self.listing.address)
-
-        # for landlord in self.listing.landLordsAsUsers():
-
-        #     if landlord.notificationPreference.group_listing_completed_notification:
-
-        #         newNotif = Notification(notif_type='group_listing_completed',
-        #                                 target_user=landlord,
-        #                                 target_model_id=self.id)
-        #         session.add(newNotif)
-        #         session.commit()
-
-        #     if landlord.notificationPreference.group_listing_completed_email:
-        #         landlord.sendEmail(emailType='generic',
-        #                            message='Your request to live at %s has been marked as completed! Welcome to your new house' % self.listing.address)
         pass
+
+    def genEmailCreateContent(self, user):
+        return """
+        <div class="row">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-10">
+                <span>Hi  %s ,</span>
+                <br><br>
+                <span>
+                    You have received a new house request from %s for %s
+                    <br>
+                    <a href="https://nexnest.com/houseRequest/view/%d">Click here</a> to confirm or decline this request
+                </span>
+                <br><br>
+            </div>
+        </div>
+        """ % (
+            user.name,
+            self.group.name,
+            self.listing.briefStreet,
+            self.id
+        )
+
+    def genEmailDeniedContent(self, user):
+        return """
+            <div class="row">
+                <div class="col-xs-1"></div>
+                <div class="col-xs-10">
+                    <span>Hi  %s ,</span>
+                    <br><br>
+                    <span>
+                        <strong>We are sorry!</strong> It looks like your housing request for %s has been <strong>denied.</strong>
+                        <br>
+                        Don't be discouraged! There are plenty of other houses looking for tenants in the %s school year on <a href="https://nexnest.com">nexnest.com</a>
+                        <br><br>
+                        <a href="https://nexnest.com/index#search">Click here</a> to keep searching.
+                        <br><br>
+                        We hope you find the perfect college house!
+                    </span>
+                    <br><br>
+                </div>
+            </div>
+        """ % (
+            user.fname,
+            self.listing.briefStreet,
+            self.listing.start_date.year
+        )
+
+    def genEmailAcceptedContent(self, user):
+        return """
+        <div class="row">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-10">
+                <span>Hi  %s ,</span>
+                <br><br>
+                <span>
+                    <strong>Congratulations!</strong> %s has approved your request to live at %s. Enjoy your new college nest!
+                    <br><br>
+                    Don't just tweet about it. Contact your landlord about putting down a deposit and signing your lease
+                    <br><br>
+                    Enjoy your %d school year!
+                </span>
+                <br><br>
+            </div>
+        </div>
+        """ % (
+            user.fname,
+            self.listing.landLordsAsUsers()[0].name,
+            self.listing.briefStreet,
+            self.listing.start_date.year
+        )
 
     def undoCompletedNotifications(self):
         session.query(Notification) \

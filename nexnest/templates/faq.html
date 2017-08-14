@@ -2,46 +2,158 @@
 {% block content %}
 <br>
 <div class="row">
-	<div class="col-xs-0 col-md-2 col-lg-4">
+	<div class="hidden-sm-down col-md-4 col-lg-3 col-xl-2 faqVR">
+		<h1 class="faqHeading">Navigate</h1>
+		<hr class="faqHR">
+		<a href="{{url_for('indexs.aboutUs')}}" class="faqNav"><h3><strong>About Us</strong></h3></a>
+		<a href="#" class="faqNav"><h3><strong>Contact Us</strong></h3></a>
+		<br>
+		<h1 class="faqHeading">Help</h1>
+		<hr class="faqHR">
+		<a href="{{url_for('indexs.faq')}}" class="faqNav"><h3><strong>FAQ</strong></h3></a>
+		<a href="{{url_for('indexs.termsConditions')}}" class="faqNav"><h3><strong>Terms of Use</strong></h3></a>
+		<a href="{{url_for('indexs.privacyPolicy')}}" class="faqNav"><h3><strong>Privacy Policy</strong></h3></a>
+		<a href="#" class="faqNav" data-toggle="modal" data-target="#platformReportModal"><h3><strong>Report Issue</strong></h3></a>
 	</div>
-	<div class="col-xs-12 col-md-8 col-lg-4">
-		<div class="card">
+	<div class="col-xs-12 col-xs-12 col-md-8 col-lg-9 col-xl-10">
+		<div class="card" style="border: none;">
 			<div class="card-header">
-				<h1>Frequently Asked Questions</h1>
+				<h1 class="faqHeading"><i class="fa fa-question-circle" aria-hidden="true"></i> Frequently Asked Questions</h1>
 			</div>
 			<div class="card-block">
 				<div class="question">
-					<strong>What is NexNest?</strong>
+					<strong class="questionHeading">What is nexnest.com? </strong>
 					<div class="answer" style="display: none;">
-						Nexnest is a platform for connecting college students looking for off campus housing and landlords
+						Nexnest.com is a Limited Liability Company (LLC) that allows college students to find rentals online through our quality internet listing service.
 					</div>
 					<hr>
 				</div>
 
 				<div class="question">
-					<strong>What schools are supported?</strong>
+					<strong class="questionHeading">Is it free? </strong>
 					<div class="answer" style="display: none;">
-						Nexnest is a platform for connecting college students looking for off campus housing and landlords
+						Yes, it is 100% free to search and use our services for renters! We charge landlords and property managers a flat fee to post per rental unit. Click here to see full details on our <a href="">Pricing and Packages.</a>
 					</div>
 					<hr>
 				</div>
 
 				<div class="question">
-					<strong>When are you coming to my school?</strong>
+					<strong class="questionHeading">What if I don’t see any listings in my search? </strong>
 					<div class="answer" style="display: none;">
-						As soon as we can, please let us know what school you want us to come to and get all your friends to do the same. The more people who ask the quicker we can make it happen
+						If you your search doesn’t return any results, it is likely that your search criteria may be too specific. We recommend starting a search with location and number of bedroom, then narrowing your search filters from there.
+						<br>
+						If we don’t currently have any properties in your area, please sign up for our <a href="">newsletter</a>
+						to be notified when there are new listings available near you!
 					</div>
 					<hr>
 				</div>
 
 				<div class="question">
-					<strong>How much does it cost me?</strong>
+					<strong class="questionHeading">I am a landlord / property manager. How can I list my property? </strong>
 					<div class="answer" style="display: none;">
-						Nexnest is a platform for connecting college students looking for off campus housing and landlords
+						You can <a href="{{url_for('listings.createListing')}}">Create a Listing here.</a> Simply go through the easy step by step process of creating your listing and add it to your cart. When you’re all done, check out and your listings will be live!
 					</div>
 					<hr>
 				</div>
 
+				<div class="question">
+					<strong class="questionHeading">How does the pricing work? </strong>
+					<div class="answer" style="display: none;">
+						Each package is priced as a one-time fee per unit, per lease term.
+					</div>
+					<hr>
+				</div>
+
+				<div class="question">
+					<strong class="questionHeading">Why choose nexnest? </strong>
+					<div class="answer" style="display: none;">
+						Nexnest specializes in off-campus college rentals for both rural and urban schools. Our team of customer service professionals are dedicated to ensuring that all listings are legitimate and personally visited and vetted by nexnest.com. Our full service platform includes creating groups, scheduling tours, processing online payments, issuing maintenance requests and our messenger feature.
+					</div>
+					<hr>
+				</div>
+
+				<div class="question">
+					<strong class="questionHeading">How do I apply for a rental? </strong>
+					<div class="answer" style="display: none;">
+						You can apply for a rental by first, <a href="{{url_for('users.register')}}">creating an account</a>. Next, <a href="{{url_for('users.myGroups')}}">create a group</a> and invite your desired roommates to join! After that, simply click <strong>“Request this Listing”</strong> on a listing page and wait for the property owner to review your request. To see your pending and accepted requests, go to that groups page and click on "Listing Requests". 
+					</div>
+					<hr>
+				</div>
+				
+
+				<div class="question">
+					<strong class="questionHeading">How do I sign up? </strong>
+					<div class="answer" style="display: none;">
+						You can sign up a a renter or a landlord <a href="{{url_for('users.register')}}">here</a>.
+					</div>
+					<hr>
+				</div>
+
+				<div class="question">
+					<strong class="questionHeading">How do I create a group? </strong>
+					<div class="answer" style="display: none;">
+						...
+					</div>
+					<hr>
+				</div>
+
+				<div class="question">
+					<strong class="questionHeading">How do I schedule a tour? </strong>
+					<div class="answer" style="display: none;">
+						You can schedule a tour by clicking on “Schedule Tour” on any listing page. Select a time from the available timeframes shown and submit your tour request. You will be notified when the tour has been scheduled.
+					</div>
+					<hr>
+				</div>
+
+				<div class="question">
+					<strong class="questionHeading">How do I sign my lease? </strong>
+					<div class="answer" style="display: none;">
+						We currently do not handle lease signing. Once your request to lease a property listing has been accepted, please contact your landlord through the messenger to find out how to sign your lease.
+					</div>
+					<hr>
+				</div>
+
+				<div class="question">
+					<strong class="questionHeading">How do I pay my security deposit? </strong>
+					<div class="answer" style="display: none;">
+						We currently do not handle security deposit payments. Once your request to lease a property listing has been accepted, please contact your landlord through the messenger to find out how to pay your deposit.
+					</div>
+					<hr>
+				</div>
+
+				<div class="question">
+					<strong class="questionHeading">How do I pay my rent? </strong>
+					<div class="answer" style="display: none;">
+						If it shows that your landlord accepts online payments for your property, you can pay your rent through your Payments Portal. We accept all major credit cards. If your landlord does not accept online payments, please contact them directly through the messenger in My House to determine how they wish to be paid.
+						<br>
+						For more information on the payment processing, visit braintree.com.
+					</div>
+					<hr>
+				</div>
+
+				<div class="question">
+					<strong class="questionHeading">When is my rent due? </strong>
+					<div class="answer" style="display: none;">
+						Rent due dates are subject to the landlord’s lease agreement. Visit your house page and click "Pay Rent" for details on payment due dates.
+					</div>
+					<hr>
+				</div>
+
+				<div class="question">
+					<strong class="questionHeading">How do maintenance requests work? </strong>
+					<div class="answer" style="display: none;">
+						To issue a maintenance request, please visit your My House Portal, and click the tab for Maintenance Requests. To submit a request, XXXXXX. You can submit a maintenance request when there is a maintenance issue at your property (ie. plumbing, electrical, damages, etc.).
+					</div>
+					<hr>
+				</div>
+
+				<div class="question">
+					<strong class="questionHeading">How can I advertise through nexnest.com? </strong>
+					<div class="answer" style="display: none;">
+						Please contact marketing@nexnest.com for inquiries. 
+					</div>
+					<hr>
+				</div>
 
 			</div>
 		</div>		
@@ -52,10 +164,12 @@
 <script>
 	function expandAnswer( event ) {
 		var target = $( event.target );
-		target = target.parent();
-		target = target.children( ".answer" );
+		target = target.closest(".question").first();
+		target = target.children( ".answer" ).first();
 		target.toggle();
 	}
+
 	$( ".question" ).click( expandAnswer );
+
 </script>
 {% endblock %}

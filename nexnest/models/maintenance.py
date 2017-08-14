@@ -86,19 +86,19 @@ class Maintenance(Base):
         return False
 
     def genNotifications(self):
-        for user in self.house.tenants:
-            if user is not self.user:
+        # for user in self.house.tenants:
+        #     if user is not self.user:
 
-                if user.notificationPreference.maintenance_notification:
-                    newNotif = Notification(notif_type='maintenance',
-                                            target_model_id=self.id,
-                                            target_user=user)
-                    session.add(newNotif)
-                    session.commit()
+        #         if user.notificationPreference.maintenance_notification:
+        #             newNotif = Notification(notif_type='maintenance',
+        #                                     target_model_id=self.id,
+        #                                     target_user=user)
+        #             session.add(newNotif)
+        #             session.commit()
 
-                if user.notificationPreference.maintenance_email:
-                    user.sendEmail(emailType='generic',
-                                   message='A new Maintenance Request has be created for your listing at %s' % (self.house.listing.address))
+        #         if user.notificationPreference.maintenance_email:
+        #             user.sendEmail(emailType='generic',
+        #                            message='A new Maintenance Request has be created for your listing at %s' % (self.house.listing.address))
 
         for user in self.house.listing.landLordsAsUsers():
             if user is not self.user:
@@ -111,8 +111,8 @@ class Maintenance(Base):
                     session.commit()
 
                 if user.notificationPreference.maintenance_email:
-                    user.sendEmail(emailType='generic',
-                                   message='A new Maintenance Request has be created for your listing at %s' % (self.house.listing.address))
+                    user.sendEmail(emailType='maintenanceCreate',
+                                   message=self.genEmailCreatedContent(user))
 
     def genInProgressNotifications(self):
         for user in self.house.tenants:
@@ -125,8 +125,8 @@ class Maintenance(Base):
                 session.commit()
 
             if user.notificationPreference.maintenance_inProgress_email:
-                user.sendEmail(emailType='generic',
-                               message='Your Maintenance Request has been marked In-Progress!')
+                user.sendEmail(emailType='maintenanceInProgress',
+                               message=self.genEmailInProgressContent(user))
 
     def genCompletedNotifications(self):
         for user in self.house.tenants:
@@ -138,8 +138,8 @@ class Maintenance(Base):
                 session.add(newNotif)
                 session.commit()
             if user.notificationPreference.maintenance_completed_email:
-                user.sendEmail(emailType='generic',
-                               message='Your Maintenance Request has been completed!')
+                user.sendEmail(emailType='maintenanceCompleted',
+                               message=self.genEmailCompletedContent(user))
 
     def removeInProgressNotifications(self):
         # notifs = session.query(Notification).filter_by(notif_type='maintenance_inprogress',
@@ -164,6 +164,81 @@ class Maintenance(Base):
             .delete()
 
         session.commit()
+
+    def genEmailCreatedContent(self, user):
+        return """
+        <div class="row">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-10">
+                <span>Hi %s,</span>
+                <br><br>
+                <span>
+                    %s has submitted a maintenance request for %s. This request was label as a %s problem. 
+                    <br>
+                    %s also included: "%s"
+                    <br><br>
+                </span>
+                <br>
+                <span>
+                    <br>
+                    If you would like to ask any additional questions before fulfilling this maintenance request, <a href="https://nexnest.com/user/directMessages/%d">Click Here</a> to go message the tenant.
+                    <br><br>
+                    Don’t forget to update your maintenance request status on <a href="https://nexnest.com/landlord/dashboard#maintenanceTab">nexnest.com</a> so your tenants can stay notified. 
+                    
+                </span>
+            </div>
+        </div>
+        """ % (
+            user.name,
+            self.user.name,
+            self.house.listing.briefStreet,
+            self.humanRequestType,
+            self.user.name,
+            self.messages[0].content,
+            self.user.id
+        )
+
+    def genEmailInProgressContent(self, user):
+        return """
+        <div class="row">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-10">
+                <span>Hi %s,</span>
+                <br><br>
+                <span>
+                    Your landlord %s  has marked your maintenance request In-Progress! <a href="https://nexnest.com/house/maintenanceRequest/%d/view">Click here</a> to view your request status. 
+                    <br>
+                </span>
+                <br>            
+                </span>     
+            </div>
+        </div>
+        """ % (
+            user.name,
+            self.house.listing.landLordsAsUsers()[0].name,
+            self.id
+        )
+
+    def genEmailCompletedContent(self, user):
+        return """
+        <div class="row">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-10">
+                <span>Hi %s,</span>
+                <br><br>
+                <span>
+                    Your landlord %s has marked your maintenance request COMPLETED! <a href="https://nexnest.com/house/maintenanceRequest/%d/view">Click here</a> to view your request status. 
+                    <br>
+                </span>
+                <br><br>
+                <span>Be sure to use the maintenance request feature on <a href="https://nexnest.com">nexnest.com</a> if any other issues arise. </span>
+            </div>
+        </div>
+        """ % (
+            user.name,
+            self.house.listing.landLordsAsUsers()[0].name,
+            self.id
+        )
 
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument

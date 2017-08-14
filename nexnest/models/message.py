@@ -55,6 +55,10 @@ class Message(Base):
             'date': self.date_created.strftime('%B-%d-%y')
         }
 
+    @property
+    def humanDateCreated(self):
+        return self.date_created.strftime('%B-%d-%y %I:%M %p')
+
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument
     # 'target' is the inserted object

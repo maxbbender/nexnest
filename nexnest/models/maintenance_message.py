@@ -43,21 +43,43 @@ class MaintenanceMessage(Message):
                     session.commit()
 
                 if user.notificationPreference.maintenance_message_email:
-                    user.sendEmail(emailType='message',
-                                   message=self.content)
+                    user.sendEmail(emailType='maintenanceMessage',
+                                   message=self.genEmailContent(user))
 
-        for landlord in self.maintenance.house.listing.landLordsAsUsers():
-            if landlord.notificationPreference.maintenance_message_notification:
-                newNotif = Notification(notif_type='maintenance_message',
-                                        target_user=landlord,
-                                        target_model_id=self.id)
+        for user in self.maintenance.house.listing.landLordsAsUsers():
+            if user is not self.user:
+                if user.notificationPreference.maintenance_message_notification:
+                    newNotif = Notification(notif_type='maintenance_message',
+                                            target_user=user,
+                                            target_model_id=self.id)
 
-                session.add(newNotif)
-                session.commit()
+                    session.add(newNotif)
+                    session.commit()
 
-            if landlord.notificationPreference.maintenance_message_email:
-                user.sendEmail(emailType='message',
-                               message=self.content)
+                if user.notificationPreference.maintenance_message_email:
+                    user.sendEmail(emailType='maintenanceMessage',
+                                   message=self.genEmailContent(user))
+
+    def genEmailContent(self, user):
+        return """
+        <div class="row">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-10">
+                <span>Hi %s,</span>
+                <br><br>
+                <span>
+                    You have recieved a message regarding a maintenance request from %s.
+                    <br>
+                    <a href="https://nexnest.com/house/maintenanceRequest/%d/view">Click  here</a> to see the message and stay connected. Don't leave them hanging!
+                </span>
+                <br><br>
+            </div>
+        </div>
+        """ % (
+            user.name,
+            self.user.name,
+            self.maintenance_id
+        )
 
     def __repr__(self):
         return '<MaintenanceMessage ~ Message %r | Maintenance %r>' % \

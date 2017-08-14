@@ -191,6 +191,7 @@ class Listing(Base):
             self.price_per_month = self.price
             self.price_per_semester = self.price * 6
         elif self.rent_due == 'semester':
+            # numMonths = int((self.end_date - self.start_date).days / 30)
             self.price_per_month = self.price / 6
             self.price_per_semester = self.price
         else:
@@ -290,6 +291,10 @@ class Listing(Base):
     @property
     def briefStreet(self):
         return self.street[:22] + '...'
+
+    @property
+    def briefBriefStreet(self):
+        return self.street[:15]
 
     @property
     def pricePerMonth(self):

@@ -3,8 +3,8 @@
 		<div class="col-xs-4" style="text-align: center;">
 			<div style="display: inline-block; text-align: left">
 				<div class="row footerItem">
-					<img src="/static/img/testlogo.png" class="hidden-xs-down" style="height: 100px;" alt="logo">
-					<img src="/static/img/testlogo.png" class="hidden-sm-up" style="height: 50px;" alt="logo">
+					<img src="/static/img/colorLogo.png" class="hidden-xs-down" style="height: 100px;" alt="logo">
+					<img src="/static/img/colorLogo.png" class="hidden-sm-up" style="height: 50px;" alt="logo">
 				</div>
 			</div>
 		</div>
@@ -15,17 +15,17 @@
 				<div class="row footerItem">
 					<u>Connect With Us:</u>
 				</div>
-				<div class="row footerItem">
-					<img src="/static/img/instagramLogo.png" style="width: 25px; height: 25px; margin-right: 5px;">
-					@NexNest
+				<div class="row footerItem" style="align-items: center;">
+					<i class="fa fa-instagram fa-2x" aria-hidden="true" style="color: #50ae82; margin-right: 5px;"></i>
+					@nexnest
 				</div>
-				<div class="row footerItem">
-					<img src="/static/img/fbLogo.png" style="width: 25px; height: 25px; margin-right: 5px;">
-					NexNest
+				<div class="row footerItem" style="align-items: center;">
+					<i class="fa fa-facebook-square fa-2x" aria-hidden="true" style="color: #50ae82; margin-right: 5px;"></i>
+					nexnest
 				</div>				
-				<div class="row footerItem">
-					<img src="/static/img/twitterLogo.png" style="width: 25px; height: 25px;">
-					@NexNest
+				<div class="row footerItem" style="align-items: center;">
+					<i class="fa fa-twitter-square fa-2x" aria-hidden="true" style="color: #50ae82; margin-right: 5px;"></i>
+					@nexnest
 				</div>				
 			</div>
 		</div>
@@ -35,13 +35,13 @@
 					<u>Company:</u>
 				</div>				
 				<div class="row footerItem">
-					<a href="#">About Us</a>
+					<a href="{{url_for('indexs.aboutUs')}}">About Us</a>
 				</div>
 				<div class="row footerItem">
-					<a href="#">Terms of Service</a>
+					<a href="{{url_for('indexs.termsConditions')}}">Terms of Service</a>
 				</div>
 				<div class="row footerItem">
-					<a href="#">Privacy Policy</a>
+					<a href="{{url_for('indexs.privacyPolicy')}}">Privacy Policy</a>
 				</div>
 				<div class="row footerItem">
 					{% if current_user.is_authenticated %}
@@ -61,10 +61,7 @@
 					<u>Support:</u>
 				</div>
 				<div class="row footerItem">
-					<a href="#">FAQ</a>
-				</div>
-				<div class="row footerItem">
-					<a href="#">Help</a>
+					<a href="{{url_for('indexs.faq')}}">FAQ</a>
 				</div>
 				<div class="row footerItem">
 					<a href="#" data-toggle="modal" data-target="#platformReportModal">Report Issue</a>

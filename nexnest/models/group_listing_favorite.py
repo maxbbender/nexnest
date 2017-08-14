@@ -36,8 +36,34 @@ class GroupListingFavorite(Base):
     def genNotifications(self):
         for user in self.group.acceptedUsers:
             if user is not self.user:
-                newNotf = Notification(notif_type='group_listing_favorite',
-                                       target_model_id=self.id,
-                                       target_user=user)
-                session.add(newNotf)
-                session.commit()
+                if user.notificationPreference.group_listing_favorite_notification:
+                    newNotf = Notification(notif_type='group_listing_favorite',
+                                           target_model_id=self.id,
+                                           target_user=user)
+                    session.add(newNotf)
+                    session.commit()
+
+                if user.notificationPreference.group_listing_favorite_email:
+                    user.sendEmail(emailType='groupListingFavorite',
+                                   message=self.genEmailContent(user))
+
+    def genEmailContent(self, user):
+        return """
+        <div class="row">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-10">
+                <span>Hi  %s ,</span>
+                <br><br>
+                <span>
+                    One of your group members has favorited a new house in %s and wants you to check it out! <a href="https://nexnest.com/group/view/%d">Click here</a> to view your group’s favorites.
+                    <br><br>
+                    Don’t just wing it!
+                </span>
+                <br><br>
+            </div>
+        </div>
+        """ % (
+            user.fname,
+            self.group.name,
+            self.group.id
+        )

@@ -260,7 +260,10 @@ groupuser26.accepted = True
 
 session.commit()
 
-# GROUP LISTING FAVORITES
+for groupUser in group_user.GroupUser.query.all():
+    groupUser.genNotifications()
+
+    # GROUP LISTING FAVORITES
 for listing in listings:
     user = random.choice(group1AcceptedUsers)
 
@@ -297,11 +300,19 @@ for i in range(10):
         target_user = random.choice(userMessageList)
 
     dm = DirectMessageFactory(source_user=source_user, target_user=target_user)
+    dm1 = DirectMessageFactory(source_user=target_user, target_user=source_user)
+    dm2 = DirectMessageFactory(source_user=source_user, target_user=target_user)
 
     # Direct Messages Notifications
     dmn = NotificationFactory(target_user=target_user,
                               notif_type='direct_message',
                               target_model_id=source_user.id)
+    dmn1 = NotificationFactory(target_user=target_user,
+                               notif_type='direct_message',
+                               target_model_id=source_user.id)
+    dmn2 = NotificationFactory(target_user=target_user,
+                               notif_type='direct_message',
+                               target_model_id=source_user.id)
     session.commit()
 
 
@@ -366,8 +377,6 @@ for tour in allTours:
             .count()
 
         print('timeCheck', timeCheck)
-
-
 
         if timeCheck == 1:
             session.commit()
@@ -516,6 +525,38 @@ listing2.show = False
 listing3.show = False
 
 session.commit()
+
+# Rent
+for house in house.House.query.all():
+    listing = house.listing
+    if listing.rent_due == 'monthly':
+        logger.debug('Creating monthly rents')
+
+        for user in house.tenants:
+            currentDate = listing.start_date
+            logger.debug('Creating rent records for user %r' % user)
+            while currentDate < listing.end_date:
+                dateDue = currentDate.replace(day=1)
+
+                logger.debug('Rent for %r' % dateDue)
+
+                newRent = rent.Rent(house, user, dateDue, listing.price_per_month)
+                session.add(newRent)
+                session.commit()
+
+                currentDate = add_months(currentDate, 1)
+                pass
+
+    else:
+        logger.debug('Creating semester rents')
+        for user in house.tenants:
+            firstSemesterRent = rent.Rent(house, user, listing.first_semester_rent_due_date, listing.price_per_semester)
+            session.add(firstSemesterRent)
+
+            secondSemesterRent = rent.Rent(house, user, listing.second_semester_rent_due_date, listing.price_per_semester)
+            session.add(secondSemesterRent)
+
+            session.commit()
 
 for user in group1AcceptedUsers:
     hnf = NotificationFactory(target_user=user,

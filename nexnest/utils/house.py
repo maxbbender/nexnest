@@ -1,39 +1,55 @@
 from nexnest.models.house import House
 from nexnest.models.rent import Rent
 
+from nexnest import logger
+
 from nexnest.application import session
+
+from nexnest.utils.misc import add_months
 
 
 def createHouse(listing, group):
-    # Create the house object
-    house = House(listing=listing,
-                  group=group)
+    # Make sure the house doesn't already exist
+    houseCheck = House.query.filter_by(listing=listing, group=group).first()
 
-    session.add(house)
-    session.commit()
+    if houseCheck is None:
+        # Create the house object
+        house = House(listing=listing,
+                      group=group)
 
-    # Now let's create the rent payments based off the house pay period
-    if listing.rent_due == 'monthly':
-        currentDate = listing.start_date
+        session.add(house)
+        session.commit()
 
-        for user in house.tenants:
-            while currentDate < listing.end_date:
-            	dateDue = currentDate.replace(day=1)
+        # Now let's create the rent payments based off the house pay period
+        if listing.rent_due == 'monthly':
+            logger.debug('Creating monthly rents')
 
-            	newRent = Rent(house, user, dateDue)
-            	# session.add(newRent)
-            	session.commit()
-            	pass
+            for user in house.tenants:
+                currentDate = listing.start_date
+                logger.debug('Creating rent records for user %r' % user)
+                while currentDate < listing.end_date:
+                    dateDue = currentDate.replace(day=1)
 
+                    logger.debug('Rent for %r' % dateDue)
+
+                    newRent = Rent(house, user, dateDue, listing.price_per_month)
+                    session.add(newRent)
+                    session.commit()
+
+                    currentDate = add_months(currentDate, 1)
+                    pass
+
+        else:
+            logger.debug('Creating semester rents')
+            for user in house.tenants:
+                firstSemesterRent = Rent(house, user, listing.first_semester_rent_due_date, listing.price_per_semester)
+                session.add(firstSemesterRent)
+
+                secondSemesterRent = Rent(house, user, listing.second_semester_rent_due_date, listing.price_per_semester)
+                session.add(secondSemesterRent)
+
+                session.commit()
+
+        return house
     else:
-    	for user in house.tenants:
-    		firstSemesterRent = Rent(house, user, listing.first_semester_rent_due_date)
-    		session.add(firstSemesterRent)
-
-    		secondSemesterRent = Rent(house, user, listing.second_semester_rent_due_date)
-    		session.add(secondSemesterRent)
-
-    		session.commit()
-
-    return house
-
+        return None

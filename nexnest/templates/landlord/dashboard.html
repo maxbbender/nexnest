@@ -60,7 +60,7 @@
         	    </li>
         	    <li class="nav-item">
         	        <a class="nav-link left-panel" style="padding-left: 5px;" id="paymentTab2" data-toggle="tab" href="#paymentTab" role="tab">
-        	        	<i class="fa fa-usd" aria-hidden="true"></i><span class="hidden-md-down">Payment Portal</span>
+        	        	<i class="fa fa-usd" aria-hidden="true"></i><span class="hidden-md-down">Rent Collect</span>
         	        </a>
         	    </li>
         	    <li class="nav-item">
@@ -842,8 +842,272 @@
 		        	</div>
 		        </div>
 		    </div>
-	        <div class="tab-pane" id="paymentTab" role="tabpanel">
-	            Payment Portal
+	        <div class="tab-pane" id="paymentTab" role="tabpanel" style="padding: 0px;">
+	            <div class="row">
+			    	<div class="col-xs-1"></div>
+			    	<div class="col-xs-10" style="width: 100%">
+				    	<div class="callout-block text-center fade-in-b">
+				    		<h1 style="font-size: 3.5vh;" class="hidden-xs-down">Rent Collection</h1>
+				    		<h1 style="font-size: 3.5vh;" class="hidden-sm-up">Rent</h1>
+				    	</div>
+			    	</div>
+			    </div>
+		    	<br>
+		    	<div class="row">
+		        	<div class="col-xs-0 col-md-1"></div>
+		        	<div class="col-xs-12 col-md-10 col-lg-10 col-xl-10" style="padding-left: 15px;">
+		        	    <div class="row">
+		        	        <div class="card" style="width:100%; border: none;">
+		        	            <div class="card-block">
+		        	                <ul class="nav nav-tabs">
+		        	                    <li class="nav-item">
+		        	                        <a class="nav-link tab-selector first-tab active" id="outStandingRent2" data-toggle="tab" href="#outStandingRentTab" role="tab" style="font-size: 2.0vh;">Outstanding Payments</a>
+		        	                    </li>
+		        	                    <li class="nav-item">
+		        	                        <a class="nav-link tab-selector" id="allRent2" data-toggle="tab" href="#allRentTab" role="tab" style="font-size: 2.0vh;">All Payments</a>
+		        	                    </li>
+		        	                </ul>
+		        	                <br>
+		        	                <div class="tab-content">
+		        	                    <div class="tab-pane selected-tab first-tab active" id="outStandingRentTab" role="tabpanel" style="padding: 0px;">
+		        	                    	{% if currentHouses|length > 0 %}
+		        	                            {% for house in currentHouses %}
+		        	                            	<div class="row">
+		        	                            		<div class="col-xs-12" style="width: 100%;">
+		        	                            			<div class="card">
+		        	                            				<div class="card-header">
+		        	                            					<div class="row">
+		        	                            						<div class="col-xs-12">   
+	        	                            								<div class="row">
+	        	                            									<div class="col-xs-1">
+	        	                            										{% if house.listing.property_type == "house" %}
+	        	                            											<img src="/static/img/housePin.png" style="height: 80px;">
+	        	                            										{% elif house.listing.property_type == "apartment" %}
+	        	                            											<img src="/static/img/apartmentPin.png" style="height: 80px;">
+	        	                            										{% else %}
+	        	                            											<img src="/static/img/complexPin.png" style="height: 80px;">
+	        	                            										{% endif %}
+	        	                            									</div>
+	        	                            									<div class="col-xs-6">
+	        	                            										<a href="{{ url_for('houses.view', id=house.listing.id) }}">
+													                    				<h3 style="font-size: 3.5vh; margin-bottom: -15px;"><strong>{{ house.listing.street }}</h3>
+													                    				<h4>{{ house.listing.city }} {{ house.listing.state }}</strong></h4>
+													                    			</a>
+													                    		</div>
+													                    		<div class="col-xs-5">
+													                    			Stats Go Here
+													                    		</div>
+											                    			</div>
+											                    		</div>
+											                    	</div>
+											                    </div>
+											                    <div class="card-block">
+												                    <div class="row">
+												                    	<div class="col-xs-1">
+									        	                    	</div>
+									        	                    	<div class="col-xs-11">
+									        	                    		<div class="row" style="padding-bottom: 15px;">
+									        	                    			<div class="col-xs-12">
+											        	                    		<div class="upcomingPaymentsToggle" style="color:#5686c5; cursor: pointer;">
+											        	                    			<i id="upcomingPaymentsIcon" class="fa fa-chevron-circle-down" aria-hidden="true"></i>
+											        	                    			Upcoming Payments (within 30 days)
+											        	                    		</div>
+											        	                    	</div>
+											        	                    </div>
+										        	                    	<div class="row" style="padding-left: 15px;">
+									        	                    			<div class="col-xs-12">
+											        	                    		<div class="upcomingPaymentsDisplay">
+											        	                    			<div class="row" style="height: 35px;">
+											        	                    				<div class="col-xs-1">
+												        	                    				<div class="form-group">
+												        	                    				    <div class="checkbox">
+												        	                    				        <label style="font-size: 1.5em">
+												        	                    				            <input id="rentID" class="form-check-input" type="checkbox">
+												        	                    				            <span class="cr"><i class="cr-icon fa fa-check fa-2x" style="color: green;"></i></span>
+												        	                    				        </label>
+												        	                    				    </div>
+												        	                    				</div>
+												        	                    			</div>
+												        	                    			<div class="col-xs-2 col-lg-1">
+												        	                    				8/12/17
+												        	                    			</div>
+												        	                    			<div class="col-xs-5" style="padding-left: 25px;">
+												        	                    				<strong>Alex Czechhowski</strong>
+												        	                    			</div>
+												        	                    			<div class="col-xs-4">
+												        	                    				<span style="color: green;">$600.95</span>
+												        	                    			</div>
+											        	                    			</div>
+											        	                    			<div class="row" style="height: 35px;">
+											        	                    				<div class="col-xs-1">
+												        	                    				<div class="form-group">
+												        	                    				    <div class="checkbox">
+												        	                    				        <label style="font-size: 1.5em">
+												        	                    				            <input id="rentID" class="form-check-input" type="checkbox">
+												        	                    				            <span class="cr"><i class="cr-icon fa fa-check fa-2x" style="color: green;"></i></span>
+												        	                    				        </label>
+												        	                    				    </div>
+												        	                    				</div>
+												        	                    			</div>
+												        	                    			<div class="col-xs-2 col-lg-1">
+												        	                    				8/12/17
+												        	                    			</div>
+												        	                    			<div class="col-xs-5" style="padding-left: 25px;">
+												        	                    				<strong>Alex Czechhowski</strong>
+												        	                    			</div>
+												        	                    			<div class="col-xs-4">
+												        	                    				<span style="color: green;">$600.95</span>
+												        	                    			</div>
+											        	                    			</div>
+											        	                    		</div>
+											        	                    	</div>
+									        	                    		</div>
+									        	                    	</div>
+												                    </div>
+												                    <div class="row">
+												                    	<div class="col-xs-1">
+									        	                    	</div>
+									        	                    	<div class="col-xs-11">
+									        	                    		<div class="row" style="padding-bottom: 15px;">
+									        	                    			<div class="col-xs-12">
+											        	                    		<div class="futurePaymentsToggle" style="color:#5686c5; cursor: pointer;">
+											        	                    			<i id="futurePaymentsIcon" class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+											        	                    			Future Payments
+											        	                    		</div>
+											        	                    	</div>
+											        	                    </div>
+										        	                    	<div class="row" style="padding-left: 15px;">
+									        	                    			<div class="col-xs-12">
+											        	                    		<div class="futurePaymentsDisplay" style="display: none;">
+											        	                    			<div class="row" style="height: 35px;">
+											        	                    				<div class="col-xs-1">
+												        	                    				<div class="form-group">
+												        	                    				    <div class="checkbox">
+												        	                    				        <label style="font-size: 1.5em">
+												        	                    				            <input id="rentID" class="form-check-input" type="checkbox">
+												        	                    				            <span class="cr"><i class="cr-icon fa fa-check" style="color: green;"></i></span>
+												        	                    				        </label>
+												        	                    				    </div>
+												        	                    				</div>
+												        	                    			</div>
+												        	                    			<div class="col-xs-2">
+												        	                    				8/12/17
+												        	                    			</div>
+												        	                    			<div class="col-xs-3">
+												        	                    				<strong>Alex Czechhowski</strong>
+												        	                    			</div>
+												        	                    			<div class="col-xs-3">
+												        	                    				<span style="color: green;">$600.95</span>
+												        	                    			</div>
+											        	                    			</div>
+											        	                    			<div class="row">
+											        	                    				<div class="col-xs-1">
+												        	                    				<div class="form-group">
+												        	                    				    <div class="checkbox">
+												        	                    				        <label style="font-size: 1.5em">
+												        	                    				            <input id="rentID" class="form-check-input" type="checkbox">
+												        	                    				            <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+												        	                    				        </label>
+												        	                    				    </div>
+												        	                    				</div>
+												        	                    			</div>
+												        	                    			<div class="col-xs-2">
+												        	                    				8/12/17
+												        	                    			</div>
+												        	                    			<div class="col-xs-3">
+												        	                    				<strong>Alex Czechhowski</strong>
+												        	                    			</div>
+												        	                    			<div class="col-xs-3">
+												        	                    				<span style="color: green;">$600.95</span>
+												        	                    			</div>
+											        	                    			</div>
+											        	                    		</div>
+											        	                    	</div>
+									        	                    		</div>
+									        	                    	</div>
+												                    </div>
+												                    <div class="row">
+												                    	<div class="col-xs-1">
+									        	                    	</div>
+									        	                    	<div class="col-xs-11">
+									        	                    		<div class="row" style="padding-bottom: 15px;">
+									        	                    			<div class="col-xs-12">
+											        	                    		<div class="pastPaymentsToggle" style="color:#5686c5; cursor: pointer;">
+											        	                    			<i id="pastPaymentsIcon" class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+											        	                    			Past Payments
+											        	                    		</div>
+											        	                    	</div>
+											        	                    </div>
+										        	                    	<div class="row" style="padding-left: 15px;">
+									        	                    			<div class="col-xs-12">
+											        	                    		<div class="pastPaymentsDisplay" style="display: none;">
+											        	                    			<div class="row" style="height: 35px;">
+											        	                    				<div class="col-xs-1">
+												        	                    				<div class="form-group">
+												        	                    				    <div class="checkbox">
+												        	                    				        <label style="font-size: 1.5em">
+												        	                    				            <input id="rentID" class="form-check-input" type="checkbox">
+												        	                    				            <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+												        	                    				        </label>
+												        	                    				    </div>
+												        	                    				</div>
+												        	                    			</div>
+												        	                    			<div class="col-xs-2">
+												        	                    				8/12/17
+												        	                    			</div>
+												        	                    			<div class="col-xs-3">
+												        	                    				<strong>Alex Czechhowski</strong>
+												        	                    			</div>
+												        	                    			<div class="col-xs-3">
+												        	                    				<span style="color: green;">$600.95</span>
+												        	                    			</div>
+											        	                    			</div>
+											        	                    			<div class="row">
+											        	                    				<div class="col-xs-1">
+												        	                    				<div class="form-group">
+												        	                    				    <div class="checkbox">
+												        	                    				        <label style="font-size: 1.5em">
+												        	                    				            <input id="rentID" class="form-check-input" type="checkbox">
+												        	                    				            <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+												        	                    				        </label>
+												        	                    				    </div>
+												        	                    				</div>
+												        	                    			</div>
+												        	                    			<div class="col-xs-2">
+												        	                    				8/12/17
+												        	                    			</div>
+												        	                    			<div class="col-xs-3">
+												        	                    				<strong>Alex Czechhowski</strong>
+												        	                    			</div>
+												        	                    			<div class="col-xs-3">
+												        	                    				<span style="color: green;">$600.95</span>
+												        	                    			</div>
+											        	                    			</div>
+											        	                    		</div>
+											        	                    	</div>
+									        	                    		</div>
+									        	                    	</div>
+												                    </div>
+											                    </div>
+											                </div>
+										                </div>
+									                </div>
+			            						{% endfor %}
+		            						{% else %}
+		            							<div class="alert alert-info" role="alert">
+		            								<strong>No Currently Booked Listings</strong>
+		            							</div>
+		            						{% endif %}
+		        	                    </div>
+		        	                    <div class="tab-pane selected-tab" id="allRentTab" role="tabpanel" style="padding: 0px;">
+
+		        	                    </div>
+		        	                </div>
+		        	            </div>
+		        	        </div>
+		        	    </div>
+		        	</div>
+		        </div>
 	        </div>
 	        <div class="tab-pane" id="availabilityTab" role="tabpanel">
 	            <div class="row">
@@ -1008,7 +1272,7 @@
 	//Code for navigating tabs
 	var validMainTabs = ["occupiedListingsTab", "unOccupiedListingsTab", "toursTab", "requestsTab", "maintenanceTab", "paymentTab", "checkoutTab", "availabilityTab"];
 	var validSecondTabs = ["currentlyOccupiedTab", "willBeOccupiedTab", "scheduledToursTab", "requestedToursTab", "unacceptedTab", "acceptedTab", 
-	"newMaintenanceTab", "inProgressMaintenanceTab", "completedMaintenanceTab"];
+	"newMaintenanceTab", "inProgressMaintenanceTab", "completedMaintenanceTab", "outStandingRentTab", "allRentTab"];
 	var hash = document.location.hash;
 	hash = hash.substr(1);
 	if(!hash){
@@ -1076,8 +1340,39 @@
 	});
 
 	
+	//Rent collection Tab
+	$(".upcomingPaymentsToggle").click(function(event){
+    	$(".upcomingPaymentsDisplay").toggle();
+    	if ($('#upcomingPaymentsIcon').hasClass('fa-chevron-circle-right')) {
+    		$("#upcomingPaymentsIcon").removeClass("fa-chevron-circle-right");
+    		$("#upcomingPaymentsIcon").addClass("fa-chevron-circle-down");
+    	}else{
+    		$("#upcomingPaymentsIcon").removeClass("fa-chevron-circle-down");
+    		$("#upcomingPaymentsIcon").addClass("fa-chevron-circle-right");
+    	}    	
+    });
 
-	
+    $(".futurePaymentsToggle").click(function(event){
+    	$(".futurePaymentsDisplay").toggle();
+    	if ($('#futurePaymentsIcon').hasClass('fa-chevron-circle-right')) {
+    		$("#futurePaymentsIcon").removeClass("fa-chevron-circle-right");
+    		$("#futurePaymentsIcon").addClass("fa-chevron-circle-down");
+    	}else{
+    		$("#futurePaymentsIcon").removeClass("fa-chevron-circle-down");
+    		$("#futurePaymentsIcon").addClass("fa-chevron-circle-right");
+    	}    	
+    });
+
+    $(".pastPaymentsToggle").click(function(event){
+    	$(".pastPaymentsDisplay").toggle();
+    	if ($('#pastPaymentsIcon').hasClass('fa-chevron-circle-right')) {
+    		$("#pastPaymentsIcon").removeClass("fa-chevron-circle-right");
+    		$("#pastPaymentsIcon").addClass("fa-chevron-circle-down");
+    	}else{
+    		$("#pastPaymentsIcon").removeClass("fa-chevron-circle-down");
+    		$("#pastPaymentsIcon").addClass("fa-chevron-circle-right");
+    	}    	
+    });
 	
 
 	/**
@@ -3433,7 +3728,7 @@
 	        			                    <div class="card-block">
 	        				                    <div class="row">
 	        				                    	<div class="hidden-md-down col-lg-4">`;
-	        				                    		if(listing.bannerPhotoURL == ""){						
+	        				                    		if(listing.bannerPhotoURL == null){						
 	        				                    			nextHouse += `<img src="/static/img/defaultHouse.png" class="listingImg">`;
 	        				                    		}
 	        				                    		else{
@@ -3622,6 +3917,8 @@
         });
         getTourRequestsJSON();
     }
+
+
 
 </script>
 {% endblock %}

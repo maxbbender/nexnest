@@ -1,0 +1,31 @@
+<div class="modal fade" id="sendDirectMessageModal" tabindex="-1" role="dialog" aria-labelledby="report" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3 id="directMessage" style="color: #50ae82;"><strong class="modal-title"></strong></h3>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        {% from "_formhelpers.html" import render_field %}
+                        <form action="{{url_for('users.createDirectMessage')}}" method='POST'>
+                            <dl>
+                                {{dmForm.csrf_token}}
+                                {{dmForm.target_user_id}}
+                                {{dmForm.content(class="form-control", type="text", required="required", rows="5", placeholder="Type Message")}}
+                            </dl>
+                            <div class="row">
+                                <div class="col-xs-12" style="text-align: right;">
+                                    <input type='submit' value='Send Message' class="btn btn-primary">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

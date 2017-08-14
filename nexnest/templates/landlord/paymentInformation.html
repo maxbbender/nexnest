@@ -4,12 +4,7 @@
 <form method="POST" action="{{url_for('landlords.createPaymentAcocunt')}}">
     {{form.csrf_token}}
     {{render_field(form.legalBusinessName, class="form-control", type="text") }}
-    {{render_field(form.dbaBusinessName, class="form-control", type="text") }}
     {{render_field(form.taxID, class="form-control", type="text") }}
-    {{render_field(form.businessStreet, class="form-control", type="text") }}
-    {{render_field(form.businessCity, class="form-control", type="text") }}
-    {{render_field(form.businessZip, class="form-control", type="text") }}
-    {{render_field(form.businessState, class="form-control")}}
     {{render_field(form.accountNumber, class="form-control")}}
     {{render_field(form.routingNumber, class="form-control")}}
     <input type="submit" value="Create Payment Account">

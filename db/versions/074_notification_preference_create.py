@@ -1,6 +1,5 @@
-from sqlalchemy import *
 from migrate import *
-
+from sqlalchemy import *
 
 meta = MetaData()
 # Column('XXXX', String(120)),
@@ -47,7 +46,11 @@ notificationPreference = Table('notification_preferences', meta,
                                Column('group_listing_accept_notification', Boolean()),
                                Column('group_listing_accept_email', Boolean()),
                                Column('group_listing_deny_notification', Boolean()),
-                               Column('group_listing_deny_email', Boolean()))
+                               Column('group_listing_deny_email', Boolean()),
+                               Column('group_user_completed_notification', Boolean()),
+                               Column('group_user_completed_email', Boolean()),
+                               Column('group_listing_favorite_notification', Boolean()),
+                               Column('group_listing_favorite_email', Boolean()))
 
 # Column('group_listing_completed_notification', Boolean()),
 # Column('group_listing_completed_email', Boolean())
@@ -57,20 +60,20 @@ def upgrade(migrate_engine):
     meta.bind = migrate_engine
     notificationPreference.create()
 
-    users = Table('users', meta, autoload=True)
-    ForeignKeyConstraint(
-        columns=[notificationPreference.c.user_id],
-        refcolumns=[users.c.id]).create()
+    # users = Table('users', meta, autoload=True)
+    # ForeignKeyConstraint(
+    #     columns=[notificationPreference.c.user_id],
+    #     refcolumns=[users.c.id]).create()
     pass
 
 
 def downgrade(migrate_engine):
     meta.bind = migrate_engine
 
-    users = Table('users', meta, autoload=True)
-    ForeignKeyConstraint(
-        columns=[notificationPreference.c.user_id],
-        refcolumns=[users.c.id]).drop()
+    # users = Table('users', meta, autoload=True)
+    # ForeignKeyConstraint(
+    #     columns=[notificationPreference.c.user_id],
+    #     refcolumns=[users.c.id]).drop()
 
     notificationPreference.drop()
     pass

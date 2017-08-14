@@ -1,30 +1,47 @@
 {% extends "base.html" %}
 {% block content %}
-	<br>
-	<div class="row justify-content-md-center">
-		<div class="col-xs-12 ">
-			{% if users|length == 0 %}
-				<div class="alert alert-info" role="alert" style="text-align: center;">
-				  <strong>You do not have any direct messages yet!</strong> You can message users from their profile page
+<div class="row">
+	<div class="col-xs-0 col-lg-2"></div>
+	<div class="col-xs-12 col-lg-8">
+		<h1 style="color: #fea700; font-size: 50px;"><strong>Direct Messages</strong></h1>
+		{% if directMessages|length > 0 %}
+			{% for message in directMessages %}
+				{% if current_user.id == message.user.id %}
+					<a href="{{url_for('users.directMessagesIndividual', userID=message.target_user.id)}}" style="text-decoration: none; color: #5686c5;">
+				{% else %}
+					<a href="{{url_for('users.directMessagesIndividual', userID=message.user.id)}}" style="text-decoration: none; color: #5686c5;">
+				{% endif %}
+				<div class="card" style="width: 100%; border-color: #50ae82; border-width: thick; margin-bottom: -22px;">
+				    <div class="card-block" style="padding-bottom: 0px;">
+				        <div class="row" style="min-height: 100px; padding-bottom: 20px;">
+				            <div class="hidden-xs-down col-sm-3 col-md-3 col-lg-3 col-xl-2" style="height: 100px;">
+				            	{% if current_user.id == message.user.id %}
+				                	<img src="{{message.target_user.profile_image}}" alt="Profile Image" class="img-responsive" style="height: 100px; width: 100px;" />
+				                {% else %}
+				                	<img src="{{message.user.profile_image}}" alt="Profile Image" class="img-responsive" style="height: 100px; width: 100px;" />
+				                {% endif %}
+				            </div>
+				            <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9 col-xl-10">
+				                <div class="row">
+				                    <h5 class="card-title">
+				                    	{% if current_user.id == message.user.id %}
+				                        	{{ message.target_user.name }}
+				                        {% else %}
+				                        	{{ message.user.name }}
+				                        {% endif %}
+				                        <span class="text-muted small timeago">{{ message.date_created }}</span>
+				                    </h5>
+				                </div>
+				                <div class="row">
+				                    <p class="card-text">{{ message.content }}</p>
+				                </div>
+				            </div>
+				        </div>
+				    </div>
 				</div>
-			{% endif %}
-		</div>
+				<br>
+			{% endfor %}
+		{% endif %}
 	</div>
-	<div class="row m-x-auto">
-		<div class="col-xs-0 col-lg-4">
-		</div>
-		<div class="col-xs-12 col-lg-4">
-			{% if users %}
-			<div class="row">
-				<h1>My Conversations:</h1>
-			</div>
-			<div class="row">
-				{% for user in users %}
-					{% include "user/directMessageUser.html" %}
-				{% endfor %}
-			</div>
-			<br>
-			{% endif %}
-		</div>
-	</div>
+</div>
 {% endblock %}

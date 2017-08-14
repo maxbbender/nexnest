@@ -1,17 +1,15 @@
 from datetime import datetime as dt
 
-from sqlalchemy.orm import relationship
-
 from flask import flash, render_template, url_for
-
-from nexnest import logger, app
+from nexnest import app, logger
 from nexnest.application import db, session
-from nexnest.utils.password import hash_password
-from nexnest.utils.email import send_email
-from nexnest.models.group_user import GroupUser
 from nexnest.models.group_listing import GroupListing
-from nexnest.models.notification import Notification
+from nexnest.models.group_user import GroupUser
 from nexnest.models.landlord import Landlord
+from nexnest.models.notification import Notification
+from nexnest.utils.email import send_email
+from nexnest.utils.password import hash_password
+from sqlalchemy.orm import relationship
 
 from .base import Base
 
@@ -48,9 +46,11 @@ class User(Base):
     landlord = relationship('Landlord', backref='user')
     securityDeposits = relationship("SecurityDeposit", backref='user')
     maintenanceRequests = relationship("Maintenance", backref='user')
-    notifications = relationship("Notification", backref='user', lazy="dynamic")
+    notifications = relationship(
+        "Notification", backref='user', lazy="dynamic")
     messages = relationship('Message', backref='user')
-    groupListingFavorites = relationship('GroupListingFavorite', backref='user')
+    groupListingFavorites = relationship(
+        'GroupListingFavorite', backref='user')
     transactions = relationship('Transaction', backref='user')
     notificationPreference = relationship('NotificationPreference',
                                           uselist=False, back_populates='user')
@@ -91,7 +91,9 @@ class User(Base):
         self.dob = dob
 
         if role is None:
-            role = 'user'
+            self.role = 'user'
+        else:
+            self.role = role
 
         if profile_image is None:
             self.profile_image = "https://api.adorable.io/avatars/120/" + self.username
@@ -229,6 +231,7 @@ class User(Base):
 
         if group_user is not None:
             group_user.accepted = True
+            group_user.genCompletedNotifications()
             session.commit()
             flash("Group invite accepted", 'info')
         else:
@@ -311,24 +314,101 @@ class User(Base):
             .distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed) \
             .count()
 
+    # Icon , Message , Title
     def sendEmail(self, emailType, message):
         logger.debug('User.sendEmail()')
         logger.debug('EmailType %s' % emailType)
+        icon, title, subject = None, None, None
+
+        if emailType == 'tourRequest':
+            icon = 'calendar'
+            title = 'tour request'
+            subject = 'Tour Request'
+
+        elif emailType == 'tourConfirmed':
+            icon = 'calendar'
+            title = 'tour request approved'
+            subject = 'Tour Request Approved'
+
+        elif emailType == 'tourDenied':
+            icon = 'calendar'
+            title = 'tour request update'
+            subject = 'Tour Request Update'
+
+        elif emailType == 'tourTimeChange':
+            icon = 'calendar'
+            title = 'new tour time request'
+            subject = 'Tour Request Update'
+
+        elif emailType == 'maintenanceCreate':
+            icon = 'wrench'
+            title = 'maintenance request'
+            subject = 'Maintenance Request'
+
+        elif emailType == 'maintenanceInProgress':
+            icon = 'wrench'
+            title = 'maintenance request'
+            subject = 'Maintenance Request Update'
+
+        elif emailType == 'maintenanceCompleted':
+            icon = 'wrench'
+            title = 'maintenance request'
+            subject = 'Maintenance Request Update'
+
+        elif emailType == 'maintenanceMessage':
+            icon = 'comments'
+            title = 'new message | maintenance'
+            subject = 'Maintenance Message'
+
+        elif emailType == 'groupListingCreate':
+            icon = 'home'
+            title = 'house request'
+            subject = 'House Request'
+
+        elif emailType == 'groupListingDenied':
+            icon = 'times-circle'
+            title = 'housing request denied'
+            subject = 'House Request Update'
+
+        elif emailType == 'groupListingAccepted':
+            icon = 'check'
+            title = 'housing request approved'
+            subject = 'House Request Update'
+
+        elif emailType == 'groupUserCompleted':
+            icon = 'user'
+            title = 'new group user'
+            subject = 'Group Update'
+
+        elif emailType == 'groupListingFavorite':
+            icon = 'thumbs-up'
+            title = 'Listing Favorite'
+            subject = 'Listing Favorite'
+
+        send_email(subject='NexNest - %s' % subject,
+                   sender='no_reply@nexnest.com',
+                   recipients=[self.email],
+                   html_body=render_template('email/emailTemplate.html',
+                                             user=self,
+                                             messageContent=message,
+                                             icon=icon,
+                                             messageType=title))
+
         # fullMessage = None
-        if emailType == 'message':
-            send_email(subject='NexNest - New Message',
-                       sender='no_reply@nexnest.com',
-                       recipients=[self.email],
-                       html_body=render_template('email/newMessage.html',
-                                                 user=self,
-                                                 message=message))
-        elif emailType == 'generic':
-            send_email(subject='NexNest - New Message',
-                       sender='no_reply@nexnest.com',
-                       recipients=[self.email],
-                       html_body=render_template('email/generic.html',
-                                                 user=self,
-                                                 message=message))
+        # if emailType == 'message':
+        #     send_email(subject='NexNest - New Message',
+        #                sender='no_reply@nexnest.com',
+        #                recipients=[self.email],
+        #                html_body=render_template('email/newGroupMessageEmail.html',
+        #                                          user=self,
+        #                                          message=message))
+        # elif emailType == 'generic':
+        #     send_email(subject='NexNest - New Message',
+        #                sender='no_reply@nexnest.com',
+        #                recipients=[self.email],
+        #                html_body=render_template('email/generic.html',
+        #                                          user=self,
+        #                                          message=message))
 
     def isEditableBy(self, user, toFlash=False):
         if user.id == self.id:

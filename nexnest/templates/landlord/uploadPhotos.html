@@ -17,7 +17,7 @@
                         <h3><strong>Other photos of the property. (Up to 15)</strong></h3>
                         <div class="row" style="width: 100%;">
                             <div class="form-group" style="width: 100%;">
-                                {{form.pictures(class='form-control file-loading', multiple='', required='required')}}
+                                {{form.pictures(class='form-control file-loading', multiple='')}}
                             </div>
                         </div>
                         {{form.nextAction}}
@@ -99,11 +99,14 @@
         initialPreviewFileType: 'image', // image is the default and can be overridden in config below
         initialPreviewConfig: [
             {% for picture in picturePaths %}
-                {caption: "Picture 1", size: 827000, width: "120px", url: "/listing/delete/{{picture}}", key: 1},
+                {caption: "Picture", size: 827000, width: "120px", url: "/listing/delete/{{picture}}", key: 1},
             {% endfor %}
         ]
     }).on('filesorted', function(e, params) {
     console.log('File sorted params', params);
     });
+
+    window.onbeforeunload = function() { return "Do not go back and edit the listing details you just made. Trying to do so can cause major issues. You can edit the listing after you upload photos"; };
+
 </script>
 {% endblock %}
