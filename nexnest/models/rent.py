@@ -32,6 +32,7 @@ class Rent(Base):
         self.user = user
         self.date_due = dateDue
         self.amount = amount
+        self.completed = False
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
