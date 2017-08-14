@@ -169,8 +169,7 @@
 				    </div>
 					<div class="col-xs-6 col-md-4">
 						<select class="form-control filterOption" id="sortBy" style="width: 100%;">
-				        	<option disabled selected>Sort By</option>
-				          	<option value="priceLowToHigh">Low to High</option>
+				          	<option value="priceLowToHigh" selected>Low to High</option>
 				          	<option value="priceHighToLow">High to Low</option>
 				          	<option value="mostRecent">Recent</option>
 				          	<option value="distanceToCampusMiles" value="default">Distance To Campus</option>
@@ -459,6 +458,10 @@
     	    	displayListings(data.listings, data.featuredListings);
     	    	console.log(data.school.lat);
     	    	console.log(data.school.lng);
+    	    	schoolName = $("#school option:selected").text().replace(/[0-9]/g, '').replace(/\s/g, '');
+    	    	icons.school['name'] = schoolName;
+    	    	icons.school['icon'] = iconBase + schoolName.toLowerCase()+ '_pin_45.png';
+    	    	console.log("schoolname: " + schoolName);
     	    	mapUpdate(data.listings, data.featuredListings, data.school.lat, data.school.lng);
     	    	$.ajax({
     	    		url: '/listings/getAddresses/'+filters.school,
@@ -583,7 +586,7 @@
 	    	    	}, 1000);
 	    	    	displayListings(data.listings, data.featuredListings);
 	    	    	//call map init with lat, lng of school
-	    	    	schoolName = $("#school2 option:selected").text();
+	    	    	schoolName = $("#school2 option:selected").text().replace(/[0-9]/g, '').replace(/\s/g, '');
 	    	    	icons.school['name'] = schoolName;
 	    	    	icons.school['icon'] = iconBase + schoolName.toLowerCase()+ '_pin_45.png';
 	    	    	console.log("schoolname: " + schoolName);
@@ -854,7 +857,8 @@
   	  	       div.innerHTML = '<img src="' + icon + '"> ' + name;
   	  	       legend.appendChild(div);
   	  	    }
-  	  		map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);		
+  	  		map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+  	  		google.maps.event.trigger(map, "resize");
   	  		//mapUpdate();  		 		
   	}
 
@@ -895,6 +899,8 @@
   		addMarker(99999, lat, long, "school", "");
   		//this fixed display issue
   		$("#map").css('position', 'fixed');
+  		console.log('try resize');
+  		google.maps.event.trigger(map, "resize");
   	}	
 
   	function addMarker(id, lat, long, type, info){
@@ -910,7 +916,8 @@
   				new google.maps.InfoWindow({content: info}).open(map, marker);
   			});
   		}
-  		markers.push(marker);  
+  		markers.push(marker);
+  		google.maps.event.trigger(map, "resize");
   	}
   	// Removes the markers from the map, preps for refresh   
   	function clearMarkers(id) { 
