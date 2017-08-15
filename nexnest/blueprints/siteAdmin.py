@@ -1,3 +1,4 @@
+
 from flask import (Blueprint, abort, flash, jsonify, render_template, request,
                    url_for)
 from flask_login import current_user, login_required
@@ -46,7 +47,9 @@ def createCoupon():
                                    unlimited=True)
                 session.add(newCoupon)
                 session.commit()
-                flash('Cpupon Created!', 'success')
+
+                flash('Coupon Created!', 'success')
+
 
             else:
                 newCoupon = Coupon(percentage_off=form.percentageOff.data,
@@ -55,7 +58,8 @@ def createCoupon():
                                    uses=form.uses.data)
                 session.add(newCoupon)
                 session.commit()
-                flash('Cpupon Created!', 'success')
+
+                flash('Coupon Created!', 'success')
         else:
             flash('Coupon already exists', 'danger')
             return form.redirect()
@@ -80,8 +84,8 @@ def randomCouponKey():
         keyCount = session.query(Coupon).filter_by(
             coupon_key=newRandomKey).count()
 
-    return jsonify({'couponKey': newRandomKey})
 
+    return jsonify({'couponKey': newRandomKey})
 
 @siteAdmin.route('/allCoupons', methods=['GET'])
 @login_required
@@ -122,8 +126,6 @@ def deleteCoupon(couponID):
             flash('Coupon Deleted', 'success')
 
     return redirect(url_for('siteAdmin.siteAdminDashboard'))
-
-
 @siteAdmin.route('/searchUsers/lastName/<lastName>')
 @login_required
 def searchUsersByLastName(lastName):

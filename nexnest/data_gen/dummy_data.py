@@ -526,6 +526,38 @@ listing3.show = False
 
 session.commit()
 
+# Rent
+for house in house.House.query.all():
+    listing = house.listing
+    if listing.rent_due == 'monthly':
+        logger.debug('Creating monthly rents')
+
+        for user in house.tenants:
+            currentDate = listing.start_date
+            logger.debug('Creating rent records for user %r' % user)
+            while currentDate < listing.end_date:
+                dateDue = currentDate.replace(day=1)
+
+                logger.debug('Rent for %r' % dateDue)
+
+                newRent = rent.Rent(house, user, dateDue, listing.price_per_month)
+                session.add(newRent)
+                session.commit()
+
+                currentDate = add_months(currentDate, 1)
+                pass
+
+    else:
+        logger.debug('Creating semester rents')
+        for user in house.tenants:
+            firstSemesterRent = rent.Rent(house, user, listing.first_semester_rent_due_date, listing.price_per_semester)
+            session.add(firstSemesterRent)
+
+            secondSemesterRent = rent.Rent(house, user, listing.second_semester_rent_due_date, listing.price_per_semester)
+            session.add(secondSemesterRent)
+
+            session.commit()
+
 for user in group1AcceptedUsers:
     hnf = NotificationFactory(target_user=user,
                               notif_type='house',

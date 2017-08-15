@@ -205,6 +205,7 @@
             {% include 'loginModel.html' %}
         {% endif %}
         {% include 'platformReportModal.html' %}
+        {% include 'createDirectMessageModal.html' %}
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
         {% block scripts %}
         {% endblock %}
@@ -233,7 +234,6 @@
                    
                    $.each(notifications, function(index, message) {
                     if(message.category == "generic_message"){
-                        console.log(message);
                         var newNotification = `<a href="`+ message.redirectURL +`" id="`+ message.id +`" class="noti" data-redirect="`+ message.redirectURL +`" style="text-decoration: none;">`;
                             if(message.viewed == false){
                                 newNotification += `<li class="notification" style="background-color: aliceblue;">`;
@@ -367,35 +367,48 @@
             var currentMessagePage = 1;
 			//Login Modal
             $('#loginModal').on('show.bs.modal', function (event) {
-              var button = $(event.relatedTarget)
-              var modal = $(this)
-              modal.find('.modal-title').text('Sign In')
+              var button = $(event.relatedTarget);
+              var modal = $(this);
+              modal.find('.modal-title').text('Sign In');
             });
             //Password Change Modal
             $('#passwordChangeModal').on('show.bs.modal', function (event) {
-              var button = $(event.relatedTarget)
-              var modal = $(this)
-              modal.find('.modal-title').text('Change Password')
+              var button = $(event.relatedTarget);
+              var modal = $(this);
+              modal.find('.modal-title').text('Change Password');
             });
             //Avatar Change Modal
             $('#changeAvatarModal').on('show.bs.modal', function (event) {
-              var button = $(event.relatedTarget)
-              var modal = $(this)
-              modal.find('.modal-title').text('Change Profile Picture')
+              var button = $(event.relatedTarget);
+              var modal = $(this);
+              modal.find('.modal-title').text('Change Profile Picture');
             });
             //Platform Report
             $('#platformReportModal').on('show.bs.modal', function (event) {
-              var button = $(event.relatedTarget)
-              var modal = $(this)
+              var button = $(event.relatedTarget);
+              var modal = $(this);
               modal.find('.modal-title').text('Give us Your Feedback!');
               var url = window.location.href;
               $("#sourceURL").val(url);
             });
 
+            //Direct Message
+            $('#sendDirectMessageModal').on('show.bs.modal', function (event) {
+                console.log(event);
+              var button = $(event.relatedTarget);
+              var modal = $(this);
+              var target_name = $(event.relatedTarget).attr("data-targetname");
+              console.log(target_name);
+              modal.find('.modal-title').text('Send Direct Message to ' + target_name);
+              var target_user_id = $(event.relatedTarget).attr("data-targetID");
+              console.log(target_user_id);
+              $("#target_user_id").val(target_user_id);
+            });
+
             $(document).on('click','.noti', function (event) {
                 event.preventDefault();
-                var type = $(event.currentTarget).attr("data-type")
-                var redirect = $(event.currentTarget).attr("data-redirect")
+                var type = $(event.currentTarget).attr("data-type");
+                var redirect = $(event.currentTarget).attr("data-redirect");
                 $.ajax({
                     type: "GET",
                     url: "/notification/"+ event.currentTarget.id +"/read/AJAX",
