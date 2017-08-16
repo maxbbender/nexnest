@@ -358,7 +358,7 @@ class User(Base):
         elif emailType == 'maintenanceMessage':
             icon = 'comments'
             title = 'new message | maintenance'
-            subject = 'Maintenance Message'
+            subject = 'New Message - Maintenance Request'
 
         elif emailType == 'groupListingCreate':
             icon = 'home'
@@ -384,6 +384,26 @@ class User(Base):
             icon = 'thumbs-up'
             title = 'Listing Favorite'
             subject = 'Listing Favorite'
+
+        elif emailType == 'houseMessage':
+            icon = 'comments'
+            title = 'new message | house'
+            subject = 'New Message - House'
+
+        elif emailType == 'tourMessage':
+            icon = 'comments'
+            title = 'new message | tour'
+            subject = 'New Message - Tour'
+
+        elif emailType == 'directMessage':
+            icon = 'comments'
+            title = 'new message | direct'
+            subject = 'New Message - Direct'
+
+        elif emailType == 'groupMessage':
+            icon = 'comments'
+            title = 'new message | group'
+            subject = 'New Message - Group'
 
         send_email(subject='NexNest - %s' % subject,
                    sender='no_reply@nexnest.com',
