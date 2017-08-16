@@ -22,6 +22,17 @@ def markCompleted(rentID):
     return 'done'
 
 
+@rents.route('/rent/<rentID>/unCompleted')
+@login_required
+@rent_editable
+def markUnCompleted(rentID):
+    rent = Rent.query.filter_by(id=rentID).first()
+
+    rent.completed = False
+    session.commit()
+    return 'done'
+
+
 @rents.route('/rent/<rentID>/createTransaction')
 @login_required
 @rent_editable
