@@ -45,8 +45,8 @@ class TourMessage(Message):
                     session.commit()
 
                 if user.notificationPreference.tour_message_email:
-                    user.sendEmail(emailType='message',
-                                   message=self.content)
+                    user.sendEmail(emailType='tourMessage',
+                                   message=self.genEmailContent(user))
 
         for user in self.tour.listing.landLordsAsUsers():
             if user is not self.user:
@@ -58,5 +58,26 @@ class TourMessage(Message):
                     session.commit()
 
                 if user.notificationPreference.tour_message_email:
-                    user.sendEmail(emailType='message',
-                                   message=self.content)
+                    user.sendEmail(emailType='tourMessage',
+                                   message=self.genEmailContent(user))
+
+    def genEmailContent(self, user):
+        return """
+        <div class="row">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-10">
+                <span>Hi %s,</span>
+                <br><br>
+                <span>
+                    You have recieved a message in your tour request for %s.
+                    <br>
+                    <a href="https://nexnest.com/tour/view/%d">Click  here</a> to see the message and stay connected. Don't leave them hanging!
+                </span>
+                <br><br>
+            </div>
+        </div>
+        """ % (
+            user.name,
+            self.tour.listing.briefStreet,
+            self.tour_id
+        )

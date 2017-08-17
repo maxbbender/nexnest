@@ -1,4 +1,6 @@
 from datetime import datetime as dt
+from datetime import date
+
 
 from sqlalchemy import event
 from sqlalchemy.orm import relationship
@@ -7,6 +9,7 @@ from flask import flash
 
 from nexnest.application import db, session
 from nexnest.models.notification import Notification
+from nexnest.utils.misc import isWithin30Days
 
 from .base import Base
 
@@ -88,8 +91,8 @@ class House(Base):
                 session.commit()
 
             if user.notificationPreference.house_email:
-                user.sendEmail(emailType='generic',
-                               message='You have a new house! Review all the actions you can take including Paying Rent and making Maintenance Requests!')
+                user.sendEmail(emailType='house',
+                               message=self.genEmailAcceptedContent(user))
 
         for user in self.listing.landLordsAsUsers():
             if user.notificationPreference.house_notification:
@@ -100,8 +103,83 @@ class House(Base):
                 session.commit()
 
             if user.notificationPreference.house_email:
-                user.sendEmail(emailType='generic',
-                               message='You have a new house! This is where you will be able to recieve rent and see maintenance requests!')
+                user.sendEmail(emailType='house',
+                               message=self.genLandlordEmailAcceptedContent(user))
+
+    @property
+    def groupedRentPayments(self):
+        now = dt.now()
+        upcomingPayments = []
+        overduePayments = []
+        completedPayments = []
+        futurePayments = []
+
+        for rent in self.rent:
+
+            # Overdue Check
+            if not rent.completed:
+
+                if rent.date_due < now.date():
+                    overduePayments.append(rent)
+                    continue
+
+                if isWithin30Days(rent.date_due):
+                    upcomingPayments.append(rent)
+                    continue
+
+                futurePayments.append(rent)
+            else:
+                completedPayments.append(rent)
+
+        return upcomingPayments, overduePayments, futurePayments, completedPayments,
+
+    def genEmailAcceptedContent(self, user):
+        return """
+        <div class="row">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-10">
+                <span>Hi  %s ,</span>
+                <br><br>
+                <span>
+                    <strong>Congratulations!</strong> %s has approved your request to live at %s. Enjoy your new college nest!
+                    <br><br>
+                    Don't just tweet about it. Contact your landlord about putting down a deposit and signing your lease
+                    <br><br>
+                    Enjoy your %d school year!
+                </span>
+                <br><br>
+            </div>
+        </div>
+        """ % (
+            user.fname,
+            self.listing.landLordsAsUsers()[0].name,
+            self.listing.briefStreet,
+            self.listing.start_date.year
+        )
+
+    def genLandlordEmailAcceptedContent(self, user):
+        return """
+        <div class="row">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-10">
+                <span>Hi  %s ,</span>
+                <br><br>
+                <span>
+                    <strong>Congratulations!</strong> %s has approved your request to live at %s. Enjoy your new college nest!
+                    <br><br>
+                    Don't just tweet about it. Contact your landlord about putting down a deposit and signing your lease
+                    <br><br>
+                    Enjoy your %d school year!
+                </span>
+                <br><br>
+            </div>
+        </div>
+        """ % (
+            user.fname,
+            self.listing.landLordsAsUsers()[0].name,
+            self.listing.briefStreet,
+            self.listing.start_date.year
+        )
 
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument

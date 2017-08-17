@@ -42,6 +42,17 @@ class Rent(Base):
     def __repr__(self):
         return '<Rent ~ House %r | User %r>' % (self.house, self.user)
 
+    @property
+    def serialize(self):
+        return {
+            'house': self.house.serialize,
+            'user': self.user.serialize,
+            'date_due': self.date_due.strftime('%B-%d-%y'),
+            'amount': self.amount,
+            'date_created': self.date_created,
+            'date_modified': self.date_modified
+        }
+
     def isEditableBy(self, user, toFlash=True):
         if user == self.user or user in self.house.listing.landLordsAsUsers():
             return True

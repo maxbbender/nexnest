@@ -25,3 +25,14 @@ def add_months(sourcedate, months):
     month = month % 12 + 1
     day = min(sourcedate.day, calendar.monthrange(year, month)[1])
     return datetime.date(year, month, day)
+
+
+def isWithin30Days(date):
+    now = datetime.datetime.now()
+
+    nowPlus30Days = now + datetime.timedelta(30)
+
+    if date < nowPlus30Days.date() and date >= now.date():
+        return True
+
+    return False

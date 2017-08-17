@@ -56,8 +56,8 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     city = factory.LazyAttribute(lambda x: fake.city())
     state = factory.LazyAttribute(lambda x: fake.state_abbr())
     zip_code = factory.LazyAttribute(lambda x: fake.zipcode())
-    start_date = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
-    end_date = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
+    start_date = factory.LazyAttribute(lambda x: fake.future_date(end_date="+10d").strftime("%Y-%m-%d"))
+    end_date = factory.LazyAttribute(lambda x: fake.future_date(end_date="+1y").strftime("%Y-%m-%d"))
     num_bedrooms = FuzzyInteger(1, 6)
     price = FuzzyInteger(1000, 6000, 100)
     square_footage = FuzzyInteger(1000, 6000, 100)
@@ -82,10 +82,8 @@ class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):
     apartment_number = 2
     property_type = 'apartment'
     rent_due = 'semester'
-    first_semester_rent_due_date = factory.LazyAttribute(
-        lambda x: fake.date(pattern="%Y-%m-%d"))
-    second_semester_rent_due_date = factory.LazyAttribute(
-        lambda x: fake.date(pattern="%Y-%m-%d"))
+    first_semester_rent_due_date = factory.LazyAttribute(lambda x: fake.future_datetime(end_date="+10d").strftime("%Y-%m-%d"))
+    second_semester_rent_due_date = factory.LazyAttribute(lambda x: fake.future_datetime(end_date="+60d").strftime("%Y-%m-%d"))
     # monthly_rent_due_date = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
     electricity = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))
     internet = factory.LazyAttribute(lambda x: fake.boolean(chance_of_getting_true=50))

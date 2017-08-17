@@ -1,5 +1,28 @@
 {% extends 'base.html' %}
 {% block content %}
+<h1>Completed</h1>
+{% for payment in completedPayments %}
+{{payment.serialize}}
+{{payment}}
+{% endfor %}
+
+<h1>Overdue</h1>
+{% for payment in overduePayments %}
+{{payment.serialize}}
+{{payment}}
+{% endfor %}
+
+<h1>Future</h1>
+{% for payment in futurePayments %}
+{{payment.serialize}}
+{{payment}}
+{% endfor %}
+
+<h1>Upcoming</h1>
+{% for payment in upcomingPayments %}
+{{payment.serialize}}
+{{payment}}
+{% endfor %}
 <link href="{{url_for('static', filename='css/landlord/dashboardStyling.css')}}" rel="stylesheet">
 <div class="row">
     <div class="col-md-2 col-sm-2 col-xs-2 display-table-cell v-align box" id="navigation" style="height: inherit;">
