@@ -54,10 +54,9 @@ def landlordDashboard():
     unAcceptedHousingRequests, acceptedHousingRequests, completedHousingRequests = landlord.getHousingRequests()
     openMaintenanceRequests, inProgressMaintenanceRequests, completedMaintenanceRequests = landlord.getMaintenanceRequests()
     currentHouses, futureHouses, unBookedHouses = landlord.getHouses()
+    upcomingPayments, overduePayments, futurePayments, completedPayments = landlord.getGroupedRentPayments()
 
     requestedTours, scheduledTours = landlord.getActiveTours()
-
-    
 
     return render_template('dashboard.html',
                            landlord=landlord,
@@ -75,7 +74,11 @@ def landlordDashboard():
                            inProgressMaintenanceRequests=inProgressMaintenanceRequests,
                            completedMaintenanceRequests=completedMaintenanceRequests,
                            preCheckoutForm=PreCheckoutForm(),
-                           listingsToCheckout=nonActiveListings)
+                           listingsToCheckout=nonActiveListings,
+                           upcomingPayments=upcomingPayments,
+                           overduePayments=overduePayments,
+                           futurePayments=futurePayments,
+                           completedPayments=completedPayments)
 
 
 @landlords.route('/landlord/requestedTours/JSON')

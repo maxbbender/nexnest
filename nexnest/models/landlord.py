@@ -389,3 +389,26 @@ class Landlord(Base):
                 listingObject = {'listing': listing.serialize}
                 unBookedHouses.append(listingObject)
         return unBookedHouses
+
+    def getGroupedRentPayments(self):
+        allUpcomingPayments = []
+        allOverduePayments = []
+        allFuturePayments = []
+        allCompletedPayments = []
+
+        for house in self.getHouses()[0]:
+            upcomingPayments, overduePayments, futurePayments, completedPayments = house.groupedRentPayments
+
+            for payment in upcomingPayments:
+                allUpcomingPayments.append(payment)
+
+            for payment in overduePayments:
+                allOverduePayments.append(payment)
+
+            for payment in futurePayments:
+                allFuturePayments.append(payment)
+
+            for payment in completedPayments:
+                allCompletedPayments.append(payment)
+
+        return allUpcomingPayments, allOverduePayments, allFuturePayments, allCompletedPayments

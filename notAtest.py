@@ -29,13 +29,19 @@ import datetime
 
 gmaps = googlemaps.Client(key='AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w')
 
-landlord = user.User.query.filter_by(id=1).first()
+landlord = landlord.Landlord.query.first()
+landlordUser = landlord.user
 otherUser = user.User.query.filter_by(id=7).first()
-
+house = house.House.query.filter_by(id=1).first()
+gl = group_listing.GroupListing.query.first()
 # tour = tour.Tour.query.filter_by(id=5).first()
 # maintenancess = maintenance.Maintenance.query.first()
-gl = group_listing.GroupListing.query.first()
 
-print(gl.genEmailDeniedContent(otherUser))
-print(gl.genEmailAcceptedContent(otherUser))
-print(gl.genEmailCreateContent(otherUser))
+print(house.groupedRentPayments)
+upcomingPayments, overduePayments, futurePayments, completedPayments = landlord.getGroupedRentPayments()
+
+print(upcomingPayments)
+print(overduePayments)
+print(futurePayments)
+print(completedPayments)
+
