@@ -405,6 +405,11 @@ class User(Base):
             title = 'new message | group'
             subject = 'New Message - Group'
 
+        elif emailType == 'house':
+            icon = 'check'
+            title = 'housing request approved'
+            subject = 'House Request Update'
+
         send_email(subject='NexNest - %s' % subject,
                    sender='no_reply@nexnest.com',
                    recipients=[self.email],

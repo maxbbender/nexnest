@@ -30,8 +30,6 @@ import braintree
 # Manager (for shell commands)
 
 
-
-
 braintree.Configuration.configure(braintree.Environment.Sandbox,
                                   merchant_id="95d9g95dztdsgkkh",
                                   public_key="fdtk8w9qbpvqr6kn",

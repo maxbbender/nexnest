@@ -558,6 +558,23 @@ for house in house.House.query.all():
 
             session.commit()
 
+# OVERDUE RENT
+from nexnest.models.house import House
+from nexnest.models.user import User
+houseff = House.query.first()
+overDueRent = rent.Rent(houseff, User.query.first(), date(2009, 1, 1), 3000)
+overDueRent2 = rent.Rent(houseff, User.query.filter_by(id=2).first(), date(2009, 1, 1), 3000)
+
+session.add(overDueRent)
+session.add(overDueRent2)
+
+completedRent = rent.Rent(houseff, User.query.filter_by(id=3).first(), date(2009, 1, 1), 3000)
+completedRent.completed = True
+session.add(completedRent)
+
+session.commit()
+
+
 for user in group1AcceptedUsers:
     hnf = NotificationFactory(target_user=user,
                               notif_type='house',
