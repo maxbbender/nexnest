@@ -32,7 +32,12 @@
 				<div class="question">
 					<strong class="questionHeading">Is it free? </strong>
 					<div class="answer" style="display: none;">
-						Yes, it is 100% free to search and use our services for renters! We charge landlords and property managers a flat fee to post per rental unit. Click here to see full details on our <a href="">Pricing and Packages.</a>
+						Yes, it is 100% free to search and use our services for renters! We charge landlords and property managers a flat fee to post per rental unit.
+						{% if current_user %}
+							{% if current_user.isLandlord %}
+								Click here to see full details on our <a href="#!" data-toggle="modal" data-target="#packageDescriptionModal">Pricing and Packages.</a>
+							{% endif %}
+						{% endif %}
 					</div>
 					<hr>
 				</div>
@@ -159,6 +164,7 @@
 		</div>		
 	</div>
 </div>
+{% include 'packageOptionsModal.html' %}
 {% endblock %}
 {% block scripts %}
 <script>

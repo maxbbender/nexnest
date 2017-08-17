@@ -917,27 +917,29 @@
 										        	                    	<div class="row" style="padding-left: 15px;">
 									        	                    			<div class="col-xs-12">
 											        	                    		<div class="upcomingPaymentsDisplay">
-											        	                    			<div class="row" style="height: 35px;">
-											        	                    				<div class="col-xs-1">
-												        	                    				<div class="form-group">
-												        	                    				    <div class="checkbox">
-												        	                    				        <label style="font-size: 1.5em">
-												        	                    				            <input id="rentID" class="form-check-input" type="checkbox">
-												        	                    				            <span class="cr"><i class="cr-icon fa fa-check fa-2x" style="color: green;"></i></span>
-												        	                    				        </label>
-												        	                    				    </div>
-												        	                    				</div>
+												        	                    		{% for rent in house.rent %}
+												        	                    			<div class="row" style="height: 35px;">
+												        	                    				<div class="col-xs-1">
+													        	                    				<div class="form-group">
+													        	                    				    <div class="checkbox">
+													        	                    				        <label style="font-size: 1.5em">
+													        	                    				            <input id="rentID" class="form-check-input" type="checkbox">
+													        	                    				            <span class="cr"><i class="cr-icon fa fa-check fa-2x" style="color: green;"></i></span>
+													        	                    				        </label>
+													        	                    				    </div>
+													        	                    				</div>
+													        	                    			</div>
+													        	                    			<div class="col-xs-2 col-lg-1">
+													        	                    				{{rent.date_due}}
+													        	                    			</div>
+													        	                    			<div class="col-xs-5" style="padding-left: 25px;">
+													        	                    				<strong>{{rent.user.name}}</strong>
+													        	                    			</div>
+													        	                    			<div class="col-xs-4">
+													        	                    				<span style="color: green;">${{rent.amount}}</span>
+													        	                    			</div>
 												        	                    			</div>
-												        	                    			<div class="col-xs-2 col-lg-1">
-												        	                    				8/12/17
-												        	                    			</div>
-												        	                    			<div class="col-xs-5" style="padding-left: 25px;">
-												        	                    				<strong>Alex Czechhowski</strong>
-												        	                    			</div>
-												        	                    			<div class="col-xs-4">
-												        	                    				<span style="color: green;">$600.95</span>
-												        	                    			</div>
-											        	                    			</div>
+												        	                    		{% endfor %}
 											        	                    			<div class="row" style="height: 35px;">
 											        	                    				<div class="col-xs-1">
 												        	                    				<div class="form-group">
@@ -1181,72 +1183,7 @@
             </div>
         </div>
     </div>
-
-<!--Package Options Modal-->
-    <div class="modal fade" id="packageDescriptionModal" tabindex="-1" role="dialog" aria-labelledby="packageDescriptionModal" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h4 class="modal-title"></h4>
-                </div>
-                <div class="modal-body" style="text-align: center;">
-                    <div class="row">
-                        <div class="col-xs-6" style="border-right: 1px solid #333;">
-                        	<div class="row">
-                        		<div class="col-xs-12">
-                        			<h1>Standard</h1>
-                        		</div>
-                        		<hr>
-                        		<div class="col-xs-12">
-                        			<ul>
-                        				<li>Thing From Alex</li>
-                        				<li>Thing From Alex</li>
-                        				<li>Thing From Alex</li>
-                        				<li>Thing From Alex</li>
-                        				<li>Thing From Alex</li>
-                        			</ul>
-                        			<hr>
-                        		</div>
-                        		<div class="col-xs-12">
-                        			<h3>Pricing</h3>
-                  					<strong>Year: $100</strong>
-                  					<br>
-                  					<strong>Summer: $50</strong>
-                        		</div>
-                        	</div>
-                        </div>
-                        <div class="col-xs-6">
-                        	<div class="row">
-                        		<div class="col-xs-12">
-                        			<h1>Deluxe</h1>
-                        		</div>
-                        		<hr>
-                        		<div class="col-xs-12">
-                        			<ul>
-                        				<li>Thing From Nate</li>
-                        				<li>Thing From Nate</li>
-                        				<li>Thing From Nate</li>
-                        				<li>Thing From Nate</li>
-                        				<li>Thing From Nate</li>
-                        			</ul>
-                        			<hr>
-                        		</div>
-                        		<div class="col-xs-12">
-                        			<h3>Pricing</h3>
-                  					<strong>Year: $200</strong>
-                  					<br>
-                  					<strong>Summer: $100</strong>
-                        		</div>
-                        	</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% include './packageOptionsModal.html' %}
 {% endblock %}
 {% block scripts %}
 <script>
@@ -1289,7 +1226,7 @@
 		var secondTab = hash.split('-')[1];
 	}else{
 		var mainTab = hash;
-	}	
+	}
 	if ($.inArray(mainTab, validMainTabs) > -1) {
 		$("#checkoutTab").removeClass('active');
 		$("#occupiedListingsTab").removeClass('active');
@@ -2548,8 +2485,7 @@
     //Package Option Modal
     $('#packageDescriptionModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget);
-      var modal = $(this);      
-      modal.find('.modal-title').text('Packages & Pricing');
+      var modal = $(this);
     })
 
 
