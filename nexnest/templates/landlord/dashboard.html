@@ -911,15 +911,15 @@
 										        	                    	<div class="col-xs-11">
 										        	                    		<div class="row" style="padding-bottom: 15px;">
 										        	                    			<div class="col-xs-12">
-												        	                    		<div class="upcomingPaymentsToggle" style="color:#5686c5; cursor: pointer;">
-												        	                    			<i id="upcomingPaymentsIcon" class="fa fa-chevron-circle-down" aria-hidden="true"></i>
+												        	                    		<div class="outstandingPaymentsToggle" style="color:#5686c5; cursor: pointer;">
+												        	                    			<i id="outstandingPaymentsIcon" class="fa fa-chevron-circle-down" aria-hidden="true"></i>
 												        	                    			Outstanding Payments
 												        	                    		</div>
 												        	                    	</div>
 												        	                    </div>
 											        	                    	<div class="row" style="padding-left: 15px;">
 										        	                    			<div class="col-xs-12">
-												        	                    		<div class="upcomingPaymentsDisplay">
+												        	                    		<div class="outstandingPaymentsDisplay">
 													        	                    		{% for rent in overduePayments %}
 													        	                    			<div class="row" style="height: 35px;">
 											        	                    						<div class="col-xs-1">
@@ -3903,22 +3903,31 @@
     }
 
     $('.markRentPaid').change(function(event) {
-    	var selectedRent = $(this).attr("data-rentid");
-    	requestURL = `/rent/`+selectedRent+`/completed`
+    	var selectedRent = $(this).attr("data-rentid");    	
         if(this.checked) {
+        	requestURL = `/rent/`+selectedRent+`/completed`;
 		    $.ajax({
 		      type: "GET",
 		      contentType: "application/json; charset=utf-8",
 		      url: requestURL,
-		      data: JSON.stringify(selectedDateTimes),
 		      success: function (data) {
 		        console.log('Success marking rent paid');
 		        console.log(data)
-		      },
-		      dataType: "json"
+		      }
 		    });
 		}
+		else{
+            requestURL = `/rent/`+selectedRent+`/unCompleted`;
+            $.ajax({
+              type: "GET",
+              contentType: "application/json; charset=utf-8",
+              url: requestURL,
+              success: function (data) {
+                console.log('Success marking rent unpaid');
+                console.log(data)
+              }
+            });            
+        }
 	});
-
 </script>
 {% endblock %}
