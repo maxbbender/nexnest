@@ -98,48 +98,68 @@
 			            		<div class="col-xs-12 col-lg-12" style="width: 100%">
 					                <div class="card">
 					                    <div class="card-header">
-						                    <div class="row">
-						                    	<div class="col-xs-1 col-md-1 col-lg-1" style="align-items: center; display: flex;">
-					                    			<div class="checkbox">
-					                    			    <label style="font-size: 1.5em">
-					                    			    {% if listing.time_period == "school" %}
-					                    			        <input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" data-time="{{listing.time_period}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', 100);"/>
-					                    			        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-					                    			    {% elif listing.time_period == "summer" %}
-					                    			    	<input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" data-time="{{listing.time_period}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', 50);"/>
-					                    			        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-					                    			    {% endif %}
-					                    			    </label>
-					                    			</div>						                    		
+					                    	<div class="row">
+					                    		<div class="col-xs-11">
+								                    <div class="row">
+								                    	<div class="col-xs-1 col-md-1 col-lg-1" style="align-items: center; display: flex;">
+							                    			<div class="checkbox">
+							                    			    <label style="font-size: 1.5em">
+							                    			    {% if listing.time_period == "school" %}
+							                    			        <input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" data-time="{{listing.time_period}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', 100);"/>
+							                    			        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+							                    			    {% elif listing.time_period == "summer" %}
+							                    			    	<input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" data-time="{{listing.time_period}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', 50);"/>
+							                    			        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+							                    			    {% endif %}
+							                    			    </label>
+							                    			</div>						                    		
+								                    	</div>
+								                    	<div class="col-xs-6 col-md-11 col-lg-11 col-xl-6" style="padding-bottom: 15px;">				                    		
+							                    			<h4 style="font-size: 2.5vh;"><strong>
+							                    				{{ listing.street }}, 
+							                    				<br>
+							                    				{{ listing.city }} {{ listing.state }}</strong>
+							                    			</h4>
+							                    			<small style="font-size: 1.5vh; text-transform: capitalize;">Time Period: {{ listing.time_period }}</small>
+							                    			<br>
+							                    			<small style="font-size: 1.5vh;">Lease Period: {{ listing.start_date }} - {{ listing.end_date }}</small>
+								                    	</div>
+								                    	{% if listing.time_period == "school" %}
+								                    	<div class="col-xs-5 col-md-12 col-lg-12 col-xl-4" id="packageOptions{{listing.id}}" style="display: none; align-items: center;">
+								                    		<div class="btn-group" data-toggle="buttons" style="display: flex;">
+								                    		    <label class="btn btn-outline-primary active" id="standardLabel{{listing.id}}" onclick="downgradeToStandard({{listing.id}}, 100)">
+								                    		    	<input type="radio" name="packageChoice" id="standard{{listing.id}}" checked autocomplete="off"> PRO
+								                    		  	</label>
+								                    		  	<label class="btn btn-outline-primary" id="deluxeLabel{{listing.id}}" onclick="upgradeToDeluxe({{listing.id}}, 200)">
+								                    		    	<input type="radio" name="packageChoice" id="deluxe{{listing.id}}" autocomplete="off"> PREMIUM
+								                    		  	</label>
+								                    		</div>
+								                    	</div>
+								                    	{% elif listing.time_period == "summer" %}
+								                    	<div class="col-xs-5 col-md-12 col-lg-12 col-xl-4" id="packageOptions{{listing.id}}" style="display: none; align-items: center;">
+								                    		<div class="btn-group" data-toggle="buttons" style="display: flex;">
+								                    		    <label class="btn btn-outline-primary active" id="standardLabel{{listing.id}}" onclick="downgradeToStandard({{listing.id}}, 50)">
+								                    		    	<input type="radio" name="packageChoice" id="standard{{listing.id}}" checked autocomplete="off"> PRO
+								                    		  	</label>
+								                    		  	<label class="btn btn-outline-primary" id="deluxeLabel{{listing.id}}" onclick="upgradeToDeluxe({{listing.id}}, 100)">
+								                    		    	<input type="radio" name="packageChoice" id="deluxe{{listing.id}}" autocomplete="off"> PREMIUM
+								                    		  	</label>
+								                    		</div>
+								                    	</div>
+								                    	{% endif %}						                    	
+								                    </div>
+								                </div>
+								                <div class="col-xs-1">
+		                    		                <div class="dropdown">
+		                    			                <i class="fa fa-bars fa-2x dropdown-toggle" style="padding-top: 4px;" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
+		                    			                <div class="dropdown-menu dropdown-menu-right hamburger-menu" style="top: 51px; right: -16px;" aria-labelledby="dropdownMenuButton">
+		                    			                	<a class="dropdown-item" href="{{ url_for('listings.editListing', listingID=listing.id) }}"><strong class="hamburgerMenuItem">Edit Listing</strong></a>
+		                    			                	<a class="dropdown-item" href="{{ url_for('listings.cloneListing', listingID=listing.id) }}"><strong class="hamburgerMenuItem">Copy Lisitng</strong></a>
+		                    			                	<a class="dropdown-item" href="{{ url_for('users.myGroups') }}"><strong class="hamburgerMenuItem">Delete</strong></a>
+		                    			            	</div>
+		                    			         	</div>
 						                    	</div>
-						                    	<div class="col-xs-6 col-md-11 col-lg-5" style="padding-bottom: 15px;">				                    		
-					                    			<h3 style="font-size: 2.5vh;"><strong>{{ listing.street }}, {{ listing.city }} {{ listing.state }}</strong></h3>
-					                    			<small style="font-size: 1.5vh;">Lease Period: {{ listing.start_date }} - {{ listing.end_date }}</small>
-						                    	</div>
-						                    	{% if listing.time_period == "school" %}
-						                    	<div class="col-xs-5 col-md-12 col-lg-6" id="packageOptions{{listing.id}}" style="display: none; align-items: center;">
-						                    		<div class="btn-group" data-toggle="buttons" style="display: flex;">
-						                    		    <label class="btn btn-outline-primary active" id="standardLabel{{listing.id}}" onclick="downgradeToStandard({{listing.id}}, 100)">
-						                    		    	<input type="radio" name="packageChoice" id="standard{{listing.id}}" checked autocomplete="off"> Standard($100)
-						                    		  	</label>
-						                    		  	<label class="btn btn-outline-primary" id="deluxeLabel{{listing.id}}" onclick="upgradeToDeluxe({{listing.id}}, 200)">
-						                    		    	<input type="radio" name="packageChoice" id="deluxe{{listing.id}}" autocomplete="off"> Deluxe($200)
-						                    		  	</label>
-						                    		</div>
-						                    	</div>
-						                    	{% elif listing.time_period == "summer" %}
-						                    	<div class="col-xs-5 col-md-12 col-lg-6" id="packageOptions{{listing.id}}" style="display: none; align-items: center;">
-						                    		<div class="btn-group" data-toggle="buttons" style="display: flex;">
-						                    		    <label class="btn btn-outline-primary active" id="standardLabel{{listing.id}}" onclick="downgradeToStandard({{listing.id}}, 50)">
-						                    		    	<input type="radio" name="packageChoice" id="standard{{listing.id}}" checked autocomplete="off"> Standard($50)
-						                    		  	</label>
-						                    		  	<label class="btn btn-outline-primary" id="deluxeLabel{{listing.id}}" onclick="upgradeToDeluxe({{listing.id}}, 100)">
-						                    		    	<input type="radio" name="packageChoice" id="deluxe{{listing.id}}" autocomplete="off"> Deluxe($100)
-						                    		  	</label>
-						                    		</div>
-						                    	</div>
-						                    	{% endif %}
-						                    </div>			                    
+						                    </div>
 					                    </div>
 					                </div>
 				                </div>		                
