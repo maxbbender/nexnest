@@ -1,11 +1,11 @@
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="login" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content" style="width: 120%; margin-left: -10%;">
+            <div class="modal-header" style="background-color: #71c0f6; text-align: center;">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="login"></h4>
+                <img src="/static/img/signInBanner.png" style="height: auto; max-width: 100%;">
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -19,7 +19,7 @@
                                 {{ render_field(login_form.password, class="form-control", type="password") }}
                             </dl>
                             <p>
-                                <input type='submit' value='Sign In' class="btn btn-primary">
+                                <input type='submit' value='Sign In' class="btn btn-primary pull-right">
                             </p>
                         </form>
                     </div>
