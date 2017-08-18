@@ -14,8 +14,6 @@ from nexnest import app
 # DB setup
 # engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 # session = scoped_session(sessionmaker(bind=engine))
-db = SQLAlchemy(app)
-session = db.session
 
 # CSRF setup
 csrf = CSRFProtect(app)

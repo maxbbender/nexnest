@@ -66,70 +66,70 @@ def createApp(configName):
     return app
 
 
-# DotEnv Setup
-load_dotenv(join(dirname(__file__), '..', '.env'))
+# # DotEnv Setup
+# load_dotenv(join(dirname(__file__), '..', '.env'))
 
-# Environment choice
-env = environ.get('NEXNEST_ENV')
+# # Environment choice
+# env = environ.get('NEXNEST_ENV')
 
-if env is None:
-    env = 'development'
+# if env is None:
+#     env = 'development'
 
-# App setup
-app = Flask(__name__, static_folder="static")
-app.config.from_object('nexnest.config')
+# # App setup
+# app = Flask(__name__, static_folder="static")
+# app.config.from_object('nexnest.config')
 
-superENV = environ.get('NEXNEST_SUPER_%s_SETTINGS' % env.upper())
+# superENV = environ.get('NEXNEST_SUPER_%s_SETTINGS' % env.upper())
 
-if superENV is not None:
-    app.config.from_envvar('NEXNEST_SUPER_%s_SETTINGS' % env.upper())
-else:
-    app.config.from_envvar('NEXNEST_%s_SETTINGS' % env.upper())
-
-
-# - LOGGER -
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-
-ch = logging.StreamHandler(sys.stdout)
-ch.setLevel(logging.DEBUG)
+# if superENV is not None:
+#     app.config.from_envvar('NEXNEST_SUPER_%s_SETTINGS' % env.upper())
+# else:
+#     app.config.from_envvar('NEXNEST_%s_SETTINGS' % env.upper())
 
 
-# print(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'error.log'))
+# # - LOGGER -
+# logger = logging.getLogger(__name__)
+# logger.setLevel(logging.DEBUG)
 
-if not exists(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'error.log')):
-    with open(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'error.log'), 'w') as f:
-        f.write('')
-
-
-if not exists(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'debug.log')):
-    with open(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'debug.log'), 'w') as f:
-        f.write('')
+# ch = logging.StreamHandler(sys.stdout)
+# ch.setLevel(logging.DEBUG)
 
 
-errorHandler = logging.FileHandler(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'error.log'), 'r+')
-errorHandler.setLevel(logging.ERROR)
+# # print(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'error.log'))
 
-errorHandlerD = logging.FileHandler(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'debug.log'), 'r+')
-errorHandlerD.setLevel(logging.DEBUG)
+# if not exists(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'error.log')):
+#     with open(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'error.log'), 'w') as f:
+#         f.write('')
 
-# create formatter and add it to the handlers
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-ch.setFormatter(formatter)
-errorHandler.setFormatter(formatter)
-errorHandlerD.setFormatter(formatter)
+# if not exists(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'debug.log')):
+#     with open(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'debug.log'), 'w') as f:
+#         f.write('')
 
-# add the handlers to the logger
-logger.addHandler(ch)
-logger.addHandler(errorHandler)
-logger.addHandler(errorHandlerD)
 
-mail = Mail(app)
+# errorHandler = logging.FileHandler(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'error.log'), 'r+')
+# errorHandler.setLevel(logging.ERROR)
+
+# errorHandlerD = logging.FileHandler(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'debug.log'), 'r+')
+# errorHandlerD.setLevel(logging.DEBUG)
+
+# # create formatter and add it to the handlers
+# formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+# ch.setFormatter(formatter)
+# errorHandler.setFormatter(formatter)
+# errorHandlerD.setFormatter(formatter)
+
+# # add the handlers to the logger
+# logger.addHandler(ch)
+# logger.addHandler(errorHandler)
+# logger.addHandler(errorHandlerD)
+
+# mail = Mail(app)
 
 
 def logEmailDispatch(message, app):
-    logger.debug('Email Sent! Subject %s | Text %s' % (message.subject, message.html))
+    app.logger.debug('Email Sent! Subject %s | Text %s' % (message.subject, message.html))
 
 
 email_dispatched.connect(logEmailDispatch)

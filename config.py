@@ -2,7 +2,6 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
-
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'domislove'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
@@ -42,6 +41,9 @@ class TestingConfig(Config):
 
 
 class ProductionConfig(Config):
+    @classmethod
+    def init_app(cls, app):
+        Config.init_app(app)
     # MAIL SERVER CONFIG
     MAIL_SERVER = 'mail.nexnest.com'
     MAIL_PORT = 587

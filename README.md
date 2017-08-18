@@ -58,4 +58,8 @@ Production Setup
 
 
 
+Environment Variables
+======
+These are going to be the environment variables that we are going to need to implement in the Unit file on the production server
 
+MAIL_USERNAME
