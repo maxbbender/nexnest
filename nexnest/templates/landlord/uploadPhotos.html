@@ -35,7 +35,24 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title" id="requestTour"></h4>
+                    <div class="row">
+                        <div class="col-xs-0 col-sm-0 col-md-0 col-lg-0 col-xl-1"></div>
+                        <div class="col-xs-1 col-md-2 col-xl-1 hidden-sm-down" style="align-self: center; padding: 0px;">
+                            <img src="/static/img/housePin.png" style="height: auto; max-width: 100%; padding-left: 15px;">
+                        </div>
+                        <div class="col-xs-1 hidden-lg-down" style="align-self: center; padding: 0px;">
+                            <img src="/static/img/apartmentPin.png" style="height: auto; max-width: 100%; padding-left: 15px;">
+                        </div>
+                        <div class="col-xs-12 col-md-8 col-lg-8 col-xl-6" style="text-align: center;">
+                            <h1 style="padding-top: 15px;">Congrats!</h1>
+                        </div>
+                        <div class="col-xs-1 col-md-2 col-xl-1 hidden-sm-down" style="align-self: center; padding: 0px;">
+                            <img src="/static/img/complexPin.png" style="height: auto; max-width: 100%; padding-left: 15px;">
+                        </div>
+                        <div class="col-xs-1 hidden-lg-down" style="align-self: center; padding: 0px;">
+                            <img src="/static/img/yellowHousePin.png" style="height: auto; max-width: 100%; padding-left: 15px;">
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -46,10 +63,20 @@
                     </div>
                     <div id="groupNumber" style="display: none;"></div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onClick="submitListingForm('createNew')" data-dismiss="modal">Create Another Listing</button>
-                    <button type="button" class="btn btn-primary" onClick="submitListingForm('createCopy')" data-dismiss="modal">Use Listing as Template</button>
-                    <button type="button" class="btn btn-primary" onClick="submitListingForm('checkout')" data-dismiss="modal">Proceed to Checkout</button>
+                <div class="modal-footer" style="text-align: left;">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6" style="padding-top: 30px; text-align: right;">
+                            <button type="button" class="btn btn-light-blue" onClick="submitListingForm('createNew')" data-dismiss="modal">Create Another Listing</button>
+                        </div>
+                        <div class="col-xs-12 col-sm-6" style="padding-top: 30px; text-align: right;">
+                            <button type="button" class="btn btn-light-blue" onClick="submitListingForm('createCopy')" data-dismiss="modal">Use Listing as Template</button>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top: 30px;">
+                        <div class="col-xs-12 col-lg-12" style="text-align: right;">
+                            <button type="button" class="btn btn-light-green pull-right" onClick="submitListingForm('checkout')" data-dismiss="modal">Proceed to Checkout</button>
+                        </div>
+                    </div>                    
                 </div>
             </div>
         </div>
