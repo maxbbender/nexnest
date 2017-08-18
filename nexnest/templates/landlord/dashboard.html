@@ -1,28 +1,5 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Completed</h1>
-{% for payment in completedPayments %}
-{{payment.serialize}}
-{{payment}}
-{% endfor %}
-
-<h1>Overdue</h1>
-{% for payment in overduePayments %}
-{{payment.serialize}}
-{{payment}}
-{% endfor %}
-
-<h1>Future</h1>
-{% for payment in futurePayments %}
-{{payment.serialize}}
-{{payment}}
-{% endfor %}
-
-<h1>Upcoming</h1>
-{% for payment in upcomingPayments %}
-{{payment.serialize}}
-{{payment}}
-{% endfor %}
 <link href="{{url_for('static', filename='css/landlord/dashboardStyling.css')}}" rel="stylesheet">
 <div class="row">
     <div class="col-md-2 col-sm-2 col-xs-2 display-table-cell v-align box" id="navigation" style="height: inherit;">
@@ -895,6 +872,102 @@
 		        	                    <div class="tab-pane selected-tab first-tab active" id="outStandingRentTab" role="tabpanel" style="padding: 0px;">
 		        	                    	{% if currentHouses|length > 0 %}
 		        	                            {% for house in currentHouses %}
+		        	                            	{% set upcomingPayments, overduePayments, futurePayments, completedPayments = house.groupedRentPayments %}
+		        	                            	{% if overduePayments|length > 0 %}
+			        	                            	<div class="row">
+			        	                            		<div class="col-xs-12" style="width: 100%;">
+			        	                            			<div class="card">
+			        	                            				<div class="card-header">
+			        	                            					<div class="row">
+			        	                            						<div class="col-xs-12">   
+		        	                            								<div class="row">
+		        	                            									<div class="col-xs-1">
+		        	                            										{% if house.listing.property_type == "house" %}
+		        	                            											<img src="/static/img/housePin.png" style="height: 80px;">
+		        	                            										{% elif house.listing.property_type == "apartment" %}
+		        	                            											<img src="/static/img/apartmentPin.png" style="height: 80px;">
+		        	                            										{% else %}
+		        	                            											<img src="/static/img/complexPin.png" style="height: 80px;">
+		        	                            										{% endif %}
+		        	                            									</div>
+		        	                            									<div class="col-xs-6">
+		        	                            										<a href="{{ url_for('houses.view', id=house.listing.id) }}">
+														                    				<h3 style="font-size: 3.5vh; margin-bottom: -15px;"><strong>{{ house.listing.street }}</h3>
+														                    				<h4>{{ house.listing.city }} {{ house.listing.state }}</strong></h4>
+														                    			</a>
+														                    		</div>
+														                    		<div class="col-xs-5" style="text-align: center;">
+														                    			<h3 style="font-size: 3.0vh; margin-bottom: -15px;">Lease Term:</h3>
+														                    			<h3 style="font-size: 3.0vh; margin-bottom: -15px;">{{house.listing.start_date}} - {{house.listing.end_date}}</h3>
+														                    		</div>
+												                    			</div>
+												                    		</div>
+												                    	</div>
+												                    </div>
+												                    <div class="card-block">
+													                    <div class="row">
+													                    	<div class="col-xs-1">
+										        	                    	</div>
+										        	                    	<div class="col-xs-11">
+										        	                    		<div class="row" style="padding-bottom: 15px;">
+										        	                    			<div class="col-xs-12">
+												        	                    		<div class="upcomingPaymentsToggle" style="color:#5686c5; cursor: pointer;">
+												        	                    			<i id="upcomingPaymentsIcon" class="fa fa-chevron-circle-down" aria-hidden="true"></i>
+												        	                    			Outstanding Payments
+												        	                    		</div>
+												        	                    	</div>
+												        	                    </div>
+											        	                    	<div class="row" style="padding-left: 15px;">
+										        	                    			<div class="col-xs-12">
+												        	                    		<div class="upcomingPaymentsDisplay">
+													        	                    		{% for rent in overduePayments %}
+													        	                    			<div class="row" style="height: 35px;">
+											        	                    						<div class="col-xs-1">
+												        	                    						<div class="form-group">
+														        	                    				    <div class="checkbox">
+														        	                    				        <label style="font-size: 1.5em">
+														        	                    				        	{% if rent.completed %}
+														        	                    				            	<input class="form-check-input markRentPaid" type="checkbox" data-rentid="{{rent.id}}" checked>
+														        	                    				            {% else %}
+														        	                    				            	<input class="form-check-input markRentPaid" type="checkbox" data-rentid="{{rent.id}}">
+														        	                    				            {% endif %}
+														        	                    				            <span class="cr"><i class="cr-icon fa fa-check" style="color: green;"></i></span>
+														        	                    				        </label>
+														        	                    				    </div>
+														        	                    				</div>
+												        	                    					</div>
+														        	                    			<div class="col-xs-2">
+														        	                    				{{rent.date_due}}
+														        	                    			</div>
+														        	                    			<div class="col-xs-3">
+														        	                    				<strong>{{rent.user.name}}</strong>
+														        	                    			</div>
+														        	                    			<div class="col-xs-3">
+														        	                    				<span style="color: red;">${{rent.amount}}</span>
+														        	                    			</div>
+													        	                    			</div>
+													        	                    		{% endfor %}
+												        	                    		</div>
+												        	                    	</div>
+										        	                    		</div>
+										        	                    	</div>
+													                    </div>
+												                    </div>
+												                </div>
+											                </div>
+										                </div>
+									                {% endif %}
+			            						{% endfor %}
+			            						<div class="alert alert-info" role="alert">
+			            							<strong>No more houses have outstanding rent payments</strong>
+			            						</div>
+		            						{% endif %}
+		        	                    </div>
+		        	                    <div class="tab-pane selected-tab" id="allRentTab" role="tabpanel" style="padding: 0px;">
+		        	                    	{% if currentHouses|length > 0 %}
+		        	                            {% for house in currentHouses %}
+		        	                            	{% set upcomingPayments, overduePayments, futurePayments, completedPayments = house.groupedRentPayments %}
+		        	                            	{% if upcomingPayments or futurePayments or completedPayments %}
 		        	                            	<div class="row">
 		        	                            		<div class="col-xs-12" style="width: 100%;">
 		        	                            			<div class="card">
@@ -917,8 +990,9 @@
 													                    				<h4>{{ house.listing.city }} {{ house.listing.state }}</strong></h4>
 													                    			</a>
 													                    		</div>
-													                    		<div class="col-xs-5">
-													                    			Stats Go Here
+													                    		<div class="col-xs-5" style="text-align: center;">
+													                    			<h3 style="font-size: 3.0vh; margin-bottom: -15px;">Lease Term:</h3>
+													                    			<h3 style="font-size: 3.0vh; margin-bottom: -15px;">{{house.listing.start_date}} - {{house.listing.end_date}}</h3>
 													                    		</div>
 											                    			</div>
 											                    		</div>
@@ -940,50 +1014,33 @@
 										        	                    	<div class="row" style="padding-left: 15px;">
 									        	                    			<div class="col-xs-12">
 											        	                    		<div class="upcomingPaymentsDisplay">
-												        	                    		{% for rent in house.rent %}
+												        	                    		{% for rent in upcomingPayments %}
 												        	                    			<div class="row" style="height: 35px;">
-												        	                    				<div class="col-xs-1">
-													        	                    				<div class="form-group">
+										        	                    						<div class="col-xs-1">
+											        	                    						<div class="form-group">
 													        	                    				    <div class="checkbox">
 													        	                    				        <label style="font-size: 1.5em">
-													        	                    				            <input id="rentID" class="form-check-input" type="checkbox">
-													        	                    				            <span class="cr"><i class="cr-icon fa fa-check fa-2x" style="color: green;"></i></span>
+													        	                    				            {% if rent.completed %}
+													        	                    				            	<input class="form-check-input markRentPaid" type="checkbox" data-rentid="{{rent.id}}" checked>
+													        	                    				            {% else %}
+													        	                    				            	<input class="form-check-input markRentPaid" type="checkbox" data-rentid="{{rent.id}}">
+													        	                    				            {% endif %}
+													        	                    				            <span class="cr"><i class="cr-icon fa fa-check" style="color: green;"></i></span>
 													        	                    				        </label>
 													        	                    				    </div>
 													        	                    				</div>
-													        	                    			</div>
-													        	                    			<div class="col-xs-2 col-lg-1">
+											        	                    					</div>
+													        	                    			<div class="col-xs-2">
 													        	                    				{{rent.date_due}}
 													        	                    			</div>
-													        	                    			<div class="col-xs-5" style="padding-left: 25px;">
+													        	                    			<div class="col-xs-3">
 													        	                    				<strong>{{rent.user.name}}</strong>
 													        	                    			</div>
-													        	                    			<div class="col-xs-4">
+													        	                    			<div class="col-xs-3">
 													        	                    				<span style="color: green;">${{rent.amount}}</span>
 													        	                    			</div>
 												        	                    			</div>
 												        	                    		{% endfor %}
-											        	                    			<div class="row" style="height: 35px;">
-											        	                    				<div class="col-xs-1">
-												        	                    				<div class="form-group">
-												        	                    				    <div class="checkbox">
-												        	                    				        <label style="font-size: 1.5em">
-												        	                    				            <input id="rentID" class="form-check-input" type="checkbox">
-												        	                    				            <span class="cr"><i class="cr-icon fa fa-check fa-2x" style="color: green;"></i></span>
-												        	                    				        </label>
-												        	                    				    </div>
-												        	                    				</div>
-												        	                    			</div>
-												        	                    			<div class="col-xs-2 col-lg-1">
-												        	                    				8/12/17
-												        	                    			</div>
-												        	                    			<div class="col-xs-5" style="padding-left: 25px;">
-												        	                    				<strong>Alex Czechhowski</strong>
-												        	                    			</div>
-												        	                    			<div class="col-xs-4">
-												        	                    				<span style="color: green;">$600.95</span>
-												        	                    			</div>
-											        	                    			</div>
 											        	                    		</div>
 											        	                    	</div>
 									        	                    		</div>
@@ -1004,48 +1061,33 @@
 										        	                    	<div class="row" style="padding-left: 15px;">
 									        	                    			<div class="col-xs-12">
 											        	                    		<div class="futurePaymentsDisplay" style="display: none;">
-											        	                    			<div class="row" style="height: 35px;">
-											        	                    				<div class="col-xs-1">
-												        	                    				<div class="form-group">
-												        	                    				    <div class="checkbox">
-												        	                    				        <label style="font-size: 1.5em">
-												        	                    				            <input id="rentID" class="form-check-input" type="checkbox">
-												        	                    				            <span class="cr"><i class="cr-icon fa fa-check" style="color: green;"></i></span>
-												        	                    				        </label>
-												        	                    				    </div>
-												        	                    				</div>
+											        	                    			{% for rent in futurePayments %}
+												        	                    			<div class="row" style="height: 35px;">
+										        	                    						<div class="col-xs-1">
+											        	                    						<div class="form-group">
+													        	                    				    <div class="checkbox">
+													        	                    				        <label style="font-size: 1.5em">
+													        	                    				            {% if rent.completed %}
+													        	                    				            	<input class="form-check-input markRentPaid" type="checkbox" data-rentid="{{rent.id}}" checked>
+													        	                    				            {% else %}
+													        	                    				            	<input class="form-check-input markRentPaid" type="checkbox" data-rentid="{{rent.id}}">
+													        	                    				            {% endif %}
+													        	                    				            <span class="cr"><i class="cr-icon fa fa-check" style="color: green;"></i></span>
+													        	                    				        </label>
+													        	                    				    </div>
+													        	                    				</div>
+											        	                    					</div>
+													        	                    			<div class="col-xs-2">
+													        	                    				{{rent.date_due}}
+													        	                    			</div>
+													        	                    			<div class="col-xs-3">
+													        	                    				<strong>{{rent.user.name}}</strong>
+													        	                    			</div>
+													        	                    			<div class="col-xs-3">
+													        	                    				<span style="color: green;">${{rent.amount}}</span>
+													        	                    			</div>
 												        	                    			</div>
-												        	                    			<div class="col-xs-2">
-												        	                    				8/12/17
-												        	                    			</div>
-												        	                    			<div class="col-xs-3">
-												        	                    				<strong>Alex Czechhowski</strong>
-												        	                    			</div>
-												        	                    			<div class="col-xs-3">
-												        	                    				<span style="color: green;">$600.95</span>
-												        	                    			</div>
-											        	                    			</div>
-											        	                    			<div class="row">
-											        	                    				<div class="col-xs-1">
-												        	                    				<div class="form-group">
-												        	                    				    <div class="checkbox">
-												        	                    				        <label style="font-size: 1.5em">
-												        	                    				            <input id="rentID" class="form-check-input" type="checkbox">
-												        	                    				            <span class="cr"><i class="cr-icon fa fa-check"></i></span>
-												        	                    				        </label>
-												        	                    				    </div>
-												        	                    				</div>
-												        	                    			</div>
-												        	                    			<div class="col-xs-2">
-												        	                    				8/12/17
-												        	                    			</div>
-												        	                    			<div class="col-xs-3">
-												        	                    				<strong>Alex Czechhowski</strong>
-												        	                    			</div>
-												        	                    			<div class="col-xs-3">
-												        	                    				<span style="color: green;">$600.95</span>
-												        	                    			</div>
-											        	                    			</div>
+												        	                    		{% endfor %}
 											        	                    		</div>
 											        	                    	</div>
 									        	                    		</div>
@@ -1059,55 +1101,40 @@
 									        	                    			<div class="col-xs-12">
 											        	                    		<div class="pastPaymentsToggle" style="color:#5686c5; cursor: pointer;">
 											        	                    			<i id="pastPaymentsIcon" class="fa fa-chevron-circle-right" aria-hidden="true"></i>
-											        	                    			Past Payments
+											        	                    			Previous Payments
 											        	                    		</div>
 											        	                    	</div>
 											        	                    </div>
 										        	                    	<div class="row" style="padding-left: 15px;">
 									        	                    			<div class="col-xs-12">
 											        	                    		<div class="pastPaymentsDisplay" style="display: none;">
-											        	                    			<div class="row" style="height: 35px;">
-											        	                    				<div class="col-xs-1">
-												        	                    				<div class="form-group">
-												        	                    				    <div class="checkbox">
-												        	                    				        <label style="font-size: 1.5em">
-												        	                    				            <input id="rentID" class="form-check-input" type="checkbox">
-												        	                    				            <span class="cr"><i class="cr-icon fa fa-check"></i></span>
-												        	                    				        </label>
-												        	                    				    </div>
-												        	                    				</div>
+											        	                    			{% for rent in completedPayments %}
+												        	                    			<div class="row" style="height: 35px;">
+										        	                    						<div class="col-xs-1">
+											        	                    						<div class="form-group">
+													        	                    				    <div class="checkbox">
+													        	                    				        <label style="font-size: 1.5em">
+													        	                    				            {% if rent.completed %}
+													        	                    				            	<input class="form-check-input markRentPaid" type="checkbox" data-rentid="{{rent.id}}" checked>
+													        	                    				            {% else %}
+													        	                    				            	<input class="form-check-input markRentPaid" type="checkbox" data-rentid="{{rent.id}}">
+													        	                    				            {% endif %}
+													        	                    				            <span class="cr"><i class="cr-icon fa fa-check" style="color: green;"></i></span>
+													        	                    				        </label>
+													        	                    				    </div>
+													        	                    				</div>
+											        	                    					</div>
+													        	                    			<div class="col-xs-2">
+													        	                    				{{rent.date_due}}
+													        	                    			</div>
+													        	                    			<div class="col-xs-3">
+													        	                    				<strong>{{rent.user.name}}</strong>
+													        	                    			</div>
+													        	                    			<div class="col-xs-3">
+													        	                    				<span style="color: green;">${{rent.amount}}</span>
+													        	                    			</div>
 												        	                    			</div>
-												        	                    			<div class="col-xs-2">
-												        	                    				8/12/17
-												        	                    			</div>
-												        	                    			<div class="col-xs-3">
-												        	                    				<strong>Alex Czechhowski</strong>
-												        	                    			</div>
-												        	                    			<div class="col-xs-3">
-												        	                    				<span style="color: green;">$600.95</span>
-												        	                    			</div>
-											        	                    			</div>
-											        	                    			<div class="row">
-											        	                    				<div class="col-xs-1">
-												        	                    				<div class="form-group">
-												        	                    				    <div class="checkbox">
-												        	                    				        <label style="font-size: 1.5em">
-												        	                    				            <input id="rentID" class="form-check-input" type="checkbox">
-												        	                    				            <span class="cr"><i class="cr-icon fa fa-check"></i></span>
-												        	                    				        </label>
-												        	                    				    </div>
-												        	                    				</div>
-												        	                    			</div>
-												        	                    			<div class="col-xs-2">
-												        	                    				8/12/17
-												        	                    			</div>
-												        	                    			<div class="col-xs-3">
-												        	                    				<strong>Alex Czechhowski</strong>
-												        	                    			</div>
-												        	                    			<div class="col-xs-3">
-												        	                    				<span style="color: green;">$600.95</span>
-												        	                    			</div>
-											        	                    			</div>
+												        	                    		{% endfor %}
 											        	                    		</div>
 											        	                    	</div>
 									        	                    		</div>
@@ -1117,15 +1144,13 @@
 											                </div>
 										                </div>
 									                </div>
+									                {% endif %}
 			            						{% endfor %}
 		            						{% else %}
 		            							<div class="alert alert-info" role="alert">
-		            								<strong>No Currently Booked Listings</strong>
+		            								<strong>No houses have outstanding rent payments</strong>
 		            							</div>
 		            						{% endif %}
-		        	                    </div>
-		        	                    <div class="tab-pane selected-tab" id="allRentTab" role="tabpanel" style="padding: 0px;">
-
 		        	                    </div>
 		        	                </div>
 		        	            </div>
@@ -3877,7 +3902,23 @@
         getTourRequestsJSON();
     }
 
-
+    $('.markRentPaid').change(function(event) {
+    	var selectedRent = $(this).attr("data-rentid");
+    	requestURL = `/rent/`+selectedRent+`/completed`
+        if(this.checked) {
+		    $.ajax({
+		      type: "GET",
+		      contentType: "application/json; charset=utf-8",
+		      url: requestURL,
+		      data: JSON.stringify(selectedDateTimes),
+		      success: function (data) {
+		        console.log('Success marking rent paid');
+		        console.log(data)
+		      },
+		      dataType: "json"
+		    });
+		}
+	});
 
 </script>
 {% endblock %}
