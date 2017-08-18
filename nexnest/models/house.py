@@ -131,7 +131,7 @@ class House(Base):
             else:
                 completedPayments.append(rent)
 
-        return upcomingPayments, overduePayments, futurePayments, completedPayments,
+        return upcomingPayments, overduePayments, futurePayments, completedPayments
 
     def genEmailAcceptedContent(self, user):
         return """

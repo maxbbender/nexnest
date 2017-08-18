@@ -11,8 +11,60 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask_mail import Mail, email_dispatched
 
+from config import config
+
 import logging
 import sys
+
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
+mail = Mail()
+
+
+def createApp(configName):
+    app = Flask(__name__)
+    app.config.from_object(config[configName])
+    config[configName].init_app(app)
+
+    db.init_app(app)
+    mail.init_app(app)
+
+    # Blueprints
+    from nexnest.blueprints.base import base
+    from nexnest.blueprints.index import indexs
+    from nexnest.blueprints.listing import listings
+    from nexnest.blueprints.user import users
+    from nexnest.blueprints.group import groups
+    from nexnest.blueprints.tour import tours
+    from nexnest.blueprints.landlord import landlords
+    from nexnest.blueprints.housingRequest import housingRequests
+    from nexnest.blueprints.house import houses
+    from nexnest.blueprints.commerce import commerce
+    from nexnest.blueprints.error import errors
+    from nexnest.blueprints.notification import notifications
+    from nexnest.blueprints.report import reports
+    from nexnest.blueprints.rent import rents
+    from nexnest.blueprints.siteAdmin import siteAdmin as siteAdminBlueprint
+
+    app.register_blueprint(base)
+    app.register_blueprint(indexs)
+    app.register_blueprint(listings)
+    app.register_blueprint(users)
+    app.register_blueprint(groups)
+    app.register_blueprint(tours)
+    app.register_blueprint(landlords)
+    app.register_blueprint(housingRequests)
+    app.register_blueprint(houses)
+    app.register_blueprint(commerce)
+    app.register_blueprint(errors)
+    app.register_blueprint(notifications)
+    app.register_blueprint(reports)
+    app.register_blueprint(rents)
+    app.register_blueprint(siteAdminBlueprint, url_prefix='/siteAdmin')
+
+    return app
+
 
 # DotEnv Setup
 load_dotenv(join(dirname(__file__), '..', '.env'))
