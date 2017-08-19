@@ -45,7 +45,7 @@
 			{% endif %}
 		</div>
 	</div>
-	<div class="row nexnest-font" style="padding-top: 30px;">
+	<div class="row nexnest-font-normal" style="padding-top: 30px;">
 		<div class="col-xs-1 col-md-2 col-lg-2"></div>
 		<div class="col-xs-10 col-md-8 col-lg-8">
 			<div class="row">
@@ -173,12 +173,78 @@
 			<hr>
 			<div class="row">
 				<div class="col-sm-4">
+					<h2>Property:</h2>
+				</div>
+				<div class="col-sm-8">
+					<div class="row" style="text-align: center;">
+						<div class="col-xs-3 col-md-3 col-xl-2">
+							{% if listing.property_type == "house" %}
+							    <i class="fa fa-home fa-3x" aria-hidden="true"></i>
+							{% elif listing.property_type == "apartment" %}
+							    <i class="fa fa-building fa-3x" aria-hidden="true"></i>
+							{% else %}
+							    <i class="fa fa-building fa-3x" aria-hidden="true"></i>
+							{% endif %}
+							<br>
+							{{ listing.property_type }}
+						</div>
+						<div class="col-xs-3 col-md-3 col-xl-2">
+							<i class="fa fa-bed fa-3x" aria-hidden="true"></i>
+							<br>
+							{{ listing.num_bedrooms }} Beds
+						</div>
+						<div class="col-xs-3 col-md-3 col-xl-2">
+							<i class="fa fa-bath fa-3x" aria-hidden="true"></i>
+							<br>
+							{{ listing.num_full_baths }} Full Bath{% if listing.num_full_baths > 1 %}s{% endif %}
+						</div>
+						{% if listing.num_half_baths > 0 %}
+							<div class="col-xs-3 col-md-3 col-xl-2">
+								<i class="fa fa-bath fa-3x" aria-hidden="true"></i>
+								<br>
+								{{ listing.num_half_baths }} Half Bath{% if listing.num_half_baths > 1 %}s{% endif %}
+							</div>
+						{% endif %}
+						{% if listing.square_footage %}
+							<div class="col-xs-3 col-md-3 col-xl-2">
+								<i class="icon icon-ruler icon-3x" aria-hidden="true"></i>
+								<br>
+								{{ listing.square_footage }} SQFT
+							</div>
+						{% endif %}
+						{% if listing.furnished %}
+							<div class="col-xs-3 col-md-3 col-xl-2">
+								<i class="icon icon-bed icon-3x" aria-hidden="true"></i>
+								<br>
+								Property Furnished
+							</div>							
+						{% endif %}
+						{% if listing.handicap %}
+							<div class="col-xs-3 col-md-3 col-xl-2">
+								<i class="icon icon-wheelchair-alt icon-3x" aria-hidden="true"></i>
+								<br>
+								Handicap Accessible
+							</div>							
+						{% endif %}
+						<div class="col-xs-3 col-md-3 col-xl-2">
+							<i class="icon icon-parking icon-3x" aria-hidden="true"></i>
+							<br>
+							<span style="text-transform: capitalize;">{{ listing.parking }}</span> Parking
+						</div>
+					</div>
+				</div>
+			</div>
+			<hr style="padding-bottom: 15px;">
+			<div class="row">
+				<div class="col-sm-4">
 					<h2>Lease:</h2>
 				</div>
 				<div class="col-sm-8">
 					<div class="row">
-						<div class="col-xs-12 col-md-6 col-xl-4">
-							<strong>Time Period:</strong> {{ listing.time_period }}
+						<div class="col-xs-3 col-md-3 col-xl-2">
+							<i class="fa fa-clock-o fa-3x" aria-hidden="true"></i>
+							<br>
+							<span style="text-transform: capitalize;">{{ listing.time_period }}</span>
 						</div>
 						<div class="col-xs-12 col-md-6 col-xl-4">
 							<strong>Start Date:</strong> {{ listing.start_date }}
@@ -200,49 +266,7 @@
 						{% endif %}
 					</div>
 				</div>
-			</div>
-			<hr style="padding-bottom: 15px;">
-			<div class="row">
-				<div class="col-sm-4">
-					<h2>Property:</h2>
-				</div>
-				<div class="col-sm-8">
-					<div class="row">
-						<div class="col-xs-12 col-md-6 col-xl-4">
-							<strong>Property Type:</strong> {{ listing.property_type }}
-						</div>
-						<div class="col-xs-12 col-md-6 col-xl-4">
-							<i class="fa fa-bed" aria-hidden="true"></i> {{ listing.num_bedrooms }} Beds
-						</div>
-						<div class="col-xs-12 col-md-6 col-xl-4">
-							<i class="fa fa-bath" aria-hidden="true"></i>{{ listing.num_full_baths }} Full Baths
-						</div>
-						{% if listing.num_half_baths > 0 %}
-							<div class="col-xs-12 col-md-6 col-xl-4">
-								<i class="fa fa-bath" aria-hidden="true"></i>{{ listing.num_half_baths }} Half Baths
-							</div>
-						{% endif %}
-						{% if listing.square_footage %}
-							<div class="col-xs-12 col-md-6 col-xl-4">
-								{{ listing.square_footage }} SQFT
-							</div>
-						{% endif %}
-						{% if listing.furnished %}
-							<div class="col-xs-12 col-md-6 col-xl-4">
-								Property Furnished
-							</div>							
-						{% endif %}
-						{% if listing.handicap %}
-							<div class="col-xs-12 col-md-6 col-xl-4">
-								Handicap Accessible
-							</div>							
-						{% endif %}
-						<div class="col-xs-12 col-md-6 col-xl-4">
-							Parking: {{ listing.parking }}
-						</div>
-					</div>
-				</div>
-			</div>
+			</div>			
 			<hr style="padding-bottom: 15px;">
 			<div class="row">
 				<div class="col-sm-4">
