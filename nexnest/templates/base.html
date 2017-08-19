@@ -39,10 +39,11 @@
         <script src="{{url_for('static', filename='js/dayScheduler.js')}}"></script>
         <script src="{{url_for('static', filename='js/tagsInput.js')}}"></script>
         <script src="{{url_for('static', filename='js/dobPicker.js')}}"></script>
+        <script src="{{url_for('static', filename='js/scrollToFixed.js')}}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
         <script src="https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay.min.js"></script>
         <script src="https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay_progress.min.js"></script>
-        <script src="https://use.fortawesome.com/2734d16a.js"></script>
+        <script src="https://use.fortawesome.com/2734d16a.js"></script>        
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 	<body>
@@ -185,13 +186,13 @@
 		    </ul>
 		  {% endif %}
 		{% endwith %}
-        <div class="row" style="width: 100%; overflow-x: hidden;">
+        <div class="row" style="width: 100%;">
             <div class="col-xs-12" style="margin-left: 15px; padding-left: 15px; min-height: 77vh;">
 		        {% block content %}{% endblock %}
             </div>
         </div>
-        <div class="row" style="width: 100%; overflow-x: hidden; padding-top: 50px; margin-left: 0px;">
-            <div class="col-xs-12" style="padding-left: 15px;">
+        <div class="row" style="width: 100%; padding-top: 0px; margin-left: 0px; overflow-x: hidden;">
+            <div class="col-xs-12">
                 {% include 'footer.html' %}
             </div>
         </div>
