@@ -46,7 +46,7 @@
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 	<body>
-		<nav class="navbar navbar-light bg-faded" style="max-height: 62px; background-color: #d9d9d9;">
+		<nav class="navbar navbar-light bg-faded" style="max-height: 62px; background-color: #656264;">
             <a class="navbar-brand" href="/index" style="padding-top: 0px;">
                 <img src="/static/img/colorLogo.png" style="height: 50px;" alt="logo">
             </a>
@@ -57,23 +57,23 @@
                         {% if not current_user.is_authenticated %}
                     <!-- !!NOT LOGGED IN!! -->
 			  		<li class="nav-item" style="padding-top: 5px;">
-			      		<a class="nav-link btn btn-primary" href="{{url_for('users.register')}}">Sign Up</a>
+			      		<a class="nav-link btn btn-light-green nexnest-font" href="{{url_for('users.register')}}" style="color: white;">Sign Up</a>
 			    	</li>
 			    	<li class="nav-item" style="padding-top: 5px;">
-			      		<a class="nav-link btn btn-primary" href="#" data-toggle="modal" data-target="#loginModal">Sign In</a>
+			      		<a class="nav-link btn btn-light-green nexnest-font" href="#" data-toggle="modal" data-target="#loginModal" style="color: white;">Sign In</a>
 			    	</li>
                         {% else %}
                     <!-- LOGGED IN -->
                     <li class="nav-item dropdown hidden-xs-down">                        
                         <a id="accountDropdown" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" style="padding: 0px;">
-                            <div class="gavatar">
+                            <div class="gavatar" style="background-color: #d2d2d2;">
                                 <img src="{{current_user.profile_image}}" alt="Profile Image" class="img-responsive" style="height: 35px; width: 35px; border-radius: 80px;"/>
                             </div>
-                            <strong>My Account</strong>
+                            <strong style="color: #d2d2d2;">My Account</strong>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="accountDropdown">
                             <div class="navbar-content">
-                               <div class="row">
+                               <div class="row nexnest-font">
                                    <div class="col-md-5">
                                         <img src="{{current_user.profile_image}}"
                                             alt="Profile Image" class="img-responsive" style="height: 120px;" />
@@ -83,22 +83,22 @@
                                     </div>
                                     <div class="col-md-7" style="text-align: center;">
                                         <span><strong><h5>{{current_user.fname}} {{current_user.lname}}</h5></strong></span>
-                                        <h6 class="text-muted" style="padding-bottom: 5px;">
+                                        <h6 class="text-muted" style="padding-bottom: 5px; color: #d2d2d2;">
                                             {{current_user.email}}</h6>
                                         <div class="divider">
                                         </div>
-                                        <a href="{{url_for('users.viewUser', userID=current_user.id)}}" class="btn btn-primary btn-sm">My Account</a>
+                                        <a href="{{url_for('users.viewUser', userID=current_user.id)}}" class="btn btn-blue btn-sm">My Account</a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="navbar-footer">
+                            <div class="navbar-footer nexnest-font" style="background-color: #d2d2d2;">
                                 <div class="navbar-footer-content">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <a class="btn btn-primary btn-sm pull-right" href="#" data-toggle="modal" data-target="#passwordChangeModal">Change Password</a>
+                                            <a class="btn btn-blue btn-sm pull-right" href="#" data-toggle="modal" data-target="#passwordChangeModal">Change Password</a>
                                         </div>
                                         <div class="col-md-6">
-                                            <a href="{{url_for('users.logout')}}" class="btn btn-primary btn-sm pull-right">Sign Out</a>
+                                            <a href="{{url_for('users.logout')}}" class="btn btn-blue btn-sm pull-right">Sign Out</a>
                                         </div>
                                     </div>
                                 </div>
@@ -107,11 +107,11 @@
                     </li>
                     {% if current_user %}
                     <li class="nav-item">
-                        <div class="dropdown dropdown-notifications dropdown-toggle">
-                            <i data-count="{{ numUnviewedMessages }}" class="fa fa-comments fa-2x notification-icon" style="padding-top: 4px;" id="dropdownNotificationButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
+                        <div class="dropdown dropdown-notifications dropdown-toggle nexnest-font">
+                            <i data-count="{{ numUnviewedMessages }}" class="fa fa-comments fa-2x notification-icon" style="padding-top: 4px; color: #f4c359;" id="dropdownNotificationButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
                             <div class="dropdown-menu dropdown-menu-right" style="overflow:scroll; overflow-x: hidden; width: 93vw; right: -100px; max-height: 75vh;" aria-labelledby="dropdownNotificationButton">
                                 <div class="dropdown-toolbar">
-                                    <h2 class="dropdown-toolbar-title"><strong>Messages ({{ numUnviewedMessages }} new)</strong>
+                                    <h2 class="dropdown-toolbar-title"><strong style="font-size: 20px;">Messages ({{ numUnviewedMessages }} new)</strong>
                                     <span style="float: right;"><a href="#" id="markAllMessages">Mark All Read</a></span></h2>
                                 </div>
                                 <ul class="notifications">
@@ -128,11 +128,11 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <div class="dropdown dropdown-notifications dropdown-toggle">
-                            <i data-count="{{ numUnviewedNotifications }}" class="fa fa-bell fa-2x notification-icon" style="padding-top: 4px;" id="dropdownNotificationButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
+                        <div class="dropdown dropdown-notifications dropdown-toggle nexnest-font">
+                            <i data-count="{{ numUnviewedNotifications }}" class="fa fa-bell fa-2x notification-icon" style="padding-top: 4px; color: #f4c359;" id="dropdownNotificationButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
                             <div class="dropdown-menu dropdown-menu-right" style="overflow:scroll; overflow-x: hidden; width: 93vw; right: -48px; max-height: 75vh;" aria-labelledby="dropdownNotificationButton">
                                 <div class="dropdown-toolbar">
-                                    <h2 class="dropdown-toolbar-title"><strong>Notifications ({{ numUnviewedNotifications }} new)</strong>
+                                    <h2 class="dropdown-toolbar-title"><strong style="font-size: 20px;">Notifications ({{ numUnviewedNotifications }} new)</strong>
                                     <span style="float: right;"><a href="#" id="markAllNotif">Mark All Read</a></span></h2>
                                 </div>
                                 <ul class="notifications">
@@ -150,8 +150,8 @@
                     </li>
                     {% endif %}
 			  		<li class="nav-item">
-		                <div class="dropdown">
-			                <i class="fa fa-bars fa-2x dropdown-toggle" style="padding-top: 4px;" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
+		                <div class="dropdown nexnest-font">
+			                <i class="fa fa-bars fa-2x dropdown-toggle" style="padding-top: 4px; color: #d2d2d2;" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
 			                <div class="dropdown-menu dropdown-menu-right hamburger-menu" style="top: 51px; right: -16px;" aria-labelledby="dropdownMenuButton">
                                 {% if current_user.isLandlord %}
                                     <a class="dropdown-item" href="{{ url_for('landlords.landlordDashboard') }}"><strong class="hamburgerMenuItem">My Dashboard</strong></a>
@@ -161,7 +161,7 @@
                                     {% elif houses|length > 1 %}
                                         <a class="dropdown-item" href="#" id="showMoreHouses"><strong class="hamburgerMenuItem">My Houses</strong></a>
                                             {% for house in houses %}
-                                                <a class="dropdown-item moreHouses" href="{{house.url}}" style="display: none;"><strong class="hamburgerMenuItem extraHouse">-{{house.address}}</strong></a>
+                                                <a class="dropdown-item moreHouses" href="{{house.url}}" style="display: none; padding-left: 35px;"><strong class="hamburgerMenuItem extraHouse"></i>-{{house.address}}</strong></a>
                                             {% endfor %}
                                     {% endif %}
 				                    <a class="dropdown-item" href="{{ url_for('users.myGroups') }}"><strong class="hamburgerMenuItem">My Groups</strong></a>
@@ -239,7 +239,7 @@
                     if(message.category == "generic_message"){
                         var newNotification = `<a href="`+ message.redirectURL +`" id="`+ message.id +`" class="noti" data-redirect="`+ message.redirectURL +`" style="text-decoration: none;">`;
                             if(message.viewed == false){
-                                newNotification += `<li class="notification" style="background-color: aliceblue;">`;
+                                newNotification += `<li class="notification" style="background-color: rgba(86, 134, 197, 0.39);">`;
                             }
                             else{
                                 newNotification += `<li class="notification">`;
@@ -272,7 +272,7 @@
                                         if(message.viewed == false){
                                             newNotification += `
                                             <div class="col-xs-6" style="text-align: right;">
-                                                <span class="tag tag-default">New Message</span>
+                                                <span class="tag tag-nexnest-blue">New Message</span>
                                             </div>`;
                                         }
                                     newNotification += `
@@ -280,7 +280,7 @@
                                     <p class="notification-desc">`+ message.messageObject.contentBrief +`</p>
                                     <div class="notification-meta">
                                         <div class="row">
-                                            <div class="col-xs-12">`;
+                                            <div class="col-xs-12 notification-item-footer">`;
                                                     if(message.notifType == "maintenance_message"){
                                                         newNotification += `<strong>Maintenance Request - </strong>`;
                                                     }
@@ -297,7 +297,7 @@
                                                         newNotification += `<strong>Group Message - </strong>`;
                                                     }
                                                 newNotification += `
-                                                <small class="timestamp timeago">`+ moment.utc(message.messageObject.date).fromNow() +` </small>
+                                                <small class="timestamp timeago notification-item-footer">`+ moment.utc(message.messageObject.date).fromNow() +` </small>
                                             </div>
                                         </div>
                                     </div>
@@ -309,7 +309,7 @@
                     else{
                         var newNotification = `<a href="`+message.redirectURL+`" id="`+message.id+`" class="noti" data-redirect="`+ message.redirectURL +`" style="text-decoration: none;">`;
                             if(message.viewed == false){
-                                newNotification += `<li class="notification" style="background-color: aliceblue;">`;
+                                newNotification += `<li class="notification" style="background-color: rgba(86, 134, 197, 0.39);">`;
                             }
                             else{
                                 newNotification += `<li class="notification">`;
@@ -328,7 +328,7 @@
                                             if(message.viewed == false){
                                                 newNotification += `
                                                 <div class="col-xs-6" style="text-align: right;">
-                                                    <span class="tag tag-default">New Message</span>
+                                                    <span class="tag tag-nexnest-blue">New Message</span>
                                                 </div>`;
                                             }
                                         newNotification += `
@@ -336,7 +336,7 @@
                                         <p class="notification-desc">`+message.messageObject.contentBrief+`</p>
                                         <div class="notification-meta">
                                             <div class="row">
-                                                <div class="col-xs-12">
+                                                <div class="col-xs-12 notification-item-footer">
                                                     <strong>Direct Message - </strong>
                                                     <small class="timestamp timeago">`+ moment.utc(message.messageObject.date).fromNow() +`</small>
                                                 </div>
@@ -484,7 +484,7 @@
                         console.log(message);
                         var newNotification = `<a href="`+ message.redirectURL +`" id="`+ message.id +`" class="noti" data-redirect="`+ message.redirectURL +`" style="text-decoration: none;">`;
                             if(message.viewed == false){
-                                newNotification += `<li class="notification" style="background-color: aliceblue;">`;
+                                newNotification += `<li class="notification" style="background-color: rgba(86, 134, 197, 0.39);">`;
                             }
                             else{
                                 newNotification += `<li class="notification">`;
@@ -517,7 +517,7 @@
                                         if(message.viewed == false){
                                             newNotification += `
                                             <div class="col-xs-6" style="text-align: right;">
-                                                <span class="tag tag-default">New Message</span>
+                                                <span class="tag tag-nexnest-blue">New Message</span>
                                             </div>`;
                                         }
                                     newNotification += `
@@ -525,7 +525,7 @@
                                     <p class="notification-desc">`+ message.messageObject.contentBrief +`</p>
                                     <div class="notification-meta">
                                         <div class="row">
-                                            <div class="col-xs-12">`;
+                                            <div class="col-xs-12 notification-item-footer">`;
                                                     if(message.notifType == "maintenance_message"){
                                                         newNotification += `<strong>Maintenance Request - </strong>`;
                                                     }
@@ -542,7 +542,7 @@
                                                         newNotification += `<strong>Group Message - </strong>`;
                                                     }
                                                 newNotification += `
-                                                <small class="timestamp timeago">`+ moment.utc(message.messageObject.date).fromNow() +` </small>
+                                                <small class="timestamp timeago notification-item-footer">`+ moment.utc(message.messageObject.date).fromNow() +` </small>
                                             </div>
                                         </div>
                                     </div>
@@ -554,7 +554,7 @@
                     else{
                         var newNotification = `<a href="`+message.redirectURL+`" id="`+message.id+`" class="noti" data-redirect="`+ message.redirectURL +`" style="text-decoration: none;">`;
                             if(message.viewed == false){
-                                newNotification += `<li class="notification" style="background-color: aliceblue;">`;
+                                newNotification += `<li class="notification" style="background-color: rgba(86, 134, 197, 0.39);">`;
                             }
                             else{
                                 newNotification += `<li class="notification">`;
@@ -573,7 +573,7 @@
                                             if(message.viewed == false){
                                                 newNotification += `
                                                 <div class="col-xs-6" style="text-align: right;">
-                                                    <span class="tag tag-default">New Message</span>
+                                                    <span class="tag tag-nexnest-blue">New Message</span>
                                                 </div>`;
                                             }
                                         newNotification += `
@@ -581,7 +581,7 @@
                                         <p class="notification-desc">`+message.messageObject.contentBrief+`</p>
                                         <div class="notification-meta">
                                             <div class="row">
-                                                <div class="col-xs-12">
+                                                <div class="col-xs-12 notification-item-footer">
                                                     <strong>Direct Message - </strong>
                                                     <small class="timestamp timeago">`+ moment.utc(message.messageObject.date).fromNow() +`</small>
                                                 </div>

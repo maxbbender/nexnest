@@ -5,7 +5,7 @@ function DisplayNotifications(){
          var messageContent = notification.message.split("#");
          var newNotification = `<div id="`+ notification.id +`" data-type="`+ notification.notifType +`" data-redirect="`+ notification.redirectURL +`" class="noti">`;
              if(notification.viewed == false){
-                 newNotification += `<li class="notification" style="background-color: aliceblue;">`;
+                 newNotification += `<li class="notification" style="background-color: rgba(86, 134, 197, 0.39);">`;
              }
              else{
                  newNotification += `<li class="notification">`;
@@ -52,7 +52,7 @@ function DisplayNotifications(){
                          <strong class="notification-title">`+ messageContent[0] +`</strong>
                          <div class="notification-meta">
                              <div class="row">
-                                 <div class="col-xs-8">
+                                 <div class="col-xs-8 notification-item-footer">
                                      
                                      <small class="timestamp">`;
                                          if(messageContent.length > 1){

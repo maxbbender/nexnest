@@ -339,7 +339,7 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .media:hover {
-  background-color: whitesmoke;
+  background-color: rgba(86, 134, 197, 0.49);
 }
 
 [data-tooltip] {
@@ -978,4 +978,12 @@ button.link {
 
 .faqVR {
   border-right: #52ab81 medium solid;
+}
+.tag-nexnest-blue{
+  background-color: #5686c5;
+  color: white;
+}
+
+.notification-item-footer{
+  color: #656264;
 }

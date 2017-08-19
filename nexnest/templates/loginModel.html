@@ -1,14 +1,14 @@
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="login" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="width: 120%; margin-left: -10%;">
-            <div class="modal-header" style="background-color: #71c0f6; text-align: center;">
+            <div class="modal-header" style="background-color: #4ca3de; text-align: center;">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <img src="/static/img/signInBanner.png" style="height: auto; max-width: 100%;">
+                <img src="/static/img/signInBanner.png" style="height: auto; max-width: 100%; padding-left: 25px; padding-right: 25px; margin-top: -15px;">
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="row nexnest-font">
                     <div class="col-xs-2"></div>
                     <div class="col-xs-8">
                         {% from "_formhelpers.html" import render_field %}
@@ -19,15 +19,19 @@
                                 {{ render_field(login_form.password, class="form-control", type="password") }}
                             </dl>
                             <p>
-                                <input type='submit' value='Sign In' class="btn btn-primary pull-right">
+                                <input type='submit' value='Sign In' class="btn btn-light-green pull-right">
                             </p>
                         </form>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <a href="{{url_for('users.register')}}" style="padding-right: 15px;">Need to Sign Up?</a>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <div class="modal-footer nexnest-font">
+                <div class="row">
+                    <div class="col-xs-12 pull-right">
+                        <span><a href="{{url_for('users.register')}}" style="padding-right: 15px;">Need to Sign Up?</a></span>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

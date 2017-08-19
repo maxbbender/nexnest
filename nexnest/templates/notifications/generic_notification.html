@@ -1,6 +1,6 @@
 <a href="{{ notification.redirectURL }}" id="{{ notification.id }}" data-type="{{ notification.notif_type }}" data-redirect="{{ notification.redirect_url }}" class="noti">
     {% if not notification.viewed %}
-    <li class="notification" style="background-color: aliceblue;">
+    <li class="notification" style="background-color: rgba(86, 134, 197, 0.39);">
     {% else %}
     <li class="notification">
     {% endif %}
@@ -34,7 +34,7 @@
                 <strong class="notification-title">{{ notification.message }}</strong>
                 <div class="notification-meta">
                     <div class="row">
-                        <div class="col-xs-8">
+                        <div class="col-xs-8 notification-item-footer">
                             <small class="timestamp">{{ notification.date_created }}</small>
                         </div>
                         <!-- <div class="col-xs-4" style="text-align: right;">

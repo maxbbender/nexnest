@@ -4,6 +4,12 @@
 	border-radius: 10px;
 }
 
+.btn-blue {
+	background-color: #5686c5; 
+	color: white;
+	border-radius: 10px;
+}
+
 .btn-light-green {
 	background-color: #4fac80; 
 	color: white;
