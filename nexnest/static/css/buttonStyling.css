@@ -9,3 +9,9 @@
 	color: white;
 	border-radius: 10px;
 }
+
+.btn-white {
+	background-color: white;
+	border-color: black;
+	color: black;
+}

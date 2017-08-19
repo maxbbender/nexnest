@@ -45,36 +45,57 @@
 			{% endif %}
 		</div>
 	</div>
-	<div class="row">
+	<div class="row nexnest-font" style="padding-top: 30px;">
 		<div class="col-xs-1 col-md-2 col-lg-2"></div>
 		<div class="col-xs-10 col-md-8 col-lg-8">
 			<div class="row">
 				<div class="col-xs-8">
-					<br>					
-					<h4>{{ listing.street }},
-					<br>
-					{{ listing.city }}, {{ listing.state }}, {{ listing.zip_code }}</h4>
-					<h5>${{ listing.price }} Per Bedroom Per {{ listing.rent_due }}</h5>
-				</div>
-				{% if listing.floor_plan_url %}
-					<div class="col-xs-4" style="text-align: right;">
-						<br>
-						<a class="btn btn-primary" href="{{listing.floor_plan_url}}">Floor Plan</a>
-						{% if current_user.is_authenticated %}
-						{% if not current_user in listing.landLordsAsUsers() %}
-							<a href="#" class="btn btn-danger" data-toggle="modal" data-target="#listingReportModal"><i class="fa fa-x fa-exclamation-triangle" title="Report This Listing" aria-hidden="true" style="color: white; padding-left: 15px; position: relative; top: 9px;"></i> Report Listing</a>
-						{% endif %}
-					{% endif %}
+					<div class="row">
+						<div class="col-xs-1" style="margin-top: 25px;">
+							{% if listing.property_type == "house" %}
+							    <img src="/static/img/housePin.png" style="height: 80px;">
+							{% elif listing.property_type == "apartment" %}
+							    <img src="/static/img/apartmentPin.png" style="height: 80px;">
+							{% else %}
+							    <img src="/static/img/complexPin.png" style="height: 80px;">
+							{% endif %}
+						</div>
+						<div class="col-xs-11">
+							<br>
+							<h3>{{ listing.street }},
+							<br>
+							{{ listing.city }}, {{ listing.state }}, {{ listing.zip_code }}</h3>
+						</div>						
 					</div>
-				{% else %}
+				</div>
+				<div class="col-xs-4" style="text-align: right;">
+					<h3>
+						From ${{ listing.price }} 
+						<br>
+						Per Bedroom Per {{ listing.rent_due }}
+					</h3>
+				</div>
+			</div>
+			<div class="row">
+			{% if listing.floor_plan_url %}
+				<div class="col-xs-12" style="text-align: right;">
+					<br>
+					<a class="btn btn-primary" href="{{listing.floor_plan_url}}">Floor Plan</a>
 					{% if current_user.is_authenticated %}
-						{% if not current_user in listing.landLordsAsUsers() %}
-							<div class="col-xs-4" style="text-align: right;">
-								<a href="#" class="btn btn-danger" data-toggle="modal" data-target="#listingReportModal"><i class="fa fa fa-exclamation-triangle" title="Report This Listing" aria-hidden="true" style="color: white;"></i> Report Listing</a>
-							</div>
-						{% endif %}
+					{% if not current_user in listing.landLordsAsUsers() %}
+						<a href="#" class="btn btn-danger" data-toggle="modal" data-target="#listingReportModal"><i class="fa fa-x fa-exclamation-triangle" title="Report This Listing" aria-hidden="true" style="color: white; padding-left: 15px; position: relative; top: 9px;"></i> Report Listing</a>
 					{% endif %}
 				{% endif %}
+				</div>
+			{% else %}
+			{% if current_user.is_authenticated %}
+				{% if not current_user in listing.landLordsAsUsers() %}
+					<div class="col-xs-12" style="text-align: right;">
+						<a href="#" class="btn btn-danger" data-toggle="modal" data-target="#listingReportModal"><i class="fa fa fa-exclamation-triangle" title="Report This Listing" aria-hidden="true" style="color: white;"></i> Report Listing</a>
+					</div>
+				{% endif %}
+			{% endif %}
+			{% endif %}
 			</div>
 			{% if current_user.is_authenticated %}
 				{% if not current_user in listing.landLordsAsUsers() %}
@@ -86,33 +107,49 @@
                 </div>
 				<div class="row hidden-md-down">
 					<div class="col-xs-12 col-lg-3" style="text-align:left">
-						<a href="{{ url_for('indexs.index') }}" class="btn btn-primary">Contact Landlord</a>
+						<a href="{{ url_for('indexs.index') }}" class="btn btn-white">
+							<i class="icon icon-user-circle" style="margin-right: 5px; color: #f4c359;"></i>Contact Landlord
+						</a>
 					</div>
 					<div class="col-xs-12 col-lg-3 col-centered">					
-			            <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#selectGroupForTourModal">Request Tour</a>
+			            <a href='#' class="btn btn-white" data-toggle="modal" data-target="#selectGroupForTourModal">
+			            	<i class="fa fa-calendar" aria-hidden="true" style="margin-right: 5px; color: #f4c359;"></i>Request Tour
+			            </a>
 					</div>
 					<div class="col-xs-12 col-lg-3 col-centered">
-						<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#selectGroupForHouseModal">Request House</a>
+						<a href='#' class="btn btn-white" data-toggle="modal" data-target="#selectGroupForHouseModal">
+							<i class="fa fa-home" aria-hidden="true" style="margin-right: 5px; color: #f4c359;"></i>Request House
+						</a>
 					</div>
 					<div class="col-xs-12 col-lg-3" style="text-align:right">
-						<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestListingModal">Favorite For Group</a>
+						<a href='#' class="btn btn-white" data-toggle="modal" data-target="#suggestListingModal">
+							<i class="fa fa-heart-o" aria-hidden="true" style="margin-right: 5px;"></i>Favorite For Group
+						</a>
 					</div>
 				</div>
 				<div class="row hidden-lg-up">
 					<div class="col-xs-12 col-md-6 col-lg-3 col-centered">
-						<a href="{{ url_for('indexs.index') }}" class="btn btn-primary" style="width: 160.31px;">Contact Landlord</a>
+						<a href="{{ url_for('indexs.index') }}" class="btn btn-white" style="width: 160.31px;">
+							<i class="icon icon-user-circle" style="margin-right: 5px;"></i>Contact Landlord
+						</a>
 					</div>
 					<br><br>
 					<div class="col-xs-12 col-md-6 col-lg-3 col-centered">					
-			            <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#selectGroupForTourModal" style="width: 160.31px;">Request Tour</a>
+			            <a href='#' class="btn btn-white" data-toggle="modal" data-target="#selectGroupForTourModal" style="width: 160.31px;">
+			            	<i class="fa fa-calendar" aria-hidden="true" style="margin-right: 5px; color: #f4c359;"></i>Request Tour
+			            </a>
 					</div>
 					<br><br>
 					<div class="col-xs-12 col-md-6 col-lg-3 col-centered">
-						<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#selectGroupForHouseModal" style="width: 160.31px;">Request House</a>
+						<a href='#' class="btn btn-white" data-toggle="modal" data-target="#selectGroupForHouseModal" style="width: 160.31px;">
+							<i class="fa fa-home" aria-hidden="true" style="margin-right: 5px;"></i>Request HouseRequest House
+						</a>
 					</div>
 					<br><br>
 					<div class="col-xs-12 col-md-6 col-lg-3 col-centered">
-						<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#suggestListingModal" style="width: 160.31px;">Favorite For Group</a>
+						<a href='#' class="btn btn-white" data-toggle="modal" data-target="#suggestListingModal" style="width: 160.31px;">
+							<i class="fa fa-heart-o" aria-hidden="true" style="margin-right: 5px;"></i>Favorite For GroupFavorite For Group
+						</a>
 					</div>
 				</div>
 				{% endif %}
@@ -126,8 +163,11 @@
 			
 			<hr>
 			<div class="row">
-				<div class="col-xl-12">
-					<strong style="padding-right: 5px;">Property Description: </strong> {{ listing.description }}
+				<div class="col-sm-4">
+					<h2>Description: </h2> 
+				</div>
+				<div class="col-sm-8">
+					{{ listing.description }}
 				</div>
 			</div>
 			<hr>
@@ -276,7 +316,7 @@
 			{% if listing.hasUtilities %}
 				<div class="row">
 					<div class="col-sm-4">
-						<h2>Utilities Included in Rent:</h2>
+						<h2>Utilities Included:</h2>
 					</div>
 					<div class="col-sm-8">
 						<div class="row">						

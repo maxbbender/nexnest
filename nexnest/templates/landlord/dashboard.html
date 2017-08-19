@@ -149,15 +149,11 @@
 								                    	{% endif %}						                    	
 								                    </div>
 								                </div>
-								                <div class="col-xs-1">
-		                    		                <div class="dropdown">
-		                    			                <i class="fa fa-bars fa-2x dropdown-toggle" style="padding-top: 4px;" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
-		                    			                <div class="dropdown-menu dropdown-menu-right hamburger-menu" style="top: 51px; right: -16px;" aria-labelledby="dropdownMenuButton">
-		                    			                	<a class="dropdown-item" href="{{ url_for('listings.editListing', listingID=listing.id) }}"><strong class="hamburgerMenuItem">Edit Listing</strong></a>
-		                    			                	<a class="dropdown-item" href="{{ url_for('listings.cloneListing', listingID=listing.id) }}"><strong class="hamburgerMenuItem">Copy Lisitng</strong></a>
-		                    			                	<a class="dropdown-item" href="{{ url_for('users.myGroups') }}"><strong class="hamburgerMenuItem">Delete</strong></a>
-		                    			            	</div>
-		                    			         	</div>
+								                <div class="col-xs-1">		                    		                
+	                			                	<a href="{{ url_for('listings.editListing', listingID=listing.id) }}"><strong>Edit</strong></a>
+	                			                	<br>
+	                			                	<br>
+	                			                	<a href="{{ url_for('listings.cloneListing', listingID=listing.id) }}"><strong>Copy</strong></a>
 						                    	</div>
 						                    </div>
 					                    </div>
