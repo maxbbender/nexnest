@@ -127,7 +127,7 @@ def maintenanceRequestMessage():
     form = MaintenanceRequestMessageForm(request.form)
 
     if form.validate():
-        maintenance = session.query(Maintenance).filter_by(id=form.maintenanceID.data).first()
+        maintenance = Maintenance.query.filter_by(id=form.maintenanceID.data).first_or_404()
 
         if maintenance is not None:
             if maintenance.house.isViewableBy(current_user):
@@ -138,11 +138,8 @@ def maintenanceRequestMessage():
                 session.commit()
 
                 newMRMsg.genNotifications()
-                # RETURN BACKTO MAINTENNANCE VIEW
-                return redirect(url_for('houses.maintenanceRequestView', id=maintenance.id))
 
-        else:
-            flash("Invalid Request", 'warning')
+                return redirect(url_for('houses.maintenanceRequestView', id=maintenance.id))\
 
     return form.redirect()
 
@@ -156,7 +153,7 @@ def maintenanceRequestView(id):
         if maintenanceRequest.house.isViewableBy(current_user):
             # Message Form
             messageForm = MaintenanceRequestMessageForm()
-            messageForm.maintenanceID = id
+            messageForm.maintenanceID.data = maintenanceRequest.id
 
             # House
             house = session.query(House) \
