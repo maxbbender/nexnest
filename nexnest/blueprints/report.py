@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, flash, url_for
 from flask_login import login_required, current_user
 
-from nexnest.application import session
+from nexnest import db
 from nexnest.models.listing import Listing
 from nexnest.models.landlord import Landlord
 from nexnest.models.group import Group
@@ -17,6 +17,8 @@ from nexnest.forms import PlatformReportForm, ListingReportForm, LandlordReportF
 
 
 reports = Blueprint('reports', __name__, template_folder='../templates/reports')
+
+session = db.session
 
 
 @reports.route('/platformReport/create', methods=['GET', 'POST'])

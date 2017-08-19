@@ -11,8 +11,8 @@ from werkzeug import secure_filename  # pylint: disable=E0611
 
 from sqlalchemy import or_
 
-from nexnest import logger
-from nexnest.application import session, app, csrf
+from flask import current_app as app
+from nexnest import db, csrf
 
 from nexnest.forms import ListingForm, SuggestListingForm, TourForm, GroupListingForm, PhotoForm, ListingReportForm
 from nexnest.models.listing import Listing
@@ -30,6 +30,8 @@ from sqlalchemy.sql.expression import func
 from pprint import pprint
 
 listings = Blueprint('listings', __name__, template_folder='../templates')
+
+session = db.session
 
 
 @listings.route('/listing/view/<int:listingID>', methods=['GET', 'POST'])
@@ -54,14 +56,14 @@ def viewListing(listingID):
 @listings.route('/listing/create', methods=['GET', 'POST'])
 @login_required
 def createListing():
-    logger.debug('/listing/create createListing()')
+    app.logger.debug('/listing/create createListing()')
     # User can only create listing if landlord
     if current_user.isLandlord:
         if request.method == 'POST':
             form = ListingForm(request.form)
-            logger.debug('POST form : %r' % form)
-            logger.debug('TimePeriodDateRange : %s' % form.time_period_date_range.data)
-            logger.debug('Start Date : %r' % form.start_date.data)
+            app.logger.debug('POST form : %r' % form)
+            app.logger.debug('TimePeriodDateRange : %s' % form.time_period_date_range.data)
+            app.logger.debug('Start Date : %r' % form.start_date.data)
             if form.validate():
                 newListing = Listing(street=form.street.data,
                                      city=form.city.data,
@@ -147,12 +149,12 @@ def createListing():
                             newListingSchool = ListingSchool(listing=newListing, school=school)
                             session.add(newListingSchool)
                             session.commit()
-                            logger.debug('newListingSchool %r' % newListingSchool)
+                            app.logger.debug('newListingSchool %r' % newListingSchool)
                         else:
-                            logger.error('Could not find school with name %s. Could not associated listing %r with school' % (collegeName, newListing))
+                            app.logger.error('Could not find school with name %s. Could not associated listing %r with school' % (collegeName, newListing))
 
-                    logger.debug('form.colleges.data : %s' % form.colleges.data)
-                    logger.debug('collegeNames %r' % collegeNames)
+                    app.logger.debug('form.colleges.data : %s' % form.colleges.data)
+                    app.logger.debug('collegeNames %r' % collegeNames)
 
                     if newListing.property_type == 'apartment':
                         newListing.apartment_number = form.apartment_number.data
@@ -354,10 +356,10 @@ def editListing(listingID):
                 if not os.path.exists(listingPicturePath):
                     os.makedirs(listingPicturePath)
 
-                logger.debug('app.config[UPLOAD_FOLDER] %s' % app.config['UPLOAD_FOLDER'])
-                logger.debug('listingPath %s' % listingPath)
-                logger.debug('listingBannerPath %s' % listingBannerPath)
-                logger.debug('listingPicturePath %s' % listingPicturePath)
+                app.logger.debug('app.config[UPLOAD_FOLDER] %s' % app.config['UPLOAD_FOLDER'])
+                app.logger.debug('listingPath %s' % listingPath)
+                app.logger.debug('listingBannerPath %s' % listingBannerPath)
+                app.logger.debug('listingPicturePath %s' % listingPicturePath)
 
                 # Make sure to delete the original banner photo in case of different extension
                 bannerPhotos = os.listdir(listingBannerPath)
@@ -367,7 +369,7 @@ def editListing(listingID):
                         try:
                             os.remove(fullFilePath)
                         except OSError as err:
-                            logger.warning('Tried to delete file %s and got error %s' % (fullFilePath, err))
+                            app.logger.warning('Tried to delete file %s and got error %s' % (fullFilePath, err))
 
                 # Lets add the photos
                 uploadedFiles = request.files.getlist("bannerPicture")
@@ -432,7 +434,7 @@ def upload(listingID):
             if not os.path.exists(listingPictureFolder):
                 os.makedirs(listingPictureFolder)
         except:
-            logger.error('Could not create directories')
+            app.logger.error('Could not create directories')
 
     # Now we uplopad the files
     for file in request.files.getlist("pictures"):
@@ -448,8 +450,8 @@ def upload(listingID):
                 savePath = os.path.join(listingPictureFolder, filename)
 
             file.save(savePath)
-            logger.debug("filename is " + filename)
-            logger.debug("file saved at %s" % savePath)
+            app.logger.debug("filename is " + filename)
+            app.logger.debug("file saved at %s" % savePath)
 
     if is_ajax:
         return jsonify(results={'success': True})
@@ -549,7 +551,7 @@ def uploadPhotos(listingID):
                 return jsonify("Do something Smart Here")
         else:
             # Does the current listing have any listing photos?
-            logger.debug("Trying to copy photos from one listing to another")
+            app.logger.debug("Trying to copy photos from one listing to another")
 
             # Listing Folder Path
             folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
@@ -558,7 +560,7 @@ def uploadPhotos(listingID):
             listingPicturePath = os.path.join(folderPath, 'pictures')
             if os.path.exists(listingPicturePath):
                 picturePaths = os.listdir(listingPicturePath)
-                logger.debug("NewListing picturePaths %r" % picturePaths)
+                app.logger.debug("NewListing picturePaths %r" % picturePaths)
             else:
                 picturePaths = None
 
@@ -573,22 +575,22 @@ def uploadPhotos(listingID):
                                                        zip_code=listing.zip_code) \
                     .first()
 
-                logger.debug("Found listing with same address %r" % otherListing)
+                app.logger.debug("Found listing with same address %r" % otherListing)
 
                 if otherListing is not None:
                     # Let's get the photos from that listing and copy them over....
                     otherListingPictureFolder = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(otherListing.id), 'pictures')
                     otherListingPicturePaths = os.listdir(otherListingPictureFolder)
 
-                    logger.debug('Other Listing otherListingPicturePaths : %r' % otherListingPicturePaths)
+                    app.logger.debug('Other Listing otherListingPicturePaths : %r' % otherListingPicturePaths)
 
                     for picture in otherListingPicturePaths:
                         copy2(os.path.join(otherListingPictureFolder, picture), listingPicturePath)
 
                 picturePaths = os.listdir(listingPicturePath)
 
-                logger.debug("Copied photos!")
-                logger.debug("NewListing picturePaths %r" % picturePaths)
+                app.logger.debug("Copied photos!")
+                app.logger.debug("NewListing picturePaths %r" % picturePaths)
 
             # Get the bannerPhoto from the listing
             bannerlistingPicturePath = os.path.join(folderPath, 'bannerPhoto')
@@ -597,7 +599,7 @@ def uploadPhotos(listingID):
 
                 if len(bannerPathList) > 0:
                     bannerPath = bannerPathList[0]
-                    logger.debug("Found Banner Photos %r" % bannerPath)
+                    app.logger.debug("Found Banner Photos %r" % bannerPath)
                 else:
                     # Let's see if there are other listings w/ same address
                     otherListing = Listing.query.filter_by(city=listing.city,
@@ -606,25 +608,25 @@ def uploadPhotos(listingID):
                                                            zip_code=listing.zip_code) \
                         .first()
 
-                    logger.debug("Found listing with same address %r" % otherListing)
+                    app.logger.debug("Found listing with same address %r" % otherListing)
 
                     if otherListing is not None:
                         otherListingBannerFolder = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(otherListing.id), 'bannerPhoto')
                         otherListingBannerPaths = os.listdir(otherListingBannerFolder)
 
-                        logger.debug('Other Listing otherListingBannerPaths : %r' % otherListingBannerPaths)
+                        app.logger.debug('Other Listing otherListingBannerPaths : %r' % otherListingBannerPaths)
 
                         for picture in otherListingBannerPaths:
                             copy2(os.path.join(otherListingBannerFolder, picture), bannerlistingPicturePath)
 
-                        logger.debug('Copied Photos!')
+                        app.logger.debug('Copied Photos!')
 
                     bannerPathList = os.listdir(bannerlistingPicturePath)
                     if len(bannerPathList) > 0:
                         bannerPath = bannerPathList[0]
                         listing.banner_photo_url = '/uploads/listings/%s/bannerPhoto/%s' % (listing.id, bannerPath)
                         session.commit()
-                        logger.debug("NewListing bannerPath %r" % bannerPath)
+                        app.logger.debug("NewListing bannerPath %r" % bannerPath)
 
             else:
                 bannerPath = None
@@ -645,10 +647,10 @@ def uploadPhotos(listingID):
 @listings.route('/listing/search/AJAX', methods=['POST', 'GET'])
 @csrf.exempt
 def searchListingsAJAX():
-    logger.debug("@listings.route('/listing/search/AJAX")
+    app.logger.debug("@listings.route('/listing/search/AJAX")
     postedJSON = request.get_json(force=True)
-    logger.debug("Incoming POSTEDJSON")
-    logger.debug(pprint(postedJSON))
+    app.logger.debug("Incoming POSTEDJSON")
+    app.logger.debug(pprint(postedJSON))
 
     # Required Fields : `bedrooms` | `minPrice` | `maxPrice` | `priceTerm` | `school`
     allListings = session.query(Listing).filter(Listing.active == True,
@@ -664,24 +666,24 @@ def searchListingsAJAX():
         else:
             allListings = allListings.filter(Listing.num_bedrooms >= 4)
     else:
-        logger.error("Bedrooms not found in listing search query")
+        app.logger.error("Bedrooms not found in listing search query")
 
-    logger.debug("Bedrooms allListings %r" % allListings.all())
+    app.logger.debug("Bedrooms allListings %r" % allListings.all())
 
     # Price Checks
     if 'minPrice' in postedJSON and 'maxPrice' in postedJSON:
         allListings = allListings.filter(Listing.price_per_month >= postedJSON['minPrice'], Listing.price_per_month <= postedJSON['maxPrice'])
     else:
-        logger.error('Minimum or Maximum price not found in listing search query')
+        app.logger.error('Minimum or Maximum price not found in listing search query')
 
-    logger.debug("Price allListings %r" % allListings.all())
+    app.logger.debug("Price allListings %r" % allListings.all())
 
     # Term Checks
     if 'term' in postedJSON:
         schoolYearPattern = re.compile(r"(\d{4}-\d{4})")
         match = schoolYearPattern.match(postedJSON['term'])
         if match:
-            logger.debug("Term School | Year : %s" % match.group(1))
+            app.logger.debug("Term School | Year : %s" % match.group(1))
             allListings = allListings.filter(Listing.time_period_date_range == match.group(1),
                                              or_(Listing.time_period == 'school',
                                                  Listing.time_period == 'year'))
@@ -690,35 +692,35 @@ def searchListingsAJAX():
             match = summerPattern.match(postedJSON['term'])
 
             if match:
-                logger.debug("Term Summer")
+                app.logger.debug("Term Summer")
                 allListings = allListings.filter(Listing.time_period_date_range == match.group(1),
                                                  Listing.time_period == 'summer')
             else:
-                logger.error("term input is invalid and does not match any patterns defined. postedJSON['term'] : %s" % postedJSON['term'])
+                app.logger.error("term input is invalid and does not match any patterns defined. postedJSON['term'] : %s" % postedJSON['term'])
     else:
-        logger.error("Term not found in listing search query")
+        app.logger.error("Term not found in listing search query")
 
-    logger.debug("Term allListings %r" % allListings.all())
+    app.logger.debug("Term allListings %r" % allListings.all())
 
     # School
     if 'school' in postedJSON:
-        logger.debug('Looking at school %s' % postedJSON['school'])
+        app.logger.debug('Looking at school %s' % postedJSON['school'])
         school = session.query(School).filter_by(name=postedJSON['school']).first()
 
         if school is not None:
             if 'distanceToCampus' in postedJSON:
-                logger.debug('Distance to Campus %d' % postedJSON['distanceToCampus'])
+                app.logger.debug('Distance to Campus %d' % postedJSON['distanceToCampus'])
                 allListings = allListings.join(ListingSchool) \
                     .filter(ListingSchool.school_id == school.id,
                             postedJSON['distanceToCampus'] >= ListingSchool.driving_miles)
             else:
                 allListings = allListings.join(ListingSchool).filter(ListingSchool.school_id == school.id)
         else:
-            logger.error("Could not find school to apply to search filter. postedJSON['school'] : %s" % postedJSON['school'])
+            app.logger.error("Could not find school to apply to search filter. postedJSON['school'] : %s" % postedJSON['school'])
     else:
-        logger.error("School not found in listing search query")
+        app.logger.error("School not found in listing search query")
 
-    logger.debug("School allListings %r" % allListings.all())
+    app.logger.debug("School allListings %r" % allListings.all())
 
     # Pets
     if 'pets' in postedJSON:
@@ -730,7 +732,7 @@ def searchListingsAJAX():
         if 'cats' in petList:
             allListings = allListings.filter(Listing.cats)
 
-    logger.debug("Pets allListings %r" % allListings.all())
+    app.logger.debug("Pets allListings %r" % allListings.all())
 
     # Includes
     if 'includes' in postedJSON:
@@ -757,7 +759,7 @@ def searchListingsAJAX():
         if 'garbageRemoval' in includeList:
             allListings = allListings.filter(Listing.garbage_service)
 
-    logger.debug("Includes allListings %r" % allListings.all())
+    app.logger.debug("Includes allListings %r" % allListings.all())
 
     # Listing Types
     if 'listingTypes' in postedJSON:
@@ -789,7 +791,7 @@ def searchListingsAJAX():
         elif 'complex' in typeList:
             allListings = allListings.filter(Listing.property_type == 'complex')
         else:
-            logger.error("No Listing Types were defined to search for")
+            app.logger.error("No Listing Types were defined to search for")
 
     standardListings = allListings.filter(Listing.featured == False).all()
     featuredListings = allListings.filter(Listing.featured == True).order_by(func.random()).limit(2).all()
@@ -800,8 +802,8 @@ def searchListingsAJAX():
         if listing not in featuredListings:
             standardListings.append(listing)
 
-    logger.debug("Standard allListings %r" % standardListings)
-    logger.debug("Featured allListings %r" % featuredListings)
+    app.logger.debug("Standard allListings %r" % standardListings)
+    app.logger.debug("Featured allListings %r" % featuredListings)
 
     # sortBy Check
     if 'sortBy' in postedJSON:
@@ -896,7 +898,7 @@ def searchListingsAJAX():
 
         listingJSONList.append(listingDict)
 
-    # logger.debug("Standard Listings")
+    # app.logger.debug("Standard Listings")
     # for tempDict in listingJSONList:
     #     pprint(tempDict)
 
@@ -954,14 +956,14 @@ def getListingAddresses(schoolName=None):
     # else:
     schoolToSearch = School.query.filter_by(name=schoolName).first_or_404()
 
-    # logger.debug("Looking for listings that have school %r" % current_user.school)
+    # app.logger.debug("Looking for listings that have school %r" % current_user.school)
     listings = Listing.query. \
         join(Listing.schools). \
         filter(ListingSchool.school_id == schoolToSearch.id). \
         filter(Listing.active == True). \
         all()
 
-    logger.debug('listings %r' % listings)
+    app.logger.debug('listings %r' % listings)
 
     returnListingList = []
 

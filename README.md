@@ -63,3 +63,9 @@ Environment Variables
 These are going to be the environment variables that we are going to need to implement in the Unit file on the production server
 
 MAIL_USERNAME
+MAIL_PASSWORD
+DATABASE_URL
+GOOGLE_MAPS_KEY
+SECURITY_PASSWORD_SALT
+SECRET_KEY
+FLASK_CONFIG

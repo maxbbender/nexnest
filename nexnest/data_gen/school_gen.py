@@ -1,4 +1,4 @@
-from nexnest.application import session
+from nexnest import db
 
 from nexnest.models.school import School
 
@@ -24,7 +24,7 @@ marist = School('Marist',
                 -73.9324651)
 
 
-session.add(fredonia)
-session.add(marist)
+db.session.add(fredonia)
+db.session.add(marist)
 
-session.commit()
+db.session.commit()

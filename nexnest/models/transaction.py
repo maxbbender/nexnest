@@ -1,7 +1,6 @@
 from datetime import datetime as dt
 
-from nexnest import logger
-from nexnest.application import db, session
+from nexnest import db
 
 from .base import Base
 
@@ -9,6 +8,7 @@ from sqlalchemy import event
 from sqlalchemy.orm import relationship
 
 from flask import flash
+from flask import current_app as app
 
 
 class Transaction(Base):
@@ -102,16 +102,16 @@ class ListingTransaction(Transaction):
 
     @property
     def totalTransactionPrice(self):
-        logger.debug("totalTransactionPrice()")
+        app.logger.debug("totalTransactionPrice()")
         if self.total is not None:
-            logger.debug("self.total is %d" % self.total)
+            app.logger.debug("self.total is %d" % self.total)
             return self.total
         else:
             totalPrice = 0
             # STANDARD 120 | 90 | 30
             # PRIVELEGED 200 | 160 | 70
             for listing in self.listings:
-                logger.debug("looking at listing %r" % listing.listing)
+                app.logger.debug("looking at listing %r" % listing.listing)
                 if listing.plan == 'standard':
                     if listing.listing.time_period == 'year':
                         totalPrice += 120
@@ -127,16 +127,16 @@ class ListingTransaction(Transaction):
                     elif listing.listing.time_period == 'summer':
                         totalPrice += 70
 
-                logger.debug("New Total : %d" % totalPrice)
+                app.logger.debug("New Total : %d" % totalPrice)
 
-            logger.debug("Final totalPrice : %d" % totalPrice)
+            app.logger.debug("Final totalPrice : %d" % totalPrice)
             if self.coupon is not None:
                 self.total = self.coupon.couponPrice(totalPrice)
-                logger.debug("Price after Coupon %d" % self.total)
+                app.logger.debug("Price after Coupon %d" % self.total)
             else:
                 self.total = totalPrice
 
-            session.commit()
+            db.session.commit()
 
             return self.total
 

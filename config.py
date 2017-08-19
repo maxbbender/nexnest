@@ -6,7 +6,7 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'domislove'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
 
-    UPLOAD_FOLDER = os.path.dirname(__file__) + '/uploads'
+    UPLOAD_FOLDER = basedir + '/nexnest/uploads'
     ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'pdf'])
     TRAP_BAD_REQUEST_ERRORS = True
 
@@ -17,6 +17,9 @@ class Config:
     # 'gc7L9UYJKqVyTMoEPbDhzGZhwogXL7Eb2hRuiRPoyhEb7uucgWUzwjWi5cLo86dX'
     GOOGLE_MAPS_KEY = os.environ.get('GOOGLE_MAPS_KEY')
     # 'AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w'
+    BRAINTREE_MERCHANT_ID = os.environ.get('BRAINTREE_MERCHANT_ID') or '95d9g95dztdsgkkh'
+    BRAINTREE_PUBLIC_KEY = os.environ.get('BRAINTREE_PUBLIC_KEY') or 'fdtk8w9qbpvqr6kn'
+    BRAINTREE_PRIVATE_KEY = os.environ.get('BRAINTREE_PRIVATE_KEY') or 'ec367f7335d5e9c222656212e1ff78f2'
 
     @staticmethod
     def init_app(app):
@@ -24,6 +27,16 @@ class Config:
 
 
 class DevelopmentConfig(Config):
+    @classmethod
+    def init_app(cls, app):
+        Config.init_app(app)
+
+        # log to syslog
+        import logging
+        from logging.handlers import SysLogHandler
+        syslog_handler = SysLogHandler()
+        syslog_handler.setLevel(logging.DEBUG)
+        app.logger.addHandler(syslog_handler)
     DEBUG = True
     MAIL_SERVER = 'http://mail.nexnest.com/'
     MAIL_PORT = 587

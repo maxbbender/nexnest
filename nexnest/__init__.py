@@ -5,30 +5,52 @@ import os
 from os import environ
 from os.path import join, dirname, exists
 
-from dotenv import load_dotenv
 
 # Flask
-from flask import Flask
+from flask import Flask, render_template
 from flask_mail import Mail, email_dispatched
+from flask_wtf.csrf import CSRFProtect
+from flask_login import LoginManager, current_user
+from flask_admin import Admin
+
 
 from config import config
 
-import logging
-import sys
+import braintree
 
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 mail = Mail()
+csrf = CSRFProtect()
+login_manager = LoginManager()
+admin = Admin(name='Nexnest', template_mode='bootstrap3')
 
 
 def createApp(configName):
+    print('CONFIG NAME')
+    print(configName)
     app = Flask(__name__)
     app.config.from_object(config[configName])
     config[configName].init_app(app)
 
     db.init_app(app)
     mail.init_app(app)
+    csrf.init_app(app)
+    login_manager.init_app(app)
+    admin.init_app(app)
+
+    login_manager.login_view = '/login'
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        from nexnest.models.user import User
+        return db.session.query(User).filter_by(id=user_id).first()
+
+    braintree.Configuration.configure(braintree.Environment.Sandbox,
+                                      merchant_id=app.config['BRAINTREE_MERCHANT_ID'],
+                                      public_key=app.config['BRAINTREE_PUBLIC_KEY'],
+                                      private_key=app.config['BRAINTREE_PRIVATE_KEY'])
 
     # Blueprints
     from nexnest.blueprints.base import base
@@ -63,69 +85,43 @@ def createApp(configName):
     app.register_blueprint(rents)
     app.register_blueprint(siteAdminBlueprint, url_prefix='/siteAdmin')
 
+    from nexnest.forms import LoginForm, PasswordChangeForm, ProfilePictureForm, PlatformReportForm, DirectMessageForm
+
+    @app.context_processor
+    def insert_login_form():
+        if current_user.is_authenticated:
+            passwordChangeForm = PasswordChangeForm()
+            avatarChangeForm = ProfilePictureForm()
+            dmForm = DirectMessageForm()
+            # messages, notifications = current_user.unreadNotifications()
+            notifications = current_user.getNotifications()
+            messages = current_user.getMessageNotifications()
+            houses = current_user.houseList
+
+            numUnviewedNotifications = current_user.getUnreadNotificationCount()
+            numUnviewedMessages = current_user.getUnreadMessageNotificationCount()
+
+            return dict(passwordChangeForm=passwordChangeForm,
+                        avatarChangeForm=avatarChangeForm,
+                        notifications=notifications,
+                        numUnviewedNotifications=numUnviewedNotifications,
+                        numUnviewedMessages=numUnviewedMessages,
+                        notificationMessages=messages,
+                        platformReportForm=PlatformReportForm(),
+                        DirectMessageForm=DirectMessageForm(),
+                        houses=houses,
+                        dmForm=dmForm)
+        else:
+            login_form = LoginForm()
+            dmForm = DirectMessageForm()
+
+            return dict(login_form=login_form,
+                        platformReportForm=PlatformReportForm(),
+                        dmForm=dmForm)
+
+    import nexnest.admin
+
     return app
-
-
-# # DotEnv Setup
-# load_dotenv(join(dirname(__file__), '..', '.env'))
-
-# # Environment choice
-# env = environ.get('NEXNEST_ENV')
-
-# if env is None:
-#     env = 'development'
-
-# # App setup
-# app = Flask(__name__, static_folder="static")
-# app.config.from_object('nexnest.config')
-
-# superENV = environ.get('NEXNEST_SUPER_%s_SETTINGS' % env.upper())
-
-# if superENV is not None:
-#     app.config.from_envvar('NEXNEST_SUPER_%s_SETTINGS' % env.upper())
-# else:
-#     app.config.from_envvar('NEXNEST_%s_SETTINGS' % env.upper())
-
-
-# # - LOGGER -
-# logger = logging.getLogger(__name__)
-# logger.setLevel(logging.DEBUG)
-
-# ch = logging.StreamHandler(sys.stdout)
-# ch.setLevel(logging.DEBUG)
-
-
-# # print(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'error.log'))
-
-# if not exists(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'error.log')):
-#     with open(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'error.log'), 'w') as f:
-#         f.write('')
-
-
-# if not exists(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'debug.log')):
-#     with open(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'debug.log'), 'w') as f:
-#         f.write('')
-
-
-# errorHandler = logging.FileHandler(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'error.log'), 'r+')
-# errorHandler.setLevel(logging.ERROR)
-
-# errorHandlerD = logging.FileHandler(join(os.path.dirname(os.path.realpath(__file__)), 'log', 'debug.log'), 'r+')
-# errorHandlerD.setLevel(logging.DEBUG)
-
-# # create formatter and add it to the handlers
-# formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-# ch.setFormatter(formatter)
-# errorHandler.setFormatter(formatter)
-# errorHandlerD.setFormatter(formatter)
-
-# # add the handlers to the logger
-# logger.addHandler(ch)
-# logger.addHandler(errorHandler)
-# logger.addHandler(errorHandlerD)
-
-# mail = Mail(app)
 
 
 def logEmailDispatch(message, app):

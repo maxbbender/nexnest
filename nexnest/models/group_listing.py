@@ -7,13 +7,14 @@ from sqlalchemy.schema import UniqueConstraint
 
 from flask import flash
 
-from nexnest.application import db, session
+from nexnest import db
 from nexnest.models.notification import Notification
 
 from .base import Base
 
+session = db.session
 
-# class PostReport(Base):
+
 class GroupListing(Base):
     __tablename__ = 'group_listings'
     id = db.Column(db.Integer, primary_key=True)

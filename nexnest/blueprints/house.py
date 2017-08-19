@@ -2,7 +2,7 @@ from flask import Blueprint, request, redirect, flash, render_template, url_for,
 
 from flask_login import login_required, current_user
 
-from nexnest.application import session
+from nexnest import db
 
 from nexnest.forms import HouseMessageForm, MaintenanceRequestForm, MaintenanceRequestMessageForm, GroupReportForm, LandlordReportForm
 from nexnest.models.house import House
@@ -15,6 +15,8 @@ from nexnest.utils.flash import flash_errors
 from sqlalchemy import desc
 
 houses = Blueprint('houses', __name__, template_folder='../templates/house')
+
+session = db.session
 
 
 @houses.route('/house/view/<id>', methods=['GET'])

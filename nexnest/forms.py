@@ -10,8 +10,6 @@ from wtforms.validators import InputRequired, Length, Email, EqualTo, Optional, 
 
 from nexnest.static.dataSets import *
 
-from nexnest import logger
-
 
 def is_safe_url(target):
     ref_url = urlparse(request.host_url)

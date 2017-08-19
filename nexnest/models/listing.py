@@ -1,8 +1,10 @@
 from datetime import datetime as dt
 
-from nexnest import logger
-from nexnest.application import db, app
+from flask import current_app as app
+
+from nexnest import db
 from nexnest.models.listing_favorite import ListingFavorite
+from nexnest.sysLogger import logger
 
 from .base import Base
 
@@ -13,6 +15,8 @@ from sqlalchemy.orm import relationship, backref
 import os
 
 import googlemaps
+
+session = db.session
 
 
 class Listing(Base):

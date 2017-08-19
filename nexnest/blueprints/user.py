@@ -6,8 +6,9 @@ from flask import (Blueprint, abort, flash, jsonify, redirect, render_template,
                    request, url_for)
 from flask_login import current_user, login_required, login_user, logout_user
 from itsdangerous import BadSignature
-from nexnest import logger
-from nexnest.application import app, csrf, session
+from nexnest import csrf, db
+from flask import current_app as app
+
 from nexnest.decorators import user_editable
 from nexnest.forms import (CreateGroupForm, DirectMessageForm, EditAccountForm,
                            EmailPreferencesForm, LandlordEditAccountForm,
@@ -35,6 +36,7 @@ from werkzeug.utils import secure_filename
 
 users = Blueprint('users', __name__, template_folder='../templates/user')
 
+session = db.session
 
 @users.route('/register', methods=['GET', 'POST'])
 def register():
@@ -133,7 +135,7 @@ def landlordInformation():
 
             availabilityJSON = json.loads(
                 moreInformationForm.availabilities.data)
-            logger.debug('availabilityJSON %r' % availabilityJSON)
+            app.logger.debug('availabilityJSON %r' % availabilityJSON)
 
             for i in range(7):
                 day = str(i)
@@ -261,7 +263,7 @@ def viewUser(userID):
         userFavorites = session.query(
             ListingFavorite).filter_by(user=current_user).all()
         myGroups = current_user.accepted_groups
-        logger.debug(currentPreferences)
+        app.logger.debug(currentPreferences)
         form = EmailPreferencesForm(obj=currentPreferences)
 
         if request.method == 'GET':
@@ -322,7 +324,7 @@ def viewUser(userID):
                 return redirect(url_for('users.viewUser',
                                         userID=userID))
     else:
-        logger.warning('User %r attempted to access user_ids page %s' %
+        app.logger.warning('User %r attempted to access user_ids page %s' %
                        (current_user, userID))
         abort(404)
 
@@ -458,7 +460,7 @@ def directMessagesAll():
         .order_by(DirectMessage.target_user_id, desc(DirectMessage.date_created)) \
         .all()
 
-    logger.debug('sentDirectMessages %r' % sentDirectMessages)
+    app.logger.debug('sentDirectMessages %r' % sentDirectMessages)
 
     allMessages = sentDirectMessages
 
@@ -486,7 +488,7 @@ def directMessagesAll():
                         allMessages.insert(idx, message)
                     break
 
-    logger.debug('allMessages %r' % allMessages)
+    app.logger.debug('allMessages %r' % allMessages)
 
     return render_template('directMessageAll.html',
                            directMessages=allMessages)
@@ -507,7 +509,7 @@ def directMessagesIndividual(userID):
         .order_by(desc(DirectMessage.date_created)) \
         .all()
 
-    logger.debug('allMessages %r' % allMessages)
+    app.logger.debug('allMessages %r' % allMessages)
 
     return render_template('directMessageIndividual.html',
                            targetUser=targetUser,
@@ -613,7 +615,7 @@ def changePassword():
 @users.route('/user/getNotifications/<int:page>', methods=['GET', 'POST'])
 @login_required
 def getNotifications(page=1):
-    logger.debug("/user/getNotifications page : %d" % page)
+    app.logger.debug("/user/getNotifications page : %d" % page)
 
     allNotifications = Notification.query \
         .filter_by(target_user_id=current_user.id) \
@@ -623,7 +625,7 @@ def getNotifications(page=1):
                   Notification.viewed) \
         .paginate(page, 10, False)
 
-    logger.debug("allNotifications : %r" % allNotifications.items)
+    app.logger.debug("allNotifications : %r" % allNotifications.items)
 
     allNotificationList = []
     for notif in allNotifications.items:
@@ -649,7 +651,7 @@ def getNotifications(page=1):
 @users.route('/user/getMessageNotifications/<int:page>', methods=['GET', 'POST'])
 @login_required
 def getMessageNotifications(page=1):
-    logger.debug("/user/getMessageNotifications page : %d" % page)
+    app.logger.debug("/user/getMessageNotifications page : %d" % page)
 
     allNotifications = Notification.query \
         .filter_by(target_user_id=current_user.id) \
@@ -659,7 +661,7 @@ def getMessageNotifications(page=1):
                   Notification.viewed) \
         .paginate(page, 10, False)
 
-    logger.debug("allNotifications : %r" % allNotifications.items)
+    app.logger.debug("allNotifications : %r" % allNotifications.items)
 
     allNotificationList = []
 
@@ -693,11 +695,11 @@ def favoriteListing(listingID):
         listing=listing, user=current_user).first()
 
     if lf is None:
-        logger.debug("Listing %r" % listing)
+        app.logger.debug("Listing %r" % listing)
         newFavorite = ListingFavorite(user=current_user,
                                       listing=listing)
 
-        logger.debug("ListingFavorite %r" % newFavorite)
+        app.logger.debug("ListingFavorite %r" % newFavorite)
         session.add(newFavorite)
         session.commit()
     else:
@@ -712,11 +714,11 @@ def favoriteListing(listingID):
 def unFavoriteListing(listingID):
     listing = session.query(Listing).filter_by(id=listingID).first_or_404()
 
-    logger.debug("Listing %r" % listing)
+    app.logger.debug("Listing %r" % listing)
     listingFavorite = session.query(ListingFavorite).filter_by(
         listing=listing, user=current_user).first()
 
-    logger.debug("ListingFavorite %r" % listingFavorite)
+    app.logger.debug("ListingFavorite %r" % listingFavorite)
     session.delete(listingFavorite)
     session.commit()
     return jsonify("true")

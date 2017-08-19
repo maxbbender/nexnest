@@ -1,7 +1,9 @@
-from nexnest.application import db, session
+from nexnest import db
 
 from nexnest.models.notification import Notification
 from nexnest.models.message import Message
+
+session = db.session
 
 
 class MaintenanceMessage(Message):

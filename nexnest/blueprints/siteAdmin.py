@@ -2,7 +2,7 @@
 from flask import (Blueprint, abort, flash, jsonify, render_template, request,
                    url_for)
 from flask_login import current_user, login_required
-from nexnest.application import session
+from nexnest import db
 from nexnest.forms import CreateCouponForm
 from nexnest.models.coupon import Coupon
 from nexnest.models.user import User
@@ -11,6 +11,8 @@ from nexnest.utils.misc import idGenerator
 
 siteAdmin = Blueprint('siteAdmin', __name__,
                       template_folder='../templates/siteAdmin')
+
+session = db.session
 
 
 @siteAdmin.before_request

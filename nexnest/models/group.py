@@ -1,6 +1,6 @@
 from datetime import datetime as dt
 
-from nexnest.application import db, session
+from nexnest import db
 
 from flask import flash
 
@@ -13,6 +13,8 @@ from sqlalchemy.orm import relationship
 
 from nexnest.models.group_user import GroupUser
 from nexnest.models.security_deposit import SecurityDeposit
+
+session = db.session
 
 
 class Group(Base):

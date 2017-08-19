@@ -1,5 +1,6 @@
-from nexnest import app
-from nexnest.application import session
+from flask import current_app as app
+
+from nexnest import db, admin
 from nexnest.models.notification_preference import NotificationPreference
 from nexnest.models.user import User
 from nexnest.models.report import Report
@@ -36,8 +37,9 @@ from nexnest.models.rent import Rent
 
 
 from flask import redirect, url_for
-from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+
+session = db.session
 
 
 class AdminModelView(ModelView):
@@ -51,8 +53,6 @@ class AdminModelView(ModelView):
         # redirect to login page if user doesn't have access
         return redirect(url_for('indexs.index'))
 
-
-admin = Admin(app, name='Nexnest', template_mode='bootstrap3')
 
 # Register the Views
 # ----------------------
