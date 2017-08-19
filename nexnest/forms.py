@@ -353,3 +353,10 @@ class CreateCouponForm(RedirectForm):
     unlimited = BooleanField('Unlimited', validators=[Optional()])
     uses = IntegerField('Number of Uses', validators=[Optional()])
     percentageOff = IntegerField('Percentage Off (15 would be 15% off)')
+
+
+class ContactForm(RedirectForm):
+    userID = HiddenField('User ID')
+    name = StringField('Full Name')
+    phone = StringField('Phone Number', validators=[Optional()])
+    message = TextAreaField('Message')

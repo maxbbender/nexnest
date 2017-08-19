@@ -1,13 +1,15 @@
 
 from flask import (Blueprint, abort, flash, jsonify, render_template, request,
-                   url_for)
+                   url_for, redirect)
 from flask_login import current_user, login_required
 from nexnest.application import session
-from nexnest.forms import CreateCouponForm
+from nexnest.forms import CreateCouponForm, ContactForm
 from nexnest.models.coupon import Coupon
 from nexnest.models.user import User
 from nexnest.utils.coupon import couponExists
 from nexnest.utils.misc import idGenerator
+from nexnest.utils.email import send_email
+from nexnest.utils.flash import flash_errors
 
 siteAdmin = Blueprint('siteAdmin', __name__,
                       template_folder='../templates/siteAdmin')
@@ -50,7 +52,6 @@ def createCoupon():
 
                 flash('Coupon Created!', 'success')
 
-
             else:
                 newCoupon = Coupon(percentage_off=form.percentageOff.data,
                                    coupon_key=form.couponKey.data,
@@ -84,8 +85,8 @@ def randomCouponKey():
         keyCount = session.query(Coupon).filter_by(
             coupon_key=newRandomKey).count()
 
-
     return jsonify({'couponKey': newRandomKey})
+
 
 @siteAdmin.route('/allCoupons', methods=['GET'])
 @login_required
@@ -104,7 +105,7 @@ def updateCouponUses(couponID, numUses):
     coupon.uses = numUses
     session.commit()
 
-    return redirect()
+    return redirect(url_for('siteAdmin.siteAdminDashboard'))
 
 
 @siteAdmin.route('/coupon/<couponID>/delete')
@@ -126,6 +127,8 @@ def deleteCoupon(couponID):
             flash('Coupon Deleted', 'success')
 
     return redirect(url_for('siteAdmin.siteAdminDashboard'))
+
+
 @siteAdmin.route('/searchUsers/lastName/<lastName>')
 @login_required
 def searchUsersByLastName(lastName):
@@ -139,4 +142,27 @@ def searchUsersByLastName(lastName):
     return jsonify({'users': userReturnArray})
 
 
-# @siteAdmin.route('/resetPassword/<userID>/')
+@siteAdmin.route('/contactUs', methods=['POST'])
+@login_required
+def contactUs():
+    form = ContactForm()
+
+    if form.validate():
+        user = User.query.filter_by(id=form.userID.data).first()
+        htmlResponse = '''
+            <h1>NEW CONTACT FORM AHHHHHHHHHHHHHHHHHHHHHHHHH</h1>
+            From %r<br>
+            Full Name Proivded: %s<br>
+            Phone Number: %s<br>
+            Message: %s<br>
+            ''' % (user, form.name.data, form.phone.data, form.message.data)
+
+        send_email(subject='Contact Us Form',
+                   sender='no_reply@nexnest.com',
+                   recipients=['contact@nexnest.com'],
+                   html_body=htmlResponse)
+        flash('Thank you for contacting Nexnest, we will address your issue and get back to you as soon as possible', 'success')
+    else:
+        flash_errors(form)
+
+    return form.redirect()

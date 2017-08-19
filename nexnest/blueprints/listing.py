@@ -391,8 +391,12 @@ def editListing(listingID):
                         flash("Error saving file %s" % file.filename, 'danger')
 
                 flash('Listing Updated', 'info')
-                return redirect(url_for('listings.viewListing',
-                                        listingID=listingID))
+
+                if currentListing.active:
+                    return redirect(url_for('listings.viewListing',
+                                            listingID=listingID))
+                else:
+                    return redirect(url_for('landlords.landlordDashboard') + '#checkoutTab')
             else:
                 flash_errors(form)
                 return render_template('/landlord/editListing.html',
