@@ -6,17 +6,17 @@
             <img src="/static/img/defaultHouse.png" class="listingImg card-img-top">
         {% endif %}
     </a>
-    <div class="card-block">
+    <div class="card-block" style="color: #656264;">
         <span style="font-size: 2.0vh;">
         <div class="row">
-            <div class="col-xs-4">
-                {{ listing.num_bedrooms }} <i class="fa fa-bed" aria-hidden="true"></i>
+            <div class="col-xs-6">
+                <span class="text-nowrap"><i class="fa fa-bed" aria-hidden="true"></i> {{ listing.num_bedrooms }} Bedrooms</span>
                 &nbsp;
-                {{ listing.num_full_baths }} <i class="fa fa-bath" aria-hidden="true"></i>
+                <span class="text-nowrap"><i class="fa fa-bath" aria-hidden="true"></i> {{ listing.num_full_baths }} Bathrooms</span>
                 <br>
-                ${{ listing.price }} per {{ listing.rent_due }}
+                ${{ listing.price }} per person/{{ listing.rent_due }}
             </div>
-            <div class="col-xs-8" style="text-align: right;">
+            <div class="col-xs-6" style="text-align: right;">F
                 {{ listing.street }}
                 <br>
                 {{ listing.city }}, {{ listing.state }}
@@ -25,21 +25,20 @@
         <div class="row">
             <div class="col-xs-12 col-xl-12" style="padding-left: 15px;">
                 <br>
-                <strong> Property Description: </strong> {{ listing.description }}
+                <strong style="font-size: 22px;"> Property Description: </strong> {{ listing.description }}
             </div>
         </div>
         <br>
         <div class="row">
-            <div class="col-xl-4">
+            <div class="col-xl-12">
                 <strong>Time Period of Rental:</strong> {{ listing.time_period_date_range }}
             </div>
         </div>
-        <br>
         <div class="row">                                                         
-            <div class="col-xl-5">
+            <div class="col-xl-6">
                 <strong>Lease Start Date:</strong> {{ listing.start_date }}
             </div>
-            <div class="col-xl-5">
+            <div class="col-xl-6">
                 <strong>Lease End Date:</strong> {{ listing.end_date }}
             </div>
         </div>
