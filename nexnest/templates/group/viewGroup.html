@@ -121,7 +121,7 @@
                     <div class="tab-pane" id="suggestedListingsTab" role="tabpanel" style="padding: 0px; color: #656264;">
                         <div class="row">
                             <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); background-color: #d2d2d2; margin-left: 20px;">Suggested Listings</h3>
+                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); background-color: #d2d2d2; margin-left: 20px;">Group Favorites</h3>
                                 <div class="card-block">
                                     <div class="row">
                                         <div class="col-xs-12" style="padding-left: 15px;">
@@ -131,7 +131,7 @@
                                                         <div class="row">
                                                             <div class="col-xs-12">
                                                                 <div class="alert alert-light-blue" role="alert">
-                                                                    No one in your group has suggested any listings to this group yet. Any one can suggest a listing by clicking the suggest to group button from the listing's page
+                                                                    No favorites in this group. Anyone can add to favorites by clicking the "Add to Group" button in a listing page
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -220,8 +220,8 @@
                     <div class="tab-pane" id="toursTab" role="tabpanel" style="padding: 0px; color: #656264;">
                         <div class="row">
                             <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); background-color: #d2d2d2; margin-left: 20px;">Tours</h3>
-                                <div class="card-block" style="margin-left: 30px;">
+                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); background-color: #d2d2d2; margin-left: 15px;">Tours</h3>
+                                <div class="card-block" style="margin-left: 10px; padding-right: 15px;">
                                     {% if tours|count == 0 %}
                                         <div class="row">
                                             <div class="col-xs-12">
@@ -232,15 +232,18 @@
                                         </div>
                                     {% endif %}
                                     {% for tour in tours %}
-                                        <div class="row" style="width: 100%;">
+                                        <div class="row">
                                             <div class="card">
                                                 <div class="card-header" style="background-color: #d2d2d2;">
                                                     <div class="row">
                                                         <div class="col-xs-8">
                                                             <h3>{{ tour.listing.street }}</h3>
+                                                            {% if tour.tour_confirmed %}
+                                                                <h4 style="color: #5686c5; font-weight: bold;">{{ tour.confirmedTourTime.humanString }}</h4>
+                                                            {% endif %}
                                                         </div>
                                                         <div class="col-xs-4" style="margin-top: 5px;">
-                                                            <a href="{{ url_for('tours.viewTour', tourID=tour.id) }}" class="btn btn-primary" style="float: right;">More Info</a>
+                                                            <a href="{{ url_for('tours.viewTour', tourID=tour.id) }}" class="btn btn-blue" style="float: right;">More Info</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -254,11 +257,11 @@
                                                             {% endif %}
                                                         </a>
                                                         <div class="card-block">
-                                                            <div class="row">
+                                                            <div class="row" style="font-size: 22px;">
                                                                 <div class="col-xs-6">
-                                                                    <i class="fa fa-bed" aria-hidden="true"></i>{{ tour.listing.num_bedrooms }} Bedrooms
+                                                                    <span class="text-nowrap"><i class="fa fa-bed" aria-hidden="true"></i>{{ tour.listing.num_bedrooms }} Bedrooms</span>
                                                                     &nbsp;
-                                                                    <i class="fa fa-bath" aria-hidden="true"></i> {{ tour.listing.num_full_baths }} Bathrooms
+                                                                    <span class="text-nowrap"><i class="fa fa-bath" aria-hidden="true"></i> {{ tour.listing.num_full_baths }} Bathrooms</span>
                                                                     <br>
                                                                     ${{ tour.listing.price }} per person/{{ tour.listing.rent_due }}
                                                                 </div>
@@ -270,7 +273,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="row">
+                                                    <div class="row" style="font-size: 20px;">
                                                         <div class="col-xs-12 col-sm-12 col-md-12">
                                                             {% if tour.group.leader_id == current_user.id %}
                                                                 {% if tour.last_requested == 'landlord' %}
@@ -278,11 +281,11 @@
                                                                     {% if tour.tour_confirmed %}
                                                                         <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.confirmedTourTime.humanString }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
                                                                         <br>
-                                                                        Tour has been confirmed for {{ tour.confirmedTourTime.humanString }}. Please arrive at the property at this time to meet for the tour
+                                                                        Your tour has been confirmed
                                                                     {% else %}
-                                                                        <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the you to confirm the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                                        <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for you to confirm the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                                         <br>
-                                                                        Waiting for the you to confirm the requested time or suggest a different one
+                                                                        Landlord was unable your accomadate your requested time(s)
                                                                     {% endif %}
                                                                 {% else %}
                                                                     <p class="card-text">
@@ -290,11 +293,11 @@
                                                                         {% if tour.tour_confirmed %}
                                                                             <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.confirmedTourTime.humanString }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
                                                                             <br>
-                                                                            Tour has been confirmed for {{ tour.confirmedTourTime.humanString }}. Please arrive at the property at this time to meet for the tour
+                                                                            Your tour has been confirmed
                                                                         {% else %}
                                                                             <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the landlord to confirm your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                                             <br>
-                                                                            Waiting for the landlord to confirm your requested time or suggest a different one
+                                                                            Waiting for the landlord to respond to your requested time(s)
                                                                         {% endif %}
                                                                     </p>
                                                                 {% endif %}                                        
@@ -303,42 +306,53 @@
                                                                 {% if tour.tour_confirmed %}
                                                                     <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.confirmedTourTime.humanString }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
                                                                     <br>
-                                                                    Tour has been confirmed for {{ tour.confirmedTourTime.humanString }}. Please arrive at the property at this time to meet for the tour
+                                                                    Tour has been confirmed
                                                                 {% else %}
                                                                     {% if tour.last_requested == 'group' %}
                                                                         <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Request Pending</b>" data-placement="top" data-content="Waiting for the landlord to confirm your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                                         <br>
-                                                                        Waiting for the landlord to confirm your requested time or suggest a different one
+                                                                        Waiting for the landlord to respond to your requested time(s)
                                                                     {% else %}
                                                                         <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Request Pending</b>" data-placement="top" data-content="The landlord has proposed a different time. Waiting for your group leader to make a decision"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                                         <br>
-                                                                        The landlord has proposed a different time. Waiting for your group leader to make a decision
+                                                                        Waiting for your group leader to select a tour time
                                                                     {% endif %}
                                                                 {% endif %}
-                                                            {% endif %}                                            
-                                                            {% if tour.tour_confirmed %}
-                                                                <p class="card-text"><strong>Tour is scheduled for:</strong><br> {{ tour.confirmedTourTime.humanString }}</p>
-                                                            {% else %}
-                                                                {% if tour.last_requested == 'landlord' %}
-                                                                    <p class="card-text"><strong>Landlord has proposed these times:</strong><br></p>
-                                                                    <div class="row">
-                                                                        {% for time in tour.tourTimes %}
-                                                                            <div class="col-xs-6 col-md-6 col-lg-6" style="padding-top: 10px;">
-                                                                                <button class="btn btn-secondary timeselector nexnest-font" style="pointer-events: none; color: #656264;" value="{{time.date_time_requested}}">{{time.humanString}}</button>
-                                                                            </div>
-                                                                        {% endfor %}
-                                                                    </div>
-                                                                {% else %}
-                                                                    <p class="card-text"><strong>Your group has requested a tour at one of these times:</strong><br></p>
-                                                                    <div class="row">
-                                                                        {% for time in tour.tourTimes %}
-                                                                            <div class="col-xs-6 col-md-6 col-lg-6" style="padding-top: 10px;">
-                                                                                <button class="btn btn-secondary timeselector nexnest-font" style="pointer-events: none; color: #656264;" value="{{time.date_time_requested}}">{{time.humanString}}</button>
-                                                                            </div>
-                                                                        {% endfor %}
-                                                                    </div>
-                                                                {% endif %}
                                                             {% endif %}
+                                                            <div style="padding-top: 15px;">
+                                                                {% if tour.tour_confirmed %}
+                                                                    <p class="card-text"><strong>Tour is scheduled for:</strong><br> 
+                                                                        <span style="padding-left: 15px; color: #5686c5;">{{ tour.confirmedTourTime.humanString }}</span>
+                                                                    </p>
+                                                                {% else %}
+                                                                    {% if tour.last_requested == 'landlord' %}
+                                                                        <p class="card-text"><strong>Available Tours:</strong><br></p>
+                                                                        <div class="row" style="padding-left: 15px;">
+                                                                            {% for time in tour.tourTimes %}
+                                                                                <div class="col-xs-6 col-md-6 col-lg-6">
+                                                                                    <span class="nexnest-font" style="color: #5686c5;">{{time.humanString}}</span>
+                                                                                </div>
+                                                                            {% endfor %}
+                                                                        </div>
+                                                                        {% if tour.group.leader_id == current_user.id %}
+                                                                            <div class="row" style="padding-top: 15px;">
+                                                                                <div class="col-xs-12" style="text-align: right;">
+                                                                                    <a href="{{ url_for('tours.viewTour', tourID=tour.id) }}" class="btn btn-blue">Schedule Tour</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        {% endif %}
+                                                                    {% else %}
+                                                                        <p class="card-text"><strong>Requsted Tours:</strong><br></p>
+                                                                        <div class="row" style="padding-left: 15px;">
+                                                                            {% for time in tour.tourTimes %}
+                                                                                <div class="col-xs-6 col-md-6 col-lg-6" style="padding-top: 10px;">
+                                                                                     <span class="nexnest-font" style="color: #5686c5;">{{time.humanString}}</span>
+                                                                                </div>
+                                                                            {% endfor %}
+                                                                        </div>
+                                                                    {% endif %}                                                                
+                                                            {% endif %}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -524,7 +538,7 @@
                         <!-- Messages -->
                         {% if messages |length == 0 %}
                             <div class="alert alert-light-blue" role="alert">
-                                <strong>No Messages Yet, start the conversation</strong>
+                                <strong>No messages yet, start the conversation</strong>
                             </div>
                         {% else %}
                             {% for message in messages %}
@@ -562,7 +576,7 @@
                 <!-- Messages -->
                 {% if messages |length == 0 %}
                     <div class="alert alert-light-blue" role="alert">
-                        <strong>No Messages Yet, start the conversation</strong>
+                        <strong>No messages yet, start the conversation</strong>
                     </div>
                 {% else %}
                     {% for message in messages %}
