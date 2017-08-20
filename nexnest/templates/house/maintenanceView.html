@@ -71,6 +71,7 @@
                         <div class="form-group">
                             <form action="{{url_for('houses.maintenanceRequestMessage')}}" method='POST'>
                                 {{messageForm.csrf_token}}
+                                {{messageForm.maintenanceID}}
                                 <div class="row">
                                     {{messageForm.content(class="form-control", rows=5)}}
                                 </div>
