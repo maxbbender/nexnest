@@ -425,7 +425,9 @@ class Listing(Base):
                 return None
 
     def hasHouse(self):
-        return len(self.house) > 0
+        app.logger.debug('hasHouse house : %r' % self.house)
+        print('awoeifhaowiefhaowiehf;oawiehfoaiwehfoawiFOSOFSOFHSF', self.house)
+        return len(self.house) == 1
 
     def isForSchool(self, school):
         for listingSchool in self.schools:
@@ -435,7 +437,6 @@ class Listing(Base):
         return False
 
     def cancelTours(self):
-        print('Cancel Tours')
         app.logger.debug('Cancel Tours')
         app.logger.debug('Tours : %r' % self.tours)
         for tour in self.tours:

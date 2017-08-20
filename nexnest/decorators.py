@@ -29,7 +29,7 @@ def tour_editable(f):
             if not tour.isEditableBy(current_user, False):
                 abort(403)
 
-            if tour.listing.hasHouse:
+            if len(tour.listing.house) == 1:
                 flash('Tours for this listing have been canceled as it already has tenants! Sorry!', 'warning')
                 return redirect(url_for('indexs.index'))
 
@@ -49,7 +49,7 @@ def tour_viewable(f):
             if not tour.isViewableBy(current_user, False):
                 abort(403)
 
-            if tour.listing.hasHouse:
+            if len(tour.listing.house) == 1:
                 flash('Tours for this listing have been canceled as it already has tenants! Sorry!', 'warning')
                 return redirect(url_for('indexs.index'))
 
