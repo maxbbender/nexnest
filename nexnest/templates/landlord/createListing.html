@@ -90,8 +90,8 @@
                             <div class="row">
                                 <div class="col-xs-6">
                                     <div class="form-group">
-                                        {{ form.colleges }}
-                                        <label class="control-label">What Colleges are you targeting?(up to 3)</label>
+                                        {{ form.colleges(class='form-control', required='required') }}
+                                        <label class="control-label form-control-feedback">What Colleges are you targeting?(up to 3)</label>
                                         <div id="magicsuggest" required='required'></div>
                                     </div>
                                 </div>
@@ -180,11 +180,6 @@
                                             </div>
                                             <!-- <input id="footage" maxlength="100" type="number" name="square_footage" required="required" class="form-control" /> -->
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <span id="estimatedRevenue" style="color: green" ;></span>
                                     </div>
                                 </div>
                                 <div class="row pull-right" style="align-items: center;">
@@ -313,7 +308,12 @@
                                                 </p>
                                             </div>
                                         </div>
+                                    </div>                                    
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <span id="estimatedRevenue" style="color: green" ;></span>
                                     </div>
+                                </div>
                                 <div class="row pull-right" style="align-items: center;">
                                     <button class="btn btn-primary nextBtn btn-lg pull-right" type="button" style="margin-right: 25px;">Next</button>
                                     <a href="#" data-toggle="modal" data-target="#contactUsModal">need help?</a>
@@ -1024,13 +1024,14 @@
 
             $(".form-group").removeClass("has-danger");
             $(".form-group").removeClass("has-error");
+            console.log(curInputs);
             for (var i = 0; i < curInputs.length; i++) {
                 if (!curInputs[i].validity.valid) {
                     isValid = false;
                     $(curInputs[i]).closest(".form-group").addClass("has-error");
                     $(curInputs[i]).closest(".form-group").addClass("has-danger");
                 }
-            }
+            }            
 
             if (isValid) {
                 if ($(this).attr('id') == 'zipCodeButton') {
@@ -1052,15 +1053,21 @@
                     }
                 }else if(curStep[0].id == "step-3"){
                     var errorExists = false;
+                    if($("#leaseStartDateInput").val().length == 0){
+                        $("#leaseStartDateInput").closest(".form-group").addClass("has-error");
+                        $("#leaseStartDateInput").closest(".form-group").addClass("has-danger");
+                        errorExists = true;
+                    }
+                    if($("#endLeaseDateInput").val().length == 0){
+                        $("#endLeaseDateInput").closest(".form-group").addClass("has-error");
+                        $("#endLeaseDateInput").closest(".form-group").addClass("has-danger");
+                        errorExists = true;
+                    }
                     if($("#rent_due").val() == "semester"){
                         var start_date = new Date($("#leaseStartDateInput").val());
                         var end_date = new Date($("#endLeaseDateInput").val());
                         var first_semester_rent_due = new Date($("#firstSemesterRentDue").val());
                         var second_semester_rent_due = new Date($("#secondSemesterRentDue").val());
-                        console.log("start date: " + start_date);
-                        console.log("end date: " + end_date);
-                        console.log("first_semester_rent_due: " + first_semester_rent_due);
-                        console.log("second_semester_rent_due: " + second_semester_rent_due);
                         $("#firstSemesterRentDue").closest(".form-group").removeClass("has-error");
                         $("#firstSemesterRentDue").closest(".form-group").removeClass("has-danger");
                         $("#secondSemesterRentDue").closest(".form-group").removeClass("has-error");
@@ -1073,7 +1080,7 @@
                         if(first_semester_rent_due >= start_date){
                             if(second_semester_rent_due < end_date){
                                 if(first_semester_rent_due < second_semester_rent_due){
-                                    errorExists = false;
+                                    //errorExists = false;
                                 } else{
                                     errorExists = true;
                                     $("#firstSemesterRentDue").closest(".form-group").addClass("has-error");
@@ -1102,6 +1109,7 @@
                             }
                         }
                     }
+
                     {% if endDate %}
                         var new_start_date = new Date($("#leaseStartDateInput").val());
                         var oldEnd = new Date("{{endDate}}");
@@ -1246,7 +1254,7 @@
         typeDelay: 0,
         useCommaKey: true,
         useZebraStyle: true,
-        placeholder: 'Type or use dropdown to select colleges',
+        placeholder: '',
         id:'college-enter',
         data: {{schools|tojson}}
     });
