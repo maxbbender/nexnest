@@ -54,6 +54,7 @@ def register():
         if registerForm.validate():
             # Determine if registering as tenant or landlord
             userType = registerForm.landlord.data
+            print(request.args)
 
             if userType == "landlord":
                 newUser = User(email=registerForm.email.data,
@@ -207,6 +208,7 @@ def login():
                                 'You must confirm your email before logging in', 'danger')
                     else:
                         flash("Error validating login credentials", 'danger')
+                        return login_form.redirect()
                 else:
                     flash("User account has been deleted", 'warning')
             else:
