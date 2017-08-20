@@ -1,11 +1,13 @@
 from datetime import datetime as dt
 
 from flask import flash
-from nexnest import logger
-from nexnest.application import db, session
+from flask import current_app as app
+from nexnest import db
 from nexnest.models.base import Base
 from nexnest.models.message import Message
 from sqlalchemy import event
+
+session = db.session
 
 
 class Notification(Base):
@@ -475,7 +477,7 @@ class Notification(Base):
                 return message, returnObject, redirectURL
 
         else:
-            logger.warning('Unknown Notification type %s' % self.notif_type)
+            app.logger.warning('Unknown Notification type %s' % self.notif_type)
 
         return None, None, None
 

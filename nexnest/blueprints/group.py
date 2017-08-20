@@ -1,8 +1,8 @@
 from flask import (Blueprint, flash, jsonify, redirect, render_template,
                    request, url_for)
 from flask_login import current_user, login_required
-from nexnest import logger
-from nexnest.application import session
+from flask import current_app as app
+from nexnest import db
 from nexnest.decorators import group_editable, group_viewable
 from nexnest.forms import (CreateGroupForm, GroupListingForm, GroupMessageForm,
                            InviteGroupForm, SuggestListingForm)
@@ -23,6 +23,8 @@ from nexnest.utils.flash import flash_errors
 from sqlalchemy import asc, desc
 
 groups = Blueprint('groups', __name__, template_folder='../templates')
+
+session = db.session
 
 
 @groups.route('/group/create', methods=['POST'])
@@ -306,10 +308,10 @@ def inviteUserByEmail(groupID, emailAddress):
         newGroupEmail = GroupEmail(group, emailAddress)
         session.add(newGroupEmail)
         session.commit()
-        logger.debug('newGroupEmail %r' % newGroupEmail)
+        app.logger.debug('newGroupEmail %r' % newGroupEmail)
     else:
-        logger.info('User %r just tried to invite %s a second time' %
-                    (current_user, emailAddress))
+        app.logger.info('User %r just tried to invite %s a second time' %
+                        (current_user, emailAddress))
         errorMessage = 'You have already sent an invite to this email!'
 
     if errorMessage is None:

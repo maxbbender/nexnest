@@ -2,8 +2,9 @@ from flask import Blueprint, request, redirect, flash, render_template, url_for,
 
 from flask_login import current_user, login_required
 
-from nexnest import logger
-from nexnest.application import session
+from flask import current_app as app
+
+from nexnest import db
 
 from nexnest.forms import TourForm, TourMessageForm, TourDateChangeForm, LandlordReportForm, GroupReportForm
 
@@ -23,6 +24,8 @@ import json
 from dateutil import parser
 
 tours = Blueprint('tours', __name__, template_folder='../templates/tour')
+
+session = db.session
 
 
 @tours.route('/tour/create', methods=['POST'])
@@ -61,16 +64,16 @@ def createTour():
             newTour.genNotifications()
 
             # Generate Tour Times
-            logger.debug('tourForm.requestedDateTime.data %s' % tourForm.requestedDateTime.data)
+            app.logger.debug('tourForm.requestedDateTime.data %s' % tourForm.requestedDateTime.data)
             tourTimeJSON = json.loads(tourForm.requestedDateTime.data)
-            logger.debug('tourTimeJSON %r' % tourTimeJSON)
+            app.logger.debug('tourTimeJSON %r' % tourTimeJSON)
             for time in tourTimeJSON:
                 timeObject = parser.parse(time)
                 newTourTime = TourTime(newTour, timeObject)
                 session.add(newTourTime)
                 session.commit()
 
-                logger.debug('time: %s | timeObject %r' % (time, timeObject))
+                app.logger.debug('time: %s | timeObject %r' % (time, timeObject))
 
             flash('Your request to tour %s has been made. The Landlord will get back to you soon.' % newTour.listing.address,
                   'success')
@@ -188,34 +191,34 @@ def getTourTimes(tourID):
 @login_required
 @tour_editable
 def confirmTourTime(tourID):
-    logger.debug('Incoming tourID %r' % tourID)
+    app.logger.debug('Incoming tourID %r' % tourID)
     tour = Tour.query.filter_by(id=tourID).first_or_404()
-    logger.debug('tour %r' % tour)
+    app.logger.debug('tour %r' % tour)
 
     if not tour.hasConfirmedTourTime:
         json = request.get_json()
-        logger.debug('request.get_json : %r' % json)
+        app.logger.debug('request.get_json : %r' % json)
 
         tourTimeToConfirm = parser.parse(json['tourTime'])
-        logger.debug('tourTimeToConfirm %r' % tourTimeToConfirm)
+        app.logger.debug('tourTimeToConfirm %r' % tourTimeToConfirm)
 
         allTourTimesForTour = TourTime.query.filter_by(tour=tour).all()
-        logger.debug('allTourTimesForTour %r' % allTourTimesForTour)
+        app.logger.debug('allTourTimesForTour %r' % allTourTimesForTour)
 
         for tempTourTime in allTourTimesForTour:
-            logger.debug('TourTime DateTime Requested %r' % tempTourTime.date_time_requested)
+            app.logger.debug('TourTime DateTime Requested %r' % tempTourTime.date_time_requested)
 
         tourTime = TourTime.query \
             .filter_by(tour=tour,
                        date_time_requested=tourTimeToConfirm) \
             .first_or_404()
 
-        logger.debug('Found TourTime %r' % tourTime)
+        app.logger.debug('Found TourTime %r' % tourTime)
 
         tourTime.confirmed = True
-        logger.debug('setting tour_confirmed to true pre %r' % tour.tour_confirmed)
+        app.logger.debug('setting tour_confirmed to true pre %r' % tour.tour_confirmed)
         tour.tour_confirmed = True
-        logger.debug('post %r' % tour.tour_confirmed)
+        app.logger.debug('post %r' % tour.tour_confirmed)
         session.commit()
 
         tour.genConfirmNotifications()
@@ -258,7 +261,7 @@ def updateTourTimes(tourID):
         elif tour.last_requested == 'landlord':
             tour.last_request = 'group'
         else:
-            logger.error('updateTourTimes() :  Unknown last_requested %s' % tour.last_requested)
+            app.logger.error('updateTourTimes() :  Unknown last_requested %s' % tour.last_requested)
         session.commit()
         tour.genTimeChangeNotifications()
     else:

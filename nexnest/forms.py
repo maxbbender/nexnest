@@ -10,8 +10,6 @@ from wtforms.validators import InputRequired, Length, Email, EqualTo, Optional, 
 
 from nexnest.static.dataSets import *
 
-from nexnest import logger
-
 
 def is_safe_url(target):
     ref_url = urlparse(request.host_url)
@@ -356,7 +354,6 @@ class CreateCouponForm(RedirectForm):
 
 
 class ContactForm(RedirectForm):
-    userID = HiddenField('User ID')
     name = StringField('Full Name')
     phone = StringField('Phone Number', validators=[Optional()])
     message = TextAreaField('Message')

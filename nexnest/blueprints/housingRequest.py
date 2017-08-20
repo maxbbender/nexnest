@@ -2,8 +2,6 @@ from flask import Blueprint, request, redirect, flash, render_template, url_for,
 
 from flask_login import login_required, current_user
 
-from nexnest.application import session
-
 from nexnest.forms import GroupListingForm, GroupListingMessageForm, LeaseUploadForm, GroupReportForm, LandlordReportForm
 from nexnest.models.group import Group
 from nexnest.models.group_listing import GroupListing
@@ -21,6 +19,12 @@ from werkzeug.utils import secure_filename
 from sqlalchemy import desc
 
 import os
+
+from flask import current_app as app
+from nexnest import db
+
+session = db.session
+
 
 housingRequests = Blueprint(
     'housingRequests', __name__, template_folder='../templates/housingRequest')

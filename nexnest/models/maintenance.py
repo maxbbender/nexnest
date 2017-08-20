@@ -6,11 +6,12 @@ from sqlalchemy.orm import relationship
 
 from flask import flash
 
-from nexnest.application import db, session
+from nexnest import db
 
 from nexnest.models.base import Base
 from nexnest.models.notification import Notification
 
+session = db.session
 
 class Maintenance(Base):
     __tablename__ = 'maintenances'

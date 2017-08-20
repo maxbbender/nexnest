@@ -1,10 +1,14 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
 from flask_login import current_user, login_required
 
-from pprint import pprint, pformat
+from flask import current_app as app
 
-from nexnest import logger, env
-from nexnest.application import braintree, csrf, session
+
+import braintree
+
+from pprint import pformat
+
+from nexnest import db
 
 from nexnest.models.transaction import ListingTransaction, ListingTransactionListing
 from nexnest.models.listing import Listing
@@ -14,6 +18,8 @@ from nexnest.forms import PreCheckoutForm
 from nexnest.utils.flash import flash_errors
 
 import json
+
+session = db.session
 
 commerce = Blueprint('commerce', __name__, template_folder='../templates/commerce')
 
@@ -43,15 +49,15 @@ def viewPreCheckout():
 @commerce.route('/checkout', methods=['GET', 'POST'])
 @login_required
 def checkout():
-    logger.debug('commerce.checkout() /checkout')
+    app.logger.debug('commerce.checkout() /checkout')
     if request.method == 'POST':
         form = PreCheckoutForm(request.form)
 
         if form.validate():
             listingObjects = json.loads(form.json.data)
-            logger.debug('Form Validated')
-            logger.debug('RAW Form JSON %s | Type %r' % (form.json.data, type(form.json.data)))
-            logger.debug('Parsed JSON %s | Type %r' % (pformat(listingObjects), type(listingObjects)))
+            app.logger.debug('Form Validated')
+            app.logger.debug('RAW Form JSON %s | Type %r' % (form.json.data, type(form.json.data)))
+            app.logger.debug('Parsed JSON %s | Type %r' % (pformat(listingObjects), type(listingObjects)))
 
             # Create our transaction record
             newListingTransaction = ListingTransaction(user=current_user)
@@ -74,10 +80,10 @@ def checkout():
                             coupon.uses = coupon.uses - 1
                             session.commit()
                         else:
-                            logger.info('%r used coupon %r that hs no uses left' % (current_user, coupon))
+                            app.logger.info('%r used coupon %r that hs no uses left' % (current_user, coupon))
                 else:
                     if couponCodeString != "":
-                        logger.info('Coupon got passed through that is invalid. Code : %s' % couponCodeString)
+                        app.logger.info('Coupon got passed through that is invalid. Code : %s' % couponCodeString)
 
             for item in listingObjects['items']:
                 # Ambiguous variables because my database setup is stupid
@@ -90,11 +96,11 @@ def checkout():
                 session.add(newLTL)
                 session.commit()
 
-            logger.debug("NewListingTransaction %r" % newListingTransaction)
-            logger.debug("NewListingTransaction LTL Objects %r" % newListingTransaction.listings)
+            app.logger.debug("NewListingTransaction %r" % newListingTransaction)
+            app.logger.debug("NewListingTransaction LTL Objects %r" % newListingTransaction.listings)
 
         else:
-            logger.warning('Invalid PreCheckoutForm')
+            app.logger.warning('Invalid PreCheckoutForm')
             flash_errors(form)
 
         return render_template('checkout.html',
@@ -117,7 +123,7 @@ def checkout():
 
 @commerce.route('/transactionGenerate', methods=['POST'])
 def genTransaction():
-    logger.debug('commerce.genTransaction() /transactionGenerate')
+    app.logger.debug('commerce.genTransaction() /transactionGenerate')
 
     listingTransaction = session.query(ListingTransaction) \
         .filter_by(id=int(request.form['listingTransactionID'])) \
@@ -128,13 +134,13 @@ def genTransaction():
 
             transactionAmount = listingTransaction.totalTransactionPrice
 
-            logger.debug('Generating Transaction for %r | Price %d | Nonce %s' % (listingTransaction, transactionAmount, request.form['payment_method_nonce']))
+            app.logger.debug('Generating Transaction for %r | Price %d | Nonce %s' % (listingTransaction, transactionAmount, request.form['payment_method_nonce']))
 
             # If we are in development we are going to use the fake payment
             # setup for braintree
             result = None
-            if env == 'development' or env == 'test':
-                logger.debug('genTransaction() - DEVELOPMENT SETTINGS')
+            if app.config['FLASK_CONFIG'] == 'development' or app.config['FLASK_CONFIG'] == 'testing':
+                app.logger.debug('genTransaction() - DEVELOPMENT SETTINGS')
 
                 result = braintree.Transaction.sale({
                     'amount': str(transactionAmount),
@@ -144,7 +150,7 @@ def genTransaction():
                     }
                 })
             else:
-                logger.debug('genTransaction() - PRODUCTION SETTINGS')
+                app.logger.debug('genTransaction() - PRODUCTION SETTINGS')
 
                 result = braintree.Transaction.sale({
                     'amount': str(transactionAmount),
@@ -162,8 +168,8 @@ def genTransaction():
                 session.commit()
 
                 # Now we want to go through the listings and set them to active
-                logger.debug('Successfull Result')
-                logger.debug("Setting these listings to active %r" % listingTransaction.listings)
+                app.logger.debug('Successfull Result')
+                app.logger.debug("Setting these listings to active %r" % listingTransaction.listings)
                 for ltl in listingTransaction.listings:
                     listing = ltl.listing
                     listing.active = True
@@ -181,8 +187,8 @@ def genTransaction():
 
             # The Transaction was NOT successfull
             else:
-                logger.warning('Unsuccessfull Result')
-                logger.warning('Transaction Error %s (%s|%s)' % (result.transaction.status, result.transaction.processor_response_code, result.transaction.processor_response_text))
+                app.logger.warning('Unsuccessfull Result')
+                app.logger.warning('Transaction Error %s (%s|%s)' % (result.transaction.status, result.transaction.processor_response_code, result.transaction.processor_response_text))
                 flash('Transaction Error %s (%s|%s) Contact an administrator if you believe this is an error our our end.' % (result.transaction.status, result.transaction.processor_response_code, result.transaction.processor_response_text), 'error')
                 return redirect('/landlord/dashboard#checkoutTab')
 
@@ -195,8 +201,8 @@ def checkCouponCode(couponCode):
         .first()
 
     if coupon is not None:
-        logger.debug("Found Coupon %r" % coupon)
+        app.logger.debug("Found Coupon %r" % coupon)
         return jsonify(results={'validCoupon': True, 'coupon': coupon.serialize})
     else:
-        logger.warning("Could not find coupon with code %s" % couponCode)
+        app.logger.warning("Could not find coupon with code %s" % couponCode)
         return jsonify(results={'validCoupon': False})

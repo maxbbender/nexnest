@@ -1,7 +1,6 @@
 from functools import wraps
 from flask import g, request, redirect, url_for, abort
 from flask_login import current_user
-from nexnest import logger
 
 from nexnest.models.tour import Tour
 from nexnest.models.group import Group

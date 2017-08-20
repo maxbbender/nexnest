@@ -1,7 +1,9 @@
-from nexnest.application import db, session
+from nexnest import db
 
 from nexnest.models.message import Message
 from nexnest.models.notification import Notification
+
+session = db.session
 
 
 class HouseMessage(Message):

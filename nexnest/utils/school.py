@@ -1,13 +1,15 @@
-from nexnest.application import session
+from nexnest import db
 from nexnest.models.school import School
-from nexnest import logger
+from flask import current_app as app
+
+session = db.session
 
 
 def allSchoolsAsStrings():
-    logger.debug("allSchoolsAsStrings()")
+    app.logger.debug("allSchoolsAsStrings()")
     allSchools = session.query(School).all()
 
-    logger.debug("allSchools : %r" % allSchools)
+    app.logger.debug("allSchools : %r" % allSchools)
 
     schoolStringArray = []
 
@@ -18,7 +20,7 @@ def allSchoolsAsStrings():
 
 
 def allSchools():
-    logger.debug('allSchoolsAsStringsWithCord()')
+    app.logger.debug('allSchoolsAsStringsWithCord()')
 
     allSchools = School.query.all()
 

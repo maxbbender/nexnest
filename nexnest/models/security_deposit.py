@@ -1,6 +1,6 @@
 from datetime import datetime as dt
 
-from nexnest.application import db
+from nexnest import db
 
 from .base import Base
 

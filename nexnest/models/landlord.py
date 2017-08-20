@@ -1,12 +1,13 @@
 from datetime import datetime, date
 from sqlalchemy.orm import relationship
 
-from nexnest.application import db, session
+from nexnest import db
 
 from nexnest.models.base import Base
 from nexnest.models.security_deposit import SecurityDeposit
 # from nexnest.models.report_landlord import Report
 
+session = db.session
 
 class Landlord(Base):
     __tablename__ = 'landlords'

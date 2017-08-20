@@ -1,11 +1,13 @@
-from nexnest.application import db, session
+from nexnest import db
 
 from nexnest.models.notification import Notification
 
 from .message import Message
 
 
-# class PostReport(Base):
+session = db.session
+
+
 class GroupMessage(Message):
     __tablename__ = 'group_messages'
     group_id = db.Column(db.Integer,

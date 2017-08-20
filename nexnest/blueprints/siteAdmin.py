@@ -2,7 +2,8 @@
 from flask import (Blueprint, abort, flash, jsonify, render_template, request,
                    url_for, redirect)
 from flask_login import current_user, login_required
-from nexnest.application import session
+
+from nexnest import db
 from nexnest.forms import CreateCouponForm, ContactForm
 from nexnest.models.coupon import Coupon
 from nexnest.models.user import User
@@ -13,6 +14,8 @@ from nexnest.utils.flash import flash_errors
 
 siteAdmin = Blueprint('siteAdmin', __name__,
                       template_folder='../templates/siteAdmin')
+
+session = db.session
 
 
 @siteAdmin.before_request
@@ -148,7 +151,7 @@ def contactUs():
     form = ContactForm()
 
     if form.validate():
-        user = User.query.filter_by(id=form.userID.data).first()
+        user = current_user
         htmlResponse = '''
             <h1>NEW CONTACT FORM AHHHHHHHHHHHHHHHHHHHHHHHHH</h1>
             From %r<br>

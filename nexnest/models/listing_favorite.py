@@ -1,4 +1,4 @@
-from nexnest.application import db
+from nexnest import db
 
 from .base import Base
 
