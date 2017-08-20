@@ -1,6 +1,6 @@
 # pylint: disable=E0602
 
-from nexnest.application import session
+from nexnest import db
 from nexnest.models import *
 from nexnest.static.dataSets import maintenanceRequestTypes, notificationTypes
 
@@ -12,6 +12,7 @@ from datetime import date, datetime
 
 import random
 
+session = db.session
 
 fake = Faker()
 

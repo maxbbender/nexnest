@@ -1,9 +1,11 @@
 from datetime import datetime as dt
 
-from nexnest.application import db, session
+from nexnest import db
 from nexnest.models.notification import Notification
 
 from .base import Base
+
+session = db.session
 
 
 class GroupListingFavorite(Base):

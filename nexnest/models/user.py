@@ -1,8 +1,7 @@
 from datetime import datetime as dt
 
-from flask import flash, render_template, url_for
-from nexnest import app, logger
-from nexnest.application import db, session
+from flask import flash, render_template, url_for, current_app
+from nexnest import db
 from nexnest.models.group_listing import GroupListing
 from nexnest.models.group_user import GroupUser
 from nexnest.models.landlord import Landlord
@@ -106,7 +105,7 @@ class User(Base):
         self.date_modified = now
         self.active = True
 
-        if app.config['TESTING']:
+        if current_app.config['TESTING']:
             self.email_confirmed = True
         else:
             self.email_confirmed = email_confirmed
@@ -187,7 +186,7 @@ class User(Base):
 
     @property
     def isLandlord(self):
-        landlordCount = session.query(
+        landlordCount = db.session.query(
             Landlord).filter_by(user_id=self.id).count()
 
         return landlordCount == 1
@@ -224,7 +223,7 @@ class User(Base):
             return str(self.id)  # python 3
 
     def accept_group_invite(self, group):
-        group_user = session.query(GroupUser).filter_by(
+        group_user = db.session.query(GroupUser).filter_by(
             accepted=False,
             group_id=group.id,
             user_id=self.id).first()
@@ -232,20 +231,20 @@ class User(Base):
         if group_user is not None:
             group_user.accepted = True
             group_user.genCompletedNotifications()
-            session.commit()
+            db.session.commit()
             flash("Group invite accepted", 'info')
         else:
             flash("Unable to find record to accept")
 
     def decline_group_invite(self, group):
-        group_user = session.query(GroupUser).filter_by(
+        group_user = db.session.query(GroupUser).filter_by(
             accepted=False,
             group_id=group.id,
             user_id=self.id).first()
 
         if group_user is not None:
             group_user.show = False
-            session.commit()
+            db.session.commit()
         else:
             flash("Unable to find record to decline")
 
@@ -258,14 +257,14 @@ class User(Base):
                 "You are the leader of this group, assign a new leader before you can leave", 'warning')
             return False
         else:
-            groupListings = session.query(GroupListing) \
+            groupListings = db.session.query(GroupListing) \
                 .filter_by(group_id=group.id,
                            group_show=True,
                            completed=True) \
                 .count()
 
             if groupListings == 0:
-                groupUser = session.query(GroupUser) \
+                groupUser = db.session.query(GroupUser) \
                     .filter_by(group_id=group.id,
                                user_id=self.id) \
                     .first()
@@ -273,14 +272,14 @@ class User(Base):
                 groupUser.accepted = False
                 groupUser.show = False
 
-                session.commit()
+                db.session.commit()
 
                 for user in groupUser.group.acceptedUsers:
                     newNotif = Notification(notif_type='user_leave_group',
                                             target_model_id=groupUser.id,
                                             target_user=user)
-                    session.add(newNotif)
-                    session.commit()
+                    db.session.add(newNotif)
+                    db.session.commit()
 
                 return True
             else:
@@ -316,8 +315,8 @@ class User(Base):
 
     # Icon , Message , Title
     def sendEmail(self, emailType, message):
-        logger.debug('User.sendEmail()')
-        logger.debug('EmailType %s' % emailType)
+        current_app.logger.debug('User.sendEmail()')
+        current_app.logger.debug('EmailType %s' % emailType)
         icon, title, subject = None, None, None
 
         if emailType == 'tourRequest':

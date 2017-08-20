@@ -3,8 +3,9 @@ from datetime import datetime as dt
 from sqlalchemy import event
 from sqlalchemy.orm import relationship
 
-from nexnest.application import db, app
-# from nexnest.models.listing_school import ListingSchool
+from nexnest import db
+from flask import current_app as app
+
 
 from .base import Base
 import googlemaps

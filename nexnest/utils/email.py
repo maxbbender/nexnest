@@ -1,8 +1,9 @@
 from threading import Thread
 from flask_mail import Message
-from nexnest import app, mail, logger
+from nexnest import mail
 # from flask import url_for
 from itsdangerous import URLSafeTimedSerializer
+from flask import current_app as app
 
 
 def generate_confirmation_token(email):
@@ -43,4 +44,4 @@ def send_email(subject, sender, recipients, text_body=None, html_body=None):
             thr.start()
             # mail.send(msg)
         else:
-            logger.debug('Sent Email ~ Subject: %s | Message %s' % (subject, html_body))
+            app.logger.debug('Sent Email ~ Subject: %s | Message %s' % (subject, html_body))

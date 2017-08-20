@@ -3,11 +3,15 @@ from flask_login import login_required, current_user
 
 from sqlalchemy import or_, and_
 
-from nexnest import logger
-from nexnest.application import session
+from flask import current_app as app
+
+from nexnest import db
 from nexnest.models.notification import Notification
 
 notifications = Blueprint('notifications', __name__, template_folder='../tempates/notification')
+
+
+session = db.session
 
 
 @notifications.route('/notification/<notifID>/read/AJAX')
@@ -70,7 +74,7 @@ def markAllNotificationsRead():
                                            'report_notification'])) \
         .all()
 
-    logger.debug('All Unread Notifications %r' % allUnreadNotifs)
+    app.logger.debug('All Unread Notifications %r' % allUnreadNotifs)
 
     for notif in allUnreadNotifs:
         # if notif.category not in ['generic_message, direct_message']:
@@ -100,11 +104,11 @@ def markAllMessagesRead():
 @notifications.route('/notification/<notifID>/allRead/AJAX')
 @login_required
 def markGroupedNotificationRead(notifID):
-    logger.debug('/notification/<notifID>/allRead/AJAX')
+    app.logger.debug('/notification/<notifID>/allRead/AJAX')
     notif = Notification.query.filter_by(id=notifID).first()
 
-    logger.debug('Looking at Notification : %r' % notif)
-    logger.debug('Notification Details : %r' % notif.serialize)
+    app.logger.debug('Looking at Notification : %r' % notif)
+    app.logger.debug('Notification Details : %r' % notif.serialize)
 
     errorMessage = None
     if notif is not None:
@@ -116,7 +120,7 @@ def markGroupedNotificationRead(notifID):
                         Notification.viewed == False) \
                 .all()
 
-            logger.debug('Other Notifications that matched queried : %r ' % allNotifsToMarkRead)
+            app.logger.debug('Other Notifications that matched queried : %r ' % allNotifsToMarkRead)
 
             if len(allNotifsToMarkRead) > 0:
                 for notifa in allNotifsToMarkRead:

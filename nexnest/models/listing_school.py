@@ -6,10 +6,13 @@ import googlemaps
 
 from pprint import pformat
 
-from nexnest import logger
-from nexnest.application import db
+from nexnest import db
 
 from nexnest.models.base import Base
+
+from flask import current_app as app
+
+session = db.session
 
 
 class ListingSchool(Base):
@@ -50,15 +53,15 @@ class ListingSchool(Base):
             drivingResponse = gmaps.distance_matrix(origins=self.listing.address,
                                                     destinations=self.school.address,
                                                     units='imperial')
-            logger.debug("Driving Response")
-            logger.debug(pformat(drivingResponse))
+            app.logger.debug("Driving Response")
+            app.logger.debug(pformat(drivingResponse))
 
             if drivingResponse['status'] == 'OK' and drivingResponse['rows'][0]['elements'][0]['status'] == 'OK':
                 self.driving_time = math.ceil((drivingResponse['rows'][0]['elements'][0]['duration']['value']) / 60)
                 self.driving_miles = round((drivingResponse['rows'][0]['elements'][0]['distance']['value'] / 1609.34), 1)
             else:
-                logger.warning('Could not calculate driving time from %r to %r' % (self.listing, self.school))
-                logger.warning('Status from googlemaps : %s' % drivingResponse['status'])
+                app.logger.warning('Could not calculate driving time from %r to %r' % (self.listing, self.school))
+                app.logger.warning('Status from googlemaps : %s' % drivingResponse['status'])
         else:
             self.driving_time = driving_time
             self.driving_miles = driving_miles
@@ -69,15 +72,15 @@ class ListingSchool(Base):
                                                     units='imperial',
                                                     mode='walking')
 
-            logger.debug("Walking Response")
-            logger.debug(pformat(walkingResponse))
+            app.logger.debug("Walking Response")
+            app.logger.debug(pformat(walkingResponse))
 
             if walkingResponse['status'] == 'OK' and walkingResponse['rows'][0]['elements'][0]['status'] == 'OK':
                 self.walking_time = math.ceil(walkingResponse['rows'][0]['elements'][0]['duration']['value'] / 60)
                 self.walking_miles = round((walkingResponse['rows'][0]['elements'][0]['distance']['value'] / 1609.34), 1)
             else:
-                logger.warning('Could not calculate walking time from %r to %r' % (self.listing, self.school))
-                logger.warning('Status from googlemaps : %s' % walkingResponse['status'])
+                app.logger.warning('Could not calculate walking time from %r to %r' % (self.listing, self.school))
+                app.logger.warning('Status from googlemaps : %s' % walkingResponse['status'])
         else:
             self.walking_miles = walking_miles
             self.walking_time = walking_time

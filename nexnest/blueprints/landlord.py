@@ -2,8 +2,7 @@ from flask import Blueprint, redirect, url_for, flash, render_template, jsonify,
 
 from flask_login import login_required, current_user
 
-from nexnest import logger
-from nexnest.application import session
+from nexnest import db
 from nexnest.models.landlord import Landlord
 from nexnest.models.listing import Listing
 from nexnest.models.landlord_listing import LandlordListing
@@ -15,9 +14,14 @@ from dateutil import parser
 
 from pprint import pprint, pformat
 
+from flask import current_app as app
+
+
 landlords = Blueprint('landlords',
                       __name__,
                       template_folder='../templates/landlord')
+
+session = db.session
 
 
 @landlords.before_request
@@ -179,7 +183,7 @@ def updateAvailability():
 
     if request.get_json() is not None:
         availabilityJSON = request.get_json(force=True)
-        logger.debug('availabilityJSON %r' % availabilityJSON)
+        app.logger.debug('availabilityJSON %r' % availabilityJSON)
 
         # Remove current availability
         Availability.query.filter_by(landlord=landlord).delete()
@@ -209,7 +213,7 @@ def createPaymentAcocunt():
     form = LandlordPaymentAccountForm(request.form)
 
     if form.validate_on_submit():
-        logger.debug("Create Payment Account Form is Valid")
+        app.logger.debug("Create Payment Account Form is Valid")
         braintreePayload = {}
 
         braintreeIndividual = {
@@ -242,8 +246,8 @@ def createPaymentAcocunt():
             'routing_number': form.routingNumber.data
         }
 
-        logger.debug('Braintree Payload')
-        logger.debug(pformat(braintreePayload))
+        app.logger.debug('Braintree Payload')
+        app.logger.debug(pformat(braintreePayload))
     else:
         flash_errors(form)
 

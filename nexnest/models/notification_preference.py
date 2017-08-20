@@ -1,7 +1,7 @@
 
 from datetime import datetime as dt
 
-from nexnest.application import db
+from nexnest import db
 from nexnest.models.base import Base
 from sqlalchemy import event
 from sqlalchemy.orm import relationship

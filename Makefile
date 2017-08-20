@@ -10,9 +10,9 @@ sync:
 	# nexnest_development ~~ Drop->Create->Version Control->InitDB->[INIT DATA]
 	dropdb -U nexnest_development nexnest_development --if-exists
 	createdb -U nexnest_development -O nexnest_development -h localhost -p 5432 nexnest_development
-	NEXNEST_ENV=development python db/manage.py version_control
-	NEXNEST_ENV=development python db/manage.py upgrade
-	NEXNEST_ENV=development python data_create.py
+	FLASK_CONFIG=development python db/manage.py version_control
+	FLASK_CONFIG=development python db/manage.py upgrade
+	FLASK_CONFIG=development python manage.py dataCreate
 
 user_setup:
 	sudo -u postgres createuser -U postgres -p 5432 -d -w nexnest_development
@@ -32,7 +32,7 @@ erd:
 	eralchemy -i postgres://nexnest_development:domislove@localhost:5432/nexnest_development -o docs/erd.pdf
 
 server:
-	python server.py
+	gunicorn -b 0.0.0.0 manage:app
 
 psql:
 	psql -U nexnest_development

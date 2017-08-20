@@ -1,17 +1,17 @@
 from datetime import datetime as dt
-from datetime import date
-
 
 from sqlalchemy import event
 from sqlalchemy.orm import relationship
 
 from flask import flash
 
-from nexnest.application import db, session
+from nexnest import db
 from nexnest.models.notification import Notification
 from nexnest.utils.misc import isWithin30Days
 
 from .base import Base
+
+session = db.session
 
 
 class House(Base):
@@ -131,7 +131,7 @@ class House(Base):
             else:
                 completedPayments.append(rent)
 
-        return upcomingPayments, overduePayments, futurePayments, completedPayments,
+        return upcomingPayments, overduePayments, futurePayments, completedPayments
 
     def genEmailAcceptedContent(self, user):
         return """

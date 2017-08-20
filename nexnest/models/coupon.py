@@ -3,12 +3,14 @@ from datetime import datetime as dt
 from sqlalchemy import event, UniqueConstraint
 from sqlalchemy.orm import relationship
 
-from nexnest.application import db, session
+from nexnest import db
 from nexnest.utils.misc import idGenerator
 
 from .base import Base
 
 from flask import flash
+
+session = db.session
 
 
 class Coupon(Base):

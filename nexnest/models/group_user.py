@@ -1,8 +1,10 @@
-from nexnest.application import db, session
+from nexnest import db
 from nexnest.models.notification import Notification
 from sqlalchemy.orm import relationship
 
 from .base import Base
+
+session = db.session
 
 
 class GroupUser(Base):

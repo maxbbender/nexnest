@@ -1,15 +1,16 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required
+from flask import current_app as app
 
-from nexnest import app, logger
+from nexnest import db
 from nexnest.forms import LoginForm
-from nexnest.application import session
 from nexnest.models.listing import Listing
 from nexnest.models.user import User
 from nexnest.utils.email import send_email
 from nexnest.utils.school import allSchoolsAsStrings, allSchools
 from nexnest.static.dataSets import valid_time_frames
 
+session = db.session
 
 indexs = Blueprint('indexs', __name__, template_folder='../templates')
 

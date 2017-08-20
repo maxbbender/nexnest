@@ -1,11 +1,14 @@
 from flask import Blueprint, render_template, request, jsonify
 
 from flask_login import login_required
+import braintree
 
 from nexnest.decorators import rent_editable, rent_viewable
 from nexnest.models.rent import Rent
 
-from nexnest.application import session, braintree
+from nexnest import db
+
+session = db.session
 
 
 rents = Blueprint('rents', __name__, template_folder='../templates/rents')

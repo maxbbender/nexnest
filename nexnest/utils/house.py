@@ -1,11 +1,12 @@
 from nexnest.models.house import House
 from nexnest.models.rent import Rent
 
-from nexnest import logger
-
-from nexnest.application import session
-
+from nexnest import db
 from nexnest.utils.misc import add_months
+
+from flask import current_app as app
+
+session = db.session
 
 
 def createHouse(listing, group):
@@ -22,15 +23,15 @@ def createHouse(listing, group):
 
         # Now let's create the rent payments based off the house pay period
         if listing.rent_due == 'monthly':
-            logger.debug('Creating monthly rents')
+            app.logger.debug('Creating monthly rents')
 
             for user in house.tenants:
                 currentDate = listing.start_date
-                logger.debug('Creating rent records for user %r' % user)
+                app.logger.debug('Creating rent records for user %r' % user)
                 while currentDate < listing.end_date:
                     dateDue = currentDate.replace(day=1)
 
-                    logger.debug('Rent for %r' % dateDue)
+                    app.logger.debug('Rent for %r' % dateDue)
 
                     newRent = Rent(house, user, dateDue, listing.price_per_month)
                     session.add(newRent)
@@ -40,7 +41,7 @@ def createHouse(listing, group):
                     pass
 
         else:
-            logger.debug('Creating semester rents')
+            app.logger.debug('Creating semester rents')
             for user in house.tenants:
                 firstSemesterRent = Rent(house, user, listing.first_semester_rent_due_date, listing.price_per_semester)
                 session.add(firstSemesterRent)
