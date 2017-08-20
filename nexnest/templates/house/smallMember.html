@@ -13,6 +13,14 @@
                                     <i class="icon icon-crown" style="color: #f4c359;"></i>
                                 {% endif %}
                             {% endif %}
+                            {% if current_user.id != user.id %}
+                                <a href="#" data-toggle="modal" data-target="#sendDirectMessageModal" data-targetID="{{user.id}}" data-targetname="{{user.name}}">
+                                    <div class="customTooltip" style="padding-left: 15px;">
+                                        <i class="fa fa-comment" aria-hidden="true" style="color: #5686c5;"></i>
+                                        <span class="customTooltiptext">Send Message</span>
+                                    </div>
+                                </a>
+                            {% endif %}
                         </h2>
                     </div>
                 </div>
