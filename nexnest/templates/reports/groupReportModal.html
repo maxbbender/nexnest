@@ -1,11 +1,11 @@
 <div class="modal fade" id="groupReportModal" tabindex="-1" role="dialog" aria-labelledby="report" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content nexnest-font" style="color: #656264;">
+            <div class="modal-header" style="background-color: #d2d2d2;">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="groupReport"></h4>
+                <h3 class="modal-title" id="groupReport"></h3>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -23,15 +23,17 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <div class="form-group">
-                                        <label class="control-label form-control-feedback"><strong>What has this group done that you wish to report them? Please be as specfic as possible for us to investigate</strong></label>
+                                        <label class="control-label form-control-feedback"><strong>Why is the group being reported? Please be as specific as possible</strong></label>
                                         {{GroupReportForm.content(class="form-control", type="text", required="required", rows="5")}}
                                     </div>
                                 </div>
                             </div>
                             {{GroupReportForm.group_id}}
-                            <p>
-                                <input type='submit' value='Submit Report' class="btn btn-primary">
-                            </p>
+                            <div class="row">
+                                <div class="col-xs-12 pull-right">
+                                    <input type='submit' value='Submit Report' class="btn btn-blue pull-right">
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>

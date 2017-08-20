@@ -1,7 +1,7 @@
 <div class="modal fade" id="landlordReportModal" tabindex="-1" role="dialog" aria-labelledby="report" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content nexnest-font" style="color: #656264;">
+            <div class="modal-header" style="background-color: #d2d2d2;">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -23,15 +23,17 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <div class="form-group">
-                                        <label class="control-label form-control-feedback"><strong>What has this landlord done that you wish to report them? Please be as specfic as possible for us to investigate</strong></label>
+                                        <label class="control-label form-control-feedback"><strong>Why is the landlord being reported? Please be as specfic as possible.</strong></label>
                                         {{LandlordReportForm.content(class="form-control", type="text", required="required", rows="5")}}
                                     </div>
                                 </div>
                             </div>
                             {{LandlordReportForm.landlord_id}}
-                            <p>
-                                <input type='submit' value='Submit Report' class="btn btn-primary">
-                            </p>
+                            <div class="row">
+                                <div class="col-xs-12 pull-right">
+                                    <input type='submit' value='Submit Report' class="btn btn-blue pull-right">
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
