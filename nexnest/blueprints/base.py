@@ -5,6 +5,5 @@ base = Blueprint('base', __name__, template_folder='../templates/base')
 
 @base.route('/uploads/<path:path>')
 def serve_upload(path):
-    print(path)
-
+    # print(path)
     return send_from_directory('uploads/', path)

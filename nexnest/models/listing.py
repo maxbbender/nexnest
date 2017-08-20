@@ -431,6 +431,25 @@ class Listing(Base):
 
         return False
 
+    def cancelTours(self):
+        print('Cancel Tours')
+        app.logger.debug('Cancel Tours')
+        app.logger.debug('Tours : %r' % self.tours)
+        for tour in self.tours:
+            app.logger.debug('Look at Tour %r' % tour)
+            if not tour.declined:
+                tour.declined = True
+                tour.genDeniedNotifications()
+                db.session.commit()
+
+    def cancelGroupListingRequests(self):
+        for gl in self.groups:
+            if gl.landlord_show or gl.group_show:
+                gl.group_show = False
+                gl.landlord_show = False
+                gl.genDeniedNotifications()
+                db.session.commit()
+
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument
     # 'target' is the inserted object

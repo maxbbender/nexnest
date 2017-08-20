@@ -34,10 +34,12 @@ class DevelopmentConfig(Config):
 
         # log to syslog
         import logging
-        from logging.handlers import SysLogHandler
-        syslog_handler = SysLogHandler()
-        syslog_handler.setLevel(logging.DEBUG)
-        app.logger.addHandler(syslog_handler)
+        import sys
+        ch = logging.StreamHandler(sys.stdout)
+        ch.setLevel(logging.DEBUG)
+        formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+        ch.setFormatter(formatter)
+        app.logger.addHandler(ch)
 
         from slack_log_handler import SlackLogHandler
         slackHandler = SlackLogHandler(Config.SLACK_LOG_URL)

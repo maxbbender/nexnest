@@ -21,6 +21,14 @@ def createHouse(listing, group):
         session.add(house)
         session.commit()
 
+        house.genNotifications()
+
+        house.listing.cancelTours()
+        house.listing.cancelGroupListingRequests()
+
+        house.group.cancelTours()
+        house.group.cancelListingRequests()
+
         # Now let's create the rent payments based off the house pay period
         if listing.rent_due == 'monthly':
             app.logger.debug('Creating monthly rents')

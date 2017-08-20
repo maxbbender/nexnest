@@ -43,6 +43,7 @@ def index():
 @login_required
 def test():
     app.logger.warning('yooo')
+    app.logger.warning('yooo %r' % 'hey')
     return render_template('test.html')
 
 
