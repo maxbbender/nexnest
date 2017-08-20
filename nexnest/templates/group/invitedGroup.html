@@ -16,7 +16,7 @@
             	<strong><i class="icon icon-crown" style="padding-right: 7px;"></i> Group Leader: </strong>{{ group.leader.fname }} {{ group.leader.lname }}
             </p>
         	<p class="card-text">
-        		<i class="fa fa-clock-o" style="padding-right: 5px;"></i> Lease Period: {{ group.target_time_period }}
+        		<i class="fa fa-clock-o" style="padding-right: 5px;"></i> Lease Period: {{ group.humanTimePeriod }}
         	</p>
         	<strong>Current Group Members:</strong>
         	{% for user in group.acceptedUsers %}
