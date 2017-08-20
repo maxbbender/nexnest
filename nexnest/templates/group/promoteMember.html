@@ -4,15 +4,13 @@
             <div class="col-xs-2" style="height: 50px;">
                 <img src="{{user.profile_image}}" alt="Profile Image" class="img-responsive" style="height: 100%" />
             </div>
-            <div class="col-xs-10">
-                <div class="row">
+            <div class="col-xs-10" style="align-self: center;">
+                <div class="row nexnest-font">
                     <div class="col-xs-12">
-                        <a href="{{ url_for('users.viewUser', userID=user.id) }}">
-                            <h4>{{ user.fname }} {{ user.lname }}
-                            {% if current_user.id != user.id %}
-                                <a class="btn btn-primary" href="/group/{{group.id}}/assignLeader/{{user.id}}" style="float: right;">Make Group Leader</a></h4>
-                            {% endif %}
-                        </a>
+                        <h4>{{ user.fname }} {{ user.lname }}
+                        {% if current_user.id != user.id %}
+                            <a class="btn btn-blue" href="/group/{{group.id}}/assignLeader/{{user.id}}" style="float: right;">Make Group Leader</a></h4>
+                        {% endif %}
                     </div>
                 </div>
             </div>

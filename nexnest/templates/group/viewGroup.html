@@ -79,8 +79,11 @@
                                             <br>
                                             <strong>Invite User to Group:</strong>
                                             <div class="row">
-                                                <div class="col-xs-12 col-sm-10 col-md-8 col-lg-8 col-xl-6">                        
+                                                <div class="col-xs-9 col-sm-10 col-md-8 col-lg-8 col-xl-6">                        
                                                     <input id="userSearch" type="text" class="form-control" aria-describedby="searchHelpBlock" style="width:100%;">
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <button id="inviteByEmail" class="btn btn-blue" style="display: none;">Invite</button>
                                                 </div>
                                             </div>
                                             <p id="searchHelpBlock" class="form-text text-muted">
@@ -612,12 +615,12 @@
     <!-- Change Group Leader Modal -->
     <div class="modal fade" id="changeGroupLeaderModal" tabindex="-1" role="dialog" aria-labelledby="changeLeader" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
+            <div class="modal-content nexnest-font">
+                <div class="modal-header" style="background-color: #d2d2d2;">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title" id="changeLeader"></h4>
+                    <h3 class="modal-title" id="changeLeader"></h3>
                 </div>
                 <div class="modal-body">
                     <h4>Which user would you like to promote to group leader?</h4>
@@ -696,6 +699,11 @@
         });
         return false;
     }
+
+    function isEmail(email){
+        var emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return emailReg.test(email);
+    }
     
     $("#userSearch").keyup(function() {
         if($("#userSearch").val().length > 4){
@@ -720,6 +728,12 @@
                 });
                 
             });
+            if(isEmail($("#userSearch").val())) {
+                $("#inviteByEmail").show();
+            }
+            else{
+                $("#inviteByEmail").hide();
+            }
         }        
     });
 
