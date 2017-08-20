@@ -136,7 +136,7 @@
                                                     {% for favorite in favoritedListings %}
                                                         <div class="row m-x-auto" id="favoritedListing{{favorite.listing.id}}" style="color: #656264;">
                                                             <div class="col-md-12">
-                                                                <div class="card" style="width: 100%;">                       
+                                                                <div class="card" style="width: 100%; border-color: #d2d2d2">                       
                                                                     <div class="card-block" style="padding-top: 0px; padding-left: 15px; padding-right: 15px;">
                                                                         <div class="row">
                                                                             <div class="imageContainer" style="width: 100%;">
@@ -157,14 +157,13 @@
                                                                             </div>
                                                                         </div>
                                                                         <br>
-                                                                        <span style="font-size: 2.0vh;">
-                                                                        <div class="row">
+                                                                        <div class="row" style="font-size: 22px;">
                                                                             <div class="col-xs-6">
-                                                                                {{ favorite.listing.num_bedrooms }} <i class="fa fa-bed" aria-hidden="true"></i>
+                                                                                <i class="fa fa-bed" aria-hidden="true"></i> {{ favorite.listing.num_bedrooms }} Bedrooms
                                                                                 &nbsp;
-                                                                                {{ favorite.listing.num_full_baths }} <i class="fa fa-bath" aria-hidden="true"></i>
+                                                                                <i class="fa fa-bath" aria-hidden="true"></i> {{ favorite.listing.num_full_baths }} Bathrooms
                                                                                 <br>
-                                                                                ${{ favorite.listing.price }} per Bedroom/{{ favorite.listing.rent_due }}
+                                                                                ${{ favorite.listing.price }} per person/{{ favorite.listing.rent_due }}
                                                                             </div>
                                                                             <div class="col-xs-6" style="text-align: right;">
                                                                                 {{ favorite.listing.street }}
@@ -175,17 +174,20 @@
                                                                         <div class="row">
                                                                             <div class="col-xs-12 col-xl-12" style="padding-left: 15px;">
                                                                                 <br>
-                                                                                <strong> Property Description: </strong> {{ favorite.listing.description }}
+                                                                                <strong style="font-size: 22px;"> Property Description: </strong> 
+                                                                                <span style="font-size: 20px;">{{ favorite.listing.description }}</span>
                                                                             </div>
                                                                         </div>
                                                                         <br>
                                                                         <div class="row hidden-xs-down">
                                                                             <br>                                                     
                                                                             <div class="col-xl-5">
-                                                                                <strong>Lease Start Date:</strong> {{ favorite.listing.start_date }}
+                                                                                <strong style="font-size: 22px;">Lease Start Date:</strong>
+                                                                                <span style="font-size: 20px;">{{ favorite.listing.start_date }}</span>
                                                                             </div>
                                                                             <div class="col-xl-5">
-                                                                                <strong>Lease End Date:</strong> {{ favorite.listing.end_date }}
+                                                                                <strong style="font-size: 22px;">Lease End Date:</strong> 
+                                                                                <span style="font-size: 20px;">{{ favorite.listing.end_date }}</span>
                                                                             </div>
                                                                         </div>                                                                        
                                                                     </div>
@@ -194,7 +196,7 @@
                                                         </div>
                                                         <div class="row m-x-auto" id="favoritedListingUndo{{favorite.listing.id}}" style="display: none;">
                                                             <div class="col-xs-12" style="padding-left: 30px;">
-                                                                <div class="alert alert-info" role="alert">
+                                                                <div class="alert alert-light-blue" role="alert">
                                                                     You have just unfavorited {{ favorite.listing.street }} <a href="#!" class="alert-link" onclick="showFavoritedListing({{favorite.listing.id}})">Undo?</a>
                                                                 </div>
                                                             </div>
@@ -252,7 +254,7 @@
                                                             <div class="card-block">
                                                                 <div class="row">
                                                                     <div class="col-xs-6">
-                                                                        {{ tour.listing.num_bedrooms }} <i class="fa fa-bed" aria-hidden="true"></i>
+                                                                        <i class="fa fa-bed" aria-hidden="true"></i>{{ tour.listing.num_bedrooms }} Beds
                                                                         &nbsp;
                                                                         {{ tour.listing.num_full_baths }} <i class="fa fa-bath" aria-hidden="true"></i>
                                                                         <br>
@@ -349,7 +351,7 @@
                     <div class="tab-pane" id="listingRequestsTab" role="tabpanel" style="padding: 0px;">
                         <div class="row">
                             <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125); margin-left: 20px;">
-                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); width: 100%;">Property Requests</h3>
+                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); width: 100%; background-color: #d2d2d2; color: #656264;">Property Requests</h3>
                                 <div class="card-block">
                                     <div class="row" style="width: 100%;">
                                     {% if housingRequests|count == 0 %}
@@ -362,120 +364,131 @@
                                             </div>
                                         {% endif %}
                                         {% for request in housingRequests %}
-                                            <div class="row" style="width: 100%">
-                                                <div class="card">
-                                                    <div class="card-header">
-                                                        <div class="row">
-                                                            <div class="col-xs-8">
-                                                                <h3>{{ request.listing.street }}</h3>
-                                                            </div>
-                                                            <div class="col-xs-4">
-                                                                <a href="{{ url_for('housingRequests.view', id=request.id) }}" class="btn btn-primary" style="float: right;">More Info</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="card-block">
-                                                        <div class="card" style="width: 100%; border: none;">
-                                                            <a href="{{ url_for('housingRequests.view', id=request.id) }}">
-                                                                {% if request.listing.banner_photo_url %}
-                                                                    <img src="{{request.listing.banner_photo_url}}" class="listingImg card-img-top">
-                                                                {% else %}
-                                                                    <img src="/static/img/defaultHouse.png" class="listingImg card-img-top">
-                                                                {% endif %}
-                                                            </a>
-                                                            <div class="card-block">
-                                                                <span style="font-size: 2.0vh;">
-                                                                <div class="row">
-                                                                    <div class="col-xs-6">
-                                                                        {{ request.listing.num_bedrooms }} <i class="fa fa-bed" aria-hidden="true"></i>
-                                                                        &nbsp;
-                                                                        {{ request.listing.num_full_baths }} <i class="fa fa-bath" aria-hidden="true"></i>
-                                                                        <br>
-                                                                        ${{ request.listing.price }} per {{ request.listing.rent_due }}
-                                                                    </div>
-                                                                    <div class="col-xs-6" style="text-align: right;">
-                                                                        {{ request.listing.street }}
-                                                                        <br>
-                                                                        {{ request.listing.city }}, {{ request.listing.state }}
-                                                                    </div>
+                                            <div class="row" style="width: 100%; color: #656264;">
+                                                <div class="col-xs-12" style="margin-left: -5px;">
+                                                    <div class="card">
+                                                        <div class="card-header" style="background-color: #d2d2d2;">
+                                                            <div class="row">
+                                                                <div class="col-xs-8">
+                                                                    <h3>{{ request.listing.street }}</h3>
                                                                 </div>
-                                                                </span>
+                                                                <div class="col-xs-4">
+                                                                    <a href="{{ url_for('housingRequests.view', id=request.id) }}" class="btn btn-blue" style="float: right; margin-top: 5px;">More Info</a>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                        {% if not request.landlord_show %}
-                                                            <h1 style="color: red"><i class="fa fa-times-circle" aria-hidden="true"></i>Request Declined</h1>
-                                                            The landlord has declined your group's request to live at this property
-                                                        {% else %}
-                                                            {% if request.accepted %}
-                                                                <div class="row">
-                                                                    <div class="col-xl-12">
-                                                                        <h4><strong>Status of request:</strong></h4>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-xs-10 col-xl-10">                                          
-                                                                        <strong style="padding-right: 5px;">Application Accepted: </strong>
-                                                                    </div>
-                                                                    <div class="col-xs-1 col-xl-1">
-                                                                        <button type="button" id="confirmed" class="btn btn-success btn-circle" style="pointer-events: none;"><i class="fa fa-check" aria-hidden="true"></i></button>
-                                                                    </div>
-                                                                </div>
-                                                                <hr>
-                                                                <br>
-                                                                <div class="row">
-                                                                    <div class=" col-xs-10 col-xl-10">
-                                                                        <strong style="padding-right: 5px;">Leases Signed: </strong>
-                                                                    </div>
-                                                                    <div class="col-xs-1 col-xl-1">
-                                                                        {% if not request.all_leases_submitted %}
-                                                                            <button type="button" class="btn btn-danger btn-circle" style="pointer-events: none;"><i class="fa fa-times" aria-hidden="true"></i></button>
-                                                                        {% else %}
-                                                                            <button type="button" class="btn btn-success btn-circle pending" style="pointer-events: none;"><i class="fa fa-check" aria-hidden="true"></i></button>
-                                                                        {% endif %}
-                                                                    </div>
-                                                                </div>
-                                                                <hr>
-                                                                <br>
-                                                                <div class="row">
-                                                                    <div class="col-xs-10 col-xl-10">
-                                                                        <strong style="padding-right: 5px;">Deposits Collected: </strong>
-                                                                    </div>
-                                                                    <div class="col-xs-1 col-xl-1">
-                                                                        {{request.numSecurityDepositsPaid}}/{{group.acceptedUsers|count}}
-                                                                    </div>
-                                                                </div>
-                                                                
-                                                                {% if request.securityDeposits | length > 0 %}
-                                                                    <hr>
-                                                                    <strong style="padding-right: 5px;">Who's Paid Their Deposit: </strong>
-                                                                    <br><br>
-                                                                    {% for deposit in request.securityDeposits %}
-                                                                        <div class="row">
-                                                                            <div class="col-xs-10">
-                                                                                <h4>
-                                                                                    <img src="{{deposit.user.profile_image}}" alt="Profile Image" class="img-responsive" style="height: 50px; width: 50px;" />
-                                                                                    {{ deposit.user.fname }} {{ deposit.user.lname }}
-                                                                                    {% if deposit.completed %}
-                                                                                        <span class="securityDeposit" id="markDepositPaid{{deposit.user.id}}" style="color: green"><i class="fa fa-check-circle" aria-hidden="true"></i></span>
-                                                                                    {% else %}
-                                                                                        <span class="securityDeposit" id="markDepositPaid{{deposit.user.id}}" style="color: red"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
-                                                                                    {% endif %}
-                                                                                </h4>
-                                                                            </div>
+                                                        <div class="card-block">
+                                                            <div class="card" style="width: 100%; border: none;">
+                                                                <a href="{{ url_for('housingRequests.view', id=request.id) }}">
+                                                                    {% if request.listing.banner_photo_url %}
+                                                                        <img src="{{request.listing.banner_photo_url}}" class="listingImg card-img-top">
+                                                                    {% else %}
+                                                                        <img src="/static/img/defaultHouse.png" class="listingImg card-img-top">
+                                                                    {% endif %}
+                                                                </a>
+                                                                <div class="card-block">
+                                                                    <span style="font-size: 2.0vh;">
+                                                                    <div class="row">
+                                                                        <div class="col-xs-6">
+                                                                            <i class="fa fa-bed" aria-hidden="true"></i> {{ request.listing.num_bedrooms }} Bedrooms
+                                                                            &nbsp;
+                                                                            <i class="fa fa-bath" aria-hidden="true"></i> {{ request.listing.num_full_baths }} Bathrooms
+                                                                            <br>
+                                                                            ${{ request.listing.price }} per person/{{ request.listing.rent_due }}
                                                                         </div>
-                                                                        <hr>
-                                                                    {% endfor %}
-                                                                {% endif %}
-                                                                <br>
-                                                                <span>You and the landlord must make arrangements to sign leases and pay your security deposits if they are required. After that has happened the landlord will confirm the listing and you will have this listing for {{ request.listing.start_date }} - {{ request.listing.end_date }}. </span>                       
+                                                                        <div class="col-xs-6" style="text-align: right;">
+                                                                            {{ request.listing.street }}
+                                                                            <br>
+                                                                            {{ request.listing.city }}, {{ request.listing.state }}
+                                                                        </div>
+                                                                    </div>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            {% if not request.landlord_show %}
+                                                                <h1 style="color: red"><i class="fa fa-times-circle" aria-hidden="true"></i>Request Declined</h1>
+                                                                The landlord has declined your group's request to live at this property
                                                             {% else %}
-                                                                <h4><strong>Status of request:</strong></h4>
-                                                                <strong style="padding-right: 5px;">Application Accepted: </strong>
-                                                                <button type="button" id="pending" class="btn btn-warning btn-circle pending" style="pointer-events: none;"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
-                                                                <br>
-                                                                <span>Waiting for the landlord to either accept or decline your request. If he accepts the next step will have all members of your group signing leases and paying your security deposits.</span>
+                                                                {% if request.accepted %}
+                                                                    <div class="row" style="padding-top: 10px;">
+                                                                        <div class="col-xl-12">
+                                                                            <h4><strong>Status of request:</strong></h4>
+                                                                        </div>
+                                                                    </div>
+                                                                    <hr>
+                                                                    <div class="row">
+                                                                        <div class="col-xs-10 col-xl-10">                                          
+                                                                            <h5><strong style="padding-right: 5px;">Application Accepted: </strong></h5>
+                                                                        </div>
+                                                                        <div class="col-xs-1 col-xl-1">
+                                                                            <button type="button" id="confirmed" class="btn btn-light-green btn-circle" style="pointer-events: none; border-radius: 16px;"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <hr>
+                                                                    <div class="row">
+                                                                        <div class=" col-xs-10 col-xl-10">
+                                                                            <h5><strong style="padding-right: 5px;">Leases Signed: </strong></h5>
+                                                                        </div>
+                                                                        <div class="col-xs-1 col-xl-1">
+                                                                            {% if not request.all_leases_submitted %}
+                                                                                <button type="button" class="btn btn-red btn-circle" style="pointer-events: none; border-radius: 16px;"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                                                            {% else %}
+                                                                                <button type="button" class="btn btn-light-green btn-circle pending" style="pointer-events: none; border-radius: 16px;"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                                                            {% endif %}
+                                                                        </div>
+                                                                    </div>
+                                                                    <hr>
+                                                                    <div class="row">
+                                                                        <div class="col-xs-10 col-xl-10">
+                                                                            <h5><strong style="padding-right: 5px;">Deposits Collected: </strong></h5>
+                                                                        </div>
+                                                                        <div class="col-xs-1 col-xl-1">
+                                                                            <h5>{{request.numSecurityDepositsPaid}}/{{group.acceptedUsers|count}}</h5>
+                                                                        </div>
+                                                                    </div>
+                                                                    
+                                                                    {% if request.securityDeposits | length > 0 %}
+                                                                        <hr>
+                                                                        <h5><strong style="padding-right: 5px;">Who's Paid Their Deposit: </strong></h5>
+                                                                        <br>
+                                                                        {% for deposit in request.securityDeposits %}
+                                                                            <div class="row">
+                                                                                <div class="col-xs-10">
+                                                                                    <h4 style="padding-left: 30px;">
+                                                                                        <img src="{{deposit.user.profile_image}}" alt="Profile Image" class="img-responsive" style="height: 50px; width: 50px;" />
+                                                                                        <span style="padding-left: 12px;">{{ deposit.user.fname }} {{ deposit.user.lname }}</span>
+                                                                                    </h4>
+                                                                                </div>
+                                                                                <div class="col-xs-1">
+                                                                                    {% if deposit.completed %}
+                                                                                        <span class="securityDeposit" id="markDepositPaid{{deposit.user.id}}" style="color: #4fac80"><i class="fa fa-check-circle" aria-hidden="true"></i></span>
+                                                                                    {% else %}
+                                                                                        <span class="securityDeposit" id="markDepositPaid{{deposit.user.id}}" style="color: #f16e5b"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                                                                                    {% endif %}
+                                                                                </div>
+                                                                            </div>
+                                                                            <hr>
+                                                                        {% endfor %}
+                                                                    {% endif %}
+                                                                    <br>
+                                                                    <h3>How it works: </h3>
+                                                                    <br>
+                                                                    <div style="padding-left: 10px; font-size: 20px;">
+                                                                        1. Make arrangements with your landlord to sign leases and pay security deposits (if required).
+                                                                    </div>
+                                                                    <br>
+                                                                    <div style="padding-left: 10px; font-size: 20px;">
+                                                                        2. Landlord will make your request as 'confirmed' and you will be added to {{ request.listing.street }} for the {{ request.listing.start_date }} - {{ request.listing.end_date }} term.
+                                                                    </div>                                                                
+                                                                {% else %}
+                                                                    <h4><strong>Status of request:</strong></h4>
+                                                                    <strong style="padding-right: 5px;">Application Accepted: </strong>
+                                                                    <button type="button" id="pending" class="btn btn-warning btn-circle pending" style="pointer-events: none;"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                                    <br>
+                                                                    <span>Pending Request: Waiting for landlord to accept or decline your request. If accepted, please contact landlord to sign leases and pay security deposits to secure this property.</span>
+                                                                {% endif %}
                                                             {% endif %}
-                                                        {% endif %}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

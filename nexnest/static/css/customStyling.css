@@ -325,7 +325,8 @@ select.form-control:not([size]):not([multiple]) {
     top:0%; 
     width:40px;
     margin:0 auto;
-    right:0px;
+    right:7px;
+    top: 6px;
     z-index:100
 }
 .delete:hover {
@@ -886,7 +887,7 @@ button.link {
 .myMessage{
   margin-bottom: 30px;
   border-width: medium;
-  border-color: #2b4767;
+  border-color: #5686c5;
 }
 .myMessage:after {
   content: "\25BC";
@@ -895,7 +896,7 @@ button.link {
   left:95%;
   font-size:39px;
   line-height:14px;
-  color:#2b4767;
+  color: #5686c5;
   text-shadow:none;
 }
 .otherUserMessage{
