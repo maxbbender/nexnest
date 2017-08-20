@@ -5,6 +5,7 @@ from flask import current_app as app
 from nexnest import db
 from nexnest.models.listing_favorite import ListingFavorite
 from nexnest.sysLogger import logger
+from nexnest.utils.date import diffMonth
 
 from .base import Base
 
@@ -191,12 +192,14 @@ class Listing(Base):
         self.featured = featured
         self.banner_photo_url = banner_photo_url
 
+        startDate = dt.strptime(self.start_date, '%Y-%m-%d')
+        endDate = dt.strptime(self.end_date, '%Y-%m-%d')
         if self.rent_due == 'monthly':
             self.price_per_month = self.price
-            self.price_per_semester = self.price * 6
+            self.price_per_semester = (self.price * diffMonth(endDate, startDate)) / 2
         elif self.rent_due == 'semester':
             # numMonths = int((self.end_date - self.start_date).days / 30)
-            self.price_per_month = self.price / 6
+            self.price_per_month = (self.price * 2) / diffMonth(endDate, startDate)
             self.price_per_semester = self.price
         else:
             logger.error('Unknown Rent Due Value while create listing : %s' % self.rent_due)
