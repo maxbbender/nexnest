@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 <link href="{{url_for('static', filename='css/landlord/dashboardStyling.css')}}" rel="stylesheet">
-<div class="row">
+<div class="row nexnest-font" style="color: #656264;">
     <div class="col-md-2 col-sm-2 col-xs-2 display-table-cell v-align box" id="navigation" style="height: inherit;">
-        <div class="navi navbar">
+        <div class="navi navbar nexnest-font">
         	<ul>
         		<li class="nav-item">
         	        <a class="nav-link" data-toggle="tab" href="#" role="tab" style="pointer-events: none;">
@@ -61,7 +61,7 @@
     <div class="col-sm-10 col-md-10 col-xs-10">
     	<div class="row">
 	        <div class="col-xs-12">
-	            <div class="callout-block text-center fade-in-b">
+	            <div class="callout-block text-center fade-in-b" style="background-color: #d2d2d2;">
 	                <h1 style="font-size: 3.0vh">
 	                    <strong>{{ housingRequest.group.name }}</strong> Have requested to live at:
 	                    <br>
@@ -79,7 +79,7 @@
 				    <div class="tab-pane active" id="statusTab" role="tabpanel" style="padding: 0px;">
 				    	<div class="row">
 				    	    <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-				    	        <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); font-size: 3.5vh;">Request Status</h3>
+				    	        <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); font-size: 3.5vh; background-color: #d2d2d2;">Request Status</h3>
 				    	        <div class="card-block">
 				    	            <div class="row">
 				    	            	<div class="col-xs-12">
@@ -201,8 +201,8 @@
 						    	                	{% if current_user in landlords %}
 						    	                		<span>If you have decided you want this group to live in this listing for {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}, please click the accept this listing button. The next step will be having the tenants sign leases and pay thier security deposits.</span>
 						    	                		<br><br>
-						    	                		<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#acceptGroupModal">Accept Group</a>
-	                                                    <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#declineGroupModal">Decline</a>
+						    	                		<a href='#' class="btn btn-blue" data-toggle="modal" data-target="#acceptGroupModal">Accept Group</a>
+	                                                    <a href='#' class="btn btn-red" data-toggle="modal" data-target="#declineGroupModal">Decline</a>
 						    	                	{% else %}
 						    	                		<span>Waiting for the landlord to either accept or decline your request. If he accepts the next step will have all members of your group signing leases and paying your security deposits.</span>
 						    	                	{% endif %}
@@ -217,7 +217,7 @@
 			        <div class="tab-pane" id="membersTab" role="tabpanel" style="padding: 0px;">
 			        	<div class="row">
 			        	    <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-			        	        <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
+			        	        <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); font-size: 3.5vh; background-color: #d2d2d2;">
 			        	        {% if current_user in landlords %}
 			        	        	Members
 			        	        {% endif %}
@@ -246,7 +246,11 @@
 			        <div class="tab-pane hidden-lg-up" id="messagesTab" role="tabpanel" style="padding: 0px;">
 				    	{% if housingRequest.landlord_show %}
                             <div class="card" style="width:100%;">
-                                <h3 class="card-header" style="font-size: 3.5vh;">Group Message with Landlord:</h3>
+                                {% if current_user in landlords %}
+                                    <h3 class="card-header" style="font-size: 3.5vh; background-color: #d2d2d2; color: #656264;">Group Message with Tenants:</h3>
+                                {% else %}
+                                    <h3 class="card-header" style="font-size: 3.5vh; background-color: #d2d2d2; color: #656264;">Group Message with Landlord:</h3>
+                                {% endif %}
                                 <div class="card-block">
                                     <!-- Add new message -->
                                     <div class="form-group">
@@ -258,7 +262,7 @@
                                             </div>
                                             <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
                                                 <div class="col-xs-12">
-                                                    <input class="btn btn-primary" type="submit" value="Respond">
+                                                    <input class="btn btn-blue" type="submit" value="Send">
                                                 </div>                                    
                                             </div>
                                         </form>
@@ -272,7 +276,7 @@
                         {% endif %}
                         <!-- Messages -->
                         {% if messages |length == 0 %}
-                            <div class="alert alert-info" role="alert">
+                            <div class="alert alert-light-blue" role="alert">
                               <strong>No Messages Yet! </strong>Be the first one
                             </div>
                         {% else %}
@@ -284,7 +288,7 @@
                     <div class="tab-pane" id="propertyTab" role="tabpanel" style="padding: 0px;">
                         <div class="row">
                             <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">The Property</h3>
+                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); font-size: 3.5vh; background-color: #d2d2d2;">The Property</h3>
                                 <div class="card-block">
                                     <div class="row">
                                         {% with listing=housingRequest.listing %}
@@ -303,7 +307,11 @@
     		<div class="col-lg-5 hidden-md-down" style="overflow-y: auto;">
     			{% if housingRequest.landlord_show %}
 				    <div class="card" style="width:100%;">
-				        <h3 class="card-header" style="font-size: 3.0vh;">Group Message with Landlord:</h3>
+				        {% if current_user in landlords %}
+                            <h3 class="card-header" style="font-size: 3.0vh; background-color: #d2d2d2; color: #656264;">Group Message with Tenants:</h3>
+                        {% else %}
+                            <h3 class="card-header" style="font-size: 3.0vh; background-color: #d2d2d2; color: #656264;">Group Message with Landlord:</h3>
+                        {% endif %}
 				        <div class="card-block">
 				            <!-- Add new message -->
 				            <div class="form-group">
@@ -315,7 +323,7 @@
 				                    </div>
 				                    <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
 				                        <div class="col-xs-12">
-				                            <input class="btn btn-primary" type="submit" value="Respond">
+				                            <input class="btn btn-blue" type="submit" value="Send">
 				                        </div>                                    
 				                    </div>
 				                </form>
@@ -360,7 +368,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="{{url_for('housingRequests.acceptRequest', id=housingRequest.id)}}" class="btn btn-primary">Accept Group</a>
+                <a href="{{url_for('housingRequests.acceptRequest', id=housingRequest.id)}}" class="btn btn-blue">Accept Group</a>
             </div>
         </div>
     </div>
