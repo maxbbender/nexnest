@@ -148,7 +148,7 @@
 			        <div class="tab-pane" id="membersTab" role="tabpanel" style="padding: 0px;">
 			        	<div class="row">
 			        	    <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-			        	        <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); background-color: #d2d2d2; font-size: 3.5vh;">
+			        	        <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); background-color: #d2d2d2; font-size: 3.5vh; color: #656264;">
 			        	        	{% if current_user in landlords %}
 			        	        		Members
 			        	        	{% endif %}
@@ -159,7 +159,7 @@
 			        	                    <div class="row">
 			        	                        <div class="col-xs-12">
 			        	                            {% if current_user in landlords %}
-			        	                                <p class="card-text" style="font-size: 3.0vh;"><strong>{{ house.group.name }}</strong></p>
+			        	                                <p class="card-text" style="font-size: 3.0vh; color: #656264;"><strong>{{ house.group.name }}</strong></p>
 			        	                                {% with group=house.group %}
 			        	                                    {% for user in group.acceptedUsers %}                                    
 			        	                                        {% include 'house/smallMember.html' %}
@@ -191,7 +191,11 @@
 				    <div class="tab-pane hidden-lg-up" id="messagesTab" role="tabpanel" style="padding: 0px;">
 				    	<div class="row">
 				    	    <div class="card" style="width:100%;">
-    	    			        <h3 class="card-header" style="font-size: 3.5vh; background-color: #d2d2d2; color: #656264;">Group Message with Landlord:</h3>
+                                {% if current_user in landlords %}
+    	    			        <h3 class="card-header" style="font-size: 3.5vh; background-color: #d2d2d2; color: #656264;">Group Message with Tenants:</h3>
+                                {% else %}
+                                <h3 class="card-header" style="font-size: 3.5vh; background-color: #d2d2d2; color: #656264;">Group Message with Landlord:</h3>
+                                {% endif %}
     	    			        <div class="card-block">
     	    			            <!-- Add new message -->
     	    			            <div class="form-group">
@@ -454,7 +458,11 @@
             </div>
     		<div class="col-md-5 hidden-md-down" style="overflow-y: auto;">
 			    <div class="card" style="width:100%;">
-			        <h3 class="card-header" style="font-size: 3.0vh; background-color: #d2d2d2; color: #656264;">Group Message with Landlord:</h3>
+                    {% if current_user in landlords %}
+                        <h3 class="card-header" style="font-size: 3.0vh; background-color: #d2d2d2; color: #656264;">Group Message with Tenants:</h3>
+                    {% else %}
+                        <h3 class="card-header" style="font-size: 3.0vh; background-color: #d2d2d2; color: #656264;">Group Message with Landlord:</h3>
+                    {% endif %}
 			        <div class="card-block">
 			            <!-- Add new message -->
 			            <div class="form-group">
