@@ -1,3 +1,4 @@
+
 from datetime import datetime as dt
 
 from flask import current_app as app
@@ -14,6 +15,7 @@ from sqlalchemy import event
 from sqlalchemy.orm import relationship, backref
 
 import os
+import re
 
 import googlemaps
 
@@ -353,6 +355,26 @@ class Listing(Base):
     @property
     def briefAddress(self):
         return self.address[:22] + "..."
+
+    @property
+    def humanStartDate(self):
+        return self.start_date.strftime('%B %d, %Y')
+
+    @property
+    def humanEndDate(self):
+        return self.end_date.strftime('%B %d, %Y')
+
+    @property
+    def humanTimePeriod(self):
+        schoolYearPattern = re.compile(r"((\d{4})-(\d{4}))")
+        schoolYear = schoolYearPattern.match(self.time_period_date_range)
+
+        if schoolYear:
+            firstYear = schoolYear.group(2)
+            secondYear = schoolYear.group(3)
+            return 'Fall %s - Spring %s' % (firstYear, secondYear)
+        else:
+            return 'Summer %s' % self.target_time_period
 
     def isEditableBy(self, user):
         if self.hasHouse() or self.hasAcceptedGroupListing:
