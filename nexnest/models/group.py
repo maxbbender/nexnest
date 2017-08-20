@@ -1,4 +1,5 @@
 from datetime import datetime as dt
+import re
 
 from nexnest import db
 
@@ -134,6 +135,18 @@ class Group(Base):
                 return True
 
         return False
+
+    @property
+    def humanTimePeriod(self):
+        schoolYearPattern = re.compile(r"((\d{4})-(\d{4}))")
+        schoolYear = schoolYearPattern.match(self.target_time_period)
+
+        if schoolYear:
+            firstYear = schoolYear.group(2)
+            secondYear = schoolYear.group(3)
+            return 'Fall %s - Spring %s' % (firstYear, secondYear)
+        else:
+            return 'Summer %s' % self.target_time_period
 
     def addUserToGroup(self, user):
         # First we want to check how many users are a part

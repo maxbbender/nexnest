@@ -31,7 +31,8 @@ users = Table('users',
                      nullable=False),
               Column('active', Boolean()),
               Column('email_confirmed', Boolean()),
-              Column('landlord_info_filled', Boolean()))
+              Column('landlord_info_filled', Boolean()),
+              Column('newsletter', Boolean()))
 
 
 def upgrade(migrate_engine):

@@ -12,6 +12,8 @@ from sqlalchemy.orm import relationship
 
 from .base import Base
 
+import random
+
 
 class User(Base):
     __tablename__ = 'users'
@@ -35,6 +37,9 @@ class User(Base):
     active = db.Column(db.Boolean)
     email_confirmed = db.Column(db.Boolean)
     landlord_info_filled = db.Column(db.Boolean)
+    newsletter = db.Column(db.Boolean)
+
+    # Relationships
     recievedDM = relationship('DirectMessage',
                               lazy='dynamic',
                               backref='target_user',
@@ -71,7 +76,8 @@ class User(Base):
                  dob=None,
                  profile_image=None,
                  email_confirmed=False,
-                 landlord_info_filled=True
+                 landlord_info_filled=True,
+                 newsletter=True
                  ):
         if school is not None:
             self.school_id = school.id
@@ -94,8 +100,9 @@ class User(Base):
         else:
             self.role = role
 
+        profileImages = ['green_default.png', 'blue_default.png', 'red_default.png', 'yellow_default.png', 'orange_default.png']
         if profile_image is None:
-            self.profile_image = "https://api.adorable.io/avatars/120/" + self.username
+            self.profile_image = url_for('static', filename='img/' + random.choice(profileImages))
         else:
             self.profile_image = profile_image
 
@@ -111,6 +118,7 @@ class User(Base):
             self.email_confirmed = email_confirmed
 
         self.landlord_info_filled = landlord_info_filled
+        self.newsletter = newsletter
 
     def __repr__(self):
         return '<User %r | %s(%d)>' % (self.username, self.name, self.id)
@@ -408,6 +416,11 @@ class User(Base):
             icon = 'check'
             title = 'housing request approved'
             subject = 'House Request Update'
+
+        elif emailType == 'emailVerification':
+            icon = 'lock'
+            title = 'email verification'
+            subject = 'Email Verification'
 
         send_email(subject='NexNest - %s' % subject,
                    sender='no_reply@nexnest.com',

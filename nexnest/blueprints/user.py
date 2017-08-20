@@ -1,6 +1,6 @@
 import json
 import os
-
+import requests
 from dateutil import parser
 from flask import (Blueprint, abort, flash, jsonify, redirect, render_template,
                    request, url_for)
@@ -31,6 +31,7 @@ from nexnest.utils.file import allowed_file
 from nexnest.utils.flash import flash_errors
 from nexnest.utils.password import check_password
 from nexnest.utils.school import allSchoolsAsStrings
+from nexnest.utils.user import genEmailVerificationContent
 from sqlalchemy import and_, asc, func, or_, desc
 from werkzeug.utils import secure_filename
 
@@ -59,7 +60,8 @@ def register():
                                password=registerForm.password.data,
                                fname=registerForm.fname.data,
                                lname=registerForm.lname.data,
-                               landlord_info_filled=False)
+                               landlord_info_filled=False,
+                               newsletter=registerForm.newsletter.data)
                 session.add(newUser)
                 session.commit()
 
@@ -84,7 +86,8 @@ def register():
                                    password=registerForm.password.data,
                                    fname=registerForm.fname.data,
                                    lname=registerForm.lname.data,
-                                   school=school)
+                                   school=school,
+                                   newsletter=registerForm.newsletter.data)
                     session.add(newUser)
                     session.commit()
 
@@ -98,8 +101,8 @@ def register():
 
             emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(
                 newUser.email), _external=True)
-            newUser.sendEmail('generic',
-                              'Click the link to confirm your account <a href="%s">Click Here</a>' % emailConfirmURL)
+            newUser.sendEmail('emailVerification',
+                              genEmailVerificationContent(newUser, emailConfirmURL))
 
             return redirect(url_for('users.emailConfirmNotice', email=registerForm.email.data))
 

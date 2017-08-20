@@ -42,6 +42,7 @@ def index():
 @indexs.route('/test')
 @login_required
 def test():
+    app.logger.warning('yooo')
     return render_template('test.html')
 
 

@@ -81,6 +81,7 @@ class RegistrationForm(RedirectForm):
     lname = StringField('Last Name', [InputRequired()])
     school = SelectField('School', [Optional()], choices=schools)
     landlord = HiddenField('Landlord')
+    newsletter = BooleanField('Would you like to subscribe to our newsletter?', [Optional()])
     submit = SubmitField('Register')
 
 

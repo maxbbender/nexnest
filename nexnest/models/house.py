@@ -164,21 +164,25 @@ class House(Base):
             <div class="col-xs-10">
                 <span>Hi  %s ,</span>
                 <br><br>
-                <span>
-                    <strong>Congratulations!</strong> %s has approved your request to live at %s. Enjoy your new college nest!
-                    <br><br>
-                    Don't just tweet about it. Contact your landlord about putting down a deposit and signing your lease
-                    <br><br>
-                    Enjoy your %d school year!
-                </span>
+                <strong>Congratulations!</strong> You have approved %s to live at %s for the %s lease term.
+                            <br><br>
+                            Feel free to contact this group to obtain a signed lease and security deposits from your new tenants.
+                            <br><br>
+                            <a href="https://nexnest.com/house/view/%d">Click here</a> to go the portal for the house and message this group!
+                            <br><br>
+                            Enjoy your %d school year!
+                        </span>
                 <br><br>
             </div>
         </div>
         """ % (
             user.fname,
-            self.listing.landLordsAsUsers()[0].name,
+            self.group.name,
             self.listing.briefStreet,
+            self.group.humanTimePeriod,
+            self.id,
             self.listing.start_date.year
+
         )
 
 

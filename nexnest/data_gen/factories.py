@@ -46,6 +46,7 @@ class UserFactory(factory.alchemy.SQLAlchemyModelFactory):
     email_confirmed = True
     dob = factory.LazyAttribute(lambda x: fake.date(pattern="%Y-%m-%d"))
     phone = '1234567890'
+    newsletter = True
 
 
 class ListingFactory(factory.alchemy.SQLAlchemyModelFactory):

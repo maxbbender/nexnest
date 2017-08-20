@@ -20,6 +20,7 @@ class Config:
     BRAINTREE_MERCHANT_ID = os.environ.get('BRAINTREE_MERCHANT_ID') or '95d9g95dztdsgkkh'
     BRAINTREE_PUBLIC_KEY = os.environ.get('BRAINTREE_PUBLIC_KEY') or 'fdtk8w9qbpvqr6kn'
     BRAINTREE_PRIVATE_KEY = os.environ.get('BRAINTREE_PRIVATE_KEY') or 'ec367f7335d5e9c222656212e1ff78f2'
+    SLACK_LOG_URL = os.environ.get('SLACK_LOG_URL') or 'https://hooks.slack.com/services/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'
 
     @staticmethod
     def init_app(app):
@@ -37,6 +38,11 @@ class DevelopmentConfig(Config):
         syslog_handler = SysLogHandler()
         syslog_handler.setLevel(logging.DEBUG)
         app.logger.addHandler(syslog_handler)
+
+        from slack_log_handler import SlackLogHandler
+        slackHandler = SlackLogHandler(Config.SLACK_LOG_URL)
+        slackHandler.setLevel(logging.WARNING)
+        app.logger.addHandler(slackHandler)
     DEBUG = True
     MAIL_SERVER = 'http://mail.nexnest.com/'
     MAIL_PORT = 587
@@ -57,6 +63,12 @@ class ProductionConfig(Config):
     @classmethod
     def init_app(cls, app):
         Config.init_app(app)
+
+        import logging
+        from slack_log_handler import SlackLogHandler
+        slackHandler = SlackLogHandler(Config.SLACK_LOG_URL)
+        slackHandler.setLevel(logging.WARNING)
+        app.logger.addHandler(slackHandler)
     # MAIL SERVER CONFIG
     MAIL_SERVER = 'mail.nexnest.com'
     MAIL_PORT = 587

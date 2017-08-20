@@ -14,10 +14,14 @@ def _make_context():
     from nexnest.models.user import User
     from nexnest.models.availability import Availability
     from nexnest.models.coupon import Coupon
+    from nexnest.models.house import House
+    from nexnest.models.group import Group
     return dict(app=app, db=db,
                 User=User,
                 Availability=Availability,
                 Coupon=Coupon,
+                House=House,
+                Group=Group
                 )
 
 
