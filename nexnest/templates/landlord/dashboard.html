@@ -3185,9 +3185,9 @@
     	$("#requestedToursTab").empty();
 
     	$.getJSON(requestURL, function(data) {
-    		//console.log(data)
+    		console.log("tours: ")
             requestedTours = data['requestedTours'];
-            //console.log(requestedTours);            
+            console.log(requestedTours);            
             if(requestedTours == ""){
             	var noRequestedTours = `<div class="alert alert-info" role="alert">
 		            						<strong>No Requested Tours</strong>

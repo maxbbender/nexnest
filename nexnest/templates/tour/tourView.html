@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <link href="{{url_for('static', filename='css/landlord/dashboardStyling.css')}}" rel="stylesheet">
-<div class="row">
+<div class="row nexnest-font" style="color: #656264;">
     <div class="col-md-2 col-sm-2 col-xs-2 display-table-cell v-align box" id="navigation" style="height: inherit;">
         <div class="navi navbar">
             <ul>
@@ -54,7 +54,7 @@
     <div class="col-sm-10 col-md-10 col-xs-10">
         <div class="row m-x-auto">
             <div class="col-xs-12">
-                <div class="callout-block text-center fade-in-b">
+                <div class="callout-block text-center fade-in-b" style="background-color: #d2d2d2;">
                     <h2 style="font-size: 3.0vh;">
                         {% if tour.tour_confirmed %}
                             {% if tour.declined %}
@@ -101,7 +101,7 @@
                                                         Tour has been confirmed for {{tour.confirmedTourTime.humanISOComplaintString}}. Please arrive at the property at this time to meet for the tour<br><br>
                                                             <div class="row">
                                                                 <div class="col-xs-12 col-md-6 col-lg-4">
-                                                                    <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour</a>
+                                                                    <a href='#' class="btn btn-red" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour</a>
                                                                 </div>
                                                             </div>
                                                         {% endif %}
@@ -120,10 +120,10 @@
                                                             <a href='#' class="btn btn-secondary confirmtime" data-toggle="modal" data-target="#confirmTourModal" style="width: 196px; pointer-events: none;">Confirm Time</a>
                                                         </div>
                                                         <div class="col-xs-12 col-xl-4" style="padding-bottom: 5px;">
-                                                            <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#timeChangeModal" style="width: 196px;">Suggest Different Time</a>
+                                                            <a href='#' class="btn btn-blue" data-toggle="modal" data-target="#timeChangeModal" style="width: 196px;">Suggest Different Time</a>
                                                         </div>
                                                         <div class="col-xs-12 col-xl-4" style="padding-bottom: 5px;">
-                                                            <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal" style="width: 196px;">Cancel Tour Request</a>
+                                                            <a href='#' class="btn btn-red" data-toggle="modal" data-target="#cancelTourModal" style="width: 196px;">Cancel Tour Request</a>
                                                         </div>
                                                     </div>
                                                 {% endif %}
@@ -141,7 +141,7 @@
                                                             <br><br>
                                                             <div class="row" style="padding-top: 10px;">
                                                                 <div class="col-xs-12 col-md-6 col-lg-4">
-                                                                    <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour Request</a>
+                                                                    <a href='#' class="btn btn-red" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour Request</a>
                                                                 </div>
                                                             </div>
                                                         {% endif %}
@@ -156,14 +156,14 @@
                                                         <div class="row">
                                                             {% for time in tour.tourTimes %}
                                                                 <div class="col-xs-6 col-md-6 col-lg-6" style="padding-top: 10px;">
-                                                                    <button class="btn btn-secondary timeselector" style="pointer-events: none;" value="{{time.date_time_requested}}">{{time.humanString}}</button>
+                                                                    <button class="btn btn-secondary timeselector" style="pointer-events: none; color: #656264;" value="{{time.date_time_requested}}">{{time.humanString}}</button>
                                                                 </div>
                                                             {% endfor %}
                                                         </div>
                                                         <br>
                                                         <div class="row" style="padding-top: 10px;">
                                                             <div class="col-xs-12 col-md-6 col-lg-4">
-                                                                <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour Request</a>
+                                                                <a href='#' class="btn btn-red" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour Request</a>
                                                             </div>
                                                         </div>
                                                     {% endif %}
@@ -183,7 +183,7 @@
                                                         <br><br>
                                                         <div class="row">
                                                             <div class="col-xs-12 col-md-6 col-lg-4">
-                                                                <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour</a>
+                                                                <a href='#' class="btn btn-red" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour</a>
                                                             </div>
                                                         </div>
                                                     {% endif %}
@@ -203,10 +203,10 @@
                                                             <a href='#' class="btn btn-secondary confirmtime" data-toggle="modal" data-target="#confirmTourModal" style="width: 196px; pointer-events: none;">Confirm Time</a>
                                                         </div>
                                                         <div class="col-xs-12 col-lg-6 col-xl-4" style="padding-bottom: 5px;">
-                                                            <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#timeChangeModal" style="width: 196px;">Suggest Different Time</a>
+                                                            <a href='#' class="btn btn-blue" data-toggle="modal" data-target="#timeChangeModal" style="width: 196px;">Suggest Different Time</a>
                                                         </div>
                                                         <div class="col-xs-12 col-lg-6 col-xl-4" style="padding-bottom: 5px;">
-                                                            <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#declineTourModal" style="width: 196px;">Decline Tour</a>
+                                                            <a href='#' class="btn btn-red" data-toggle="modal" data-target="#declineTourModal" style="width: 196px;">Decline Tour</a>
                                                         </div>
                                                     </div>
                                                 {% endif %}
@@ -224,7 +224,7 @@
                                                 {% else %}
                                                     <strong><h1>Tour Status:
                                                         <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the group leader to confirm your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
-                                                    </h1>
+                                                    </h1></strong>
                                                     <br><br>
                                                     Waiting for the group leader to confirm your requested time or suggest a different one<br>
                                                     <br>
@@ -232,13 +232,13 @@
                                                     <div class="row">
                                                         {% for time in tour.tourTimes %}
                                                             <div class="col-xs-6 col-md-6 col-lg-6" style="padding-top: 10px;">
-                                                                <button class="btn btn-secondary timeselector" style="pointer-events: none;" value="{{time.date_time_requested}}">{{time.humanString}}</button>
+                                                                <button class="btn btn-secondary timeselector" style="pointer-events: none; color: #656264" value="{{time.date_time_requested}}">{{time.humanString}}</button>
                                                             </div>
                                                         {% endfor %}
                                                     </div>
                                                     <div class="row" style="padding-top: 10px;">
                                                         <div class="col-xs-12 col-md-6 col-lg-4">
-                                                            <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour Request</a>
+                                                            <a href='#' class="btn btn-red" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour Request</a>
                                                         </div>
                                                     </div>
                                                 {% endif %}
@@ -267,7 +267,7 @@
                                                     <div class="row">
                                                         {% for time in tour.tourTimes %}
                                                             <div class="col-xs-6 col-md-6 col-lg-6" style="padding-top: 10px;">
-                                                                <button class="btn btn-secondary timeselector" style="pointer-events: none;" value="{{time.date_time_requested}}">{{time.humanString}}</button>
+                                                                <button class="btn btn-secondary timeselector" style="pointer-events: none; color: #656264" value="{{time.date_time_requested}}">{{time.humanString}}</button>
                                                             </div>
                                                         {% endfor %}
                                                     </div>
@@ -282,7 +282,7 @@
                                                     <div class="row">
                                                         {% for time in tour.tourTimes %}
                                                             <div class="col-xs-6 col-md-6 col-lg-6" style="padding-top: 10px;">
-                                                                <button class="btn btn-secondary timeselector" style="pointer-events: none;" value="{{time.date_time_requested}}">{{time.humanString}}</button>
+                                                                <button class="btn btn-secondary timeselector" style="pointer-events: none; color: #656264" value="{{time.date_time_requested}}">{{time.humanString}}</button>
                                                             </div>
                                                         {% endfor %}
                                                     </div>
@@ -299,7 +299,7 @@
                     <div class="tab-pane" id="propertyTab" role="tabpanel" style="padding: 0px;">
                         <div class="row">
                             <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);"">
-                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">The Property</h3>
+                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); font-size: 3.0vh; background-color: #d2d2d2;">The Property</h3>
                                 <div class="card-block">
                                     <div class="row">
                                         {% with listing=tour.listing %}
@@ -313,7 +313,7 @@
                     <div class="tab-pane" id="membersTab" role="tabpanel" style="padding: 0px;">
                         <div class="row">
                             <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
+                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); font-size: 3.0vh; background-color: #d2d2d2;">
                                     {% if current_user in landlords %}
                                         {{ tour.group.name }} ({{tour.group.acceptedUsers|length}})
                                     {% endif %}
@@ -342,11 +342,11 @@
                         <div class="row">
                             <div class="card" style="width:100%;">
                                 {% if current_user in landlords %}
-                                    <h3 class="card-header" style="font-size: 3.5vh;">Group Message with Tenants:</h3>
+                                    <h3 class="card-header" style="font-size: 3.5vh; background-color: #d2d2d2;">Group Message with Tenants:</h3>
                                 {% else %}
-                                    <h3 class="card-header" style="font-size: 3.5vh;">Group Message with Landlord:</h3>
+                                    <h3 class="card-header" style="font-size: 3.5vh; background-color: #d2d2d2;">Group Message with Landlord:</h3>
                                 {% endif %}
-                                <div class="card-block">
+                                <div class="card-block" style="padding-bottom: 0px;">
                                     <!-- Add new message -->
                                     <div class="form-group">
                                         <form action="{{url_for('tours.createMessage')}}" method='POST'>
@@ -357,7 +357,7 @@
                                             </div>
                                             <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
                                                 <div class="col-xs-12">
-                                                    <input class="btn btn-primary" type="submit" value="Send">
+                                                    <input class="btn btn-blue" type="submit" value="Send">
                                                 </div>                                    
                                             </div>
                                         </form>
@@ -366,7 +366,7 @@
                             </div>
                             <!-- Messages -->
                             {% if messages |length == 0 %}
-                                <div class="alert alert-info" role="alert">
+                                <div class="alert alert-light-blue" role="alert">
                                     <strong>No Messages Yet, start the conversation</strong>
                                 </div>
                             {% else %}
@@ -381,11 +381,11 @@
             <div class="col-md-5 hidden-md-down" style="overflow-y: auto;">
                 <div class="card" style="width:100%;">
                     {% if current_user in landlords %}
-                        <h3 class="card-header" style="font-size: 3.5vh;">Group Message with Tenants:</h3>
+                        <h3 class="card-header" style="font-size: 3.5vh; background-color: #d2d2d2;">Group Message with Tenants:</h3>
                     {% else %}
-                        <h3 class="card-header" style="font-size: 3.5vh;">Group Message with Landlord:</h3>
+                        <h3 class="card-header" style="font-size: 3.5vh; background-color: #d2d2d2;">Group Message with Landlord:</h3>
                     {% endif %}
-                    <div class="card-block">
+                    <div class="card-block" style="padding-bottom: 0px;">
                         <!-- Add new message -->
                         <div class="form-group">
                             <form action="{{url_for('tours.createMessage')}}" method='POST'>
@@ -396,7 +396,7 @@
                                 </div>
                                 <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
                                     <div class="col-xs-12">
-                                        <input class="btn btn-primary" type="submit" value="Send">
+                                        <input class="btn btn-blue" type="submit" value="Send">
                                     </div>                                    
                                 </div>
                             </form>
@@ -405,7 +405,7 @@
                 </div>
                 <!-- Messages -->
                 {% if messages |length == 0 %}
-                    <div class="alert alert-info" role="alert">
+                    <div class="alert alert-light-blue" role="alert">
                         <strong>No Messages Yet, start the conversation</strong>
                     </div>
                 {% else %}
@@ -424,12 +424,12 @@
     <!--Confirm Tour Modal-->
     <div class="modal fade" id="confirmTourModal" tabindex="-1" role="dialog" aria-labelledby="confirmTour" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
+            <div class="modal-content nexnest-font">
+                <div class="modal-header" style="background-color: #d2d2d2;">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title"></h4>
+                    <h3 class="modal-title"></h3>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -439,7 +439,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary" onClick="confirmTour()">Confirm Tour</button>
+                    <button class="btn btn-light-green" onClick="confirmTour()">Confirm Tour</button>
                 </div>
             </div>
         </div>
@@ -448,12 +448,12 @@
     <!--Request Tour Modal-->
     <div class="modal fade" id="timeChangeModal" tabindex="-1" role="dialog" aria-labelledby="timeChange" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">                  
+            <div class="modal-content nexnest-font" style="width: 120%; margin-left: -10%;">
+                <div class="modal-header" style="background-color: #d2d2d2;">                  
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title" id="timeChange"></h4>
+                    <h3 class="modal-title" id="timeChange"></h3>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -473,7 +473,7 @@
                     <div id="groupNumber" style="display: none;"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onClick="suggestDifferentTimes()" data-dismiss="modal">Suggest These Times</button>
+                    <button type="button" class="btn btn-blue" onClick="suggestDifferentTimes()" data-dismiss="modal">Suggest These Times</button>
                 </div>
             </div>
         </div>
@@ -482,12 +482,12 @@
     <!--Decline Tour Modal-->
     <div class="modal fade" id="declineTourModal" tabindex="-1" role="dialog" aria-labelledby="declineTour" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
+            <div class="modal-content nexnest-font">
+                <div class="modal-header" style="background-color: #d2d2d2;">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title"></h4>
+                    <h3 class="modal-title"></h3>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -497,7 +497,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="/tour/{{tour.id}}/decline" class="btn btn-danger">Decline Tour</a>
+                    <a href="/tour/{{tour.id}}/decline" class="btn btn-red">Decline Tour</a>
                 </div>
             </div>
         </div>
@@ -507,11 +507,11 @@
     <div class="modal fade" id="cancelTourModal" tabindex="-1" role="dialog" aria-labelledby="cancelTour" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" style="background-color: #d2d2d2;">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title"></h4>
+                    <h3 class="modal-title"></h3>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -585,7 +585,7 @@
                                 }
                             }
                             timesShown+= `>
-                            <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                            <span class="cr"><i class="cr-icon fa fa-check" style="color:#5686c5;"></i></span>
                             </label>
                         </div>
                     </div>
@@ -686,7 +686,7 @@
         for(var i=0; i<requestedTimes.tourTimes.length; i++){
             $(".requestedTimes").append(
                 `<div class="col-xs-6 col-md-6 col-lg-4" style="padding-top: 10px;">
-                    <button class="btn btn-secondary timeselector" style="width: 224px;" value="`+requestedTimes.tourTimes[i].dateTimeRequested+`">`+requestedTimes.tourTimes[i].dateTimeRequested+`</button>
+                    <button class="btn btn-secondary timeselector" style="width: 224px; color: #656264" value="`+requestedTimes.tourTimes[i].dateTimeRequested+`">`+requestedTimes.tourTimes[i].dateTimeRequested+`</button>
             </div>`);
         }
     });
@@ -710,7 +710,7 @@
       var modal = $(this);
       var chosenTime;
       $( ".timeselector" ).each(function( index ) {
-          if($(this).hasClass("btn-primary")){
+          if($(this).hasClass("btn-blue")){
               chosenTime=$(this).val();
           }
       });
@@ -762,7 +762,7 @@
     function confirmTour(){
         var chosenTime;
         $( ".timeselector" ).each(function( index ) {
-            if($(this).hasClass("btn-primary")){
+            if($(this).hasClass("btn-blue")){
                 chosenTime=$(this).val();
             }
         });
@@ -785,14 +785,14 @@
 
     $(document).on('click', '.timeselector', function () {
         $( ".timeselector" ).each(function( index ) {
-            $(this).removeClass("btn-primary");
+            $(this).removeClass("btn-blue");
             $(this).removeClass("btn-secondary");
             $(this).addClass("btn-secondary");
         });
         $(this).removeClass("btn-secondary");
-        $(this).addClass("btn-primary");
+        $(this).addClass("btn-blue");
         $('.confirmtime').removeClass("btn-secondary");
-        $('.confirmtime').addClass("btn-success");
+        $('.confirmtime').addClass("btn-light-green");
         $('.confirmtime').css({ 'pointer-events' : ''});
     });
 
