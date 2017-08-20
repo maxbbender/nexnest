@@ -75,7 +75,7 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="tourTab" role="tabpanel" style="padding: 0px;">
                         <div class="row">
-                            <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
+                            <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125); font-size: 20px; padding-left: 30px;">
                                                           
                                 <div class="card-block">
                                     <div class="row">
@@ -83,7 +83,7 @@
                                     {% if tour.declined %}
                                         
                                     {% else %}
-                                        <p class="card-text"><strong>Tour is scheduled for:</strong> {{tour.confirmedTourTime.humanISOComplaintString}}</p>
+                                        
                                     {% endif %}
                                 {% endif %}
                                 <div class="row">
@@ -97,8 +97,7 @@
                                                         <strong><h1>Tour Status:
                                                             <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
                                                         </h1></strong>
-                                                        <br>
-                                                        Tour has been confirmed for {{tour.confirmedTourTime.humanISOComplaintString}}. Please arrive at the property at this time to meet for the tour<br><br>
+                                                        <h3 class="card-text"><strong>Tour is scheduled for:</strong> <span style="color: #5686c5;">{{tour.confirmedTourTime.humanISOComplaintString}}</span></h3> <br><br>
                                                             <div class="row">
                                                                 <div class="col-xs-12 col-md-6 col-lg-4">
                                                                     <a href='#' class="btn btn-red" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour</a>
@@ -109,20 +108,19 @@
                                                     <strong><h1>Tour Status:
                                                         <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the you to confrim the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                     </h1></strong>
-                                                    <br><br>
-                                                    The Landlord has propsed these times for the tour, please select one or suggest different times<br>
+                                                    Select an available time: <br>
                                                     <div class="row requestedTimes">
                                                         
                                                     </div>
                                                     <br><br>
                                                     <div class="row" style="padding-top: 10px;">
-                                                        <div class="col-xs-12 col-xl-4" style="padding-bottom: 5px;">
+                                                        <div class="col-xs-12 col-xl-4" style="padding-bottom: 5px; text-align: center;">
                                                             <a href='#' class="btn btn-secondary confirmtime" data-toggle="modal" data-target="#confirmTourModal" style="width: 196px; pointer-events: none;">Confirm Time</a>
                                                         </div>
-                                                        <div class="col-xs-12 col-xl-4" style="padding-bottom: 5px;">
+                                                        <div class="col-xs-12 col-xl-4" style="padding-bottom: 5px; text-align: center;">
                                                             <a href='#' class="btn btn-blue" data-toggle="modal" data-target="#timeChangeModal" style="width: 196px;">Suggest Different Time</a>
                                                         </div>
-                                                        <div class="col-xs-12 col-xl-4" style="padding-bottom: 5px;">
+                                                        <div class="col-xs-12 col-xl-4" style="padding-bottom: 5px; text-align: center;">
                                                             <a href='#' class="btn btn-red" data-toggle="modal" data-target="#cancelTourModal" style="width: 196px;">Cancel Tour Request</a>
                                                         </div>
                                                     </div>
@@ -137,7 +135,7 @@
                                                                 <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
                                                             </h1></strong>
                                                             <br>
-                                                            Tour has been confirmed for {{tour.confirmedTourTime.humanISOComplaintString}}. Please arrive at the property at this time to meet for the tour
+                                                            <h3 class="card-text"><strong>Tour is scheduled for:</strong> <span style="color: #5686c5;">{{tour.confirmedTourTime.humanISOComplaintString}}</span></h3>
                                                             <br><br>
                                                             <div class="row" style="padding-top: 10px;">
                                                                 <div class="col-xs-12 col-md-6 col-lg-4">
@@ -179,7 +177,7 @@
                                                             <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
                                                         </h1></strong>
                                                         <br>
-                                                        Tour has been confirmed for {{tour.confirmedTourTime.humanISOComplaintString}}. Please arrive at the property at this time to meet for the tour
+                                                        <h3 class="card-text"><strong>Tour is scheduled for:</strong> <span style="color: #5686c5;">{{tour.confirmedTourTime.humanISOComplaintString}}</span></h3>
                                                         <br><br>
                                                         <div class="row">
                                                             <div class="col-xs-12 col-md-6 col-lg-4">
@@ -192,20 +190,20 @@
                                                         <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the you to confirm the requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                     </h1></strong>
                                                     <br>
-                                                    Waiting for the you to select one of the requested times or choose another one
+                                                    Select an available tour time:
                                                     <br><br>
                                                     <div class="row requestedTimes">
                                                         
                                                     </div>
                                                     <br><br>
                                                     <div class="row">
-                                                        <div class="col-xs-12 col-lg-6 col-xl-4" style="padding-bottom: 5px;">
+                                                        <div class="col-xs-12 col-lg-6 col-xl-4" style="padding-bottom: 5px; text-align: center;">
                                                             <a href='#' class="btn btn-secondary confirmtime" data-toggle="modal" data-target="#confirmTourModal" style="width: 196px; pointer-events: none;">Confirm Time</a>
                                                         </div>
-                                                        <div class="col-xs-12 col-lg-6 col-xl-4" style="padding-bottom: 5px;">
+                                                        <div class="col-xs-12 col-lg-6 col-xl-4" style="padding-bottom: 5px; text-align: center;">
                                                             <a href='#' class="btn btn-blue" data-toggle="modal" data-target="#timeChangeModal" style="width: 196px;">Suggest Different Time</a>
                                                         </div>
-                                                        <div class="col-xs-12 col-lg-6 col-xl-4" style="padding-bottom: 5px;">
+                                                        <div class="col-xs-12 col-lg-6 col-xl-4" style="padding-bottom: 5px; text-align: center;">
                                                             <a href='#' class="btn btn-red" data-toggle="modal" data-target="#declineTourModal" style="width: 196px;">Decline Tour</a>
                                                         </div>
                                                     </div>
@@ -219,24 +217,29 @@
                                                             <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
                                                         </h1></strong>
                                                         <br>
-                                                        Tour has been confirmed for {{tour.confirmedTourTime.humanISOComplaintString}}. Please arrive at the property at this time to meet for the tour
+                                                        <h3 class="card-text"><strong>Tour is scheduled for:</strong> <span style="color: #5686c5;">{{tour.confirmedTourTime.humanISOComplaintString}}</span></h3>
+                                                        <div class="row" style="padding-top: 20px;">
+                                                            <div class="col-xs-12 col-md-6 col-lg-4">
+                                                                <a href='#' class="btn btn-red" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour Request</a>
+                                                            </div>
+                                                        </div>
                                                     {% endif %}
                                                 {% else %}
                                                     <strong><h1>Tour Status:
                                                         <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the group leader to confirm your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                     </h1></strong>
                                                     <br><br>
-                                                    Waiting for the group leader to confirm your requested time or suggest a different one<br>
+                                                    Waiting for this group to select a tour time<br>
                                                     <br>
-                                                    <strong>You offered these times:</strong>
-                                                    <div class="row">
+                                                    <strong>Tour times you suggested:</strong>
+                                                    <div class="row" style="padding-left: 15px;">
                                                         {% for time in tour.tourTimes %}
                                                             <div class="col-xs-6 col-md-6 col-lg-6" style="padding-top: 10px;">
-                                                                <button class="btn btn-secondary timeselector" style="pointer-events: none; color: #656264" value="{{time.date_time_requested}}">{{time.humanString}}</button>
+                                                                <span class="nexnest-font" style="color: #5686c5;">{{time.humanString}}</span>
                                                             </div>
                                                         {% endfor %}
                                                     </div>
-                                                    <div class="row" style="padding-top: 10px;">
+                                                    <div class="row" style="padding-top: 20px;">
                                                         <div class="col-xs-12 col-md-6 col-lg-4">
                                                             <a href='#' class="btn btn-red" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour Request</a>
                                                         </div>
@@ -253,7 +256,7 @@
                                                         <button type="button" id="confirmed" class="btn btn-success btn-circle" title="<b>Tour Confirmed!</b>" data-placement="top" data-content="Tour has been confirmed for {{ tour.time_requested }}. Please arrive at the property at this time to meet for the tour"><i class="fa fa-check" aria-hidden="true"></i></button>
                                                     </h1></strong>
                                                     <br>
-                                                    Tour has been confirmed for {{tour.confirmedTourTime.humanISOComplaintString}}. Please arrive at the property at this time to meet for the tour
+                                                    <h3 class="card-text"><strong>Tour is scheduled for:</strong> <span style="color: #5686c5;">{{tour.confirmedTourTime.humanISOComplaintString}}</span></h3>
                                                 {% endif %}
                                             {% else %}
                                                 {% if tour.last_requested == 'group' %}
@@ -264,10 +267,10 @@
                                                     Waiting for the landlord to confirm your requested time or suggest a different one
                                                     <br><br>
                                                     <strong>Your Group Leader offered these times:</strong>
-                                                    <div class="row">
+                                                    <div class="row" style="padding-left: 15px;">
                                                         {% for time in tour.tourTimes %}
                                                             <div class="col-xs-6 col-md-6 col-lg-6" style="padding-top: 10px;">
-                                                                <button class="btn btn-secondary timeselector" style="pointer-events: none; color: #656264" value="{{time.date_time_requested}}">{{time.humanString}}</button>
+                                                                <span class="nexnest-font" style="color: #5686c5;">{{time.humanString}}</span>
                                                             </div>
                                                         {% endfor %}
                                                     </div>
@@ -276,13 +279,15 @@
                                                         <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Request Pending</b>" data-placement="top" data-content="The landlord has proposed a different time. Waiting for your group leader to make a decision"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                     </h1></strong>
                                                     <br>
-                                                    The landlord has proposed a different time. Waiting for your group leader to make a decision
+                                                    Landlord was unable your accomadate your requested time(s).
+                                                    <br>
+                                                    Waiting for your group leader to select a tour time
                                                     <br><br>
                                                     <strong>The Landlord offered these times:</strong>
-                                                    <div class="row">
+                                                    <div class="row" style="padding-left: 15px;">
                                                         {% for time in tour.tourTimes %}
                                                             <div class="col-xs-6 col-md-6 col-lg-6" style="padding-top: 10px;">
-                                                                <button class="btn btn-secondary timeselector" style="pointer-events: none; color: #656264" value="{{time.date_time_requested}}">{{time.humanString}}</button>
+                                                                <span class="nexnest-font" style="color: #5686c5;">{{time.humanString}}</span>
                                                             </div>
                                                         {% endfor %}
                                                     </div>
@@ -367,7 +372,7 @@
                             <!-- Messages -->
                             {% if messages |length == 0 %}
                                 <div class="alert alert-light-blue" role="alert">
-                                    <strong>No Messages Yet, start the conversation</strong>
+                                    <strong>No messages yet, start the conversation</strong>
                                 </div>
                             {% else %}
                                 {% for message in messages %}
@@ -406,7 +411,7 @@
                 <!-- Messages -->
                 {% if messages |length == 0 %}
                     <div class="alert alert-light-blue" role="alert">
-                        <strong>No Messages Yet, start the conversation</strong>
+                        <strong>No messages yet, start the conversation</strong>
                     </div>
                 {% else %}
                     {% for message in messages %}
@@ -506,7 +511,7 @@
     <!--Decline Tour Modal-->
     <div class="modal fade" id="cancelTourModal" tabindex="-1" role="dialog" aria-labelledby="cancelTour" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
+            <div class="modal-content nexnest-font">
                 <div class="modal-header" style="background-color: #d2d2d2;">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -516,7 +521,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-xs-12">
-                            <p class="card-text">Has something come up? Are you sure you want to cancel this tour? This cannot be undone</p>
+                            <p class="card-text">Are you sure you want to cancel this tour?</p>
                         </div>
                     </div>
                 </div>
@@ -573,7 +578,7 @@
             var timesShown =`<div class="row">`;
             for (var i = 0; i < validTourTimes.length; i++ )
             {
-                timesShown+= `<div class="col-xs-4">
+                timesShown+= `<div class="col-xs-4" style="text-align: center;">
                      <div class="form-group">
                         <label class="control-label form-control-feedback" id="timelabel"style="font-size: 1.5em">`+ validTourTimes[i]+`</label>
                         <div class="checkbox">
@@ -715,7 +720,7 @@
           }
       });
       modal.find('.modal-title').text('Confirm Tour');
-      modal.find('.card-text').text('Are you sure you want to confirm a tour for '+ chosenTime + "?");
+      modal.find('.card-text').text('Confirm a tour for '+ chosenTime + "?");
     })
 
     //Confirm Tour Modal
@@ -723,7 +728,7 @@
       var button = $(event.relatedTarget);
       var modal = $(this);
       var chosenTime;
-      modal.find('.modal-title').text('Suggest Different Tour Times');
+      modal.find('.modal-title').text('Suggest Different Tour Time(s)');
     })
     
 

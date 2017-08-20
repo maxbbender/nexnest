@@ -774,7 +774,8 @@ button.link {
   margin-right: 2px;
   background-color: #5686c5;
   color: white;
-  width: 150px;
+  font-size: 19px;
+  margin-bottom: 5px;
 }
 .bootstrap-tagsinput .tag [data-role="remove"] {
   margin-left: 8px;
@@ -794,6 +795,7 @@ button.link {
 .bootstrap-tagsinput {
    border: none;
    box-shadow: none;
+   text-align: center;
 }
 .bootstrap-tagsinput input {
    display: none;
