@@ -210,6 +210,20 @@ class Group(Base):
 
         session.commit()
 
+    def cancelTours(self):
+        for tour in self.tours:
+            tour.declined = True
+            tour.genDeniedNotifications()
+            db.session.commit()
+
+    def cancelListingRequests(self):
+        for gl in self.listings:
+            if gl.landlord_show or gl.group_show:
+                gl.landlord_show = False
+                gl.group_show = False
+                db.session.commit()
+                gl.genDeniedNotifications()
+
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument
     # 'target' is the inserted object

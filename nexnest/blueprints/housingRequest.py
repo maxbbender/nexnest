@@ -469,8 +469,6 @@ def completeHousingRequestAJAX(id):
             newHouse = createHouse(groupListing.listing, groupListing.group)
 
             if newHouse is not None:
-
-                groupListing.genCompletedNotifications()
                 return jsonify(results={'success': True})
             else:
                 return jsonify(results={'success': False, 'message': 'House has already been created!'})

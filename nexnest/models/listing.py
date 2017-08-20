@@ -5,6 +5,7 @@ from flask import current_app as app
 from nexnest import db
 from nexnest.models.listing_favorite import ListingFavorite
 from nexnest.sysLogger import logger
+from nexnest.utils.date import diffMonth
 
 from .base import Base
 
@@ -191,12 +192,14 @@ class Listing(Base):
         self.featured = featured
         self.banner_photo_url = banner_photo_url
 
+        startDate = dt.strptime(self.start_date, '%Y-%m-%d')
+        endDate = dt.strptime(self.end_date, '%Y-%m-%d')
         if self.rent_due == 'monthly':
             self.price_per_month = self.price
-            self.price_per_semester = self.price * 6
+            self.price_per_semester = (self.price * diffMonth(endDate, startDate)) / 2
         elif self.rent_due == 'semester':
             # numMonths = int((self.end_date - self.start_date).days / 30)
-            self.price_per_month = self.price / 6
+            self.price_per_month = (self.price * 2) / diffMonth(endDate, startDate)
             self.price_per_semester = self.price
         else:
             logger.error('Unknown Rent Due Value while create listing : %s' % self.rent_due)
@@ -422,7 +425,9 @@ class Listing(Base):
                 return None
 
     def hasHouse(self):
-        return len(self.house) > 0
+        app.logger.debug('hasHouse house : %r' % self.house)
+        print('awoeifhaowiefhaowiehf;oawiehfoaiwehfoawiFOSOFSOFHSF', self.house)
+        return len(self.house) == 1
 
     def isForSchool(self, school):
         for listingSchool in self.schools:
@@ -430,6 +435,24 @@ class Listing(Base):
                 return True
 
         return False
+
+    def cancelTours(self):
+        app.logger.debug('Cancel Tours')
+        app.logger.debug('Tours : %r' % self.tours)
+        for tour in self.tours:
+            app.logger.debug('Look at Tour %r' % tour)
+            if not tour.declined:
+                tour.declined = True
+                tour.genDeniedNotifications()
+                db.session.commit()
+
+    def cancelGroupListingRequests(self):
+        for gl in self.groups:
+            if gl.landlord_show or gl.group_show:
+                gl.group_show = False
+                gl.landlord_show = False
+                gl.genDeniedNotifications()
+                db.session.commit()
 
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument

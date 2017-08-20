@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import g, request, redirect, url_for, abort
+from flask import g, request, redirect, url_for, abort, flash
 from flask_login import current_user
 
 from nexnest.models.tour import Tour
@@ -29,6 +29,10 @@ def tour_editable(f):
             if not tour.isEditableBy(current_user, False):
                 abort(403)
 
+            if len(tour.listing.house) == 1:
+                flash('Tours for this listing have been canceled as it already has tenants! Sorry!', 'warning')
+                return redirect(url_for('indexs.index'))
+
         return f(*args, **kwargs)
     return decorated_function
 
@@ -44,6 +48,10 @@ def tour_viewable(f):
 
             if not tour.isViewableBy(current_user, False):
                 abort(403)
+
+            if len(tour.listing.house) == 1:
+                flash('Tours for this listing have been canceled as it already has tenants! Sorry!', 'warning')
+                return redirect(url_for('indexs.index'))
 
         return f(*args, **kwargs)
     return decorated_function

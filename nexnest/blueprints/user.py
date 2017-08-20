@@ -35,9 +35,12 @@ from nexnest.utils.user import genEmailVerificationContent
 from sqlalchemy import and_, asc, func, or_, desc
 from werkzeug.utils import secure_filename
 
+from pprint import pformat
+
 users = Blueprint('users', __name__, template_folder='../templates/user')
 
 session = db.session
+
 
 @users.route('/register', methods=['GET', 'POST'])
 def register():
@@ -54,57 +57,71 @@ def register():
         if registerForm.validate():
             # Determine if registering as tenant or landlord
             userType = registerForm.landlord.data
+            app.logger.debug('Verifying Captcha')
+            captchaConfirmURL = 'https://www.google.com/recaptcha/api/siteverify'
+            payload = {'response': request.form['g-recaptcha-response'], 'secret': app.config['GOOGLE_CAPTCHA_SECRET']}
 
-            if userType == "landlord":
-                newUser = User(email=registerForm.email.data,
-                               password=registerForm.password.data,
-                               fname=registerForm.fname.data,
-                               lname=registerForm.lname.data,
-                               landlord_info_filled=False,
-                               newsletter=registerForm.newsletter.data)
-                session.add(newUser)
-                session.commit()
+            response = requests.post(captchaConfirmURL, data=payload)
 
-                # Make them a Landlord
+            responseObject = json.loads(response.text)
 
-                # Notification Preference Table init
-                session.add(NotificationPreference(user=newUser))
-                session.commit()
+            app.logger.debug('Response Text %s' % response.text)
+            app.logger.debug('Response Dict %r' % pformat(responseObject))
 
-                newLandlord = Landlord(newUser)
-                session.add(newLandlord)
-                session.commit()
-
-            else:
-                school = session.query(School) \
-                    .filter(func.lower(School.name) == registerForm.school.data.lower()) \
-                    .first()
-
-                if school is not None:
-                    # School Exists
+            if responseObject['success']:
+                if userType == "landlord":
                     newUser = User(email=registerForm.email.data,
                                    password=registerForm.password.data,
                                    fname=registerForm.fname.data,
                                    lname=registerForm.lname.data,
-                                   school=school,
+                                   landlord_info_filled=False,
                                    newsletter=registerForm.newsletter.data)
                     session.add(newUser)
                     session.commit()
+
+                    # Make them a Landlord
 
                     # Notification Preference Table init
                     session.add(NotificationPreference(user=newUser))
                     session.commit()
 
-                    # emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(newUser.email), _external=True)
-                    # newUser.sendEmail('generic',
-                    #                   'Click the link to confirm your account <a href="%s">Click Here</a>' % emailConfirmURL)
+                    newLandlord = Landlord(newUser)
+                    session.add(newLandlord)
+                    session.commit()
 
-            emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(
-                newUser.email), _external=True)
-            newUser.sendEmail('emailVerification',
-                              genEmailVerificationContent(newUser, emailConfirmURL))
+                else:
+                    school = session.query(School) \
+                        .filter(func.lower(School.name) == registerForm.school.data.lower()) \
+                        .first()
 
-            return redirect(url_for('users.emailConfirmNotice', email=registerForm.email.data))
+                    if school is not None:
+                        # School Exists
+                        newUser = User(email=registerForm.email.data,
+                                       password=registerForm.password.data,
+                                       fname=registerForm.fname.data,
+                                       lname=registerForm.lname.data,
+                                       school=school,
+                                       newsletter=registerForm.newsletter.data)
+                        session.add(newUser)
+                        session.commit()
+
+                        # Notification Preference Table init
+                        session.add(NotificationPreference(user=newUser))
+                        session.commit()
+
+                        # emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(newUser.email), _external=True)
+                        # newUser.sendEmail('generic',
+                        #                   'Click the link to confirm your account <a href="%s">Click Here</a>' % emailConfirmURL)
+
+                emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(
+                    newUser.email), _external=True)
+                newUser.sendEmail('emailVerification',
+                                  genEmailVerificationContent(newUser, emailConfirmURL))
+
+                return redirect(url_for('users.emailConfirmNotice', email=registerForm.email.data))
+            else:
+                flash('Captcha Error: Codes %r' % responseObject['error-codes'], 'danger')
+                return render_template('register.html', form=registerForm, schools=allSchoolsAsStrings())
 
         flash_errors(registerForm)
         return render_template('register.html', form=registerForm, schools=allSchoolsAsStrings())
@@ -207,6 +224,7 @@ def login():
                                 'You must confirm your email before logging in', 'danger')
                     else:
                         flash("Error validating login credentials", 'danger')
+                        return login_form.redirect()
                 else:
                     flash("User account has been deleted", 'warning')
             else:
@@ -328,7 +346,7 @@ def viewUser(userID):
                                         userID=userID))
     else:
         app.logger.warning('User %r attempted to access user_ids page %s' %
-                       (current_user, userID))
+                           (current_user, userID))
         abort(404)
 
 

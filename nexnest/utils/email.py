@@ -3,20 +3,20 @@ from flask_mail import Message
 from nexnest import mail
 # from flask import url_for
 from itsdangerous import URLSafeTimedSerializer
-from flask import current_app as app
+from flask import current_app
 
 
 def generate_confirmation_token(email):
-    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-    return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
+    serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    return serializer.dumps(email, salt=current_app.config['SECURITY_PASSWORD_SALT'])
 
 
 def confirm_token(token, expiration=3600):
-    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
     try:
         email = serializer.loads(
             token,
-            salt=app.config['SECURITY_PASSWORD_SALT'],
+            salt=current_app.config['SECURITY_PASSWORD_SALT'],
             max_age=expiration
         )
     except:
@@ -30,6 +30,7 @@ def send_async_email(app, msg):
 
 
 def send_email(subject, sender, recipients, text_body=None, html_body=None):
+    app = current_app._get_current_object()
     msg = Message(subject, sender=sender, recipients=recipients)
 
     if text_body is not None:
@@ -39,9 +40,9 @@ def send_email(subject, sender, recipients, text_body=None, html_body=None):
         msg.html = html_body
 
     if html_body is not None or text_body is not None:
-        if not app.config['TESTING']:
+        if not app.config['DEBUG']:
+            # mail.send(msg)
             thr = Thread(target=send_async_email, args=[app, msg])
             thr.start()
-            # mail.send(msg)
         else:
             app.logger.debug('Sent Email ~ Subject: %s | Message %s' % (subject, html_body))
