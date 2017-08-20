@@ -1,37 +1,21 @@
 {% extends "base.html" %}
-{% block content %}
-	<br>
-	<div class="row">
-		<div class="col-xs-12 col-xl-6">
-			<div class="row">
-				<div class="col-xs-1"></div>
-				<div class="col-xs-10">
-					<div class="row">
-						<div class="col-xs-12">
-							<h1 class="nexnest-title">Groups</h1>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<br>
-	<div class="row" style="width: 100%;">
+{% block content %}	
+	<div class="row nexnest-font" style="width: 100%; color: #656264;">
 		<div class="col-xs-12 ">
 			{% if acceptedGroups|length == 0 and invitedGroups|length == 0 %}
-				<div class="alert alert-info" role="alert" style="text-align: center;">
-				  <strong>You are not a part of any groups!</strong> <a href="{{ url_for('groups.createGroup') }}"> Create a New Group</a> to invite your friends to join!
+				<div class="alert alert-light-blue" role="alert" style="text-align: center;">
+				  <strong>You are not a part of any group!</strong> <a href="#" data-toggle="modal" data-target="#createGroupModal" style="color: #5686c5;"> Create a New Group</a> to invite your friends to join!
 				</div>
 			{% endif %}
 			{% if acceptedGroups|length == 0 and invitedGroups|length != 0 %}
-				<div class="alert alert-info" role="alert" style="text-align: center;">
-				  <strong>You are not currently part of any groups!</strong> Either <a href="{{ url_for('groups.createGroup') }}"> Create a New Group</a> or accept a pending invitation to join a group!
+				<div class="alert alert-light-blue" role="alert" style="text-align: center;">
+				  <strong>You are not currently part of any groups!</strong> <a href="#" data-toggle="modal" data-target="#createGroupModal" style="color: #5686c5;"> Create a New Group</a> or accept a pending invitation to join a group!
 				</div>
 			{% endif %}
 		</div>
 	</div>	
 	<br><br>
-	<div class="row">
+	<div class="row nexnest-font" style="color: #656264;">
 		<div class="col-xs-12 col-xl-6">
 			<div class="row">
 				<div class="col-xs-1"></div>
@@ -41,8 +25,8 @@
 						<div class="col-xs-8">
 							<h1>My Groups:</h1>
 						</div>
-						<div class="col-xs-4">
-							<a class="btn btn-primary" href="#" data-toggle="modal" data-target="#createGroupModal" style="float: right;"><i class="fa fa-plus" aria-hidden="true"></i> Create New Group</a>
+						<div class="col-xs-4" style="align-self: center;">
+							<a class="btn btn-light-green" href="#" data-toggle="modal" data-target="#createGroupModal" style="float: right;"><i class="fa fa-plus" aria-hidden="true"></i> Create New Group</a>
 						</div>
 					</div>
 					<div class="row">
@@ -62,7 +46,9 @@
 				<div class="col-xs-10">
 					<hr class="hidden-lg-up">
 					<div class="row">
-						<h1>Group Invites:</h1>
+						<div class="col-xs-12">
+							<h1>Group Invites:</h1>
+						</div>
 					</div>
 					{% if invitedGroups %}
 						<div class="row">

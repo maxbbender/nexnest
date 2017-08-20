@@ -2,13 +2,13 @@
 {% block content %}
     <meta id="schools" data-name="schools" data-other="{{schools}}">
     <br>
-    <div class="row m-x-auto">
+    <div class="row m-x-auto" style="color: #656264;">
         <div class="col-xs-1 col-sm-2 col-md-2 col-lg-2 col-xl-3">
         </div>
         <div class="col-xs-10 col-sm-8 col-md-8 col-lg-8 col-xl-6">
             <div class="row">
                 <div class="card" style="width:100%;">
-                    <div class="card-header">
+                    <div class="card-header" style="background-color: rgba(86, 134, 197, 0.49);">
                         <div class="row">
                             <div class="col-xs-1 hidden-md-down" style="align-self: center; padding: 0px;">
                                 <img src="/static/img/housePin.png" style="height: auto; max-width: 100%;" class="hidden-md-down">
@@ -33,10 +33,10 @@
         					{{form.csrf_token}}
                             <label class="control-label form-control-feedback">Sign Up As</label>
                             <div class="btn-group" data-toggle="buttons" style="display: flex;">
-                                <label class="btn btn-outline-primary active" id="registerAsTenant" style="font-size: 20px;">
+                                <label class="btn btn-outline-green active" id="registerAsTenant" style="font-size: 20px;">
                                     <input type="radio" checked autocomplete="off"> <i class="fa fa-graduation-cap" aria-hidden="true"></i> Tenant
                                 </label>
-                                <label class="btn btn-outline-primary" id="registerAsLandlord" style="font-size: 20px;">
+                                <label class="btn btn-outline-green" id="registerAsLandlord" style="font-size: 20px;">
                                     <input type="radio" autocomplete="off"><i class="fa fa-home" aria-hidden="true"></i>  Landlord
                                 </label>
                             </div>
@@ -117,18 +117,35 @@
                                         <div class="checkbox">
                                             <label style="font-size: 1.5em">
                                                 <input id="agreeToTerms" name="agreeToTerms" class="form-check-input" type="checkbox">
-                                                <span class="cr"><i class="cr-icon fa fa-check" style="color: green;"></i></span>
+                                                <span class="cr"><i class="cr-icon fa fa-check" style="color: #4fac80;"></i></span>
                                             </label>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xs-10 col-md-11" style="margin-top: -4px;">
-                                    <h3 id="agreeToTermsText">
+                                <div class="col-xs-10 col-md-11" style="margin-top: 7px;">
+                                    <h5 id="agreeToTermsText">
                                         I agree to the
-                                        <a href="{{url_for('indexs.termsConditions')}}">Terms of Service</a>
+                                        <a href="{{url_for('indexs.termsConditions')}}" target="_blank">Terms of Service</a>
                                         and
-                                        <a href="{{url_for('indexs.privacyPolicy')}}">Privacy Policy</a>
-                                    </h3>
+                                        <a href="{{url_for('indexs.privacyPolicy')}}" target="_blank">Privacy Policy</a>
+                                    </h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-2 col-md-1">
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <label style="font-size: 1.5em">
+                                                <input id="agreeToTerms" class="form-check-input" type="checkbox" checked>
+                                                <span class="cr"><i class="cr-icon fa fa-check" style="color: #4fac80;"></i></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-10 col-md-11" style="margin-top: 7px;">
+                                    <h5>
+                                       Sign up for our email newsletter
+                                    </h5>
                                 </div>
                             </div>
                             <div class="row">
@@ -137,37 +154,20 @@
                                         <div class="checkbox">
                                             <label style="font-size: 1.5em">
                                                 <input id="agreeToTerms" class="form-check-input" type="checkbox">
-                                                <span class="cr"><i class="cr-icon fa fa-check" style="color: green;"></i></span>
+                                                <span class="cr"><i class="cr-icon fa fa-check" style="color: #4fac80;"></i></span>
                                             </label>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xs-10 col-md-11" style="margin-top: -4px;">
-                                    <h3>
-                                       Sign up for our Email Newsletter
-                                    </h3>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-2 col-md-1">
-                                    <div class="form-group">
-                                        <div class="checkbox">
-                                            <label style="font-size: 1.5em">
-                                                <input id="agreeToTerms" class="form-check-input" type="checkbox">
-                                                <span class="cr"><i class="cr-icon fa fa-check" style="color: green;"></i></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-10 col-md-11" style="margin-top: -4px;">
-                                    <h3>
+                                <div class="col-xs-10 col-md-11" style="margin-top: 7px;">
+                                    <h5>
                                         I am not a robot
-                                    </h3>
+                                    </h5>
                                 </div>
                             </div>
                             {{form.landlord}}
 						  	<p>
-						  		<button id="submitRegistration" type="button" style="float: right;" class="btn btn-primary" onClick="submitForm()">Sign Up As Tenant</button>
+						  		<button id="submitRegistration" type="button" style="float: right;" class="btn btn-light-green" onClick="submitForm()">Sign Up As Tenant</button>
 						  	</p>
         				</form>            
                     </div>

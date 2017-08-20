@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <link href="{{url_for('static', filename='css/landlord/dashboardStyling.css')}}" rel="stylesheet">
-<div class="row">
+<div class="row nexnest-font">
     <div class="col-md-2 col-sm-2 col-xs-2 display-table-cell v-align box" id="navigation" style="height: inherit;">
         <div class="navi navbar">
             <ul>
@@ -50,11 +50,11 @@
     <div class="col-sm-10 col-md-10 col-xs-10">
         <div class="row m-x-auto">
             <div class="col-xs-12">
-                <div class="callout-block text-center fade-in-b">
-                    <h1 style="font-size: 3.0vh">
+                <div class="callout-block text-center fade-in-b" style="background-color: #d2d2d2; color: #656264;">
+                    <h1>
                         <b>{{ group.name }}</b>
                     </h1>
-                    <p><small>{{ group.target_time_period }}</small></p>
+                    <h3>{{ group.target_time_period }}</h3>
                 </div>
             </div>
         </div>
@@ -65,9 +65,9 @@
                     <div class="tab-pane active" id="membersTab" role="tabpanel" style="padding: 0px;">
                         <div class="row">
                             <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); font-size: 3.5vh; margin-left: 20px;">Members ({{ group.acceptedUsers|length }})
+                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); background-color: #d2d2d2; font-size: 3.5vh; margin-left: 20px; color: #656264;">Members ({{ group.acceptedUsers|length }})
                                 {% if group.leader_id == current_user.id %}
-                                    <a href='#' class="btn btn-primary" style="float: right;" data-toggle="modal" data-target="#changeGroupLeaderModal">Change Group Leader</a>
+                                    <a href='#' class="btn btn-blue" style="float: right; margin-top: 5px;" data-toggle="modal" data-target="#changeGroupLeaderModal">Change Group Leader</a>
                                 {% endif %}
                                 </h3>
                                 <div class="card-block">
@@ -98,13 +98,13 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 col-xl-10">
-                                            <strong>Current Group Members:</strong>
+                                            <h5 style="color: #656264;">Current Group Members:</h5>
                                             {% for user in group.acceptedUsers %}                                    
                                                 {% include 'group/member.html' %}
                                             {% endfor %}                                            
                                             <br><br>
                                             {% if group.unAcceptedUsers %}
-                                                <strong>Invited Members:</strong>
+                                                <h5 style="color: #656264;">Invited Members:</h5>
                                                 {% for user in group.unAcceptedUsers %}
                                                     {% include 'group/member.html' %}
                                                 {% endfor %}
@@ -115,10 +115,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane" id="suggestedListingsTab" role="tabpanel" style="padding: 0px;">
+                    <div class="tab-pane" id="suggestedListingsTab" role="tabpanel" style="padding: 0px; color: #656264;">
                         <div class="row">
                             <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">Suggested Listings</h3>
+                                <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); background-color: #d2d2d2; margin-left: 20px;">Suggested Listings</h3>
                                 <div class="card-block">
                                     <div class="row">
                                         <div class="col-xs-12" style="padding-left: 15px;">
@@ -127,14 +127,14 @@
                                                     {% if favoritedListings|count == 0 %}
                                                         <div class="row">
                                                             <div class="col-xs-12">
-                                                                <div class="alert alert-info" role="alert">
-                                                                    No one in your group has suggested any listings to this group yet. Any one can suggest a listing by clicking the suggest to group button from the listing page
+                                                                <div class="alert alert-light-blue" role="alert">
+                                                                    No one in your group has suggested any listings to this group yet. Any one can suggest a listing by clicking the suggest to group button from the listing's page
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     {% endif %}
                                                     {% for favorite in favoritedListings %}
-                                                        <div class="row m-x-auto" id="favoritedListing{{favorite.listing.id}}">
+                                                        <div class="row m-x-auto" id="favoritedListing{{favorite.listing.id}}" style="color: #656264;">
                                                             <div class="col-md-12">
                                                                 <div class="card" style="width: 100%;">                       
                                                                     <div class="card-block" style="padding-top: 0px; padding-left: 15px; padding-right: 15px;">
@@ -487,7 +487,7 @@
                     </div>
                     <div class="tab-pane hidden-lg-up" id="messagesTab" role="tabpanel" style="padding: 0px; overflow-y: auto;">
                         <div class="card" style="width:100%;">
-                            <h3 class="card-header" style="font-size: 3.5vh;">Group Message:</h3>
+                            <h3 class="card-header" style="font-size: 3.5vh; background-color: #d2d2d2; color: #656264;">Messages:</h3>
                             <div class="card-block" style="padding-bottom: 0px;">
                                 <!-- Add new message -->
                                 <div class="form-group">
@@ -500,7 +500,7 @@
                                         </div>
                                         <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
                                             <div class="col-xs-12">
-                                                <input class="btn btn-primary" type="submit" value="Respond">
+                                                <input class="btn btn-blue" type="submit" value="Send">
                                             </div>                                    
                                         </div>
                                     </form>
@@ -525,7 +525,7 @@
             </div>
             <div class="col-md-5 hidden-md-down" style="overflow-y: auto;">
                 <div class="card" style="width:100%;">
-                    <h3 class="card-header">Messages:</h3>
+                    <h3 class="card-header" style="background-color: #d2d2d2; color: #656264;">Messages:</h3>
                     <div class="card-block" style="padding-bottom: 0px;">
                         <!-- Add new message -->
                         <div class="form-group">
@@ -538,7 +538,7 @@
                                 </div>
                                 <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
                                     <div class="col-xs-12">
-                                        <input class="btn btn-primary" type="submit" value="Send">
+                                        <input class="btn btn-blue" type="submit" value="Send">
                                     </div>                                    
                                 </div>
                             </form>

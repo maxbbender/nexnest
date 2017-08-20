@@ -8,21 +8,21 @@
                 <h4 class="modal-title" id="Create Group"></h4>
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="row nexnest-font">
                     <div class="col-xs-0 col-xl-1"></div>
                     <div class="col-xs-12 col-xl-10">
                         {% from "_formhelpers.html" import render_field %}
                         <form action="{{url_for('groups.createGroup')}}" method='POST'>
                             <dl>
                                 {{ createGroupForm.csrf_token }}
-                                {{ render_field(createGroupForm.name, class="form-control", type="text") }}
+                                <h5>{{ render_field(createGroupForm.name, class="form-control", type="text") }}</h5>
                                 <p id="groupNameHelpBlock" class="form-text text-muted">
                                   Note: Landlords will be able to see your group name. Please choose accordingly.
                                 </p>
-                                {{ render_field(createGroupForm.time_frame, class="form-control")}}
+                                <h5>{{ render_field(createGroupForm.time_frame, class="form-control")}}</h5>
                             </dl>
                             <p>
-                                <input type='submit' value='Create Group' class="btn btn-primary" style="float: right;">
+                                <input type='submit' value='Create Group' class="btn btn-light-green" style="float: right;">
                             </p>
                         </form>
                     </div>

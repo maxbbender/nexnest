@@ -202,7 +202,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="homepage" class="row m-x-auto" style="display: none;">
+	<div id="homepage" class="row m-x-auto nexnest-font" style="display: none;">
 		<div class="col-md-12 col-lg-12 col-xl-7">
 			<div class="row hidden-sm-up">
 				<div class="col-xs-12" style="padding-bottom: 15px;">
@@ -239,14 +239,11 @@
 				    </div>
 			    </div>
 			    <div class="row" style="padding-top: 10px;">
-					<div class="col-xs-12 col-sm-6 col-md-8 col-lg-7" style="padding-left: 0px;">
+			    	<div class="col-xs-6 col-sm-6 col-md-4" style="padding-left: 15px;">
 						Monthly Price Range
 						<br>
 					    <span class="text-nowrap"><b id="minPriceDisplay" style="padding-right: 10px;">$0</b> <input id="priceSlider" type="text" class="span2 filterOption" value="" data-slider-min="0" data-slider-max="5000" data-slider-step="100" data-slider-tooltip="hide" data-slider-value="[0,5000]"/> <b id="maxPriceDisplay" style="padding-left: 10px;">$5,000</b></span>
 					</div>
-			    </div>
-			    <div class="row" style="padding-top: 10px;">
-			    	<div class="col-md-4"></div>
 			    	<div class="col-xs-6 col-md-4">
 				        <button class="btn btn-secondary" onClick="showMoreFilters()" style="width: 100%; text-align: left;">More Filters <i class="fa fa-chevron-down" aria-hidden="true"></i></button>
 				    </div>
@@ -727,35 +724,36 @@
 				nextListing += `</a>`;
 				if(listing.isFavorited == false){
 					nextListing += `<div style="position: relative; width: 0; height: 0">
-					<i id="listingFavoite_`+listing.id+`" class="fa fa-2x fa-star-o listingFavorite" aria-hidden="true" style="bottom: 217px; position: absolute;"></i>
+					<i id="listingFavoite_`+listing.id+`" class="fa fa-2x fa-heart-o listingFavorite" aria-hidden="true" style="color: #f16e5b; left: 5px; bottom: 215px; position: absolute;"></i>
 					</div>`;
 				}else{
 					nextListing += `<div style="position: relative; width: 0; height: 0">
-					<i id="listingFavoite_`+listing.id+`" class="fa fa-2x fa-star listingFavorite" aria-hidden="true" style="bottom: 217px; position: absolute;"></i>
+					<i id="listingFavoite_`+listing.id+`" class="fa fa-2x fa-heart listingFavorite" aria-hidden="true" style="color: #f16e5b; left: 5px; bottom: 215px; position: absolute;"></i>
 					</div>`;
 				}
-				nextListing += `<div class="card-block" style="background-color: #89cdef;">
+				nextListing += `<div class="card-block" style="background-color: #52ab81; color: white; padding-bottom: 0px;">
 					<div class="row">
-						<div class="col-xs-4">
-							<span class="text-nowrap">
-								`+ listing.numBedrooms +`<i class="fa fa-bed" aria-hidden="true"></i>
+						<div class="col-xs-12 col-lg-12 col-xl-12">
+							<h5 class="nexnest-font-normal"><span class="text-nowrap">
+								<i class="fa fa-bed" aria-hidden="true"></i> `+ listing.numBedrooms +` Bed 
 								&nbsp;
-								`+ listing.numFullBaths +`<i class="fa fa-bath" aria-hidden="true"></i>
-							</span>
-							<br>
-							$`+ listing.price +` per `+ listing.priceTerm +`
+								<i class="fa fa-bath" aria-hidden="true"></i> `+ listing.numFullBaths +` Bath 
+							</h5>							
 						</div>
-						<div class="col-xs-8">
+						<div class="col-xs-12 col-lg-12 col-xl-12">
+							<h5>
 							<div class="row">
-								<div class="col-xs-12" style="text-align: right;">
-									<span class="text-nowrap">`+ listing.street +`</span>
+								<div class="col-xs-12">
+								<i class="fa fa-map-marker" aria-hidden="true"></i>
+								<span class="text-nowrap">`+ listing.street +`, `+ listing.city +`, `+ listing.state +`</span>
 								</div>
 							</div>
-							<div class="row">
-								<div class="col-xs-12" style="text-align: right;">
-									<span class="text-nowrap">`+ listing.city +`, `+ listing.state +`</span>
-								</div>
-							</div>
+							</h5>
+						</div>
+					</div>
+					<div class="row" style="margin-top: 10px;">
+						<div class="col-xs-12">
+							<h4><span style="font-size: 35px;">$`+ listing.price +`</span> per person per `+ listing.priceTerm +`</h4>
 						</div>
 					</div>
 				</div>
@@ -766,46 +764,47 @@
 		//Non Featured
 		$.each(listings, function(index, listing) {
 			console.log(listing);
-			var nextListing = `<div class="card" style="width: 100%;">
+			var nextListing = `<div class="card" style="width: 100%;" style="background-color: #d2d2d2;">
 				<a href="`+ listing.url +`">`;
 					if(listing.bannerPhotoURL == null){						
-						nextListing += `<img src="static/img/defaultHouse.png" class="listingImg card-img-top">`;
+						nextListing += `<img src="static/img/defaultHouse.png" class="listingImg card-img-top" style="background-color: #d2d2d2;">`;
 					}
 					else{
-						nextListing += `<img src=`+ listing.bannerPhotoURL +` class="listingImg card-img-top">`;
+						nextListing += `<img src=`+ listing.bannerPhotoURL +` class="listingImg card-img-top" style="background-color: #d2d2d2;">`;
 					}					
 				nextListing += `</a>`;
 				if(listing.isFavorited == false){
 					nextListing += `<div style="position: relative; width: 0; height: 0">
-					<i id="listingFavoite_`+listing.id+`" class="fa fa-2x fa-star-o listingFavorite" aria-hidden="true" style="bottom: 217px; position: absolute;"></i>
+					<i id="listingFavoite_`+listing.id+`" class="fa fa-2x fa-heart-o listingFavorite" aria-hidden="true" style="color: #f16e5b; left: 5px; bottom: 215px; position: absolute;"></i>
 					</div>`;
 				}else{
 					nextListing += `<div style="position: relative; width: 0; height: 0">
-					<i id="listingFavoite_`+listing.id+`" class="fa fa-2x fa-star listingFavorite" aria-hidden="true" style="bottom: 217px; position: absolute;"></i>
+					<i id="listingFavoite_`+listing.id+`" class="fa fa-2x fa-heart listingFavorite" aria-hidden="true" style="color: #f16e5b; left: 5px; bottom: 215px; position: absolute;"></i>
 					</div>`;
 				}
-				nextListing += `<div class="card-block">
+				nextListing += `<div class="card-block" style="padding-bottom: 0px; background-color: #d2d2d2; color: #656264;">
 					<div class="row">
-						<div class="col-xs-4">
-							<span class="text-nowrap">
-								`+ listing.numBedrooms +`<i class="fa fa-bed" aria-hidden="true"></i>
+						<div class="col-xs-12 col-lg-12 col-xl-12">
+							<h5 class="nexnest-font-normal"><span class="text-nowrap">
+								<i class="fa fa-bed" aria-hidden="true"></i> `+ listing.numBedrooms +` Bed 
 								&nbsp;
-								`+ listing.numFullBaths +`<i class="fa fa-bath" aria-hidden="true"></i>
-							</span>
-							<br>
-							$`+ listing.price +` per `+ listing.priceTerm +`
+								<i class="fa fa-bath" aria-hidden="true"></i> `+ listing.numFullBaths +` Bath 
+							</h5>							
 						</div>
-						<div class="col-xs-8">
+						<div class="col-xs-12 col-lg-12 col-xl-12">
+							<h5>
 							<div class="row">
-								<div class="col-xs-12" style="text-align: right;">
-									<span class="text-nowrap">`+ listing.street +`</span>
+								<div class="col-xs-12">
+								<i class="fa fa-map-marker" aria-hidden="true"></i>
+								<span class="text-nowrap">`+ listing.street +`, `+ listing.city +`, `+ listing.state +`</span>
 								</div>
 							</div>
-							<div class="row">
-								<div class="col-xs-12" style="text-align: right;">
-									<span class="text-nowrap">`+ listing.city +`, `+ listing.state +`</span>
-								</div>
-							</div>
+							</h5>
+						</div>
+					</div>
+					<div class="row" style="margin-top: 10px;">
+						<div class="col-xs-12">
+							<h4><span style="font-size: 35px;">$`+ listing.price +`</span> per person per `+ listing.priceTerm +`</h4>
 						</div>
 					</div>
 				</div>

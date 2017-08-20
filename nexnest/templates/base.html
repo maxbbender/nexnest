@@ -65,7 +65,7 @@
 			    	</li>
                         {% else %}
                     <!-- LOGGED IN -->
-                    <li class="nav-item dropdown hidden-xs-down">                        
+                    <li class="nav-item dropdown hidden-xs-down nexnest-font">                        
                         <a id="accountDropdown" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" style="padding: 0px;">
                             <div class="gavatar" style="background-color: #d2d2d2;">
                                 <img src="{{current_user.profile_image}}" alt="Profile Image" class="img-responsive" style="height: 35px; width: 35px; border-radius: 80px;"/>
@@ -83,7 +83,7 @@
                                         </p>
                                     </div>
                                     <div class="col-md-7" style="text-align: center;">
-                                        <span><strong><h5>{{current_user.fname}} {{current_user.lname}}</h5></strong></span>
+                                        <span><strong><h5 style="color: #656264;">{{current_user.fname}} {{current_user.lname}}</h5></strong></span>
                                         <h6 class="text-muted" style="padding-bottom: 5px; color: #d2d2d2;">
                                             {{current_user.email}}</h6>
                                         <div class="divider">
@@ -110,7 +110,7 @@
                     <li class="nav-item">
                         <div class="dropdown dropdown-notifications dropdown-toggle nexnest-font">
                             <i data-count="{{ numUnviewedMessages }}" class="fa fa-comments fa-2x notification-icon" style="padding-top: 4px; color: #f4c359;" id="dropdownNotificationButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
-                            <div class="dropdown-menu dropdown-menu-right" style="overflow:scroll; overflow-x: hidden; width: 93vw; right: -100px; max-height: 75vh;" aria-labelledby="dropdownNotificationButton">
+                            <div class="dropdown-menu dropdown-menu-right" style="color: #656264; overflow:scroll; overflow-x: hidden; width: 93vw; right: -100px; max-height: 75vh;" aria-labelledby="dropdownNotificationButton">
                                 <div class="dropdown-toolbar">
                                     <h2 class="dropdown-toolbar-title"><strong style="font-size: 20px;">Messages ({{ numUnviewedMessages }} new)</strong>
                                     <span style="float: right;"><a href="#" id="markAllMessages">Mark All Read</a></span></h2>
@@ -131,7 +131,7 @@
                     <li class="nav-item">
                         <div class="dropdown dropdown-notifications dropdown-toggle nexnest-font">
                             <i data-count="{{ numUnviewedNotifications }}" class="fa fa-bell fa-2x notification-icon" style="padding-top: 4px; color: #f4c359;" id="dropdownNotificationButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
-                            <div class="dropdown-menu dropdown-menu-right" style="overflow:scroll; overflow-x: hidden; width: 93vw; right: -48px; max-height: 75vh;" aria-labelledby="dropdownNotificationButton">
+                            <div class="dropdown-menu dropdown-menu-right" style="color: #656264; overflow:scroll; overflow-x: hidden; width: 93vw; right: -48px; max-height: 75vh;" aria-labelledby="dropdownNotificationButton">
                                 <div class="dropdown-toolbar">
                                     <h2 class="dropdown-toolbar-title"><strong style="font-size: 20px;">Notifications ({{ numUnviewedNotifications }} new)</strong>
                                     <span style="float: right;"><a href="#" id="markAllNotif">Mark All Read</a></span></h2>
@@ -240,7 +240,7 @@
                     if(message.category == "generic_message"){
                         var newNotification = `<a href="`+ message.redirectURL +`" id="`+ message.id +`" class="noti" data-redirect="`+ message.redirectURL +`" style="text-decoration: none;">`;
                             if(message.viewed == false){
-                                newNotification += `<li class="notification" style="background-color: rgba(86, 134, 197, 0.39);">`;
+                                newNotification += `<li class="notification" style="background-color: rgba(86, 134, 197, 0.39); color: #656264;">`;
                             }
                             else{
                                 newNotification += `<li class="notification">`;
@@ -310,7 +310,7 @@
                     else{
                         var newNotification = `<a href="`+message.redirectURL+`" id="`+message.id+`" class="noti" data-redirect="`+ message.redirectURL +`" style="text-decoration: none;">`;
                             if(message.viewed == false){
-                                newNotification += `<li class="notification" style="background-color: rgba(86, 134, 197, 0.39);">`;
+                                newNotification += `<li class="notification" style="background-color: rgba(86, 134, 197, 0.39); color: #656264;">`;
                             }
                             else{
                                 newNotification += `<li class="notification">`;
@@ -485,7 +485,7 @@
                         console.log(message);
                         var newNotification = `<a href="`+ message.redirectURL +`" id="`+ message.id +`" class="noti" data-redirect="`+ message.redirectURL +`" style="text-decoration: none;">`;
                             if(message.viewed == false){
-                                newNotification += `<li class="notification" style="background-color: rgba(86, 134, 197, 0.39);">`;
+                                newNotification += `<li class="notification" style="background-color: rgba(86, 134, 197, 0.39); color: #656264;">`;
                             }
                             else{
                                 newNotification += `<li class="notification">`;
@@ -555,7 +555,7 @@
                     else{
                         var newNotification = `<a href="`+message.redirectURL+`" id="`+message.id+`" class="noti" data-redirect="`+ message.redirectURL +`" style="text-decoration: none;">`;
                             if(message.viewed == false){
-                                newNotification += `<li class="notification" style="background-color: rgba(86, 134, 197, 0.39);">`;
+                                newNotification += `<li class="notification" style="background-color: rgba(86, 134, 197, 0.39); color: #656264;">`;
                             }
                             else{
                                 newNotification += `<li class="notification">`;

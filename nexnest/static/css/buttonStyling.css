@@ -10,14 +10,63 @@
 	border-radius: 10px;
 }
 
+.btn-blue:hover {
+	color: #656264;
+}
+
+.btn-red {
+	background-color: #f16e5b; 
+	color: white;
+	border-radius: 10px;
+}
+.btn-red:hover {
+	color: #656264;
+}
+
 .btn-light-green {
 	background-color: #4fac80; 
 	color: white;
 	border-radius: 10px;
 }
 
+.btn-light-green:hover {
+	color: #656264;
+}
+
 .btn-white {
 	background-color: white;
 	border-color: black;
 	color: black;
+}
+
+.btn-white:hover {
+	color: #656264;
+}
+
+.btn-outline-blue {
+	color: #5686c5;
+	border-color: #5686c5; 
+}
+
+.btn-outline-blue.active {
+	background-color: #5686c5;
+	border-color: #5686c5;
+	color: white;
+}
+
+.btn-outline-green {
+	color: #4fac80;
+	border-color: #4fac80; 
+}
+
+.btn-outline-green.active {
+	background-color: #4fac80;
+	border-color: #4fac80;
+	color: white;
+}
+
+.alert-light-blue {
+	background-color: rgba(86, 134, 197, 0.29);
+	border-color: rgba(86, 134, 197, 0.59);
+	color: #656264;
 }

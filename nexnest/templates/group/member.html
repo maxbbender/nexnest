@@ -1,4 +1,4 @@
-<div class="card" style="width: 100%">
+<div class="card" style="width: 100%; border-color: #d2d2d2;">
     <div class="card-block">
         <div class="row" style="align-items: center;">
             <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
@@ -8,11 +8,11 @@
                 <div class="row" style="align-items: flex-end;">
                     <div class="col-xs-12 col-lg-8">
                         <div class="row">
-                            <h2 style="font-size: 3.0vh">
+                            <h2 style="font-size: 3.0vh; color: #656264;">
                                 {{ user.fname }} {{ user.lname }}
                                 {% if group.leader_id == user.id %}
-                                    <div class="customTooltip">
-                                        <i class="fa fa-user" aria-hidden="true"></i>                                    
+                                    <div class="customTooltip" style="padding-left: 15px;">
+                                        <i class="icon icon-crown" style="color: #f4c359;" aria-hidden="true"></i>                                    
                                         <span class="customTooltiptext">Group Leader</span>
                                     </div>
                                 {% endif %}

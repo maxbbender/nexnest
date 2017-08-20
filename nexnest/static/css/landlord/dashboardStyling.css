@@ -28,7 +28,7 @@ li,ul{
 }
 
 #navigation {
-    background: #0e1a35;
+    background: #5686c5;
     height: inherit;
     min-height: 100vh;
 }
@@ -198,35 +198,33 @@ header {
 }
 
 .navi a {
-    border-bottom: 1px solid #0d172e;
-    border-top: 1px solid #0d172e;
+    border-bottom: 1px solid #656264;
     color: #ffffff;
     display: block;
     font-size: 17px;
-    font-weight: 500;
     padding: 28px 20px;
     text-decoration: none;
 }
 
 .navi i {
     margin-right: 15px;
-    color: #5584ff;
+    color: #f4c359;
 }
 
 .navi .active a {
-    background: #122143;
+    background: #0f55b1;
     border-left: 5px solid #5584ff;
     padding-left: 15px;
 }
 
 .navi .active {
-    background: #122143;
-    border-left: 5px solid #5584ff;
+    background: #0f55b1;
+    border-left: 5px solid #f4c359;
     padding-left: 15px;
 }
 .navi a:hover {
-    background: #122143 none repeat scroll 0 0;
-    border-left: 5px solid #5584ff;
+    background: #0f55b1 none repeat scroll 0 0;
+    border-left: 5px solid #f4c359;
     display: block;
     padding-left: 15px;
 }

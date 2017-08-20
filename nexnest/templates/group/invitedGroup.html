@@ -1,26 +1,28 @@
 <div class="card" style="width:100%;">
-    <div class="card-header">
+    <div class="card-header" style="background-color: #d2d2d2;">
     	<div class="row">
-    		<div class="col-xs-6">
-    			<h3>{{ group.name }}</h3>
+    		<div class="col-xs-7">
+    			<h3><i class="fa fa-users" aria-hidden="true" style="padding-right: 5px;"></i> {{ group.name }}</h3>
     		</div>
-    		<div class="col-xs-6" style="text-align: right;">
-    			<a href='#' class="btn btn-danger" data-toggle="modal" data-target="#DeclineInviteModal{{group.id}}">Decline</a>
-    			<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#AcceptInviteModal{{group.id}}">Join Group</a>
+    		<div class="col-xs-5" style="text-align: right; align-self: center;">
+    			<a href='#' class="btn btn-red" data-toggle="modal" data-target="#DeclineInviteModal{{group.id}}">Decline</a>
+    			<a href='#' class="btn btn-blue" data-toggle="modal" data-target="#AcceptInviteModal{{group.id}}">Join Group</a>
     		</div>
     	</div>
     </div>
-    <div class="card-block">	        
-        <p class="card-text">
-        	<strong>Group Leader: </strong>{{ group.leader.fname }} {{ group.leader.lname }}
-        </p>
-    	<p class="card-text">
-    		Lease Period: {{ group.target_time_period }}
-    	</p>
-    	<strong>Current Group Members:</strong>
-    	{% for user in group.acceptedUsers %}
-        	<li>{{ user.fname }} {{ user.lname }}</li>
-        {% endfor %}        
+    <div class="card-block">
+        <h4>
+            <p class="card-text">
+            	<strong><i class="icon icon-crown" style="padding-right: 7px;"></i> Group Leader: </strong>{{ group.leader.fname }} {{ group.leader.lname }}
+            </p>
+        	<p class="card-text">
+        		<i class="fa fa-clock-o" style="padding-right: 5px;"></i> Lease Period: {{ group.target_time_period }}
+        	</p>
+        	<strong>Current Group Members:</strong>
+        	{% for user in group.acceptedUsers %}
+            	<li>{{ user.fname }} {{ user.lname }}</li>
+            {% endfor %}
+        </h4>
     </div>
 </div>
 

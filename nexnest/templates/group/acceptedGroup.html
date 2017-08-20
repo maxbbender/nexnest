@@ -1,16 +1,18 @@
 <div class="card" style="width:100%;">
-    <div class="card-header">
+    <div class="card-header" style="background-color: #d2d2d2;">
     	<div class="row">
 	    	<div class="col-xs-8">
-	    		<h3>{{ group.name }}</h3>
+	    		<h3><i class="fa fa-users" aria-hidden="true" style="padding-right: 5px;"></i> {{ group.name }}</h3>
 	    	</div>
-	    	<div class="col-xs-4">
-    			<a href="{{ url_for('groups.viewGroup', groupID=group.id) }}" class="btn btn-primary" style="float: right;">View Group</a>
+	    	<div class="col-xs-4" style="align-self: center;">
+    			<a href="{{ url_for('groups.viewGroup', groupID=group.id) }}" class="btn btn-blue" style="float: right;">View Group</a>
     		</div>
     	</div>
     </div>
-    <div class="card-block">	        
-        <p class="card-text"><strong>Group Leader: </strong> {{ group.leader.fname }} {{ group.leader.lname }}</a>
-    	<p class="card-text">Lease Period: {{ group.target_time_period }}</p>
+    <div class="card-block">
+        <h4>
+            <p class="card-text"><i class="icon icon-crown" style="padding-right: 7px;"></i> Group Leader: {{ group.leader.fname }} {{ group.leader.lname }}</p>
+    	    <p class="card-text"><i class="fa fa-clock-o" style="padding-right: 5px;"></i> Lease Period: {{ group.target_time_period }} </p>
+        </h4>
     </div>
 </div>
