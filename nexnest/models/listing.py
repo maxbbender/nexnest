@@ -193,15 +193,20 @@ class Listing(Base):
         self.youtube_url = youtube_url
         self.featured = featured
         self.banner_photo_url = banner_photo_url
-
-        startDate = dt.strptime(self.start_date, '%Y-%m-%d')
-        endDate = dt.strptime(self.end_date, '%Y-%m-%d')
         if self.rent_due == 'monthly':
+            print('SELFSLEFSEOIFHSOE', self.endDate)
+            print('SELFSLEFSEOIFHSOE', self.startDate)
             self.price_per_month = self.price
-            self.price_per_semester = (self.price * diffMonth(endDate, startDate)) / 2
+            self.price_per_semester = (self.price * diffMonth(self.endDate, self.startDate)) / 2
+            # self.price_per_semester = (self.price * diffMonth(self.endDate, self.startDate)) / 2
         elif self.rent_due == 'semester':
             # numMonths = int((self.end_date - self.start_date).days / 30)
-            self.price_per_month = (self.price * 2) / diffMonth(endDate, startDate)
+            numMonthsDiff = diffMonth(self.endDate, self.startDate)
+            if numMonthsDiff > 0:
+                self.price_per_month = (self.price * 2) / numMonthsDiff
+            else:
+                self.price_per_month = (self.price * 2)
+
             self.price_per_semester = self.price
         else:
             logger.error('Unknown Rent Due Value while create listing : %s' % self.rent_due)
@@ -227,6 +232,20 @@ class Listing(Base):
 
     def __repr__(self):
         return '<Listing %r | %s>' % (self.id, self.street)
+
+    @property
+    def startDate(self):
+        if isinstance(self.start_date, str):
+            return dt.strptime(self.start_date, '%Y-%m-%d')
+        else:
+            return self.start_date
+
+    @property
+    def endDate(self):
+        if isinstance(self.end_date, str):
+            return dt.strptime(self.end_date, '%Y-%m-%d')
+        else:
+            return self.end_date
 
     @property
     def shortSerialize(self):
