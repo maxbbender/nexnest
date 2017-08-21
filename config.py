@@ -24,7 +24,6 @@ class Config:
     BRAINTREE_PUBLIC_KEY = os.environ.get('BRAINTREE_PUBLIC_KEY') or 'fdtk8w9qbpvqr6kn'
     BRAINTREE_PRIVATE_KEY = os.environ.get('BRAINTREE_PRIVATE_KEY') or 'ec367f7335d5e9c222656212e1ff78f2'
     SLACK_LOG_URL = os.environ.get('SLACK_LOG_URL') or 'https://hooks.slack.com/services/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'
-    SEND_FILE_MAX_AGE_DEFAULT = 0
 
     @staticmethod
     def init_app(app):
