@@ -26,6 +26,16 @@ def markNotificationRead(notifID):
             if not notif.viewed:
                 notif.viewed = True
                 session.commit()
+
+                # Find other non-viewed notifications with the same attributes
+                similarNotifications = Notification.query.filter_by(target_model_id=notif.target_model_id,
+                                                                    target_user_id=notif.target_user_id,
+                                                                    notif_type=notif.notif_type).all()
+                print(similarNotifications)
+                for notif in similarNotifications:
+                    notif.viewed = True
+                    session.commit()
+
             else:
                 errorMessage = 'Notification already viewed'
         else:

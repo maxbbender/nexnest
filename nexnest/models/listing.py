@@ -194,8 +194,6 @@ class Listing(Base):
         self.featured = featured
         self.banner_photo_url = banner_photo_url
         if self.rent_due == 'monthly':
-            print('SELFSLEFSEOIFHSOE', self.endDate)
-            print('SELFSLEFSEOIFHSOE', self.startDate)
             self.price_per_month = self.price
             self.price_per_semester = (self.price * diffMonth(self.endDate, self.startDate)) / 2
             # self.price_per_semester = (self.price * diffMonth(self.endDate, self.startDate)) / 2
