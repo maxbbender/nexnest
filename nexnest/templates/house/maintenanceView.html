@@ -25,7 +25,7 @@
                         <div class="card-block" style="font-size: 20px;">
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <p class="card-text"><strong>Issue Reported on:</strong> {{ maintenanceRequest.date_created }}</p>
+                                    <p class="card-text"><strong>Issue Reported on:</strong> {{ maintenanceRequest.date_created|format_datetime }}</p>
                                     <p class="card-text"><strong>Reported by:</strong> {{ maintenanceRequest.user.fname }} {{ maintenanceRequest.user.lname }}</p>
                                     <strong>Status: </strong>
                                     {% if maintenanceRequest.status == 'open' %}
