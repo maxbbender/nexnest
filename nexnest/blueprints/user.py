@@ -674,6 +674,20 @@ def getNotifications(page=1):
 def getMessageNotifications(page=1):
     app.logger.debug("/user/getMessageNotifications page : %d" % page)
 
+    # First lets get the generic messages
+    genericMessageNotif = Notification.query \
+        .filter_by(target_user_id=current_user.id, category='generic_mesage')
+
+    app.logger.debug('filter_by ', pformat(genericMessageNotif.all()))
+
+    # Distinct Filters
+    genericMessageNotif = genericMessageNotif.distinct(Notification.notif_type,
+                                                       Notification.redirect_url,
+                                                       Notification.viewed)
+
+    app.logger.debug('distinct ', pformat(genericMessageNotif.all()))
+
+
     allNotifications = Notification.query \
         .filter_by(target_user_id=current_user.id) \
         .filter(Notification.category.in_(('direct_message', 'generic_message'))) \

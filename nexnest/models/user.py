@@ -1,6 +1,7 @@
 from datetime import datetime as dt
 
-from flask import flash, render_template, url_for, current_app
+from flask import flash, render_template, url_for
+from flask import current_app as app
 from nexnest import db
 from nexnest.models.group_listing import GroupListing
 from nexnest.models.group_user import GroupUser
@@ -13,6 +14,8 @@ from sqlalchemy.orm import relationship
 from .base import Base
 
 import random
+
+from pprint import pformat
 
 
 class User(Base):
@@ -112,7 +115,7 @@ class User(Base):
         self.date_modified = now
         self.active = True
 
-        if current_app.config['TESTING']:
+        if app.config['TESTING']:
             self.email_confirmed = True
         else:
             self.email_confirmed = email_confirmed
@@ -302,10 +305,13 @@ class User(Base):
             .paginate(1, 10, False).items
 
     def getMessageNotifications(self):
-        return self.notifications \
+        app.logger.debug('getMessageNotifications')
+        returnList = self.notifications \
             .filter(Notification.category.in_(('direct_message', 'generic_message'))) \
             .distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed) \
             .paginate(1, 10, False).items
+        app.logger.debug(pformat(returnList))
+        return returnList
 
     def getUnreadMessageNotificationCount(self):
         return self.notifications \

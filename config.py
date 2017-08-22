@@ -95,7 +95,7 @@ class UnixConfig(ProductionConfig):
         # log to syslog
         import logging
         from logging.handlers import SysLogHandler
-        syslog_handler = SysLogHandler()
+        syslog_handler = SysLogHandler(address='/var/log/nexnest.log')
         syslog_handler.setLevel(logging.WARNING)
         app.logger.addHandler(syslog_handler)
 
