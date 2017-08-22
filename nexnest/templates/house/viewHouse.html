@@ -230,7 +230,7 @@
 				    </div>
 				    <div class="tab-pane" id="rentTab" role="tabpanel" style="padding: 0px;">
                         {% set upcomingPayments, overduePayments, futurePayments, completedPayments = house.groupedRentPayments %}
-                        {% if upcomingPayments or futurePayments or completedPayments %}
+                        {% if upcomingPayments or futurePayments or completedPayments or overduePayments %}
                             <div class="row">
                                 <div class="card" style="width: 100%; margin-left: 10px;">
                                     <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); background-color: #d2d2d2; font-size: 3.5vh; color: #656264;">
@@ -244,7 +244,7 @@
                                         <div class="row" style="padding-bottom: 15px;">
                                             <div class="col-xs-12">
                                                 <div class="outstandingPaymentsToggle" style="color:#5686c5; cursor: pointer;">
-                                                    {% if upcomingPayments|length > 0 %}
+                                                    {% if overduePayments|length > 0 %}
                                                         <i id="outstandingPaymentsIcon" class="fa fa-chevron-circle-down" aria-hidden="true"></i>
                                                     {% else %}
                                                         <i id="outstandingPaymentsIcon" class="fa fa-chevron-circle-right" aria-hidden="true"></i>
@@ -255,30 +255,46 @@
                                         </div>
                                         <div class="row" style="padding-left: 15px;">
                                             <div class="col-xs-12">
-                                                {% if upcomingPayments|length > 0 %}
+                                                {% if overduePayments|length > 0 %}
                                                     <div class="outstandingPaymentsDisplay">
                                                 {% else %}
                                                     <div class="outstandingPaymentsDisplay" style="display: none; padding-bottom: 15px;">
                                                 {% endif %}
-                                                {% if upcomingPayments|length > 0 %}
+                                                {% if overduePayments|length > 0 %}
                                                     {% for rent in overduePayments %}
                                                         {% if current_user in landlords %}
+                                                            <div class="row" style="height: 35px; margin-bottom: 15px;">
+                                                                <div class="col-xs-1">
+                                                                    {% if current_user in landlords %}
+                                                                    <div class="form-group" style="font-size: 15px; padding-top: 3px;">
+                                                                        <div class="checkbox">
+                                                                            <label style="font-size: 1.5em">
+                                                                                {% if rent.completed %}
+                                                                                    <input class="form-check-input markRentPaid" type="checkbox" data-rentid="{{rent.id}}" checked>
+                                                                                {% else %}
+                                                                                    <input class="form-check-input markRentPaid" type="checkbox" data-rentid="{{rent.id}}">
+                                                                                {% endif %}
+                                                                                <span class="cr"><i class="cr-icon fa fa-check" style="color: green;"></i></span>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                    {% endif %}
+                                                                </div>
+                                                                <div class="col-xs-4" style="align-self: center;">
+                                                                    {{rent.date_due}}
+                                                                </div>
+                                                                <div class="col-xs-4" style="align-self: center;">
+                                                                    <strong>{{rent.user.name}}</strong>
+                                                                </div>
+                                                                <div class="col-xs-3" style="align-self: center;">
+                                                                    <span style="color: #f16e5b;">${{rent.amount}}</span>
+                                                                </div>
+                                                            </div>
+                                                        {% else %}
+                                                            {% if current_user == rent.user %}
                                                                 <div class="row" style="height: 35px; margin-bottom: 15px;">
-                                                                    <div class="col-xs-1">
-                                                                        {% if current_user in landlords %}
-                                                                        <div class="form-group" style="font-size: 15px; padding-top: 3px;">
-                                                                            <div class="checkbox">
-                                                                                <label style="font-size: 1.5em">
-                                                                                    {% if rent.completed %}
-                                                                                        <input class="form-check-input markRentPaid" type="checkbox" data-rentid="{{rent.id}}" checked>
-                                                                                    {% else %}
-                                                                                        <input class="form-check-input markRentPaid" type="checkbox" data-rentid="{{rent.id}}">
-                                                                                    {% endif %}
-                                                                                    <span class="cr"><i class="cr-icon fa fa-check" style="color: green;"></i></span>
-                                                                                </label>
-                                                                            </div>
-                                                                        </div>
-                                                                        {% endif %}
+                                                                    <div class="col-xs-1" style="align-self: center;">
+                                                                        <i class="fa fa-clock-o" aria-hidden="true" style="color: #f16e5b;"></i>
                                                                     </div>
                                                                     <div class="col-xs-4" style="align-self: center;">
                                                                         {{rent.date_due}}
@@ -287,38 +303,11 @@
                                                                         <strong>{{rent.user.name}}</strong>
                                                                     </div>
                                                                     <div class="col-xs-3" style="align-self: center;">
-                                                                        <span style="color: green;">${{rent.amount}}</span>
+                                                                        <span style="color: #f16e5b;">${{rent.amount}}</span>
                                                                     </div>
                                                                 </div>
-                                                            {% else %}
-                                                                {% if current_user == rent.user %}
-                                                                    <div class="row" style="height: 35px; margin-bottom: 15px;">
-                                                                    <div class="col-xs-1">
-                                                                        <div class="form-group" style="font-size: 15px; padding-top: 3px;">
-                                                                            <div class="checkbox">
-                                                                                <label style="font-size: 1.5em">
-                                                                                    {% if rent.completed %}
-                                                                                        <input class="form-check-input markRentPaid" type="checkbox" data-rentid="{{rent.id}}" checked>
-                                                                                    {% else %}
-                                                                                        <input class="form-check-input markRentPaid" type="checkbox" data-rentid="{{rent.id}}">
-                                                                                    {% endif %}
-                                                                                    <span class="cr"><i class="cr-icon fa fa-check" style="color: green;"></i></span>
-                                                                                </label>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-xs-4" style="align-self: center;">
-                                                                        {{rent.date_due}}
-                                                                    </div>
-                                                                    <div class="col-xs-4" style="align-self: center;">
-                                                                        <strong>{{rent.user.name}}</strong>
-                                                                    </div>
-                                                                    <div class="col-xs-3" style="align-self: center;">
-                                                                        <span style="color: green;">${{rent.amount}}</span>
-                                                                    </div>
-                                                                </div>
-                                                                {% endif %}
                                                             {% endif %}
+                                                        {% endif %}
                                                     {% endfor %}
                                                 {% else %}
                                                     <strong>No Outstanding Payments</strong>
@@ -342,7 +331,6 @@
                                                             {% if current_user in landlords %}
                                                                 <div class="row" style="height: 35px; margin-bottom: 15px;">
                                                                     <div class="col-xs-1">
-                                                                        {% if current_user in landlords %}
                                                                         <div class="form-group" style="font-size: 15px; padding-top: 3px;">
                                                                             <div class="checkbox">
                                                                                 <label style="font-size: 1.5em">
@@ -355,7 +343,6 @@
                                                                                 </label>
                                                                             </div>
                                                                         </div>
-                                                                        {% endif %}
                                                                     </div>
                                                                     <div class="col-xs-4" style="align-self: center;">
                                                                         {{rent.date_due}}
@@ -370,30 +357,19 @@
                                                             {% else %}
                                                                 {% if current_user == rent.user %}
                                                                     <div class="row" style="height: 35px; margin-bottom: 15px;">
-                                                                    <div class="col-xs-1">
-                                                                        <div class="form-group" style="font-size: 15px; padding-top: 3px;">
-                                                                            <div class="checkbox">
-                                                                                <label style="font-size: 1.5em">
-                                                                                    {% if rent.completed %}
-                                                                                        <input class="form-check-input markRentPaid" type="checkbox" data-rentid="{{rent.id}}" checked>
-                                                                                    {% else %}
-                                                                                        <input class="form-check-input markRentPaid" type="checkbox" data-rentid="{{rent.id}}">
-                                                                                    {% endif %}
-                                                                                    <span class="cr"><i class="cr-icon fa fa-check" style="color: green;"></i></span>
-                                                                                </label>
-                                                                            </div>
+                                                                        <div class="col-xs-1" style="align-self: center;">
+                                                                            <i class="fa fa-times-circle" aria-hidden="true" style="color: #f4c359;"></i>
+                                                                        </div>
+                                                                        <div class="col-xs-4" style="align-self: center;">
+                                                                            {{rent.date_due}}
+                                                                        </div>
+                                                                        <div class="col-xs-4" style="align-self: center;">
+                                                                            <strong>{{rent.user.name}}</strong>
+                                                                        </div>
+                                                                        <div class="col-xs-3" style="align-self: center;">
+                                                                            <span style="color: #f4c359;">${{rent.amount}}</span>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-xs-4" style="align-self: center;">
-                                                                        {{rent.date_due}}
-                                                                    </div>
-                                                                    <div class="col-xs-4" style="align-self: center;">
-                                                                        <strong>{{rent.user.name}}</strong>
-                                                                    </div>
-                                                                    <div class="col-xs-3" style="align-self: center;">
-                                                                        <span style="color: green;">${{rent.amount}}</span>
-                                                                    </div>
-                                                                </div>
                                                                 {% endif %}
                                                             {% endif %}
                                                         {% endfor %}
@@ -441,36 +417,25 @@
                                                                         <strong>{{rent.user.name}}</strong>
                                                                     </div>
                                                                     <div class="col-xs-3" style="align-self: center;">
-                                                                        <span style="color: green;">${{rent.amount}}</span>
+                                                                        <span style="color: #f4c359;">${{rent.amount}}</span>
                                                                     </div>
                                                                 </div>
                                                             {% else %}
                                                                 {% if current_user == rent.user %}
-                                                                    <div class="row" style="height: 35px; margin-bottom: 15px;">
-                                                                    <div class="col-xs-1">
-                                                                        <div class="form-group" style="font-size: 15px; padding-top: 3px;">
-                                                                            <div class="checkbox">
-                                                                                <label style="font-size: 1.5em">
-                                                                                    {% if rent.completed %}
-                                                                                        <input class="form-check-input markRentPaid" type="checkbox" data-rentid="{{rent.id}}" checked>
-                                                                                    {% else %}
-                                                                                        <input class="form-check-input markRentPaid" type="checkbox" data-rentid="{{rent.id}}">
-                                                                                    {% endif %}
-                                                                                    <span class="cr"><i class="cr-icon fa fa-check" style="color: green;"></i></span>
-                                                                                </label>
-                                                                            </div>
+                                                                    <div class="row" style="height: 35px; margin-bottom: 15px;">         
+                                                                        <div class="col-xs-1" style="align-self: center;">
+                                                                            <i class="fa fa-times-circle" aria-hidden="true" style="color: #f4c359;"></i>
+                                                                        </div>
+                                                                        <div class="col-xs-4" style="align-self: center;">
+                                                                            {{rent.date_due}}
+                                                                        </div>
+                                                                        <div class="col-xs-4" style="align-self: center;">
+                                                                            <strong>{{rent.user.name}}</strong>
+                                                                        </div>
+                                                                        <div class="col-xs-3" style="align-self: center;">
+                                                                            <span style="color: green;">${{rent.amount}}</span>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-xs-4" style="align-self: center;">
-                                                                        {{rent.date_due}}
-                                                                    </div>
-                                                                    <div class="col-xs-4" style="align-self: center;">
-                                                                        <strong>{{rent.user.name}}</strong>
-                                                                    </div>
-                                                                    <div class="col-xs-3" style="align-self: center;">
-                                                                        <span style="color: green;">${{rent.amount}}</span>
-                                                                    </div>
-                                                                </div>
                                                                 {% endif %}
                                                             {% endif %}
                                                         {% endfor %}
@@ -523,30 +488,19 @@
                                                             {% else %}
                                                                 {% if current_user == rent.user %}
                                                                     <div class="row" style="height: 35px; margin-bottom: 15px;">
-                                                                    <div class="col-xs-1">
-                                                                        <div class="form-group" style="font-size: 15px; padding-top: 3px;">
-                                                                            <div class="checkbox">
-                                                                                <label style="font-size: 1.5em">
-                                                                                    {% if rent.completed %}
-                                                                                        <input class="form-check-input markRentPaid" type="checkbox" data-rentid="{{rent.id}}" checked>
-                                                                                    {% else %}
-                                                                                        <input class="form-check-input markRentPaid" type="checkbox" data-rentid="{{rent.id}}">
-                                                                                    {% endif %}
-                                                                                    <span class="cr"><i class="cr-icon fa fa-check" style="color: green;"></i></span>
-                                                                                </label>
-                                                                            </div>
+                                                                        <div class="col-xs-1" style="align-self: center;">
+                                                                            <i class="fa fa-check-circle" aria-hidden="true" style="color: #4fac80;"></i>
+                                                                        </div>
+                                                                        <div class="col-xs-4" style="align-self: center;">
+                                                                            {{rent.date_due}}
+                                                                        </div>
+                                                                        <div class="col-xs-4" style="align-self: center;">
+                                                                            <strong>{{rent.user.name}}</strong>
+                                                                        </div>
+                                                                        <div class="col-xs-3" style="align-self: center;">
+                                                                            <span style="color: green;">${{rent.amount}}</span>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-xs-4" style="align-self: center;">
-                                                                        {{rent.date_due}}
-                                                                    </div>
-                                                                    <div class="col-xs-4" style="align-self: center;">
-                                                                        <strong>{{rent.user.name}}</strong>
-                                                                    </div>
-                                                                    <div class="col-xs-3" style="align-self: center;">
-                                                                        <span style="color: green;">${{rent.amount}}</span>
-                                                                    </div>
-                                                                </div>
                                                                 {% endif %}
                                                             {% endif %}
                                                     {% endfor %}
