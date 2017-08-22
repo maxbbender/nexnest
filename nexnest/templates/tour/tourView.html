@@ -86,7 +86,6 @@
                                         
                                     {% endif %}
                                 {% endif %}
-                                <div class="row">
                                     <div class="col-xl-12">
                                         {% if tour.group.leader_id == current_user.id %}
                                             {% if tour.last_requested == 'landlord' %}
@@ -112,7 +111,7 @@
                                                     <div class="row requestedTimes">
                                                         
                                                     </div>
-                                                    <br><br>
+                                                    <br>
                                                     <div class="row" style="padding-top: 10px;">
                                                         <div class="col-xs-12 col-xl-4" style="padding-bottom: 5px; text-align: center;">
                                                             <a href='#' class="btn btn-secondary confirmtime" data-toggle="modal" data-target="#confirmTourModal" style="width: 196px; pointer-events: none;">Confirm Time</a>
@@ -148,13 +147,13 @@
                                                             <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the landlord to confrim your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                         </h1></strong>
                                                         <br>
-                                                        Waiting for the landlord to confirm your requested time or suggest a different one
+                                                        Waiting for the landlord to respond to your requested time(s)
                                                         <br><br>
-                                                        <p class="card-text"><strong>Your group has requested a tour at one of these times:</strong><br></p>
-                                                        <div class="row">
+                                                        <p class="card-text"><strong>Requested Tours:</strong><br></p>
+                                                        <div class="row" style="padding-left: 15px;">
                                                             {% for time in tour.tourTimes %}
                                                                 <div class="col-xs-6 col-md-6 col-lg-6" style="padding-top: 10px;">
-                                                                    <button class="btn btn-secondary timeselector" style="pointer-events: none; color: #656264;" value="{{time.date_time_requested}}">{{time.humanString}}</button>
+                                                                    <span class="nexnest-font" style="color: #5686c5;">{{time.humanString}}</span>
                                                                 </div>
                                                             {% endfor %}
                                                         </div>
@@ -178,7 +177,7 @@
                                                         </h1></strong>
                                                         <br>
                                                         <h3 class="card-text"><strong>Tour is scheduled for:</strong> <span style="color: #5686c5;">{{tour.confirmedTourTime.humanISOComplaintString}}</span></h3>
-                                                        <br><br>
+                                                        <br>
                                                         <div class="row">
                                                             <div class="col-xs-12 col-md-6 col-lg-4">
                                                                 <a href='#' class="btn btn-red" data-toggle="modal" data-target="#cancelTourModal">Cancel Tour</a>
@@ -191,7 +190,7 @@
                                                     </h1></strong>
                                                     <br>
                                                     Select an available tour time:
-                                                    <br><br>
+                                                    <br>
                                                     <div class="row requestedTimes">
                                                         
                                                     </div>
@@ -228,7 +227,7 @@
                                                     <strong><h1>Tour Status:
                                                         <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Tour Pending</b>" data-placement="top" data-content="Waiting for the group leader to confirm your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                     </h1></strong>
-                                                    <br><br>
+                                                    <br>
                                                     Waiting for this group to select a tour time<br>
                                                     <br>
                                                     <strong>Tour times you suggested:</strong>
@@ -264,9 +263,9 @@
                                                         <button type="button" id="pending" class="btn btn-warning btn-circle pending" data-toggle="popover" title="<b> Request Pending</b>" data-placement="top" data-content="Waiting for the landlord to confirm your requested time or suggest a different one"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
                                                     </h1></strong>
                                                     <br>
-                                                    Waiting for the landlord to confirm your requested time or suggest a different one
+                                                    Waiting for the landlord to respond to your requested time(s)
                                                     <br><br>
-                                                    <strong>Your Group Leader offered these times:</strong>
+                                                    <strong>Requested Tours:</strong>
                                                     <div class="row" style="padding-left: 15px;">
                                                         {% for time in tour.tourTimes %}
                                                             <div class="col-xs-6 col-md-6 col-lg-6" style="padding-top: 10px;">
@@ -283,7 +282,7 @@
                                                     <br>
                                                     Waiting for your group leader to select a tour time
                                                     <br><br>
-                                                    <strong>The Landlord offered these times:</strong>
+                                                    <strong>Available Tours:</strong>
                                                     <div class="row" style="padding-left: 15px;">
                                                         {% for time in tour.tourTimes %}
                                                             <div class="col-xs-6 col-md-6 col-lg-6" style="padding-top: 10px;">
@@ -295,7 +294,6 @@
                                             {% endif %}
                                         {% endif %}
                                     </div>
-                                </div>
                                 </div>
                             </div>
                         </div>
@@ -347,9 +345,9 @@
                         <div class="row">
                             <div class="card" style="width:100%;">
                                 {% if current_user in landlords %}
-                                    <h3 class="card-header" style="font-size: 3.5vh; background-color: #d2d2d2;">Group Message with Tenants:</h3>
+                                    <h3 class="card-header" style="font-size: 3.0vh; background-color: #d2d2d2;">Group Message with Tenants:</h3>
                                 {% else %}
-                                    <h3 class="card-header" style="font-size: 3.5vh; background-color: #d2d2d2;">Group Message with Landlord:</h3>
+                                    <h3 class="card-header" style="font-size: 3.0vh; background-color: #d2d2d2;">Group Message with Landlord:</h3>
                                 {% endif %}
                                 <div class="card-block" style="padding-bottom: 0px;">
                                     <!-- Add new message -->
@@ -386,9 +384,9 @@
             <div class="col-md-5 hidden-md-down" style="overflow-y: auto;">
                 <div class="card" style="width:100%;">
                     {% if current_user in landlords %}
-                        <h3 class="card-header" style="font-size: 3.5vh; background-color: #d2d2d2;">Group Message with Tenants:</h3>
+                        <h3 class="card-header" style="font-size: 3.0vh; background-color: #d2d2d2;">Group Message with Tenants:</h3>
                     {% else %}
-                        <h3 class="card-header" style="font-size: 3.5vh; background-color: #d2d2d2;">Group Message with Landlord:</h3>
+                        <h3 class="card-header" style="font-size: 3.0vh; background-color: #d2d2d2;">Group Message with Landlord:</h3>
                     {% endif %}
                     <div class="card-block" style="padding-bottom: 0px;">
                         <!-- Add new message -->
