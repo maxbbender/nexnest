@@ -120,6 +120,19 @@ def createApp(configName):
 
     import nexnest.admin
 
+    def format_datetime(value, format='human'):
+        if format == 'human':
+            format = '%B %m, %Y at %-I:%-M%p'
+        return value.strftime(format)
+
+    def format_date(value, format='medium'):
+        if format == 'human':
+            format = '%B %m, %Y'
+        return value.strftime(format)
+
+    app.jinja_env.filters['format_datetime'] = format_datetime
+    app.jinja_env.filters['format_date'] = format_date
+
     @app.context_processor
     def override_url_for():
         return dict(url_for=dated_url_for)
