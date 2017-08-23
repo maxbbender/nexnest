@@ -63,9 +63,11 @@
 	        <div class="col-xs-12">
 	            <div class="callout-block text-center fade-in-b" style="background-color: #d2d2d2;">
 	                <h1 style="font-size: 3.0vh">
-	                    <strong>{{ housingRequest.group.name }}</strong> Have requested to live at:
-	                    <br>
-	                    {{ housingRequest.listing.street }}
+                        {{ housingRequest.listing.street }}
+                        <br>
+                        {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}
+                        <br>
+	                    Requested By: {{ housingRequest.group.name }}
 	                </h1>
 	            </div>
                 <div id="numGroupMembers" style="display: none;">{{housingRequest.group.acceptedUsers|count}}</div>
@@ -79,7 +81,9 @@
 				    <div class="tab-pane active" id="statusTab" role="tabpanel" style="padding: 0px;">
 				    	<div class="row">
 				    	    <div class="card" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125); padding-left: 10px;">
-				    	        <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); font-size: 3.5vh; background-color: #d2d2d2;">Request Status</h3>
+				    	        <h3 class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); font-size: 3.5vh; background-color: #d2d2d2;">
+                                    Application Status
+                                </h3>
 				    	        <div class="card-block">
 				    	            <div class="row">
 				    	            	<div class="col-xs-12">
@@ -136,26 +140,6 @@
 						    	                	{% if current_user in landlords %}
 						    	                		<span style="font-size: 2.5vh;">You have accepted <strong>{{ housingRequest.group.name }}</strong> to live at this property. Now you must arrange to collect signed leases from all tenants and security deposits if you require them. After everything has been collected click the "process completed button" to confirm the group for this property.</span>
                                                         <hr>
-                                                        <!-- <div class="row">
-                                                            <div class="col-xs-8">
-                                                                <h3><strong>Leases Collected:</strong></h3>
-                                                            </div>
-                                                            <div class="col-xs-4" style="text-align: right">
-                                                                <a href="#" class="btn btn-primary">Mark Collected</a>
-                                                            </div>
-                                                        </div> -->
-                                                        <!-- {% if not hasLease %}
-                                                            <form method='POST' action="{{url_for('housingRequests.uploadLease')}}" enctype="multipart/form-data">
-                                                                {{leaseUploadForm.csrf_token}}
-                                                                {{leaseUploadForm.lease}}
-                                                                {{leaseUploadForm.groupListingID}}
-                                                                <input type="submit">
-                                                            </form>
-                                                        {% else %}
-                                                            <a href="#">View Lease</a>
-                                                        {% endif %}
-                                                        <br>
-						    	                		<hr> -->
                                                         <div class="row">
                                                             <div class="col-xs-8">
                                                                 <h3 style="font-size: 3.0vh;"><strong>Security Deposits:</strong></h3>
@@ -168,12 +152,10 @@
                                                         {% for deposit in housingRequest.securityDeposits %}                                    
                                                             <div class="row">
                                                                 <div class="col-xs-10">
-                                                                    <a href="{{ url_for('users.viewUser', userID=deposit.user.id) }}">
-                                                                        <h4>
-                                                                            <img src="{{deposit.user.profile_image}}" alt="Profile Image" class="img-responsive" style="height: 50px; width: 50px;" />
-                                                                            <span style="font-size: 2.5vh;">{{ deposit.user.fname }} {{ deposit.user.lname }}</span>
-                                                                        </h4>
-                                                                    </a>
+                                                                    <h4>
+                                                                        <img src="{{deposit.user.profile_image}}" alt="Profile Image" class="img-responsive" style="height: 50px; width: 50px;" />
+                                                                        <span style="font-size: 2.5vh;">{{ deposit.user.fname }} {{ deposit.user.lname }}</span>
+                                                                    </h4>
                                                                 </div>
                                                                 <div class="col-xs-2" style="text-align: right">
                                                                     {% if deposit.completed %}
@@ -195,16 +177,63 @@
 						    	                		<span>You and the landlord must make arrangements to sign leases and pay your security deposits if they are required. After that has happened the landlord will confirm the listing and you will have this listing for {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}. </span>
 						    	                	{% endif %}
 						    	                {% else %}
-						    	                	<strong style="padding-right: 5px;">Application: </strong>
-						    	                	<button type="button" id="pending" class="btn btn-warning btn-circle pending"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+						    	                	<h3 style="padding-right: 5px;">
+                                                        Group Accepted:
+                                                        <div class="customTooltip">
+                                                            <button type="button" id="pending" class="btn btn-warning btn-circle pending" style="pointer-events: none;"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></button>
+                                                            <span class="customTooltiptext">Not yet accepted</span>
+                                                        </div>    						    	                	
+                                                    </h3>
 						    	                	<br>
 						    	                	{% if current_user in landlords %}
-						    	                		<span>If you have decided you want this group to live in this listing for {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}, please click the accept this listing button. The next step will be having the tenants sign leases and pay thier security deposits.</span>
-						    	                		<br><br>
+						    	                		<span style="font-size: 20px;">If you would like to confirm this group({{ housingRequest.group.name }}) to occupy {{ housingRequest.listing.street }} for {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}, click the Accept Group button below. 
+                                                        <br><br>
+                                                        If you have not yet determined if you would like to accept this group, you can choose to leave this request pending or group message with tenants to get more information about this group.
+                                                        <br><br>
+                                                        Note: Once you have accepted a group for this listing, all other requests will be marked as declined and removed from your listing requests.</span>
+						    	                		<br><br><br>
+                                                        <h3>Accepting a Group: </h3>
+                                                        <span style="font-size: 20px;">
+                                                            <span style="padding-left: 15px;">
+                                                                1. Click "Accept Group"
+                                                            </span>
+                                                            <br>
+                                                            <span style="padding-left: 15px;">
+                                                                2. Collect signed leases and security deposits for this listing
+                                                                <br>
+                                                                <span style="padding-left: 37px;">
+                                                                and mark confirmed for all tenants
+                                                                </span>
+                                                            </span>
+                                                            <br>
+                                                            <span style="padding-left: 15px;">
+                                                                3. Confirm Group to finalize application
+                                                            </span>
+                                                            <br>
+                                                            <span style="padding-left: 15px;">
+                                                                4. Group will be added to this property for {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}
+                                                            <span style="padding-left: 15px;">
+                                                        </span>
+                                                        <br><br>
 						    	                		<a href='#' class="btn btn-blue" data-toggle="modal" data-target="#acceptGroupModal">Accept Group</a>
 	                                                    <a href='#' class="btn btn-red" data-toggle="modal" data-target="#declineGroupModal">Decline</a>
 						    	                	{% else %}
-						    	                		<span>Waiting for the landlord to either accept or decline your request. If he accepts the next step will have all members of your group signing leases and paying your security deposits.</span>
+						    	                		<span style="font-size: 20px;">Waiting for the landlord to review your request</span>
+                                                        <br><br>
+                                                        <h3>After Accepted: </h3>
+                                                        <span style="font-size: 20px;">
+                                                            <span style="padding-left: 15px;">
+                                                                1. Sign leases and pay security deposits
+                                                            </span>
+                                                            <br>
+                                                            <span style="padding-left: 15px;">
+                                                                2. Landlord will confirm these have been recieved
+                                                            </span>
+                                                            <br>
+                                                            <span style="padding-left: 15px;">
+                                                                3. Your group will be added to this property for {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}
+                                                            <span style="padding-left: 15px;">
+                                                        </span>
 						    	                	{% endif %}
 						    	                {% endif %}
 						    	            {% endif %}
