@@ -60,3 +60,6 @@ test_setup:
 
 shell:
 	python manage.py shell
+
+freeze:
+	pip freeze > requirements.txt

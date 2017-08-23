@@ -329,8 +329,8 @@ class User(Base):
 
     # Icon , Message , Title
     def sendEmail(self, emailType, message):
-        current_app.logger.debug('User.sendEmail()')
-        current_app.logger.debug('EmailType %s' % emailType)
+        app.logger.debug('User.sendEmail()')
+        app.logger.debug('EmailType %s' % emailType)
         icon, title, subject = None, None, None
 
         if emailType == 'tourRequest':

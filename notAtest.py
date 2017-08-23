@@ -39,10 +39,17 @@ with app.app_context():
     # tour = tour.Tour.query.filter_by(id=5).first()
     # maintenancess = maintenance.Maintenance.query.first()
 
+    directMessage = notification.Notification.query.filter_by(user=landlordUser, category='direct_message')
 
-    directMessage = notification.Notification.query.filter_by(user=landlordUser, category='direct_message').all()
+    genericMessage = notification.Notification.query.filter_by(user=landlordUser, category='generic_message')
 
-    genericMessage = notification.Notification.query.filter_by(user=landlordUser, category='generic_message').all()
+    print('directMessage ', directMessage.all())
+    print('generic ', genericMessage.all())
 
-    print(directMessage)
-    print(genericMessage)
+    print('Distinct')
+
+    directMessage = directMessage.distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed)
+    genericMessage = genericMessage.distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed)
+
+    print('directMessage ', directMessage.all())
+    print('generic ', genericMessage.all())
