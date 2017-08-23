@@ -125,7 +125,7 @@ def createApp(configName):
             format = '%B %m, %Y at %-I:%-M%p'
         return value.strftime(format)
 
-    def format_date(value, format='medium'):
+    def format_date(value, format='human'):
         if format == 'human':
             format = '%B %m, %Y'
         return value.strftime(format)
