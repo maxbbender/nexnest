@@ -314,11 +314,29 @@ class User(Base):
         return returnList
 
     def getUnreadMessageNotificationCount(self):
-        return self.notifications \
-            .filter(Notification.viewed == False) \
-            .filter(Notification.category.in_(('direct_message', 'generic_message'))) \
-            .distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed) \
-            .count()
+        directMessage = Notification.query.filter_by(user=self, category='direct_message', viewed=False)
+
+        genericMessage = Notification.query.filter_by(user=self, category='generic_message', viewed=False)
+
+        print('directMessage ', directMessage.all())
+        print('generic ', genericMessage.all())
+
+        print('Distinct')
+
+        directMessage = directMessage.distinct(Notification.notif_type, Notification.target_model_id)
+        genericMessage = genericMessage.distinct(Notification.notif_type, Notification.redirect_url)
+
+        print('directMessage ', directMessage.all())
+        print('generic ', genericMessage.all())
+
+        compiledMessages = []
+        allDirect = directMessage.all()
+        allGeneric = genericMessage.all()
+
+        compiledMessages.extend(allDirect)
+        compiledMessages.extend(allGeneric)
+
+        return len(compiledMessages)
 
     def getUnreadNotificationCount(self):
         return self.notifications \

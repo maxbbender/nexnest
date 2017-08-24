@@ -5,6 +5,7 @@ from flask import current_app as app
 from nexnest import db
 from nexnest.models.base import Base
 from nexnest.models.message import Message
+
 from sqlalchemy import event
 
 session = db.session
@@ -76,6 +77,7 @@ class Notification(Base):
 
     @property
     def serialize(self):
+        from nexnest.models.direct_message import DirectMessage
         dictToReturn = {
             'id': self.id,
             'targetUser': self.user.serialize,
@@ -87,7 +89,10 @@ class Notification(Base):
             'date': self.date_created.strftime('%B-%d-%y')
         }
 
-        if self.category in ['direct_message', 'generic_message']:
+        if self.category == 'direct_message':
+            dm = DirectMessage.query.filter_by(target_user_id=self.target_user_id, user_id=self.target_model_id).first()
+            dictToReturn['messageObject'] = dm.serialize
+        if self.category == 'generic_message':
             dictToReturn['messageObject'] = Message.query.filter_by(
                 id=self.target_model_id).first().serialize
 
@@ -104,6 +109,12 @@ class Notification(Base):
     @property
     def redirectURL(self):
         return self.redirect_url
+
+    @property
+    def targetUser(self):
+        from nexnest.models.user import User
+        if self.notif_type == 'direct_message':
+            return User.query.filter_by(id=self.target_model_id).first()
 
     def isViewableBy(self):
         return True
@@ -204,7 +215,7 @@ class Notification(Base):
                 message = "%s has posted a new message in %s's Tour Request" % \
                     (returnObject.user.name, returnObject.tour.group.name)
 
-                redirectURL = '/tour/view/%d' % returnObject.id
+                redirectURL = '/tour/view/%d' % returnObject.tour.id
 
                 return message, returnObject, redirectURL
 

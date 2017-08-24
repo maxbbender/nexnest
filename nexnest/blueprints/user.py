@@ -672,46 +672,62 @@ def getNotifications(page=1):
 @users.route('/user/getMessageNotifications/<int:page>', methods=['GET', 'POST'])
 @login_required
 def getMessageNotifications(page=1):
+    from math import ceil
     app.logger.debug("/user/getMessageNotifications page : %d" % page)
 
-    # First lets get the generic messages
-    genericMessageNotif = Notification.query \
-        .filter_by(target_user_id=current_user.id, category='generic_mesage')
+    startNumber = None
 
-    app.logger.debug('filter_by ', pformat(genericMessageNotif.all()))
+    if page == 1:
+        startNumber = 0
+        endNumber = 10
+    else:
+        startNumber = (page*10) - 10
+        endNumber = (page*10)
 
-    # Distinct Filters
-    genericMessageNotif = genericMessageNotif.distinct(Notification.notif_type,
-                                                       Notification.redirect_url,
-                                                       Notification.viewed)
+    directMessage = Notification.query.filter_by(user=current_user, category='direct_message')
 
-    app.logger.debug('distinct ', pformat(genericMessageNotif.all()))
+    genericMessage = Notification.query.filter_by(user=current_user, category='generic_message')
+
+    print('directMessage ', directMessage.all())
+    print('generic ', genericMessage.all())
+
+    print('Distinct')
+
+    directMessage = directMessage.distinct(Notification.notif_type, Notification.viewed, Notification.target_model_id)
+    genericMessage = genericMessage.distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed)
+
+    print('directMessage ', directMessage.all())
+    print('generic ', genericMessage.all())
+
+    compiledMessages = []
+    allDirect = directMessage.all()
+    allGeneric = genericMessage.all()
+    
+    compiledMessages.extend(allDirect)
+    compiledMessages.extend(allGeneric)
+
+    print('compiledMessages : \n %s' % pformat(compiledMessages))
+
+    sortedCompiled = sorted(compiledMessages, key=lambda n: n.date_created, reverse=True)
+
+    print('sortedCompiled : \n %s' % pformat(sortedCompiled))
+
+    serializedReturn = []
 
 
-    allNotifications = Notification.query \
-        .filter_by(target_user_id=current_user.id) \
-        .filter(Notification.category.in_(('direct_message', 'generic_message'))) \
-        .distinct(Notification.notif_type,
-                  Notification.redirect_url,
-                  Notification.viewed) \
-        .paginate(page, 10, False)
-
-    app.logger.debug("allNotifications : %r" % allNotifications.items)
-
-    allNotificationList = []
-
-    for notif in allNotifications.items:
-        allNotificationList.append(notif.serialize)
+    while startNumber < endNumber and startNumber < len(sortedCompiled):
+        serializedReturn.append(sortedCompiled[startNumber].serialize)
+        startNumber += 1
 
     numUnviewed = current_user.getUnreadMessageNotificationCount()
 
     returnDict = {'numUnviewed': numUnviewed,
-                  'notifications': allNotificationList}
+                  'notifications': serializedReturn}
 
     paginateDict = {
-        'hasNext': allNotifications.has_next,
-        'hasPrev': allNotifications.has_prev,
-        'numPages': allNotifications.pages
+        'hasNext': (endNumber < len(compiledMessages)),
+        'hasPrev': (endNumber-10) > 0,
+        'numPages': int((len(compiledMessages) / 10)) + 1
     }
 
     returnDict['paginateDetails'] = paginateDict

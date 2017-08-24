@@ -13,7 +13,7 @@ import re
 import datetime
 import googlemaps
 
-from pprint import pprint
+from pprint import pprint, pformat
 from nexnest.utils.school import allSchoolsAsStrings
 import googlemaps
 from apiclient.discovery import build
@@ -48,8 +48,28 @@ with app.app_context():
 
     print('Distinct')
 
-    directMessage = directMessage.distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed)
+    directMessage = directMessage.distinct(Notification.notif_type, Notification.viewed, Notification.target_model_id)
     genericMessage = genericMessage.distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed)
 
     print('directMessage ', directMessage.all())
     print('generic ', genericMessage.all())
+
+    print('Order by')
+
+    # directMessage = directMessage.order_by(asc(Notification.date_created), asc(Notification.notif_type))
+
+    print('directMessage ', directMessage.all())
+    print('generic ', genericMessage.all())
+
+    compiledMessages = []
+    allDirect = directMessage.all()
+    allGeneric = genericMessage.all()
+    
+    compiledMessages.extend(allDirect)
+    compiledMessages.extend(allGeneric)
+
+    print('compiledMessages : \n %s' % pformat(compiledMessages))
+
+    sortedCompiled = sorted(compiledMessages, key=lambda n: n.date_created, reverse=True)
+
+    print('sortedCompiled : \n %s' % pformat(sortedCompiled))
