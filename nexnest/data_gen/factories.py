@@ -37,7 +37,7 @@ class UserFactory(factory.alchemy.SQLAlchemyModelFactory):
         model = user.User
         sqlalchemy_session = session
 
-    email = factory.Sequence(lambda x: u'fake%d@fake.com' % x)
+    email = factory.Sequence(lambda x: u'fake%d@fake.com' % (x + 1))
     password = 'domislove'
     fname = factory.LazyAttribute(lambda x: fake.first_name())
     lname = factory.LazyAttribute(lambda x: fake.last_name())

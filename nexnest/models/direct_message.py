@@ -35,6 +35,12 @@ class DirectMessage(Message):
         return '<DirectMessage ~ Source %r | Target %r | Message %r>' % \
             (self.user_id, self.target_user_id, self.message_id)
 
+    @property
+    def serialize(self):
+        returnDict = super().serialize
+        returnDict['targetUser'] = self.target_user.serialize
+        return returnDict
+
     def genNotifications(self):
         print(self.target_user)
         print(self.target_user.notificationPreference.direct_message_notification)

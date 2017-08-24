@@ -146,6 +146,7 @@ def createApp(configName):
                 values['q'] = int(os.stat(file_path).st_mtime)
         return url_for(endpoint, **values)
 
+
     return app
 
 
