@@ -894,8 +894,8 @@ button.link {
 .myMessage:after {
   content: "\25BC";
   position:relative;
-  top:34px;
-  left:95%;
+  top:10px;
+  float: right;
   font-size:39px;
   line-height:14px;
   color: #5686c5;
@@ -904,13 +904,13 @@ button.link {
 .otherUserMessage{
   margin-bottom: 30px;
   border-width: medium;
-  border-color: #f9c76a;
+  border-color: #f4c359;
 }
 .otherUserMessage:after {
   content: "\25BC";
   position:relative;
-  top:34px;
-  left:-5px;
+  top:10px;
+  float: left;
   font-size:39px;
   line-height:14px;
   color:#f9c76a;

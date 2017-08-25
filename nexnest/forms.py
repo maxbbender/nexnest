@@ -320,8 +320,8 @@ class EmailPreferencesForm(RedirectForm):
 
 class ReportForm(RedirectForm):
     title = StringField('Subject of Report', validators=[Optional()])
-    content = TextAreaField('Describe what went wrong or the feedback you have!', validators=[InputRequired()])
-    sourceURL = StringField('The URL of where you had your issue if any', validators=[Optional()])
+    content = TextAreaField('Describe what went wrong or any feedback you have!', validators=[InputRequired()])
+    sourceURL = StringField('The URL of where you found an issue, if any', validators=[Optional()])
 
 
 class PlatformReportForm(ReportForm):

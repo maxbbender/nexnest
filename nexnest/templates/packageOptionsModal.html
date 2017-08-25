@@ -1,16 +1,23 @@
 <!--Package Options Modal-->
 <div class="modal fade" id="packageDescriptionModal" tabindex="-1" role="dialog" aria-labelledby="packageDescriptionModal" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content" style="width: 180%; margin-left: -40%;">
-            <div class="modal-header">
+        <div class="modal-content nexnest-font" style="width: 180%; margin-left: -40%; color: #656264;">
+            <div class="modal-header" style="background-color: #656264;">                
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title"></h4>
+                <h1 class="modal-title" style="color: #fff;">Pricing & Packages</h1>
             </div>
             <div class="modal-body" style="text-align: center;">
-                <img src="../static/img/pricingPackage.png" style="width: 100%;">
+                <img src="/static/img/pricingPackage.png" style="width: 100%;">
             </div>
+            {% if current_user %}
+                {% if current_user.isLandlord %}
+                    <div class="modal-footer">                
+                        <a class="btn btn-light-green pull-right" href="{{url_for('listings.createListing')}}" style="font-size: 31px;"><i class="fa fa-plus" aria-hidden="true"></i> Create Listing Now!</a>
+                    </div>
+                {% endif %}
+            {% endif %}
         </div>
     </div>
 </div>

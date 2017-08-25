@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 <br>
-<div class="row m-x-auto">
+<div class="row m-x-auto nexnest-font" style="color: #656264; font-size: 20px;">
     <div class="col-xs-0 col-lg-2">
     </div>
     <div class="col-xs-12 col-lg-8" style="padding-bottom: 15px;">
-        <h1 style="color: #fea700;"><strong>Direct Messages with {{targetUser.name}}</strong></h1>
+        <h1 style="color: #4fac80;"><strong>Direct Messages with {{targetUser.name}}</strong></h1>
         <br>
         <div class="form-group">
             <form action="{{url_for('users.createDirectMessage')}}" method="POST">
@@ -16,7 +16,7 @@
             </div>
             <div class="row" style="padding-top: 10px; text-align:-webkit-right;">
                 <div class="col-xs-12">
-                    <input class="btn btn-primary" type="submit" value="Send Message">
+                    <input class="btn btn-blue" type="submit" value="Send Message">
                 </div>                                    
             </div>
         </div>

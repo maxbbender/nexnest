@@ -51,11 +51,7 @@
 					<h1 class="nexnest-font" style="color: #52ab81; font-size: 50px;" style="color: white;">Support</h1>
 					<br>
 					<h3 class="nexnest-font"><a href="{{url_for('indexs.faq')}}" style="color: white;">FAQ</a></h3>
-					{% if current_user.is_authenticated %}
-						{% if current_user.isLandlord %}
-							<h3 class="nexnest-font"><a href="#" style="color: white;">Pricing</a></h3>
-						{% endif %}
-					{% endif %}
+					<h3 class="nexnest-font"><a href="#" data-toggle="modal" data-target="#packageDescriptionModal" style="color: white;">Pricing</a></h3>
 					<h3 class="nexnest-font"><a href="#" data-toggle="modal" data-target="#platformReportModal" style="color: white;">Report Issue</a></h3>
 					<div class="row" style="padding-top: 15px;">
 						<div class="col-xs-12">

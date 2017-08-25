@@ -10,8 +10,8 @@
         <link rel="stylesheet" href="{{url_for('static', filename='css/rangeslider.css')}}">
         <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap-slider.css')}}">
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-	    <link href="{{url_for('static', filename='css/bootstrap-flex.css')}}" rel="stylesheet">
-	    <link href="{{url_for('static', filename='css/customStyling.css')}}" rel="stylesheet">
+	    <link href="{{url_for('static', filename='css/bootstrap-flex2.css')}}" rel="stylesheet">
+	    <link href="{{url_for('static', filename='css/customStyling6.css')}}" rel="stylesheet">
 	    <link rel="stylesheet" href="{{url_for('static', filename='font-awesome-4.7.0/css/font-awesome.min.css')}}">
         <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap-notifications2.css')}}">
         <link rel="stylesheet" href="{{url_for('static', filename='css/magnific-popup.css')}}">
@@ -210,6 +210,7 @@
             {% include 'loginModel.html' %}
         {% endif %}
         {% include 'platformReportModal.html' %}
+        {% include 'packageOptionsModal.html' %}
         {% include 'createDirectMessageModal.html' %}
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
         {% block scripts %}

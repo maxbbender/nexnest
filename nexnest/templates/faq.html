@@ -1,30 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
 <br>
-<div class="row">
+<div class="row nexnest-font" style="color: #656264; font-size: 20px;">
 	<div class="hidden-sm-down col-md-4 col-lg-3 col-xl-2 faqVR">
-		<h1 class="faqHeading">Navigate</h1>
+		<h1 class="faqHeading" style="padding-left: 30px;">Navigate</h1>
+		<a href="{{url_for('indexs.aboutUs')}}" class="faqNav"><h3 style="padding-left: 30px;"><strong>About Us</strong></h3></a>
+		<a href="#" class="faqNav"><h3 style="padding-left: 30px;"><strong>Contact Us</strong></h3></a>
 		<hr class="faqHR">
-		<a href="{{url_for('indexs.aboutUs')}}" class="faqNav"><h3><strong>About Us</strong></h3></a>
-		<a href="#" class="faqNav"><h3><strong>Contact Us</strong></h3></a>
-		<br>
-		<h1 class="faqHeading">Help</h1>
-		<hr class="faqHR">
-		<a href="{{url_for('indexs.faq')}}" class="faqNav"><h3><strong>FAQ</strong></h3></a>
-		<a href="{{url_for('indexs.termsConditions')}}" class="faqNav"><h3><strong>Terms of Use</strong></h3></a>
-		<a href="{{url_for('indexs.privacyPolicy')}}" class="faqNav"><h3><strong>Privacy Policy</strong></h3></a>
-		<a href="#" class="faqNav" data-toggle="modal" data-target="#platformReportModal"><h3><strong>Report Issue</strong></h3></a>
+		<h1 class="faqHeading" style="padding-left: 30px;">Help</h1>
+		<a href="{{url_for('indexs.faq')}}" class="faqNav"><h3 style="padding-left: 30px;"><strong>FAQ</strong></h3></a>
+		<a href="{{url_for('indexs.termsConditions')}}" class="faqNav"><h3 style="padding-left: 30px;"><strong>Terms of Use</strong></h3></a>
+		<a href="{{url_for('indexs.privacyPolicy')}}" class="faqNav"><h3 style="padding-left: 30px;"><strong>Privacy Policy</strong></h3></a>
+		<a href="#" class="faqNav" data-toggle="modal" data-target="#platformReportModal"><h3 style="padding-left: 30px;"><strong>Report Issue</strong></h3></a>
 	</div>
-	<div class="col-xs-12 col-xs-12 col-md-8 col-lg-9 col-xl-10">
+	<div class="col-xs-12 col-xs-12 col-md-8 col-lg-9 col-xl-10" style="padding-top: 45px;">
 		<div class="card" style="border: none;">
-			<div class="card-header">
+			<div class="card-header" style="background-color: #d2d2d2;">
 				<h1 class="faqHeading"><i class="fa fa-question-circle" aria-hidden="true"></i> Frequently Asked Questions</h1>
 			</div>
 			<div class="card-block">
 				<div class="question">
 					<strong class="questionHeading">What is nexnest.com? </strong>
 					<div class="answer" style="display: none;">
-						Nexnest.com is a Limited Liability Company (LLC) that allows college students to find rentals online through our quality internet listing service.
+						Nexnest.com is a platform that allows college students to find rentals online through our quality internet listing service.
 					</div>
 					<hr>
 				</div>
@@ -33,11 +31,6 @@
 					<strong class="questionHeading">Is it free? </strong>
 					<div class="answer" style="display: none;">
 						Yes, it is 100% free to search and use our services for renters! We charge landlords and property managers a flat fee to post per rental unit.
-						{% if current_user %}
-							{% if current_user.isLandlord %}
-								Click here to see full details on our <a href="#!" data-toggle="modal" data-target="#packageDescriptionModal">Pricing and Packages.</a>
-							{% endif %}
-						{% endif %}
 					</div>
 					<hr>
 				</div>
@@ -61,13 +54,17 @@
 					<hr>
 				</div>
 
-				<div class="question">
-					<strong class="questionHeading">How does the pricing work? </strong>
-					<div class="answer" style="display: none;">
-						Each package is priced as a one-time fee per unit, per lease term.
-					</div>
-					<hr>
-				</div>
+				{% if current_user %}
+					{% if current_user.isLandlord %}
+						<div class="question">
+							<strong class="questionHeading">How does the pricing work? </strong>
+							<div class="answer" style="display: none;">
+								Each package is priced as a one-time fee per unit, per lease term. Click here to see full details on our <a href="#!" data-toggle="modal" data-target="#packageDescriptionModal">Pricing and Packages.</a>
+							</div>
+							<hr>
+						</div>
+					{% endif %}
+				{% endif %}
 
 				<div class="question">
 					<strong class="questionHeading">Why choose nexnest? </strong>
@@ -76,15 +73,6 @@
 					</div>
 					<hr>
 				</div>
-
-				<div class="question">
-					<strong class="questionHeading">How do I apply for a rental? </strong>
-					<div class="answer" style="display: none;">
-						You can apply for a rental by first, <a href="{{url_for('users.register')}}">creating an account</a>. Next, <a href="{{url_for('users.myGroups')}}">create a group</a> and invite your desired roommates to join! After that, simply click <strong>“Request this Listing”</strong> on a listing page and wait for the property owner to review your request. To see your pending and accepted requests, go to that groups page and click on "Listing Requests". 
-					</div>
-					<hr>
-				</div>
-				
 
 				<div class="question">
 					<strong class="questionHeading">How do I sign up? </strong>
@@ -106,6 +94,22 @@
 					<strong class="questionHeading">How do I schedule a tour? </strong>
 					<div class="answer" style="display: none;">
 						You can schedule a tour by clicking on “Schedule Tour” on any listing page. Select a time from the available timeframes shown and submit your tour request. You will be notified when the tour has been scheduled.
+					</div>
+					<hr>
+				</div>
+
+				<div class="question">
+					<strong class="questionHeading">How do I apply for a rental? </strong>
+					<div class="answer" style="display: none;">
+						You can apply for a rental by first, <a href="{{url_for('users.register')}}">creating an account</a>. Next, 
+						{% if current_user %}
+							{% if not current_user.isLandlord %}
+								<a href="{{url_for('users.myGroups')}}">create a group</a>
+							{% else %}
+								create a group
+							{% endif %}
+						{% endif %}
+						and invite your desired roommates to join! After that, simply click <strong>“Request this Listing”</strong> on a listing page and wait for the property owner to review your request. To see your pending and accepted requests, go to that groups page and click on "Listing Requests". 
 					</div>
 					<hr>
 				</div>
