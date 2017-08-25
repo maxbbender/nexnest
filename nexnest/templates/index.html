@@ -724,11 +724,11 @@
 				nextListing += `</a>`;
 				if(listing.isFavorited == false){
 					nextListing += `<div style="position: relative; width: 0; height: 0">
-					<i id="listingFavoite_`+listing.id+`" class="fa fa-2x fa-heart-o listingFavorite" aria-hidden="true" style="color: #f16e5b; left: 5px; bottom: 215px; position: absolute;"></i>
+					<i id="listingFavoite_`+listing.id+`" class="fa fa-2x fa-heart-o listingFavorite" aria-hidden="true" style="color: #f16e5b; left: 5px; bottom: 255px; position: absolute;"></i>
 					</div>`;
 				}else{
 					nextListing += `<div style="position: relative; width: 0; height: 0">
-					<i id="listingFavoite_`+listing.id+`" class="fa fa-2x fa-heart listingFavorite" aria-hidden="true" style="color: #f16e5b; left: 5px; bottom: 215px; position: absolute;"></i>
+					<i id="listingFavoite_`+listing.id+`" class="fa fa-2x fa-heart listingFavorite" aria-hidden="true" style="color: #f16e5b; left: 5px; bottom: 255px; position: absolute;"></i>
 					</div>`;
 				}
 				nextListing += `<div class="card-block" style="background-color: #52ab81; color: white; padding-bottom: 0px;">
@@ -775,11 +775,11 @@
 				nextListing += `</a>`;
 				if(listing.isFavorited == false){
 					nextListing += `<div style="position: relative; width: 0; height: 0">
-					<i id="listingFavoite_`+listing.id+`" class="fa fa-2x fa-heart-o listingFavorite" aria-hidden="true" style="color: #f16e5b; left: 5px; bottom: 215px; position: absolute;"></i>
+					<i id="listingFavoite_`+listing.id+`" class="fa fa-2x fa-heart-o listingFavorite" aria-hidden="true" style="color: #f16e5b; left: 5px; bottom: 255px; position: absolute;"></i>
 					</div>`;
 				}else{
 					nextListing += `<div style="position: relative; width: 0; height: 0">
-					<i id="listingFavoite_`+listing.id+`" class="fa fa-2x fa-heart listingFavorite" aria-hidden="true" style="color: #f16e5b; left: 5px; bottom: 215px; position: absolute;"></i>
+					<i id="listingFavoite_`+listing.id+`" class="fa fa-2x fa-heart listingFavorite" aria-hidden="true" style="color: #f16e5b; left: 5px; bottom: 255px; position: absolute;"></i>
 					</div>`;
 				}
 				nextListing += `<div class="card-block" style="padding-bottom: 0px; background-color: #d2d2d2; color: #656264;">
@@ -887,15 +887,15 @@
 	    	    type: "POST",
 	    	    url: "/user/unFavoriteListing/"+id,
 	    	    success: function(data){	    	    	
-	    	    	$("#listingFavoite_"+id).removeClass("fa-star");
-	    		$("#listingFavoite_"+id).addClass("fa-star-o");
+	    	    	$("#listingFavoite_"+id).removeClass("fa-heart");
+	    		$("#listingFavoite_"+id).addClass("fa-heart-o");
 	    	    },
 	    	    failure: function(errMsg) {
 	    	        alert(errMsg);
 	    	    }
     		});
   		}
-  		else if($(this).hasClass("fa-star-o")){
+  		else if($(this).hasClass("fa-heart-o")){
   			console.log("fav");
   			console.log($(this));
   			console.log(id);
@@ -903,8 +903,8 @@
 	    	    type: "POST",
 	    	    url: "/user/favoriteListing/"+id,
 	    	    success: function(data){
-	    	    	$("#listingFavoite_"+id).removeClass("fa-star-o");
-	    			$("#listingFavoite_"+id).addClass("fa-star");
+	    	    	$("#listingFavoite_"+id).removeClass("fa-heart-o");
+	    			$("#listingFavoite_"+id).addClass("fa-heart");
 	    	    },
 	    	    failure: function(errMsg) {
 	    	        alert(errMsg);

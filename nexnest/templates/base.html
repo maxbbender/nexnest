@@ -18,7 +18,7 @@
         <link rel="stylesheet" href="{{url_for('static', filename='css/magicsuggest-min.css')}}">
         <link rel="stylesheet" href="{{url_for('static', filename='css/fileinput.css')}}">
         <link rel="stylesheet" href="{{url_for('static', filename='css/fontStyling.css')}}">
-        <link rel="stylesheet" href="{{url_for('static', filename='css/buttonStyling.css')}}">
+        <link rel="stylesheet" href="{{url_for('static', filename='css/buttonStyling4.css')}}">
         <link rel="stylesheet" href="{{url_for('static', filename='css/dayScheduler.css')}}">
         <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Amaranth" />
         <script src="{{url_for('static', filename='js/flatpickr.js')}}"></script>        
@@ -380,7 +380,6 @@
             $('#passwordChangeModal').on('show.bs.modal', function (event) {
               var button = $(event.relatedTarget);
               var modal = $(this);
-              modal.find('.modal-title').text('Change Password');
             });
             //Avatar Change Modal
             $('#changeAvatarModal').on('show.bs.modal', function (event) {

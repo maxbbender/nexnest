@@ -7,7 +7,7 @@
         <div class="col-xs-10">
             <div class="callout-block text-center fade-in-b" style="background-color: #d2d2d2;">
                 <h2 style="font-size: 3.5vh; color: #656264;">
-                    <b>Maintenance Issue at {{ house.listing.street }}, {{ house.listing.city }} {{ house.listing.state }} {{ house.listing.zip_code }}</b>
+                    <b>Maintenance Request at {{ house.listing.street }}, {{ house.listing.city }} {{ house.listing.state }} {{ house.listing.zip_code }}</b>
                 </h2>
             </div>
         </div>
@@ -21,36 +21,55 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="card" style="width:100%;">
-                        <h3 class="card-header" style="background-color: #d2d2d2;">Maintenance Request</h3>
-                        <div class="card-block" style="font-size: 20px;">
+                        <h3 class="card-header" style="background-color: #d2d2d2;">
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <p class="card-text"><strong>Issue Reported on:</strong> {{ maintenanceRequest.date_created|format_datetime }}</p>
-                                    <p class="card-text"><strong>Reported by:</strong> {{ maintenanceRequest.user.fname }} {{ maintenanceRequest.user.lname }}</p>
-                                    <strong>Status: </strong>
+                                    Maintenance Request
+                                </div>
+                            </div>
+                        </h3>
+                        <div class="card-block" style="font-size: 20px;">
+                            <div class="row">
+                                <div class="col-xl-7 col-lg-12 col-xs-12">
+                                    <strong><h3 style="font-size: 3.0vh">Type: <span style="text-transform: capitalize;">{{ maintenanceRequest.request_type }}</span></h3></strong>
+                                </div>
+                                <div class="col-xl-5 col-lg-12 col-xs-12" style="text-align: right; align-self: center;">
                                     {% if maintenanceRequest.status == 'open' %}
-                                    	<button class="btn btn-info" style="pointer-events:none">Open </button>
+                                        <span style="font-size: 2.5vh; color: #5686c5;"><i class="icon icon-issue-opened" style="padding-right: 5px;"></i>New Request </span>
                                     {% elif maintenanceRequest.status == 'inprogress' %}
-                                    	<button class="btn btn-warning" style="pointer-events:none"><i class="fa fa-ellipsis-h" aria-hidden="true"></i> In Progress</button>
+                                        <span style="font-size: 2.5vh; color: #f4c359;">
+                                            <i class="icon icon-dots-three-horizontal"></i>
+                                        <!-- <span class="icon-stack" style="font-size: 16px;">
+                                            <i class="icon icon-circle-with-plus icon-stack-2x"></i>
+                                            <i class="icon icon-dots-horizontal icon-stack-1x"></i>
+                                        </span> -->
+                                        <span style="margin-top: -1px;">In Progress</span></span>
                                     {% else %}
-                                    	<button class="btn btn-success" style="pointer-events:none"><i class="fa fa-check" aria-hidden="true"></i> Completed</button>
+                                        <span style="font-size: 2.5vh; color: #4fac80;"><i class="icon icon-check-circle" style="padding-right: 5px;"></i>Completed </span>
                                     {% endif %}
+                                </div>
+                            </div>
+                            <div class="row" style="padding-top: 10px;">
+                                <div class="col-xs-12">
+                                    <strong>Date Submitted:</strong> {{ maintenanceRequest.date_created|format_datetime }}
+                                    <br>
+                                    <strong>Requested By:</strong> {{ maintenanceRequest.user.fname }} {{ maintenanceRequest.user.lname }}
                                     <br><br>
                                     <strong>Details:</strong>
                                     {{ maintenanceRequest.details }}
                                     <br><br>
                                     {% if current_user in landlords %}
                                         {% if not maintenanceRequest.status == 'completed' %}
-                                            <strong>Change status of maintenance request to:</strong>
+                                            <strong>Change status:</strong>
                                             <br><br>
                                         {% endif %}
                                     	{% if maintenanceRequest.status == 'open' %}
                                             <div class="row">
                                                 <div class="col-xs-12 col-md-6" style="padding-bottom: 5px;">
-                                    		        <button class="btn btn-warning" data-toggle="modal" data-target="#markInProgressModal"><i class="fa fa-ellipsis-h" aria-hidden="true"></i> Work In Progress</button>
+                                    		        <button class="btn btn-yellow" data-toggle="modal" data-target="#markInProgressModal"><i class="fa fa-ellipsis-h" aria-hidden="true"></i> Work In Progress</button>
                                                 </div>
                                                 <div class="col-xs-12 col-md-6">
-                                    		        <button class="btn btn-success" data-toggle="modal" data-target="#markCompletedModal"><i class="fa fa-check" aria-hidden="true"></i> Work Completed</button>
+                                    		        <button class="btn btn-light-green" data-toggle="modal" data-target="#markCompletedModal"><i class="fa fa-check" aria-hidden="true"></i> Work Completed</button>
                                                 </div>
                                             </div>
                                     	{% elif maintenanceRequest.status == 'inprogress' %}
@@ -94,7 +113,7 @@
                     <!-- Messages -->
                     {% if messages |length == 0 %}
                         <div class="alert alert-light-blue" role="alert">
-                          <strong>No messages et! </strong>Be the first one
+                          <strong>No messages yet! </strong>Be the first one
                         </div>
                     {% else %}
                         {% for message in messages %}
@@ -119,12 +138,12 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-xs-12">
-                            <p class="card-text">Has work begun on this maintenance request?</p>
+                            <p class="card-text">Change maintenance request status to:</p>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="{{ url_for('houses.maintenanceRequestInProgress', id=maintenanceRequest.id) }}" class="btn btn-blue">Mark In Progress</a>
+                    <a href="{{ url_for('houses.maintenanceRequestInProgress', id=maintenanceRequest.id) }}" class="btn btn-yellow">Work In Progress</a>
                 </div>
             </div>
         </div>
@@ -143,12 +162,12 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-xs-12">
-                            <p class="card-text">Has work been completed on this maintenance request?</p>
+                            <p class="card-text">Change maintenance request status to:</p>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="{{ url_for('houses.maintenanceRequestCompleted', id=maintenanceRequest.id) }}" class="btn btn-blue">Mark Completed</a>
+                    <a href="{{ url_for('houses.maintenanceRequestCompleted', id=maintenanceRequest.id) }}" class="btn btn-light-green">Work Completed</a>
                 </div>
             </div>
         </div>

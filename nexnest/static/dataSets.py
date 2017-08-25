@@ -138,13 +138,13 @@ statesLong = [
 ]
 
 maintenanceRequestTypes = [
-    ('heatingCooling', 'Heating or Cooling'),
-    ('internet', 'Internet'),
-    ('yardDriveway', 'Yard or Driveway'),
     ('appliance', 'Appliance'),
-    ('plumbing', 'Plumbing'),
     ('electrical', 'Electrical'),
     ('furnishing', 'Furnishing'),
+    ('heatingCooling', 'Heating/Cooling'),
+    ('internetCable', 'Internet/Cable'),
+    ('plumbing', 'Plumbing'),
+    ('yardDriveway', 'Yard/Driveway'),    
     ('other', 'Other')
 ]
 

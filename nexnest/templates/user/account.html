@@ -4,7 +4,7 @@
 {% block content %}
     {% if user.id == current_user.id %}
     <link href="{{url_for('static', filename='css/landlord/dashboardStyling.css')}}" rel="stylesheet">
-    <div class="row">
+    <div class="row nexnest-font" style="color: #656264; font-size: 20px;">
         <div class="col-md-2 col-sm-2 col-xs-2 display-table-cell v-align box" id="navigation" style="height: inherit;">
             <div class="navi navbar">
                 <ul>
@@ -38,26 +38,28 @@
             <div class="tab-pane active" id="meTab" role="tabpanel" style="padding: 0px;">
                 <div class="row">
                     <div class="col-xs-12">
-                        <h1>My Profile</h1>
+                        <div class="callout-block text-center fade-in-b" style="background-color: #d2d2d2;">
+                            <h1>My Profile</h1>
+                        </div>
                     </div>
                 </div>
                 <br>
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="card" style="border: none;">
-                            <div class="card-header">
+                            <div class="card-header" style="background-color: #d2d2d2;">
                                 <div class="row">
-                                    <div class="col-xs-12 col-md-4 col-xl-4">
+                                    <div class="col-xs-12 col-md-4 col-lg-2 col-xl-2">
                                         <h1 class="hidden-md-up" style="margin-left: auto; margin-right: auto;"><strong>{{ user.fname }} {{ user.lname }}</strong></h1>
                                         <div class="card" style="width: 150px;">
                                             <img class="card-img" src="{{user.profile_image}}" style="height: 150px; width: 150px;">
                                         </div>
-                                        <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#changeAvatarModal">Change Photo</a>
+                                        <a href="#" class="btn btn-blue" data-toggle="modal" data-target="#changeAvatarModal" style="width: 150px;">Change Photo</a>
                                     </div>
-                                    <div class="col-xs-12 col-md-8 col-xl-8" style="align-self: center; padding-top: 10px;">
+                                    <div class="col-xs-12 col-md-8 col-lg-10 col-xl-6" style="align-self: center; padding-top: 10px; text-align: center;">
                                         <h1 class="hidden-sm-down" style="margin-left: auto; margin-right: auto;"><strong>{{ user.fname }} {{ user.lname }}</strong></h1>
-                                        <a href="{{ url_for('users.editAccountInfo') }}" class="btn btn-outline-primary" style="width: 158px; margin-top: 10px;">Edit your profile</a>
-                                        <a href="#" data-toggle="modal" data-target="#passwordChangeModal" class="btn btn-outline-primary" style="margin-top: 10px;">Change Password</a>
+                                        <a href="{{ url_for('users.editAccountInfo') }}" class="btn btn-blue-outline" style="width: 158px; margin-top: 10px;">Edit Profile</a>
+                                        <a href="#" data-toggle="modal" data-target="#passwordChangeModal" class="btn btn-blue-outline" style="margin-top: 10px;">Change Password</a>
                                     </div>
                                 </div>
                             </div>                   
@@ -68,7 +70,7 @@
             <div class="tab-pane" id="emailTab" role="tabpanel" style="padding: 0px;">
                 <div class="row">
                     <div class="col-xs-12">
-                        <div class="callout-block text-center fade-in-b">
+                        <div class="callout-block text-center fade-in-b" style="background-color: #d2d2d2;">
                             <h1>Notification Preferences</h1>
                         </div>
                     </div>
@@ -82,144 +84,148 @@
                             <div class="card-block">
                                 <div class="row">
                                     <div class="col-xs-12">
-                                        <h1 class="card-title"><strong>Messages</strong></h1>
+                                        <h1 class="card-title"><strong><i class="fa fa-comments" aria-hidden="true"></i> Messages</strong></h1>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-5 col-sm-4" style="padding-top: 30px;">
+                                    <div class="col-xs-5 col-sm-4" style="padding-top: 10px; align-self: center;">
                                         <strong>Direct Messages</strong>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback hidden-xs-down" id="direct_message_label">Notification</label>
-                                            <label class="control-label form-control-feedback hidden-sm-up" id="direct_message_label">Notif</label>
+                                            <label class="control-label form-control-feedback hidden-xs-down" style="font-size: 18px;" id="direct_message_label">Notification</label>
+                                            <label class="control-label form-control-feedback hidden-sm-up" style="font-size: 18px;" id="direct_message_label">Notif</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.direct_message_notification(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="direct_message_label">Email</label>
+                                            <label class="control-label form-control-feedback" style="font-size: 18px;" id="direct_message_label">Email</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.direct_message_email(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <hr>
                                 <div class="row">
-                                    <div class="col-xs-5 col-sm-4" style="padding-top: 30px;">
+                                    <div class="col-xs-5 col-sm-4" style="padding-top: 10px; align-self: center;">
                                         <strong>Tour</strong>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback hidden-xs-down" id="direct_message_label">Notification</label>
-                                            <label class="control-label form-control-feedback hidden-sm-up" id="direct_message_label">Notif</label>
+                                            <label class="control-label form-control-feedback hidden-xs-down" style="font-size: 18px;" id="direct_message_label">Notification</label>
+                                            <label class="control-label form-control-feedback hidden-sm-up" style="font-size: 18px;" id="direct_message_label">Notif</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.tour_message_notification(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="direct_message_label">Email</label>
+                                            <label class="control-label form-control-feedback" style="font-size: 18px;" id="direct_message_label">Email</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.tour_message_email(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <hr>
                                 <div class="row">
-                                    <div class="col-xs-5 col-sm-4" style="padding-top: 30px;">
+                                    <div class="col-xs-5 col-sm-4" style="padding-top: 10px; align-self: center;">
                                         <strong>Group</strong>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback hidden-xs-down" id="direct_message_label">Notification</label>
-                                            <label class="control-label form-control-feedback hidden-sm-up" id="direct_message_label">Notif</label>
+                                            <label class="control-label form-control-feedback hidden-xs-down" style="font-size: 18px;" id="direct_message_label">Notification</label>
+                                            <label class="control-label form-control-feedback hidden-sm-up" style="font-size: 18px;" id="direct_message_label">Notif</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.group_message_notification(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="direct_message_label">Email</label>
+                                            <label class="control-label form-control-feedback" style="font-size: 18px;" id="direct_message_label">Email</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.group_message_email(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <hr>
                                 <div class="row">
-                                    <div class="col-xs-5 col-sm-4" style="padding-top: 30px;">
+                                    <div class="col-xs-5 col-sm-4" style="padding-top: 10px; align-self: center;">
                                         <strong>House</strong>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback hidden-xs-down" id="direct_message_label">Notification</label>
-                                            <label class="control-label form-control-feedback hidden-sm-up" id="direct_message_label">Notif</label>
+                                            <label class="control-label form-control-feedback hidden-xs-down" style="font-size: 18px;" id="direct_message_label">Notification</label>
+                                            <label class="control-label form-control-feedback hidden-sm-up" style="font-size: 18px;" id="direct_message_label">Notif</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.house_message_notification(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="direct_message_label">Email</label>
+                                            <label class="control-label form-control-feedback" style="font-size: 18px;" id="direct_message_label">Email</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.house_message_email(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <hr>
                                 <div class="row">
-                                    <div class="col-xs-5 col-sm-4" style="padding-top: 30px;">
+                                    <div class="col-xs-5 col-sm-4" style="padding-top: 10px; align-self: center;">
                                         <strong>Maintenance Request</strong>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback hidden-xs-down" id="direct_message_label">Notification</label>
-                                            <label class="control-label form-control-feedback hidden-sm-up" id="direct_message_label">Notif</label>
+                                            <label class="control-label form-control-feedback hidden-xs-down" style="font-size: 18px;" id="direct_message_label">Notification</label>
+                                            <label class="control-label form-control-feedback hidden-sm-up" style="font-size: 18px;" id="direct_message_label">Notif</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.maintenance_message_notification(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="direct_message_label">Email</label>
+                                            <label class="control-label form-control-feedback" style="font-size: 18px;" id="direct_message_label">Email</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.maintenance_message_email(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
@@ -228,157 +234,160 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-xs-12">
-                                        <h1 class="card-title"><strong>Tours</strong></h1>
+                                        <h1 class="card-title"><strong><i class="fa fa-calendar" aria-hidden="true"></i> Tours</strong></h1>
                                     </div>
                                 </div>
                                 {% if current_user.isLandlord %}
                                 <div class="row">
-                                    <div class="col-xs-5 col-sm-4" style="padding-top: 30px;">
+                                    <div class="col-xs-5 col-sm-4" style="padding-top: 10px; align-self: center;">
                                         <strong>Requested</strong>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback hidden-xs-down" id="direct_message_label">Notification</label>
-                                            <label class="control-label form-control-feedback hidden-sm-up" id="direct_message_label">Notif</label>
+                                            <label class="control-label form-control-feedback hidden-xs-down" style="font-size: 18px;" id="direct_message_label">Notification</label>
+                                            <label class="control-label form-control-feedback hidden-sm-up" style="font-size: 18px;" id="direct_message_label">Notif</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.tour_create_notification(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="tour_time_label">Email</label>
+                                            <label class="control-label form-control-feedback" style="font-size: 18px;" id="tour_time_label">Email</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.tour_create_email(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <hr>
                                 {% endif %}
                                 <div class="row">
-                                    <div class="col-xs-5 col-sm-4" style="padding-top: 30px;">
+                                    <div class="col-xs-5 col-sm-4" style="padding-top: 10px; align-self: center;">
                                         <strong>Time Change Requested</strong>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback hidden-xs-down" id="direct_message_label">Notification</label>
-                                            <label class="control-label form-control-feedback hidden-sm-up" id="direct_message_label">Notif</label>
+                                            <label class="control-label form-control-feedback hidden-xs-down" style="font-size: 18px;" id="direct_message_label">Notification</label>
+                                            <label class="control-label form-control-feedback hidden-sm-up" style="font-size: 18px;" id="direct_message_label">Notif</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.tour_time_notification(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="tour_time_label">Email</label>
+                                            <label class="control-label form-control-feedback" style="font-size: 18px;" id="tour_time_label">Email</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.tour_time_email(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <hr>
                                 {% if not current_user.isLandlord %}
                                 <div class="row">
-                                    <div class="col-xs-5 col-sm-4" style="padding-top: 30px;">
+                                    <div class="col-xs-5 col-sm-4" style="padding-top: 10px; align-self: center;">
                                         <strong>Confirmed</strong>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback hidden-xs-down" id="direct_message_label">Notification</label>
-                                            <label class="control-label form-control-feedback hidden-sm-up" id="direct_message_label">Notif</label>
+                                            <label class="control-label form-control-feedback hidden-xs-down" style="font-size: 18px;" id="direct_message_label">Notification</label>
+                                            <label class="control-label form-control-feedback hidden-sm-up" style="font-size: 18px;" id="direct_message_label">Notif</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.tour_confirmed_notification(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="tour_confirmed_label">Email</label>
+                                            <label class="control-label form-control-feedback" style="font-size: 18px;" id="tour_confirmed_label">Email</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.tour_confirmed_email(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <hr>
                                 {% endif %}
                                 {% if not current_user.isLandlord%}
                                 <div class="row">
-                                    <div class="col-xs-5 col-sm-4" style="padding-top: 30px;">
+                                    <div class="col-xs-5 col-sm-4" style="padding-top: 10px; align-self: center;">
                                         <strong>Denied</strong>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback hidden-xs-down" id="direct_message_label">Notification</label>
-                                            <label class="control-label form-control-feedback hidden-sm-up" id="direct_message_label">Notif</label>
+                                            <label class="control-label form-control-feedback hidden-xs-down" style="font-size: 18px;" id="direct_message_label">Notification</label>
+                                            <label class="control-label form-control-feedback hidden-sm-up" style="font-size: 18px;" id="direct_message_label">Notif</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.tour_denied_notification(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="tour_denied_label">Email</label>
+                                            <label class="control-label form-control-feedback" style="font-size: 18px;" id="tour_denied_label">Email</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.tour_denied_email(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                {% endif %}
                                 <hr>
+                                {% endif %}
                                 <div class="row">
                                     <div class="col-xs-12">
-                                        <h1 class="card-title"><strong>Maintenance Requests</strong></h1>
+                                        <h1 class="card-title"><strong><i class="fa fa-wrench" aria-hidden="true"></i> Maintenance Requests</strong></h1>
                                     </div>
                                 </div>
                                 {% if current_user.isLandlord %}
                                 <div class="row">
-                                    <div class="col-xs-5 col-sm-4" style="padding-top: 30px;">
+                                    <div class="col-xs-5 col-sm-4" style="padding-top: 10px; align-self: center;">
                                         <strong>New Request</strong>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback hidden-xs-down" id="direct_message_label">Notification</label>
-                                            <label class="control-label form-control-feedback hidden-sm-up" id="direct_message_label">Notif</label>
+                                            <label class="control-label form-control-feedback hidden-xs-down" style="font-size: 18px;" id="direct_message_label">Notification</label>
+                                            <label class="control-label form-control-feedback hidden-sm-up" style="font-size: 18px;" id="direct_message_label">Notif</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.maintenance_notification(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="tour_time_label">Email</label>
+                                            <label class="control-label form-control-feedback" style="font-size: 18px;" id="tour_time_label">Email</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.maintenance_email(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
@@ -387,124 +396,95 @@
                                 {% endif %}
                                 {% if not current_user.isLandlord %}
                                 <div class="row">
-                                    <div class="col-xs-5 col-sm-4" style="padding-top: 30px;">
+                                    <div class="col-xs-5 col-sm-4" style="padding-top: 10px; align-self: center;">
                                         <strong>In-Progress</strong>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback hidden-xs-down" id="direct_message_label">Notification</label>
-                                            <label class="control-label form-control-feedback hidden-sm-up" id="direct_message_label">Notif</label>
+                                            <label class="control-label form-control-feedback hidden-xs-down" style="font-size: 18px;" id="direct_message_label">Notification</label>
+                                            <label class="control-label form-control-feedback hidden-sm-up" style="font-size: 18px;" id="direct_message_label">Notif</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.maintenance_inProgress_notification(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="tour_confirmed_label">Email</label>
+                                            <label class="control-label form-control-feedback" style="font-size: 18px;" id="tour_confirmed_label">Email</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.maintenance_inProgress_email(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <hr>
                                 {% endif %}
                                 {% if not current_user.isLandlord %}
                                 <div class="row">
-                                    <div class="col-xs-5 col-sm-4" style="padding-top: 30px;">
+                                    <div class="col-xs-5 col-sm-4" style="padding-top: 10px; align-self: center;">
                                         <strong>Completed</strong>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback hidden-xs-down" id="direct_message_label">Notification</label>
-                                            <label class="control-label form-control-feedback hidden-sm-up" id="direct_message_label">Notif</label>
+                                            <label class="control-label form-control-feedback hidden-xs-down" style="font-size: 18px;" id="direct_message_label">Notification</label>
+                                            <label class="control-label form-control-feedback hidden-sm-up" style="font-size: 18px;" id="direct_message_label">Notif</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.maintenance_completed_notification(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="tour_denied_label">Email</label>
+                                            <label class="control-label form-control-feedback" style="font-size: 18px;" id="tour_denied_label">Email</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.maintenance_completed_email(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                {% endif %}
                                 <hr>
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <h1 class="card-title"><strong>Rent</strong></h1>
-                                    </div>
-                                </div>
+                                {% endif %}
                                 {% if not current_user.isLandlord %}
                                 <div class="row">
-                                    <div class="col-xs-5 col-sm-4" style="padding-top: 30px;">
+                                    <div class="col-xs-12">
+                                        <h1 class="card-title"><strong><i class="fa fa-usd" aria-hidden="true"></i> Rent</strong></h1>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-5 col-sm-4" style="padding-top: 10px; align-self: center;">
                                         <strong>Your Rent is Due</strong>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback hidden-xs-down" id="direct_message_label">Notification</label>
-                                            <label class="control-label form-control-feedback hidden-sm-up" id="direct_message_label">Notif</label>
+                                            <label class="control-label form-control-feedback hidden-xs-down" style="font-size: 18px;" id="direct_message_label">Notification</label>
+                                            <label class="control-label form-control-feedback hidden-sm-up" style="font-size: 18px;" id="direct_message_label">Notif</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.rent_due_notification(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="tour_time_label">Email</label>
+                                            <label class="control-label form-control-feedback" style="font-size: 18px;" id="tour_time_label">Email</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.rent_due_email(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endif %}
-                                {% if current_user.isLandlord %}
-                                <div class="row">
-                                    <div class="col-xs-5 col-sm-4" style="padding-top: 30px;">
-                                        <strong>A Tenant has Paid Their Rent</strong>
-                                    </div>
-                                    <div class="col-xs-3 col-sm-4">
-                                        <div class="form-group">
-                                            <label class="control-label form-control-feedback hidden-xs-down" id="direct_message_label">Notification</label>
-                                            <label class="control-label form-control-feedback hidden-sm-up" id="direct_message_label">Notif</label>
-                                            <div class="checkbox">
-                                                <label style="font-size: 1.5em">
-                                                    {{form.rent_paid_notification(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-3 col-sm-4">
-                                        <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="tour_confirmed_label">Email</label>
-                                            <div class="checkbox">
-                                                <label style="font-size: 1.5em">
-                                                    {{form.rent_paid_email(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
@@ -515,33 +495,33 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-xs-12">
-                                        <h1 class="card-title"><strong>Groups</strong></h1>
+                                        <h1 class="card-title"><strong><i class="fa fa-users" aria-hidden="true"></i> Groups</strong></h1>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-5 col-sm-4" style="padding-top: 30px;">
+                                    <div class="col-xs-5 col-sm-4" style="padding-top: 10px; align-self: center;">
                                         <strong class="hidden-sm-up">Invited to Group</strong>
                                         <strong class="hidden-xs-down">You Have Been Invited to a Group</strong>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback hidden-xs-down" id="direct_message_label">Notification</label>
-                                            <label class="control-label form-control-feedback hidden-sm-up" id="direct_message_label">Notif</label>
+                                            <label class="control-label form-control-feedback hidden-xs-down" style="font-size: 18px;" id="direct_message_label">Notification</label>
+                                            <label class="control-label form-control-feedback hidden-sm-up" style="font-size: 18px;" id="direct_message_label">Notif</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.group_user_notification(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="tour_time_label">Email</label>
+                                            <label class="control-label form-control-feedback" style="font-size: 18px;" id="tour_time_label">Email</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.group_user_email(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
@@ -551,101 +531,107 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-xs-12">
-                                        <h1 class="card-title"><strong>Property Requests</strong></h1>
+                                        <h1 class="card-title"><strong><i class="fa fa-handshake-o" aria-hidden="true"></i> Property Requests</strong></h1>
                                     </div>
                                 </div>
                                 {% if current_user.isLandlord %}
                                 <div class="row">
-                                    <div class="col-xs-5 col-sm-4" style="padding-top: 30px;">
+                                    <div class="col-xs-5 col-sm-4" style="padding-top: 10px; align-self: center;">
                                         <strong>Property Has Been Requested by a Group</strong>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback hidden-xs-down" id="direct_message_label">Notification</label>
-                                            <label class="control-label form-control-feedback hidden-sm-up" id="direct_message_label">Notif</label>
+                                            <label class="control-label form-control-feedback hidden-xs-down" style="font-size: 18px;" id="direct_message_label">Notification</label>
+                                            <label class="control-label form-control-feedback hidden-sm-up" style="font-size: 18px;" id="direct_message_label">Notif</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.group_listing_notification(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="tour_time_label">Email</label>
+                                            <label class="control-label form-control-feedback" style="font-size: 18px;" id="tour_time_label">Email</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.group_listing_email(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <hr>
                                 {% endif %}
                                 {% if not current_user.isLandlord %}
                                 <div class="row">
-                                    <div class="col-xs-5 col-sm-4" style="padding-top: 30px;">
+                                    <div class="col-xs-5 col-sm-4" style="padding-top: 10px; align-self: center;">
                                         <strong>Accepted</strong>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback hidden-xs-down" id="direct_message_label">Notification</label>
-                                            <label class="control-label form-control-feedback hidden-sm-up" id="direct_message_label">Notif</label>
+                                            <label class="control-label form-control-feedback hidden-xs-down" style="font-size: 18px;" id="direct_message_label">Notification</label>
+                                            <label class="control-label form-control-feedback hidden-sm-up" style="font-size: 18px;" id="direct_message_label">Notif</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.group_listing_accept_notification(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="tour_confirmed_label">Email</label>
+                                            <label class="control-label form-control-feedback" style="font-size: 18px;" id="tour_confirmed_label">Email</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.group_listing_accept_email(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <hr>
                                 {% endif %}
                                 {% if not current_user.isLandlord %}
                                 <div class="row">
-                                    <div class="col-xs-5 col-sm-4" style="padding-top: 30px;">
+                                    <div class="col-xs-5 col-sm-4" style="padding-top: 10px; align-self: center;">
                                         <strong>Denied</strong>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback hidden-xs-down" id="direct_message_label">Notification</label>
-                                            <label class="control-label form-control-feedback hidden-sm-up" id="direct_message_label">Notif</label>
+                                            <label class="control-label form-control-feedback hidden-xs-down" style="font-size: 18px;" id="direct_message_label">Notification</label>
+                                            <label class="control-label form-control-feedback hidden-sm-up" style="font-size: 18px;" id="direct_message_label">Notif</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.group_listing_deny_notification(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xs-3 col-sm-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="tour_denied_label">Email</label>
+                                            <label class="control-label form-control-feedback" style="font-size: 18px;" id="tour_denied_label">Email</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.group_listing_deny_email(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 {% endif %}
-                                <hr>
-                                <input type='submit' value='Update Preferences' class="btn btn-primary">
+                                <div class="row">
+                                    <div class="col-xs-8"></div>
+                                    <div class="col-xs-4">
+                                        <input type='submit' value='Update Preferences' class="btn btn-blue">
+                                    </div>
+                                </div>
                             </div>                    
                         </div>
                     </div>
@@ -655,98 +641,90 @@
             <div class="tab-pane" id="favoritesTab" role="tabpanel" style="padding: 0px;">
                 <div class="row">
                     <div class="col-xs-12">
-                        <div class="callout-block text-center fade-in-b">
+                        <div class="callout-block text-center fade-in-b" style="background-color: #d2d2d2;">
                             <h1>My Favorites</h1>
                         </div>
                     </div>
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col-xs-12">
-                        {% if not userFavorites %}
-                            <div class="alert alert-info" role="alert">
-                                <strong>You have not favorited any listings yet. Simply click the star on any listing on the homepage to favorite them.</strong>
-                            </div>
-                        {% endif %}
-                        {% for favorite in userFavorites %}
-                            <div class="row">
-                                <div class="col-xs-0 col-md-1"></div>
-                                <div class="col-xs-12 col-md-10" style="width: 100%">
-                                    <div class="row">
-                                        <div class="col-xs-12" id="favorited{{favorite.listing.id}}">
-
-                                        </div>
-                                    </div>
+                    <div class="col-xs-0 col-xl-1"></div>
+                    <div class="col-xs-12 col-xl-10">
+                        <div class="row">
+                            {% if not userFavorites %}
+                                <div class="alert alert-light-blue" role="alert">
+                                    <strong>You have not favorited any listings yet. Simply click the star on any listing on the homepage to favorite them.</strong>
+                                </div>
+                            {% endif %}
+                            {% for favorite in userFavorites %}
+                                <div class="col-xs-12 col-md-10 col-lg-10 col-xl-6">                                    
                                     <div class="card">
                                         <div class="card-header">
                                             <div class="row">
                                                 <div class="col-xs-12 col-md-8 col-lg-8">
                                                     <a href="{{ url_for('listings.viewListing', listingID=favorite.listing.id) }}">
-                                                        <h3 style="font-size: 3.5vh;"><strong>{{ favorite.listing.street }}, {{ favorite.listing.city }} {{ favorite.listing.state }}</strong></h3>
+                                                        <h3 style="font-size: 3.5vh;"><strong>{{ favorite.listing.street }}</strong></h3>
                                                         <small style="font-size: 2.5vh;">Lease Period: {{ favorite.listing.start_date }} - {{ favorite.listing.end_date }}</small>
                                                     </a>
                                                 </div>
                                                 <div class="col-xs-2 col-md-4 col-lg-4" style="text-align: right;">
-                                                    <a href='#' class="btn btn-primary" id="{{ favorite.listing.id }}" data-toggle="modal" data-target="#suggestListingModal">Favorite For Group</a>
+                                                    <a href='#' class="btn btn-blue" id="{{ favorite.listing.id }}" data-toggle="modal" data-target="#suggestListingModal">Favorite For Group</a>
                                                 </div>
                                             </div>                              
                                         </div>
-                                        <div class="card-block">
+                                        <div class="card-block" style="padding-top: 0px; padding-left: 15px; padding-right: 15px;">
                                             <div class="row">
-                                                <div class="hidden-md-down col-lg-4">
-                                                    {% if favorite.listing.banner_photo_url %}
-                                                        <img src="{{favorite.listing.banner_photo_url}}" class="listingImg">
-                                                    {% else %}
-                                                        <img src="/static/img/defaultHouse.png" class="listingImg">
-                                                    {% endif %}
-                                                </div>
-                                                <div class="col-xs-12 col-lg-8">
-                                                    <h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ favorite.listing.price }}</strong> per bedroom per semester</h3>
-                                                    <h3 style="font-size: 3.0vh;"><strong>{{ favorite.listing.num_bedrooms }}<i class="fa fa-bed" aria-hidden="true"></i>
-                                                    &nbsp;
-                                                    {{ favorite.listing.num_full_baths }}<i class="fa fa-bath" aria-hidden="true"></i></strong></h3>
-                                                    <div class="row">
-                                                        <div class="col-xs-12 col-xl-12" style="padding-left: 15px;">
-                                                            <br>
-                                                            <strong> Property Description: </strong> {{ favorite.listing.description }}
-                                                        </div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-xl-12">
-                                                            <strong>Time Period of Rental:</strong> {{ favorite.listing.time_period }}
-                                                        </div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">                                                         
-                                                        <div class="col-xl-6">
-                                                            <strong>Lease Start Date:</strong> {{ favorite.listing.start_date }}
-                                                        </div>
-                                                        <div class="col-xl-6">
-                                                            <strong>Lease End Date:</strong> {{ favorite.listing.end_date }}
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        {% if favorite.listing.rent_due == "semester" %}
-                                                            <div class="col-xl-6">
-                                                                <strong>First Semester Rent Due:</strong> {{ favorite.listing.first_semester_rent_due_date }}
-                                                            </div>
-                                                            <div class="col-xl-6">
-                                                                <strong>Second Semester Rent Due:</strong> {{ favorite.listing.second_semester_rent_due_date }}
-                                                            </div>                                                               
-                                                        {% elif favorite.listing.rent_due == "monthly" %}
-                                                            <div class="col-xl-12">
-                                                                <strong>Rent Due: </strong>1st of each month
-                                                            </div>
+                                                <div class="imageContainer" style="width: 100%;">
+                                                    <div class="image">
+                                                        <a href="{{ url_for('listings.viewListing', listingID=favorite.listing.id) }}">
+                                                        {% if favorite.listing.banner_photo_url %}
+                                                            <img src="{{favorite.listing.banner_photo_url}}" class="listingImg card-img-top">
+                                                        {% else %}
+                                                            <img src="/static/img/defaultHouse.png" class="listingImg card-img-top">
                                                         {% endif %}
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <br>
+                                            <div class="row" style="font-size: 22px;">
+                                                <div class="col-xs-6">
+                                                    <i class="fa fa-bed" aria-hidden="true"></i> {{ favorite.listing.num_bedrooms }} Bedrooms
+                                                    &nbsp;
+                                                    <i class="fa fa-bath" aria-hidden="true"></i> {{ favorite.listing.num_full_baths }} Bathrooms
+                                                    <br>
+                                                    ${{ favorite.listing.price }} per person/{{ favorite.listing.rent_due }}
+                                                </div>
+                                                <div class="col-xs-6" style="text-align: right;">
+                                                    {{ favorite.listing.street }}
+                                                    <br>
+                                                    {{ favorite.listing.city }}, {{ favorite.listing.state }}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-12 col-xl-12" style="padding-left: 15px;">
+                                                    <br>
+                                                    <strong style="font-size: 22px;"> Property Description: </strong> 
+                                                    <span style="font-size: 20px;">{{ favorite.listing.description }}</span>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row hidden-xs-down">
+                                                <br>                                                     
+                                                <div class="col-xs-12 col-lg-6 col-xl-12">
+                                                    <strong style="font-size: 22px;">Lease Start Date:</strong>
+                                                    <span style="font-size: 20px;">{{ favorite.listing.start_date|format_date }}</span>
+                                                </div>
+                                                <div class="col-xs-12 col-lg-6 col-xl-12">
+                                                    <strong style="font-size: 22px;">Lease End Date:</strong> 
+                                                    <span style="font-size: 20px;">{{ favorite.listing.end_date|format_date }}</span>
+                                                </div>
+                                            </div>                                                                        
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        {% endfor %}
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>                
             </div>

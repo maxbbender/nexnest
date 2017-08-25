@@ -65,7 +65,7 @@
 	                <h1 style="font-size: 3.0vh">
                         {{ housingRequest.listing.street }}
                         <br>
-                        {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}
+                        {{ housingRequest.listing.start_date|format_date }} - {{ housingRequest.listing.end_date|format_date }}
                         <br>
 	                    Requested By: {{ housingRequest.group.name }}
 	                </h1>
@@ -92,21 +92,69 @@
 				    	            			The landlord has declined your group's request to live at this property
 				    	            		{% else %}
 						    	                {% if housingRequest.accepted %}
+                                                    {% if current_user in landlords %}
+                                                        <span style="font-size: 20px;">You have accepted <strong>{{ housingRequest.group.name }}</strong> to live at this property. </span>
+                                                        <br><br>
+                                                        <h3>Confirming a Group: </h3>
+                                                        <span style="font-size: 20px;">
+                                                            <span style="padding-left: 15px;">
+                                                                1. Make arrangements with group to collect signed leases. 
+                                                            </span>
+                                                            <br>
+                                                            <span style="padding-left: 36px;">
+                                                                Once receieved, click to mark confirmed.
+                                                            </span>
+                                                            <br>
+                                                            <span style="padding-left: 15px;">
+                                                                2. Collect security deposits from all group members (if required).
+                                                            </span>
+                                                            <br>
+                                                            <span style="padding-left: 36px;">
+                                                                Click to mark received for each member.
+                                                            </span>
+                                                            <br>
+                                                            <span style="padding-left: 15px;">
+                                                                3. Confirm Group to finalize application
+                                                            </span>
+                                                            <br>
+                                                            <span style="padding-left: 15px;">
+                                                                4. Group will be added to this property for {{ housingRequest.listing.start_date|format_date }} - {{ housingRequest.listing.end_date|format_date }}
+                                                            <span style="padding-left: 15px;">
+                                                        </span>
+                                                    {% else %}
+                                                        <span style="font-size: 20px;">
+                                                            <span style="padding-left: 15px;">
+                                                                1. Make arrangements with landlord to sign leases. 
+                                                            </span>
+                                                            <br>
+                                                            <span style="padding-left: 15px;">
+                                                                2. Landlord will collect security deposits from all group members (if required).
+                                                            </span>
+                                                            <br>
+                                                            <span style="padding-left: 15px;">
+                                                                3. Landlord will confirm your group
+                                                            </span>
+                                                            <br>
+                                                            <span style="padding-left: 15px;">
+                                                                4. Your group will be added to this property for {{ housingRequest.listing.start_date|format_date }} - {{ housingRequest.listing.end_date|format_date }}
+                                                            <span style="padding-left: 15px;">
+                                                        </span>
+                                                    {% endif %}
+                                                    <hr>
 						    	                	<div class="row">
 						    	                		<div class="col-xs-10 col-xl-10">
 						    	                			<strong style="padding-right: 5px; font-size: 3.0vh;">Application: </strong>
 						    	                		</div>
-						    	                		<div class="col-xs-2 col-xl-1">
+						    	                		<div class="col-xs-2 col-xl-2" style="text-align: right; align-self: center;">
 						    	                			<button type="button" id="confirmed" class="btn btn-success btn-circle" style="pointer-events: none;"><i class="fa fa-check" aria-hidden="true"></i></button>
 						    	                		</div>
 						    	                	</div>
 						    	                	<hr>
-						    	                	<br>
 						    	                	<div class="row">
 						    	                		<div class="col-xs-10 col-xl-10">
                                                     		<strong style="padding-right: 5px; font-size: 3.0vh;">Leases Signed: </strong>
                                                     	</div>
-                                                    	<div class="col-xs-2 col-xl-1">
+                                                    	<div class="col-xs-2 col-xl-2" style="text-align: right; align-self: center;">
                                                             {% if current_user in landlords %}
                                                         		{% if housingRequest.all_leases_submitted %}
     							                    				<button id="undoMarkAllCollected{{housingRequest.id}}" type="button" class="btn btn-success btn-circle" data-tooltip="Click here to mark all Leases as NOT completed" onclick="undoMarkLeasesCollected({{housingRequest.id}})"><i class="fa fa-check" aria-hidden="true"></i></button>
@@ -127,37 +175,40 @@
                                                     	</div>
                                                     </div>
                                                     <hr>
-                                                    <br>
-                                                    <div class="row">
-						    	                		<div class="col-xs-10 col-xl-10">
-                                                    		<strong style="padding-right: 5px; font-size: 3.0vh;">Deposits Collected: </strong>
-                                                    	</div>
-                                                    	<div class="col-xs-2 col-xl-1">
-                                                    		<span id="numDeposits{{housingRequest.id}}">{{housingRequest.numSecurityDepositsPaid}}</span>/{{housingRequest.group.acceptedUsers|count}}
-                                                    	</div>
-                                                    </div>
-                                                    <hr>
-						    	                	{% if current_user in landlords %}
-						    	                		<span style="font-size: 2.5vh;">You have accepted <strong>{{ housingRequest.group.name }}</strong> to live at this property. Now you must arrange to collect signed leases from all tenants and security deposits if you require them. After everything has been collected click the "process completed button" to confirm the group for this property.</span>
-                                                        <hr>
+                                                    {% if not current_user in landlords %}                                                      
                                                         <div class="row">
                                                             <div class="col-xs-8">
-                                                                <h3 style="font-size: 3.0vh;"><strong>Security Deposits:</strong></h3>
+                                                                <strong style="padding-right: 5px; font-size: 3.0vh;">Security Deposits: </strong>
+                                                            </div>
+                                                            <div class="col-xs-4" style="text-align: right; align-self: center;">
+                                                                <h3><span id="numDeposits2{{housingRequest.id}}">{{housingRequest.numSecurityDepositsPaid}}</span>/{{housingRequest.group.acceptedUsers|count}}</h3>
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+                                                    {% endif %}
+						    	                	{% if current_user in landlords %}						    	                		
+                                                        <div class="row">
+                                                            <div class="col-xs-8">
+                                                                <strong style="padding-right: 5px; font-size: 3.0vh;">Security Deposits: </strong>
                                                             </div>
                                                             <div class="col-xs-4" style="text-align: right">
-                                                                <h3 style="font-size: 3.0vh;"><span id="numDeposits2{{housingRequest.id}}">{{housingRequest.numSecurityDepositsPaid}}</span>/{{housingRequest.group.acceptedUsers|count}}</h3>
+                                                                <h3><span id="numDeposits2{{housingRequest.id}}">{{housingRequest.numSecurityDepositsPaid}}</span>/{{housingRequest.group.acceptedUsers|count}}</h3>
                                                             </div>
                                                         </div>
                                                         <hr>
                                                         {% for deposit in housingRequest.securityDeposits %}                                    
                                                             <div class="row">
-                                                                <div class="col-xs-10">
+                                                                <div class="col-xs-1" style="align-self: center;">
                                                                     <h4>
                                                                         <img src="{{deposit.user.profile_image}}" alt="Profile Image" class="img-responsive" style="height: 50px; width: 50px;" />
+                                                                    </h4>
+                                                                </div>
+                                                                <div class="col-xs-9" style="align-self: center;">
+                                                                    <h4>
                                                                         <span style="font-size: 2.5vh;">{{ deposit.user.fname }} {{ deposit.user.lname }}</span>
                                                                     </h4>
                                                                 </div>
-                                                                <div class="col-xs-2" style="text-align: right">
+                                                                <div class="col-xs-2" style="text-align: right; align-self: center;">
                                                                     {% if deposit.completed %}
 											                            <button id="depositPaid{{housingRequest.id}}Z{{deposit.user.id}}" type="button" onclick="paidToUnpaid({{deposit.user.id}}, {{housingRequest.id}})" class="btn btn-success btn-circle" data-tooltip="Click here to mark deposit as NOT paid"><i class="fa fa-check" aria-hidden="true"></i></button>
 											                            <button id="markDepositUnpaid{{housingRequest.id}}Z{{deposit.user.id}}" type="button" class="btn btn-warning btn-circle" style="display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
@@ -171,10 +222,8 @@
                                                             </div>
                                                             <hr>
                                                         {% endfor %}
-						    	                		<a href='#' class="btn btn-primary" data-toggle="modal" data-target="#confirmGroupModal">Confirm Group</a>
-	                                                    <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#somethingHappenedModal">Something Happened</a>
-						    	                	{% else %}
-						    	                		<span>You and the landlord must make arrangements to sign leases and pay your security deposits if they are required. After that has happened the landlord will confirm the listing and you will have this listing for {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}. </span>
+						    	                		<a href='#' class="btn btn-blue" data-toggle="modal" data-target="#confirmGroupModal">Confirm Group</a>
+	                                                    <a href='#' class="btn btn-red" data-toggle="modal" data-target="#somethingHappenedModal">Something Happened</a>
 						    	                	{% endif %}
 						    	                {% else %}
 						    	                	<h3 style="padding-right: 5px;">
@@ -186,7 +235,7 @@
                                                     </h3>
 						    	                	<br>
 						    	                	{% if current_user in landlords %}
-						    	                		<span style="font-size: 20px;">If you would like to confirm this group({{ housingRequest.group.name }}) to occupy {{ housingRequest.listing.street }} for {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}, click the Accept Group button below. 
+						    	                		<span style="font-size: 20px;">If you would like to confirm this group({{ housingRequest.group.name }}) to occupy {{ housingRequest.listing.street }} for {{ housingRequest.listing.start_date|format_date }} - {{ housingRequest.listing.end_date|format_date }}, click the Accept Group button below. 
                                                         <br><br>
                                                         If you have not yet determined if you would like to accept this group, you can choose to leave this request pending or group message with tenants to get more information about this group.
                                                         <br><br>
@@ -211,7 +260,7 @@
                                                             </span>
                                                             <br>
                                                             <span style="padding-left: 15px;">
-                                                                4. Group will be added to this property for {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}
+                                                                4. Group will be added to this property for {{ housingRequest.listing.start_date|format_date }} - {{ housingRequest.listing.end_date|format_date }}
                                                             <span style="padding-left: 15px;">
                                                         </span>
                                                         <br><br>
@@ -231,7 +280,7 @@
                                                             </span>
                                                             <br>
                                                             <span style="padding-left: 15px;">
-                                                                3. Your group will be added to this property for {{ housingRequest.listing.start_date }} - {{ housingRequest.listing.end_date }}
+                                                                3. Your group will be added to this property for {{ housingRequest.listing.start_date|format_date }} - {{ housingRequest.listing.end_date|format_date }}
                                                             <span style="padding-left: 15px;">
                                                         </span>
 						    	                	{% endif %}
@@ -257,7 +306,6 @@
 			        	                    <div class="row">
 			        	                        <div class="col-xs-12">
 			        	                            {% if current_user in landlords %}
-			        	                                <p class="card-text"><strong>The group requesting the property: </strong>{{ housingRequest.group.name }}</p>
 			        	                                {% with group=housingRequest.group %}
 			        	                                    {% for user in group.acceptedUsers %}                                    
 			        	                                        {% include 'house/smallMember.html' %}
@@ -382,8 +430,8 @@
 <!--Accept Group Modal-->
 <div class="modal fade" id="acceptGroupModal" tabindex="-1" role="dialog" aria-labelledby="acceptGroup" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content nexnest-font">
+            <div class="modal-header" style="background-color: #d2d2d2;">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -392,7 +440,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-xs-12">
-                        <p class="card-text">Are you sure you want to accept <strong>{{ housingRequest.group.name }}</strong> to live at this property? Next step will be to collect leases and security deposits</p>
+                        <p class="card-text">Are you sure you want to accept <strong>{{ housingRequest.group.name }}</strong> to live at this property?</p>
                     </div>
                 </div>
             </div>
@@ -406,8 +454,8 @@
 <!--Decline Group Modal-->
 <div class="modal fade" id="declineGroupModal" tabindex="-1" role="dialog" aria-labelledby="declineGroup" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content nexnest-font">
+            <div class="modal-header" style="background-color: #d2d2d2;">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -416,12 +464,12 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-xs-12">
-                        <p class="card-text">Are you sure you want to decline <strong>{{ housingRequest.group.name }}</strong> to live at this property? You will not be able to undo this
+                        <p class="card-text">Are you sure you want to decline <strong>{{ housingRequest.group.name }}'s</strong> request to live at this property?
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="{{url_for('housingRequests.denyRequest', id=housingRequest.id)}}" class="btn btn-danger">Decline Group</a>
+                <a href="{{url_for('housingRequests.denyRequest', id=housingRequest.id)}}" class="btn btn-red">Decline Group</a>
             </div>
         </div>
     </div>
@@ -430,8 +478,8 @@
 <!--Confirm Group Modal-->
 <div class="modal fade" id="confirmGroupModal" tabindex="-1" role="dialog" aria-labelledby="confirmGroup" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content nexnest-font">
+            <div class="modal-header" style="background-color: #d2d2d2;">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -440,12 +488,14 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-xs-12">
-                        <p class="card-text">Have you recieved all leases and security deposits from <strong>{{ housingRequest.group.name }}</strong>? If so, this is the last step, once you click confirm neither party can back out from the terms of the signed leases.</p>
+                        I hereby agree that I have received all that is required from this group (signed leases, security deposits, etc).
+                        <br>
+                        By confirming group, I am agreeing that {{ housingRequest.group.name }} will occupy {{ housingRequest.listing.street }} for {{ housingRequest.listing.start_date|format_date }} - {{ housingRequest.listing.end_date|format_date }}.
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="{{url_for('housingRequests.confirmRequest', id=housingRequest.id)}}" class="btn btn-primary">Confirm Group</a>
+                <a href="{{url_for('housingRequests.confirmRequest', id=housingRequest.id)}}" class="btn btn-blue">Confirm Group</a>
             </div>
         </div>
     </div>
@@ -454,8 +504,8 @@
 <!--Confirm Group Modal-->
 <div class="modal fade" id="everythingCollectedModal" tabindex="-1" role="dialog" aria-labelledby="everythingCollected" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content nexnest-font">
+            <div class="modal-header" style="background-color: #d2d2d2;">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -464,12 +514,14 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-xs-12">
-                        <p class="card-text">You have indicated that you have recieved all leases and deposits from  <strong>{{ housingRequest.group.name }}</strong>. If so, this is the last step, once you click confirm neither party can back out from the terms of the signed leases.</p>
+                        <p class="card-text">Looks like you have recieved all leases and deposits from  <strong>{{ housingRequest.group.name }}</strong>! 
+                        <br>
+                        By confirming group, I am agreeing that {{ housingRequest.group.name }} will occupy {{ housingRequest.listing.street }} for {{ housingRequest.listing.start_date|format_date }} - {{ housingRequest.listing.end_date|format_date }}.
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="{{url_for('housingRequests.confirmRequest', id=housingRequest.id)}}" class="btn btn-primary">Confirm Group</a>
+                <a href="{{url_for('housingRequests.confirmRequest', id=housingRequest.id)}}" class="btn btn-blue">Confirm Group</a>
             </div>
         </div>
     </div>
@@ -478,8 +530,8 @@
 <!--Decline Group Modal-->
 <div class="modal fade" id="somethingHappenedModal" tabindex="-1" role="dialog" aria-labelledby="somethingHappened" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content nexnest-font">
+            <div class="modal-header" style="background-color: #d2d2d2;">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -488,12 +540,26 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-xs-12">
-                        <p class="card-text">You have already agreed to allow <strong>{{ housingRequest.group.name }}</strong>. Has something happened to cause you to back out of renting to them? This cannot be undone.
+                        <p class="card-text">You have already accepted <strong>{{ housingRequest.group.name }}</strong> for this property. 
+                        <br><br>
+                        Has something happened to cause you to back out of renting to them?
+                        <br>
+                        Such as:
+                        <br>
+                        -I no longer feel comfortable renting to this group
+                        <br>
+                        -I have lost contact with this group
+                        <br>
+                        -I could not collect leases and deposits
+                        <br><br>
+                        Whatever the reason, this action cannot be undone.
+                        <br>
+                        This will allow other groups to begin requesting this property again.
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="{{url_for('housingRequests.denyRequest', id=housingRequest.id)}}" class="btn btn-danger">Back Out</a>
+                <a href="{{url_for('housingRequests.denyRequest', id=housingRequest.id)}}" class="btn btn-red">Cancel Application</a>
             </div>
         </div>
     </div>
@@ -537,7 +603,7 @@
     $('#somethingHappenedModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget);
       var modal = $(this);
-      modal.find('.modal-title').text('Back Out');
+      modal.find('.modal-title').text('Cancel Application');
     })
 
     //Group Report

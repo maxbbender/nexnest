@@ -1,13 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
-	<div class="row m-x-auto">
+	<div class="row m-x-auto nexnest-font" style="color: #656264; font-size: 20px; padding-top: 15px;">
 		<div class="col-xs-0 col-lg-3"></div>
 		<div class="col-xs-12 col-lg-6">
 			{% from "_formhelpers.html" import render_field %}
 			<form id="editAccountForm" action="{{url_for('users.editAccountInfo')}}" method="POST">
 			{{form.csrf_token}}
 			<fieldset>
-			    <legend>Your Information:</legend>
+			    <div class="row">
+                    <div class="col-xs-12">
+                        <div class="callout-block text-center fade-in-b" style="background-color: #d2d2d2;">
+                            <h1>Edit Profile:</h1>
+                        </div>
+                    </div>
+                </div>
 			    <div class="row">
 			        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
 			            <div class="form-group">
@@ -91,7 +97,7 @@
 				        </div>
 				    </div>
 				</fieldset>
-				<fieldset>
+				<!-- <fieldset>
 				    <legend style="padding-top: 20px;">Payments Accepted:</legend>
 				  	<div class="row">
                         <div class="col-xs-6">
@@ -117,11 +123,11 @@
                             </div>
                         </div>
                     </div>
-				</fieldset>
+				</fieldset> -->
 				{{form.date_of_birth}}
 			{% endif %}
 		  	<p style="float: right;">
-		  		<button type="button" class="btn btn-primary" onClick="submitForm()">Edit Information</button>
+		  		<button type="button" class="btn btn-blue" onClick="submitForm()">Save Changes</button>
 		  	</p>
 			</form>
 		</div>

@@ -14,12 +14,35 @@
 	color: #656264;
 }
 
+.btn-blue-outline {
+	background-image: none;
+    background-color: transparent;
+    color: #5686c5;
+    border-color: #5686c5;
+	border-radius: 10px;
+}
+
+.btn-blue-outline:hover {
+	color: #fff;
+	background-color: #5686c5;
+	border-color: #5686c5;
+}
+
 .btn-red {
 	background-color: #f16e5b; 
 	color: white;
 	border-radius: 10px;
 }
 .btn-red:hover {
+	color: #656264;
+}
+
+.btn-yellow {
+	background-color: #f4c359; 
+	color: white;
+	border-radius: 10px;
+}
+.btn-yellow:hover {
 	color: #656264;
 }
 
