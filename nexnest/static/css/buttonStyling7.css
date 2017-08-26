@@ -28,6 +28,13 @@
 	border-color: #5686c5;
 }
 
+.btn-blue-outline:active, .btn-blue-outline.active,
+.open > .btn-blue-outline.dropdown-toggle {
+  color: #fff;
+  background-color: #5686c5;
+  border-color: #5686c5;
+}
+
 .btn-red {
 	background-color: #f16e5b; 
 	color: white;

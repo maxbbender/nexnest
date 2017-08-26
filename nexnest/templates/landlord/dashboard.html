@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <link href="{{url_for('static', filename='css/landlord/dashboardStyling.css')}}" rel="stylesheet">
-<div class="row">
+<div class="row nexnest-font" style="color: #656264;">
     <div class="col-md-2 col-sm-2 col-xs-2 display-table-cell v-align box" id="navigation" style="height: inherit;">
         <div class="navi navbar">
         	<ul>
@@ -75,17 +75,16 @@
 	    <div class="tab-content">
 	    	<div class="tab-pane" id="checkoutTab" role="tabpanel" style="padding: 0px;">
 	        	<div class="row">
-			    	<div class="col-xs-0 col-md-1"></div>
-			    	<div class="col-xs-12 col-md-10">
-				    	<div class="callout-block text-center fade-in-b">
-				    		<h1 style="font-size: 3.5vh;">Select the Listings and Packages you Wish to Purchase</h1>
+			    	<div class="col-xs-12 col-md-12">
+				    	<div class="callout-block text-center fade-in-b" style="background-color: #d2d2d2;">
+				    		<h1 style="font-size: 3.5vh;">Select the Listings and Packages You Wish to Purchase</h1>
 				    	</div>
 			    	</div>
 			    </div>
 		    	<br>
 		    	<div class="row">
 		    		<div class="col-xs-12">
-		    			<a href="#!" class="btn btn-info" data-toggle="modal" data-target="#packageDescriptionModal">View Packages and Pricing</a>
+		    			<a href="#!" class="btn btn-blue" data-toggle="modal" data-target="#packageDescriptionModal">View Packages and Pricing</a>
 		    		</div>
 		    	</div>
 		    	<br>
@@ -97,7 +96,7 @@
 			            		<div class="col-xs-0"></div>
 			            		<div class="col-xs-12 col-lg-12" style="width: 100%">
 					                <div class="card">
-					                    <div class="card-header">
+					                    <div class="card-header" style="background-color: #d2d2d2;">
 					                    	<div class="row">
 					                    		<div class="col-xs-11">
 								                    <div class="row">
@@ -105,32 +104,32 @@
 							                    			<div class="checkbox">
 							                    			    <label style="font-size: 1.5em">
 							                    			    {% if listing.time_period == "school" %}
-							                    			        <input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" data-time="{{listing.time_period}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', 100);"/>
-							                    			        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+							                    			        <input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" data-time="{{listing.time_period}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', 79.99);"/>
+							                    			        <span class="cr" style="border-color: #4fac80; border-width: 2px;"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
 							                    			    {% elif listing.time_period == "summer" %}
-							                    			    	<input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" data-time="{{listing.time_period}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', 50);"/>
-							                    			        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+							                    			    	<input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" data-time="{{listing.time_period}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', 39.99);"/>
+							                    			        <span class="cr" style="border-color: #4fac80; border-width: 2px;"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
 							                    			    {% endif %}
 							                    			    </label>
 							                    			</div>						                    		
 								                    	</div>
 								                    	<div class="col-xs-6 col-md-11 col-lg-11 col-xl-6" style="padding-bottom: 15px;">				                    		
 							                    			<h4 style="font-size: 2.5vh;"><strong>
-							                    				{{ listing.street }}, 
+							                    				{{ listing.street }}
 							                    				<br>
-							                    				{{ listing.city }} {{ listing.state }}</strong>
+							                    				{{ listing.city }}, {{ listing.state }}</strong>
 							                    			</h4>
-							                    			<small style="font-size: 1.5vh; text-transform: capitalize;">Time Period: {{ listing.time_period }}</small>
+							                    			<small style="font-size: 1.5vh; text-transform: capitalize;">Time Period: {{ listing.humanTimePeriod }}</small>
 							                    			<br>
-							                    			<small style="font-size: 1.5vh;">Lease Period: {{ listing.start_date }} - {{ listing.end_date }}</small>
+							                    			<small style="font-size: 1.5vh;">Lease Period: {{ listing.start_date|format_date }} - {{ listing.end_date|format_date }}</small>
 								                    	</div>
 								                    	{% if listing.time_period == "school" %}
-								                    	<div class="col-xs-5 col-md-12 col-lg-12 col-xl-4" id="packageOptions{{listing.id}}" style="display: none; align-items: center;">
+								                    	<div class="col-xs-5 col-md-12 col-lg-12 col-xl-4" id="packageOptions{{listing.id}}" style="display: none; align-self: center;">
 								                    		<div class="btn-group" data-toggle="buttons" style="display: flex;">
-								                    		    <label class="btn btn-outline-primary active" id="standardLabel{{listing.id}}" onclick="downgradeToStandard({{listing.id}}, 100)">
+								                    		    <label class="btn btn-blue-outline active" id="standardLabel{{listing.id}}" onclick="downgradeToStandard({{listing.id}}, 79.99, 129.99)" style="font-size: 18px;">
 								                    		    	<input type="radio" name="packageChoice" id="standard{{listing.id}}" checked autocomplete="off"> PRO
 								                    		  	</label>
-								                    		  	<label class="btn btn-outline-primary" id="deluxeLabel{{listing.id}}" onclick="upgradeToDeluxe({{listing.id}}, 200)">
+								                    		  	<label class="btn btn-blue-outline" id="deluxeLabel{{listing.id}}" onclick="upgradeToDeluxe({{listing.id}}, 129.99, 79.99)" style="font-size: 18px;">
 								                    		    	<input type="radio" name="packageChoice" id="deluxe{{listing.id}}" autocomplete="off"> PREMIUM
 								                    		  	</label>
 								                    		</div>
@@ -138,10 +137,10 @@
 								                    	{% elif listing.time_period == "summer" %}
 								                    	<div class="col-xs-5 col-md-12 col-lg-12 col-xl-4" id="packageOptions{{listing.id}}" style="display: none; align-items: center;">
 								                    		<div class="btn-group" data-toggle="buttons" style="display: flex;">
-								                    		    <label class="btn btn-outline-primary active" id="standardLabel{{listing.id}}" onclick="downgradeToStandard({{listing.id}}, 50)">
+								                    		    <label class="btn btn-outline-primary active" id="standardLabel{{listing.id}}" onclick="downgradeToStandard({{listing.id}}, 39.99, 69.99)" style="font-size: 18px;">
 								                    		    	<input type="radio" name="packageChoice" id="standard{{listing.id}}" checked autocomplete="off"> PRO
 								                    		  	</label>
-								                    		  	<label class="btn btn-outline-primary" id="deluxeLabel{{listing.id}}" onclick="upgradeToDeluxe({{listing.id}}, 100)">
+								                    		  	<label class="btn btn-outline-primary" id="deluxeLabel{{listing.id}}" onclick="upgradeToDeluxe({{listing.id}}, 69.99, 39.99)" style="font-size: 18px;">
 								                    		    	<input type="radio" name="packageChoice" id="deluxe{{listing.id}}" autocomplete="off"> PREMIUM
 								                    		  	</label>
 								                    		</div>
@@ -149,11 +148,10 @@
 								                    	{% endif %}						                    	
 								                    </div>
 								                </div>
-								                <div class="col-xs-1">		                    		                
-	                			                	<a href="{{ url_for('listings.editListing', listingID=listing.id) }}"><strong>Edit</strong></a>
+								                <div class="col-xs-1" style="font-size: 20px; margin-left: -30px;">
+	                			                	<a href="{{ url_for('listings.editListing', listingID=listing.id) }}"><strong class="text-nowrap"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</strong></a>
 	                			                	<br>
-	                			                	<br>
-	                			                	<a href="{{ url_for('listings.cloneListing', listingID=listing.id) }}"><strong>Copy</strong></a>
+	                			                	<a href="{{ url_for('listings.cloneListing', listingID=listing.id) }}"><strong class="text-nowrap"><i class="fa fa-clone" aria-hidden="true"></i> Copy</strong></a>
 						                    	</div>
 						                    </div>
 					                    </div>
@@ -163,23 +161,31 @@
 			            {% endif %}
 			            {% endfor %}
 			        </div>
-			        <div id="cart" class="hidden-md-down col-lg-3" style="z-index: 10; position: fixed; top: 25%; left: 75%;">
-		                <div class="card">
-					        <div class="card-header">
+			        <div id="cart" class="hidden-md-down col-lg-3" style="z-index: 10; position: fixed; top: 22%; left: 71%;">
+		                <div class="card" style="width: 117%;">
+					        <div class="card-header" style="background-color: #d2d2d2;">
 				                <div class="row">
-				                	<div class="col-xs-12">
-				                		Shopping Cart
+				                	<div class="col-xs-12" style="font-size: 20px;">
+				                		<i class="fa fa-shopping-cart" aria-hidden="true" style="padding-right: 5px;"></i> Shopping Cart
 				                	</div>
 				                </div>
 				            </div>
 				            <div id="cartContents" class="card-block">
-				            	<div class="row" id="nothingInCart">
-				            		No Listings Selected Yet
+				            	<div class="row">
+				            		<div class="col-xs-12" id="nothingInCart">
+				            			No Listings Selected Yet
+				            		</div>
 				            	</div>
 				            </div>
-				            <div class="card-footer">
-				            	Total: <span id="checkoutTotal">$0</span>
-				            	<button id="checkoutButton" class="btn btn-primary" style="display: none; float: right" onclick="checkout({{current_user.id}})">Checkout</button>
+				            <div class="card-footer" style="background-color: #d2d2d2; font-size: 20px;">
+				            	<div class="row">
+				            		<div class="col-xs-6" style="align-self: center;">
+				            			Total: <span id="checkoutTotal">$0</span>
+				            		</div>
+				            		<div class="col-xs-6">
+				            			<button id="checkoutButton" class="btn btn-blue" style="display: none; float: right" onclick="checkout({{current_user.id}})">Checkout</button>
+				            		</div>
+				            	</div>
 				            </div>
 				        </div>
 			        </div>
@@ -190,18 +196,26 @@
 					        <div class="card-header">
 				                <div class="row">
 				                	<div class="col-xs-12">
-				                		Shopping Cart
+				                		<i class="fa fa-shopping-cart" aria-hidden="true" style="padding-right: 5px;"></i> Shopping Cart
 				                	</div>
 				                </div>
 				            </div>
 				            <div id="cartContents2" class="card-block">
-				            	<div class="row" id="nothingInCart2">
-				            		No Listings Selected Yet
+				            	<div class="row">
+				            		<div class="col-xs-12" id="nothingInCart2">
+				            			No Listings Selected Yet
+				            		</div>
 				            	</div>
 				            </div>
 				            <div class="card-footer">
-				            	Total: <span id="checkoutTotal2">$0</span>
-				            	<button id="checkoutButton2" class="btn btn-primary" style="display: none; float: right" onclick="checkout()">Checkout</button>
+				            	<div class="row">
+				            		<div class="col-xs-6" style="align-self: center;">
+				            			Total: <span id="checkoutTotal2">$0</span>
+				            		</div>
+				            		<div class="col-xs-6">
+				            			<button id="checkoutButton2" class="btn btn-blue" style="display: none; float: right" onclick="checkout()">Checkout</button>
+				            		</div>
+				            	</div>
 				            </div>
 				        </div>
 			        </div>
@@ -2339,27 +2353,27 @@
 			$("#checkoutButton2").show();
 			//Append to the cart div
 			var newItem =   "<div class='row' id='itemInCart"+id+"'>"+
-		              			"<div class='col-xs-8'>"+
+		              			"<div class='col-xs-8' style='align-self: center;'>"+
 		                			listing +
 		                		"</div>"+
-		                		"<div class='col-xs-2' id='itemPrice"+id+"'>"+
+		                		"<div class='col-xs-2' id='itemPrice"+id+"' style='align-self: center;'>"+
 		                			"$"+price+
 		                		"</div>"+
 		                		"<div class='col-xs-2'>"+
-		                			"<button class='btn btn-danger btn-circle' onClick='removeListingToPurchase("+id+")'><i class='fa fa-times' aria-hidden='true'></i></button>"+
+		                			"<button class='btn btn-danger btn-circle' style='color: #f16e5b;' onClick='removeListingToPurchase("+id+")'><i class='fa fa-times' aria-hidden='true' style='color: #fff;'></i></button>"+
 		                		"</div>"+		                		
 		               		"</div>"+
 		               		"<hr id='hrInCart"+id+"'>";
 
 		    var newItem2 =   "<div class='row' id='itemInCart2"+id+"'>"+
-		              			"<div class='col-xs-8'>"+
+		              			"<div class='col-xs-8' style='align-self: center;'>"+
 		                			listing +
 		                		"</div>"+
-		                		"<div class='col-xs-2' id='itemPrice2"+id+"'>"+
+		                		"<div class='col-xs-2' id='itemPrice2"+id+"' style='align-self: center;'>"+
 		                			"$"+price+
 		                		"</div>"+
 		                		"<div class='col-xs-2'>"+
-		                			"<button class='btn btn-danger btn-circle' onClick='removeListingToPurchase("+id+")'><i class='fa fa-times' aria-hidden='true'></button>"+
+		                			"<button class='btn btn-danger btn-circle' style='color: #f16e5b;' onClick='removeListingToPurchase("+id+")'><i class='fa fa-times' aria-hidden='true' style='color: #fff;'></i></button>"+
 		                		"</div>"+		                		
 		               		"</div>"+
 		               		"<hr id='hrInCart2"+id+"'>";
@@ -2410,21 +2424,21 @@
 		}
     }
 
-    function upgradeToDeluxe(id, price){
+    function upgradeToDeluxe(id, price, oldPrice){
     	if(! $("#deluxeLabel"+id).hasClass("active")){
 	    	$("#itemPrice"+id).text("$"+price);
 	    	$("#itemPrice2"+id).text("$"+price);
-	    	totalCost += (price/2);
+	    	totalCost += (price-oldPrice);
 	    	$("#checkoutTotal").text("$"+totalCost);
 	    	$("#checkoutTotal2").text("$"+totalCost);
 	    }
     }
 
-    function downgradeToStandard(id, price){
+    function downgradeToStandard(id, price, oldPrice){
     	if(! $("#standardLabel"+id).hasClass("active")){
     		$("#itemPrice"+id).text("$"+price);
 	    	$("#itemPrice2"+id).text("$"+price);
-	    	totalCost -= price;
+	    	totalCost -= (oldPrice-price);
 	    	$("#checkoutTotal").text("$"+totalCost);
 	    	$("#checkoutTotal2").text("$"+totalCost);
     	}	
