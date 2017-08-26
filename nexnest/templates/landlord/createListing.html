@@ -1,43 +1,43 @@
 {% extends "base.html" %} {% block content %}
 <br>
-<div class="row">
+<div class="row nexnest-font" style="font-size: 20px; color: #656264;">
     <div class="col-xs-0 col-sm-1 col-md-1 col-lg-1 col-xl-2">
     </div>
     <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-8">
-        <h1 style="font-family: 'Enriqueta', arial, serif; line-height: 1.25; margin: 0 0 10px; font-size: 43px; font-weight: bold;">Create a Listing</h1>
+        <h1 style="font-size: 43px; padding-left: 45px;">Create a Listing</h1>
         <br>
         <div class="stepwizard col-xs-12">
             <div class="stepwizard-row setup-panel">
-                <div class="stepwizard-step">
-                    <a href="#step-1" type="button" class="btn btn-primary btn-circle">1</a>
+                <div class="stepwizard-step" style="width: 150px;">
+                    <a href="#step-1" type="button" class="btn btn-blue btn-circle">1</a>
                     <p class="hidden-md-down">Address</p>
                 </div>
-                <div class="stepwizard-step">
-                    <a href="#step-2" type="button" class="btn btn-default btn-circle disabled">2</a>
+                <div class="stepwizard-step" style="width: 150px;">
+                    <a href="#step-2" type="button" class="btn btn-default btn-circle ">2</a>
                     <p class="hidden-md-down">Property Details</p>
                 </div>
-                <div class="stepwizard-step">
-                    <a href="#step-3" type="button" class="btn btn-default btn-circle disabled">3</a>
+                <div class="stepwizard-step" style="width: 150px;">
+                    <a href="#step-3" type="button" class="btn btn-default btn-circle ">3</a>
                     <p class="hidden-md-down">Rental Time</p>
                 </div>                
-                <div class="stepwizard-step">
-                    <a href="#step-4" type="button" class="btn btn-default btn-circle disabled">4</a>
+                <div class="stepwizard-step" style="width: 150px;">
+                    <a href="#step-4" type="button" class="btn btn-default btn-circle ">4</a>
                     <p class="hidden-md-down">Utilities</p>
                 </div>
-                <div class="stepwizard-step">
-                    <a href="#step-5" type="button" class="btn btn-default btn-circle disabled">5</a>
+                <div class="stepwizard-step" style="width: 150px;">
+                    <a href="#step-5" type="button" class="btn btn-default btn-circle ">5</a>
                     <p class="hidden-md-down">Appliances</p>
                 </div>
-                <div class="stepwizard-step">
-                    <a href="#step-6" type="button" class="btn btn-default btn-circle disabled">6</a>
+                <div class="stepwizard-step" style="width: 150px;">
+                    <a href="#step-6" type="button" class="btn btn-default btn-circle ">6</a>
                     <p class="hidden-md-down">Services</p>
                 </div>
-                <div class="stepwizard-step">
-                    <a href="#step-7" type="button" class="btn btn-default btn-circle disabled">7</a>
+                <div class="stepwizard-step" style="width: 150px;">
+                    <a href="#step-7" type="button" class="btn btn-default btn-circle ">7</a>
                     <p class="hidden-md-down">Pets</p>
                 </div>
-                <div class="stepwizard-step">
-                    <a href="#step-8" type="button" class="btn btn-default btn-circle disabled">8</a>
+                <div class="stepwizard-step" style="width: 150px;">
+                    <a href="#step-8" type="button" class="btn btn-default btn-circle ">8</a>
                     <p class="hidden-md-down">Description</p>
                 </div>
             </div>
@@ -51,10 +51,10 @@
                         <div class="col-xs-0 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
                         <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10">
                             <h2> Step 1: Address</h2>
-                            <div class="row">
+                            <div class="row" style="padding-bottom: 60px;">
                                 <div class="col-xs-12">
                                     <div id="locationField">
-                                        <input class="form-control" id="autocomplete" placeholder="Enter property address" onFocus="geolocate()" type="text" style="box-shadow: 0 0 5px rgba(82, 171, 129, 1); border: 1px solid rgba(82, 171, 129, 1);"></input>
+                                        <input class="form-control" id="autocomplete" placeholder="Enter property address" onFocus="geolocate()" type="text" style="box-shadow: 0 0 5px rgba(82, 171, 129, 1); border: 1px solid rgba(82, 171, 129, 1); height: 55px; font-size: 25px;">
                                     </div>
                                 </div>
                             </div>
@@ -88,22 +88,24 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-xs-6">
+                                <div class="col-xs-12 col-sm-6">
                                     <div class="form-group">
                                         {{ form.colleges(class='form-control', required='required') }}
-                                        <label class="control-label form-control-feedback">What Colleges are you targeting?(up to 3)</label>
+                                        <label class="control-label form-control-feedback text-nowrap">What colleges are you targeting? (up to 3)</label>
                                         <div id="magicsuggest" required='required'></div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row pull-right" style="align-items: center;">
-                                <button id="zipCodeButton" class="btn btn-primary nextBtn btn-lg pull-right" type="button" style="margin-right: 25px;">Next</button>
-                                <a href="#" data-toggle="modal" data-target="#contactUsModal">need help?</a>
-                            </div>
+                            <div class="row" style="align-items: center; text-align: right;">
+                                <div class="col-xs-12">
+                                    <u><a href="#" data-toggle="modal" data-target="#contactUsModal" style="padding-right: 30px;">need help?</a></u>
+                                    <button id="zipCodeButton" class="btn btn-blue nextBtn btn-lg" type="button">Next</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>                
+                </div>
+            </div>
                 <div class="row setup-content" id="step-2">
                     <div class="col-xs-12">
                         <div class="row">
@@ -132,34 +134,34 @@
                                     </div>
                                 </div>                                
                                 <div class="row">
-                                    <div class="col-xs-6">
-                                        <div class="form-group">
+                                    <div class="col-xs-12">
+                                        <div class="form-group" style="margin-bottom: -5px;">
                                             <label class="control-label form-control-feedback" id="furnished_label">Is the property furnished?</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.furnished(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-col-xs-12 col-md-6 col-xl-4">
+                                    <div class="col-xs-col-xs-12 col-md-6 col-lg-6 col-xl-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback">Number of Bedrooms</label>
+                                            <label class="control-label form-control-feedback text-nowrap">Number of Bedrooms</label>
                                             {{form.num_bedrooms(class='form-control', required='required', maxlength='1', type="number")}}
                                         </div>
                                     </div>
-                                    <div class="col-xs-col-xs-12 col-md-6 col-xl-4">
+                                    <div class="col-xs-col-xs-12 col-md-6 col-lg-6 col-xl-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback">Number of Full Bathrooms</label>
+                                            <label class="control-label form-control-feedback text-nowrap">Number of Full Bathrooms</label>
                                             {{form.num_full_baths(class='form-control', required='required', maxlength='1', type="number")}}
                                         </div>
                                     </div>
-                                    <div class="col-xs-col-xs-12 col-md-6 col-xl-4">
+                                    <div class="col-xs-col-xs-12 col-md-6 col-lg-6 col-xl-4">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback">Number of Half Bathrooms</label>
+                                            <label class="control-label form-control-feedback text-nowrap">Number of Half Bathrooms</label>
                                             {{form.num_half_baths(class='form-control', maxlength='1', type="number")}}
                                         </div>
                                     </div>
@@ -176,16 +178,18 @@
                                             <label class="control-label form-control-feedback">Square Footage of Property</label>
                                             <div class="input-group">
                                                 {{form.square_footage(class='form-control', type="number")}}
-                                                <span class="input-group-addon">FT</span>
+                                                <span class="input-group-addon nexnest-font">FT</span>
                                             </div>
                                             <!-- <input id="footage" maxlength="100" type="number" name="square_footage" required="required" class="form-control" /> -->
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row pull-right" style="align-items: center;">
-                                    <button class="btn btn-primary nextBtn btn-lg pull-right" type="button" style="margin-right: 25px;">Next</button>
-                                    <a href="#" data-toggle="modal" data-target="#contactUsModal">need help?</a>
-                                </div>                                
+                                <div class="row" style="align-items: center; text-align: right;">
+                                    <div class="col-xs-12">
+                                        <u><a href="#" data-toggle="modal" data-target="#contactUsModal" style="padding-right: 30px;">need help?</a></u>
+                                        <button class="btn btn-blue nextBtn btn-lg pull-right" type="button">Next</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -195,19 +199,19 @@
                         <div class="row">
                             <div class="col-xs-0 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
                             <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10">
-                                <h2> Step 3: Rental Time Period</h2>
+                                <h2> Step 3: Rental Lease Period</h2>
                                 {{endDate}}
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback">Time Period</label>
+                                            <label class="control-label form-control-feedback">Lease Period</label>
                                             {{form.time_period(class='form-control', required='required')}}
                                         </div>
                                     </div>
                                     <div id="time_range_full_year" class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                         <div class="form-group">
                                             {{form.time_period_date_range}}
-                                            <label class="control-label">What year is this for</label>
+                                            <label class="control-label">What year is this for?</label>
                                             <select class="form-control" name="time_range_full" id="time_range_full_select">
                                                 <option value="2017-2018">2017-2018</option>
                                                 <option value="2018-2019">2018-2019</option>
@@ -219,7 +223,7 @@
                                     <div id="time_range_summer" class="col-xs-12 col-sm-12 col-md-12 col-lg-6" style="display: none;">
                                         <div class="form-group">
                                             {{form.time_period_date_range}}
-                                            <label class="control-label">What year is this for</label>
+                                            <label class="control-label">What year is this for?</label>
                                             <select class="form-control" name="time_range_summer" id="time_range_summer_select">
                                                 <option value="2018">2018</option>
                                                 <option value="2019">2019</option>
@@ -267,7 +271,7 @@
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                             <div class="form-group">
-                                                <label class="control-label form-control-feedback" id="price_label">Price Per Bedroom per Month</label>
+                                                <label class="control-label form-control-feedback" id="price_label">Price Per Bedroom Per Month</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon">$</span> {{form.price(class='form-control', required='required')}}
                                                 </div>
@@ -315,7 +319,7 @@
                                     </div>
                                 </div>
                                 <div class="row pull-right" style="align-items: center;">
-                                    <button class="btn btn-primary nextBtn btn-lg pull-right" type="button" style="margin-right: 25px;">Next</button>
+                                    <button class="btn btn-blue nextBtn btn-lg pull-right" type="button" style="margin-right: 25px;">Next</button>
                                     <a href="#" data-toggle="modal" data-target="#contactUsModal">need help?</a>
                                 </div>  
                             </div>
@@ -327,9 +331,9 @@
                         <div class="row">
                             <div class="col-xs-0 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
                             <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10">
-                                <h3> Step 4: Utilities</h3>
+                                <h2> Step 4: Utilities</h2>
                                 <br>
-                                <p><strong>Please select which utilites if any are included in this price</strong></p>
+                                <p><strong>Please select which utilites, if any, are included:</strong></p>
                                 <div class="row">
                                     <div class="col-xs-6">
                                         <div class="form-group">
@@ -337,7 +341,7 @@
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.electricity(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
@@ -348,7 +352,7 @@
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.water(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
@@ -361,7 +365,7 @@
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.heat_gas(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
@@ -372,7 +376,7 @@
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.internet(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
@@ -385,14 +389,14 @@
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.cable(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row pull-right" style="align-items: center;">
-                                    <button class="btn btn-primary nextBtn btn-lg pull-right" type="button" style="margin-right: 25px;">Next</button>
+                                    <button class="btn btn-blue nextBtn btn-lg pull-right" type="button" style="margin-right: 25px;">Next</button>
                                     <a href="#" data-toggle="modal" data-target="#contactUsModal">need help?</a>
                                 </div>  
                             </div>
@@ -404,9 +408,9 @@
                         <div class="row">
                             <div class="col-xs-0 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
                             <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10">
-                                <h3> Step 5: Appliances</h3>
+                                <h2> Step 5: Appliances</h2>
                                 <br>
-                                <p><strong>Please select all that are included in the property</strong></p>
+                                <p><strong>Please select which appliances, if any, are included:</strong></p>
                                 <div class="row">
                                     <div class="col-xs-6">
                                         <div class="form-group">
@@ -415,7 +419,7 @@
                                                 <label style="font-size: 1.5em">
                                                     {{form.air_conditioning(class='form-control form-check-input')}}
                                                     <!-- <input id="air_conditioning" class="form-check-input" type="checkbox"> -->
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
@@ -427,7 +431,7 @@
                                                 <label style="font-size: 1.5em">
                                                     {{form.dishwasher(class='form-control form-check-input')}}
                                                     <!-- <input id="dishwasher" class="form-check-input" type="checkbox"> -->
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
@@ -436,28 +440,28 @@
                                 <div class="row">
                                     <div class="col-xs-6">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="dryer_label">Dryer</label>
+                                            <label class="control-label form-control-feedback" id="washer_label">Washing Machine</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
-                                                    {{form.dryer(class='form-check-input form-check-input')}}
-                                                    <!-- <input id="dryer" class="form-check-input" type="checkbox"> -->
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    {{form.washer(class='form-control form-check-input')}}
+                                                    <!-- <input id="washer" class="form-check-input" type="checkbox"> -->
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xs-6">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="washer_label">Washing Machine</label>
+                                            <label class="control-label form-control-feedback" id="dryer_label">Dryer</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
-                                                    {{form.washer(class='form-control form-check-input')}}
-                                                    <!-- <input id="washer" class="form-check-input" type="checkbox"> -->
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    {{form.dryer(class='form-check-input form-check-input')}}
+                                                    <!-- <input id="dryer" class="form-check-input" type="checkbox"> -->
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>                                    
                                 </div>
                                 <div class="row" style="display: none;" id="freeLaundry">
                                     <div class="col-xs-6">
@@ -466,14 +470,14 @@
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.washer_free(class='form-check-input form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row pull-right" style="align-items: center;">
-                                    <button class="btn btn-primary nextBtn btn-lg pull-right" type="button" style="margin-right: 25px;">Next</button>
+                                    <button class="btn btn-blue nextBtn btn-lg pull-right" type="button" style="margin-right: 25px;">Next</button>
                                     <a href="#" data-toggle="modal" data-target="#contactUsModal">need help?</a>
                                 </div>  
                             </div>
@@ -485,30 +489,30 @@
                         <div class="row">
                             <div class="col-xs-0 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
                             <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10">
-                                <h3> Step 6: Services</h3>
+                                <h2> Step 6: Services</h2>
                                 <br>
-                                <p><strong>Please select all that apply</strong></p>
+                                <p><strong>Please select all that apply:</strong></p>
                                 <div class="row">
                                     <div class="col-xs-6">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="handicap_label">Is the Property Handicap Accessible?</label>
+                                            <label class="control-label form-control-feedback" id="handicap_label">Is the property handicap accessible?</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.handicap(class='form-control form-check-input')}}
                                                     <!-- <input id="handicap" class="form-check-input" type="checkbox"> -->
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xs-6">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="snow_label">Do You Provide Snow Removal?</label>
+                                            <label class="control-label form-control-feedback" id="snow_label">Do you provide snow removal?</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.snow_plowing(class='form-control form-check-input')}}
                                                     <!-- <input id="snow_plowing" class="form-check-input" type="checkbox"> -->
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
@@ -517,24 +521,24 @@
                                 <div class="row">
                                     <div class="col-xs-6">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="garbage_label">Are Garbage Services Included?</label>
+                                            <label class="control-label form-control-feedback" id="garbage_label">Are garbage services included?</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.garbage_service(class='form-control form-check-input')}}
                                                     <!-- <input id="garbage_service" class="form-check-input" type="checkbox"> -->
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xs-6">
                                         <div class="form-check">
-                                            <label class="control-label form-control-feedback" id="maintenance_label">Do You Offer Emergency Maintenance?</label>
+                                            <label class="control-label form-control-feedback" id="maintenance_label">Do you offer emergency maintenance?</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.emergency_maintenance(class='form-control form-check-input')}}
                                                     <!-- <input id="maintenance" class="form-check-input" type="checkbox"> -->
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
@@ -543,19 +547,19 @@
                                 <div class="row">
                                     <div class="col-xs-6">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="security_label">Do You Offer Security Services?</label>
+                                            <label class="control-label form-control-feedback" id="security_label">Do you offer security services?</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.security_service(class='form-control form-check-input')}}
                                                     <!-- <input id="security" class="form-check-input" type="checkbox"> -->
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row pull-right" style="align-items: center;">
-                                    <button class="btn btn-primary nextBtn btn-lg pull-right" type="button" style="margin-right: 25px;">Next</button>
+                                    <button class="btn btn-blue nextBtn btn-lg pull-right" type="button" style="margin-right: 25px;">Next</button>
                                     <a href="#" data-toggle="modal" data-target="#contactUsModal">need help?</a>
                                 </div>  
                             </div>
@@ -567,9 +571,9 @@
                         <div class="row">
                             <div class="col-xs-0 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
                             <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10">
-                                <h3> Step 7: Pets</h3>
+                                <h2> Step 7: Pets</h2>
                                 <br>
-                                <p><strong>What Pets Do You Allow?</strong></p>
+                                <p><strong>What pets do you allow?</strong></p>
                                 <div class="row">
                                     <div class="col-xs-6">
                                         <div class="form-group">
@@ -578,7 +582,7 @@
                                                 <label style="font-size: 1.5em">
                                                     {{form.dogs(class='form-control form-check-input')}}
                                                     <!-- <input id="handicap" class="form-check-input" type="checkbox"> -->
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
@@ -590,22 +594,22 @@
                                                 <label style="font-size: 1.5em">
                                                     {{form.cats(class='form-control form-check-input')}}
                                                     <!-- <input id="snow_plowing" class="form-check-input" type="checkbox"> -->
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-6">
+                                    <div class="col-xs-12 col-md-7">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback">Anything else to say about pets?(100 characters max)</label>
+                                            <label class="control-label form-control-feedback">Additional details (100 characters max): </label>
                                             {{form.other_pets(class='form-control', rows='3', maxlength="150")}}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row pull-right" style="align-items: center;">
-                                    <button class="btn btn-primary nextBtn btn-lg pull-right" type="button" style="margin-right: 25px;">Next</button>
+                                    <button class="btn btn-blue nextBtn btn-lg pull-right" type="button" style="margin-right: 25px;">Next</button>
                                     <a href="#" data-toggle="modal" data-target="#contactUsModal">need help?</a>
                                 </div>  
                             </div>
@@ -617,30 +621,31 @@
                         <div class="row">
                             <div class="col-xs-0 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
                             <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10">
-                                <h3>Step 8: Description</h3>
+                                <h2>Step 8: Description</h2>
                                 <br>
-                                <p><strong>Please provide a description of the property and anything you want prospective tenants to know about it.</strong></p>
+                                <p><strong>Please provide a description of the property and/or any additional information you would like to display.</strong></p>
                                 <div class="form-group">
-                                    <label class="control-label form-control-feedback">Description</label>
                                     {{form.description(class='form-control', rows='5')}}
                                     <!-- textarea id="description" type="textarea" rows="5" class="form-control"></textarea> -->
                                 </div>
-                                <p><strong>Floor Plan</strong></p>
                                 <div class="row">
-                                    <div class="form-group">
-                                        <label class="control-label form-control-feedback">Upload a PDF of the floor plan if you have one</label>
-                                        {{form.floor_plan(class='form-control')}}
+                                    <div class="col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback">Upload Floor Plan (pdf, png, gif, jpg)<small style="padding-left: 15px;">Not Required</small></label>
+                                            {{form.floor_plan(class='form-control')}}
+                                        </div>
                                     </div>
                                 </div>
-                               <!--  <p><strong>Youtube video of the property</strong></p>
                                 <div class="row">
-                                    <div class="form-group">
-                                        <label class="control-label form-control-feedback">If you have a video of your house on Youtube paste the link here</label>
-                                        {{form.youtube_url(class='form-control', type="url")}}
+                                    <div class="col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback">YouTube Video URL: <small style="padding-left: 15px;">Not Required</small></label>
+                                            {{form.youtube_url(class='form-control', type="url", placeholder="Paste link here")}}
+                                        </div>
                                     </div>
-                                </div> -->
+                                </div>
                                 <div class="row pull-right" style="align-items: center;">
-                                    <button class="btn btn-primary" onClick="submitListingForm();" style="margin-right: 25px;">Add Photos</button>
+                                    <button class="btn btn-blue" onClick="submitListingForm();" style="margin-right: 25px;">Add Photos</button>
                                     <a href="#" data-toggle="modal" data-target="#contactUsModal">need help?</a>
                                 </div>                                
                             </div>
@@ -670,9 +675,9 @@
                     <div id="groupNumber" style="display: none;"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onClick="submitListingForm('createNew')" data-dismiss="modal">Create Another Listing</button>
-                    <button type="button" class="btn btn-primary" onClick="submitListingForm('createCopy')" data-dismiss="modal">Use Listing as Template</button>
-                    <button type="button" class="btn btn-primary" onClick="submitListingForm('checkout')" data-dismiss="modal">Proceed to Checkout</button>
+                    <button type="button" class="btn btn-blue" onClick="submitListingForm('createNew')" data-dismiss="modal">Create Another Listing</button>
+                    <button type="button" class="btn btn-blue" onClick="submitListingForm('createCopy')" data-dismiss="modal">Use Listing as Template</button>
+                    <button type="button" class="btn btn-blue" onClick="submitListingForm('checkout')" data-dismiss="modal">Proceed to Checkout</button>
                 </div>
             </div>
         </div>
@@ -906,13 +911,13 @@
         }
         //Determine wether or not to show the rent due date fields
         if ($("#rent_due").val() == "monthly") {
-            $("#price_label").text("Price Per Bedroom per Month");
+            $("#price_label").text("Price Per Bedroom Per Month");
             $("#first_semester_rent_due").hide();
             $("#second_semester_rent_due").hide();
             $('#first_semester_rent_due').removeAttr('required');
             $('#second_semester_rent_due').removeAttr('required');
         } else {
-            $("#price_label").text("Price Per Bedroom per Semester");
+            $("#price_label").text("Price Per Bedroom Per Semester");
             $("#first_semester_rent_due").show();
             $("#second_semester_rent_due").show();
             $('#first_semester_rent_due').attr('required', 'required');
@@ -949,13 +954,13 @@
         /* Here we go, populate hidden form object with values to submit */
         $('#rent_due').change(function() {
             if ($("#rent_due").val() == "monthly") {
-                $("#price_label").text("Price Per Bedroom per Month");
+                $("#price_label").text("Price Per Bedroom Per Month");
                 $("#first_semester_rent_due").hide();
                 $("#second_semester_rent_due").hide();
                 $('#first_semester_rent_due').removeAttr('required');
                 $('#second_semester_rent_due').removeAttr('required');
             } else {
-                $("#price_label").text("Price Per Bedroom per Semester");
+                $("#price_label").text("Price Per Bedroom Per Semester");
                 $("#first_semester_rent_due").show();
                 $("#second_semester_rent_due").show();
                 $('#first_semester_rent_due').attr('required', 'required');
@@ -1007,8 +1012,8 @@
                 $item = $(this);
 
             if (!$item.hasClass('disabled')) {
-                navListItems.removeClass('btn-primary').addClass('btn-default');
-                $item.addClass('btn-primary');
+                navListItems.removeClass('btn-blue').addClass('btn-default');
+                $item.addClass('btn-blue');
                 allWells.hide();
                 $target.show();
                 $target.find('input:eq(0)').focus();
@@ -1137,7 +1142,7 @@
             }
         });
 
-        $('div.setup-panel div a.btn-primary').trigger('click');
+        $('div.setup-panel div a.btn-blue').trigger('click');
     });
     $('#radioBtn a').on('click', function() {
         var sel = $(this).data('title');

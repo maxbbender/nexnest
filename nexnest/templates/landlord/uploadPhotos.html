@@ -2,26 +2,36 @@
 {% block content %}
     <form id="photoForm" action="{{url_for('listings.uploadPhotos', listingID=listingID)}}" role="form" data-toggle="validator" method='POST' enctype="multipart/form-data">
         {{form.csrf_token}}
-        <div class="row">
+        <div class="row nexnest-font" style="color: #656264">
             <div class="col-md-1"></div>
             <div class="col-xs-12 col-md-10">
+                <div class="row" style="padding-top: 45px;">
+                    <div class="col-xs-12" style="padding-left: 0px;">
+                        <h1 style="font-size: 43px;">Upload Photos</h1>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                         <br>
-                        <h3><strong>Banner Photo(The photo that is displayed on the homepage)</strong></h3>
                         <div class="row" style="width: 100%;">
                             <div class="form-group" style="width: 100%;">
+                                <h3><strong>Cover Photo (This photo will appear first on your listing)</strong><small class="text-muted" style="padding-left: 10px;">Not Required</small></h3>
                                 {{form.bannerPicture(class='form-control file', required='required')}}
                             </div>
                         </div>
-                        <h3><strong>Other photos of the property. (Up to 15)</strong></h3>
+                        
                         <div class="row" style="width: 100%;">
                             <div class="form-group" style="width: 100%;">
+                                <h3><strong>Other Photos of Property (Up to 15)</strong><small class="text-muted" style="padding-left: 10px;">Not Required</small></h3>
                                 {{form.pictures(class='form-control file-loading', multiple='')}}
                             </div>
                         </div>
-                        {{form.nextAction}}
-                        <a href='#' class="btn btn-primary" data-toggle="modal" data-target="#confirmModal">Create Listing</a>
+                        {{form.nextAction}}                        
+                    </div>
+                </div>
+                <div class="row" style="padding-bottom: 60px;">
+                    <div class="col-xs-12" style="text-align: right;">
+                        <a href='#' class="btn btn-light-green" data-toggle="modal" data-target="#confirmModal" style="margin-right: 15px;"><i class="fa fa-plus" aria-hidden="true" style="padding-right: 5px;"></i> Create Listing</a>
                     </div>
                 </div>
             </div>
@@ -30,8 +40,8 @@
 <!--Confirm Listing-->
     <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirm" aria-hidden="true">
         <div class="modal-dialog" role="document" style="max-width: 700px;">
-            <div class="modal-content">
-                <div class="modal-header">                  
+            <div class="modal-content nexnest-font" style="font-size: 20px; color: #656264;">
+                <div class="modal-header" style="background-color: #656264;">                  
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -54,29 +64,41 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body nexnest-font" style="font-size: 20px; color: #656264;">
                     <div class="row">
                         <div class="col-xs-1"></div>
-                        <div class="col-xs-10">
-                              You have succesfully created your listing. From here you have three options. You can <strong>Proceed to Checkout</strong> where you can purchase this listing and have it displayed on NexNest! You can also <strong>Create Another Listing</strong> and then checkout multiple at once. If you want, you can even <strong>Use This Listing as Template</strong> which will prefill the create form with everything you chose for this listing. This is ideal to create this listing again for the following year.
+                        <div class="col-xs-10">                            
+                            You have succesfully created your listing!
+                            <br><br>
+                            Please Proceed with one of the following:
+                            <br><br>
+                            <div class="row">
+                                <div class="col-xs-12" style="padding-left: 30px;">
+                                    <i class="fa fa-plus" aria-hidden="true" style="padding-right: 5px;"></i> <strong style="color: #5686c5;"> Create Another Listing</strong> to add an additional listing to your cart
+                                    <br><br>
+                                    <i class="fa fa-clone" aria-hidden="true" style="padding-right: 5px;"></i> Use <strong style="color: #5686c5;">Listing as Template</strong> to pre-fill a new listing with the same specifications of this listing (ideal when posting this property for multiple years)
+                                    <br><br>
+                                    <i class="fa fa-shopping-cart" aria-hidden="true" style="padding-right: 5px;"></i> <strong style="color: #4fac80;"> Proceed to Checkout</strong> to purchase and display this listing on nexnest
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div id="groupNumber" style="display: none;"></div>
                 </div>
                 <div class="modal-footer" style="text-align: left;">
                     <div class="row">
-                        <div class="col-xs-12 col-sm-6" style="padding-top: 30px; text-align: right;">
-                            <button type="button" class="btn btn-light-blue" onClick="submitListingForm('createNew')" data-dismiss="modal">Create Another Listing</button>
-                        </div>
-                        <div class="col-xs-12 col-sm-6" style="padding-top: 30px; text-align: right;">
-                            <button type="button" class="btn btn-light-blue" onClick="submitListingForm('createCopy')" data-dismiss="modal">Use Listing as Template</button>
+                        <div class="col-xs-12 col-sm-12" style="text-align: left;">
+                            <button type="button" style="width: 225px;" class="btn btn-blue" onClick="submitListingForm('createNew')" data-dismiss="modal"><i class="fa fa-plus" aria-hidden="true" style="padding-right: 5px;"></i> Create Another Listing</button>
                         </div>
                     </div>
-                    <div class="row" style="padding-top: 30px;">
-                        <div class="col-xs-12 col-lg-12" style="text-align: right;">
-                            <button type="button" class="btn btn-light-green pull-right" onClick="submitListingForm('checkout')" data-dismiss="modal">Proceed to Checkout</button>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6" style="padding-top: 10px; text-align: left;">
+                            <button type="button" style="width: 225px;" class="btn btn-blue" onClick="submitListingForm('createCopy')" data-dismiss="modal"><i class="fa fa-clone" aria-hidden="true" style="padding-right: 5px;"></i> Use Listing as Template</button>
                         </div>
-                    </div>                    
+                        <div class="col-xs-12 col-sm-6" style="padding-top: 10px; text-align: right;">
+                            <button type="button" style="width: 225px;" class="btn btn-light-green pull-right" onClick="submitListingForm('checkout')" data-dismiss="modal"><i class="fa fa-shopping-cart" aria-hidden="true" style="padding-right: 5px;"></i> Proceed to Checkout</button>
+                        </div>
+                    </div>  
                 </div>
             </div>
         </div>
@@ -129,7 +151,7 @@
         initialPreviewConfig: [
             {% if picturePaths %}
                 {% for picture in picturePaths %}
-                    {caption: "Picture", size: 827000, width: "120px", url: "/listing/delete/{{picture}}", key: 1},
+                    {caption: "Picture", size: 827000, width: "120px", url: "/listing/delete/{{listingID}}/{{picture}}", key: 1},
                 {% endfor %}
             {% endif %}
         ]

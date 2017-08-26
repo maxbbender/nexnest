@@ -425,7 +425,7 @@
                 '{uploadIcon}</button>';
             tActionZoom = '<button type="button" class="kv-file-zoom {zoomClass}" ' +
                 'title="{zoomTitle}">{zoomIcon}</button>';
-            tActionDrag = '<span class="file-drag-handle {dragClass}" title="{dragTitle}">{dragIcon}</span>';
+            tActionDrag = '';
             tTagBef = '<div class="file-preview-frame {frameClass}" id="{previewId}" data-fileindex="{fileindex}"' +
                 ' data-template="{template}"';
             tTagBef1 = tTagBef + '><div class="kv-file-content">\n';
@@ -3538,7 +3538,7 @@
         previewFileExtSettings: {},
         buttonLabelClass: 'hidden-xs',
         browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>&nbsp;',
-        browseClass: 'btn btn-primary',
+        browseClass: 'btn btn-blue',
         removeIcon: '<i class="glyphicon glyphicon-trash"></i>',
         removeClass: 'btn btn-default',
         cancelIcon: '<i class="glyphicon glyphicon-ban-circle"></i>',
@@ -3669,7 +3669,7 @@
      * Convert automatically file inputs with class 'file' into a bootstrap fileinput control.
      */
     $(document).ready(function () {
-        var $input = $('input.file[type=file]');
+        var $input = $("input.file[type=file]");
         if ($input.length) {
             $input.fileinput();
         }
