@@ -401,7 +401,14 @@ class Listing(Base):
 
     @property
     def humanTimePeriod(self):
-        return self.humanTimePeriod
+        timePeriodMatch = re.compile(r'\d{2}(\d{2})-\d{2}(\d{2})')
+
+        matchElement = timePeriodMatch.match(self.time_period_date_range)
+        if matchElement:
+            return "Fall '%s - Spring '%s" % (matchElement.group(1), matchElement.group(2))
+
+        else:
+            return self.time_period_date_range
 
     @property
     def uploadPath(self):

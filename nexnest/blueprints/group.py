@@ -209,11 +209,11 @@ def removeMember(groupID, userID):
 def favoriteListing(groupID, listingID):
     favoriteCount = GroupListingFavorite.query \
         .filter_by(group_id=groupID, listing_id=listingID)\
-        .count()
+        .first()
 
     errorMessage = None
 
-    if favoriteCount == 0:
+    if not favoriteCount:
         group = Group.query.filter_by(id=groupID).first_or_404()
         listing = Listing.query.filter_by(id=listingID).first_or_404()
         newGLF = GroupListingFavorite(group=group,
