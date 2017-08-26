@@ -232,11 +232,12 @@ def login():
         else:
             flash_errors(login_form)
 
-        if user.isLandlord:
-            if user.landlord_info_filled:
-                return redirect('/landlord/dashboard')
-            else:
-                return redirect(url_for('users.landlordInformation'))
+        if user is not None:
+            if user.isLandlord:
+                if user.landlord_info_filled:
+                    return redirect('/landlord/dashboard')
+                else:
+                    return redirect(url_for('users.landlordInformation'))
 
         return login_form.redirect()
 

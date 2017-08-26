@@ -27,14 +27,7 @@ class Config:
 
     @staticmethod
     def init_app(app):
-        pass
-
-
-class DevelopmentConfig(Config):
-    @classmethod
-    def init_app(cls, app):
-        Config.init_app(app)
-
+        app.logger.handlers = []
         # log to syslog
         import logging
         import sys
@@ -43,7 +36,14 @@ class DevelopmentConfig(Config):
         formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
         ch.setFormatter(formatter)
         app.logger.addHandler(ch)
+        pass
 
+
+class DevelopmentConfig(Config):
+    @classmethod
+    def init_app(cls, app):
+        Config.init_app(app)
+        import logging
         from slack_log_handler import SlackLogHandler
         slackHandler = SlackLogHandler(Config.SLACK_LOG_URL)
         slackHandler.setLevel(logging.WARNING)

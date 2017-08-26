@@ -12,6 +12,8 @@ from nexnest.utils.misc import idGenerator
 from nexnest.utils.email import send_email
 from nexnest.utils.flash import flash_errors
 
+from pprint import pformat
+
 siteAdmin = Blueprint('siteAdmin', __name__,
                       template_folder='../templates/siteAdmin')
 
@@ -158,7 +160,10 @@ def contactUs():
             Full Name Proivded: %s<br>
             Phone Number: %s<br>
             Message: %s<br>
-            ''' % (user, form.name.data, form.phone.data, form.message.data)
+            <br><br><br><hr>
+            <h3>User Dump</h3>
+            %s
+            ''' % (user, form.name.data, form.phone.data, form.message.data, pformat(user.serialize))
 
         send_email(subject='Contact Us Form',
                    sender='no_reply@nexnest.com',

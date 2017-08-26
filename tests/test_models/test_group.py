@@ -1,6 +1,6 @@
 import unittest
 
-from nexnest.application import session
+from nexnest import db
 
 from nexnest.data_gen.factories import GroupUserFactory, NotificationFactory, UserFactory, GroupFactory, GroupMessageFactory, ListingFactory, GroupListingFavoriteFactory
 
@@ -11,6 +11,8 @@ from nexnest.models.group import Group
 from nexnest.models.notification_preference import NotificationPreference
 
 from .utils import dropAllRows
+
+session = db.session
 
 
 class TestGroup(unittest.TestCase):

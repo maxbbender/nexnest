@@ -175,12 +175,15 @@ class User(Base):
 
     @property
     def accepted_groups(self):
-        acceptedGroups = []
-        for groupUser in self.groups:
-            if groupUser.accepted:
-                acceptedGroups.append(groupUser.group)
+        if not self.isLandlord:
+            acceptedGroups = []
+            for groupUser in self.groups:
+                if groupUser.accepted:
+                    acceptedGroups.append(groupUser.group)
 
-        return acceptedGroups
+            return acceptedGroups
+        else:
+            return None
 
     @property
     def un_accepted_groups(self):

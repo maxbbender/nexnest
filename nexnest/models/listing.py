@@ -2,6 +2,7 @@
 from datetime import datetime as dt
 
 from flask import current_app as app
+from flask import flash
 
 from nexnest import db
 from nexnest.models.listing_favorite import ListingFavorite
@@ -178,7 +179,7 @@ class Listing(Base):
         self.active = active  # Landlords have to activate listing
         self.show = show
         self.time_period = time_period
-        self.time_period_date_range = time_period_date_range
+
         self.parking = parking
         self.property_type = property_type
         self.rent_due = rent_due
@@ -227,6 +228,23 @@ class Listing(Base):
         else:
             self.lat = lat
             self.lng = lng
+
+        # dateRangePattern = re.compile(r'\d{2}(\d{2})')
+
+        # app.logger.debug('Attempting to compile the listings time_period_date_range')
+        # self.time_period_date_range = ""
+        # if dateRangePattern.match(time_period_date_range):
+        #     app.logger.debug('dateRangePattern -- Match Found')
+        #     for idx, match in enumerate(dateRangePattern.findall(time_period_date_range)):
+        #         app.logger.debug('time_period_date_range match %d - val %r' % (idx, match))
+        #         if idx == 0:
+        #             self.time_period_date_range = "Fall '%s - " % match
+        #         elif idx == 1:
+        #             self.time_period_date_range += "Spring '%s" % match
+        # else:
+        #     app.logger.error('Unable to match time_period_date_range to a known pattern')
+        #     self.time_period_date_range = None
+        self.time_period_date_range = time_period_date_range
 
     def __repr__(self):
         return '<Listing %r | %s>' % (self.id, self.street)
@@ -383,18 +401,29 @@ class Listing(Base):
 
     @property
     def humanTimePeriod(self):
-        schoolYearPattern = re.compile(r"((\d{4})-(\d{4}))")
-        schoolYear = schoolYearPattern.match(self.time_period_date_range)
+        return self.humanTimePeriod
 
-        if schoolYear:
-            firstYear = schoolYear.group(2)
-            secondYear = schoolYear.group(3)
-            return 'Fall %s - Spring %s' % (firstYear, secondYear)
-        else:
-            return 'Summer %s' % self.target_time_period
+    @property
+    def uploadPath(self):
+        return os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(self.id))
 
-    def isEditableBy(self, user):
+    @property
+    def bannerPath(self):
+        return os.path.join(self.uploadPath, 'bannerPhoto')
+
+    @property
+    def picturePath(self):
+        return os.path.join(self.uploadPath, 'pictures')
+
+    @property
+    def allPictureURL(self):
+        if os.path.exists(self.picturePath):
+            return os.listdir(self.picturePath)
+
+    def isEditableBy(self, user, toFlash=False):
         if self.hasHouse() or self.hasAcceptedGroupListing:
+            if toFlash:
+                flash('Permission Error', 'danger')
             return False
 
         if user in self.landLordsAsUsers():
@@ -408,7 +437,7 @@ class Listing(Base):
 
         return False
 
-    def isViewableBy(self, user):
+    def isViewableBy(self, user, toFlash=False):
         if self.isEditableBy(user):
             return True
         elif self.active and self.show:
@@ -465,7 +494,6 @@ class Listing(Base):
 
     def hasHouse(self):
         app.logger.debug('hasHouse house : %r' % self.house)
-        print('awoeifhaowiefhaowiehf;oawiehfoaiwehfoawiFOSOFSOFHSF', self.house)
         return len(self.house) == 1
 
     def isForSchool(self, school):
@@ -492,6 +520,22 @@ class Listing(Base):
                 gl.landlord_show = False
                 gl.genDeniedNotifications()
                 db.session.commit()
+
+    def createUploadDirectories(self):
+        # Upload Directory Setup
+        app.logger.debug('Building upload folder structure')
+        app.logger.debug('listing.uploadPath : %s' % self.uploadPath)
+        app.logger.debug('listing.picturePath : %s' % self.picturePath)
+        app.logger.debug('listing.bannerPath : %s' % self.bannerPath)
+
+        if not os.path.exists(self.uploadPath):
+            os.makedirs(self.uploadPath)
+
+        if not os.path.exists(self.picturePath):
+            os.makedirs(self.picturePath)
+
+        if not os.path.exists(self.bannerPath):
+            os.makedirs(self.bannerPath)
 
 
 def update_date_modified(mapper, connection, target):  # pylint: disable=unused-argument

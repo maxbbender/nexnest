@@ -574,7 +574,7 @@
 		var filters = {};
     	filters.school = $("#school2 option:selected").text();
     	sessionStorage.setItem('school', $("#school2 option:selected").text());
-    	filters.term = $("#when2 option:selected").text();
+    	filters.term = $("#when2 option:selected").val();
     	sessionStorage.setItem('term', $("#when2 option:selected").val());
     	filters.bedrooms = parseInt($("#rooms2").val(), 10);
     	sessionStorage.setItem('bedrooms', $("#rooms2 option:selected").val());
