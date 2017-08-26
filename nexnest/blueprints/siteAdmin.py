@@ -4,15 +4,11 @@ from flask import (Blueprint, abort, flash, jsonify, render_template, request,
 from flask_login import current_user, login_required
 
 from nexnest import db
-from nexnest.forms import CreateCouponForm, ContactForm
 from nexnest.models.coupon import Coupon
 from nexnest.models.user import User
 from nexnest.utils.coupon import couponExists
 from nexnest.utils.misc import idGenerator
-from nexnest.utils.email import send_email
-from nexnest.utils.flash import flash_errors
-
-from pprint import pformat
+from nexnest.forms import CreateCouponForm
 
 siteAdmin = Blueprint('siteAdmin', __name__,
                       template_folder='../templates/siteAdmin')
@@ -145,32 +141,3 @@ def searchUsersByLastName(lastName):
         userReturnArray.append(user.serialize)
 
     return jsonify({'users': userReturnArray})
-
-
-@siteAdmin.route('/contactUs', methods=['POST'])
-@login_required
-def contactUs():
-    form = ContactForm()
-
-    if form.validate():
-        user = current_user
-        htmlResponse = '''
-            <h1>NEW CONTACT FORM AHHHHHHHHHHHHHHHHHHHHHHHHH</h1>
-            From %r<br>
-            Full Name Proivded: %s<br>
-            Phone Number: %s<br>
-            Message: %s<br>
-            <br><br><br><hr>
-            <h3>User Dump</h3>
-            %s
-            ''' % (user, form.name.data, form.phone.data, form.message.data, pformat(user.serialize))
-
-        send_email(subject='Contact Us Form',
-                   sender='no_reply@nexnest.com',
-                   recipients=['contact@nexnest.com'],
-                   html_body=htmlResponse)
-        flash('Thank you for contacting Nexnest, we will address your issue and get back to you as soon as possible', 'success')
-    else:
-        flash_errors(form)
-
-    return form.redirect()

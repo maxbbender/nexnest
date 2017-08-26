@@ -493,7 +493,6 @@ class Listing(Base):
                 return None
 
     def hasHouse(self):
-        app.logger.debug('hasHouse house : %r' % self.house)
         return len(self.house) == 1
 
     def isForSchool(self, school):

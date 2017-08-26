@@ -30,6 +30,11 @@ session = db.session
 @groups.route('/group/create', methods=['POST'])
 @login_required
 def createGroup():
+
+    if current_user.isLandlord:
+        flash('Sorry! Landlords are unable to create groups.', 'warning')
+        return redirect(url_for('landlords.dashboard'))
+
     form = CreateGroupForm(request.form)
 
     if form.validate():

@@ -358,3 +358,4 @@ class ContactForm(RedirectForm):
     name = StringField('Full Name')
     phone = StringField('Phone Number', validators=[Optional()])
     message = TextAreaField('Message')
+    email = StringField('Email Address', validators=[Email()])

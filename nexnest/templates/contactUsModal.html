@@ -70,7 +70,7 @@
                     <div class="col-xs-6" style="background-color: #4fac80; color: #fff;">
                         <div class="row" style="padding-top: 30px;">
                             <div class="col-xs-12">
-                                <form action="{{url_for('siteAdmin.contactUs')}}" method='POST'>
+                                <form action="{{url_for('base.contactUs')}}" method='POST'>
                                     {{contactForm.csrf_token}}
                                     <div class="row" style="padding-top: 15px;">
                                         <div class="col-xs-12">
@@ -79,7 +79,7 @@
                                     </div>
                                     <div class="row" style="padding-top: 15px;">
                                         <div class="col-xs-12">
-                                            {{contactForm.phone(class='form-control', placeholder='Email: ')}}
+                                            {{contactForm.email(class='form-control', placeholder='Email: ')}}
                                         </div>
                                     </div>
                                     <div class="row" style="padding-top: 15px;">
