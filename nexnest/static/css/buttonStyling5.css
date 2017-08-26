@@ -93,3 +93,10 @@
 	border-color: rgba(86, 134, 197, 0.59);
 	color: #656264;
 }
+
+.btn-outline-white {
+	color: #fff;
+	border-color: #fff;
+	background-image: none;
+    background-color: transparent;
+}
