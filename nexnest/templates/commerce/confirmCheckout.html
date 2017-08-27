@@ -157,7 +157,7 @@
 			console.log(results);
 			if(results.validCoupon == true){
 				//update total price div
-				subtotalAfterCoupon = Number((totalPrice*(100-results.coupon.percentageOff)/100)).toFixed(2);
+				subtotalAfterCoupon = Number((totalPrice*((100-results.coupon.percentageOff)/100)).toFixed(2);
 				taxAfterCoupon = Number(subtotalAfterCoupon*.075).toFixed(2);
 				priceAfterCoupon = Number((subtotalAfterCoupon*1.075)).toFixed(2);
 				//totalPrice = totalPrice-results.coupon.percentageOff;
