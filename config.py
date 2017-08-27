@@ -22,6 +22,8 @@ class Config:
     BRAINTREE_PUBLIC_KEY = os.environ.get('BRAINTREE_PUBLIC_KEY')
     BRAINTREE_PRIVATE_KEY = os.environ.get('BRAINTREE_PRIVATE_KEY')
     SLACK_LOG_URL = os.environ.get('SLACK_LOG_URL') or 'https://hooks.slack.com/services/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'
+    SLACK_WARNING_URL = os.environ.get('SLACK_WARNING_URL')
+    SLACK_ERROR_URL = os.environ.get('SLACK_ERROR_URL')
 
     @staticmethod
     def init_app(app):
@@ -71,18 +73,26 @@ class ProductionConfig(Config):
         app.logger.handlers = []
 
         import logging
+        from logging.handlers import RotatingFileHandler
         from slack_log_handler import SlackLogHandler
-        slackHandler = SlackLogHandler(Config.SLACK_LOG_URL)
-        slackHandler.setLevel(logging.WARNING)
-        app.logger.addHandler(slackHandler)
+
+        # Slack Warning
+        slackWarningHandler = SlackLogHandler(Config.SLACK_WARNING_URL) or Config.SLACK_LOG_URL
+        slackWarningHandler.setLevel(logging.WARNING)
+        app.logger.addHandler(slackWarningHandler)
+
+        # Slack Error
+        slackErrHandler = SlackLogHandler(Config.SLACK_ERROR_URL) or Config.SLACK_LOG_URL
+        slackErrHandler.setLevel(logging.ERROR)
+        app.logger.addHandler(slackErrHandler)
 
         # Debug Handler
-        debugHandler = logging.handlers.RotatingFileHandler('/var/log/nexnest/debug.log', maxBytes=10000, backupCount=5)
+        debugHandler = RotatingFileHandler('/var/log/nexnest/debug.log', maxBytes=10000, backupCount=5)
         debugHandler.setLevel(logging.DEBUG)
         app.logger.addHandler(debugHandler)
 
         # Info Handler
-        infoHandler = logging.handlers.RotatingFileHandler('/var/log/nexnest/info.log', maxBytes=10000, backupCount=5)
+        infoHandler = RotatingFileHandler('/var/log/nexnest/info.log', maxBytes=10000, backupCount=5)
         infoHandler.setLevel(logging.INFO)
         app.logger.addHandler(infoHandler)
 

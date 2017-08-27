@@ -151,6 +151,7 @@ def genTransaction():
                 })
             else:
                 app.logger.debug('genTransaction() - PRODUCTION SETTINGS')
+                app.logger.debug('payment_method_nonce: %r' % request.form['payment_method_nonce'] )
 
                 result = braintree.Transaction.sale({
                     'amount': str(transactionAmount),
@@ -187,9 +188,9 @@ def genTransaction():
 
             # The Transaction was NOT successfull
             else:
-                app.logger.warning('Unsuccessfull Result')
-                app.logger.warning('Transaction Error %s (%s|%s)' % (result.transaction.status, result.transaction.processor_response_code, result.transaction.processor_response_text))
-                flash('Transaction Error %s (%s|%s) Contact an administrator if you believe this is an error our our end.' % (result.transaction.status, result.transaction.processor_response_code, result.transaction.processor_response_text), 'error')
+                app.logger.error('Unsuccessfull Result')
+                app.logger.error('Transaction Error %s (%s|%s)' % (result.transaction.status, result.transaction.processor_response_code, result.transaction.processor_response_text))
+                flash('Transaction Error %s (%s|%s) Contact an administrator if you believe this is an error our our end.' % (result.transaction.status, result.transaction.processor_response_code, result.transaction.processor_response_text), 'danger')
                 return redirect('/landlord/dashboard#checkoutTab')
 
 
