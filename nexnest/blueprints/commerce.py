@@ -80,7 +80,7 @@ def checkout():
                             coupon.uses = coupon.uses - 1
                             session.commit()
                         else:
-                            app.logger.info('%r used coupon %r that hs no uses left' % (current_user, coupon))
+                            app.logger.info('%r used coupon %r that has no uses left' % (current_user, coupon))
                 else:
                     if couponCodeString != "":
                         app.logger.info('Coupon got passed through that is invalid. Code : %s' % couponCodeString)

@@ -113,19 +113,15 @@ class ListingTransaction(Transaction):
             for listing in self.listings:
                 app.logger.debug("looking at listing %r" % listing.listing)
                 if listing.plan == 'standard':
-                    if listing.listing.time_period == 'year':
-                        totalPrice += 120
-                    elif listing.listing.time_period == 'school':
-                        totalPrice += 90
+                    if listing.listing.time_period == 'school':
+                        totalPrice += 79.99
                     elif listing.listing.time_period == 'summer':
-                        totalPrice += 30
+                        totalPrice += 39.99
                 if listing.plan == 'premium':
-                    if listing.listing.time_period == 'year':
-                        totalPrice += 200
-                    elif listing.listing.time_period == 'school':
-                        totalPrice += 160
+                    if listing.listing.time_period == 'school':
+                        totalPrice += 129.99
                     elif listing.listing.time_period == 'summer':
-                        totalPrice += 70
+                        totalPrice += 69.99
 
                 app.logger.debug("New Total : %d" % totalPrice)
 
