@@ -275,6 +275,9 @@
                                                 <div class="input-group">
                                                     <span class="input-group-addon">$</span> {{form.price(class='form-control', required='required')}}
                                                 </div>
+                                                <p id="incorrect_rent_format" style="display: none;" class="form-text text-muted">
+                                                    *Please enter rent as a single number, rounded up to nearest dollar. No decimal places please
+                                                </p>
                                                 <!-- <input id="price" maxlength="100" type="number" required="required" class="form-control" /> -->
                                             </div>
                                         </div>
@@ -1010,6 +1013,13 @@
             }
         });
 
+        //try to format rent price
+        $("#price").on('input', function() {
+            console.log('hi');
+            $("#price").val($("#price").val().replace(/([,$])/g, ''));
+            $("#price").val($("#price").val().replace(/$/g, ''));
+        });
+
 
         var navListItems = $('div.setup-panel div a'),
             allWells = $('.setup-content'),
@@ -1070,6 +1080,13 @@
                     }
                 }else if(curStep[0].id == "step-3"){
                     var errorExists = false;
+
+                    if($("#price").val().indexOf('.') > -1){
+                        console.log('hi');
+                        $("#incorrect_rent_format").show();
+                        errorExists = true;
+                    }
+
                     if($("#leaseStartDateInput").val().length == 0){
                         $("#leaseStartDateInput").closest(".form-group").addClass("has-error");
                         $("#leaseStartDateInput").closest(".form-group").addClass("has-danger");
@@ -1079,7 +1096,8 @@
                         $("#endLeaseDateInput").closest(".form-group").addClass("has-error");
                         $("#endLeaseDateInput").closest(".form-group").addClass("has-danger");
                         errorExists = true;
-                    }
+                    }                    
+
                     if($("#rent_due").val() == "semester"){
                         var start_date = new Date($("#leaseStartDateInput").val());
                         var end_date = new Date($("#endLeaseDateInput").val());

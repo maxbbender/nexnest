@@ -281,6 +281,9 @@
                                                 <div class="input-group">
                                                     <span class="input-group-addon">$</span> {{form.price(class='form-control', required='required')}}
                                                 </div>
+                                                <p id="incorrect_rent_format" style="display: none;" class="form-text text-muted">
+                                                    *Please enter rent as a single number, rounded up to nearest dollar. No decimal places please
+                                                </p>
                                                 <!-- <input id="price" maxlength="100" type="number" required="required" class="form-control" /> -->
                                             </div>
                                         </div>
@@ -868,6 +871,13 @@
             }
         });
 
+        //try to format rent price
+        $("#price").on('input', function() {
+            console.log('hi');
+            $("#price").val($("#price").val().replace(/([,$])/g, ''));
+            $("#price").val($("#price").val().replace(/$/g, ''));
+        });
+
         $('#property_type').change(function() {
             if ($("#property_type").val() == "apartment") {
                 $("#apartmentNumberInput").show();
@@ -929,13 +939,14 @@
 
             $(".form-group").removeClass("has-danger");
             $(".form-group").removeClass("has-error");
+            console.log(curInputs);
             for (var i = 0; i < curInputs.length; i++) {
                 if (!curInputs[i].validity.valid) {
                     isValid = false;
                     $(curInputs[i]).closest(".form-group").addClass("has-error");
                     $(curInputs[i]).closest(".form-group").addClass("has-danger");
                 }
-            }
+            }            
 
             if (isValid) {
                 if ($(this).attr('id') == 'zipCodeButton') {
@@ -955,7 +966,95 @@
                     } else {
                         nextStepWizard.removeClass('disabled').trigger('click');
                     }
-                } else {
+                }else if(curStep[0].id == "step-3"){
+                    var errorExists = false;
+
+                    if($("#price").val().indexOf('.') > -1){
+                        console.log('hi');
+                        $("#incorrect_rent_format").show();
+                        errorExists = true;
+                    }
+
+                    if($("#leaseStartDateInput").val().length == 0){
+                        $("#leaseStartDateInput").closest(".form-group").addClass("has-error");
+                        $("#leaseStartDateInput").closest(".form-group").addClass("has-danger");
+                        errorExists = true;
+                    }
+                    if($("#endLeaseDateInput").val().length == 0){
+                        $("#endLeaseDateInput").closest(".form-group").addClass("has-error");
+                        $("#endLeaseDateInput").closest(".form-group").addClass("has-danger");
+                        errorExists = true;
+                    }                    
+
+                    if($("#rent_due").val() == "semester"){
+                        var start_date = new Date($("#leaseStartDateInput").val());
+                        var end_date = new Date($("#endLeaseDateInput").val());
+                        var first_semester_rent_due = new Date($("#firstSemesterRentDue").val());
+                        var second_semester_rent_due = new Date($("#secondSemesterRentDue").val());
+                        $("#firstSemesterRentDue").closest(".form-group").removeClass("has-error");
+                        $("#firstSemesterRentDue").closest(".form-group").removeClass("has-danger");
+                        $("#secondSemesterRentDue").closest(".form-group").removeClass("has-error");
+                        $("#secondSemesterRentDue").closest(".form-group").removeClass("has-danger");
+                        $("#first_semester_rent_due_before_start_date").hide();
+                        $("#first_semester_rent_due_after_second").hide();
+                        $("#second_semester_rent_due_after_end_date").hide();
+                        $("#second_semester_rent_due_before_first").hide();
+
+                        if(first_semester_rent_due >= start_date){
+                            if(second_semester_rent_due < end_date){
+                                if(first_semester_rent_due < second_semester_rent_due){
+                                    //errorExists = false;
+                                } else{
+                                    errorExists = true;
+                                    $("#firstSemesterRentDue").closest(".form-group").addClass("has-error");
+                                    $("#firstSemesterRentDue").closest(".form-group").addClass("has-danger");
+                                    $("#secondSemesterRentDue").closest(".form-group").addClass("has-error");
+                                    $("#secondSemesterRentDue").closest(".form-group").addClass("has-danger");
+                                    $("#first_semester_rent_due_after_second").show();
+                                    $("#second_semester_rent_due_before_first").show();
+                                }
+                            }
+                            else{
+                                errorExists = true;
+                                $("#secondSemesterRentDue").closest(".form-group").addClass("has-error");
+                                $("#secondSemesterRentDue").closest(".form-group").addClass("has-danger");
+                                $("#second_semester_rent_due_after_end_date").show();
+                            }
+                        }else{
+                            errorExists = true;
+                            $("#firstSemesterRentDue").closest(".form-group").addClass("has-error");
+                            $("#firstSemesterRentDue").closest(".form-group").addClass("has-danger");
+                            $("#first_semester_rent_due_before_start_date").show();
+                            if(second_semester_rent_due > end_date){
+                                $("#secondSemesterRentDue").closest(".form-group").addClass("has-error");
+                                $("#secondSemesterRentDue").closest(".form-group").addClass("has-danger");
+                                $("#second_semester_rent_due_after_end_date").show();
+                            }
+                        }
+                    }
+
+                    {% if endDate %}
+                        var new_start_date = new Date($("#leaseStartDateInput").val());
+                        var oldEnd = new Date("{{endDate}}");
+                        console.log("new_start_date: " + new_start_date);
+                        console.log("oldEnd: " + oldEnd);
+                        if(oldEnd > new_start_date){
+                            errorExists = true;
+                            $("#leaseStartDateInput").closest(".form-group").addClass("has-error");
+                            $("#leaseStartDateInput").closest(".form-group").addClass("has-danger");
+                        }
+                        else{
+                            if(errorExists == false){
+                                nextStepWizard.removeClass('disabled').trigger('click');
+                            }
+                        }
+                    {% else %}
+                        if(errorExists == false){
+                            nextStepWizard.removeClass('disabled').trigger('click');
+                        }                        
+                    {% endif %}
+                }
+                else {
                     nextStepWizard.removeClass('disabled').trigger('click');
                 }
             }
