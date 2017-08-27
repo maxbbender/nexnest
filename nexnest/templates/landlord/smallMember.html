@@ -6,10 +6,20 @@
             </div>
             <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-10">
                 <div class="row">
-                    <div class="col-xs-12">                           
-                        <a href="{{ url_for('users.viewUser', userID=user.id) }}">
-                            <h4 style="font-size: 3.0vh;">{{ user.fname }} {{ user.lname }}</h4>
-                        </a>
+                    <div class="col-xs-12" style="align-self: center;">
+                        <h2 style="margin-top: 5px;">{{ user.fname }} {{ user.lname }}
+                            {% if group.leader_id == user.id %}
+                                <i class="icon icon-crown" style="color: #f4c359;"></i>
+                            {% endif %}
+                            {% if current_user.id != user.id %}
+                                <a href="#" data-toggle="modal" data-target="#sendDirectMessageModal" data-targetID="{{user.id}}" data-targetname="{{user.name}}">
+                                    <div class="customTooltip" style="padding-left: 15px;">
+                                        <i class="fa fa-comment" aria-hidden="true" style="color: #5686c5;"></i>
+                                        <span class="customTooltiptext">Send Message</span>
+                                    </div>
+                                </a>
+                            {% endif %}
+                        </h2>
                     </div>
                 </div>
             </div>
