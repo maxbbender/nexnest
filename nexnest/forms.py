@@ -94,6 +94,7 @@ class LandlordMoreInfoForm(RedirectForm):
     state = SelectField('State', choices=statesLong)
     zip_code = StringField('Zipcode', [Length(min=5, max=5), InputRequired()])
     user_id = HiddenField('user')
+    phone = StringField('Phone Number', [Length(min=10,max=10)])
     availabilities = HiddenField('availabilities', validators=[Optional()])
     check_pay = BooleanField('Do you accept rent payments via checks?')
     online_pay = BooleanField('Do you accept rent payments through NexNest?')
