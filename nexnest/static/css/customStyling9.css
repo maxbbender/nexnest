@@ -934,8 +934,7 @@ button.link {
     bottom: 100%;
     left: 50%;
     margin-left: -75px;
- 
-    /* Position the tooltip text - see examples below! */
+    font-size: 22px;
     position: absolute;
     z-index: 1;
 }

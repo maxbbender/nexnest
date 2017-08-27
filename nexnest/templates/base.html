@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap-slider.css')}}">
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 	    <link href="{{url_for('static', filename='css/bootstrap-flex3.css')}}" rel="stylesheet">
-	    <link href="{{url_for('static', filename='css/customStyling8.css')}}" rel="stylesheet">
+	    <link href="{{url_for('static', filename='css/customStyling9.css')}}" rel="stylesheet">
 	    <link rel="stylesheet" href="{{url_for('static', filename='font-awesome-4.7.0/css/font-awesome.min.css')}}">
         <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap-notifications2.css')}}">
         <link rel="stylesheet" href="{{url_for('static', filename='css/magnific-popup.css')}}">
@@ -414,7 +414,9 @@
               modal.find('.modal-title').text('Send Direct Message to ' + target_name);
               var target_user_id = $(event.relatedTarget).attr("data-targetID");
               console.log(target_user_id);
+              var target_url = '/user/directMessages/'+target_user_id;
               $("#target_user_id").val(target_user_id);
+              $('#urlToConversation').attr('href',target_url);
             });
 
             $(document).on('click','.noti', function (event) {

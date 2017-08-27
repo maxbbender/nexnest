@@ -45,7 +45,7 @@
 			{% endif %}
 		</div>
 	</div>
-	<div class="row nexnest-font-normal" style="padding-top: 30px;">
+	<div class="row nexnest-font-normal" style="padding-top: 30px; font-size: 20px; color: #656264;">
 		<div class="col-xs-1 col-md-2 col-lg-2"></div>
 		<div class="col-xs-10 col-md-8 col-lg-8">
 			<div class="row">
@@ -241,23 +241,32 @@
 				</div>
 				<div class="col-sm-8">
 					<div class="row">
-						<div class="col-xs-3 col-md-3 col-xl-2">
+						<div class="col-xs-3 col-md-3 col-xl-2" style="align-self: center;">
 							<i class="fa fa-clock-o fa-3x" aria-hidden="true"></i>
 							<br>
-							<span style="text-transform: capitalize;">{{ listing.time_period }}</span>
+							<span style="text-transform: capitalize;">{{ listing.humanTimePeriod }}</span>
 						</div>
-						<div class="col-xs-12 col-md-6 col-xl-4">
-							<strong>Start Date:</strong> {{ listing.start_date }}
+						<div class="col-xs-1" style="align-self: center;">
+							<i class="fa fa-calendar fa-3x" aria-hidden="true"></i>
 						</div>
-						<div class="col-xs-12 col-md-6 col-xl-4">
-							<strong>End Date:</strong> {{ listing.end_date }}
+						<div class="col-xs-12 col-md-6 col-xl-4" style="align-self: center;">
+							<strong>Start Date:</strong> {{ listing.start_date|format_date }}
+							<br><br>
+							<strong>End Date:</strong> {{ listing.end_date|format_date }}
 						</div>
 						{% if listing.rent_due == "semester" %}	
-							<div class="col-xs-12 col-md-6 col-xl-4">				
-								<strong>First Semester Rent Due:</strong> {{ listing.first_semester_rent_due_date }}
+							<div class="col-xs-12 col-md-6 col-xl-3" style="align-self: center;">				
+								<strong>1st Semester
+								<br>
+								Rent Due:</strong>
+								<br>
+								{{ listing.first_semester_rent_due_date|format_date }}
 							</div>
-							<div class="col-xs-12 col-md-6 col-xl-4">
-								<strong>Second Semester Rent Due:</strong> {{ listing.second_semester_rent_due_date }}
+							<div class="col-xs-12 col-md-6 col-xl-3" style="align-self: center;">
+								<strong>2nd Semester<br>
+								Rent Due:</strong>
+								<br>
+								{{ listing.second_semester_rent_due_date|format_date }}
 							</div>
 						{% elif listing.rent_due == "monthly" %}
 							<div class="col-xs-12 col-md-6 col-xl-4">
@@ -450,6 +459,7 @@
 		      				<div class="col-xs-1"></div>
 		      				<div class="col-xs-10">
 		      					{% if current_user.is_authenticated %}
+		      					{% if not current_user.isLandlord %}
 		      					{% for group in groups %}
 			      					<div class="card" style="width:100%;">
 			      					    <h3 class="card-header">{{ group.name }}</h3>
@@ -486,6 +496,7 @@
 			      					</script>
 		      					{% endfor %}
 		      					{% endif %}
+		      					{% endif %}
 		      				</div>
 		      			</div>
 		      		</div>
@@ -512,6 +523,7 @@
 		      				<div class="col-xs-1"></div>
 		      				<div class="col-xs-10">
 		      					{% if current_user.is_authenticated %}
+		      					{% if not current_user.isLandlord %}
 		      					{% for group in groups %}
 			      					<div class="card" style="width:100%;">
 			      					    <h3 class="card-header">{{ group.name }}</h3>
@@ -541,6 +553,7 @@
 			      						});
 			      					</script>
 		      					{% endfor %}
+		      					{% endif %}
 		      					{% endif %}
 		      				</div>
 		      			</div>
@@ -614,6 +627,7 @@
 		      				<div class="col-xs-1"></div>
 		      				<div class="col-xs-10">
 		      					{% if current_user.is_authenticated %}
+		      					{% if not current_user.isLandlord %}
 		      					{% for group in groups %}
 			      					<div class="card" style="width:100%;">
 			      					    <h3 class="card-header">{{ group.name }}</h3>
@@ -643,6 +657,7 @@
 			      						});
 			      					</script>
 		      					{% endfor %}
+		      					{% endif %}
 		      					{% endif %}
 		      				</div>
 		      			</div>

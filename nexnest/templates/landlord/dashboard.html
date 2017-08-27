@@ -23,7 +23,7 @@
         	        </li>
 	        	    <li class="nav-item">
 	        	        <a class="nav-link left-panel" style="padding-left: 5px;" id="occupiedListingsTab2" data-toggle="tab" href="#occupiedListingsTab" role="tab">
-	        	        	<i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">Occupied</span>
+	        	        	<i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">Booked</span>
 	        	        </a>
         	    	</li>
         	    {% else %}
@@ -34,7 +34,7 @@
         	        </li>
 	        	    <li class="nav-item">
 	        	        <a class="nav-link left-panel active" style="padding-left: 5px;" id="occupiedListingsTab2" data-toggle="tab" href="#occupiedListingsTab" role="tab">
-	        	        	<i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">Occupied</span>
+	        	        	<i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">Booked</span>
 	        	        </a>
         	    	</li>
         	    {% endif %}
@@ -259,16 +259,16 @@
 		        	                            	<div class="row">
 		        	                            		<div class="col-xs-12 col-md-12" style="width: 100%;">
 		        	                            			<div class="card">
-		        	                            				<div class="card-header">
-		        	                            					<div class="row">
-		        	                            						<div class="col-xs-12">
-		        	                            							<a href="{{ url_for('houses.view', id=house.listing.id) }}">
+		        	                            				<a href="{{ url_for('houses.view', id=house.listing.id) }}">
+			        	                            				<div class="card-header" style="background-color: #d2d2d2;">
+			        	                            					<div class="row">
+			        	                            						<div class="col-xs-12">	
 												                    			<h3 style="font-size: 3.5vh;"><strong>{{ house.listing.street }}, {{ house.listing.city }} {{ house.listing.state }}</strong></h3>
 												                    			<small style="font-size: 2.5vh;">Lease Period: {{ house.listing.start_date|format_date }} - {{ house.listing.end_date|format_date }}</small>
-											                    			</a>
-											                    		</div>
-											                    	</div>
-											                    </div>
+												                    		</div>
+												                    	</div>
+												                    </div>
+											                    </a>
 											                    <div class="card-block">
 												                    <div class="row">
 												                    	<div class="hidden-md-down col-lg-4">
@@ -279,12 +279,7 @@
 												                    		{% endif %}
 												                    	</div>
 												                    	<div class="col-xs-12 col-lg-8">
-												                    		<h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ house.listing.price }}</strong> per bed per semester</h3>
-												                    		<h3 style="font-size: 3.0vh;"><strong><i class="fa fa-bed" aria-hidden="true"></i> {{ house.listing.num_bedrooms }} Bedroom(s)
-												                    		&nbsp;
-												                    		<i class="fa fa-bath" aria-hidden="true"></i> {{ house.listing.num_full_baths }} Bathroom(s)</strong></h3>
-												                    		<br>
-												                    		<h3 style="font-size: 3.0vh;"><strong>Occupied By: {{house.group.name}}</strong>({{house.group.acceptedUsers|count}} Members)</h3>				
+												                    		<h3 style="font-size: 3.0vh;"><strong>Occupied By: {{house.group.name}}</strong> ({{house.group.acceptedUsers|count}} Members)</h3>				
 						    			      					    		<div id="allGroupMembersCurrentlyOccupied{{house.group.id}}" style="display: none;">
 						    		      					    				{% for user in house.group.acceptedUsers %}
 						    		      					    					{% with group=house.group %}         
@@ -296,8 +291,8 @@
 						    		      					    				    {% endwith %}
 						    		      					    				{% endfor %}
 						    			      					    		</div>
-						    			      					    		<button class="btn btn-blue" id="allGroupMembersCurrentlyOccupiedToggle{{house.group.id}}" onClick="showOccupiedHouseMembers({{house.group.id}})"><i class='fa fa-users' aria-hidden='true'></i> Tenants</button>
-						    			      					    		<button class="btn btn-blue" id="hideAllGroupMembersCurrentlyOccupiedToggle{{house.group.id}}" onClick="hideOccupiedHouseMembers({{house.group.id}})" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide Tenants</button>
+						    			      					    		<button class="btn btn-blue" id="allGroupMembersCurrentlyOccupiedToggle{{house.group.id}}" onClick="showOccupiedHouseMembers({{house.group.id}})" style="font-size: 22px;"><i class='fa fa-users' aria-hidden='true'></i> Tenants</button>
+						    			      					    		<button class="btn btn-blue" id="hideAllGroupMembersCurrentlyOccupiedToggle{{house.group.id}}" onClick="hideOccupiedHouseMembers({{house.group.id}})" style="display: none; font-size: 22px;"><i class='fa fa-users' aria-hidden='true'></i> Hide Tenants</button>
 												                    		<br>
 												                    	</div>
 												                    </div>
@@ -308,7 +303,7 @@
 			            						{% endfor %}
 		            						{% else %}
 		            							<div class="alert alert-light-blue" role="alert">
-		            								<strong>No Currently Booked Listings</strong>
+		            								<strong>You do not have any currently occupied listings</strong>
 		            							</div>
 		            						{% endif %}
 		        	                    </div>
@@ -318,16 +313,16 @@
 		        	                            	<div class="row">
 		        	                            		<div class="col-xs-12 col-md-12" style="width: 100%;">
 		        	                            			<div class="card">
-		        	                            				<div class="card-header">
-		        	                            					<div class="row">
-		        	                            						<div class="col-xs-12">
-		        	                            							<a href="{{ url_for('houses.view', id=house.listing.id) }}">
+		        	                            				<a href="{{ url_for('houses.view', id=house.listing.id) }}">
+			        	                            				<div class="card-header" style="background-color: #d2d2d2;">
+			        	                            					<div class="row">
+			        	                            						<div class="col-xs-12">	
 												                    			<h3 style="font-size: 3.5vh;"><strong>{{ house.listing.street }}, {{ house.listing.city }} {{ house.listing.state }}</strong></h3>
 												                    			<small style="font-size: 2.5vh;">Lease Period: {{ house.listing.start_date|format_date }} - {{ house.listing.end_date|format_date }}</small>
-											                    			</a>
-											                    		</div>
-											                    	</div>
-											                    </div>
+												                    		</div>
+												                    	</div>
+												                    </div>
+											                    </a>
 											                    <div class="card-block">
 												                    <div class="row">
 												                    	<div class="hidden-md-down col-lg-4">
@@ -338,12 +333,7 @@
 												                    		{% endif %}
 												                    	</div>
 												                    	<div class="col-xs-12 col-lg-8">
-												                    		<h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>{{ house.listing.price }}</strong> per bedroom per semester</h3>
-												                    		<h3 style="font-size: 3.0vh;"><strong> <i class="fa fa-bed" aria-hidden="true"></i> {{ house.listing.num_bedrooms }} Bedroom(s)
-												                    		&nbsp;
-												                    		<i class="fa fa-bath" aria-hidden="true"></i>{{ house.listing.num_full_baths }} Bathroom(s)</strong></h3>
-												                    		<br>
-												                    		<h3 style="font-size: 3.0vh;"><strong>Occupied By: {{house.group.name}}</strong>({{house.group.acceptedUsers|count}} Members)</h3>
+												                    		<h3 style="font-size: 3.0vh;"><strong>Occupied By: {{house.group.name}}</strong> ({{house.group.acceptedUsers|count}} Members)</h3>
 						    			      					    		<div id="allGroupMembersWillBeOccupied{{house.id}}" style="display: none;">
 						    		      					    				{% for user in house.group.acceptedUsers %}
 						    		      					    					{% with group=house.group %}         
@@ -355,8 +345,8 @@
 						    		      					    				    {% endwith %}
 						    		      					    				{% endfor %}
 						    			      					    		</div>
-						    			      					    		<button class="btn btn-blue" id="allGroupMembersWillBeOccupiedToggle{{house.id}}" onClick="showWillBeOccupiedHouseMembers({{house.id}})"><i class='fa fa-users' aria-hidden='true'></i> Future Tenants</button>
-						    			      					    		<button class="btn btn-blue" id="hideAllGroupMembersWillBeOccupiedToggle{{house.id}}" onClick="hideWillBeOccupiedHouseMembers({{house.id}})" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide Future Tenants</button>
+						    			      					    		<button class="btn btn-blue" id="allGroupMembersWillBeOccupiedToggle{{house.id}}" onClick="showWillBeOccupiedHouseMembers({{house.id}})" style="font-size: 22px;"><i class='fa fa-users' aria-hidden='true'></i> Future Tenants</button>
+						    			      					    		<button class="btn btn-blue" id="hideAllGroupMembersWillBeOccupiedToggle{{house.id}}" onClick="hideWillBeOccupiedHouseMembers({{house.id}})" style="display: none; font-size: 22px;"><i class='fa fa-users' aria-hidden='true'></i> Hide Future Tenants</button>
 												                    		<br>
 												                    	</div>
 												                    </div>
@@ -367,7 +357,7 @@
 			            						{% endfor %}
 		            						{% else %}
 		            							<div class="alert alert-light-blue" role="alert">
-		            								<strong>No Booked Listings for the Future</strong>
+		            								<strong>You do not have any future listings occupied</strong>
 		            							</div>
 		            						{% endif %}
 		        	                    </div>
@@ -383,27 +373,29 @@
 			    	<div class="col-xs-12 col-md-12">
 				    	<div class="callout-block text-center fade-in-b" style="background-color: #d2d2d2;">
 				    		<div class="row">
-				    			<div class="col-xs-12 col-lg-8">
+				    			<div class="col-xs-12 col-lg-12">
 					    			<h1 style="font-size: 3.5vh;">Un-Booked Listings</h1>
-					    		</div>
-					    		<div class="col-xs-12 col-lg-4">
-					    			<a href="{{ url_for('listings.createListing') }}" class="btn btn-blue" style="float: right;">Create New Listing</a>
 					    		</div>
 				    		</div>
 				    	</div>
 				    	<br>
-				    	<div class="form-group">
-				    	    <label class="control-label">View Un-Booked Listings For What Time Period?</label>
-				    	    <select class="form-control" name="unbooked_time_range" id="unbooked_time_range_select">
-				    	        <option value="2017-2018">2017-2018</option>
-                                <option value="2018-2019">2018-2019</option>
-                                <option value="2019">2019 Summer</option>
-                                <option value="2019-2020">2019-2020</option>
-                                <option value="2020">2020 Summer</option>
-                                <option value="2020-2021">2020-2021</option>
-                                <option value="2021">2021 Summer</option>
-				    	    </select>
-				    	</div>
+				    	<div class="row">
+				    		<div class="col-xs-12 col-sm-10 col-md-6 col-lg-4">
+						    	<div class="form-group" style="padding-left: 5px;">
+						    	    <h4 class="control-label">Select Time Period:</h4>
+						    	    <select class="form-control" name="unbooked_time_range" id="unbooked_time_range_select"">
+						    	        <option value="2017-2018">2017 - 2018</option>
+						    	        <option value="2018">Summer 2018</option>
+		                                <option value="2018-2019">2018 - 2019</option>
+		                                <option value="2019">Summer 2019</option>
+		                                <option value="2019-2020">2019 - 2020</option>
+		                                <option value="2020">Summer 2020</option>
+		                                <option value="2020-2021">2020 - 2021</option>
+		                                <option value="2021">Summer 2021</option>
+						    	    </select>
+						    	</div>
+						    </div>
+						</div>
 			    	</div>
 			    </div>
 		    	<br>
@@ -411,11 +403,10 @@
 	            <!-- Loaded By Ajax -->
 	            </div>
 	        </div>
-	        <div class="tab-pane" id="toursTab" role="tabpanel" style="padding: 0px;">
+	        <div class="tab-pane" id="toursTab" role="tabpanel" style="padding: 0px; font-size: 20px;">
 	        	<div class="row">
-			    	<div class="col-xs-1"></div>
-			    	<div class="col-xs-10" style="width: 100%">
-				    	<div class="callout-block text-center fade-in-b">
+			    	<div class="col-xs-12" style="width: 100%">
+				    	<div class="callout-block text-center fade-in-b" style="background-color: #d2d2d2;">
 				    		<h1 style="font-size: 3.5vh;">Tours</h1>
 				    	</div>
 			    	</div>
@@ -577,7 +568,7 @@
 		        	            <div class="card-block">
 		        	                <ul class="nav nav-tabs">
 		        	                    <li class="nav-item">
-		        	                        <a class="nav-link tab-selector first-tab active" id="unacceptedTab2" data-toggle="tab" href="#unacceptedTab" role="tab">Unaccepted</a>
+		        	                        <a class="nav-link tab-selector first-tab active" id="unacceptedTab2" data-toggle="tab" href="#unacceptedTab" role="tab">Pending</a>
 		        	                    </li>
 		        	                    <li class="nav-item">
 		        	                        <a class="nav-link tab-selector" id="acceptedTab2" data-toggle="tab" href="#acceptedTab" role="tab">Accepted</a>
@@ -820,9 +811,8 @@
 	        </div>
 	        <div class="tab-pane" id="maintenanceTab" role="tabpanel" style="padding: 0px;">
 	        	<div class="row">
-			    	<div class="col-xs-1"></div>
-			    	<div class="col-xs-10" style="width: 100%">
-				    	<div class="callout-block text-center fade-in-b">
+			    	<div class="col-xs-12" style="width: 100%">
+				    	<div class="callout-block text-center fade-in-b" style="background-color: #d2d2d2;">
 				    		<h1 style="font-size: 3.5vh;" class="hidden-xs-down">Maintenance Requests</h1>
 				    		<h1 style="font-size: 3.5vh;" class="hidden-sm-up">Maintenance</h1>
 				    	</div>
@@ -830,8 +820,7 @@
 			    </div>
 		    	<br>
 		    	<div class="row">
-		        	<div class="col-xs-0 col-md-1"></div>
-		        	<div class="col-xs-12 col-md-10 col-lg-10 col-xl-10" style="padding-left: 15px;">
+		        	<div class="col-xs-12 col-md-12 col-lg-12 col-xl-12" style="padding-left: 15px;">
 		        	    <div class="row">
 		        	        <div class="card" style="width:100%; border: none;">
 		        	            <div class="card-block">
@@ -866,9 +855,8 @@
 		    </div>
 	        <div class="tab-pane" id="paymentTab" role="tabpanel" style="padding: 0px;">
 	            <div class="row">
-			    	<div class="col-xs-1"></div>
-			    	<div class="col-xs-10" style="width: 100%">
-				    	<div class="callout-block text-center fade-in-b">
+			    	<div class="col-xs-12" style="width: 100%">
+				    	<div class="callout-block text-center fade-in-b" style="background-color: #d2d2d2;">
 				    		<h1 style="font-size: 3.5vh;" class="hidden-xs-down">Rent Collection</h1>
 				    		<h1 style="font-size: 3.5vh;" class="hidden-sm-up">Rent</h1>
 				    	</div>
@@ -876,8 +864,7 @@
 			    </div>
 		    	<br>
 		    	<div class="row">
-		        	<div class="col-xs-0 col-md-1"></div>
-		        	<div class="col-xs-12 col-md-10 col-lg-10 col-xl-10" style="padding-left: 15px;">
+		        	<div class="col-xs-12" style="padding-left: 15px;">
 		        	    <div class="row">
 		        	        <div class="card" style="width:100%; border: none;">
 		        	            <div class="card-block">
@@ -896,10 +883,10 @@
 		        	                            {% for house in currentHouses %}
 		        	                            	{% set upcomingPayments, overduePayments, futurePayments, completedPayments = house.groupedRentPayments %}
 		        	                            	{% if overduePayments|length > 0 %}
-			        	                            	<div class="row">
+			        	                            	<div class="row" style="font-size: 20px;">
 			        	                            		<div class="col-xs-12" style="width: 100%;">
 			        	                            			<div class="card">
-			        	                            				<div class="card-header">
+			        	                            				<div class="card-header" style="background-color: #d2d2d2;">
 			        	                            					<div class="row">
 			        	                            						<div class="col-xs-12">   
 		        	                            								<div class="row">
@@ -912,15 +899,15 @@
 		        	                            											<img src="/static/img/complexPin.png" style="height: 80px;">
 		        	                            										{% endif %}
 		        	                            									</div>
-		        	                            									<div class="col-xs-6">
+		        	                            									<div class="col-xs-11">
 		        	                            										<a href="{{ url_for('houses.view', id=house.listing.id) }}">
 														                    				<h3 style="font-size: 3.5vh; margin-bottom: -15px;"><strong>{{ house.listing.street }}</h3>
-														                    				<h4>{{ house.listing.city }} {{ house.listing.state }}</strong></h4>
+														                    				<h4>{{ house.listing.city }}, {{ house.listing.state }}</strong></h4>
 														                    			</a>
 														                    		</div>
-														                    		<div class="col-xs-5" style="text-align: center;">
-														                    			<h3 style="font-size: 3.0vh; margin-bottom: -15px;">Lease Term:</h3>
-														                    			<h3 style="font-size: 3.0vh; margin-bottom: -15px;">{{house.listing.start_date}} - {{house.listing.end_date}}</h3>
+														                    		<div class="col-xs-1"></div>
+														                    		<div class="col-xs-11">
+														                    			<h4 style="margin-bottom: -5px;">Lease Term: {{house.listing.humanTimePeriod}}</h4>
 														                    		</div>
 												                    			</div>
 												                    		</div>
@@ -943,7 +930,7 @@
 										        	                    			<div class="col-xs-12">
 												        	                    		<div class="outstandingPaymentsDisplay">
 													        	                    		{% for rent in overduePayments %}
-													        	                    			<div class="row" style="height: 35px;">
+													        	                    			<div class="row" style="height: 50px;">
 											        	                    						<div class="col-xs-1">
 												        	                    						<div class="form-group">
 														        	                    				    <div class="checkbox">
@@ -958,14 +945,14 @@
 														        	                    				    </div>
 														        	                    				</div>
 												        	                    					</div>
-														        	                    			<div class="col-xs-2">
+														        	                    			<div class="col-xs-4 col-md-2" style="padding-top: 6px;">
 														        	                    				{{rent.date_due}}
 														        	                    			</div>
-														        	                    			<div class="col-xs-3">
+														        	                    			<div class="col-xs-4 col-md-3" style="padding-top: 6px;">
 														        	                    				<strong>{{rent.user.name}}</strong>
 														        	                    			</div>
-														        	                    			<div class="col-xs-3">
-														        	                    				<span style="color: red;">${{rent.amount}}</span>
+														        	                    			<div class="col-xs-3" style="padding-top: 6px;">
+														        	                    				<span style="color: #f16e5b;">${{rent.amount}}</span>
 														        	                    			</div>
 													        	                    			</div>
 													        	                    		{% endfor %}
@@ -981,7 +968,7 @@
 									                {% endif %}
 			            						{% endfor %}
 			            						<div class="alert alert-light-blue" role="alert">
-			            							<strong>No more houses have outstanding rent payments</strong>
+			            							<strong>No more outstanding payments due</strong>
 			            						</div>
 		            						{% endif %}
 		        	                    </div>
@@ -993,7 +980,7 @@
 		        	                            	<div class="row">
 		        	                            		<div class="col-xs-12" style="width: 100%;">
 		        	                            			<div class="card">
-		        	                            				<div class="card-header">
+		        	                            				<div class="card-header" style="background-color: #d2d2d2;">
 		        	                            					<div class="row">
 		        	                            						<div class="col-xs-12">   
 	        	                            								<div class="row">
@@ -1006,21 +993,21 @@
 	        	                            											<img src="/static/img/complexPin.png" style="height: 80px;">
 	        	                            										{% endif %}
 	        	                            									</div>
-	        	                            									<div class="col-xs-6">
+	        	                            									<div class="col-xs-11">
 	        	                            										<a href="{{ url_for('houses.view', id=house.listing.id) }}">
 													                    				<h3 style="font-size: 3.5vh; margin-bottom: -15px;"><strong>{{ house.listing.street }}</h3>
-													                    				<h4>{{ house.listing.city }} {{ house.listing.state }}</strong></h4>
+													                    				<h4>{{ house.listing.city }}, {{ house.listing.state }}</strong></h4>
 													                    			</a>
 													                    		</div>
-													                    		<div class="col-xs-5" style="text-align: center;">
-													                    			<h3 style="font-size: 3.0vh; margin-bottom: -15px;">Lease Term:</h3>
-													                    			<h3 style="font-size: 3.0vh; margin-bottom: -15px;">{{house.listing.start_date}} - {{house.listing.end_date}}</h3>
+													                    		<div class="col-xs-1"></div>
+													                    		<div class="col-xs-11">
+													                    			<h4 style="margin-bottom: -5px;">Lease Term: {{house.listing.humanTimePeriod}}</h4>
 													                    		</div>
 											                    			</div>
 											                    		</div>
 											                    	</div>
 											                    </div>
-											                    <div class="card-block">
+											                    <div class="card-block" style="font-size: 20px;">
 												                    <div class="row">
 												                    	<div class="col-xs-1">
 									        	                    	</div>
@@ -1028,7 +1015,7 @@
 									        	                    		<div class="row" style="padding-bottom: 15px;">
 									        	                    			<div class="col-xs-12">
 											        	                    		<div class="upcomingPaymentsToggle" style="color:#5686c5; cursor: pointer;">
-											        	                    			<i id="upcomingPaymentsIcon" class="fa fa-chevron-circle-down" aria-hidden="true"></i>
+											        	                    			<i id="upcomingPaymentsIcon" class="fa fa-chevron-circle-down upcomingPaymentsIcon" aria-hidden="true"></i>
 											        	                    			Upcoming Payments (within 30 days)
 											        	                    		</div>
 											        	                    	</div>
@@ -1037,7 +1024,7 @@
 									        	                    			<div class="col-xs-12">
 											        	                    		<div class="upcomingPaymentsDisplay">
 												        	                    		{% for rent in upcomingPayments %}
-												        	                    			<div class="row" style="height: 35px;">
+												        	                    			<div class="row" style="height: 50px;">
 										        	                    						<div class="col-xs-1">
 											        	                    						<div class="form-group">
 													        	                    				    <div class="checkbox">
@@ -1052,13 +1039,13 @@
 													        	                    				    </div>
 													        	                    				</div>
 											        	                    					</div>
-													        	                    			<div class="col-xs-2">
+													        	                    			<div class="col-xs-4 col-md-2" style="padding-top: 6px;">
 													        	                    				{{rent.date_due}}
 													        	                    			</div>
-													        	                    			<div class="col-xs-3">
+													        	                    			<div class="col-xs-4 col-md-3" style="padding-top: 6px;">
 													        	                    				<strong>{{rent.user.name}}</strong>
 													        	                    			</div>
-													        	                    			<div class="col-xs-3">
+													        	                    			<div class="col-xs-3" style="padding-top: 6px;">
 													        	                    				<span style="color: green;">${{rent.amount}}</span>
 													        	                    			</div>
 												        	                    			</div>
@@ -1075,7 +1062,7 @@
 									        	                    		<div class="row" style="padding-bottom: 15px;">
 									        	                    			<div class="col-xs-12">
 											        	                    		<div class="futurePaymentsToggle" style="color:#5686c5; cursor: pointer;">
-											        	                    			<i id="futurePaymentsIcon" class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+											        	                    			<i id="futurePaymentsIcon" class="fa fa-chevron-circle-right futurePaymentsIcon" aria-hidden="true"></i>
 											        	                    			Future Payments
 											        	                    		</div>
 											        	                    	</div>
@@ -1084,7 +1071,7 @@
 									        	                    			<div class="col-xs-12">
 											        	                    		<div class="futurePaymentsDisplay" style="display: none;">
 											        	                    			{% for rent in futurePayments %}
-												        	                    			<div class="row" style="height: 35px;">
+												        	                    			<div class="row" style="height: 50px;">
 										        	                    						<div class="col-xs-1">
 											        	                    						<div class="form-group">
 													        	                    				    <div class="checkbox">
@@ -1099,13 +1086,13 @@
 													        	                    				    </div>
 													        	                    				</div>
 											        	                    					</div>
-													        	                    			<div class="col-xs-2">
+													        	                    			<div class="col-xs-4 col-md-2" style="padding-top: 6px;">
 													        	                    				{{rent.date_due}}
 													        	                    			</div>
-													        	                    			<div class="col-xs-3">
+													        	                    			<div class="col-xs-4 col-md-3" style="padding-top: 6px;">
 													        	                    				<strong>{{rent.user.name}}</strong>
 													        	                    			</div>
-													        	                    			<div class="col-xs-3">
+													        	                    			<div class="col-xs-3" style="padding-top: 6px;">
 													        	                    				<span style="color: green;">${{rent.amount}}</span>
 													        	                    			</div>
 												        	                    			</div>
@@ -1122,7 +1109,7 @@
 									        	                    		<div class="row" style="padding-bottom: 15px;">
 									        	                    			<div class="col-xs-12">
 											        	                    		<div class="pastPaymentsToggle" style="color:#5686c5; cursor: pointer;">
-											        	                    			<i id="pastPaymentsIcon" class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+											        	                    			<i id="pastPaymentsIcon" class="fa fa-chevron-circle-right pastPaymentsIcon" aria-hidden="true"></i>
 											        	                    			Previous Payments
 											        	                    		</div>
 											        	                    	</div>
@@ -1131,7 +1118,7 @@
 									        	                    			<div class="col-xs-12">
 											        	                    		<div class="pastPaymentsDisplay" style="display: none;">
 											        	                    			{% for rent in completedPayments %}
-												        	                    			<div class="row" style="height: 35px;">
+												        	                    			<div class="row" style="height: 50px;">
 										        	                    						<div class="col-xs-1">
 											        	                    						<div class="form-group">
 													        	                    				    <div class="checkbox">
@@ -1146,13 +1133,13 @@
 													        	                    				    </div>
 													        	                    				</div>
 											        	                    					</div>
-													        	                    			<div class="col-xs-2">
+													        	                    			<div class="col-xs-4 col-md-2" style="padding-top: 6px;">
 													        	                    				{{rent.date_due}}
 													        	                    			</div>
-													        	                    			<div class="col-xs-3">
+													        	                    			<div class="col-xs-4 col-md-3" style="padding-top: 6px;">
 													        	                    				<strong>{{rent.user.name}}</strong>
 													        	                    			</div>
-													        	                    			<div class="col-xs-3">
+													        	                    			<div class="col-xs-3" style="padding-top: 6px;">
 													        	                    				<span style="color: green;">${{rent.amount}}</span>
 													        	                    			</div>
 												        	                    			</div>
@@ -1181,11 +1168,10 @@
 		        	</div>
 		        </div>
 	        </div>
-	        <div class="tab-pane" id="availabilityTab" role="tabpanel">
+	        <div class="tab-pane" id="availabilityTab" role="tabpanel" style="padding-top: 0px;">
 	            <div class="row">
-			    	<div class="col-xs-1"></div>
-			    	<div class="col-xs-10" style="width: 100%">
-				    	<div class="callout-block text-center fade-in-b">
+			    	<div class="col-xs-12" style="width: 100%">
+				    	<div class="callout-block text-center fade-in-b" style="background-color: #d2d2d2;">
 				    		<h1 style="font-size: 3.5vh;" class="hidden-xs-down">Availibilty for Tours</h1>
 				    		<h1 style="font-size: 3.5vh;" class="hidden-sm-up">Availibilty</h1>
 				    	</div>
@@ -1197,11 +1183,25 @@
 		        	<div class="col-xs-12 col-md-10 col-lg-10 col-xl-10" style="padding-left: 15px;">
 		        	    <div class="row">
 		        	        <div class="card" style="width:100%; border: none;">
-		        	            <div class="card-block">
-		        	            	Select the times you are available for tours on an average week. Prospective tenants will only be able to request tours during times you have marked as being available.
-		        	            	<br>
+		        	            <div class="card-block" style="font-size: 20px;">
+		        	            	Please select the times you are available for tours on an average week. Prospective tenants will only be able to request tours during times you have marked as being available.
+		        	            	<br><br>
 		        	            	<div id="day-schedule"></div>
 		        	            	<br>
+		        	            	<div class="row" style="padding-left: 90px;">
+		        	            		<div class="col-xs-1">
+		        	            			<hr style="border-top: 20px solid #5686c5; width: 40px;">
+		        	            		</div>
+		        	            		<div class="col-xs-11" style="align-self: center; color: #5686c5;">
+		        	            			<h4 style="font-size: 20px;">Available</h4>
+		        	            		</div>
+		        	            	</div>
+		        	            	<div class="row" style="padding-left: 90px;">
+		        	            		<div class="col-xs-12">
+		        	            			Double-Click to select single time slot
+		        	            			<br><br>
+		        	            		</div>
+		        	            	</div>
 		        	            	<div class="row">
 		        	            		<div class="col-xs-6" id="availabilityUpdatedSuccesfully">
 
@@ -1223,12 +1223,12 @@
 
 <div class="modal fade" id="suggestTimeTourModal" tabindex="-1" role="dialog" aria-labelledby="timeChange" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">                  
+            <div class="modal-content nexnest-font" style="width: 120%; margin-left: -10%;">
+                <div class="modal-header" style="background-color: #d2d2d2;">                  
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title" id="timeChange"></h4>
+                    <h3 class="modal-title" id="timeChange"></h3>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -1350,34 +1350,34 @@
 	//Rent collection Tab
 	$(".upcomingPaymentsToggle").click(function(event){
     	$(".upcomingPaymentsDisplay").toggle();
-    	if ($('#upcomingPaymentsIcon').hasClass('fa-chevron-circle-right')) {
-    		$("#upcomingPaymentsIcon").removeClass("fa-chevron-circle-right");
-    		$("#upcomingPaymentsIcon").addClass("fa-chevron-circle-down");
+    	if ($('.upcomingPaymentsIcon').hasClass('fa-chevron-circle-right')) {
+    		$(".upcomingPaymentsIcon").removeClass("fa-chevron-circle-right");
+    		$(".upcomingPaymentsIcon").addClass("fa-chevron-circle-down");
     	}else{
-    		$("#upcomingPaymentsIcon").removeClass("fa-chevron-circle-down");
-    		$("#upcomingPaymentsIcon").addClass("fa-chevron-circle-right");
+    		$(".upcomingPaymentsIcon").removeClass("fa-chevron-circle-down");
+    		$(".upcomingPaymentsIcon").addClass("fa-chevron-circle-right");
     	}    	
     });
 
     $(".futurePaymentsToggle").click(function(event){
     	$(".futurePaymentsDisplay").toggle();
-    	if ($('#futurePaymentsIcon').hasClass('fa-chevron-circle-right')) {
-    		$("#futurePaymentsIcon").removeClass("fa-chevron-circle-right");
-    		$("#futurePaymentsIcon").addClass("fa-chevron-circle-down");
+    	if ($('.futurePaymentsIcon').hasClass('fa-chevron-circle-right')) {
+    		$(".futurePaymentsIcon").removeClass("fa-chevron-circle-right");
+    		$(".futurePaymentsIcon").addClass("fa-chevron-circle-down");
     	}else{
-    		$("#futurePaymentsIcon").removeClass("fa-chevron-circle-down");
-    		$("#futurePaymentsIcon").addClass("fa-chevron-circle-right");
+    		$(".futurePaymentsIcon").removeClass("fa-chevron-circle-down");
+    		$(".futurePaymentsIcon").addClass("fa-chevron-circle-right");
     	}    	
     });
 
     $(".pastPaymentsToggle").click(function(event){
     	$(".pastPaymentsDisplay").toggle();
-    	if ($('#pastPaymentsIcon').hasClass('fa-chevron-circle-right')) {
-    		$("#pastPaymentsIcon").removeClass("fa-chevron-circle-right");
-    		$("#pastPaymentsIcon").addClass("fa-chevron-circle-down");
+    	if ($('.pastPaymentsIcon').hasClass('fa-chevron-circle-right')) {
+    		$(".pastPaymentsIcon").removeClass("fa-chevron-circle-right");
+    		$(".pastPaymentsIcon").addClass("fa-chevron-circle-down");
     	}else{
-    		$("#pastPaymentsIcon").removeClass("fa-chevron-circle-down");
-    		$("#pastPaymentsIcon").addClass("fa-chevron-circle-right");
+    		$(".pastPaymentsIcon").removeClass("fa-chevron-circle-down");
+    		$(".pastPaymentsIcon").addClass("fa-chevron-circle-right");
     	}    	
     });
 	
@@ -2549,7 +2549,7 @@
       $("#currentTour").val($(button).attr("data-tourid"));
       $("#currentTour").innerHTML = "hi";
       console.log($("#currentTour").val());
-      modal.find('.modal-title').text('Suggest Different Tour Times');
+      modal.find('.modal-title').text('Suggest Different Tour Dates/Times');
     })
 
     //Package Option Modal
@@ -2588,7 +2588,7 @@
             <div id="numberOfOpenRequests`+maintenanceRequestObject.listing.id+`" style="display: none;">`+maintenanceRequestObject.requestCount+`</div>
 		    <div id="doIShowOpenRequestsDiv`+maintenanceRequestObject.listing.id+`" style="display: none;">show</div>
             <div class="card" id="openRequestListing`+maintenanceRequestObject.listing.id+`" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-                <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
+                <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); background-color: #5686c5; color: white;">
                     <div class="row">
                     	<div class="col-xl-12">
                     		<h3 style="font-size: 3.5vh;" id="openRequestsCount`+maintenanceRequestObject.listing.id+`"><strong>
@@ -2611,21 +2611,22 @@
             	$.each(maintenanceRequestObject.maintenanceRequests, function(index, maintenanceRequest) {
             		individualElement = `
             		<div class="row" id="openRequest`+maintenanceRequest.id+`">
-    					<div class="col-xl-12">
+            			<div class="col-xs-0 col-md-1"></div>
+    					<div class="xol-xs-12 col-md-10 col-xl-10">
 	        				<div class="card">
-                    			<div class="card-header">
+                    			<div class="card-header" style="background-color: #d2d2d2;">
                     				<div class="row">
 	                    				<div class="col-xl-12">
         	            					<h3 style="font-size: 3.0vh;">
             	            					<strong>`+ maintenanceRequest.requestType +`</strong>
             	            					<a style="float: right;" class="btn btn-blue hidden-sm-down" href="`+ maintenanceRequest.url +`">More Info</a>
         	            					</h3>
-        	            					Reported on: `+ maintenanceRequest.date +`
+        	            					<h4>Reported on: `+ maintenanceRequest.date +`</h4>
         	            					<br><br>
         	            				</div>
         	            			</div>
-	            					<div class="row">   
-	            						<div class="col-12 col-md-auto" style="padding-bottom: 5px;padding-right: 15px;">
+	            					<div class="row" style="margin-top: -35px;">   
+	            						<div class="col-xs-6 col-md-4" style="padding-bottom: 5px;padding-right: 15px; text-align: center;">
         	            					<div id="markInProgressButton`+maintenanceRequest.id+`">
         	            						<button id="inProgressButton`+maintenanceRequest.id+`" class="btn btn-warning" onclick="markInProgress(`+maintenanceRequest.id+`, `+maintenanceRequestObject.listing.id+`, '`+maintenanceRequestObject.listing.street+`')">Mark In Progress</button>
         	            					</div>
@@ -2635,7 +2636,7 @@
         	            						</button>
         	            					</div>
         	            				</div>
-        	            				<div class="col-12 col-md-auto" style="padding-right: 15px; padding-bottom: 5px;">
+        	            				<div class="col-xs-6 col-md-4 col-md-auto" style="padding-right: 15px; padding-bottom: 5px; text-align: center;">
         	            					<div id="markCompletedButton`+maintenanceRequest.id+`">
         	            						<button id="completedButton`+maintenanceRequest.id+`" class="btn btn-light-green" onclick="markCompleted(`+maintenanceRequest.id+`, `+maintenanceRequestObject.listing.id+`, '`+maintenanceRequestObject.listing.street+`')">Mark Completed</button>
         	            					</div>
@@ -2650,11 +2651,11 @@
         	            				</div>
     	            				</div>
         	            		</div>
-        	            		<div class="card-block">
+        	            		<div class="card-block" style="font-size: 20px;">
                     				<div class="row">
                     					<div class="col-xs-12">
                     						<strong>Reported by:</strong> `+ maintenanceRequest.requestedBy.name +`
-                    						<br><br>
+                    						<br>
                     						<strong>Details: </strong>`+ maintenanceRequest.details +`
 		      					    	</div>
 		      					    </div>
@@ -2710,7 +2711,7 @@
             	<div id="numberOfInProgressRequests`+maintenanceRequestObject.listing.id+`" style="display: none;">`+maintenanceRequestObject.requestCount+`</div>
             	<div id="doIShowInProgressRequestsDiv`+maintenanceRequestObject.listing.id+`" style="display: none;">show</div>
             	<div class="card" id="inProgressRequestListing`+maintenanceRequestObject.listing.id+`" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
+                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); background-color: #5686c5; color: white;">
 	                    <div class="row">
 	                    	<div class="col-xl-12">
 	                    		<h3 style="font-size: 3.5vh;" id="inProgressRequestsCount`+maintenanceRequestObject.listing.id+`"><strong>
@@ -2734,9 +2735,10 @@
             	$.each(maintenanceRequestObject.maintenanceRequests, function(index, maintenanceRequest) {
             		individualElement = `
             		<div class="row" id="inProgress`+ maintenanceRequest.id +`">
-    					<div class="col-xl-12">
+            			<div class="col-xs-0 col-md-1 col-xl-1"></div>
+    					<div class="col-xs-12 col-md-10 col-xl-10">
 	        				<div class="card">
-                    			<div class="card-header">
+                    			<div class="card-header" style="background-color: #d2d2d2;">
                     				<div class="row">
 	                    				<div class="col-xl-12">
         	            					<h3 style="font-size: 3.0vh;">
@@ -2747,12 +2749,12 @@
         	            			</div>
         	            			<div class="row">
         	            				<div class="col-xl-12">
-        	            					Reported on: `+ maintenanceRequest.date +`
+        	            					<h4>Reported on: `+ maintenanceRequest.date +`</h4>
         	            					<br><br>
         	            				</div>
         	            			</div>
-	            					<div class="row">
-        	            				<div class="col-12 col-md-auto" style="padding-bottom: 5px;padding-right: 15px;">
+	            					<div class="row" style="margin-top: -35px;">
+        	            				<div class="col-xs-6 col-md-4" style="padding-bottom: 5px;padding-right: 15px; text-align: center;">
         	            					<div id="inProgressToCompletedButton`+ maintenanceRequest.id +`">
         	            						<button class="btn btn-light-green" onclick="inProgressToCompleted(`+ maintenanceRequest.id +`, `+maintenanceRequestObject.listing.id+`, '`+maintenanceRequestObject.listing.street+`')">Mark Completed</button>
         	            					</div>
@@ -2769,11 +2771,11 @@
     	            					</div>
     	            				</div>
         	            		</div>
-        	            		<div class="card-block">
+        	            		<div class="card-block" style="font-size: 20px;">
                     				<div class="row">
                     					<div class="col-xs-12">
                     						<strong>Reported by:</strong> `+ maintenanceRequest.requestedBy.name +`
-                    						<br><br>
+                    						<br>
                     						<strong>Details: </strong>`+ maintenanceRequest.details +`
 		      					    	</div>
 		      					    </div>
@@ -2819,7 +2821,7 @@
 
             var outerDiv =`
             	<div class="card" id="completedRequestListing`+maintenanceRequestObject.listing.id+`" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-	                <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125);">
+	                <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); background-color: #5686c5; color: white;">
 	                    <div class="row">
 	                    	<div class="col-xl-12">
 	                    		<h3 style="font-size: 3.5vh;" id="completedRequestsCount`+maintenanceRequestObject.listing.id+`"><strong>
@@ -2843,27 +2845,28 @@
             	$.each(maintenanceRequestObject.maintenanceRequests, function(index, maintenanceRequest) {
             		individualElement = `
             		<div class="row" id="completed`+ maintenanceRequest.id +`">
-    					<div class="col-xl-12">
+            			<div class="col-xs-0 col-md-1 col-xl-1"></div>
+    					<div class="col-xs-12 col-md-10 col-xl-10">
 	        				<div class="card">
-                    			<div class="card-header">
-                    				<div class="row">
+                    			<div class="card-header" style="background-color: #d2d2d2;">
+                    				<div class="row" style="margin-bottom: -45px;">
 	                    				<div class="col-xl-10">
         	            					<h3 style="font-size: 3.0vh;"><strong>`+ maintenanceRequest.requestType +` </strong></h3>
-        	            					Reported on: `+ maintenanceRequest.date +`
-        	            					<br><br>
-        	            					Completed on: `+ maintenanceRequest.dateCompleted +`
+        	            					<h4>Reported on: `+ maintenanceRequest.date +`
+        	            					<br>
+        	            					Completed on: `+ maintenanceRequest.dateCompleted +`</h4>
         	            					<br><br>
         	            				</div>
-        	            				<div class="col-xl-2" style="text-align: right;">
+        	            				<div class="col-xl-1" style="text-align: right;">
         	            					<a class="btn btn-blue" href="`+ maintenanceRequest.url +`">More Info</a>
         	            				</div>
         	            			</div>
         	            		</div>
-        	            		<div class="card-block">
+        	            		<div class="card-block" style="font-size: 20px;">
                     				<div class="row">
                     					<div class="col-xs-12">
                     						<strong>Reported by:</strong> `+ maintenanceRequest.requestedBy.name +`
-                    						<br><br>
+                    						<br>
                     						<strong>Details: </strong>`+ maintenanceRequest.details +`
 		      					    	</div>
 		      					    </div>
@@ -2901,12 +2904,12 @@
             	<div id="numberOfUnacceptedRequests`+ housingRequestObject.listing.id +`" style="display: none;">`+ housingRequestObject.requestCount +`</div>
 		        <div id="doIShowUnacceptedRequestsDiv`+ housingRequestObject.listing.id +`" style="display: none;">show</div>
             	<div class="card" id="unacceptedRequestsListing`+ housingRequestObject.listing.id +`" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-	                <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); background-color: #d2d2d2;">
+	                <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); background-color: #5686c5; color: white;">
 	                    <div class="row">
 	                    	<div class="col-xl-12">
 	                    		<h3 style="font-size: 3.5vh;" id="unacceptedRequestsCount`+ housingRequestObject.listing.id +`"><strong>
 	                    		`+ housingRequestObject.listing.street +` (`+ housingRequestObject.requestCount +` Requests)</strong></h3>
-	                    		<small>Lease Period: `+ housingRequestObject.listing.startDate +` - `+ housingRequestObject.listing.endDate +`</small>
+	                    		<h5>Lease Period: `+ housingRequestObject.listing.startDate +` - `+ housingRequestObject.listing.endDate +`</h5>
 	                    	</div>
 	                    </div>			                    
 	                </div>
@@ -2914,8 +2917,8 @@
 	                	<div class="row">
 	                		<div class="col-xs-12 col-md-12">
 	                			<strong>
-	                				<h2 class="hidden-sm-up" style="font-size: 2.5vh;">Group(s) Requesting This Listing: </h2>
-	                				<h2 class="hidden-xs-down" style="font-size: 3.5vh;">Group(s) Requesting This Listing: </h2>
+	                				<h2 class="hidden-sm-up" style="font-size: 2.5vh;">Groups Requesting This Listing: </h2>
+	                				<h2 class="hidden-xs-down" style="font-size: 3.5vh;">Groups Requesting This Listing: </h2>
 	                			</strong>
 	                		</div>
 	                	</div>
@@ -2927,18 +2930,19 @@
             		var membersNotLeaderCount = parseInt(houseRequest.group.userCount) -1;
             		individualElement = `
             		<div class="row" id="unAcceptedRequest`+ houseRequest.id +`">
-    					<div class="col-xs-12 col-md-12" style="padding-left: 0px; padding-right: 0px;">
+            			<div class="col-xs-0 col-md-1" style="padding-left: 0px; padding-right: 0px;"></div>
+    					<div class="col-xs-12 col-md-10" style="padding-left: 0px; padding-right: 0px;">
 	        				<div class="card">
                     			<div class="card-header" style="background-color: #d2d2d2;">
                     				<div class="row">
 	                    				<div class="col-xl-12">
-        	            					<h3 style="font-size: 3.0vh;"><strong>`+ houseRequest.group.name +`</strong>(`+ houseRequest.group.userCount +` Members)
+        	            					<h3 style="font-size: 3.0vh;"><strong>`+ houseRequest.group.name +`</strong> (`+ houseRequest.group.userCount +` Members)
         	            					<a class="btn btn-blue hidden-sm-down" style="float: right;" href="`+ houseRequest.url +`">More Info</a></h3>
         	            				</div>
         	            			</div>
         	            			<br>
 	            					<div class="row">
-    	            					<div class="col-12 col-md-auto" style="padding-bottom: 5px;padding-right: 15px;">
+    	            					<div class="col-lg-4" style="padding-right: 15px; padding-bottom: 5px; ">
         	            					<div id="acceptHouseRequest`+ houseRequest.id +`">
         	            						<button id="acceptHouseRequestButton`+ houseRequest.id +`" style="width: 131.06px;" class="btn btn-light-green acceptHouseRequest`+ houseRequest.id +`" onclick="acceptHouseRequest(`+ houseRequest.id +`, `+ housingRequestObject.listing.id +`, '`+ housingRequestObject.listing.street +`')">Accept Group</button>
         	            					</div>
@@ -2948,9 +2952,10 @@
         	            						</button>
         	            					</div>
     	            					</div>
-    	            					<div class="col-12 col-md-auto" style="padding-right: 15px; padding-bottom: 5px;">
+
+    	            					<div class="col-lg-4" style="padding-right: 15px; padding-bottom: 5px; ">
         	            					<div id="denyHouseRequest`+ houseRequest.id +`">
-        	            						<button id="denyHouseRequestButton`+ houseRequest.id +`" style="width: 131.06px;" class="btn btn-red denyHouseRequest`+ houseRequest.id +`" onclick="denyHouseRequest(`+ houseRequest.id +`, `+ housingRequestObject.listing.id +`, '`+ housingRequestObject.listing.street +`')">Reject Group</button>
+        	            						<button id="denyHouseRequestButton`+ houseRequest.id +`" style="width: 131.06px;" class="btn btn-red denyHouseRequest`+ houseRequest.id +`" onclick="denyHouseRequest(`+ houseRequest.id +`, `+ housingRequestObject.listing.id +`, '`+ housingRequestObject.listing.street +`')">Decline Group</button>
         	            					</div>
         	            					<div id="denyHouseRequestLoading`+ houseRequest.id +`" style="display: none;">
         	            						<button class="btn btn-red" style="width: 131.06px;">
@@ -2964,30 +2969,42 @@
     	            					</div>
 	            					</div>
         	            		</div>
-        	            		<div class="card-block">
+        	            		<div class="card-block" style="font-size: 20px;">
                     				<div class="row">
                     					<div class="col-xs-12">
-                    						<strong>The Group's Initial Message to You: </strong>
-                    						`+ houseRequest.message +`
+                    						<strong>Listing Request Status: </strong>
+                    						<br>
+                    						Waiting for you to accept/decline this group.
                     						<br><br>                    						
                     						<div id="allGroupMembersListingUnaccepted`+ houseRequest.id +`" style="display:none">
             								`;	
             								$.each(houseRequest.group.users, function(index, user) {
             									individualElement += `
             									<div class="row">
-            										<div class="col-sm-12" style="padding: 0px;">                  											
+            										<div class="col-sm-12" style="padding: 0px;"> 
         							    				<div class="card" style="width: 100%">
         							    					<div class="card-block">
         							    					    <div class="row">
-        							    					        <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
+        							    					        <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-1" style="height: 50px;">
         							    					            <img src="`+ user.profileImageURL +`" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;">
         							    					        </div>
-        							    					        <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-10">
-        							    					            <div class="row">
-        							    					                <div class="col-xs-12">
-        							    					                    <h4 style="font-size: 3.0vh;">`+ user.name +`</h4>
-        							    					                </div>
-        							    					            </div>
+        							    					        <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-11">
+        							    					            <h2 style="margin-top: 5px;">`+ user.name +``;
+        							    					            	if(user.id == houseRequest.group.leader.id){
+        							    					            		individualElement +=
+        							    					            		 `<div class="customTooltip" style="padding-left: 15px;">
+        							    					            	        <i class="icon icon-crown" style="color: #f4c359;"></i>
+        							    					            	        <span class="customTooltiptext">Group Leader</span>
+        							    					            	    </div>`;
+        							    					            	}
+        							    					            	individualElement += `
+											                                <a href="#" data-toggle="modal" data-target="#sendDirectMessageModal" data-targetID="`+ user.id +`" data-targetname="`+ user.name +`">
+											                                    <div class="customTooltip" style="padding-left: 15px;">
+											                                        <i class="fa fa-comment" aria-hidden="true" style="color: #5686c5;"></i>
+											                                        <span class="customTooltiptext">Send Message</span>
+											                                    </div>
+											                                </a>
+												                        </h2>
         							    					        </div>
         							    					    </div>
         							    					</div>
@@ -3046,6 +3063,7 @@
             }
             //console.log(acceptedGroupListings);
            $.each(acceptedGroupListings, function(index, housingRequest) {
+           		console.log("%%%%%%%%%%%%")
             	console.log(housingRequest);
             	console.log(housingRequest.listing.street);
             	console.log(housingRequest.groupListings[0].leasesCollected);
@@ -3053,21 +3071,25 @@
 
             	var div =`
 		                <div class="card" id="confirmRequest`+ housingRequest.groupListings[0].id +`">
-		                    <div class="card-header">
+		                    <div class="card-header" style="background-color: #d2d2d2;">
 			                    <div class="row">
 			                    	<div class="col-xl-12">
-			                    		<h3 style="font-size: 2.5vh;"><strong>`+ housingRequest.groupListings[0].group.name +` for `+ housingRequest.listing.street +`
+			                    		<h3 style="font-size: 3.0vh;"><strong>`+ housingRequest.listing.street +` <br> Group: `+ housingRequest.groupListings[0].group.name +`
 			                    		</strong>        								                    		
-			                    		<a class="btn btn-blue hidden-sm-down" style="float: right;" href="`+ housingRequest.groupListings[0].url +`">More Info</a></h3>
+			                    		<a class="btn btn-blue hidden-sm-down" style="float: right; margin-top: -35px;" href="`+ housingRequest.groupListings[0].url +`">More Info</a></h3>
 			                    	</div>
 			                    </div>
 			                    <div class="row">
 			                    	<div class="col-xl-12">
-			                    		<small>Lease Period: `+ housingRequest.listing.startDate +` - `+ housingRequest.listing.endDate +`</small>
+			                    		<h4>Lease Period: `+ housingRequest.listing.startDate +` - `+ housingRequest.listing.endDate +`</h4>
 			                    	</div>
 			                    </div>        								                    		<br>
 	                    		<div class="row">
-	                    			<div class="col-12 col-md-auto" style="padding-left: 15px;padding-right: 15px;">
+	                    			<div class="col-xs-6" style="padding-left: 15px; padding-right: 15px; padding-bottom: 5px;">
+		                    			<button id="confirmGroupButton`+ housingRequest.groupListings[0].id +`" class="btn btn-light-green" onclick="confirmGroup(`+ housingRequest.groupListings[0].id +`)">Confirm Group</button>
+		                    			<button id="confirmGroupLoading`+ housingRequest.groupListings[0].id +`" class="btn btn-light-green" style="display: none; width: 139.33px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+		                    		</div>
+	                    			<div class="col-xs-6" style="padding-left: 15px;padding-right: 15px; text-align: right; margin-top: -87px;">
 		                    			<strong style="padding-right: 16px;">All Leases Collected: </strong>
 		                    			`;
 		                    			if(housingRequest.groupListings[0].leasesCollected == true){
@@ -3086,26 +3108,21 @@
 		                    			}
 		                    				
 		                    		div += `	    								                    			
-		                    		</div>
-		                    		<div class="col-12 col-md-auto" style="padding-left: 15px; padding-right: 15px;">
-		                    			<strong>Deposits Collected: </strong> 
-		                    			<span id="numDeposits`+ housingRequest.groupListings[0].id +`">`+ housingRequest.groupListings[0].numSecurityDepositsPaid +`/`+ housingRequest.groupListings[0].group.userCount +`
-		                    		</div>
-		                    		<div class="col-12 col-md-auto" style="padding-left: 15px; padding-right: 15px; padding-bottom: 5px;">
-		                    			<button id="confirmGroupButton`+ housingRequest.groupListings[0].id +`" class="btn btn-light-green" onclick="confirmGroup(`+ housingRequest.groupListings[0].id +`)">Confirm Group</button>
-		                    			<button id="confirmGroupLoading`+ housingRequest.groupListings[0].id +`" class="btn btn-light-green" style="display: none; width: 139.33px;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
-		                    		</div>
+		                    			<br><br>
+		                    			<strong style="margin-right: 18px;">Deposits Collected: </strong> 
+		                    			<span style="margin-right: 7px;" id="numDeposits`+ housingRequest.groupListings[0].id +`">`+ housingRequest.groupListings[0].numSecurityDepositsPaid +`/`+ housingRequest.groupListings[0].group.userCount +`
+		                    		</div>		                    		
 		                    		<br>
 		                    		<div class="col-xs-12" style="padding-left: 15px;">
 			                    		<a class="btn btn-blue hidden-md-up" style="width: 139.33px;" href="`+ housingRequest.groupListings[0].url +`">More Info</a>
 		                    		</div>
 	                    		</div>		                    
 		                    </div>
-		                    <div class="card-block">        								                    
+		                    <div class="card-block" style="font-size: 20px;">        								                    
 			                    <div class="row">
 			                    	<div class="col-xl-12">
 			                    		<strong>Security Deposits Collected:</strong>				                    		    
-		                    				<br>
+		                    				<br><br>
 		      					    		<div id="allGroupMembersListingAccepted`+ housingRequest.groupListings[0].id +`" style="display: none;">
 		      					    		`;
 	      					    				$.each(housingRequest.groupListings[0].group.users, function(index, user) {
@@ -3115,14 +3132,30 @@
 			                    		    				<div class="card">
 			                    		    				    <div class="card-block">
 			                    		    				        <div class="row">
-			                    		    				            <div class="hidden-sm-down col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
+			                    		    				            <div class="hidden-sm-down col-md-2 col-lg-2 col-xl-1" style="height: 50px;">
 			                    		    				                <img src="`+ user.profileImageURL +`" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;" />
 			                    		    				            </div>
-			                    		    				            <div class="col-xs-10 col-sm-10">
+			                    		    				            <div class="col-xs-10 col-sm-10 col-xl-11">
 			                    		    				                <div class="row">
 			                    		    				                    <div class="col-xs-12 col-md-6">
 			                    		    				                        <div class="row">
-			                    		    				                            <h4 style="font-size: 3.0vh;">`+ user.name +`</h4>
+			                    		    				                            <h2 style="margin-top: 5px;">`+ user.name +``;
+			                    		    				                            	console.log(user.id + "  " + housingRequest.groupListings[0].group.leader.id)
+				        							    					            	if(user.id == housingRequest.groupListings[0].group.leader.id){
+				        							    					            		div +=
+				        							    					            		 `<div class="customTooltip" style="padding-left: 15px;">
+				        							    					            	        <i class="icon icon-crown" style="color: #f4c359;"></i>
+				        							    					            	        <span class="customTooltiptext">Group Leader</span>
+				        							    					            	    </div>`;
+				        							    					            	}
+				        							    					            	div += `
+															                                <a href="#" data-toggle="modal" data-target="#sendDirectMessageModal" data-targetID="`+ user.id +`" data-targetname="`+ user.name +`">
+															                                    <div class="customTooltip" style="padding-left: 15px;">
+															                                        <i class="fa fa-comment" aria-hidden="true" style="color: #5686c5;"></i>
+															                                        <span class="customTooltiptext">Send Message</span>
+															                                    </div>
+															                                </a>
+																                        </h2>
 			                    		    				                        </div>
 			                    		    				                    </div>
 			                    		    				                    <div class="col-xs-12 col-md-6">                            
@@ -3157,8 +3190,8 @@
 	            								})
 											div+=`
 		      					    		</div>
-		      					    		<button class="btn btn-blue" id="allGroupMembersListingAcceptedToggle`+ housingRequest.groupListings[0].id +`" onClick="showAcceptedHousingRequestMembers(`+ housingRequest.groupListings[0].id +`)"><i class='fa fa-users' aria-hidden='true'></i> Group Members</button>
-		      					    		<button class="btn btn-blue" id="hideAllGroupMembersListingAcceptedToggle`+ housingRequest.groupListings[0].id +`" onClick="hideAcceptedHousingRequestMembers(`+ housingRequest.groupListings[0].id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide Group Members</button>
+		      					    		<button class="btn btn-blue" id="allGroupMembersListingAcceptedToggle`+ housingRequest.groupListings[0].id +`" onClick="showAcceptedHousingRequestMembers(`+ housingRequest.groupListings[0].id +`)"><i class='fa fa-usd' aria-hidden='true'></i> Show Deposits Collected</button>
+		      					    		<button class="btn btn-blue" id="hideAllGroupMembersListingAcceptedToggle`+ housingRequest.groupListings[0].id +`" onClick="hideAcceptedHousingRequestMembers(`+ housingRequest.groupListings[0].id +`)" style="display: none;"><i class='fa fa-usd' aria-hidden='true'></i> Hide Deposits Collected</button>
 				                    		<br>
 				                    		<br>
 				                    	</div>
@@ -3198,12 +3231,13 @@
             $.each(requestedTours, function(index, requestedTourObject) {
             	//console.log(requestedTourObject);
             	//console.log(requestedTourObject.listing.street);
-
+           	console.log("*****");
+           	console.log(requestedTourObject);
             var outerDiv =`
             	<div id="numberOfRequestedTours`+ requestedTourObject.listing.id +`" style="display: none;">`+ requestedTourObject.tourCount +`</div>
                 	<div id="doIShowDiv`+ requestedTourObject.listing.id +`" style="display: none;">show</div>
                 	<div class="card" id="requestedTourListing`+ requestedTourObject.listing.id +`" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-	                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); background-color: #d2d2d2;">
+	                    <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); background-color: #5686c5; color: white;">
 		                    <div class="row">
 		                    	<div class="col-xl-12">
 		                    		<h3 style="font-size: 3.5vh;" id="requestedToursCount`+ requestedTourObject.listing.id +`"><strong>
@@ -3216,8 +3250,8 @@
 	                    	<div class="row">
 	                    		<div class="col-xl-12">
 	                    			<strong>
-	                    				<h2 class="hidden-sm-up" style="font-size: 2.5vh;">Group(s) Requesting This Tour: </h2>
-	                    				<h2 class="hidden-xs-down" style="font-size: 3.5vh;">Group(s) Requesting This Tour: </h2>
+	                    				<h2 class="hidden-sm-up" style="font-size: 2.5vh;">Groups Requesting This Tour: </h2>
+	                    				<h2 class="hidden-xs-down" style="font-size: 3.5vh;">Groups Requesting This Tour: </h2>
 	                    			</strong>
 	                    		</div>
 	                    	</div>
@@ -3240,12 +3274,13 @@
             		var membersNotLeaderCount = parseInt(tour.group.userCount) -1;
             		individualElement = `
             		<div class="row" id="requestedTour`+ tour.id +`">
-    					<div class="col-xs-12 col-xl-12"  style="padding-left:  10px;">
+            			<div class="col-xs-0 col-md-1 col-xl-1"  style="padding-left:  10px;"></div>
+    					<div class="col-xs-12 col-md-10 col-xl-10"  style="padding-left:  10px;">
 	        				<div class="card">
                     			<div class="card-header" style="background-color: #d2d2d2;">
                     				<div class="row">
 	                    				<div class="col-12 col-xl-12">
-        	            					<h3 style="font-size: 3.5vh;"><strong>`+ tour.group.name +` </strong>(`+ tour.group.userCount +` Members)
+        	            					<h3 style="font-size: 3.0vh;"><strong>`+ tour.group.name +` </strong>(`+ tour.group.userCount +` Members)
         	            					<a class="btn btn-blue hidden-sm-down" href="`+ tour.url +`" style="float: right;">More Info</a></h3>
         	            				</div>
         	            			</div>`;
@@ -3253,12 +3288,12 @@
 	        	            			individualElement+= `
 	        	            			<div class="row">
 	        	            				<div class="col-xl-12">
-        	            					The Group has requested any of these times. Please choose one:
+        	            					This group has requested the following times. Please select a time:
 	        	            					<br>
 	        	            					<div class="row">`;
 	        	            					for(var i=0; i<requestedTimes.tourTimes.length; i++){
-	        	            						individualElement+= `<div class="col-xs-6 col-md-6 col-lg-4" style="padding-top: 10px;">
-	        	            											<button class="btn btn-secondary timeselector" data-tourid="`+tour.id+`" value="`+requestedTimes.tourTimes[i].dateTimeRequested+`">`+requestedTimes.tourTimes[i].dateTimeRequested+`</button>
+	        	            						individualElement+= `<div class="col-xs-6 col-md-6 col-lg-4" style="padding-top: 10px; text-align: center;">
+	        	            											<button class="btn btn-secondary timeselector" style="width: 220px; color: #656264;" data-tourid="`+tour.id+`" value="`+requestedTimes.tourTimes[i].dateTimeRequested+`">`+requestedTimes.tourTimes[i].dateTimeRequested+`</button>
 	        	            										</div>`;
 	        	            					}
 	        	            				individualElement+= `</div></div>`;
@@ -3271,8 +3306,8 @@
 	        	            					<br>
 	        	            					<div class="row">`;
 	        	            					for(var i=0; i<requestedTimes.tourTimes.length; i++){
-	        	            						individualElement+= `<div class="col-xs-6 col-md-6 col-lg-4" style="padding-top: 10px;">
-	        	            											<button class="btn btn-secondary timeselector" style="pointer-events: none;" data-tourid="`+tour.id+`" value="`+requestedTimes.tourTimes[i].dateTimeRequested+`">`+requestedTimes.tourTimes[i].dateTimeRequested+`</button>
+	        	            						individualElement+= `<div class="col-xs-6 col-md-6 col-lg-4" style="padding-top: 10px; text-align: center;">
+	        	            											<span class="nexnest-font" style="color: #5686c5;">`+requestedTimes.tourTimes[i].dateTimeRequested+`</span>
 	        	            										</div>`;
 	        	            					}
 	        	            				individualElement+= `</div></div>`;
@@ -3296,17 +3331,8 @@
                     	            				</div>						
                     	            				<div class="col-lg-4 col-centered" style="padding-right: 15px; padding-bottom: 5px;">
                     	            					<a href="#!" id="tourTimeChangeBtn`+ tour.id +`" class="btn btn-blue" data-toggle="modal" data-target="#suggestTimeTourModal" data-tourid="`+ tour.id +`" data-groupid="`+ tour.group.id +`">Date/Time Change</a>
-                    	            				</div>`;
-        	            						}
-        	            						else{
-        	            							individualElement += `
-        	            								<div class="col-lg-4 col-centered" style="padding-left: 15px; padding-right: 15px; padding-bottom: 5px;">
-        	            									<button class="btn btn-secondary" style="width: 166.5px; pointer-events: none;">Waiting For Group</button>
-        	            								</div>
-        	            							`;
-        	            						}
-        	            						individualElement += `
-                	            				<div class="col-lg-4 col-centered" style="padding-right: 15px; padding-bottom: 5px;">
+                    	            				</div>
+                    	            				<div class="col-lg-4 col-centered" style="padding-right: 15px; padding-bottom: 5px;">
                 	            					<div id="declineTourButton`+ tour.id +`">
                 	            						<button id="declineTourBtn`+ tour.id +`" style="width: 166.5px;" class="btn btn-red" onclick="declineTour(`+ tour.id +`, `+ requestedTourObject.listing.id +`, '`+ requestedTourObject.listing.street +`')">Decline Tour</button>
                 	            					</div>
@@ -3314,7 +3340,24 @@
                 	            						<button class="btn btn-red" style="width: 166.5px;">
                 	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
                 	            						</button>
+                	            					</div>`;
+
+        	            						}
+        	            						else{
+        	            							individualElement += `
+        	            							<div class="col-lg-4 col-centered" style="padding-right: 15px; padding-bottom: 5px;"></div>
+        	            							<div class="col-lg-4 col-centered" style="padding-right: 15px; padding-bottom: 5px;"></div>
+        	            							<div class="col-lg-4 col-centered" style="padding-right: 15px; padding-bottom: 5px;">
+                	            					<div id="declineTourButton`+ tour.id +`">
+                	            						<button id="declineTourBtn`+ tour.id +`" style="width: 166.5px;" class="btn btn-red" onclick="declineTour(`+ tour.id +`, `+ requestedTourObject.listing.id +`, '`+ requestedTourObject.listing.street +`')">Cancel Tour</button>
                 	            					</div>
+                	            					<div id="declineTourLoading`+ tour.id +`" style="display: none;">
+                	            						<button class="btn btn-red" style="width: 166.5px;">
+                	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                	            						</button>
+                	            					</div>`;
+        	            						}
+        	            						individualElement += `
                 	            				</div>
                 	            				<br>
                 	            				<div class="col-sm-12 hidden-md-up" style="padding-left: 15px;">
@@ -3331,15 +3374,11 @@
 				                    		<br>`;
 				                    		if(tour.lastRequested == "landlord"){
         	            						individualElement += `
-				                    			Pending The Group's Decision
-				                    			<br>
-				                    			Waiting for the group leader, `+ tour.group.leader.name +` to confirm the requested time or suggest a different one`;
+				                    			Waiting for the group leader, `+ tour.group.leader.name +`, to confirm a time.`;
 				                    		}
 				                    		else{
 				                    			individualElement += `
-				                    			Pending Your Decision
-				                    			<br>
-				                    			Waiting for the you to confrim the requested time or suggest a different one`;
+				                    			Waiting for you to confirm a time.`;
 				                    		}
 				                    		individualElement += `
 				                    		<br><br>
@@ -3347,21 +3386,30 @@
 				                    		$.each(tour.group.users, function(index, user) {
 					                    			individualElement += `
 	            									<div class="row">
-	            										<div class="col-sm-12" style="padding: 0px;">                  											
+	            										<div class="col-sm-12" style="padding: 0px;"> 
 	        							    				<div class="card" style="width: 100%">
 	        							    					<div class="card-block">
 	        							    					    <div class="row">
-	        							    					        <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
+	        							    					        <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-1" style="height: 50px;">
 	        							    					            <img src="`+ user.profileImageURL +`" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;">
 	        							    					        </div>
-	        							    					        <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-10">
-	        							    					            <div class="row">
-	        							    					                <div class="col-xs-12">                           
-	        							    					                    <a href="`+ user.url +`">
-	        							    					                        <h4 style="font-size: 3.0vh;">`+ user.name +`</h4>
-	        							    					                    </a>
-	        							    					                </div>
-	        							    					            </div>
+	        							    					        <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-11">
+	        							    					            <h2 style="margin-top: 5px;">`+ user.name +``;
+	        							    					            	if(user.id == tour.group.leader.id){
+	        							    					            		individualElement +=
+	        							    					            		 `<div class="customTooltip" style="padding-left: 15px;">
+	        							    					            	        <i class="icon icon-crown" style="color: #f4c359;"></i>
+	        							    					            	        <span class="customTooltiptext">Group Leader</span>
+	        							    					            	    </div>`;
+	        							    					            	}
+	        							    					            	individualElement += `
+												                                <a href="#" data-toggle="modal" data-target="#sendDirectMessageModal" data-targetID="`+ user.id +`" data-targetname="`+ user.name +`">
+												                                    <div class="customTooltip" style="padding-left: 15px;">
+												                                        <i class="fa fa-comment" aria-hidden="true" style="color: #5686c5;"></i>
+												                                        <span class="customTooltiptext">Send Message</span>
+												                                    </div>
+												                                </a>
+													                        </h2>
 	        							    					        </div>
 	        							    					    </div>
 	        							    					</div>
@@ -3372,8 +3420,10 @@
 				                    		})            								
         							    	individualElement += `
 		      					    		</div></div>
-		      					    		<button class="btn btn-blue" id="allMembersRequestedTourToggle`+ tour.id +`" onClick="showRequestedTourMembers(`+ tour.id +`)"><i class='fa fa-users' aria-hidden='true'></i> Group Members</button>
-		      					    		<button class="btn btn-blue" id="hideAllMembersRequestedTourToggle`+ tour.id +`" onClick="hideRequestedTourMembers(`+ tour.id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide Group Members</button>
+	      					    			<div class="col-xs-12">
+			      					    		<button class="btn btn-blue" id="allMembersRequestedTourToggle`+ tour.id +`" onClick="showRequestedTourMembers(`+ tour.id +`)"><i class='fa fa-users' aria-hidden='true'></i> Group Members</button>
+			      					    		<button class="btn btn-blue" id="hideAllMembersRequestedTourToggle`+ tour.id +`" onClick="hideRequestedTourMembers(`+ tour.id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide Group Members</button>
+			      					    	</div>
 		      					    	</div>
 		      					    </div>
 		      					</div>
@@ -3427,7 +3477,7 @@
             	<div id="numberOfScheduledTours`+ scheduledTourObject.listing.id +`" style="display: none;">`+ scheduledTourObject.tourCount +`</div>
 		        	<div id="doIShowScheduledDiv`+ scheduledTourObject.listing.id +`" style="display: none;">show</div>
 		        	<div class="card" id="scheduledTourListing`+ scheduledTourObject.listing.id +`" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
-		                <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); background-color: #d2d2d2;">
+		                <div class="card-header" style="border-bottom: 0px solid rgba(0, 0, 0, 0.125); background-color: #5686c5; color: white;">
 		                    <div class="row">
 		                    	<div class="col-xl-12">
 		                    		<h3 style="font-size: 3.5vh;" id="requestedToursCount`+ scheduledTourObject.listing.street +`"><strong>
@@ -3440,8 +3490,8 @@
 		                	<div class="row">
 		                		<div class="col-xl-12">
 		                			<strong>
-		                				<h2 class="hidden-sm-up" style="font-size: 2.5vh;">Group(s) Touring This Property: </h2>
-		                				<h2 class="hidden-xs-down" style="font-size: 3.5vh;">Group(s) Touring This Property: </h2>
+		                				<h2 class="hidden-sm-up" style="font-size: 2.5vh;">Groups Touring This Property: </h2>
+		                				<h2 class="hidden-xs-down" style="font-size: 3.5vh;">Groups Touring This Property: </h2>
 		                			</strong>
 		                		</div>
 		                	</div>
@@ -3454,29 +3504,26 @@
             		var membersNotLeaderCount = parseInt(tour.group.userCount) -1;
             		individualElement = `
             		<div class="row" id="scheduledTour`+ tour.id +`">
-    					<div class="col-xs-12 col-xl-12" style="padding-left: 10px;">
+            			<div class="col-xs-0 col-md-1 col-xl-1" style="padding-left: 10px;"></div>
+    					<div class="col-xs-12 col-md-10 col-xl-10" style="padding-left: 10px;">
 	        				<div class="card">
                     			<div class="card-header" style="background-color: #d2d2d2;">
                     				<div class="row">
 	                    				<div class="col-xs-12 col-xl-10">
-        	            					<h3 style="font-size: 3.5vh;"><strong>`+ tour.group.name +`</strong>(`+ tour.group.userCount +` Members)</h3>
-        	            					Confirmed Date and Time: `+ tour.confirmedTime.dateTimeRequested +`
+        	            					<h3 style="font-size: 3.5vh;"><strong>`+ tour.group.name +`</strong> (`+ tour.group.userCount +` Members)</h3>
+        	            					Tour Scheduled For: <span class="nexnest-font" style="color: #5686c5;">`+ tour.confirmedTime.dateTimeRequested +`</span>
         	            					<br><br>
-        	            					<div class="row">
-        	            						<div class="col-12 col-md-auto">
-                	            					<div id="cancelTourButton`+ tour.id +`" style="padding-bottom: 5px;">
-                	            						<button class="btn btn-red" onclick="cancelTour(`+ tour.id +`, `+ scheduledTourObject.listing.id +`, '`+ scheduledTourObject.listing.street +`')">Cancel Tour</button>
-                	            					</div>
-                	            					<div id="cancelTourLoading`+ tour.id +`" style="display: none; padding-bottom: 5px;">
-                	            						<button class="btn btn-red" style="width: 117.5px;">
-                	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-                	            						</button>
-                	            					</div>
-                	            				</div>
-        	            					</div>
         	            				</div>
         	            				<div class="col-xs-2 col-xl-2" style="text-align: right;">
         	            					<a class="btn btn-blue" href="`+ tour.url +`">More Info</a>
+        	            					<div id="cancelTourButton`+ tour.id +`" style="padding-bottom: 5px; margin-top: 50px;">
+        	            						<button class="btn btn-red" onclick="cancelTour(`+ tour.id +`, `+ scheduledTourObject.listing.id +`, '`+ scheduledTourObject.listing.street +`')">Cancel Tour</button>
+        	            					</div>
+        	            					<div id="cancelTourLoading`+ tour.id +`" style="display: none; padding-bottom: 5px; margin-top: 50px;">
+        	            						<button class="btn btn-red" style="width: 117.5px;">
+        	            							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+        	            						</button>
+        	            					</div>
         	            				</div>
         	            			</div>
         	            		</div>
@@ -3485,28 +3532,35 @@
                     					<div class="col-xs-12">
 				                    		<strong>Tour Status: </strong>
 				                    		Confirmed
-				                    		<br>
-				                    		Please Arrive at the property on `+ tour.confirmedTime.dateTimeRequested +` to meet for this tour
 				                    		<br><br>
 											<div id="allMembersScheduledTour`+ tour.id +`" style="display: none;">`;
 				                    		$.each(tour.group.users, function(index, user) {
 	            								individualElement += `
 	            									<div class="row">
-	            										<div class="col-sm-12" style="padding: 0px;">
+	            										<div class="col-sm-12" style="padding: 0px;"> 
 	        							    				<div class="card" style="width: 100%">
 	        							    					<div class="card-block">
 	        							    					    <div class="row">
-	        							    					        <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-2" style="height: 50px;">
+	        							    					        <div class="col-xs-3 col-sm-3 col-md-2 col-lg-2 col-xl-1" style="height: 50px;">
 	        							    					            <img src="`+ user.profileImageURL +`" alt="Profile Image" class="img-responsive" style="height: 100%; width: 50px;">
 	        							    					        </div>
-	        							    					        <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-10">
-	        							    					            <div class="row">
-	        							    					                <div class="col-xs-12">                           
-	        							    					                    <a href="`+ user.url +`">
-	        							    					                        <h4 style="font-size: 3.0vh;">`+ user.name +`</h4>
-	        							    					                    </a>
-	        							    					                </div>
-	        							    					            </div>
+	        							    					        <div class="col-xs-9 col-sm-9 col-md-10 col-lg-10 col-xl-11">
+	        							    					            <h2 style="margin-top: 5px;">`+ user.name +``;
+	        							    					            	if(user.id == tour.group.leader.id){
+	        							    					            		individualElement +=
+	        							    					            		 `<div class="customTooltip" style="padding-left: 15px;">
+	        							    					            	        <i class="icon icon-crown" style="color: #f4c359;"></i>
+	        							    					            	        <span class="customTooltiptext">Group Leader</span>
+	        							    					            	    </div>`;
+	        							    					            	}
+	        							    					            	individualElement += `
+												                                <a href="#" data-toggle="modal" data-target="#sendDirectMessageModal" data-targetID="`+ user.id +`" data-targetname="`+ user.name +`">
+												                                    <div class="customTooltip" style="padding-left: 15px;">
+												                                        <i class="fa fa-comment" aria-hidden="true" style="color: #5686c5;"></i>
+												                                        <span class="customTooltiptext">Send Message</span>
+												                                    </div>
+												                                </a>
+													                        </h2>
 	        							    					        </div>
 	        							    					    </div>
 	        							    					</div>
@@ -3517,8 +3571,10 @@
 				                    		})
         							    	individualElement += `
 		      					    		</div></div>
-		      					    		<button class="btn btn-blue" id="allMembersScheduledTourToggle`+ tour.id +`" onClick="showScheduledTourMembers(`+ tour.id +`)"><i class='fa fa-users' aria-hidden='true'></i> Group Members</button>
-		      					    		<button class="btn btn-blue" id="hideAllMembersScheduledTourToggle`+ tour.id +`" onClick="hideScheduledTourMembers(`+ tour.id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide Group Members</button>	  		
+		      					    		<div class="col-xs-12">
+			      					    		<button class="btn btn-blue" id="allMembersScheduledTourToggle`+ tour.id +`" onClick="showScheduledTourMembers(`+ tour.id +`)"><i class='fa fa-users' aria-hidden='true'></i> Group Members</button>
+			      					    		<button class="btn btn-blue" id="hideAllMembersScheduledTourToggle`+ tour.id +`" onClick="hideScheduledTourMembers(`+ tour.id +`)" style="display: none;"><i class='fa fa-users' aria-hidden='true'></i> Hide Group Members</button>
+		      					    		</div>
 		      					    	</div>
 		      					    </div>
 		      					</div>
@@ -3708,15 +3764,16 @@
 	        				                    		</a>
 	        				                    	</div>
 	        				                    	<div class="col-xs-2 col-md-4 col-lg-4" style="text-align: right;">
-	        				                    		<a href="/listing/clone/`+listing.id+`" class="btn btn-blue"><i class="fa fa-clone" aria-hidden="true"></i> Clone Listing</a>`;
+	        				                    		<a href="/listing/clone/`+listing.id+`" class="btn btn-blue"><i class="fa fa-clone" aria-hidden="true"></i> Copy Listing</a>`;
 	        				                    		requestURL = '/landlord/' + listing.id + '/isEditable/AJAX';
 	        				                    		$.getJSON(requestURL, function(data) {
 	        				                    		    results = data['results'];
-	        				                    		    // alert(data['results'].success);
-	        				                    		    if (results.success == true){ 
+	        				                    		    //alert(data['results'].success);
+	        				                    		    if (results.success == true){
+	        				                    		    	console.log("should be editable");
 	        				                    		        nextHouse += `<a href="/listing/edit/`+listing.id+`" class="btn btn-blue">Edit Listing</a>`;
 	        				                    		    } else {
-	        				                    		       
+	        				                    		       console.log("is not editable");
 	        				                    		    }
 	        				                    		});
 	        				                    	nextHouse += `
@@ -3749,7 +3806,7 @@
 	            }    
             })
             if(anythingChosen == false){
-            	$("#unBookedGoHere").append(`<div class="alert alert-light-blue" role="alert"><strong>You Don't have any listings that are not booked for this time period. <a href="/listing/create">Create one?</a></strong></div>`);
+            	$("#unBookedGoHere").append(`<div class="alert alert-light-blue" role="alert"><strong>You do not have any un-booked listings for this time period. <a href="/listing/create">Create a listing?</a></strong></div>`);
 	        }
         });
 	}
@@ -3778,51 +3835,51 @@
 	
 
 	$datePicker.datepicker({ 
-	    changeMonth: true,
-	    changeYear: true,
-	    inline: true,
-	    altField: "#datep"   
-	 }).change(function(e){
-	    setTimeout(function(){
-	        $("#validTimes").empty();
-	        console.log($datePicker.datepicker('getDate'));
-	        var date = $datePicker.datepicker('getDate');
-	        var month = date.getUTCMonth() +1;
-	        var monthName = monthNames[month-1];
-	        var day = date.getDate();
-	        var year = date.getUTCFullYear();
-	        var dayOfWeek = date.getUTCDay();
-	        var dateForMax = ""+month+"-"+day+"-"+year;
-	        var returnDate = ""+monthName+" "+day+" "+year;
-	        console.log(returnDate);
-	        console.log(dayOfWeek);
-	        var alreadySelectedTimes = returnTimes(selectedDateTimes, dateForMax)
-	        console.log(alreadySelectedTimes);
-	        var timesShown =`<div class="row">`;
-	        for (var i = 0; i < validTourTimes.length; i++ )
-	        {
-	            timesShown+= `<div class="col-xs-4">
-	                 <div class="form-group">
-	                    <label class="control-label form-control-feedback" id="timelabel"style="font-size: 1.5em">`+ validTourTimes[i]+`</label>
-	                    <div class="checkbox">
-	                        <label style="font-size: 1.5em">
-	                        <input class="form-check-input tourtime" type="checkbox" onClick="addTime('`+returnDate+`','`+dateForMax+`','`+validTourTimes[i]+`')" id="date_`+returnDate+"_time_"+validTourTimes[i]+`" value="`+validTourTimes[i]+`"`;
-	                        for(var k=0; k<alreadySelectedTimes.length; k++){
-	                            if(alreadySelectedTimes[k]==validTourTimes[i]){
-	                                timesShown+= `checked`;
-	                            }
-	                        }
-	                        timesShown+= `>
-	                        <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-	                        </label>
-	                    </div>
-	                </div>
-	             </div>`;
-	        }
-	        timesShown+= `</div>`;
-	        $("#validTimes").append(timesShown);
-	    });
-	});
+        changeMonth: true,
+        changeYear: true,
+        inline: true,
+        altField: "#datep"   
+     }).change(function(e){
+        setTimeout(function(){
+            $("#validTimes").empty();
+            console.log($datePicker.datepicker('getDate'));
+            var date = $datePicker.datepicker('getDate');
+            var month = date.getUTCMonth() +1;
+            var monthName = monthNames[month-1];
+            var day = date.getDate();
+            var year = date.getUTCFullYear();
+            var dayOfWeek = date.getUTCDay();
+            var dateForMax = ""+month+"-"+day+"-"+year;
+            var returnDate = ""+monthName+" "+day+" "+year;
+            console.log(returnDate);
+            console.log(dayOfWeek);
+            var alreadySelectedTimes = returnTimes(selectedDateTimes, dateForMax)
+            console.log(alreadySelectedTimes);
+            var timesShown =`<div class="row">`;
+            for (var i = 0; i < validTourTimes.length; i++ )
+            {
+                timesShown+= `<div class="col-xs-4" style="text-align: center;">
+                     <div class="form-group">
+                        <label class="control-label form-control-feedback" id="timelabel"style="font-size: 1.5em">`+ validTourTimes[i]+`</label>
+                        <div class="checkbox">
+                            <label style="font-size: 1.5em">
+                            <input class="form-check-input tourtime" type="checkbox" onClick="addTime('`+returnDate+`','`+dateForMax+`','`+validTourTimes[i]+`')" id="date_`+returnDate+"_time_"+validTourTimes[i]+`" value="`+validTourTimes[i]+`"`;
+                            for(var k=0; k<alreadySelectedTimes.length; k++){
+                                if(alreadySelectedTimes[k]==validTourTimes[i]){
+                                    timesShown+= `checked`;
+                                }
+                            }
+                            timesShown+= `>
+                            <span class="cr"><i class="cr-icon fa fa-check" style="color:#5686c5;"></i></span>
+                            </label>
+                        </div>
+                    </div>
+                 </div>`;
+            }
+            timesShown+= `</div>`;
+            $("#validTimes").append(timesShown);
+        });
+    });
 	$(".ui-datepicker").css("margin","auto");
 
 	function addTime(date, dateForMax, time){

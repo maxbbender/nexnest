@@ -9,7 +9,10 @@
                     <div class="col-xs-12" style="align-self: center;">
                         <h2 style="margin-top: 5px;">{{ user.fname }} {{ user.lname }}
                             {% if group.leader_id == user.id %}
-                                <i class="icon icon-crown" style="color: #f4c359;"></i>
+                                <div class="customTooltip" style="padding-left: 15px;">
+                                    <i class="icon icon-crown" style="color: #f4c359;"></i>
+                                    <span class="customTooltiptext">Group Leader</span>
+                                </div>
                             {% endif %}
                             {% if current_user.id != user.id %}
                                 <a href="#" data-toggle="modal" data-target="#sendDirectMessageModal" data-targetID="{{user.id}}" data-targetname="{{user.name}}">
