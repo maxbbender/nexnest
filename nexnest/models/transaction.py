@@ -132,6 +132,8 @@ class ListingTransaction(Transaction):
             else:
                 self.total = totalPrice
 
+            self.total += (self.total*.075)
+
             db.session.commit()
 
             return self.total
