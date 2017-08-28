@@ -236,20 +236,18 @@
 			<hr style="padding-bottom: 15px;">
 			<div class="row">
 				<div class="col-sm-4">
+					<h3>Lease: </h3>
 					<div class="row">
-						<div class="col-xs-4">
-							<h3>Lease: </h3>
-						</div>
-						<div class="col-xs-8" style="text-align: center;">
+						<div class="col-xs-12" style="text-align: center;">
 							<i class="fa fa-clock-o fa-3x" aria-hidden="true"></i>
 							<br>
 							<span class="text-nowrap" style="text-transform: capitalize;">{{ listing.humanTimePeriod }}</span>
 						</div>
-					</div>
+					</div>					
 				</div>
 				<div class="col-sm-8">
 					<div class="row">
-						<div class="col-xs-12 col-md-6 col-xl-4" style="align-self: center;">
+						<div class="col-xs-12 col-md-6 col-xl-4" style="align-self: center; padding-bottom: 15px;">
 							<strong>Start Date:</strong>
 							<br>
 							{{ listing.start_date|format_date }}
@@ -259,129 +257,120 @@
 							{{ listing.end_date|format_date }}
 						</div>
 						{% if listing.rent_due == "semester" %}	
-							<div class="col-xs-12 col-md-6 col-xl-4" style="align-self: center;">				
+							<div class="col-xs-12 col-md-6 col-xl-4" style="align-self: center; padding-bottom: 15px;">				
 								<strong>1st Semester
 								<br>
 								Rent Due:</strong>
 								<br>
 								{{ listing.first_semester_rent_due_date|format_date }}
 							</div>
-							<div class="col-xs-12 col-md-6 col-xl-4" style="align-self: center;">
+							<div class="col-xs-12 col-md-6 col-xl-4" style="align-self: center; padding-bottom: 15px;">
 								<strong>2nd Semester<br>
 								Rent Due:</strong>
 								<br>
 								{{ listing.second_semester_rent_due_date|format_date }}
 							</div>
 						{% elif listing.rent_due == "monthly" %}
-							<div class="col-xs-12 col-md-6 col-xl-4">
-								<strong>Rent Due: </strong>1st of each month
+							<div class="col-xs-12 col-md-6 col-xl-4" style="align-self: center; padding-bottom: 15px;">
+								<strong>Rent Due: </strong>
+								<br>
+								1st of each month
 							</div>
 						{% endif %}
 					</div>
 				</div>
 			</div>			
 			<hr style="padding-bottom: 15px;">
-			<div class="row">
-				<div class="col-sm-4">
-					<h2>Distance to {{ listing.schools[0].school.name }}:</h2>
-				</div>
-				<div class="col-sm-8">
-					<div class="row">
-						<div class="col-xs-12 col-md-6 col-xl-4">
-							<strong>Distance:</strong>
-						</div>
-						<div class="col-xs-12 col-md-6 col-xl-4">
-							<strong>Driving Time:</strong>
-						</div>
-						<div class="col-xs-12 col-md-6 col-xl-4">
-							<strong>Walking Time:</strong>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-xs-12 col-md-6 col-xl-4">
-							{{ listing.schools[0].driving_miles }} Miles
-						</div>
-						<div class="col-xs-12 col-md-6 col-xl-4">
-							<i class="fa fa-car" aria-hidden="true"></i>{{ listing.schools[0].driving_time }} Minutes
-						</div>
-						<div class="col-xs-12 col-md-6 col-xl-4">
-							<i class="fa fa-male" aria-hidden="true"></i>{{ listing.schools[0].walking_time }} Minutes
-						</div>
-					</div>
-				</div>
-			</div>
-			<hr style="padding-bottom: 15px;">
-			{% if listing.hasAppliances %}
+			{% if listing.hasUtilities %}
 				<div class="row">
 					<div class="col-sm-4">
-						<h2>Appliances:</h2>
+						<h3>Utilities Included:</h3>
 					</div>
 					<div class="col-sm-8">
-						<div class="row">						
-							{% if listing.air_conditioning %}
-								<div class="col-xs-12 col-md-6 col-xl-4">
-									<li>Air Conditioning</li>
+						<div class="row" style="text-align: center;">
+							{% if listing.electricity %}
+								<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
+									<i class="fa fa-bed fa-3x" aria-hidden="true"></i>
+									<br>
+									<span class="text-nowrap">Electricity</span>
 								</div>
 							{% endif %}
-							{% if listing.dishwasher %}
-								<div class="col-xs-12 col-md-6 col-xl-4">
-									<li>Dishwasher</li>
-								</div>							
-							{% endif %}	
-							{% if listing.washer %}
-								<div class="col-xs-12 col-md-6 col-xl-4">
-									<li>Washing Machine</li>
+							{% if listing.heat_gas %}
+								<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
+									<i class="icon icon-flame icon-3x" aria-hidden="true"></i>
+									<br>
+									<span class="text-nowrap">Heat/Gas</span>
 								</div>
 							{% endif %}
-							{% if listing.dryer %}
-								<div class="col-xs-12 col-md-6 col-xl-4">
-									<li>Dryer</li>
-								</div>							
+							{% if listing.water %}
+								<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
+									<i class="fa fa-tint fa-3x" aria-hidden="true"></i>
+									<br>
+									<span class="text-nowrap">Water</span>
+								</div>						
 							{% endif %}
-							{% if listing.washer or listing.dryer %}
-								{% if listing.washer_free %}
-									<div class="col-xs-12 col-md-6 col-xl-4">
-										<i class="fa fa-usd" aria-hidden="true"></i><li>Laundry is Free to use</li>
-									</div>							
-								{% endif %}
+							{% if listing.internet %}
+								<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
+									<i class="fa fa-wifi fa-3x" aria-hidden="true"></i>
+									<br>
+									<span class="text-nowrap">Internet</span>
+								</div>
 							{% endif %}
+							{% if listing.cable %}
+								<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
+									<i class="fa fa-television fa-3x" aria-hidden="true"></i>
+									<br>
+									<span class="text-nowrap">Cable</span>
+								</div>
+							{% endif %}					
 						</div>
 					</div>
 				</div>
 				<hr style="padding-bottom: 15px;">
 			{% endif %}
-			{% if listing.hasUtilities %}
+			{% if listing.hasAppliances %}
 				<div class="row">
 					<div class="col-sm-4">
-						<h2>Utilities Included:</h2>
+						<h3>Appliances:</h3>
 					</div>
 					<div class="col-sm-8">
-						<div class="row">						
-							{% if listing.electricity %}
-								<div class="col-xs-12 col-md-6 col-xl-4">
-									<li>Electricity</li>
+						<div class="row" style="text-align: center;">						
+							{% if listing.air_conditioning %}
+								<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
+									<i class="icon icon-fan icon-3x" aria-hidden="true"></i>
+									<br>
+									<span class="text-nowrap">Air Conditioning</span>
 								</div>
 							{% endif %}
-							{% if listing.heat_gas %}
-								<div class="col-xs-12 col-md-6 col-xl-4">
-									<li>Heat/Gas</li>
+							{% if listing.dishwasher %}
+								<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
+									<i class="icon icon-local-laundry-service icon-3x" aria-hidden="true"></i>
+									<br>
+									<span class="text-nowrap">Dishwasher</span>
+								</div>
+							{% endif %}	
+							{% if listing.washer %}
+								<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
+									<i class="icon icon-local-laundry-service icon-3x" aria-hidden="true"></i>
+									<br>
+									<span class="text-nowrap">Washer</span>
+									<br>
+									{% if listing.washer_free %}
+										<small>Free to Use</small>
+									{% endif %}
 								</div>
 							{% endif %}
-							{% if listing.water %}
-								<div class="col-xs-12 col-md-6 col-xl-4">
-									<li>Water</li>
-								</div>							
+							{% if listing.dryer %}
+								<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
+									<i class="icon icon-local-laundry-service icon-3x" aria-hidden="true"></i>
+									<br>
+									<span class="text-nowrap">Dryer</span>
+									<br>
+									{% if listing.washer_free %}
+										<small>Free to Use</small>
+									{% endif %}
+								</div>
 							{% endif %}
-							{% if listing.internet %}
-								<div class="col-xs-12 col-md-6 col-xl-4">
-									<li>Internet</li>
-								</div>							
-							{% endif %}
-							{% if listing.cable %}
-								<div class="col-xs-12 col-md-6 col-xl-4">
-									<li>Cable</li>
-								</div>							
-							{% endif %}					
 						</div>
 					</div>
 				</div>
@@ -390,29 +379,45 @@
 			{% if listing.hasServices %}
 				<div class="row">
 					<div class="col-sm-4">
-						<h2>Services Included:</h2>
+						<h3>Services Included:</h3>
 					</div>
 					<div class="col-sm-8">
-						<div class="row">						
+						<div class="row" style="text-align: center;">						
 							{% if listing.snow_plowing %}
-								<div class="col-xs-12 col-md-6 col-xl-4">
-									<li>Snow Removal</li>
+								<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
+									<i class="fa fa-snowflake-o fa-3x" aria-hidden="true"></i>
+									<br>
+									Snow
+									<br>
+									Removal
 								</div>
 							{% endif %}
 							{% if listing.garbage_service %}
-								<div class="col-xs-12 col-md-6 col-xl-4">
-									<li>Garbage Removal</li>
+								<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
+									<i class="fa fa-trash fa-3x" aria-hidden="true"></i>
+									<br>
+									Garbage
+									<br>
+									Removal
 								</div>
 							{% endif %}
 							{% if listing.security_service %}
-								<div class="col-xs-12 col-md-6 col-xl-4">
-									<li>Security Service</li>
-								</div>							
+								<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
+									<i class="fa fa-shield fa-3x" aria-hidden="true"></i>
+									<br>
+									Security
+									<br>
+									Service
+								</div>
 							{% endif %}
 							{% if listing.emergency_maintenance %}
-								<div class="col-xs-12 col-md-6 col-xl-4">
-									<li>Emergency Maintenance</li>
-								</div>							
+								<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
+									<i class="fa fa-wrench fa-3x" aria-hidden="true"></i>
+									<br>
+									Emergency
+									<br>
+									Maintenance
+								</div>
 							{% endif %}				
 						</div>
 					</div>
@@ -422,18 +427,26 @@
 			{% if listing.hasPets %}
 			<div class="row">
 				<div class="col-sm-4">
-					<h2>Pets Allowed:</h2>
+					<h3>Pets Allowed:</h3>
 				</div>
 				<div class="col-sm-8">
-					<div class="row">						
+					<div class="row" style="text-align: center;">						
 						{% if listing.dogs %}
-							<div class="col-xs-12 col-md-6 col-xl-4">
-								<li>Dogs</li>
+							<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
+								<i class="icon icon-guide-dog icon-3x" aria-hidden="true"></i>
+								<br>
+								Dogs
+								<br>
+								Allowed
 							</div>
 						{% endif %}
 						{% if listing.cats %}
-							<div class="col-xs-12 col-md-6 col-xl-4">
-								<li>Cats</li>
+							<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
+								<i class="icon icon-guide-dog icon-3x" aria-hidden="true"></i>
+								<br>
+								Cats
+								<br>
+								Allowed
 							</div>
 						{% endif %}
 						{% if listing.other_pets %}
@@ -444,12 +457,55 @@
 					</div>
 				</div>
 			</div>
-			{% endif %}	
-		</div>
+			<hr style="padding-bottom: 15px;">
+			{% endif %}
+			<div class="row">
+				<div class="col-sm-4">
+					<h3>Distance to {{ listing.schools[0].school.name }}:</h3>
+				</div>
+				<div class="col-sm-8">
+					<div class="row" style="text-align: center;">
+						<div class="col-xs-6 col-md-6 col-lg-4 col-xl-4" style="padding-bottom: 10px;">
+							Distance:
+							<br>
+							<i class="fa fa-map-marker" aria-hidden="true"></i>
+							{{ listing.schools[0].driving_miles }} Miles
+						</div>
+						<div class="col-xs-6 col-md-6 col-lg-4 col-xl-4" style="padding-bottom: 10px;">
+							Driving Time:
+							<br>
+							<i class="fa fa-car" aria-hidden="true"></i>
+							{{ listing.schools[0].driving_time }} Minutes
+						</div>
+						<div class="col-xs-6 col-md-6 col-lg-4 col-xl-4" style="padding-bottom: 10px;">
+							Walking Time:
+							<br>
+							<i class="fa fa-male" aria-hidden="true"></i>
+							{{ listing.schools[0].walking_time }} Minutes
+						</div>
+					</div>
+				</div>
+			</div>
+			<hr style="padding-bottom: 15px;">
+			<div class="row">
+				<div class="col-sm-6">
+					<h3>
+						Questions?
+						<a href="#" data-toggle="modal" data-target="#contactUsModal" class="btn btn-blue">Contact Us</a>
+					</h3>
+				</div>
+				<div class="col-sm-6">
+					<h3>
+						Complaints?
+						<a href="#" class="btn btn-red" data-toggle="modal" data-target="#listingReportModal"><i class="fa fa fa-exclamation-triangle" title="Report This Listing" aria-hidden="true" style="color: white;"></i> Report Listing</a>
+					</h3>
+				</div>
+			</div>
+			<hr style="padding-bottom: 15px;">
 		{% if current_user.is_authenticated %}
 			{% if not current_user in listing.landLordsAsUsers() %}
 				<div class="col-xs-12" style="text-align: right;">
-					<a href="#" class="btn btn-danger" data-toggle="modal" data-target="#listingReportModal"><i class="fa fa fa-exclamation-triangle" title="Report This Listing" aria-hidden="true" style="color: white;"></i> Report Listing</a>
+					
 				</div>
 			{% endif %}
 		{% endif %}
