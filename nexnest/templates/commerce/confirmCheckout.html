@@ -50,16 +50,16 @@
 						<div class="col-xs-12" id="tax">
 						</div>
 						<div class="col-xs-12" id="totalPrice">
-							Total Price: 
+							Total Price:
 						</div>
 					</div>
 				</div>
-			</div>			
+			</div>
 			<div class="row">
 				<div class="col-xs-12">
 					<button class="btn btn-primary" onClick="proceedToCheckout()" style="float: right;">Proceed To Checkout</button>
 				</div>
-			</div>			
+			</div>
 		</div>
 	</div>
     <form id="preCheckoutForm" action="/checkout" method="POST">
@@ -81,7 +81,7 @@
 		landlordID = data['landlord']
 		items = data['items'];
 		console.log(items);
-		$.each(items, function(index, item) {			
+		$.each(items, function(index, item) {
 			var checkoutItem = `<div class='row' id="itemInCart`+item.listing_id+`">
 									<div class='col-xs-5'>
 										<strong>`+ item.listing_street +`</strong>
@@ -95,22 +95,22 @@
 										`;
 										if(item.plan == "standard"){
 											if(item.timePeriod == "school"){
-												checkoutItem += "$100";
-												totalPrice += 100;
+												checkoutItem += "$79.99";
+												totalPrice += 79.99;
 											}
 											else if(item.timePeriod == "summer"){
-												checkoutItem += "$50";
-												totalPrice += 50;
+												checkoutItem += "$39.99";
+												totalPrice += 39.99;
 											}
 										}
 										else if(item.plan == "premium"){
 											if(item.timePeriod == "school"){
-												checkoutItem += "$200";
-												totalPrice += 200;
+												checkoutItem += "$129.99";
+												totalPrice += 129.99;
 											}
 											else if(item.timePeriod == "summer"){
-												checkoutItem += "$100";
-												totalPrice += 100;
+												checkoutItem += "$69.99";
+												totalPrice += 69.99;
 											}
 										}
 									checkoutItem +=`
@@ -140,7 +140,7 @@
     	cart.landlord = landlordID;
     	cart.items = items;
     	cart.couponCode = $('#couponCodeInput').val();
-        
+
         preCheckoutJSONElement = document.getElementById("preCheckoutJSON")
         preCheckoutJSONElement.value = JSON.stringify(cart)
         precheckoutElement = document.getElementById("preCheckoutForm")
@@ -157,7 +157,7 @@
 			console.log(results);
 			if(results.validCoupon == true){
 				//update total price div
-				subtotalAfterCoupon = Number((totalPrice*(100-results.coupon.percentageOff)/100)).toFixed(2);
+				subtotalAfterCoupon = Number((totalPrice*((100-results.coupon.percentageOff)/100)).toFixed(2);
 				taxAfterCoupon = Number(subtotalAfterCoupon*.075).toFixed(2);
 				priceAfterCoupon = Number((subtotalAfterCoupon*1.075)).toFixed(2);
 				//totalPrice = totalPrice-results.coupon.percentageOff;
@@ -188,5 +188,5 @@
 			$("#sumbitCouponCode").hide();
 		}
     });
-</script>	
+</script>
 {% endblock %}

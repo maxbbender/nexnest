@@ -45,7 +45,7 @@ def createApp(configName):
         from nexnest.models.user import User
         return db.session.query(User).filter_by(id=user_id).first()
 
-    braintree.Configuration.configure(braintree.Environment.Sandbox,
+    braintree.Configuration.configure(braintree.Environment.Production,
                                       merchant_id=app.config['BRAINTREE_MERCHANT_ID'],
                                       public_key=app.config['BRAINTREE_PUBLIC_KEY'],
                                       private_key=app.config['BRAINTREE_PRIVATE_KEY'])
