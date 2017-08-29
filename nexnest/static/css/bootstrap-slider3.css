@@ -155,9 +155,9 @@
 }
 .slider-selection {
   position: absolute;
-  background-image: -webkit-linear-gradient(top, #89cdef 0%, #81bfde 100%);
-  background-image: -o-linear-gradient(top, #89cdef 0%, #81bfde 100%);
-  background-image: linear-gradient(to bottom, #89cdef 0%, #81bfde 100%);
+  background-image: -webkit-linear-gradient(top, #5686c5 0%, #5686c5 100%);
+  background-image: -o-linear-gradient(top, #5686c5 0%, #5686c5 100%);
+  background-image: linear-gradient(to bottom, #5686c5 0%, #5686c5 100%);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff9f9f9', endColorstr='#fff5f5f5', GradientType=0);
   -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
@@ -168,9 +168,9 @@
   border-radius: 4px;
 }
 .slider-selection.tick-slider-selection {
-  background-image: -webkit-linear-gradient(top, #89cdef 0%, #81bfde 100%);
-  background-image: -o-linear-gradient(top, #89cdef 0%, #81bfde 100%);
-  background-image: linear-gradient(to bottom, #89cdef 0%, #81bfde 100%);
+  background-image: -webkit-linear-gradient(top, #5686c5 0%, #5686c5 100%);
+  background-image: -o-linear-gradient(top, #5686c5 0%, #5686c5 100%);
+  background-image: linear-gradient(to bottom, #5686c5 0%, #5686c5 100%);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff89cdef', endColorstr='#ff81bfde', GradientType=0);
 }
@@ -187,10 +187,10 @@
   position: absolute;
   width: 20px;
   height: 20px;
-  background-color: #337ab7;
-  background-image: -webkit-linear-gradient(top, #149bdf 0%, #0480be 100%);
-  background-image: -o-linear-gradient(top, #149bdf 0%, #0480be 100%);
-  background-image: linear-gradient(to bottom, #149bdf 0%, #0480be 100%);
+  background-color: #5686c5;
+  background-image: -webkit-linear-gradient(top, #5686c5 0%, #5686c5 100%);
+  background-image: -o-linear-gradient(top, #5686c5 0%, #5686c5 100%);
+  background-image: linear-gradient(to bottom, #5686c5 0%, #5686c5 100%);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff149bdf', endColorstr='#ff0480be', GradientType=0);
   filter: none;

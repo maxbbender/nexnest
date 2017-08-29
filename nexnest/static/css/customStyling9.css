@@ -287,7 +287,7 @@ select.form-control:not([size]):not([multiple]) {
     content: " ";
     height: 2px;
     background-color: #5686c5;
-    width: 86%;
+    width: 87%;
     left: 6%;
 }
 .stepwizard-step {
