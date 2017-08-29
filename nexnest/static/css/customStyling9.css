@@ -287,7 +287,7 @@ select.form-control:not([size]):not([multiple]) {
     content: " ";
     height: 2px;
     background-color: #5686c5;
-    width: 86%;
+    width: 87%;
     left: 6%;
 }
 .stepwizard-step {
@@ -934,8 +934,7 @@ button.link {
     bottom: 100%;
     left: 50%;
     margin-left: -75px;
- 
-    /* Position the tooltip text - see examples below! */
+    font-size: 22px;
     position: absolute;
     z-index: 1;
 }
@@ -989,5 +988,9 @@ button.link {
 }
 
 .notification-item-footer{
+  color: #656264;
+}
+
+.hamburgerMenuItem {
   color: #656264;
 }

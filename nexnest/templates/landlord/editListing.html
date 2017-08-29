@@ -1,48 +1,48 @@
 {% extends "base.html" %} {% block content %}
 <br>
-<div class="row">
+<div class="row nexnest-font" style="font-size: 20px; color: #656264; padding-bottom: 60px;">
     <div class="col-xs-0 col-sm-1 col-md-1 col-lg-1 col-xl-2">
     </div>
     <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-8">
-        <div class="callout-block text-center fade-in-b">
+        <div class="callout-block text-center fade-in-b" style="background-color: #d2d2d2;">
             <h1>Edit Listing</h1>
         </div>
         <br>
         <div class="stepwizard col-xs-12">
             <div class="stepwizard-row setup-panel">
-                <div class="stepwizard-step">
-                    <a href="#step-1" type="button" class="btn btn-primary btn-circle">1</a>
+                <div class="stepwizard-step" style="width: 150px;">
+                    <a href="#step-1" type="button" class="btn btn-blue btn-circle">1</a>
                     <p class="hidden-md-down">Address</p>
                 </div>
-                <div class="stepwizard-step">
+                <div class="stepwizard-step" style="width: 150px;">
                     <a href="#step-2" type="button" class="btn btn-default btn-circle ">2</a>
-                    <p class="hidden-md-down">Rental Time</p>
-                </div>
-                <div class="stepwizard-step">
-                    <a href="#step-3" type="button" class="btn btn-default btn-circle ">3</a>
                     <p class="hidden-md-down">Property Details</p>
                 </div>
-                <div class="stepwizard-step">
+                <div class="stepwizard-step" style="width: 150px;">
+                    <a href="#step-3" type="button" class="btn btn-default btn-circle ">3</a>
+                    <p class="hidden-md-down">Rental Time</p>
+                </div>                
+                <div class="stepwizard-step" style="width: 150px;">
                     <a href="#step-4" type="button" class="btn btn-default btn-circle ">4</a>
                     <p class="hidden-md-down">Utilities</p>
                 </div>
-                <div class="stepwizard-step">
+                <div class="stepwizard-step" style="width: 150px;">
                     <a href="#step-5" type="button" class="btn btn-default btn-circle ">5</a>
                     <p class="hidden-md-down">Appliances</p>
                 </div>
-                <div class="stepwizard-step">
+                <div class="stepwizard-step" style="width: 150px;">
                     <a href="#step-6" type="button" class="btn btn-default btn-circle ">6</a>
                     <p class="hidden-md-down">Services</p>
                 </div>
-                <div class="stepwizard-step">
+                <div class="stepwizard-step" style="width: 150px;">
                     <a href="#step-7" type="button" class="btn btn-default btn-circle ">7</a>
                     <p class="hidden-md-down">Pets</p>
                 </div>
-                <div class="stepwizard-step">
+                <div class="stepwizard-step" style="width: 150px;">
                     <a href="#step-8" type="button" class="btn btn-default btn-circle ">8</a>
                     <p class="hidden-md-down">Description</p>
                 </div>
-                <div class="stepwizard-step">
+                <div class="stepwizard-step" style="width: 150px;">
                     <a href="#step-9" type="button" class="btn btn-default btn-circle ">9</a>
                     <p class="hidden-md-down">Photos</p>
                 </div>
@@ -57,10 +57,10 @@
                         <div class="col-xs-0 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
                         <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10">
                             <h2> Step 1: Address</h2>
-                            <div class="row">
+                            <div class="row" style="padding-bottom: 60px;">
                                 <div class="col-xs-12">
                                     <div id="locationField">
-                                        <input class="form-control" id="autocomplete" placeholder="Enter your address" onFocus="geolocate()" type="text"></input>
+                                        <input class="form-control" id="autocomplete" placeholder="Enter property address" onFocus="geolocate()" type="text" style="box-shadow: 0 0 5px rgba(82, 171, 129, 1); border: 1px solid rgba(82, 171, 129, 1); height: 55px; font-size: 25px;">
                                     </div>
                                 </div>
                             </div>
@@ -94,44 +94,130 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-xs-6">
+                                <div class="col-xs-12 col-sm-6">
                                     <div class="form-group">
-                                        {% for school in selectedSchools %}
-                                            {{ school.school.name }}
-                                        {% endfor %}
-                                        {{ form.colleges }}
-                                        <label class="control-label">What Colleges are you targeting?(up to 3)</label>
+                                        {{ form.colleges(class='form-control', required='required') }}
+                                        <label class="control-label form-control-feedback text-nowrap">What colleges are you targeting? (up to 3)</label>
                                         <div id="magicsuggest" required='required'></div>
                                     </div>
                                 </div>
                             </div>
-                            <button id="zipCodeButton" class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
+                            <div class="row" style="align-items: center; text-align: right;">
+                                <div class="col-xs-12">
+                                    <u><a href="#" data-toggle="modal" data-target="#contactUsModal" style="padding-right: 30px;">need help?</a></u>
+                                    <button id="zipCodeButton" class="btn btn-blue nextBtn btn-lg" type="button">Next</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
                 <div class="row setup-content" id="step-2">
                     <div class="col-xs-12">
                         <div class="row">
                             <div class="col-xs-0 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
                             <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10">
-                                <h2> Step 2: Rental Time Period</h2>                                
+                                <h2> Step 2: Property Details</h2>
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback">Time Period</label>
-                                            {{form.time_period(class='form-control', required='required')}}
-                                            <!-- <select class="form-control" required="required" name="time_period" id="time_period">
-                                            <option value="school_year">School Year</option>
-                                            <option value="full_year">Full Year</option>
-                                            <option value="summer">Summer</option>
+                                            <label class="control-label form-control-feedback">Type of Property</label>
+                                            {{form.property_type(class='form-control', required='required')}}
+                                            <!-- <select class="form-control" required="required" name="property_type" id="property_type">
+                                            <option value="house">House</option>
+                                            <option value="apartment">Apartment</option>
+                                            <option value="complex">Complex</option>
+                                            <option value="room">Room</option>
                                         </select> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                        <div class="form-group" style="display: none;" id="apartmentNumberInput">
+                                            <label class="control-label form-control-feedback" id="apartment_number_label">Apartment Number</label>
+                                            {{form.apartment_number(class='form-control')}}
+                                            <!-- <input id="apartment_number" name="apartment_number" maxlength="100" type="number" class="form-control" /> -->
+                                        </div>
+                                    </div>
+                                </div>                                
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="form-group" style="margin-bottom: -5px;">
+                                            <label class="control-label form-control-feedback" id="furnished_label">Is the property furnished?</label>
+                                            <div class="checkbox">
+                                                <label style="font-size: 1.5em">
+                                                    {{form.furnished(class='form-control form-check-input')}}
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-col-xs-12 col-md-6 col-lg-6 col-xl-4">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback text-nowrap">Number of Bedrooms</label>
+                                            {{form.num_bedrooms(class='form-control', required='required', maxlength='1', type="number")}}
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-col-xs-12 col-md-6 col-lg-6 col-xl-4">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback text-nowrap">Number of Full Bathrooms</label>
+                                            {{form.num_full_baths(class='form-control', required='required', maxlength='1', type="number")}}
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-col-xs-12 col-md-6 col-lg-6 col-xl-4">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback text-nowrap">Number of Half Bathrooms</label>
+                                            {{form.num_half_baths(class='form-control', maxlength='1', type="number")}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback">Type of Parking</label>
+                                            {{form.parking(class='form-control', required='required')}}
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback">Square Footage of Property</label>
+                                            <div class="input-group">
+                                                {{form.square_footage(class='form-control', type="number")}}
+                                                <span class="input-group-addon nexnest-font">FT</span>
+                                            </div>
+                                            <!-- <input id="footage" maxlength="100" type="number" name="square_footage" required="required" class="form-control" /> -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="align-items: center; text-align: right;">
+                                    <div class="col-xs-12">
+                                        <u><a href="#" data-toggle="modal" data-target="#contactUsModal" style="padding-right: 30px;">need help?</a></u>
+                                        <button class="btn btn-blue nextBtn btn-lg" type="button">Next</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row setup-content" id="step-3">
+                    <div class="col-xs-12">
+                        <div class="row">
+                            <div class="col-xs-0 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
+                            <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10">
+                                <h2> Step 3: Rental Lease Period</h2>
+                                {{endDate}}
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback">Lease Period</label>
+                                            {{form.time_period(class='form-control', required='required')}}
                                         </div>
                                     </div>
                                     <div id="time_range_full_year" class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                         <div class="form-group">
                                             {{form.time_period_date_range}}
-                                            <label class="control-label">What year is this for</label>
+                                            <label class="control-label">What year is this for?</label>
                                             <select class="form-control" name="time_range_full" id="time_range_full_select">
                                                 <option value="2017-2018">2017-2018</option>
                                                 <option value="2018-2019">2018-2019</option>
@@ -143,7 +229,7 @@
                                     <div id="time_range_summer" class="col-xs-12 col-sm-12 col-md-12 col-lg-6" style="display: none;">
                                         <div class="form-group">
                                             {{form.time_period_date_range}}
-                                            <label class="control-label">What year is this for</label>
+                                            <label class="control-label">What year is this for?</label>
                                             <select class="form-control" name="time_range_summer" id="time_range_summer_select">
                                                 <option value="2018">2018</option>
                                                 <option value="2019">2019</option>
@@ -178,140 +264,75 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row setup-content" id="step-3">
-                    <div class="col-xs-12">
-                        <div class="row">
-                            <div class="col-xs-0 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
-                            <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10">
-                                <h2> Step 3: Property Details</h2>
-                                <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                                        <div class="form-group">
-                                            <label class="control-label form-control-feedback">Type of Property</label>
-                                            {{form.property_type(class='form-control', required='required')}}
-                                            <!-- <select class="form-control" required="required" name="property_type" id="property_type">
-                                            <option value="house">House</option>
-                                            <option value="apartment">Apartment</option>
-                                            <option value="complex">Complex</option>
-                                            <option value="room">Room</option>
-                                        </select> -->
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                                        <div class="form-group" style="display: none;" id="apartmentNumberInput">
-                                            <label class="control-label form-control-feedback" id="apartment_number_label">Apartment Number</label>
-                                            {{form.apartment_number(class='form-control')}}
-                                            <!-- <input id="apartment_number" name="apartment_number" maxlength="100" type="number" class="form-control" /> -->
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                                        <div class="form-group">
-                                            <label class="control-label form-control-feedback">How often is rent due?</label>
-                                            {{form.rent_due(class='form-control', required='required')}}
-                                            <!-- <select class="form-control" required="required" name="rent_due" id="rent_due">
-                                            <option value="monthly">Per Month</option>
-                                            <option value="semester">Per Semester</option>
-                                        </select> -->
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                                        <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="price_label">Price Per Bedroom per Month</label>
-                                            <div class="input-group">
-                                                <span class="input-group-addon">$</span> {{form.price(class='form-control', required='required')}}
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                            <div class="form-group">
+                                                <label class="control-label form-control-feedback">How often is rent due?</label>
+                                                {{form.rent_due(class='form-control', required='required')}}
+                                                <!-- <select class="form-control" required="required" name="rent_due" id="rent_due">
+                                                <option value="monthly">Per Month</option>
+                                                <option value="semester">Per Semester</option>
+                                            </select> -->
                                             </div>
-                                            <!-- <input id="price" maxlength="100" type="number" required="required" class="form-control" /> -->
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-6">
-                                        <div class="form-group" style="display: none;" id="first_semester_rent_due">
-                                            <label class="control-label form-control-feedback" id="apartment_number_label">First Semester Rent Due Date</label>
-                                            <p id="end" class="flatpickr input-group" data-wrap="true" data-clickOpens="false">
-                                                {{form.first_semester_rent_due_date(id="endLeaseDateInput", class='form-control', data_input="true", maxlength='100', type="date", style="background-color: inherit;")}}
-                                                <a class="btn input-btn" style="border-color: #ddd;" data-toggle><i class="fa fa-calendar" aria-hidden="true"></i></a>
-                                                <a class="btn input-btn" style="border-color: #ddd;" data-clear><i class="fa fa-times" aria-hidden="true"></i></a>
-                                            </p>
-                                            <!-- <input id="apartment_number" name="apartment_number" maxlength="100" type="number" class="form-control" /> -->
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <div class="form-group" style="display: none;" id="second_semester_rent_due">
-                                            <label class="control-label form-control-feedback" id="apartment_number_label">Second Semester Rent Due Date</label>
-                                            <p id="end" class="flatpickr input-group" data-wrap="true" data-clickOpens="false">
-                                                {{form.second_semester_rent_due_date(id="endLeaseDateInput", class='form-control', data_input="true", maxlength='100', type="date", style="background-color: inherit;")}}
-                                                <a class="btn input-btn" style="border-color: #ddd;" data-toggle><i class="fa fa-calendar" aria-hidden="true"></i></a>
-                                                <a class="btn input-btn" style="border-color: #ddd;" data-clear><i class="fa fa-times" aria-hidden="true"></i></a>
-                                            </p>
-                                            <!-- <input id="apartment_number" name="apartment_number" maxlength="100" type="number" class="form-control" /> -->
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-6">
-                                        <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="furnished_label">Is the property furnished?</label>
-                                            <div class="checkbox">
-                                                <label style="font-size: 1.5em">
-                                                    {{form.furnished(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-                                                </label>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                                            <div class="form-group">
+                                                <label class="control-label form-control-feedback" id="price_label">Price Per Bedroom Per Month</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">$</span> {{form.price(class='form-control', required='required')}}
+                                                </div>
+                                                <p id="incorrect_rent_format" style="display: none;" class="form-text text-muted">
+                                                    *Please enter rent as a single number, rounded up to nearest dollar. No decimal places please
+                                                </p>
+                                                <!-- <input id="price" maxlength="100" type="number" required="required" class="form-control" /> -->
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-col-xs-12 col-md-6 col-xl-4">
-                                        <div class="form-group">
-                                            <label class="control-label form-control-feedback">Number of Bedrooms</label>
-                                            {{form.num_bedrooms(class='form-control', required='required', maxlength='1', type="number")}}
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-col-xs-12 col-md-6 col-xl-4">
-                                        <div class="form-group">
-                                            <label class="control-label form-control-feedback">Number of Full Bathrooms</label>
-                                            {{form.num_full_baths(class='form-control', required='required', maxlength='1', type="number")}}
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-col-xs-12 col-md-6 col-xl-4">
-                                        <div class="form-group">
-                                            <label class="control-label form-control-feedback">Number of Half Bathrooms</label>
-                                            {{form.num_half_baths(class='form-control', required='required', maxlength='1', type="number")}}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-12 col-lg-6">
-                                        <div class="form-group">
-                                            <label class="control-label form-control-feedback">Type of Parking</label>
-                                            {{form.parking(class='form-control', required='required')}}
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-lg-6">
-                                        <div class="form-group">
-                                            <label class="control-label form-control-feedback">Square Footage of Property</label>
-                                            <div class="input-group">
-                                                {{form.square_footage(class='form-control', type="number")}}
-                                                <span class="input-group-addon">FT</span>
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <div class="form-group" style="display: none;" id="first_semester_rent_due">
+                                                <label class="control-label form-control-feedback" id="apartment_number_label">First Semester Rent Due Date</label>
+                                                <p id="firstSemesterRentCalender" class="flatpickr input-group" data-wrap="true" data-clickOpens="false">
+                                                    {{form.first_semester_rent_due_date(id="firstSemesterRentDue", class='form-control', data_input="true", maxlength='100', type="date", style="background-color: inherit;")}}
+                                                    <a class="btn input-btn" style="border-color: #ddd;" data-toggle><i class="fa fa-calendar" aria-hidden="true"></i></a>
+                                                    <a class="btn input-btn" style="border-color: #ddd;" data-clear><i class="fa fa-times" aria-hidden="true"></i></a>
+                                                </p>
+                                                <p id="first_semester_rent_due_before_start_date" style="display: none;" class="form-text text-muted">
+                                                    *Please set the First Semester Rent Due Date to on or after the first day of the lease
+                                                </p>
+                                                <p id="first_semester_rent_due_after_second" style="display: none;" class="form-text text-muted">
+                                                    *Please set the First Semester Rent Due Date to before the second semester rent is due
+                                                </p>
                                             </div>
-                                            <!-- <input id="footage" maxlength="100" type="number" name="square_footage" required="required" class="form-control" /> -->
                                         </div>
-                                    </div>
-                                </div>
+                                        <div class="col-xs-6">
+                                            <div class="form-group" style="display: none;" id="second_semester_rent_due">
+                                                <label class="control-label form-control-feedback" id="apartment_number_label">Second Semester Rent Due Date</label>
+                                                <p id="secondSemesterRentCalender" class="flatpickr input-group" data-wrap="true" data-clickOpens="false">
+                                                    {{form.second_semester_rent_due_date(id="secondSemesterRentDue", class='form-control', data_input="true", maxlength='100', type="date", style="background-color: inherit;")}}
+                                                    <a class="btn input-btn" style="border-color: #ddd;" data-toggle><i class="fa fa-calendar" aria-hidden="true"></i></a>
+                                                    <a class="btn input-btn" style="border-color: #ddd;" data-clear><i class="fa fa-times" aria-hidden="true"></i></a>
+                                                </p>
+                                                <p id="second_semester_rent_due_after_end_date" style="display: none;" class="form-text text-muted">
+                                                    *Please set the Second Semester Rent Due Date to before the end of the lease
+                                                </p>
+                                                <p id="second_semester_rent_due_before_first" style="display: none;" class="form-text text-muted">
+                                                    *Please set the Second Semester Rent Due Date to after the first semester rent is due
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>                                    
                                 <div class="row">
                                     <div class="col-xs-12">
                                         <span id="estimatedRevenue" style="color: green" ;></span>
                                     </div>
                                 </div>
-                                <button class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
+                                <div class="row" style="align-items: center; text-align: right;">
+                                    <div class="col-xs-12">
+                                        <u><a href="#" data-toggle="modal" data-target="#contactUsModal" style="padding-right: 30px;">need help?</a></u>
+                                        <button class="btn btn-blue nextBtn btn-lg" type="button">Next</button>
+                                    </div>
+                                </div> 
                             </div>
                         </div>
                     </div>
@@ -321,9 +342,9 @@
                         <div class="row">
                             <div class="col-xs-0 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
                             <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10">
-                                <h3> Step 4: Utilities</h3>
+                                <h2> Step 4: Utilities</h2>
                                 <br>
-                                <p><strong>Please select which utilites are included in this price</strong></p>
+                                <p><strong>Please select which utilites, if any, are included:</strong></p>
                                 <div class="row">
                                     <div class="col-xs-6">
                                         <div class="form-group">
@@ -331,7 +352,7 @@
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.electricity(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
@@ -342,7 +363,7 @@
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.water(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
@@ -355,7 +376,7 @@
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.heat_gas(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
@@ -366,7 +387,7 @@
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.internet(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
@@ -379,13 +400,18 @@
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.cable(class='form-control form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <button class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
+                                <div class="row" style="align-items: center; text-align: right;">
+                                    <div class="col-xs-12">
+                                        <u><a href="#" data-toggle="modal" data-target="#contactUsModal" style="padding-right: 30px;">need help?</a></u>
+                                        <button class="btn btn-blue nextBtn btn-lg" type="button">Next</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -395,9 +421,9 @@
                         <div class="row">
                             <div class="col-xs-0 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
                             <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10">
-                                <h3> Step 5: Appliances</h3>
+                                <h2> Step 5: Appliances</h2>
                                 <br>
-                                <p><strong>Please select all that are included in the property</strong></p>
+                                <p><strong>Please select which appliances, if any, are included:</strong></p>
                                 <div class="row">
                                     <div class="col-xs-6">
                                         <div class="form-group">
@@ -406,7 +432,7 @@
                                                 <label style="font-size: 1.5em">
                                                     {{form.air_conditioning(class='form-control form-check-input')}}
                                                     <!-- <input id="air_conditioning" class="form-check-input" type="checkbox"> -->
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
@@ -418,7 +444,7 @@
                                                 <label style="font-size: 1.5em">
                                                     {{form.dishwasher(class='form-control form-check-input')}}
                                                     <!-- <input id="dishwasher" class="form-check-input" type="checkbox"> -->
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
@@ -427,28 +453,28 @@
                                 <div class="row">
                                     <div class="col-xs-6">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="dryer_label">Dryer</label>
+                                            <label class="control-label form-control-feedback" id="washer_label">Washing Machine</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
-                                                    {{form.dryer(class='form-check-input form-check-input')}}
-                                                    <!-- <input id="dryer" class="form-check-input" type="checkbox"> -->
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    {{form.washer(class='form-control form-check-input')}}
+                                                    <!-- <input id="washer" class="form-check-input" type="checkbox"> -->
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xs-6">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="washer_label">Washing Machine</label>
+                                            <label class="control-label form-control-feedback" id="dryer_label">Dryer</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
-                                                    {{form.washer(class='form-control form-check-input')}}
-                                                    <!-- <input id="washer" class="form-check-input" type="checkbox"> -->
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    {{form.dryer(class='form-check-input form-check-input')}}
+                                                    <!-- <input id="dryer" class="form-check-input" type="checkbox"> -->
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>                                    
                                 </div>
                                 <div class="row" style="display: none;" id="freeLaundry">
                                     <div class="col-xs-6">
@@ -457,13 +483,18 @@
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.washer_free(class='form-check-input form-check-input')}}
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <button class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
+                                <div class="row" style="align-items: center; text-align: right;">
+                                    <div class="col-xs-12">
+                                        <u><a href="#" data-toggle="modal" data-target="#contactUsModal" style="padding-right: 30px;">need help?</a></u>
+                                        <button class="btn btn-blue nextBtn btn-lg" type="button">Next</button>
+                                    </div>
+                                </div> 
                             </div>
                         </div>
                     </div>
@@ -473,30 +504,30 @@
                         <div class="row">
                             <div class="col-xs-0 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
                             <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10">
-                                <h3> Step 6: Services</h3>
+                                <h2> Step 6: Services</h2>
                                 <br>
-                                <p><strong>Please select all that apply</strong></p>
+                                <p><strong>Please select all that apply:</strong></p>
                                 <div class="row">
                                     <div class="col-xs-6">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="handicap_label">Is the Property Handicap Accessible?</label>
+                                            <label class="control-label form-control-feedback" id="handicap_label">Is the property handicap accessible?</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.handicap(class='form-control form-check-input')}}
                                                     <!-- <input id="handicap" class="form-check-input" type="checkbox"> -->
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xs-6">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="snow_label">Do You Provide Snow Removal?</label>
+                                            <label class="control-label form-control-feedback" id="snow_label">Do you provide snow removal?</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.snow_plowing(class='form-control form-check-input')}}
                                                     <!-- <input id="snow_plowing" class="form-check-input" type="checkbox"> -->
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
@@ -505,24 +536,24 @@
                                 <div class="row">
                                     <div class="col-xs-6">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="garbage_label">Are Garbage Services Included?</label>
+                                            <label class="control-label form-control-feedback" id="garbage_label">Are garbage services included?</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.garbage_service(class='form-control form-check-input')}}
                                                     <!-- <input id="garbage_service" class="form-check-input" type="checkbox"> -->
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-xs-6">
                                         <div class="form-check">
-                                            <label class="control-label form-control-feedback" id="maintenance_label">Do You Offer Emergency Maintenance?</label>
+                                            <label class="control-label form-control-feedback" id="maintenance_label">Do you offer emergency maintenance?</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.emergency_maintenance(class='form-control form-check-input')}}
                                                     <!-- <input id="maintenance" class="form-check-input" type="checkbox"> -->
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
@@ -531,18 +562,23 @@
                                 <div class="row">
                                     <div class="col-xs-6">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback" id="security_label">Do You Offer Security Services?</label>
+                                            <label class="control-label form-control-feedback" id="security_label">Do you offer security services?</label>
                                             <div class="checkbox">
                                                 <label style="font-size: 1.5em">
                                                     {{form.security_service(class='form-control form-check-input')}}
                                                     <!-- <input id="security" class="form-check-input" type="checkbox"> -->
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <button class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
+                                <div class="row" style="align-items: center; text-align: right;">
+                                    <div class="col-xs-12">
+                                        <u><a href="#" data-toggle="modal" data-target="#contactUsModal" style="padding-right: 30px;">need help?</a></u>
+                                        <button class="btn btn-blue nextBtn btn-lg" type="button">Next</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -552,9 +588,9 @@
                         <div class="row">
                             <div class="col-xs-0 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
                             <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10">
-                                <h3> Step 7: Pets</h3>
+                                <h2> Step 7: Pets</h2>
                                 <br>
-                                <p><strong>What Pets Do You Allow?</strong></p>
+                                <p><strong>What pets do you allow?</strong></p>
                                 <div class="row">
                                     <div class="col-xs-6">
                                         <div class="form-group">
@@ -563,7 +599,7 @@
                                                 <label style="font-size: 1.5em">
                                                     {{form.dogs(class='form-control form-check-input')}}
                                                     <!-- <input id="handicap" class="form-check-input" type="checkbox"> -->
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
@@ -575,21 +611,26 @@
                                                 <label style="font-size: 1.5em">
                                                     {{form.cats(class='form-control form-check-input')}}
                                                     <!-- <input id="snow_plowing" class="form-check-input" type="checkbox"> -->
-                                                    <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
+                                                    <span class="cr"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-6">
+                                    <div class="col-xs-12 col-md-7">
                                         <div class="form-group">
-                                            <label class="control-label form-control-feedback">Anything else to say about pets?(100 characters max)</label>
+                                            <label class="control-label form-control-feedback">Additional details (100 characters max): </label>
                                             {{form.other_pets(class='form-control', rows='3', maxlength="150")}}
                                         </div>
                                     </div>
                                 </div>
-                                <button class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
+                                <div class="row" style="align-items: center; text-align: right;">
+                                    <div class="col-xs-12">
+                                        <u><a href="#" data-toggle="modal" data-target="#contactUsModal" style="padding-right: 30px;">need help?</a></u>
+                                        <button class="btn btn-blue nextBtn btn-lg" type="button">Next</button>
+                                    </div>
+                                </div> 
                             </div>
                         </div>
                     </div>
@@ -599,55 +640,66 @@
                         <div class="row">
                             <div class="col-xs-0 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
                             <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10">
-                                <h3>Step 8: Description</h3>
+                                <h2>Step 8: Description</h2>
                                 <br>
-                                <p><strong>If you would like to, provide a description of the property</strong></p>
+                                <p><strong>Please provide a description of the property and/or any additional information you would like to display.</strong></p>
                                 <div class="form-group">
-                                    <label class="control-label form-control-feedback">Description</label>
                                     {{form.description(class='form-control', rows='5')}}
                                     <!-- textarea id="description" type="textarea" rows="5" class="form-control"></textarea> -->
                                 </div>
-                                <button class="btn btn-primary nextBtn btn-lg pull-right" type="button">Next</button>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback">Upload Floor Plan (pdf, png, gif, jpg)<small style="padding-left: 15px;">Not Required</small></label>
+                                            {{form.floor_plan(class='form-control')}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="form-group">
+                                            <label class="control-label form-control-feedback">YouTube Video URL: <small style="padding-left: 15px;">Not Required</small></label>
+                                            {{form.youtube_url(class='form-control', type="url", placeholder="Paste link here")}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="align-items: center; text-align: right;">
+                                    <div class="col-xs-12">
+                                        <u><a href="#" data-toggle="modal" data-target="#contactUsModal" style="padding-right: 30px;">need help?</a></u>
+                                        <button class="btn btn-blue nextBtn btn-lg" type="button">Next</button>
+                                    </div>
+                                </div>                              
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row setup-content" id="step-9">
+                <div class="row setup-content" id="step-9" style="padding-bottom: 60px;">
                     <div class="col-xs-12">
                         <div class="row">
                             <div class="col-xs-0 col-sm-1 col-md-1 col-lg-1 col-xl-1"></div>
                             <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-xl-10">
-                                <h3>Step 9: Photos</h3>
+                                <h2>Step 9: Photos</h2>
                                 <br>
-                                <p><strong>Banner Photo</strong></p>
                                 <div class="row">
-                                    <div class="form-group">
-                                        <label class="control-label form-control-feedback">Choose Photo</label>
-                                        {{form.bannerPicture(class='form-control')}}
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                        <br>
+                                        <div class="row" style="width: 100%;">
+                                            <div class="form-group" style="width: 100%;">
+                                                <h3><strong>Cover Photo (This photo will appear first on your listing)</strong><small class="text-muted" style="padding-left: 10px;">Not Required</small></h3>
+                                                {{form.bannerPicture(class='form-control file')}}
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row" style="width: 100%;">
+                                            <div class="form-group" style="width: 100%;">
+                                                <h3><strong>Other Photos of Property (Up to 15)</strong><small class="text-muted" style="padding-left: 10px;">Not Required</small></h3>
+                                                {{form.pictures(class='form-control file-loading', multiple='')}}
+                                            </div>
+                                        </div>
+                                        {{form.nextAction}}                        
                                     </div>
                                 </div>
-                                <p><strong>Photos</strong></p>
-                                <div class="row">
-                                    <div class="form-group">
-                                        <label class="control-label form-control-feedback">Choose Photos</label>
-                                        {{form.pictures(class='form-control', multiple='')}}
-                                    </div>
-                                </div>
-                                <p><strong>Floor Plan</strong></p>
-                                <div class="row">
-                                    <div class="form-group">
-                                        <label class="control-label form-control-feedback">Upload a PDF of the floor plan if you have one</label>
-                                        {{form.floor_plan(class='form-control')}}
-                                    </div>
-                                </div>
-                                <p><strong>Youtube video of the property</strong></p>
-                                <div class="row">
-                                    <div class="form-group">
-                                        <label class="control-label form-control-feedback">Paste the URL of the video</label>
-                                        {{form.youtube_url(class='form-control', type="url")}}
-                                    </div>
-                                </div>
-                                <button onClick="submitListingForm()" class="btn btn-primary">Edit Listing</a>
+                                <button onClick="submitListingForm()" class="btn btn-light-green btn-lg pull-right">Save Changes</a>
                             </div>
                         </div>
                     </div>
@@ -819,6 +871,13 @@
             }
         });
 
+        //try to format rent price
+        $("#price").on('input', function() {
+            console.log('hi');
+            $("#price").val($("#price").val().replace(/([,$])/g, ''));
+            $("#price").val($("#price").val().replace(/$/g, ''));
+        });
+
         $('#property_type').change(function() {
             if ($("#property_type").val() == "apartment") {
                 $("#apartmentNumberInput").show();
@@ -863,8 +922,8 @@
                 $item = $(this);
 
             if (!$item.hasClass('disabled')) {
-                navListItems.removeClass('btn-primary').addClass('btn-default');
-                $item.addClass('btn-primary');
+                navListItems.removeClass('btn-blue').addClass('btn-default');
+                $item.addClass('btn-blue');
                 allWells.hide();
                 $target.show();
                 $target.find('input:eq(0)').focus();
@@ -880,13 +939,14 @@
 
             $(".form-group").removeClass("has-danger");
             $(".form-group").removeClass("has-error");
+            console.log(curInputs);
             for (var i = 0; i < curInputs.length; i++) {
                 if (!curInputs[i].validity.valid) {
                     isValid = false;
                     $(curInputs[i]).closest(".form-group").addClass("has-error");
                     $(curInputs[i]).closest(".form-group").addClass("has-danger");
                 }
-            }
+            }            
 
             if (isValid) {
                 if ($(this).attr('id') == 'zipCodeButton') {
@@ -906,13 +966,101 @@
                     } else {
                         nextStepWizard.removeClass('disabled').trigger('click');
                     }
-                } else {
+                }else if(curStep[0].id == "step-3"){
+                    var errorExists = false;
+
+                    if($("#price").val().indexOf('.') > -1){
+                        console.log('hi');
+                        $("#incorrect_rent_format").show();
+                        errorExists = true;
+                    }
+
+                    if($("#leaseStartDateInput").val().length == 0){
+                        $("#leaseStartDateInput").closest(".form-group").addClass("has-error");
+                        $("#leaseStartDateInput").closest(".form-group").addClass("has-danger");
+                        errorExists = true;
+                    }
+                    if($("#endLeaseDateInput").val().length == 0){
+                        $("#endLeaseDateInput").closest(".form-group").addClass("has-error");
+                        $("#endLeaseDateInput").closest(".form-group").addClass("has-danger");
+                        errorExists = true;
+                    }                    
+
+                    if($("#rent_due").val() == "semester"){
+                        var start_date = new Date($("#leaseStartDateInput").val());
+                        var end_date = new Date($("#endLeaseDateInput").val());
+                        var first_semester_rent_due = new Date($("#firstSemesterRentDue").val());
+                        var second_semester_rent_due = new Date($("#secondSemesterRentDue").val());
+                        $("#firstSemesterRentDue").closest(".form-group").removeClass("has-error");
+                        $("#firstSemesterRentDue").closest(".form-group").removeClass("has-danger");
+                        $("#secondSemesterRentDue").closest(".form-group").removeClass("has-error");
+                        $("#secondSemesterRentDue").closest(".form-group").removeClass("has-danger");
+                        $("#first_semester_rent_due_before_start_date").hide();
+                        $("#first_semester_rent_due_after_second").hide();
+                        $("#second_semester_rent_due_after_end_date").hide();
+                        $("#second_semester_rent_due_before_first").hide();
+
+                        if(first_semester_rent_due >= start_date){
+                            if(second_semester_rent_due < end_date){
+                                if(first_semester_rent_due < second_semester_rent_due){
+                                    //errorExists = false;
+                                } else{
+                                    errorExists = true;
+                                    $("#firstSemesterRentDue").closest(".form-group").addClass("has-error");
+                                    $("#firstSemesterRentDue").closest(".form-group").addClass("has-danger");
+                                    $("#secondSemesterRentDue").closest(".form-group").addClass("has-error");
+                                    $("#secondSemesterRentDue").closest(".form-group").addClass("has-danger");
+                                    $("#first_semester_rent_due_after_second").show();
+                                    $("#second_semester_rent_due_before_first").show();
+                                }
+                            }
+                            else{
+                                errorExists = true;
+                                $("#secondSemesterRentDue").closest(".form-group").addClass("has-error");
+                                $("#secondSemesterRentDue").closest(".form-group").addClass("has-danger");
+                                $("#second_semester_rent_due_after_end_date").show();
+                            }
+                        }else{
+                            errorExists = true;
+                            $("#firstSemesterRentDue").closest(".form-group").addClass("has-error");
+                            $("#firstSemesterRentDue").closest(".form-group").addClass("has-danger");
+                            $("#first_semester_rent_due_before_start_date").show();
+                            if(second_semester_rent_due > end_date){
+                                $("#secondSemesterRentDue").closest(".form-group").addClass("has-error");
+                                $("#secondSemesterRentDue").closest(".form-group").addClass("has-danger");
+                                $("#second_semester_rent_due_after_end_date").show();
+                            }
+                        }
+                    }
+
+                    {% if endDate %}
+                        var new_start_date = new Date($("#leaseStartDateInput").val());
+                        var oldEnd = new Date("{{endDate}}");
+                        console.log("new_start_date: " + new_start_date);
+                        console.log("oldEnd: " + oldEnd);
+                        if(oldEnd > new_start_date){
+                            errorExists = true;
+                            $("#leaseStartDateInput").closest(".form-group").addClass("has-error");
+                            $("#leaseStartDateInput").closest(".form-group").addClass("has-danger");
+                        }
+                        else{
+                            if(errorExists == false){
+                                nextStepWizard.removeClass('disabled').trigger('click');
+                            }
+                        }
+                    {% else %}
+                        if(errorExists == false){
+                            nextStepWizard.removeClass('disabled').trigger('click');
+                        }                        
+                    {% endif %}
+                }
+                else {
                     nextStepWizard.removeClass('disabled').trigger('click');
                 }
             }
         });
 
-        $('div.setup-panel div a.btn-primary').trigger('click');
+        $('div.setup-panel div a.btn-blue').trigger('click');
     });
     $('#radioBtn a').on('click', function() {
         var sel = $(this).data('title');
@@ -924,13 +1072,83 @@
     });
 
     $(document).ready(function() {
-        flatpickr(".flatpickr", {
+       var startLeaseFlat = new Flatpickr(document.getElementById('start'), {
             wrap: true,
+            altInput: true,
+            altFormat: 'F d Y',
+            defaultDate: Date.now(),
+            altInput: true,
+            onChange: function(dateStr, dateObj) {
+              end.value = dateStr;
+              endLeaseFlat.set("minDate", dateObj);
+              var m = moment(dateObj);
+              //determine length of lease period
+              if($("#time_period").val()=="school"){
+                  m.add(8, 'M');
+              }
+              else if($("#time_period").val()=="year"){
+                  m.add(1, 'y');
+              }
+              else if($("#time_period").val()=="summer"){
+                  m.add(3, 'M');
+              }
+              //Set the end date to an apprx guess to help landlord
+              endLeaseFlat.setDate(m.format()); // Set to the exact date
+              //Set first day of rent to be due the first day of lease
+              firstSemesterRentFlat.setDate(dateStr);
+            },
             disable: [{
                 from: "0001-01-01",
                 to: "today"
             }]
-        });
+          }
+        );
+
+        var endLeaseFlat = new Flatpickr(document.getElementById('end'), {
+            wrap: true,
+            altInput: true,
+            altFormat: 'F d Y',
+            defaultDate: Date.now(),
+            altInput: true,
+            disable: [{
+                from: "0001-01-01",
+                to: "today"
+            }]
+          }
+        );
+
+        var firstSemesterRentFlat = new Flatpickr(document.getElementById('firstSemesterRentCalender'), {
+            wrap: true,
+            altInput: true,
+            altFormat: 'F d Y',
+            defaultDate: Date.now(),
+            altInput: true,
+            onChange: function(dateStr, dateObj) {
+              secondSemesterRentCalender.value = dateStr;
+              secondSemesterRentFlat.set("minDate", dateObj);              
+              var m = moment(dateObj);
+              m.add(4, 'M');
+              secondSemesterRentFlat.setDate(m.format()); // Set to the exact date
+            },
+            disable: [{
+                from: "0001-01-01",
+                to: "today"
+            }]
+          }
+        );
+
+        var secondSemesterRentFlat = new Flatpickr(document.getElementById('secondSemesterRentCalender'), {
+            wrap: true,
+            altInput: true,
+            altFormat: 'F d Y',
+            defaultDate: Date.now(),
+            altInput: true,
+            disable: [{
+                from: "0001-01-01",
+                to: "today"
+            }]
+          }
+        );
         $('.flatpickr-calendar').css('z-index', 99999999999999);
     });
 

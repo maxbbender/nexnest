@@ -6,20 +6,23 @@
             </div>
             <div class="col-xs-10">
                 <div class="row">
-                    <div class="col-xs-8">                           
-                        <a href="{{ url_for('users.viewUser', userID=user.id) }}">
-                            <h4>{{ user.fname }} {{ user.lname }}</h4>
-                        </a>
-                    </div>
-                    <div class="col-xs-4">                            
-                        {% if group.leader_id == current_user.id %}
-                            {% if current_user.id != user.id %}
-                                <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#removeUser" data-user="{{user.id}}" style="float: right;">Remove</a>
+                    <div class="col-xs-12" style="align-self: center;">
+                        <h2 style="margin-top: 5px;">{{ user.fname }} {{ user.lname }}
+                            {% if group.leader_id == user.id %}
+                                <div class="customTooltip" style="padding-left: 15px;">
+                                    <i class="icon icon-crown" style="color: #f4c359;"></i>
+                                    <span class="customTooltiptext">Group Leader</span>
+                                </div>
                             {% endif %}
-                        {% endif %}
-                        {% if current_user.id == user.id %}
-                            <a href='#' class="btn btn-danger" data-toggle="modal" data-target="#leaveGroupModal{{group.id}}" style="float: right;">Leave Group</a>
-                        {% endif %}
+                            {% if current_user.id != user.id %}
+                                <a href="#" data-toggle="modal" data-target="#sendDirectMessageModal" data-targetID="{{user.id}}" data-targetname="{{user.name}}">
+                                    <div class="customTooltip" style="padding-left: 15px;">
+                                        <i class="fa fa-comment" aria-hidden="true" style="color: #5686c5;"></i>
+                                        <span class="customTooltiptext">Send Message</span>
+                                    </div>
+                                </a>
+                            {% endif %}
+                        </h2>
                     </div>
                 </div>
             </div>

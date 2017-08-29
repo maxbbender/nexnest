@@ -16,7 +16,7 @@
                         <div class="row" style="width: 100%;">
                             <div class="form-group" style="width: 100%;">
                                 <h3><strong>Cover Photo (This photo will appear first on your listing)</strong><small class="text-muted" style="padding-left: 10px;">Not Required</small></h3>
-                                {{form.bannerPicture(class='form-control file', required='required')}}
+                                {{form.bannerPicture(class='form-control file')}}
                             </div>
                         </div>
                         
@@ -151,7 +151,7 @@
         initialPreviewConfig: [
             {% if picturePaths %}
                 {% for picture in picturePaths %}
-                    {caption: "Picture", size: 827000, width: "120px", url: "/listing/delete/{{listingID}}/{{picture}}", key: 1},
+                    {caption: "Picture", size: 827000, width: "120px", url: "/listing/delete/{{listingID}}/{{picture}}", key: 1,extra: {csrf_token:csrfToken}}}
                 {% endfor %}
             {% endif %}
         ]
