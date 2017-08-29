@@ -5,12 +5,12 @@
 		<link href="{{url_for('static', filename='css/bootstrap-flex3.css', _external=True)}}" rel="stylesheet">
 		<link rel="stylesheet" href="{{url_for('static', filename='font-awesome-4.7.0/css/font-awesome.min.css', _external=True)}}">
 	</head>
-	<body>
+	<body class="nexnest-font" style="font-size: 20px; color: #656264;">
 		<div class="row" style="position: relative; padding-top: 20px;">
 			<div class="col-xs-0 col-lg-2">
 			</div>
 			<div class="col-xs-5 col-lg-3" style="padding-top: 20px; border-top-width: 5px; border-top-style: solid; border-left-width: 5px; border-left-style: solid; border-color: lightgray; padding-left: 20px;">
-			<img src="{{url_for('static', filename='img/dontJustWingIt.png', _external=True)}}" style="width: 100%;" alt="logo">
+			<img src="{{url_for('static', filename='img/dontJustWingIt.png', _external=True)}}" style="width: 250px;" alt="logo">
 			</div>
 			<div class="col-xs-7 col-lg-5" style="text-align: right; border-top-width: 5px; border-top-style: solid; border-right-width: 5px; border-right-style: solid; border-color: lightgray; padding-right: 20px;">
 				<div style="display: inline-block; width:1px; height:100%; vertical-align:bottom;"></div>
@@ -49,7 +49,7 @@
 				<div style="text-align: center;">
 					<i>Copyright &copy; Nexnest, LLC, All rights reserved</i>
 					<br><br><br><br>
-					<a href="#">Change notification preferences</a> | <a href="{{url_for('indexs.privacyPolicy', _external=True)}}">Privacy policy</a> | <a href="{{url_for('indexs.termsConditions')}}">Terms of Service</a> | <a href="#">Subscribe to Newsletter</a>
+					<a href="#">Change notification preferences</a> | <a href="{{url_for('indexs.privacyPolicy', _external=True)}}">Privacy policy</a> | <a href="{{url_for('indexs.termsConditions', _external=True)}}">Terms of Service</a> | <a href="#">Subscribe to Newsletter</a>
 					<br><br>
 					<a href="mailto:contact@nexnest.com?subject=Contact nexnest">contact@nexnest.com</a>
 				</div>

@@ -1,12 +1,12 @@
 {% extends "base.html" %} {% block content %}
 <br>
-<div class="row m-x-auto">
+<div class="row m-x-auto nexnest-font" style="color: #656264;">
     <div class="col-xs-0 col-sm-2 col-md-2 col-lg-2 col-xl-2">
     </div>
     <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 col-xl-8">
         <div class="row">
             <div class="card" style="width:100%; border: none;">
-                <h3 class="card-header">We Just Need A Little More Information</h3>
+                <h3 class="card-header" style="background-color: #d2d2d2;">We Just Need A Little More Information</h3>
                 <div class="card-block">
                     <form id="moreInformationForm" action="{{url_for('users.landlordInformation')}}" method="POST">
                         {{form.csrf_token}}
@@ -73,41 +73,28 @@
                             </div>
                         </fieldset>
                         <fieldset>
-                            <legend>How You Accept Rent:</legend>
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                                    <div class="form-group">
-                                        <label class="control-label form-control-feedback">Check Payments</label>
-                                        <div class="checkbox">
-                                            <label style="font-size: 1.5em">
-                                                {{form.check_pay(class='form-control form-check-input')}}
-                                                <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                                    <div class="form-group">
-                                        <label class="control-label form-control-feedback">Online Payments</label>
-                                        <div class="checkbox">
-                                            <label style="font-size: 1.5em">
-                                                {{form.online_pay(class='form-control form-check-input')}}
-                                                <span class="cr"><i class="cr-icon fa fa-check-circle"></i></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <fieldset>
                             <legend>Your Availabilty for Tours:</legend>
                             <div class="row">
                                 <div class="card" style="width:100%; border: none;">
                                     <div class="card-block" style="padding-left: 5px">
-                                        Select the times you are available for tours on an average week. This simply will suggest these times to prospective tenants. It does not prevent them from requesting other time slots
+                                        Please select the times you are available for tours on an average week. Prospective tenants will only be able to request tours during times you have marked as being available.
                                         <br>
                                         <div id="day-schedule"></div>
                                         <br>
+                                        <div class="row" style="padding-left: 90px;">
+                                            <div class="col-xs-1">
+                                                <hr style="border-top: 20px solid #5686c5; width: 40px;">
+                                            </div>
+                                            <div class="col-xs-11" style="align-self: center; color: #5686c5;">
+                                                <h4 style="font-size: 20px;">Available</h4>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-left: 90px;">
+                                            <div class="col-xs-12">
+                                                Double-Click to select single time slot
+                                                <br><br>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </fieldset>
@@ -115,7 +102,7 @@
                             {{form.user_id}}
                             {{form.availabilities}}
 						  	<p>
-						  		<button type="button" class="btn btn-primary" onClick="submitForm()">Register As Landlord</button>
+						  		<button type="button" class="btn btn-blue pull-right" onClick="submitForm()">Register As Landlord</button>
 						  	</p>
         				</form>            
                     </div>
