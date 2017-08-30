@@ -21,6 +21,7 @@ class Config:
     BRAINTREE_MERCHANT_ID = os.environ.get('BRAINTREE_MERCHANT_ID')
     BRAINTREE_PUBLIC_KEY = os.environ.get('BRAINTREE_PUBLIC_KEY')
     BRAINTREE_PRIVATE_KEY = os.environ.get('BRAINTREE_PRIVATE_KEY')
+    BRAINTREE_ENV = os.environ.get('BRAINTREE_ENV') or 'sandbox'
     SLACK_LOG_URL = os.environ.get('SLACK_LOG_URL') or 'https://hooks.slack.com/services/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'
     SLACK_WARNING_URL = os.environ.get('SLACK_WARNING_URL')
     SLACK_ERROR_URL = os.environ.get('SLACK_ERROR_URL')
