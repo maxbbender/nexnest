@@ -17,7 +17,7 @@ class Config:
     # 'gc7L9UYJKqVyTMoEPbDhzGZhwogXL7Eb2hRuiRPoyhEb7uucgWUzwjWi5cLo86dX'
     GOOGLE_MAPS_KEY = os.environ.get('GOOGLE_MAPS_KEY')
     GOOGLE_CAPTCHA_SECRET = os.environ.get('GOOGLE_CAPTCHA_SECRET')
-
+    FLASK_CONFIG = os.environ.get('FLASK_CONFIG')
     BRAINTREE_MERCHANT_ID = os.environ.get('BRAINTREE_MERCHANT_ID')
     BRAINTREE_PUBLIC_KEY = os.environ.get('BRAINTREE_PUBLIC_KEY')
     BRAINTREE_PRIVATE_KEY = os.environ.get('BRAINTREE_PRIVATE_KEY')

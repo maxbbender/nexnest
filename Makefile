@@ -32,7 +32,7 @@ erd:
 	eralchemy -i postgres://nexnest_development:domislove@localhost:5432/nexnest_development -o docs/erd.pdf
 
 server:
-	gunicorn -b 0.0.0.0:8080 --log-syslog manage:app
+	gunicorn -b 0.0.0.0:8080 --log-syslog --reload manage:app 
 
 psql:
 	psql -U nexnest_development
