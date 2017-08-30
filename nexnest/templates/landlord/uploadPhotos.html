@@ -31,7 +31,8 @@
                 </div>
                 <div class="row" style="padding-bottom: 60px;">
                     <div class="col-xs-12" style="text-align: right;">
-                        <a href='#' class="btn btn-light-green" data-toggle="modal" data-target="#confirmModal" style="margin-right: 15px;"><i class="fa fa-plus" aria-hidden="true" style="padding-right: 5px;"></i> Create Listing</a>
+                        <a id="createListingButton" href='#' class="btn btn-light-green" data-toggle="modal" data-target="#confirmModal" style="margin-right: 15px;"><i class="fa fa-plus" aria-hidden="true" style="padding-right: 5px;"></i> Create Listing</a>
+                        <button id="createListingButton_Loading" disabled class="btn btn-light-green" data-toggle="modal" data-target="#confirmModal" style="margin-right: 15px; display: none; width: 148px;"><i class="fa fa-spinner fa-spin" aria-hidden="true" style="padding-right: 5px;"></i></button>
                     </div>
                 </div>
             </div>
@@ -106,7 +107,19 @@
 {% endblock %}
 {% block scripts %}
 <script>
+    var csrf_token = "{{ csrf_token() }}";
+
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrf_token);
+            }
+        }
+    });
+
     function submitListingForm(nextAction) {
+        $('#createListingButton').hide();
+        $('#createListingButton_Loading').show();
         $('#pictures').fileinput('upload');
         $("#nextAction").val(nextAction);
         $("form#photoForm").submit();
@@ -130,6 +143,8 @@
         ]
     });
 
+    csrfToken = "{{csrf_token()}}"
+
     $("#pictures").fileinput({
         uploadUrl: "/listing/upload/{{listingID}}", // server upload action
         uploadAsync: true,
@@ -151,7 +166,7 @@
         initialPreviewConfig: [
             {% if picturePaths %}
                 {% for picture in picturePaths %}
-                    {caption: "Picture", size: 827000, width: "120px", url: "/listing/delete/{{listingID}}/{{picture}}", key: 1,extra: {csrf_token:csrfToken}}}
+                    {caption: "Picture", size: 827000, width: "120px", url: "/listing/delete/{{listingID}}/{{picture}}", key: 1,extra: {csrf_token:csrfToken}},
                 {% endfor %}
             {% endif %}
         ]
