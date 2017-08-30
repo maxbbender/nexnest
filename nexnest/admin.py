@@ -38,6 +38,7 @@ from nexnest.models.rent import Rent
 
 from flask import redirect, url_for
 from flask_admin.contrib.sqla import ModelView
+from flask_login import current_user
 
 session = db.session
 
