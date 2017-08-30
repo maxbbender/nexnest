@@ -123,16 +123,19 @@ class ListingTransaction(Transaction):
                     elif listing.listing.time_period == 'summer':
                         totalPrice += 69.99
 
-                app.logger.debug("New Total : %d" % totalPrice)
+                app.logger.debug("New Total : %r" % totalPrice)
 
-            app.logger.debug("Final totalPrice : %d" % totalPrice)
             if self.coupon is not None:
                 self.total = self.coupon.couponPrice(totalPrice)
-                app.logger.debug("Price after Coupon %d" % self.total)
+                app.logger.debug("Price after Coupon %r" % self.total)
             else:
                 self.total = totalPrice
 
-            self.total += (self.total*.075)
+            app.logger.debug('Applying tax to the price')
+            self.total = self.total * 1.075
+            app.logger.debug('Price after tax : %r' % self.total)
+
+            self.total = float("%.2f" % self.total)
 
             db.session.commit()
 

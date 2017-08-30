@@ -125,10 +125,9 @@
 		//tax calculation
 		subTotal = Number(totalPrice).toFixed(2);
 		taxBeforeCoupon = Number(totalPrice*.075).toFixed(2);
-		totalPrice = Number((totalPrice*1.075)).toFixed(2);
 		$("#subTotal").html(`<h4>Subtoal: `+"$"+subTotal+`</h4>`);
 		$("#tax").html(`<h4>Tax: `+"$"+taxBeforeCoupon+`</h4>`);
-		$("#totalPrice").html(`<h2>Total Price: `+"$"+totalPrice+`</h2>`);
+		$("#totalPrice").html(`<h2>Total Price: `+"$"+Number(totalPrice*1.075).toFixed(2)+`</h2>`);
 	});
 	function removeListingToPurchase(id, index){
 		$("#itemInCart"+id).remove();
@@ -156,8 +155,13 @@
 			results = data['results'];
 			console.log(results);
 			if(results.validCoupon == true){
+				console.log('totalPrice ' + totalPrice)
+				console.log('results.coupon.percentageOff : ' + results.coupon.percentageOff)
+				console.log('100-results.coupon.percentageOff' + (100-results.coupon.percentageOff))
+				console.log('100-results.coupon.percentageOff)/100' + (100-results.coupon.percentageOff)/100)
+				console.log('totalPrice*((100-results.coupon.percentageOff)/100)' + (totalPrice*((100-results.coupon.percentageOff)/100)))
 				//update total price div
-				subtotalAfterCoupon = Number((totalPrice*((100-results.coupon.percentageOff)/100)).toFixed(2);
+				subtotalAfterCoupon = Number(totalPrice*((100-results.coupon.percentageOff)/100)).toFixed(2);
 				taxAfterCoupon = Number(subtotalAfterCoupon*.075).toFixed(2);
 				priceAfterCoupon = Number((subtotalAfterCoupon*1.075)).toFixed(2);
 				//totalPrice = totalPrice-results.coupon.percentageOff;

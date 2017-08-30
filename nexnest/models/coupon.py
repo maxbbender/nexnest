@@ -82,7 +82,7 @@ class Coupon(Base):
         return newRandomKey
 
     def couponPrice(self, price):
-        return "%.2f" % (price * (1 - (self.percentage_off / 100)))
+        return float("%.2f" % (price * (1 - (self.percentage_off / 100))))
 
 
 def update_date_modified(mapper, connection, target):

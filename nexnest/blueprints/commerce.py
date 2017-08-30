@@ -139,7 +139,7 @@ def genTransaction():
             # If we are in development we are going to use the fake payment
             # setup for braintree
             result = None
-            if app.config['FLASK_CONFIG'] == 'development' or app.config['FLASK_CONFIG'] == 'testing':
+            if app.config['BRAINTREE_ENV'] == 'sandbox':
                 app.logger.debug('genTransaction() - DEVELOPMENT SETTINGS')
 
                 result = braintree.Transaction.sale({
@@ -149,9 +149,9 @@ def genTransaction():
                         'submit_for_settlement': True
                     }
                 })
-            else:
+            elif app.config['BRAINTREE_ENV'] == 'production':
                 app.logger.debug('genTransaction() - PRODUCTION SETTINGS')
-                app.logger.debug('payment_method_nonce: %r' % request.form['payment_method_nonce'] )
+                app.logger.debug('payment_method_nonce: %r' % request.form['payment_method_nonce'])
 
                 result = braintree.Transaction.sale({
                     'amount': str(transactionAmount),
@@ -160,6 +160,8 @@ def genTransaction():
                         'submit_for_settlement': True
                     }
                 })
+            else:
+                app.logger.error('Unknown BRAINTREE_ENV : %s' % app.config['BRAINTREE_ENV'])
 
             # The Transaction was successfull
             if result.is_success:

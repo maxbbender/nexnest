@@ -50,11 +50,13 @@ def createApp(configName):
                                           merchant_id=app.config['BRAINTREE_MERCHANT_ID'],
                                           public_key=app.config['BRAINTREE_PUBLIC_KEY'],
                                           private_key=app.config['BRAINTREE_PRIVATE_KEY'])
-    else:
+    elif app.config['BRAINTREE_ENV'] == 'production':
         braintree.Configuration.configure(braintree.Environment.Production,
                                           merchant_id=app.config['BRAINTREE_MERCHANT_ID'],
                                           public_key=app.config['BRAINTREE_PUBLIC_KEY'],
                                           private_key=app.config['BRAINTREE_PRIVATE_KEY'])
+    else:
+        app.logger.error('Unknown BRAINTREE_ENV : %s' % app.config['BRAINTREE_ENV'])
 
     # Blueprints
     from nexnest.blueprints.base import base
