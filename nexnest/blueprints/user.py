@@ -555,11 +555,11 @@ def createDirectMessage():
 
         newDM.genNotifications()
         session.commit()
+        flash('Message sent!', 'success')
     else:
         flash_errors(dmForm)
 
-    return redirect(url_for('users.directMessagesIndividual',
-                            userID=dmForm.target_user_id.data))
+    return dmForm.redirect()
 
 
 @users.route('/user/groups', methods=['GET', 'POST'])
