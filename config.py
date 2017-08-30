@@ -11,6 +11,7 @@ class Config:
     TRAP_BAD_REQUEST_ERRORS = True
 
     ADMINS = ['max@nexnest.com']
+    SSL_DISABLE = True
 
     # SERVER_NAME = '127.0.0.1:8000' # BREAKS CSRF TOKENS FOR LOCAL
     SECURITY_PASSWORD_SALT = os.environ.get('SECURITY_PASSWORD_SALT')
@@ -106,6 +107,7 @@ class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     DEBUG = False
     TESTING = False
+    SSL_DISABLE = False
 
 
 class UnixConfig(ProductionConfig):

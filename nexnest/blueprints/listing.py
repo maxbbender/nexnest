@@ -105,13 +105,24 @@ def createListing():
                                  first_semester_rent_due_date=form.first_semester_rent_due_date.data,
                                  second_semester_rent_due_date=form.second_semester_rent_due_date.data)
 
-            otherListingsWithSameAddress = session.query(Listing) \
-                .filter_by(street=newListing.street,
-                           city=newListing.city,
-                           state=newListing.state,
-                           zip_code=newListing.zip_code,
-                           ) \
-                .all()
+            otherListingsWithSameAddress = None
+            if newListing.property_type == 'apartment':
+                otherListingsWithSameAddress = session.query(Listing) \
+                    .filter_by(street=newListing.street,
+                               city=newListing.city,
+                               state=newListing.state,
+                               zip_code=newListing.zip_code,
+                               apartment_number=newListing.apartment_number
+                               ) \
+                    .all()
+            else:
+                otherListingsWithSameAddress = session.query(Listing) \
+                    .filter_by(street=newListing.street,
+                               city=newListing.city,
+                               state=newListing.state,
+                               zip_code=newListing.zip_code
+                               ) \
+                    .all()
 
             conflictingDates = False
             conflictingListing = None
@@ -393,13 +404,15 @@ def uploadPhotos(listingID):
             return redirect(url_for('listings.createListing'))
         elif form.nextAction.data == 'createCopy':
             flash('Listing Created!', 'success')
-            selectedSchools = session.query(ListingSchool).filter_by(listing=listingID).all()
-            # Get Pictures
-            return render_template('/landlord/createListing.html',
-                                   form=form,
-                                   title='Create Listing',
-                                   schools=allSchoolsAsStrings(),
-                                   selectedSchools=selectedSchools)
+            return redirect(url_for('listing.cloneListing', listingID=listingID))
+            # selectedSchools = ListingSchool.query.filter_by(listing_id=listingID).all()
+            # # Get Pictures
+            # form = ListingForm()
+            # return render_template('/landlord/createListing.html',
+            #                        form=form,
+            #                        title='Create Listing',
+            #                        schools=allSchoolsAsStrings(),
+            #                        selectedSchools=selectedSchools)
         else:
             app.logger.debug('Unknown nextAction : %s' % form.nextAction.data)
     else:
@@ -481,7 +494,6 @@ def uploadPhotos(listingID):
 
 
 @listings.route('/listing/search/AJAX', methods=['POST', 'GET'])
-@csrf.exempt
 def searchListingsAJAX():
     app.logger.debug("@listings.route('/listing/search/AJAX")
     postedJSON = request.get_json(force=True)
@@ -525,7 +537,7 @@ def searchListingsAJAX():
                                              or_(Listing.time_period == 'school',
                                                  Listing.time_period == 'year'))
         else:
-            summerPattern = re.compile(r"(\d{4}) Summer")
+            summerPattern = re.compile(r"(\d{4})")
             match = summerPattern.match(postedJSON['term'])
 
             if match:

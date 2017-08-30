@@ -40,6 +40,10 @@ def createApp(configName):
 
     login_manager.login_view = '/login'
 
+    if not app.config['SSL_DISABLE']:
+        from flask_sslify import SSLify
+        sslify = SSLify(app)
+
     @login_manager.user_loader
     def load_user(user_id):
         from nexnest.models.user import User
