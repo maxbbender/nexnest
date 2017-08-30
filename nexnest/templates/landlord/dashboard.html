@@ -2374,8 +2374,8 @@
 			$("#cartContents2").append(newItem2);
 			numberOfSelectedForCheckout++;
 			totalCost += price;
-			$("#checkoutTotal").text("$"+totalCost);
-			$("#checkoutTotal2").text("$"+totalCost);
+			$("#checkoutTotal").text("$"+totalCost.toFixed(2));
+			$("#checkoutTotal2").text("$"+totalCost.toFixed(2));
       	}else {
             $("#packageOptions"+id).hide();
             $("#deluxeLabel"+id).removeClass('active');
@@ -2385,8 +2385,8 @@
             $("#hrInCart2"+id).remove();
             numberOfSelectedForCheckout--;
 			totalCost -= price;
-			$("#checkoutTotal").text("$"+totalCost);
-			$("#checkoutTotal2").text("$"+totalCost);
+			$("#checkoutTotal").text("$"+totalCost.toFixed(2));
+			$("#checkoutTotal2").text("$"+totalCost.toFixed(2));
 			if(numberOfSelectedForCheckout == 0){
 				$("#nothingInCart").show();
 				$("#nothingInCart2").show();
@@ -2421,8 +2421,8 @@
 	    	$("#itemPrice"+id).text("$"+price);
 	    	$("#itemPrice2"+id).text("$"+price);
 	    	totalCost += (price-oldPrice);
-	    	$("#checkoutTotal").text("$"+totalCost);
-	    	$("#checkoutTotal2").text("$"+totalCost);
+	    	$("#checkoutTotal").text("$"+totalCost.toFixed(2));
+	    	$("#checkoutTotal2").text("$"+totalCost.toFixed(2));
 	    }
     }
 
@@ -2431,8 +2431,8 @@
     		$("#itemPrice"+id).text("$"+price);
 	    	$("#itemPrice2"+id).text("$"+price);
 	    	totalCost -= (oldPrice-price);
-	    	$("#checkoutTotal").text("$"+totalCost);
-	    	$("#checkoutTotal2").text("$"+totalCost);
+	    	$("#checkoutTotal").text("$"+totalCost.toFixed(2));
+	    	$("#checkoutTotal2").text("$"+totalCost.toFixed(2));
     	}	
     }
 

@@ -131,13 +131,20 @@
                                     </h5>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row" style="padding-top: 15px;">
                                 <div class="col-xs-2 col-md-1">
-                                    {{form.newsletter(class='form-control')}}            
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <label style="font-size: 1.5em">
+                                                {{form.newsletter(class='form-control')}}
+                                                <span class="cr"><i class="cr-icon fa fa-check" style="color: #4fac80;"></i></span>
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-xs-10 col-md-11" style="margin-top: 7px;">
-                                    <h5>
-                                       Sign up for our email newsletter
+                                    <h5 id="agreeToTermsText">
+                                        Sign up for our email newsletter
                                     </h5>
                                 </div>
                             </div>

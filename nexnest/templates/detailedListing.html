@@ -5,10 +5,10 @@
 		<div class="col-xs-12 col-md-8 col-lg-8">
 			<div class="row">
 				{% if listing.banner_photo_url %}
-					<a class="hidden-xs-down test-popup-link" href="{{pictures[0]}}" style="width: 100%;">
+					<a class="hidden-xs-down test-popup-link" href="{{bannerPhoto}}" style="width: 100%;">
 						<img src="{{bannerPhoto}}" style="height: 40vh; width: 90%; margin-left: 5%;">
 					</a>
-					<a class="hidden-sm-up test-popup-link" href="{{pictures[0]}}">
+					<a class="hidden-sm-up test-popup-link" href="{{bannerPhoto}}">
 						<img src="{{bannerPhoto}}" style="height: 30vh; width: 100%;">
 					</a>
 				 {% else %}
@@ -90,7 +90,7 @@
 			{% if listing.floor_plan_url %}
 				<div class="col-xs-12" style="text-align: right;">
 					<br>
-					<a class="btn btn-primary" href="{{listing.floor_plan_url}}">Floor Plan</a>
+					<a class="btn btn-blue" href="{{listing.floor_plan_url}}">Floor Plan</a>
 					{% if current_user.is_authenticated %}
 				{% endif %}
 				</div>			
@@ -106,7 +106,7 @@
                 </div>
 				<div class="row hidden-md-down">
 					<div class="col-xs-12 col-lg-3" style="text-align:left">
-						<a href="{{ url_for('indexs.index') }}" class="btn btn-light-green" style="font-size: 20px; width: 202px;">
+						<a href="#" data-toggle="modal" data-target="#sendDirectMessageModal" data-targetID="{{listing.landLordsAsUsers()[0].id}}" data-targetname="{{listing.landLordsAsUsers()[0].name}}" class="btn btn-light-green" style="font-size: 20px; width: 202px;">
 							<i class="icon icon-user-circle" style="margin-right: 5px; color: #fff;"></i>Contact Landlord
 						</a>
 					</div>
@@ -128,7 +128,7 @@
 				</div>
 				<div class="row hidden-lg-up">
 					<div class="col-xs-12 col-md-6 col-lg-3 col-centered">
-						<a href="{{ url_for('indexs.index') }}" class="btn btn-light-green" style="width: 160.31px;">
+						<a href="#" data-toggle="modal" data-target="#sendDirectMessageModal" data-targetID="{{listing.landLordsAsUsers()[0].id}}" data-targetname="{{listing.landLordsAsUsers()[0].name}}" class="btn btn-light-green" style="width: 160.31px;">
 							<i class="icon icon-user-circle" style="margin-right: 5px; color: #fff;"></i>Contact Landlord
 						</a>
 					</div>
@@ -197,7 +197,7 @@
 							<br>
 							{{ listing.num_full_baths }} Full Bath{% if listing.num_full_baths > 1 %}s{% endif %}
 						</div>
-						{% if listing.num_half_baths > 0 %}
+						{% if listing.num_half_baths %}
 							<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
 								<i class="fa fa-shower fa-3x" aria-hidden="true"></i>
 								<br>
@@ -495,67 +495,64 @@
 				</div>
 			</div>
 			<hr style="padding-bottom: 15px;">
-		{% if current_user.is_authenticated %}
-			{% if not current_user in listing.landLordsAsUsers() %}
-				<div class="col-xs-12" style="text-align: right;">
-					
-				</div>
-			{% endif %}
-		{% endif %}
 	</div>
 
 	<!-- Suggest Listing Modal -->
 		<div class="modal fade" id="suggestListingModal" tabindex="-1" role="dialog" aria-labelledby="suggestListingModal" aria-hidden="true">
 		  	<div class="modal-dialog" role="document">
-		    	<div class="modal-content">
-		      		<div class="modal-header">
+		    	<div class="modal-content nexnest-font" style="color: #656264;">
+		      		<div class="modal-header" style="background-color: #d2d2d2;">
 		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		          			<span aria-hidden="true">&times;</span>
 		        		</button>
-		        		<h4 class="modal-title" id="login"></h4>
+		        		<h4 class="modal-title" id="login">Add to Group</h4>
 		      		</div>
 		      		<div class="modal-body">
 		      			<div class="row">
 		      				<div class="col-xs-1"></div>
 		      				<div class="col-xs-10">
 		      					{% if current_user.is_authenticated %}
-		      					{% if not current_user.isLandlord %}
-		      					{% for group in groups %}
-			      					<div class="card" style="width:100%;">
-			      					    <h3 class="card-header">{{ group.name }}</h3>
-			      					    <div class="card-block">	        
-			      					        <p class="card-text">
-			      					        	<strong>Group Leader:</strong>{{ group.leader.fname }} {{ group.leader.lname }}
-			      					        </p>
-			      					    	<p class="card-text">
-			      					    		<strong>Intended Lease Period:</strong> {{group.target_time_period}}
-			      					    	</p>
-			      					    	<p class="card-text">
-			      					    		<strong><a href=# id="allMembersToggle{{group.id}}">See all members</a></strong>
-			      					    		<div id="allMembers{{group.id}}" style="display: none;">
-		      					    				{% for user in group.acceptedUsers %}
-		      					    			    	<li>{{ user.fname }} {{ user.lname }}</li>
-		      					    			    {% endfor %}
-			      					    		</div>
-			      					    	</p>	      					    	
-					      					<button class="btn btn-primary" onClick="favoriteLisitng({{group.id}}, {{listing.id}})" data-dismiss="modal">Favorite Listing</button>
-			      					    </div>
-			      					</div>
-			      					<script>
-			      						//Suggest Listing Modal
-			      						$('#suggestListingModal').on('show.bs.modal', function (event) {
-			      						  var button = $(event.relatedTarget)
-			      						  var modal = $(this)
-			      						  modal.find('.modal-title').text('Suggest to Which Group?')
-			      						})
+			      					{% if not current_user.isLandlord %}
+				      					{% if groups %}
+					      					{% for group in groups %}
+						      					<div class="card" style="width:100%;">
+						      					    <h3 class="card-header">{{ group.name }}</h3>
+						      					    <div class="card-block">	        
+						      					        <p class="card-text">
+						      					        	<strong>Group Leader:</strong>{{ group.leader.fname }} {{ group.leader.lname }}
+						      					        </p>
+						      					    	<p class="card-text">
+						      					    		<strong>Intended Lease Period:</strong> {{group.target_time_period}}
+						      					    	</p>
+						      					    	<p class="card-text">
+						      					    		<strong><a href=# id="allMembersToggle{{group.id}}">See all members</a></strong>
+						      					    		<div id="allMembers{{group.id}}" style="display: none;">
+					      					    				{% for user in group.acceptedUsers %}
+					      					    			    	<li>{{ user.fname }} {{ user.lname }}</li>
+					      					    			    {% endfor %}
+						      					    		</div>
+						      					    	</p>	      					    	
+								      					<button class="btn btn-primary" onClick="favoriteLisitng({{group.id}}, {{listing.id}})" data-dismiss="modal">Favorite Listing</button>
+						      					    </div>
+						      					</div>
+						      					<script>
+						      						//Suggest Listing Modal
+						      						$('#suggestListingModal').on('show.bs.modal', function (event) {
+						      						  var button = $(event.relatedTarget)
+						      						  var modal = $(this)
+						      						  modal.find('.modal-title').text('Suggest to Which Group?')
+						      						})
 
-			      						//Show/hide all members of group
-			      						$("#allMembersToggle{{group.id}}").click(function(){
-			      						    $("#allMembers{{group.id}}").toggle();
-			      						});
-			      					</script>
-		      					{% endfor %}
-		      					{% endif %}
+						      						//Show/hide all members of group
+						      						$("#allMembersToggle{{group.id}}").click(function(){
+						      						    $("#allMembers{{group.id}}").toggle();
+						      						});
+						      					</script>
+					      					{% endfor %}
+					      				{% else %}
+					      					<h3>You first need to be in a group. <a href="{{ url_for('users.myGroups') }}">Create one!</a></h3>
+					      				{% endif %}
+			      					{% endif %}
 		      					{% endif %}
 		      				</div>
 		      			</div>
@@ -570,8 +567,8 @@
 		<!-- Tour Request Select Group Modal -->
 		<div class="modal fade" id="selectGroupForTourModal" tabindex="-1" role="dialog" aria-labelledby="selectGroupForTourModal" aria-hidden="true">
 		  	<div class="modal-dialog" role="document">
-		    	<div class="modal-content">
-		      		<div class="modal-header">
+		    	<div class="modal-content nexnest-font" style="color: #656264;">
+		      		<div class="modal-header" style="background-color: #d2d2d2;">
 		      			<strong>Select Which Group You're Requesting this Tour for:</strong>
 		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		          			<span aria-hidden="true">&times;</span>
@@ -583,37 +580,41 @@
 		      				<div class="col-xs-1"></div>
 		      				<div class="col-xs-10">
 		      					{% if current_user.is_authenticated %}
-		      					{% if not current_user.isLandlord %}
-		      					{% for group in groups %}
-			      					<div class="card" style="width:100%;">
-			      					    <h3 class="card-header">{{ group.name }}</h3>
-			      					    <div class="card-block">	        
-			      					        <p class="card-text">
-			      					        	<strong>Group Leader:</strong>{{ group.leader.fname }} {{ group.leader.lname }}
-			      					        </p>
-			      					    	<p class="card-text">
-			      					    		<strong>Intended Lease Period:</strong> {{group.target_time_period}}
-			      					    	</p>
-			      					    	<p class="card-text">
-			      					    		<strong><a href=# id="allTourMembersToggle{{group.id}}">See all members</a></strong>
-			      					    		<div id="allTourMembers{{group.id}}" style="display: none;">
-		      					    				{% for user in group.acceptedUsers %}
-		      					    			    	<li>{{ user.fname }} {{ user.lname }}</li>
-		      					    			    {% endfor %}
-			      					    		</div>
-			      					    	</p>
-			      					    	<!-- If group.hasTourForLisiting -->
-					      					<button class="btn btn-primary" data-toggle="modal" data-target="#requestTourModal" data-group="{{group.id}}" data-dismiss="modal">Select Group</button>
-			      					    </div>
-			      					</div>
-			      					<script>
-			      						//Show/hide all members of group
-			      						$("#allTourMembersToggle{{group.id}}").click(function(){
-			      						    $("#allTourMembers{{group.id}}").toggle();
-			      						});
-			      					</script>
-		      					{% endfor %}
-		      					{% endif %}
+			      					{% if not current_user.isLandlord %}
+			      						{% if groups %}
+					      					{% for group in groups %}
+						      					<div class="card" style="width:100%;">
+						      					    <h3 class="card-header">{{ group.name }}</h3>
+						      					    <div class="card-block">	        
+						      					        <p class="card-text">
+						      					        	<strong>Group Leader:</strong>{{ group.leader.fname }} {{ group.leader.lname }}
+						      					        </p>
+						      					    	<p class="card-text">
+						      					    		<strong>Intended Lease Period:</strong> {{group.target_time_period}}
+						      					    	</p>
+						      					    	<p class="card-text">
+						      					    		<strong><a href=# id="allTourMembersToggle{{group.id}}">See all members</a></strong>
+						      					    		<div id="allTourMembers{{group.id}}" style="display: none;">
+					      					    				{% for user in group.acceptedUsers %}
+					      					    			    	<li>{{ user.fname }} {{ user.lname }}</li>
+					      					    			    {% endfor %}
+						      					    		</div>
+						      					    	</p>
+						      					    	<!-- If group.hasTourForLisiting -->
+								      					<button class="btn btn-primary" data-toggle="modal" data-target="#requestTourModal" data-group="{{group.id}}" data-dismiss="modal">Select Group</button>
+						      					    </div>
+						      					</div>
+						      					<script>
+						      						//Show/hide all members of group
+						      						$("#allTourMembersToggle{{group.id}}").click(function(){
+						      						    $("#allTourMembers{{group.id}}").toggle();
+						      						});
+						      					</script>
+					      					{% endfor %}
+					      				{% else %}
+					      					<h3>You first need to be in a group. <a href="{{ url_for('users.myGroups') }}">Create one!</a></h3>
+					      				{% endif %}
+			      					{% endif %}
 		      					{% endif %}
 		      				</div>
 		      			</div>
@@ -628,8 +629,8 @@
 		<!--Request Tour Modal-->
 		<div class="modal fade" id="requestTourModal" tabindex="-1" role="dialog" aria-labelledby="requestTour" aria-hidden="true" style="display: absolute;">
 		  	<div class="modal-dialog" role="document">
-		    	<div class="modal-content">
-		      		<div class="modal-header">		      		
+		    	<div class="modal-content nexnest-font" style="color: #656264;">
+		      		<div class="modal-header" style="background-color: #d2d2d2;">		      		
 		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		          			<span aria-hidden="true">&times;</span>
 		        		</button>
@@ -665,7 +666,7 @@
 		      			<div id="groupNumber" style="display: none;"></div>
 		      		</div>
 			      	<div class="modal-footer">
-			        	<button type="button" class="btn btn-primary" onClick="submitTourForm()" data-dismiss="modal">Request Tour</button>
+			        	<button type="button" class="btn btn-blue" onClick="submitTourForm()" data-dismiss="modal">Request Tour</button>
 			      	</div>
 		    	</div>
 		  	</div>
@@ -674,8 +675,8 @@
 		<!-- House Request Select Group Modal -->
 		<div class="modal fade" id="selectGroupForHouseModal" tabindex="-1" role="dialog" aria-labelledby="selectGroupForHouseModal" aria-hidden="true">
 		  	<div class="modal-dialog" role="document">
-		    	<div class="modal-content">
-		      		<div class="modal-header">
+		    	<div class="modal-content nexnest-font" style="color: #656264;">
+		      		<div class="modal-header" style="background-color: #d2d2d2;">
 		      			<strong>Select Which Group You're Requesting this {{listing.property_type}} for:</strong>
 		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		          			<span aria-hidden="true">&times;</span>
@@ -687,37 +688,41 @@
 		      				<div class="col-xs-1"></div>
 		      				<div class="col-xs-10">
 		      					{% if current_user.is_authenticated %}
-		      					{% if not current_user.isLandlord %}
-		      					{% for group in groups %}
-			      					<div class="card" style="width:100%;">
-			      					    <h3 class="card-header">{{ group.name }}</h3>
-			      					    <div class="card-block">	        
-			      					        <p class="card-text">
-			      					        	<strong>Group Leader:</strong>{{ group.leader.fname }} {{ group.leader.lname }}
-			      					        </p>
-			      					    	<p class="card-text">
-			      					    		<strong>Intended Lease Period:</strong> {{group.target_time_period}}
-			      					    	</p>
-			      					    	<p class="card-text">
-			      					    		<strong><a href=# id="allHouseRequestMembersToggle{{group.id}}">See all members</a></strong>
-			      					    		<div id="allHouseRequestMembers{{group.id}}" style="display: none;">
-		      					    				{% for user in group.acceptedUsers %}
-		      					    			    	<li>{{ user.fname }} {{ user.lname }}</li>
-		      					    			    {% endfor %}
-			      					    		</div>
-			      					    	</p>
-			      					    	<!-- If group.hasTourForLisiting -->
-					      					<button class="btn btn-primary" data-toggle="modal" data-target="#requestHouseModal" data-group="{{group.id}}" data-dismiss="modal">Select Group</button>
-			      					    </div>
-			      					</div>
-			      					<script>
-			      						//Show/hide all members of group
-			      						$("#allHouseRequestMembersToggle{{group.id}}").click(function(){
-			      						    $("#allHouseRequestMembers{{group.id}}").toggle();
-			      						});
-			      					</script>
-		      					{% endfor %}
-		      					{% endif %}
+			      					{% if not current_user.isLandlord %}
+			      						{% if groups %}
+					      					{% for group in groups %}
+						      					<div class="card" style="width:100%;">
+						      					    <h3 class="card-header">{{ group.name }}</h3>
+						      					    <div class="card-block">	        
+						      					        <p class="card-text">
+						      					        	<strong>Group Leader:</strong>{{ group.leader.fname }} {{ group.leader.lname }}
+						      					        </p>
+						      					    	<p class="card-text">
+						      					    		<strong>Intended Lease Period:</strong> {{group.target_time_period}}
+						      					    	</p>
+						      					    	<p class="card-text">
+						      					    		<strong><a href=# id="allHouseRequestMembersToggle{{group.id}}">See all members</a></strong>
+						      					    		<div id="allHouseRequestMembers{{group.id}}" style="display: none;">
+					      					    				{% for user in group.acceptedUsers %}
+					      					    			    	<li>{{ user.fname }} {{ user.lname }}</li>
+					      					    			    {% endfor %}
+						      					    		</div>
+						      					    	</p>
+						      					    	<!-- If group.hasTourForLisiting -->
+								      					<button class="btn btn-primary" data-toggle="modal" data-target="#requestHouseModal" data-group="{{group.id}}" data-dismiss="modal">Select Group</button>
+						      					    </div>
+						      					</div>
+						      					<script>
+						      						//Show/hide all members of group
+						      						$("#allHouseRequestMembersToggle{{group.id}}").click(function(){
+						      						    $("#allHouseRequestMembers{{group.id}}").toggle();
+						      						});
+						      					</script>
+					      					{% endfor %}
+					      				{% else %}
+					      					<h3>You first need to be in a group. <a href="{{ url_for('users.myGroups') }}">Create one!</a></h3>
+					      				{% endif %}
+			      					{% endif %}
 		      					{% endif %}
 		      				</div>
 		      			</div>
@@ -732,8 +737,8 @@
 		<!--Request House Modal-->
 		<div class="modal fade" id="requestHouseModal" tabindex="-1" role="dialog" aria-labelledby="requestHouse" aria-hidden="true">
 		  	<div class="modal-dialog" role="document">
-		    	<div class="modal-content">
-		      		<div class="modal-header">
+		    	<div class="modal-content nexnest-font" style="color: #656264;">
+		      		<div class="modal-header" style="background-color: #d2d2d2;">
 		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		          			<span aria-hidden="true">&times;</span>
 		        		</button>
@@ -755,7 +760,7 @@
 		      			<div id="groupNumberHouse" style="display: none;"></div>
 		      		</div>
 			      	<div class="modal-footer">
-			        	<button type="button" class="btn btn-primary" onClick="submitHouseForm()" data-dismiss="modal">Request House</button>
+			        	<button type="button" class="btn btn-blue" onClick="submitHouseForm()" data-dismiss="modal">Request House</button>
 			      	</div>
 		    	</div>
 		  	</div>
