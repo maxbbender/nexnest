@@ -83,11 +83,14 @@ class NotificationPreference(Base):
     group_listing_favorite_notification = db.Column(db.Boolean)  # D
     group_listing_favorite_email = db.Column(db.Boolean)  # D
 
+    newsletter_email = db.Column(db.Boolean)
+
     user = relationship('User', back_populates='notificationPreference')
 
     def __init__(
             self,
-            user
+            user,
+            newsletter=False
     ):
 
         self.user = user
@@ -162,6 +165,8 @@ class NotificationPreference(Base):
 
         self.group_listing_favorite_notification = True
         self.group_listing_favorite_email = False
+
+        self.newsletter_email = newsletter
 
     def __repr__(self):
         return '<NotificationPreferences %d | User %r>' % (self.id, self.user)

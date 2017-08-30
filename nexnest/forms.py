@@ -180,8 +180,6 @@ class CreateGroupForm(RedirectForm):
     name = StringField('Group Name:', [Length(min=2, max=50), InputRequired()])
     time_frame = SelectField(
         'When are you looking to rent?', choices=valid_time_frames)
-    #start_date = DateField('Start Date', format='%Y-%m-%d')
-    #end_date = DateField('End Date', format='%Y-%m-%d')
 
 
 class GroupMessageForm(RedirectForm):
@@ -317,6 +315,7 @@ class EmailPreferencesForm(RedirectForm):
     house_notification = BooleanField('house')
     group_listing_accept_notification = BooleanField('group_listing_accept')
     group_listing_deny_notification = BooleanField('group_listing_deny')
+    newsletter_email = BooleanField('newsletter')
 
 
 class ReportForm(RedirectForm):
