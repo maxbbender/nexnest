@@ -40,7 +40,6 @@ class User(Base):
     active = db.Column(db.Boolean)
     email_confirmed = db.Column(db.Boolean)
     landlord_info_filled = db.Column(db.Boolean)
-    newsletter = db.Column(db.Boolean)
 
     # Relationships
     recievedDM = relationship('DirectMessage',

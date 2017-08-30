@@ -179,7 +179,6 @@ class Listing(Base):
         self.active = active  # Landlords have to activate listing
         self.show = show
         self.time_period = time_period
-
         self.parking = parking
         self.property_type = property_type
         self.rent_due = rent_due
@@ -270,7 +269,8 @@ class Listing(Base):
             'street': self.street,
             'startDate': self.start_date.strftime("%B %d, %Y"),
             'endDate': self.end_date.strftime("%B %d, %Y"),
-            'url': '/listing/view/%d' % self.id
+            'url': '/listing/view/%d' % self.id,
+            'humanTimePeriod': self.humanTimePeriod
         }
 
     @property
@@ -317,6 +317,7 @@ class Listing(Base):
             'featured': self.featured,
             'timePeriod': self.time_period,
             'timePeriodDateRange': self.time_period_date_range,
+            'humanTimePeriod': self.humanTimePeriod,
             'priceTerm': self.rent_due,
             'bannerPhotoURL': self.banner_photo_url,
             'lat': float(self.lat),

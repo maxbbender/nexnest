@@ -1,6 +1,7 @@
 from nexnest import db
 
 from nexnest.models.report import Report
+from nexnest.models.user import User
 
 
 class PlatformReport(Report):
@@ -15,9 +16,13 @@ class PlatformReport(Report):
             self,
             title,
             content,
-            user,
+            user=None,
             sourceURL=None,
     ):
+
+        if user is None:
+            user = User.query.first()
+
         super().__init__(
             title=title,
             content=content,

@@ -74,15 +74,14 @@ def register():
                                    password=registerForm.password.data,
                                    fname=registerForm.fname.data,
                                    lname=registerForm.lname.data,
-                                   landlord_info_filled=False,
-                                   newsletter=registerForm.newsletter.data)
+                                   landlord_info_filled=False)
                     session.add(newUser)
                     session.commit()
 
                     # Make them a Landlord
 
                     # Notification Preference Table init
-                    session.add(NotificationPreference(user=newUser))
+                    session.add(NotificationPreference(user=newUser, newsletter=registerForm.newsletter.data))
                     session.commit()
 
                     newLandlord = Landlord(newUser)
@@ -100,13 +99,12 @@ def register():
                                        password=registerForm.password.data,
                                        fname=registerForm.fname.data,
                                        lname=registerForm.lname.data,
-                                       school=school,
-                                       newsletter=registerForm.newsletter.data)
+                                       school=school)
                         session.add(newUser)
                         session.commit()
 
                         # Notification Preference Table init
-                        session.add(NotificationPreference(user=newUser))
+                        session.add(NotificationPreference(user=newUser, newsletter=registerForm.newsletter.data))
                         session.commit()
 
                         # emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(newUser.email), _external=True)
@@ -333,6 +331,7 @@ def viewUser(userID):
                 currentPreferences.group_listing_notification = form.group_listing_notification.data
                 currentPreferences.group_listing_accept_notification = form.group_listing_accept_notification.data
                 currentPreferences.group_listing_deny_notification = form.group_listing_deny_notification.data
+                currentPreferences.newsletter_email = form.newsletter_email.data
                 session.commit()
 
                 flash('Preferences Updated', 'success')
@@ -555,11 +554,11 @@ def createDirectMessage():
 
         newDM.genNotifications()
         session.commit()
+        flash('Message sent!', 'success')
     else:
         flash_errors(dmForm)
 
-    return redirect(url_for('users.directMessagesIndividual',
-                            userID=dmForm.target_user_id.data))
+    return dmForm.redirect()
 
 
 @users.route('/user/groups', methods=['GET', 'POST'])

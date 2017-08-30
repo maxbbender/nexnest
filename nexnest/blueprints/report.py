@@ -26,13 +26,22 @@ def createPlatformReport():
     form = PlatformReportForm()
 
     if form.validate_on_submit():
-        newPlatformReport = PlatformReport(title=form.title.data,
-                                           content=form.content.data,
-                                           user=current_user,
-                                           sourceURL=form.sourceURL.data)
+        if current_user.is_authenticated:
+            newPlatformReport = PlatformReport(title=form.title.data,
+                                               content=form.content.data,
+                                               user=current_user,
+                                               sourceURL=form.sourceURL.data)
 
-        session.add(newPlatformReport)
-        session.commit()
+            session.add(newPlatformReport)
+            session.commit()
+        else:
+            newPlatformReport = PlatformReport(title=form.title.data,
+                                               content=form.content.data,
+                                               user=None,
+                                               sourceURL=form.sourceURL.data)
+
+            session.add(newPlatformReport)
+            session.commit()
 
         flash('Your report has been forwarded to NexNest Administrators!', 'success')
     else:

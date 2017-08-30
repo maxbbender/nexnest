@@ -94,7 +94,7 @@ class LandlordMoreInfoForm(RedirectForm):
     state = SelectField('State', choices=statesLong)
     zip_code = StringField('Zipcode', [Length(min=5, max=5), InputRequired()])
     user_id = HiddenField('user')
-    phone = StringField('Phone Number', [Length(min=10,max=10)])
+    phone = StringField('Phone Number', [Length(10, 10, 'Phone number must be 10 digits long')])
     availabilities = HiddenField('availabilities', validators=[Optional()])
     check_pay = BooleanField('Do you accept rent payments via checks?')
     online_pay = BooleanField('Do you accept rent payments through NexNest?')
@@ -180,8 +180,6 @@ class CreateGroupForm(RedirectForm):
     name = StringField('Group Name:', [Length(min=2, max=50), InputRequired()])
     time_frame = SelectField(
         'When are you looking to rent?', choices=valid_time_frames)
-    #start_date = DateField('Start Date', format='%Y-%m-%d')
-    #end_date = DateField('End Date', format='%Y-%m-%d')
 
 
 class GroupMessageForm(RedirectForm):
@@ -215,7 +213,7 @@ class LandlordEditAccountForm(EditAccountForm):
     state = SelectField('State', choices=statesLong)
     zip_code = StringField('Zip Code')
     date_of_birth = HiddenField('Date of Birth', [InputRequired()])
-    phone = StringField('Phone Number')
+    phone = StringField('Phone Number', [Length(10, 10, 'Phone number must be 10 digits long')])
 
 
 class InviteGroupForm(RedirectForm):
@@ -317,6 +315,7 @@ class EmailPreferencesForm(RedirectForm):
     house_notification = BooleanField('house')
     group_listing_accept_notification = BooleanField('group_listing_accept')
     group_listing_deny_notification = BooleanField('group_listing_deny')
+    newsletter_email = BooleanField('newsletter')
 
 
 class ReportForm(RedirectForm):
@@ -357,6 +356,6 @@ class CreateCouponForm(RedirectForm):
 
 class ContactForm(RedirectForm):
     name = StringField('Full Name')
-    phone = StringField('Phone Number', validators=[Optional()])
+    phone = StringField('Phone Number', validators=[Optional(), Length(10, 10, 'Phone number must be 10 digits long')])
     message = TextAreaField('Message')
     email = StringField('Email Address', validators=[Email()])

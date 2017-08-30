@@ -46,8 +46,13 @@ class AdminModelView(ModelView):
     column_display_pk = True
 
     def is_accessible(self):
-        return True
-        # return current_user.isAdmin # TURN ON FOR PRODUCTION
+        if app.config['TESTING'] or app.config['DEBUG']:
+            return True
+        else:
+            if current_user.is_authenticated:
+                return current_user.isAdmin
+            else:
+                return False
 
     def inaccessible_callback(self, name, **kwargs):
         # redirect to login page if user doesn't have access

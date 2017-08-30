@@ -14,7 +14,7 @@ sudo apt-get install -y postgresql postgresql-contrib
 echo 'export MAIL_USERNAME="no_reply@nexnest.com"'  >> /home/vagrant/.bashrc
 echo 'export MAIL_PASSWORD="t6OtmrY77AEEeEn"'  >> /home/vagrant/.bashrc
 echo 'export GOOGLE_MAPS_KEY="AIzaSyAaosOp5nB3yMtx8-k-_MbLwxS1MGnwg_c"'  >> /home/vagrant/.bashrc
-echo 'export GOOGLE_CAPTCHA_KEY="6LcjSy0UAAAAAPJpuJ4r1uD2nwtDIshTgGkg9Ywa"'  >> /home/vagrant/.bashrc
+echo 'export GOOGLE_CAPTCHA_SECRET="6LcjSy0UAAAAAPJpuJ4r1uD2nwtDIshTgGkg9Ywa"'  >> /home/vagrant/.bashrc
 echo 'export SECURITY_PASSWORD_SALT="domislove"'  >> /home/vagrant/.bashrc
 echo 'export SECRET_KEY="domislove"'  >> /home/vagrant/.bashrc
 echo 'export FLASK_CONFIG="development"'  >> /home/vagrant/.bashrc
