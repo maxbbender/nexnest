@@ -243,7 +243,11 @@
                                                 <a class="btn input-btn" style="border-color: #ddd;" data-toggle><i class="fa fa-calendar" aria-hidden="true"></i></a>
                                                 <a class="btn input-btn" style="border-color: #ddd;" data-clear><i class="fa fa-times" aria-hidden="true"></i></a>
                                             </p>
-                                            <!--  <input id="start_date" name="start_date" maxlength="100" type="date" required="required" class="form-control" /> -->
+                                            <p id="start_date_before_previous_listing_end_date" style="display: none;" class="form-text text-muted">
+                                                *You are trying to create another listing for this property, but the lease dates overlap
+                                                <br>
+                                                <span id="previousListingDates">
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
@@ -809,34 +813,6 @@
     <script>
     $(document).ready(function() {
 
-        // flatpickr(".flatpickr", {
-        //     wrap: true,
-        //     disable: [{
-        //         from: "0001-01-01",
-        //         to: "today"
-        //     }]
-        // });
-        // var startLeaseFlat =  flatpickr("#start", {
-        //     wrap: true,
-        //     disable: [{
-        //         from: "0001-01-01",
-        //         to: "today"
-        //     }],
-        //     onChange: function(dateStr, dateObj) {
-        //         end.value = dateStr;
-        //         //endLeaseFlat.set("minDate", dateObj);
-        //         endLeaseFlat.setDate(dateStr); // Set to the exact date
-        //     }
-        // });
-        // var endLeaseFlat = flatpickr("#end", {
-        //     wrap: true,
-        //     defaultDate: "2018-10-20",
-        //     disable: [{
-        //         from: "0001-01-01",
-        //         to: "today"
-        //     }]
-        // });
-
         var startLeaseFlat = new Flatpickr(document.getElementById('start'), {
             wrap: true,
             altInput: true,
@@ -849,7 +825,7 @@
               var m = moment(dateObj);
               //determine length of lease period
               if($("#time_period").val()=="school"){
-                  m.add(8, 'M');
+                  m.add(9, 'M');
               }
               else if($("#time_period").val()=="year"){
                   m.add(1, 'y');
@@ -914,6 +890,15 @@
             }]
           }
         );
+
+        //If clone listing, prefill lease start date
+        {% if endDate %}
+            var oldEnd = new Date("{{endDate}}");
+            console.log("oldEnd: " + oldEnd);
+            var m = moment(oldEnd);
+            m.add(2, 'd');
+            startLeaseFlat.setDate(m.format()); // Set to the exact date
+        {% endif %}
 
         $('.flatpickr-calendar').css('z-index', 99999999999999);
         //Determine wether or not to show the apartment # field
@@ -1154,6 +1139,8 @@
                             errorExists = true;
                             $("#leaseStartDateInput").closest(".form-group").addClass("has-error");
                             $("#leaseStartDateInput").closest(".form-group").addClass("has-danger");
+                            $("#start_date_before_previous_listing_end_date").show();
+                            $("#previousListingDates").text("The previous lease ends : " + oldEnd)
                         }
                         else{
                             if(errorExists == false){
