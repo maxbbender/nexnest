@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
     <br>
-    <div class="row m-x-auto">
+    <div class="row m-x-auto nexnest-font" style="font-size: 20px; color: #656264">
         <div class="col-xs-1 col-sm-2 col-md-2 col-lg-2 col-xl-4">
         </div>
         <div class="col-xs-10 col-sm-8 col-md-8 col-lg-8 col-xl-4">
             <div class="row">
                 <div class="card" style="width:100%; border: none;">
-                    <h3 class="card-header">Login to NexNest</h3>
+                    <h3 class="card-header" style="background-color: #d2d2d2;">Sign In to NexNest</h3>
                     <div class="card-block">
         				{% from "_formhelpers.html" import render_field %}
         				<form action="{{url_for('users.login')}}" method="POST">
@@ -18,8 +18,8 @@
 							  	</dl>
                                 {{login_form.next}}
 							  	<div class="row" style="float: right;">
-                                    <a href="{{url_for('users.register')}}" class="btn btn-primary" style="margin-right: 15px;">Need to Register?</a>
-							  		<input type='submit' value='Login' class="btn btn-primary">
+                                    <a href="{{url_for('users.register')}}" class="btn btn-blue" style="margin-right: 15px;">Need to Sign Up?</a>
+							  		<input type='submit' value='Sign In' class="btn btn-light-green">
 							  	</div>
         				</form>            
                     </div>

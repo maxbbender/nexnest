@@ -412,7 +412,7 @@
 				</div>
 			</div>		
 		</div>
-		<div id="map" class="hidden-lg-down col-xl-5" style="height: 80vh; position: fixed; left: 58vw;">
+		<div id="map" class="hidden-lg-down col-xl-5" style="height: 80vh; position: sticky; left: 58vw; top: 0;">
 		</div>
 		<div id="legend"><h3>Legend</h3></div>
 	</div>
@@ -439,19 +439,13 @@
   		};
 
 	$( document ).ready(function() {
-		//$('#map').scrollToFixed({ limit: $(".footer") });
 		var sessionStorageSchool = sessionStorage.getItem('school');
 		var sessionStorageBedrooms = sessionStorage.getItem('bedrooms');
 		var sessionStorageTerm = sessionStorage.getItem('term');
 		var sessionStorageMinPrice = sessionStorage.getItem('minprice');
 		var sessionStorageMaxPrice = sessionStorage.getItem('maxprice');
 		var sessionStorageSortBy = sessionStorage.getItem('sortby');
-		// console.log(sessionStorageSchool);
-		// console.log(sessionStorageBedrooms);
-		// console.log(sessionStorageTerm);
-		// console.log(sessionStorageMinPrice);
-		// console.log(sessionStorageMaxPrice);
-		// console.log(sessionStorageSortBy);
+
 		if(sessionStorageSchool != undefined){
 			$('#school').val(sessionStorageSchool);
 			$('#school2').val(sessionStorageSchool);
@@ -870,21 +864,6 @@
 		}
 	});
 
-	// $( function() {
-	//     var listingAddresses = [
-	//       {value: "76 Taylor Avenue, Poughkeepsie NY 12601", listingID: 5},
-	//       {value: "7 Trap Lane, Poughkeepsie NY 12601", listingID: 2},
-	//       {value: "25 Myrtle Lane, East Patchogue NY 11772", listingID: 2}
-	//     ];
-	//     $("input#addressSearch").autocomplete({
-	//     	  source: listingAddresses,
-	//     	  select: function(event, ui) { 
-	//     	    $("#addressSearch").val("76 Taylor Avenue");
-	//     	    window.location.href = "/listing/view/"+ui.item.listingID;
-	//     	}
-	//     })
-	//   } );
-
 	$(document).on('click', ".listingFavorite", function() {
   		var id = $(this).attr("id");
   		id = id.split("_")[1];
@@ -1006,7 +985,7 @@
   		//add school pin
   		addMarker(99999, lat, long, "school", "");
   		//this fixed display issue
-  		$("#map").css('position', 'fixed');
+  		$("#map").css('position', 'sticky');
   		$("#mapView").css('position', 'absolute');
   		console.log('try resize');
   		google.maps.event.trigger(map, "resize");
