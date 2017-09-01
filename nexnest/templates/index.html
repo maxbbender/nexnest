@@ -502,6 +502,11 @@
     	var prices = $("#priceSlider").val().split(',');
 		filters.minPrice = parseInt(prices[0], 10);
 		filters.maxPrice = parseInt(prices[1], 10);
+
+		sessionStorage.setItem('school', $("#school option:selected").text());
+    	sessionStorage.setItem('term', $("#when option:selected").val());
+    	sessionStorage.setItem('bedrooms', $("#rooms option:selected").val());
+
 		$("#listingsGoHere").LoadingOverlay("show", {
 		    image       : "",
 		    fontawesome : "fa fa-spinner fa-spin"
