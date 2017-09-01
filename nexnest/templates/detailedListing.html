@@ -85,17 +85,7 @@
 						Per Bedroom Per <span style="text-transform: capitalize;">{{ listing.rent_due }}</span>
 					</h4>
 				</div>
-			</div>
-			<div class="row">
-			{% if listing.floor_plan_url %}
-				<div class="col-xs-12" style="text-align: right;">
-					<br>
-					<a class="btn btn-blue" href="{{listing.floor_plan_url}}">Floor Plan</a>
-					{% if current_user.is_authenticated %}
-				{% endif %}
-				</div>			
-			{% endif %}
-			</div>
+			</div>			
 			{% if current_user.is_authenticated %}
 				{% if not current_user in listing.landLordsAsUsers() %}
 				<hr>
@@ -167,6 +157,18 @@
 				</div>
 				<div class="col-sm-8">
 					{{ listing.description }}
+					<div class="row" style="padding-top: 15px; padding-bottom: 15px;">
+						<div class="col-xs-12 col-md-6">
+							{% if listing.youtube_url %}
+								Video: <a href="{{listing.youtube_url}}" target="_blank" style="margin-top: 15px; padding-bottom: 15px;">{{listing.youtube_url}}</a>
+							{% endif %}
+						</div>
+						<div class="col-xs-12 col-md-6">
+							{% if listing.floor_plan_url %}
+								<a class="btn btn-blue" href="{{listing.floor_plan_url}}" style="margin-top: 15px; margin-bottom: 15px;">Floor Plan</a>
+							{% endif %}
+						</div>						
+					</div>
 				</div>
 			</div>
 			<hr>
