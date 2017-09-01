@@ -416,11 +416,11 @@ def editAccountInfo():
                                schools=schools)
 
 
-@users.route('/user/search/<username>')
+@users.route('/user/search/<email>')
 @login_required
 def searchForUser(username):
     usersToReturn = session.query(User).filter(func.lower(
-        User.username).like(func.lower(username + "%"))).all()
+        User.email).like(func.lower(email + "%"))).all()
 
     return jsonify(users=[i.serialize for i in usersToReturn])
 
@@ -702,7 +702,7 @@ def getMessageNotifications(page=1):
     compiledMessages = []
     allDirect = directMessage.all()
     allGeneric = genericMessage.all()
-    
+
     compiledMessages.extend(allDirect)
     compiledMessages.extend(allGeneric)
 

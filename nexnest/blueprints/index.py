@@ -23,13 +23,6 @@ def index():
     allListings = session.query(Listing).all()
     featuredListings = session.query(Listing).all()
 
-    if request.method == 'POST' and form.validate():
-        # user = User(form.username.data, form.email.data,
-        #            form.password.data)
-        # db_session.add(user)
-        flash('Login Successfull')
-        return redirect(url_for('indexs.index'))
-
     return render_template('index.html',
                            form=form,
                            listings=allListings,

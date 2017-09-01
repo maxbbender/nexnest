@@ -21,7 +21,6 @@ from pprint import pformat
 class User(Base):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True)
     email = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(128), nullable=False)
     salt = db.Column(db.String(128), nullable=False)
@@ -83,7 +82,6 @@ class User(Base):
                  ):
         if school is not None:
             self.school_id = school.id
-        self.username = email.split("@")[0]
         self.email = email
 
         self.set_password(password)
@@ -123,13 +121,12 @@ class User(Base):
         self.newsletter = newsletter
 
     def __repr__(self):
-        return '<User %r | %s(%d)>' % (self.username, self.name, self.id)
+        return '<User %s(%d) - %s>' % (self.name, self.id, self.email)
 
     @property
     def serialize(self):
         return {
             'id': self.id,
-            'username': self.username,
             'fname': self.fname,
             'lname': self.lname,
             'profileImageURL': self.profile_image,
