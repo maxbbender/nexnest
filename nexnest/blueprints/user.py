@@ -46,9 +46,15 @@ def register():
         if current_user.is_authenticated:
             return redirect(url_for('indexs.index'))
 
+        form = RegistrationForm()
+        schoolStrings = allSchoolsAsStrings()
+
+        for school in schoolStrings:
+            form.school.choices.append((school, school))
+
         return render_template('register.html',
-                               form=RegistrationForm(),
-                               schools=allSchoolsAsStrings())
+                               form=form,
+                               schools=schoolStrings)
     else:
         registerForm = RegistrationForm(request.form)
 
