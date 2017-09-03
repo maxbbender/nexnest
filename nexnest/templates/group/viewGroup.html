@@ -87,7 +87,7 @@
                                                 </div>
                                             </div>
                                             <p id="searchHelpBlock" class="form-text text-muted">
-                                                Search by Username (first part of email)
+                                                Search by Email
                                             </p>
                                             <span class="" id="userSearchUL"></span>
                                             <form id="invite_user" action="{{url_for('groups.invite')}}" method="POST">
@@ -724,14 +724,15 @@
             var keyToSearch = $("#userSearch").val();
             // alert($("#userSearch").val())
             $("#userSearchUL").empty();
-            $.getJSON("/user/search/" + keyToSearch + "/" + {{group.id}}, function(data) {
+            console.log('getJSON for ' + keyToSearch)
+            $.getJSON("/user/search/tenant/" + keyToSearch, function(data) {
                 //clear div to prevent case of users typing to fast resulting in duplicate results
                 $("#userSearchUL").html('<strong>Results:</strong');
                 $.each(data.users, function(key, user) {
                     userString = '<hr>'+
                                 '<div id="' + user.id + '" class="row">'+
                                     '<div class=col-xs-8>' +
-                                        user.email + ' (' + user.fname + ' ' + user.lname + ')' +
+                                        user.fname + " " + user.lname + " ( " + user.email + " )" +
                                     '</div>'+
                                     '<div class="col-xs-4">' +
                                         '<span onClick="submitForm(this.id)" class="invite btn btn-blue" id="' + user.id + '">Invite</span>'+

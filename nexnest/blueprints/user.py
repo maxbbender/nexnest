@@ -460,6 +460,26 @@ def searchForUser(email):
     return jsonify(users=[i.serialize for i in usersToReturn])
 
 
+@users.route('/user/search/tenant/<email>')
+@login_required
+def searchForTenants(email):
+    app.logger.debug('Searching for an email that looks like %s' % email)
+    usersToReturn = User.query.filter(func.lower(
+        User.email).like(func.lower(email + "%")))
+
+    app.logger.debug("Applying isLandlord filter")
+
+    usersToReturn = usersToReturn.all()
+
+    for user in usersToReturn:
+        if user.isLandlord:
+            usersToReturn.remove(user)
+
+    app.logger.debug("Users with isLandlord filter %r" % usersToReturn)
+
+    return jsonify(users=[i.serialize for i in usersToReturn])
+
+
 @users.route('/user/acceptGroupInvite/<groupID>')
 @login_required
 def acceptGroupInvite(groupID):

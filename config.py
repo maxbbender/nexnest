@@ -121,26 +121,10 @@ class UnixConfig(ProductionConfig):
         app.logger.addHandler(syslog_handler)
 
 
-
-class MacConfig(DevelopmentConfig):
-    @classmethod
-    def init_app(cls,app):
-        # app.logger.handlers = []
-        # import logging
-        # from logging.handlers import SysLogHandler
-        # syslog_handler = SysLogHandler(address='/var/log/nexnest.log')
-        # syslog_handler.setLevel(logging.WARNING)
-        # app.logger.addHandler(syslog_handler)
-        pass
-
-
-
-
 config = {
     'development': DevelopmentConfig,
     'testing': TestingConfig,
     'production': ProductionConfig,
     'default': DevelopmentConfig,
-    'unix': UnixConfig,
-    'mac': MacConfig
+    'unix': UnixConfig
 }

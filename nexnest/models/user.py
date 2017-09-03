@@ -10,6 +10,7 @@ from nexnest.models.notification import Notification
 from nexnest.utils.email import send_email
 from nexnest.utils.password import hash_password
 from sqlalchemy.orm import relationship
+from sqlalchemy.ext.hybrid import hybrid_property
 
 from .base import Base
 
@@ -130,7 +131,8 @@ class User(Base):
             'fname': self.fname,
             'lname': self.lname,
             'profileImageURL': self.profile_image,
-            'url': '/user/view/%d' % self.id
+            'url': '/user/view/%d' % self.id,
+            'email': self.email
         }
 
     @property
@@ -139,7 +141,8 @@ class User(Base):
             'name': self.name,
             'id': self.id,
             'profileImageURL': self.profile_image,
-            'url': '/user/view/%d' % self.id
+            'url': '/user/view/%d' % self.id,
+            'email': self.email
         }
 
     def set_password(self, __password__):
