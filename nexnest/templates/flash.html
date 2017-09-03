@@ -3,7 +3,7 @@
 {%- for category, flashedMessage in flashedMessages %}
 <div class="alert alert-{{ category }}">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
-    {{ flashedMessage }}
+    {{ flashedMessage|safe }}
 </div>
 {% endfor %}
 {% endif %}

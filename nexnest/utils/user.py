@@ -15,4 +15,4 @@ def genEmailVerificationContent(user, emailConfirmURL):
             <br><br>
         </div>
     </div>
-    ''' % (user.fname, emailConfirmURL)
+    ''' % (user.name, emailConfirmURL)

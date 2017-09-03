@@ -1,14 +1,14 @@
 import json
 import os
+from pprint import pformat
+
 import requests
 from dateutil import parser
+from flask import current_app as app
 from flask import (Blueprint, abort, flash, jsonify, redirect, render_template,
                    request, url_for)
 from flask_login import current_user, login_required, login_user, logout_user
-from itsdangerous import BadSignature
 from nexnest import csrf, db
-from flask import current_app as app
-
 from nexnest.decorators import user_editable
 from nexnest.forms import (CreateGroupForm, DirectMessageForm, EditAccountForm,
                            EmailPreferencesForm, LandlordEditAccountForm,
@@ -32,10 +32,8 @@ from nexnest.utils.flash import flash_errors
 from nexnest.utils.password import check_password
 from nexnest.utils.school import allSchoolsAsStrings
 from nexnest.utils.user import genEmailVerificationContent
-from sqlalchemy import and_, asc, func, or_, desc
+from sqlalchemy import and_, asc, desc, func, or_
 from werkzeug.utils import secure_filename
-
-from pprint import pformat
 
 users = Blueprint('users', __name__, template_folder='../templates/user')
 
@@ -59,7 +57,8 @@ def register():
             userType = registerForm.landlord.data
             app.logger.debug('Verifying Captcha')
             captchaConfirmURL = 'https://www.google.com/recaptcha/api/siteverify'
-            payload = {'response': request.form['g-recaptcha-response'], 'secret': app.config['GOOGLE_CAPTCHA_SECRET']}
+            payload = {'response': request.form['g-recaptcha-response'],
+                       'secret': app.config['GOOGLE_CAPTCHA_SECRET']}
 
             response = requests.post(captchaConfirmURL, data=payload)
 
@@ -68,58 +67,70 @@ def register():
             app.logger.debug('Response Text %s' % response.text)
             app.logger.debug('Response Dict %r' % pformat(responseObject))
 
-            if responseObject['success']:
-                if userType == "landlord":
-                    newUser = User(email=registerForm.email.data,
-                                   password=registerForm.password.data,
-                                   fname=registerForm.fname.data,
-                                   lname=registerForm.lname.data,
-                                   landlord_info_filled=False)
-                    session.add(newUser)
-                    session.commit()
+            # Check to make sure the email does not already exists
+            emailCheck = User.query.filter_by(
+                email=registerForm.email.data).first()
 
-                    # Make them a Landlord
+            if emailCheck is None:
 
-                    # Notification Preference Table init
-                    session.add(NotificationPreference(user=newUser, newsletter=registerForm.newsletter.data))
-                    session.commit()
-
-                    newLandlord = Landlord(newUser)
-                    session.add(newLandlord)
-                    session.commit()
-
-                else:
-                    school = session.query(School) \
-                        .filter(func.lower(School.name) == registerForm.school.data.lower()) \
-                        .first()
-
-                    if school is not None:
-                        # School Exists
+                if responseObject['success']:
+                    if userType == "landlord":
                         newUser = User(email=registerForm.email.data,
                                        password=registerForm.password.data,
                                        fname=registerForm.fname.data,
                                        lname=registerForm.lname.data,
-                                       school=school)
+                                       landlord_info_filled=False)
                         session.add(newUser)
                         session.commit()
 
+                        # Make them a Landlord
+
                         # Notification Preference Table init
-                        session.add(NotificationPreference(user=newUser, newsletter=registerForm.newsletter.data))
+                        session.add(NotificationPreference(
+                            user=newUser, newsletter=registerForm.newsletter.data))
                         session.commit()
 
-                        # emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(newUser.email), _external=True)
-                        # newUser.sendEmail('generic',
-                        #                   'Click the link to confirm your account <a href="%s">Click Here</a>' % emailConfirmURL)
+                        newLandlord = Landlord(newUser)
+                        session.add(newLandlord)
+                        session.commit()
 
-                emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(
-                    newUser.email), _external=True)
-                newUser.sendEmail('emailVerification',
-                                  genEmailVerificationContent(newUser, emailConfirmURL))
+                    else:
+                        school = session.query(School) \
+                            .filter(func.lower(School.name) == registerForm.school.data.lower()) \
+                            .first()
 
-                return redirect(url_for('users.emailConfirmNotice', email=registerForm.email.data))
+                        if school is not None:
+                            # School Exists
+                            newUser = User(email=registerForm.email.data,
+                                           password=registerForm.password.data,
+                                           fname=registerForm.fname.data,
+                                           lname=registerForm.lname.data,
+                                           school=school)
+                            session.add(newUser)
+                            session.commit()
+
+                            # Notification Preference Table init
+                            session.add(NotificationPreference(
+                                user=newUser, newsletter=registerForm.newsletter.data))
+                            session.commit()
+
+                            # emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(newUser.email), _external=True)
+                            # newUser.sendEmail('generic',
+                            #                   'Click the link to confirm your account <a href="%s">Click Here</a>' % emailConfirmURL)
+
+                    emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(
+                        newUser.email), _external=True)
+                    newUser.sendEmail('emailVerification',
+                                      genEmailVerificationContent(newUser, emailConfirmURL))
+
+                    return redirect(url_for('users.emailConfirmNotice', email=registerForm.email.data))
+                else:
+                    flash('Captcha Error: Codes %r' %
+                          responseObject['error-codes'], 'danger')
+                    return render_template('register.html', form=registerForm, schools=allSchoolsAsStrings())
             else:
-                flash('Captcha Error: Codes %r' % responseObject['error-codes'], 'danger')
-                return render_template('register.html', form=registerForm, schools=allSchoolsAsStrings())
+                flash('Email has already been registered with Nexnest! Try resetting your password if you have forgotten it!', 'warning')
+                return render_template(url_for('indexs.index'))
 
         flash_errors(registerForm)
         return render_template('register.html', form=registerForm, schools=allSchoolsAsStrings())
@@ -218,15 +229,17 @@ def login():
                                         session.commit()
 
                         else:
-                            flash(
-                                'You must confirm your email before logging in', 'danger')
+                            flash('You must confirm your email before logging in. Click <a href="'
+                                  + url_for('users.resendEmailVerification', email=user.email) +
+                                  '">here</a> to resend the email verification', 'danger')
                     else:
                         flash("Error validating login credentials", 'danger')
                         return login_form.redirect()
                 else:
                     flash("User account has been deleted", 'warning')
             else:
-                flash("There was no account found with an email address matching %s" % login_form.email.data, 'warning')
+                flash("There was no account found with an email address matching %s" %
+                      login_form.email.data, 'warning')
         else:
             flash_errors(login_form)
 
@@ -238,6 +251,22 @@ def login():
                     return redirect(url_for('users.landlordInformation'))
 
         return login_form.redirect()
+
+
+@users.route('/resendEmailVerification/<email>')
+def resendEmailVerification(email):
+    user = User.query.filter_by(email=email).first_or_404()
+
+    if not user.email_confirmed:
+        emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(
+            user.email), _external=True)
+        user.sendEmail('emailVerification',
+                       genEmailVerificationContent(user, emailConfirmURL))
+        flash('Email for account verification has been resent!', 'success')
+    else:
+        flash('This user account has already been confirmed', 'warning')
+
+    return redirect(url_for('indexs.index'))
 
 
 @users.route('/logout')
@@ -418,7 +447,7 @@ def editAccountInfo():
 
 @users.route('/user/search/<email>')
 @login_required
-def searchForUser(username):
+def searchForUser(email):
     usersToReturn = session.query(User).filter(func.lower(
         User.email).like(func.lower(email + "%"))).all()
 
@@ -681,20 +710,24 @@ def getMessageNotifications(page=1):
         startNumber = 0
         endNumber = 10
     else:
-        startNumber = (page*10) - 10
-        endNumber = (page*10)
+        startNumber = (page * 10) - 10
+        endNumber = (page * 10)
 
-    directMessage = Notification.query.filter_by(user=current_user, category='direct_message')
+    directMessage = Notification.query.filter_by(
+        user=current_user, category='direct_message')
 
-    genericMessage = Notification.query.filter_by(user=current_user, category='generic_message')
+    genericMessage = Notification.query.filter_by(
+        user=current_user, category='generic_message')
 
     print('directMessage ', directMessage.all())
     print('generic ', genericMessage.all())
 
     print('Distinct')
 
-    directMessage = directMessage.distinct(Notification.notif_type, Notification.viewed, Notification.target_model_id)
-    genericMessage = genericMessage.distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed)
+    directMessage = directMessage.distinct(
+        Notification.notif_type, Notification.viewed, Notification.target_model_id)
+    genericMessage = genericMessage.distinct(
+        Notification.notif_type, Notification.redirect_url, Notification.viewed)
 
     print('directMessage ', directMessage.all())
     print('generic ', genericMessage.all())
@@ -708,12 +741,12 @@ def getMessageNotifications(page=1):
 
     print('compiledMessages : \n %s' % pformat(compiledMessages))
 
-    sortedCompiled = sorted(compiledMessages, key=lambda n: n.date_created, reverse=True)
+    sortedCompiled = sorted(
+        compiledMessages, key=lambda n: n.date_created, reverse=True)
 
     print('sortedCompiled : \n %s' % pformat(sortedCompiled))
 
     serializedReturn = []
-
 
     while startNumber < endNumber and startNumber < len(sortedCompiled):
         serializedReturn.append(sortedCompiled[startNumber].serialize)
@@ -726,7 +759,7 @@ def getMessageNotifications(page=1):
 
     paginateDict = {
         'hasNext': (endNumber < len(compiledMessages)),
-        'hasPrev': (endNumber-10) > 0,
+        'hasPrev': (endNumber - 10) > 0,
         'numPages': int((len(compiledMessages) / 10)) + 1
     }
 
