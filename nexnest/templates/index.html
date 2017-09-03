@@ -2,12 +2,13 @@
 {% block content %}
 	<style>
 	  #legend {
-	    font-family: Arial, sans-serif;
-	    background-color:rgba(255, 255, 255, 0.5);
-	    padding: 5px;
-	    margin: 5px;
-	    border: 3px solid lightblue;
-	  }
+	      font-family: Arial, sans-serif;
+	      background-color:rgba(255, 255, 255, 0.5);
+	      padding: 5px;
+	      margin: 5px;
+	      color: #656264;
+	      border: 3px solid #656264;
+	    }
 	  #legend h3 {
 	    margin-top: 0;
 	  }
@@ -413,8 +414,8 @@
 			</div>		
 		</div>
 		<div id="map" class="hidden-lg-down col-xl-5" style="height: 80vh; position: sticky; left: 58vw; top: 0;">
-		</div>
-		<div id="legend"><h3>Legend</h3></div>
+		</div>		
+		<div id="legend" class="nexnest-font"></div>
 	</div>
 {% endblock %}
 {% block scripts %}
@@ -930,7 +931,7 @@
   	  	       var name = type.name;
   	  	       var icon = type.icon;
   	  	       var div = document.createElement('div');
-  	  	       div.innerHTML = '<img src="' + icon + '"> ' + name;
+  	  	       div.innerHTML = '<img src="' + icon + '" height="40em" width="auto"> ' + name;
   	  	       legend.appendChild(div);
   	  	       mobileLegend.appendChild(div);
   	  	    }
@@ -953,7 +954,7 @@
   	        console.log(name);
   	        var icon = type.icon;
   	        var div = document.createElement('div');
-  	        div.innerHTML = '<img src="' + icon + '"> ' + name;
+  	        div.innerHTML = '<img src="' + icon + '" height="40em" width="auto"> ' + name;
   	        legend.appendChild(div);
   		}
   		mobileLegend = document.getElementById('mobileLegend');
@@ -963,7 +964,7 @@
   	        console.log(name);
   	        var icon = type.icon;
   	        var div = document.createElement('div');
-  	        div.innerHTML = '<img src="' + icon + '"> ' + name;
+  	        div.innerHTML = '<img src="' + icon + '" height="40em" width="auto"> ' + name;
   	        mobileLegend.appendChild(div);
   		}
   	  	//set temp center
@@ -975,11 +976,12 @@
   			if(lat != undefined){
   				$.each(listings, function(index, listing) {
   					latArray.push(listing.lat); longArray.push(listing.long); // gather center data
-  					addMarker(listing.id, listing.lat, listing.long, listing.propertyType, '<a href="'+listing.url+'"><img src="'+listing.bannerPhotoURL+'" alt="'+listing.address+'" width="300px" height="auto"></a><hr><h2>$'+listing.pricePerSemester+' per bedroom per '+listing.priceTerm+'</h2><span style="float: left;">'+listing.numBedrooms+' Bed / '+listing.numFullBaths+' Bath</span><span style="float: right"><a href="'+listing.url+'">View this Listing</a></span>');
+  					addMarker(listing.id, listing.lat, listing.long, listing.propertyType, 
+  						'<a href="'+listing.url+'"><div class="row nexnest-font" style="color: #656264;"><div class="col-xs-12" style="text-align: center;"><img src="'+listing.bannerPhotoURL+'" alt="'+listing.address+'" width="300px" height="auto"></div></div></a><hr><h2>$'+listing.pricePerSemester+' per bedroom per '+listing.priceTerm+'</h2><span style="float: left;">'+listing.numBedrooms+' Bed / '+listing.numFullBaths+' Bath</span><span style="float: right"><a href="'+listing.url+'">View this Listing</a></span>');
   				});
   				$.each(featuredListings, function(index, listing) {
   					latArray.push(listing.lat); longArray.push(listing.long); // gather center data
-  					addMarker(listing.id, listing.lat, listing.long, listing.propertyType, '<a href="'+listing.url+'"><img src="'+listing.bannerPhotoURL+'" alt="'+listing.address+'" width="300px" height="auto"></a><h2>$'+listing.pricePerSemester+' per bedroom per '+listing.priceTerm+'</h2><span style="float: left;">'+listing.numBedrooms+' Bed / '+listing.numFullBaths+' Bath</span><span style="float: right"><a href="'+listing.url+'">View this Listing</a></span>');
+  					addMarker(listing.id, listing.lat, listing.long, listing.propertyType, '<a href="'+listing.url+'"><img src="'+listing.bannerPhotoURL+'" alt="'+listing.address+'" width="350px" height="auto"></a><h2 class="nexnest-font" style="color: #656264;">$'+listing.pricePerSemester+' per bedroom per '+listing.priceTerm+'</h2><span style="float: left;">'+listing.numBedrooms+' Bed / '+listing.numFullBaths+' Bath</span><span style="float: right"><a href="'+listing.url+'">View this Listing</a></span>');
   				});  				
   			}
   			markerCluster = new MarkerClusterer(map, markers, {gridSize: 10, imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
