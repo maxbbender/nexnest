@@ -74,7 +74,14 @@
 						<br>
 						From <span style="font-size: 40px; color: #4fac80;">${{ listing.price }}</span>
 						<br>
-						Per Bedroom Per <span style="text-transform: capitalize;">{{ listing.rent_due }}</span>
+						Per Bedroom Per 
+						<span style="text-transform: capitalize;">
+							{% if listing.rent_due == 'monthly' %}
+								month
+							{% else %}
+								semester
+							{% endif %}
+						</span>
 					</h4>
 				</div>
 				<div class="col-xs-12 col-lg-4 hidden-lg-up" style="margin-top: -20px;">
@@ -82,7 +89,14 @@
 						<br>
 						From <span style="font-size: 40px; color: #4fac80;">${{ listing.price }}</span>
 						<br>
-						Per Bedroom Per <span style="text-transform: capitalize;">{{ listing.rent_due }}</span>
+						Per Bedroom Per 
+						<span style="text-transform: capitalize;">
+							{% if listing.rent_due == 'monthly' %}
+								month
+							{% else %}
+								semester
+							{% endif %}
+						</span>
 					</h4>
 				</div>
 			</div>			
@@ -951,6 +965,7 @@
       modal.find('.modal-title').text('Request To Tour This Property');
       modal.find('#groupNumber').text(group);
       modal.css('position', 'absolute');
+      window.scrollTo(0, 0);
     })
 
     //Request House Modal
@@ -960,6 +975,7 @@
       var group = $(event.relatedTarget).data('group');
       modal.find('.modal-title').text('Request to live at this {{listing.property_type}}');
       modal.find('#groupNumberHouse').text(group);
+      window.scrollTo(0, 0);
     })
 
     //Listing Report
@@ -970,6 +986,7 @@
       var url = window.location.href;
       $("#sourceURL").val(url);
       $("#listing_id").val({{listing.id}})
+      window.scrollTo(0, 0);
     });
 
     function submitTourForm() {

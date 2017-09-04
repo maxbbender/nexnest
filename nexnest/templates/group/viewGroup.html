@@ -751,6 +751,20 @@
         }        
     });
 
+    $("#inviteByEmail").click(function(){
+        var emailAddress = $("#userSearch").val();
+        $.ajax({
+          type: "GET",
+          contentType: "application/json; charset=utf-8",
+          url: "/group/{{group.id}}/inviteByEmail/"+emailAddress,
+          success: function () {
+            console.log("email_sent");
+          },
+          dataType: "json"
+        });
+    });
+
+
     $("#allMembersToggle{{group.id}}").click(function(){
         $("#allMembers{{group.id}}").toggle();
     });

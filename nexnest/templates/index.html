@@ -555,6 +555,7 @@
     	    			})
     	    		}
     	    	});
+    	    	window.scrollTo(0, 0);
     	    },
     	    failure: function(errMsg) {
     	        alert(errMsg);
@@ -689,7 +690,8 @@
 	    	    				  select: function(event, ui) { 
 	    	    				    window.location.href = "/listing/view/"+ui.item.id;
 	    	    				}
-	    	    			})
+	    	    			});
+	    	    			window.scrollTo(0, 0);
 	    	    		},
 	    	    		failure: function(errMsg) {
 	    	    		    alert(errMsg);
