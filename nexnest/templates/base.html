@@ -61,9 +61,12 @@
 			  		<li class="nav-item" style="padding-top: 5px;">
 			      		<a class="nav-link btn btn-light-green nexnest-font" href="{{url_for('users.register')}}" style="color: white;">Sign Up</a>
 			    	</li>
-			    	<li class="nav-item" style="padding-top: 5px;">
-			      		<a class="nav-link btn btn-light-green nexnest-font" href="#" data-toggle="modal" data-target="#loginModal" style="color: white;">Sign In</a>
+			    	<li class="nav-item hidden-sm-up" style="padding-top: 5px;">
+			      		<a class="nav-link btn btn-light-green nexnest-font" href="{{url_for('users.login')}}" style="color: white;">Sign In</a>
 			    	</li>
+                    <li class="nav-item hidden-xs-down" style="padding-top: 5px;">
+                        <a class="nav-link btn btn-light-green nexnest-font" href="#" data-toggle="modal" data-target="#loginModal" style="color: white;">Sign In</a>
+                    </li>
                         {% else %}
                     <!-- LOGGED IN -->
                     <li class="nav-item dropdown hidden-xs-down nexnest-font">                        
