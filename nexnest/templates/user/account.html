@@ -25,6 +25,13 @@
                             </a>
                         </li>
                     {% endif %}
+                    {% if not current_user.isLandlord %}
+                        <li class="nav-item">
+                            <a class="nav-link" style="padding-left: 10px;" href="{{ url_for('users.myGroups') }}">
+                                <i class="fa fa-users" aria-hidden="true"></i><span class="hidden-md-down">My Groups</span>
+                            </a>
+                        </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" style="padding-left: 10px;" data-toggle="tab" href="#emailTab" role="tab">
                             <i class="fa fa-cogs" aria-hidden="true"></i><span class="hidden-md-down">Notification Preferences</span>
