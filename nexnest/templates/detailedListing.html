@@ -151,7 +151,7 @@
 					<br><br>
 					<div class="col-xs-12 col-md-6 col-lg-3 col-centered">
 						<a href='#' class="btn btn-yellow" data-toggle="modal" data-target="#suggestListingModal" style="width: 160.31px;">
-							<i class="fa fa-heart-o" aria-hidden="true" style="margin-right: 5px; color: #fff;"></i>Add to Group
+							<i class="fa fa-heart" aria-hidden="true" style="margin-right: 5px; color: #fff;"></i>Add to Group
 						</a>
 					</div>
 				</div>
@@ -165,6 +165,34 @@
 			{% endif %}
 			
 			<hr>
+			<div class="row">
+				<div class="col-sm-4">
+					<h3>Distance to {{ listing.schools[0].school.name }}:</h3>
+				</div>
+				<div class="col-sm-8">
+					<div class="row" style="text-align: center;">
+						<div class="col-xs-6 col-md-6 col-lg-4 col-xl-4" style="padding-bottom: 10px;">
+							Distance:
+							<br>
+							<i class="fa fa-map-marker" aria-hidden="true"></i>
+							{{ listing.schools[0].driving_miles }} Miles
+						</div>
+						<div class="col-xs-6 col-md-6 col-lg-4 col-xl-4" style="padding-bottom: 10px;">
+							Driving Time:
+							<br>
+							<i class="fa fa-car" aria-hidden="true"></i>
+							{{ listing.schools[0].driving_time }} Minutes
+						</div>
+						<div class="col-xs-6 col-md-6 col-lg-4 col-xl-4" style="padding-bottom: 10px;">
+							Walking Time:
+							<br>
+							<i class="icon icon-directions-walk" aria-hidden="true"></i>
+							{{ listing.schools[0].walking_time }} Minutes
+						</div>
+					</div>
+				</div>
+			</div>
+			<hr style="padding-bottom: 15px;">
 			<div class="row">
 				<div class="col-sm-4">
 					<h3>Description: </h3> 
@@ -467,35 +495,7 @@
 				</div>
 			</div>
 			<hr style="padding-bottom: 15px;">
-			{% endif %}
-			<div class="row">
-				<div class="col-sm-4">
-					<h3>Distance to {{ listing.schools[0].school.name }}:</h3>
-				</div>
-				<div class="col-sm-8">
-					<div class="row" style="text-align: center;">
-						<div class="col-xs-6 col-md-6 col-lg-4 col-xl-4" style="padding-bottom: 10px;">
-							Distance:
-							<br>
-							<i class="fa fa-map-marker" aria-hidden="true"></i>
-							{{ listing.schools[0].driving_miles }} Miles
-						</div>
-						<div class="col-xs-6 col-md-6 col-lg-4 col-xl-4" style="padding-bottom: 10px;">
-							Driving Time:
-							<br>
-							<i class="fa fa-car" aria-hidden="true"></i>
-							{{ listing.schools[0].driving_time }} Minutes
-						</div>
-						<div class="col-xs-6 col-md-6 col-lg-4 col-xl-4" style="padding-bottom: 10px;">
-							Walking Time:
-							<br>
-							<i class="icon icon-directions-walk" aria-hidden="true"></i>
-							{{ listing.schools[0].walking_time }} Minutes
-						</div>
-					</div>
-				</div>
-			</div>
-			<hr style="padding-bottom: 15px;">
+			{% endif %}			
 			<div class="row">
 				<div class="col-sm-6">
 					<h3>
@@ -548,7 +548,7 @@
 					      					    			    {% endfor %}
 						      					    		</div>
 						      					    	</p>	      					    	
-								      					<button class="btn btn-primary" onClick="favoriteLisitng({{group.id}}, {{listing.id}})" data-dismiss="modal">Favorite Listing</button>
+								      					<button class="btn btn-yellow pull-right" onClick="favoriteLisitng({{group.id}}, {{listing.id}})" data-dismiss="modal"><i class="fa fa-heart" aria-hidden="true" style="margin-right: 5px; color: #fff;"></i> Add to Group</button>
 						      					    </div>
 						      					</div>
 						      					<script>
