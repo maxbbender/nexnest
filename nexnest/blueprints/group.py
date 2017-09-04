@@ -59,7 +59,7 @@ def createGroup():
 
             flash('Group Created', 'success')
 
-            return redirect(url_for('groups.viewGroup', groupID=newGroup.id))
+            return form.redirect()
         else:
             flash("Conflict with Group %s. Cannot create group in same time period as %s. Start(%s) End(%s)" %
                   (groupHasConflict.name,
