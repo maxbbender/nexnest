@@ -124,7 +124,7 @@
 							                    			<small style="font-size: 1.5vh;">Lease Period: {{ listing.start_date|format_date }} - {{ listing.end_date|format_date }}</small>
 								                    	</div>
 								                    	{% if listing.time_period == "school" %}
-								                    	<div class="col-xs-5 col-md-12 col-lg-12 col-xl-4" id="packageOptions{{listing.id}}" style="display: none; align-self: center;">
+								                    	<div class="col-xs-5 col-md-12 col-lg-12 col-xl-4" id="packageOptions{{listing.id}}" style="display: none; align-self: center; text-align: center;">
 								                    		<div class="btn-group" data-toggle="buttons" style="display: flex;">
 								                    		    <label class="btn btn-blue-outline active" id="standardLabel{{listing.id}}" onclick="downgradeToStandard({{listing.id}}, 79.99, 129.99)" style="font-size: 18px;">
 								                    		    	<input type="radio" name="packageChoice" id="standard{{listing.id}}" checked autocomplete="off"> PRO
@@ -133,9 +133,11 @@
 								                    		    	<input type="radio" name="packageChoice" id="deluxe{{listing.id}}" autocomplete="off"> PREMIUM
 								                    		  	</label>
 								                    		</div>
+								                    		<br>
+								                    		<a href="#!" data-toggle="modal" data-target="#packageDescriptionModal">View Differences</a>
 								                    	</div>
 								                    	{% elif listing.time_period == "summer" %}
-								                    	<div class="col-xs-5 col-md-12 col-lg-12 col-xl-4" id="packageOptions{{listing.id}}" style="display: none; align-items: center;">
+								                    	<div class="col-xs-5 col-md-12 col-lg-12 col-xl-4" id="packageOptions{{listing.id}}" style="display: none; align-items: center; text-align: center;">
 								                    		<div class="btn-group" data-toggle="buttons" style="display: flex;">
 								                    		    <label class="btn btn-outline-primary active" id="standardLabel{{listing.id}}" onclick="downgradeToStandard({{listing.id}}, 39.99, 69.99)" style="font-size: 18px;">
 								                    		    	<input type="radio" name="packageChoice" id="standard{{listing.id}}" checked autocomplete="off"> PRO
@@ -144,6 +146,8 @@
 								                    		    	<input type="radio" name="packageChoice" id="deluxe{{listing.id}}" autocomplete="off"> PREMIUM
 								                    		  	</label>
 								                    		</div>
+								                    		<br>
+								                    		<a href="#!" data-toggle="modal" data-target="#packageDescriptionModal">View Differences</a>
 								                    	</div>
 								                    	{% endif %}						                    	
 								                    </div>
