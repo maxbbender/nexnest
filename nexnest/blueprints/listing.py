@@ -105,6 +105,15 @@ def createListing():
                                  first_semester_rent_due_date=form.first_semester_rent_due_date.data,
                                  second_semester_rent_due_date=form.second_semester_rent_due_date.data)
 
+            if newListing.property_type == 'apartment':
+                newListing.apartment_number = form.apartment_number.data
+
+            app.logger.debug('newListing.property_type : %r' % newListing.property_type)
+            app.logger.debug('newListing.street : %r' % newListing.street)
+            app.logger.debug('newListing.city : %r' % newListing.city)
+            app.logger.debug('newListing.zip_code : %r' % newListing.zip_code)
+            app.logger.debug('newListing.apartment_number : %r' % newListing.apartment_number)
+
             otherListingsWithSameAddress = None
             if newListing.property_type == 'apartment':
                 otherListingsWithSameAddress = session.query(Listing) \
@@ -124,20 +133,21 @@ def createListing():
                                ) \
                     .all()
 
+            app.logger.debug('Found other listings with the same address : %r' % otherListingsWithSameAddress)
+
             conflictingDates = False
             conflictingListing = None
             for listing in otherListingsWithSameAddress:
-                if listing.active:
-                    newListingStartDate = datetime.datetime.strptime(newListing.start_date, "%Y-%m-%d").date()
-                    newListingEndDate = datetime.datetime.strptime(newListing.end_date, "%Y-%m-%d").date()
-                    if newListingStartDate <= listing.end_date and newListingStartDate >= listing.start_date:
-                        conflictingListing = listing
-                        conflictingDates = True
-                        break
-                    elif newListingStartDate <= listing.start_date and newListingEndDate >= listing.start_date:
-                        conflictingListing = listing
-                        conflictingDates = True
-                        break
+                newListingStartDate = datetime.datetime.strptime(newListing.start_date, "%Y-%m-%d").date()
+                newListingEndDate = datetime.datetime.strptime(newListing.end_date, "%Y-%m-%d").date()
+                if newListingStartDate <= listing.end_date and newListingStartDate >= listing.start_date:
+                    conflictingListing = listing
+                    conflictingDates = True
+                    break
+                elif newListingStartDate <= listing.start_date and newListingEndDate >= listing.start_date:
+                    conflictingListing = listing
+                    conflictingDates = True
+                    break
 
             if not conflictingDates:
 
