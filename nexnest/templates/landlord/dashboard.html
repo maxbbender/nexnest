@@ -165,7 +165,7 @@
 			            {% endif %}
 			            {% endfor %}
 			        </div>
-			        <div id="cart" class="hidden-md-down col-lg-3" style="z-index: 10; position: fixed; top: 22%; left: 71%;">
+			        <div id="cart" class="hidden-md-down col-lg-3" style="z-index: 10; position: sticky; top: 0; left: 71%; height: 80vh;">
 		                <div class="card" style="width: 117%;">
 					        <div class="card-header" style="background-color: #d2d2d2;">
 				                <div class="row">
@@ -174,7 +174,7 @@
 				                	</div>
 				                </div>
 				            </div>
-				            <div id="cartContents" class="card-block">
+				            <div id="cartContents" class="card-block" style="max-height: 60vh; overflow-y: scroll;">
 				            	<div class="row">
 				            		<div class="col-xs-12" id="nothingInCart">
 				            			No Listings Selected Yet
@@ -2349,10 +2349,10 @@
 			$("#checkoutButton2").show();
 			//Append to the cart div
 			var newItem =   "<div class='row' id='itemInCart"+id+"'>"+
-		              			"<div class='col-xs-8' style='align-self: center;'>"+
+		              			"<div class='col-xs-7' style='align-self: center;'>"+
 		                			listing +
 		                		"</div>"+
-		                		"<div class='col-xs-2' id='itemPrice"+id+"' style='align-self: center;'>"+
+		                		"<div class='col-xs-3' id='itemPrice"+id+"' style='align-self: center;'>"+
 		                			"$"+price+
 		                		"</div>"+
 		                		"<div class='col-xs-2'>"+
@@ -2362,10 +2362,10 @@
 		               		"<hr id='hrInCart"+id+"'>";
 
 		    var newItem2 =   "<div class='row' id='itemInCart2"+id+"'>"+
-		              			"<div class='col-xs-8' style='align-self: center;'>"+
+		              			"<div class='col-xs-7' style='align-self: center;'>"+
 		                			listing +
 		                		"</div>"+
-		                		"<div class='col-xs-2' id='itemPrice2"+id+"' style='align-self: center;'>"+
+		                		"<div class='col-xs-3' id='itemPrice2"+id+"' style='align-self: center;'>"+
 		                			"$"+price+
 		                		"</div>"+
 		                		"<div class='col-xs-2'>"+
