@@ -448,6 +448,11 @@ class User(Base):
             title = 'email verification'
             subject = 'Email Verification'
 
+        elif emailType == 'passwordReset':
+            icon = 'lock'
+            title = 'password reset'
+            subject = 'Password Reset'
+
         send_email(subject='NexNest - %s' % subject,
                    sender='no_reply@nexnest.com',
                    recipients=[self.email],
