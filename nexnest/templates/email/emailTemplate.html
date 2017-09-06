@@ -2,23 +2,20 @@
 <html lang="en">
 	<head>
 		<title>NexNest</title>
-		<link href="{{url_for('static', filename='css/bootstrap-flex3.css', _external=True)}}" rel="stylesheet">
-		<link rel="stylesheet" href="{{url_for('static', filename='font-awesome-4.7.0/css/font-awesome.min.css', _external=True)}}">
 	</head>
-	<body class="nexnest-font" style="font-size: 20px; color: #656264;">
-		<div class="row" style="position: relative; padding-top: 20px;">
-			<div class="col-xs-0 col-lg-2">
-			</div>
-			<div class="col-xs-5 col-lg-3" style="padding-top: 20px; border-top-width: 5px; border-top-style: solid; border-left-width: 5px; border-left-style: solid; border-color: lightgray; padding-left: 20px;">
-			<img src="{{url_for('static', filename='img/dontJustWingIt.png', _external=True)}}" style="width: 250px;" alt="logo">
-			</div>
-			<div class="col-xs-7 col-lg-5" style="text-align: right; border-top-width: 5px; border-top-style: solid; border-right-width: 5px; border-right-style: solid; border-color: lightgray; padding-right: 20px;">
-				<div style="display: inline-block; width:1px; height:100%; vertical-align:bottom;"></div>
-				<div style="display: inline-block; vertical-align:bottom;">
+	<body style="font-size: 20px; color: #656264; font-family: Amaranth; font-style: normal; font-variant: normal;	font-weight: bold;">
+	<table style="border: 5px solid lightgray; border-bottom: none; border-spacing: 0px;">
+		<tbody>
+			<tr>
+				<td><img src="{{url_for('static', filename='img/dontJustWingIt.png', _external=True)}}" style="width: 250px;" alt="logo"></td>
+				<td style="width:100%; text-align: right;">
 					<h1 style="color: #f6c559;"><i class="fa fa-{{ icon }}" aria-hidden="true" style="padding-right: 15px;"></i>{{ messageType }}</h1>
-					<hr style="width: 115%; height: 30px; color: #50ae82; background-color: #50ae82; margin: 0px; margin-left: -15%">
-				</div>
-			</div>
+					<hr align="right;" style="height: 30px; color: #50ae82; background-color: #50ae82; margin: 0px; margin-left: 50%; margin-right: 0.85em;">
+				</td>
+			</tr>
+		</tbody>
+	</table>
+		<div class="row" style="position: relative;">
 		</div>
 		<div class="row">
 			<div class="col-xs-0 col-lg-2">
@@ -49,9 +46,9 @@
 				<div style="text-align: center;">
 					<i>Copyright &copy; Nexnest, LLC, All rights reserved</i>
 					<br><br><br><br>
-					<a href="#">Change notification preferences</a> | <a href="{{url_for('indexs.privacyPolicy', _external=True)}}">Privacy policy</a> | <a href="{{url_for('indexs.termsConditions', _external=True)}}">Terms of Service</a> | <a href="#">Subscribe to Newsletter</a>
+					<a style="color: #5686c5;" href="#">Change notification preferences</a> | <a style="color: #5686c5;" href="{{url_for('indexs.privacyPolicy', _external=True)}}">Privacy policy</a> | <a style="color: #5686c5;" href="{{url_for('indexs.termsConditions', _external=True)}}">Terms of Service</a>
 					<br><br>
-					<a href="mailto:contact@nexnest.com?subject=Contact nexnest">contact@nexnest.com</a>
+					<a style="color: #5686c5;" href="mailto:contact@nexnest.com?subject=Contact nexnest">contact@nexnest.com</a>
 				</div>
 			</div>
 		</div>

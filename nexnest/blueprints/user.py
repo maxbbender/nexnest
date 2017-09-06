@@ -13,7 +13,7 @@ from nexnest.decorators import user_editable
 from nexnest.forms import (CreateGroupForm, DirectMessageForm, EditAccountForm,
                            EmailPreferencesForm, LandlordEditAccountForm,
                            LandlordMoreInfoForm, LoginForm, PasswordChangeForm,
-                           ProfilePictureForm, RegistrationForm)
+                           ProfilePictureForm, RegistrationForm, NewPasswordForm)
 from nexnest.models.availability import Availability
 from nexnest.models.direct_message import DirectMessage
 from nexnest.models.group import Group
@@ -681,8 +681,8 @@ def getMessageNotifications(page=1):
         startNumber = 0
         endNumber = 10
     else:
-        startNumber = (page*10) - 10
-        endNumber = (page*10)
+        startNumber = (page * 10) - 10
+        endNumber = (page * 10)
 
     directMessage = Notification.query.filter_by(user=current_user, category='direct_message')
 
@@ -702,7 +702,7 @@ def getMessageNotifications(page=1):
     compiledMessages = []
     allDirect = directMessage.all()
     allGeneric = genericMessage.all()
-    
+
     compiledMessages.extend(allDirect)
     compiledMessages.extend(allGeneric)
 
@@ -713,7 +713,6 @@ def getMessageNotifications(page=1):
     print('sortedCompiled : \n %s' % pformat(sortedCompiled))
 
     serializedReturn = []
-
 
     while startNumber < endNumber and startNumber < len(sortedCompiled):
         serializedReturn.append(sortedCompiled[startNumber].serialize)
@@ -726,7 +725,7 @@ def getMessageNotifications(page=1):
 
     paginateDict = {
         'hasNext': (endNumber < len(compiledMessages)),
-        'hasPrev': (endNumber-10) > 0,
+        'hasPrev': (endNumber - 10) > 0,
         'numPages': int((len(compiledMessages) / 10)) + 1
     }
 
@@ -794,3 +793,42 @@ def getAvailability(landlordID=None):
             availabilityList.append(avail.serialize)
 
     return jsonify(availabilityList)
+
+
+@users.route('/user/passwordReset/<email>')
+def resetPassword(email):
+    user = User.query.filter_by(email=email).first_or_404()
+
+    emailConfirmURL = url_for('users.resetPasswordConfirm',
+                              payload=generate_confirmation_token(user.email),
+                              _external=True)
+
+    # Send EMAIL
+    user.sendEmail('passwordReset', 'Click <a href="%s">here</a> to reset your password' % emailConfirmURL)
+
+    flash('Password Reset Email sent to %s' % email, 'success')
+    return redirect(url_for('users.login'))
+
+
+@users.route('/user/password/reset/<payload>', methods=['GET', 'POST'])
+def resetPasswordConfirm(payload):
+    try:
+        email = confirm_token(payload)
+    except:
+        flash('The confirmation link is invalid or has expired.', 'danger')
+        app.logger.warning('User just tried to reset password with an invalid or expired token')
+        abort(404)
+
+    user = User.query.filter_by(email=email).first_or_404()
+    form = NewPasswordForm()
+
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        db.session.commit()
+
+        flash('Password updated!', 'success')
+        return redirect(url_for('indexs.index'))
+    else:
+        flash_errors(form)
+
+    return render_template('resetPassword.html', form=form, payload=payload)

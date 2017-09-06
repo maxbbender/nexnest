@@ -74,7 +74,14 @@
 						<br>
 						From <span style="font-size: 40px; color: #4fac80;">${{ listing.price }}</span>
 						<br>
-						Per Bedroom Per <span style="text-transform: capitalize;">{{ listing.rent_due }}</span>
+						Per Bedroom Per 
+						<span style="text-transform: capitalize;">
+							{% if listing.rent_due == 'monthly' %}
+								month
+							{% else %}
+								semester
+							{% endif %}
+						</span>
 					</h4>
 				</div>
 				<div class="col-xs-12 col-lg-4 hidden-lg-up" style="margin-top: -20px;">
@@ -82,20 +89,17 @@
 						<br>
 						From <span style="font-size: 40px; color: #4fac80;">${{ listing.price }}</span>
 						<br>
-						Per Bedroom Per <span style="text-transform: capitalize;">{{ listing.rent_due }}</span>
+						Per Bedroom Per 
+						<span style="text-transform: capitalize;">
+							{% if listing.rent_due == 'monthly' %}
+								month
+							{% else %}
+								semester
+							{% endif %}
+						</span>
 					</h4>
 				</div>
-			</div>
-			<div class="row">
-			{% if listing.floor_plan_url %}
-				<div class="col-xs-12" style="text-align: right;">
-					<br>
-					<a class="btn btn-blue" href="{{listing.floor_plan_url}}">Floor Plan</a>
-					{% if current_user.is_authenticated %}
-				{% endif %}
-				</div>			
-			{% endif %}
-			</div>
+			</div>			
 			{% if current_user.is_authenticated %}
 				{% if not current_user in listing.landLordsAsUsers() %}
 				<hr>
@@ -147,7 +151,7 @@
 					<br><br>
 					<div class="col-xs-12 col-md-6 col-lg-3 col-centered">
 						<a href='#' class="btn btn-yellow" data-toggle="modal" data-target="#suggestListingModal" style="width: 160.31px;">
-							<i class="fa fa-heart-o" aria-hidden="true" style="margin-right: 5px; color: #fff;"></i>Add to Group
+							<i class="fa fa-heart" aria-hidden="true" style="margin-right: 5px; color: #fff;"></i>Add to Group
 						</a>
 					</div>
 				</div>
@@ -163,10 +167,50 @@
 			<hr>
 			<div class="row">
 				<div class="col-sm-4">
+					<h3>Distance to {{ listing.schools[0].school.name }}:</h3>
+				</div>
+				<div class="col-sm-8">
+					<div class="row" style="text-align: center;">
+						<div class="col-xs-6 col-md-6 col-lg-4 col-xl-4" style="padding-bottom: 10px;">
+							Distance:
+							<br>
+							<i class="fa fa-map-marker" aria-hidden="true"></i>
+							{{ listing.schools[0].driving_miles }} Miles
+						</div>
+						<div class="col-xs-6 col-md-6 col-lg-4 col-xl-4" style="padding-bottom: 10px;">
+							Driving Time:
+							<br>
+							<i class="fa fa-car" aria-hidden="true"></i>
+							{{ listing.schools[0].driving_time }} Minutes
+						</div>
+						<div class="col-xs-6 col-md-6 col-lg-4 col-xl-4" style="padding-bottom: 10px;">
+							Walking Time:
+							<br>
+							<i class="icon icon-directions-walk" aria-hidden="true"></i>
+							{{ listing.schools[0].walking_time }} Minutes
+						</div>
+					</div>
+				</div>
+			</div>
+			<hr style="padding-bottom: 15px;">
+			<div class="row">
+				<div class="col-sm-4">
 					<h3>Description: </h3> 
 				</div>
 				<div class="col-sm-8">
 					{{ listing.description }}
+					<div class="row" style="padding-top: 15px; padding-bottom: 15px;">
+						<div class="col-xs-12 col-md-6">
+							{% if listing.youtube_url %}
+								Video: <a href="{{listing.youtube_url}}" target="_blank" style="margin-top: 15px; padding-bottom: 15px;">{{listing.youtube_url}}</a>
+							{% endif %}
+						</div>
+						<div class="col-xs-12 col-md-6" style="text-align: right;">
+							{% if listing.floor_plan_url %}
+								<a class="btn btn-blue" href="{{listing.floor_plan_url}}" target="_blank" style="margin-top: 15px; margin-bottom: 15px;"><i class="icon icon-view-dashboard"></i> Floor Plan</a>
+							{% endif %}
+						</div>						
+					</div>
 				</div>
 			</div>
 			<hr>
@@ -451,35 +495,7 @@
 				</div>
 			</div>
 			<hr style="padding-bottom: 15px;">
-			{% endif %}
-			<div class="row">
-				<div class="col-sm-4">
-					<h3>Distance to {{ listing.schools[0].school.name }}:</h3>
-				</div>
-				<div class="col-sm-8">
-					<div class="row" style="text-align: center;">
-						<div class="col-xs-6 col-md-6 col-lg-4 col-xl-4" style="padding-bottom: 10px;">
-							Distance:
-							<br>
-							<i class="fa fa-map-marker" aria-hidden="true"></i>
-							{{ listing.schools[0].driving_miles }} Miles
-						</div>
-						<div class="col-xs-6 col-md-6 col-lg-4 col-xl-4" style="padding-bottom: 10px;">
-							Driving Time:
-							<br>
-							<i class="fa fa-car" aria-hidden="true"></i>
-							{{ listing.schools[0].driving_time }} Minutes
-						</div>
-						<div class="col-xs-6 col-md-6 col-lg-4 col-xl-4" style="padding-bottom: 10px;">
-							Walking Time:
-							<br>
-							<i class="icon icon-directions-walk" aria-hidden="true"></i>
-							{{ listing.schools[0].walking_time }} Minutes
-						</div>
-					</div>
-				</div>
-			</div>
-			<hr style="padding-bottom: 15px;">
+			{% endif %}			
 			<div class="row">
 				<div class="col-sm-6">
 					<h3>
@@ -532,7 +548,7 @@
 					      					    			    {% endfor %}
 						      					    		</div>
 						      					    	</p>	      					    	
-								      					<button class="btn btn-primary" onClick="favoriteLisitng({{group.id}}, {{listing.id}})" data-dismiss="modal">Favorite Listing</button>
+								      					<button class="btn btn-yellow pull-right" onClick="favoriteLisitng({{group.id}}, {{listing.id}})" data-dismiss="modal"><i class="fa fa-heart" aria-hidden="true" style="margin-right: 5px; color: #fff;"></i> Add to Group</button>
 						      					    </div>
 						      					</div>
 						      					<script>
@@ -949,6 +965,7 @@
       modal.find('.modal-title').text('Request To Tour This Property');
       modal.find('#groupNumber').text(group);
       modal.css('position', 'absolute');
+      window.scrollTo(0, 0);
     })
 
     //Request House Modal
@@ -958,6 +975,7 @@
       var group = $(event.relatedTarget).data('group');
       modal.find('.modal-title').text('Request to live at this {{listing.property_type}}');
       modal.find('#groupNumberHouse').text(group);
+      window.scrollTo(0, 0);
     })
 
     //Listing Report
@@ -968,6 +986,7 @@
       var url = window.location.href;
       $("#sourceURL").val(url);
       $("#listing_id").val({{listing.id}})
+      window.scrollTo(0, 0);
     });
 
     function submitTourForm() {

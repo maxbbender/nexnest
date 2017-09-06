@@ -630,7 +630,7 @@
     }
 
     function getNumDepositsPaid(requestID){
-        return parseFloat($("#numDeposits"+requestID).html()) || 0;
+        return parseFloat($("#numDeposits2"+requestID).html()) || 0;
     }
 
 	function markLeasesCollected(requestID){
@@ -721,10 +721,9 @@
             results = data['results'];
             // alert(data['results'].success);
             if (results.success == true){ 
-		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+		    	var depositsPaid = parseFloat($("#numDeposits2"+requestID).html()) || 0;
 		    	$("#depositPaid"+requestID+"Z"+userID).hide();
 		    	$("#markDepositUnpaid"+requestID+"Z"+userID).show();
-                $("#numDeposits"+requestID).html(depositsPaid-1);
                 $("#numDeposits2"+requestID).html(depositsPaid-1);
 		    	setTimeout(function () {
 		        	$("#markDepositUnpaid"+requestID+"Z"+userID).hide();
@@ -743,10 +742,9 @@
             results = data['results'];
             // alert(data['results'].success);
             if (results.success == true){ 
-		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+		    	var depositsPaid = parseFloat($("#numDeposits2"+requestID).html()) || 0;
 		    	$("#depositMarkedUnPaid"+requestID+"Z"+userID).hide();
 		    	$("#markDepositUnpaid"+requestID+"Z"+userID).show();
-                $("#numDeposits"+requestID).html(depositsPaid+1);
                 $("#numDeposits2"+requestID).html(depositsPaid+1);
 		    	setTimeout(function () {
 		        	$("#markDepositUnpaid"+requestID+"Z"+userID).hide();
@@ -766,10 +764,9 @@
             results = data['results'];
             // alert(data['results'].success);
             if (results.success == true){ 
-		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+		    	var depositsPaid = parseFloat($("#numDeposits2"+requestID).html()) || 0;
 		    	$("#depositUnpaid"+requestID+"Z"+userID).hide();
 		    	$("#markDepositPaid"+requestID+"Z"+userID).show();
-                $("#numDeposits"+requestID).html(depositsPaid+1);
                 $("#numDeposits2"+requestID).html(depositsPaid+1);
 		    	setTimeout(function () {
 		        	$("#markDepositPaid"+requestID+"Z"+userID).hide();
@@ -789,10 +786,9 @@
             results = data['results'];
             // alert(data['results'].success);
             if (results.success == true){ 
-		    	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
+		    	var depositsPaid = parseFloat($("#numDeposits2"+requestID).html()) || 0;
 		    	$("#depositMarkedPaid"+requestID+"Z"+userID).hide();
 		    	$("#markDepositPaid"+requestID+"Z"+userID).show();
-                $("#numDeposits"+requestID).html(depositsPaid-1);
                 $("#numDeposits2"+requestID).html(depositsPaid-1);
 		    	setTimeout(function () {
 		        	$("#markDepositPaid"+requestID+"Z"+userID).hide();

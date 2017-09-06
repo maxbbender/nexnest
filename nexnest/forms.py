@@ -359,3 +359,11 @@ class ContactForm(RedirectForm):
     phone = StringField('Phone Number', validators=[Optional(), Length(10, 10, 'Phone number must be 10 digits long')])
     message = TextAreaField('Message')
     email = StringField('Email Address', validators=[Email()])
+
+
+class NewPasswordForm(RedirectForm):
+    password = PasswordField('Password',
+                             [InputRequired(),
+                              EqualTo('confirm',
+                                      message="Passwords must match")])
+    confirm = PasswordField('Confirm Password', [InputRequired()])

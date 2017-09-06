@@ -294,30 +294,41 @@ def favoriteListingHide(favoriteListingID):
 @login_required
 @group_editable
 def inviteUserByEmail(groupID, emailAddress):
+    errorMessage = None
     group = Group.query.filter_by(id=groupID).first_or_404()
 
-    # First make sure this user hasn't already been invited by email
-    groupEmailCheck = GroupEmail.query.filter_by(
-        group=group, email=emailAddress).count()
-    errorMessage = None
-    if groupEmailCheck == 0:
-        message = 'You have received an invitation to join %s, a group at NexNest! Click <a href="%s">here</a> to join' % (
-            group.name, url_for('groups.acceptEmailInvite', _external=True))
-        send_email(subject='NexNest - Group Invitation',
-                           sender='no_reply@nexnest.com',
-                           recipients=[emailAddress],
-                           html_body=render_template('email/generic.html',
-                                                     user=None,
-                                                     message=message))
+    # Let's see if the user is already part of the website
+    user = User.query.filter_by(email=emailAddress).first()
 
-        newGroupEmail = GroupEmail(group, emailAddress)
-        session.add(newGroupEmail)
-        session.commit()
-        app.logger.debug('newGroupEmail %r' % newGroupEmail)
-    else:
-        app.logger.info('User %r just tried to invite %s a second time' %
-                        (current_user, emailAddress))
+    # First make sure this user hasn't already been invited by email
+    groupEmailCheck = GroupEmail.query.filter_by(group=group, email=emailAddress).count()
+
+    if user is not None:
+        # Make sure user isn't already a part of the group
+        groupUserCheck = GroupUser.query.filter_by(group=group, user=user).count()
+
+        if groupUserCheck == 1:
+            errorMessage = 'User is already a part of your group!'
+
+    if groupEmailCheck > 0:
+        app.logger.warning('User %r just tried to invite %s a second time' %
+                           (current_user, emailAddress))
         errorMessage = 'You have already sent an invite to this email!'
+
+    # No Errors
+    if errorMessage is None:
+        if user is None:
+            message = 'you are not a part of the site yet! Lets invite you'
+        else:
+            message = 'you are already a part of the site. here is the link to confirm'
+
+        send_email(subject='NexNest - %s' % 'Group Invite',
+                   sender='no_reply@nexnest.com',
+                   recipients=[emailAddress],
+                   html_body=render_template('email/emailTemplate.html',
+                                             messageContent=message,
+                                             icon='users',
+                                             messageType='group invite'))
 
     if errorMessage is None:
         if request.is_xhr:
@@ -337,11 +348,11 @@ def inviteUserByEmail(groupID, emailAddress):
 @groups.route('/group/confirmEmailInvite')
 @login_required
 def acceptEmailInvite():
-    groupEmail = GroupEmail.query.filter_by(
-        email=current_user.email).first_or_404()
+    groupEmail = GroupEmail.query \
+        .filter_by(email=current_user.email) \
+        .first_or_404()
 
-    groupUserCheck = GroupUser.query.filter_by(
-        group=groupEmail.group, user=current_user).count()
+    groupUserCheck = GroupUser.query.filter_by(group=groupEmail.group, user=current_user).count()
     errorMessage = None
     if groupUserCheck == 0:
         newGroupUser = GroupUser(groupEmail.group, current_user)
@@ -372,7 +383,7 @@ def acceptEmailInvite():
 @group_editable
 def deleteGroup(groupID):
     errorMessage = None
-    group = Group.query.fitler_by(id=groupID).first_or_404()
+    group = Group.query.filter_by(id=groupID).first_or_404()
 
     # There can't be any users in the group if it is to be deleted
     if len(group.users) == 1:

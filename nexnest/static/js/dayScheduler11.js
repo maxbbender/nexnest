@@ -101,39 +101,16 @@
       , $slots;
 
     this.$el.on('click', '.time-slot', function () {
-      var day = $(this).data('day');
-      if (!plugin.isSelecting()) {  // if we are not in selecting mode
-        if (isSlotSelected($(this))) { plugin.deselect($(this)); }
-        else {  // then start selecting
-          plugin.$selectingStart = $(this);
-          $(this).attr('data-selecting', 'selecting');
-          plugin.$el.find('.time-slot').attr('data-disabled', 'disabled');
-          plugin.$el.find('.time-slot[data-day="' + day + '"]').removeAttr('data-disabled');
-        }
-      } else {  // if we are in selecting mode
-        if (day == plugin.$selectingStart.data('day')) {  // if clicking on the same day column
-          // then end of selection
-          plugin.$el.find('.time-slot[data-day="' + day + '"]').filter('[data-selecting]')
-            .attr('data-selected', 'selected').removeAttr('data-selecting');
-          plugin.$el.find('.time-slot').removeAttr('data-disabled');
-          plugin.$el.trigger('selected.artsy.dayScheduleSelector', [getSelection(plugin, plugin.$selectingStart, $(this))]);
-          plugin.$selectingStart = null;
-        }
+      console.log(this);
+      if(this.hasAttribute('data-selected')) {
+          $(this).removeAttr('data-selected');
+      } else {
+          $(this).attr('data-selected', 'selected');
       }
     });
 
     this.$el.on('mouseover', '.time-slot', function () {
-      var $slots, day, start, end, temp;
-      if (plugin.isSelecting()) {  // if we are in selecting mode
-        day = plugin.$selectingStart.data('day');
-        $slots = plugin.$el.find('.time-slot[data-day="' + day + '"]');
-        $slots.filter('[data-selecting]').removeAttr('data-selecting');
-        start = $slots.index(plugin.$selectingStart);
-        end = $slots.index(this);
-        if (end < 0) return;  // not hovering on the same column
-        if (start > end) { temp = start; start = end; end = temp; }
-        $slots.slice(start, end + 1).attr('data-selecting', 'selecting');
-      }
+      
     });
   };
 

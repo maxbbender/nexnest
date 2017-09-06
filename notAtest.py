@@ -39,37 +39,13 @@ with app.app_context():
     # tour = tour.Tour.query.filter_by(id=5).first()
     # maintenancess = maintenance.Maintenance.query.first()
 
-    directMessage = notification.Notification.query.filter_by(user=landlordUser, category='direct_message')
+    otherListingsWithSameAddress = listing.Listing.query \
+        .filter_by(street='2 Sheldon Drive',
+                   city='Poughkeepsie',
+                   state='NY',
+                   zip_code='12603',
+                   apartment_number=1
+                   ) \
+        .all()
 
-    genericMessage = notification.Notification.query.filter_by(user=landlordUser, category='generic_message')
-
-    print('directMessage ', directMessage.all())
-    print('generic ', genericMessage.all())
-
-    print('Distinct')
-
-    directMessage = directMessage.distinct(Notification.notif_type, Notification.viewed, Notification.target_model_id)
-    genericMessage = genericMessage.distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed)
-
-    print('directMessage ', directMessage.all())
-    print('generic ', genericMessage.all())
-
-    print('Order by')
-
-    # directMessage = directMessage.order_by(asc(Notification.date_created), asc(Notification.notif_type))
-
-    print('directMessage ', directMessage.all())
-    print('generic ', genericMessage.all())
-
-    compiledMessages = []
-    allDirect = directMessage.all()
-    allGeneric = genericMessage.all()
-    
-    compiledMessages.extend(allDirect)
-    compiledMessages.extend(allGeneric)
-
-    print('compiledMessages : \n %s' % pformat(compiledMessages))
-
-    sortedCompiled = sorted(compiledMessages, key=lambda n: n.date_created, reverse=True)
-
-    print('sortedCompiled : \n %s' % pformat(sortedCompiled))
+    print (otherListingsWithSameAddress)
