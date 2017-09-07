@@ -682,6 +682,18 @@
         window.location.href="/group/leave/" + id;
     }
 
+    function deleteGroup(id) {
+        var requestURL = "/group/deleteGroup/" + id;
+        $.ajax({
+          type: "GET",
+          contentType: "application/json; charset=utf-8",
+          url: requestURL,          
+          success: function () {
+            console.log('deleted group')
+          },
+        });
+    }
+
     function deleteFavoritedListing(id) {
         //alert("Deleted " + id);
         $.getJSON('/group/favoriteListing/' + id + '/hide', function(data) {

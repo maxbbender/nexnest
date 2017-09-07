@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-	<div class="row">
+	<div class="row nexnest-font" style="color: #656264;">
 		<div class="col-xs-1 col-xl-3"></div>
 		<div class="col-xs-10 col-xl-6">
 			<div class="card" style="border: 0px;">
-				<div class="card-header">
+				<div class="card-header" style="background-color: #d2d2d2;">
 					<h3>Proceed With Checkout</h3>
 				</div>
 				<div class="card-block">
@@ -43,7 +43,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="card-footer">
+				<div class="card-footer" style="background-color: #d2d2d2;">
 					<div class="row">
 						<div class="col-xs-12" id="subTotal">
 						</div>
@@ -52,12 +52,15 @@
 						<div class="col-xs-12" id="totalPrice">
 							Total Price:
 						</div>
+						<div class="col-xs-12" id="priceTooHighMessage" style="display: none; color: red;">
+							Currently we cannot accept transcations higher than $1499.99, please remove listings or enter a coupon to meet this price. You may then checkout the remaining listings afterwards. 
+						</div>
 					</div>
 				</div>
 			</div>
-			<div class="row">
+			<div class="row" style="padding-bottom: 45px;">
 				<div class="col-xs-12">
-					<button class="btn btn-primary" onClick="proceedToCheckout()" style="float: right;">Proceed To Checkout</button>
+					<button id="proceedToCheckoutButton" class="btn btn-blue" onClick="proceedToCheckout()" style="float: right;">Proceed To Checkout</button>
 				</div>
 			</div>
 		</div>
@@ -128,12 +131,57 @@
 		$("#subTotal").html(`<h4>Subtoal: `+"$"+subTotal+`</h4>`);
 		$("#tax").html(`<h4>Tax: `+"$"+taxBeforeCoupon+`</h4>`);
 		$("#totalPrice").html(`<h2>Total Price: `+"$"+Number(totalPrice*1.075).toFixed(2)+`</h2>`);
+		determineIfPriceLowEnough(Number(totalPrice*1.075).toFixed(2))
 	});
 	function removeListingToPurchase(id, index){
 		$("#itemInCart"+id).remove();
 		$("#hrInCart"+id).remove();
 		items.splice(index, 1);
+		calculatePrice();
 	}
+
+	function calculatePrice(){
+		items = data['items'];
+		totalPrice = 0;
+		$.each(items, function(index, item) {
+			if(item.plan == "standard"){
+				if(item.timePeriod == "school"){
+					totalPrice += 79.99;
+				}
+				else if(item.timePeriod == "summer"){
+					totalPrice += 39.99;
+				}
+			}
+			else if(item.plan == "premium"){
+				if(item.timePeriod == "school"){
+					totalPrice += 129.99;
+				}
+				else if(item.timePeriod == "summer"){
+					totalPrice += 69.99;
+				}
+			}			
+		});
+		subTotal = Number(totalPrice).toFixed(2);
+		taxBeforeCoupon = Number(totalPrice*.075).toFixed(2);
+		$("#subTotal").html(`<h4>Subtoal: `+"$"+subTotal+`</h4>`);
+		$("#tax").html(`<h4>Tax: `+"$"+taxBeforeCoupon+`</h4>`);
+		$("#totalPrice").html(`<h2>Total Price: `+"$"+Number(totalPrice*1.075).toFixed(2)+`</h2>`);
+		determineIfPriceLowEnough(Number(totalPrice*1.075).toFixed(2));
+		validateCoupon();
+	}
+
+	function determineIfPriceLowEnough(price){
+		console.log(price);
+		if(price > 1499.99){
+			$("#proceedToCheckoutButton").attr("disabled","disabled");
+			$("#priceTooHighMessage").show();
+		}
+		else{
+			$("#proceedToCheckoutButton").prop("disabled", false);
+			$("#priceTooHighMessage").hide();
+		}
+	}
+
 	function proceedToCheckout(){
 		var cart = {};
     	cart.landlord = landlordID;
@@ -148,39 +196,38 @@
 
 	function validateCoupon(){
 		var input = $('#couponCodeInput').val();
-		requestURL = '/coupon/'+input+'/check';
-		$("#acceptedTab").empty();
+		if(input.length>0){
+			requestURL = '/coupon/'+input+'/check';
+			$("#acceptedTab").empty();
 
-		$.getJSON(requestURL, function(data) {
-			results = data['results'];
-			console.log(results);
-			if(results.validCoupon == true){
-				console.log('totalPrice ' + totalPrice)
-				console.log('results.coupon.percentageOff : ' + results.coupon.percentageOff)
-				console.log('100-results.coupon.percentageOff' + (100-results.coupon.percentageOff))
-				console.log('100-results.coupon.percentageOff)/100' + (100-results.coupon.percentageOff)/100)
-				console.log('totalPrice*((100-results.coupon.percentageOff)/100)' + (totalPrice*((100-results.coupon.percentageOff)/100)))
-				//update total price div
-				subtotalAfterCoupon = Number(totalPrice*((100-results.coupon.percentageOff)/100)).toFixed(2);
-				taxAfterCoupon = Number(subtotalAfterCoupon*.075).toFixed(2);
-				priceAfterCoupon = Number((subtotalAfterCoupon*1.075)).toFixed(2);
-				//totalPrice = totalPrice-results.coupon.percentageOff;
-				$("#totalPrice").html(`<h2>Total Price: `+"$"+priceAfterCoupon+`</h2>`);
-				$("#subTotal").html(`<h4>Subtoal: `+"$"+subtotalAfterCoupon+`</h4>`);
-				$("#tax").html(`<h4>Tax: `+"$"+taxAfterCoupon+`</h4>`);
-				//display the valid coupon percentage off
-				$("#discount").html("<strong>"+results.coupon.percentageOff+"% Off"+"</strong>");
-		 	    $("#discount").css("color", "green");
-			}
-			else{
-				$("#discount").html("<strong>"+"Invlaid Code"+"</strong>");
-				$("#discount").css("color", "red");
-				//if the user had a correct code and then enters a wrong one display orighinal price
-				$("#subTotal").html(`<h4>Subtoal: `+"$"+subTotal+`</h4>`);
-				$("#totalPrice").html(`<h2>Total Price: `+"$"+totalPrice+`</h2>`);
-				$("#tax").html(`<h4>Tax: `+"$"+taxBeforeCoupon+`</h4>`);
-			}
-		});
+			$.getJSON(requestURL, function(data) {
+				results = data['results'];
+				console.log(results);
+				if(results.validCoupon == true){
+					//update total price div
+					subtotalAfterCoupon = Number(totalPrice*((100-results.coupon.percentageOff)/100)).toFixed(2);
+					taxAfterCoupon = Number(subtotalAfterCoupon*.075).toFixed(2);
+					priceAfterCoupon = Number((subtotalAfterCoupon*1.075)).toFixed(2);
+					//totalPrice = totalPrice-results.coupon.percentageOff;
+					$("#totalPrice").html(`<h2>Total Price: `+"$"+priceAfterCoupon+`</h2>`);
+					$("#subTotal").html(`<h4>Subtoal: `+"$"+subtotalAfterCoupon+`</h4>`);
+					$("#tax").html(`<h4>Tax: `+"$"+taxAfterCoupon+`</h4>`);
+					//display the valid coupon percentage off
+					$("#discount").html("<strong>"+results.coupon.percentageOff+"% Off"+"</strong>");
+			 	    $("#discount").css("color", "green");
+			 	    determineIfPriceLowEnough(priceAfterCoupon);
+				}
+				else{
+					$("#discount").html("<strong>"+"Invlaid Code"+"</strong>");
+					$("#discount").css("color", "red");
+					//if the user had a correct code and then enters a wrong one display orighinal price
+					$("#subTotal").html(`<h4>Subtoal: `+"$"+subTotal+`</h4>`);
+					$("#totalPrice").html(`<h2>Total Price: `+"$"+totalPrice+`</h2>`);
+					$("#tax").html(`<h4>Tax: `+"$"+taxBeforeCoupon+`</h4>`);
+					determineIfPriceLowEnough(totalPrice);
+				}
+			});
+		}
 	}
 
 	$('#couponCodeInput').on('input',function(e){

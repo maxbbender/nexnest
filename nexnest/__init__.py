@@ -7,7 +7,7 @@ from os.path import join, dirname, exists
 
 
 # Flask
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, redirect
 from flask_mail import Mail, email_dispatched
 from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager, current_user
@@ -90,6 +90,12 @@ def createApp(configName):
     app.register_blueprint(reports)
     app.register_blueprint(rents)
     app.register_blueprint(siteAdminBlueprint, url_prefix='/siteAdmin')
+
+    @login_manager.unauthorized_handler
+    def unauthorized():
+        app.logger.warning('User unauthorized')
+        # do stuff
+        return redirect(url_for('users.login'))
 
     from nexnest.forms import LoginForm, PasswordChangeForm, ProfilePictureForm, PlatformReportForm, DirectMessageForm, ContactForm
 

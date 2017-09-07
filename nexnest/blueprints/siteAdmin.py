@@ -6,6 +6,7 @@ from flask_login import current_user, login_required
 from nexnest import db
 from nexnest.models.coupon import Coupon
 from nexnest.models.user import User
+from nexnest.models.platform_report import PlatformReport
 from nexnest.utils.coupon import couponExists
 from nexnest.utils.misc import idGenerator
 from nexnest.forms import CreateCouponForm
@@ -141,3 +142,12 @@ def searchUsersByLastName(lastName):
         userReturnArray.append(user.serialize)
 
     return jsonify({'users': userReturnArray})
+
+
+@siteAdmin.route('/viewPlatformReports')
+def viewPlatformReports():
+    """Show the current platform reports"""
+    allPlatformReports = PlatformReport.query.all()
+
+    return render_template('viewPlatformReports.html',
+                           reports=allPlatformReports)

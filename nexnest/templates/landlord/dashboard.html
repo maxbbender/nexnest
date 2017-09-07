@@ -165,7 +165,7 @@
 			            {% endif %}
 			            {% endfor %}
 			        </div>
-			        <div id="cart" class="hidden-md-down col-lg-3" style="z-index: 10; position: fixed; top: 22%; left: 71%;">
+			        <div id="cart" class="hidden-md-down col-lg-3" style="z-index: 10; position: sticky; top: 0; left: 71%; height: 80vh;">
 		                <div class="card" style="width: 117%;">
 					        <div class="card-header" style="background-color: #d2d2d2;">
 				                <div class="row">
@@ -174,7 +174,7 @@
 				                	</div>
 				                </div>
 				            </div>
-				            <div id="cartContents" class="card-block">
+				            <div id="cartContents" class="card-block" style="max-height: 60vh; overflow-y: scroll;">
 				            	<div class="row">
 				            		<div class="col-xs-12" id="nothingInCart">
 				            			No Listings Selected Yet
@@ -2349,10 +2349,10 @@
 			$("#checkoutButton2").show();
 			//Append to the cart div
 			var newItem =   "<div class='row' id='itemInCart"+id+"'>"+
-		              			"<div class='col-xs-8' style='align-self: center;'>"+
+		              			"<div class='col-xs-7' style='align-self: center;'>"+
 		                			listing +
 		                		"</div>"+
-		                		"<div class='col-xs-2' id='itemPrice"+id+"' style='align-self: center;'>"+
+		                		"<div class='col-xs-3' id='itemPrice"+id+"' style='align-self: center;'>"+
 		                			"$"+price+
 		                		"</div>"+
 		                		"<div class='col-xs-2'>"+
@@ -2362,10 +2362,10 @@
 		               		"<hr id='hrInCart"+id+"'>";
 
 		    var newItem2 =   "<div class='row' id='itemInCart2"+id+"'>"+
-		              			"<div class='col-xs-8' style='align-self: center;'>"+
+		              			"<div class='col-xs-7' style='align-self: center;'>"+
 		                			listing +
 		                		"</div>"+
-		                		"<div class='col-xs-2' id='itemPrice2"+id+"' style='align-self: center;'>"+
+		                		"<div class='col-xs-3' id='itemPrice2"+id+"' style='align-self: center;'>"+
 		                			"$"+price+
 		                		"</div>"+
 		                		"<div class='col-xs-2'>"+
@@ -2446,82 +2446,46 @@
     	cart.items = [];
     	var selectedItem = {};
     	var count = 0;
-    	$(".checkoutListingSelect").each(function(i, obj){
-    		if($(obj).is(":checked")){
-    			var id = obj.id.match(/\d+/)[0];
-    			var street = obj.dataset.street;
-    			var leasePeriod = obj.dataset.lease;
-    			var time = obj.dataset.time;
-    			//console.log(id);
-    			if($("#standardLabel"+id).hasClass("active")){
-    				selectedItem = {
-    					index: count,
-    					listing_id: id,
-    					listing_street: street,
-    					leasePeriod: leasePeriod,
-    					timePeriod: time,
-    					plan: 'standard'    					
-    				}
-    				cart.items.push(selectedItem);
-    			}
-    			else if($("#deluxeLabel"+id).hasClass("active")){
-    				selectedItem = {
-    					index: count,
-    					listing_id: id,
-    					listing_street: street,
-    					leasePeriod: leasePeriod,
-    					timePeriod: time,
-    					plan: 'premium'    					
-    				}
-    				cart.items.push(selectedItem);
-    			}
-    			count++;
-    		}    		
-    	});
-    	cart = JSON.stringify(cart);
-    	console.log(cart);
+    	//ensure checout total is less than $1500 due to Braintree conditions
+		$(".checkoutListingSelect").each(function(i, obj){
+			if($(obj).is(":checked")){
+				var id = obj.id.match(/\d+/)[0];
+				var street = obj.dataset.street;
+				var leasePeriod = obj.dataset.lease;
+				var time = obj.dataset.time;
+				//console.log(id);
+				if($("#standardLabel"+id).hasClass("active")){
+					selectedItem = {
+						index: count,
+						listing_id: id,
+						listing_street: street,
+						leasePeriod: leasePeriod,
+						timePeriod: time,
+						plan: 'standard'    					
+					}
+					cart.items.push(selectedItem);
+				}
+				else if($("#deluxeLabel"+id).hasClass("active")){
+					selectedItem = {
+						index: count,
+						listing_id: id,
+						listing_street: street,
+						leasePeriod: leasePeriod,
+						timePeriod: time,
+						plan: 'premium'    					
+					}
+					cart.items.push(selectedItem);
+				}
+				count++;
+			}    		
+		});
+		cart = JSON.stringify(cart);
+		console.log(cart);
 
-        preCheckoutJSONElement = document.getElementById("preCheckoutJSON")
-        preCheckoutJSONElement.value = cart
-        precheckoutElement = document.getElementById("preCheckoutForm")
-        precheckoutElement.submit()
-
-    	// $.ajax({
-    	//     type: "POST",
-    	//     url: '/preCheckout',
-    	//     // The key needs to match your method's input parameter (case-sensitive).
-    	//     data: cart,
-    	//     contentType: "application/json; charset=utf-8",
-    	//     dataType: "json",
-    	//     beforeSend: function(xhr, settings) {
-	    // 	                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-	    // 	                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token() }}');
-	    // 	                }
-    	//             	},
-    	//     success: function(data){alert(data);},
-    	//     failure: function(errMsg) {
-    	//         alert(errMsg);
-    	//     }
-    	// });
-
-  //   	$.getJSON(requestURL, function(data) {
-  //           results = data['results'];
-  //           // alert(data['results'].success);
-  //           if (results.success == true){ 
-		//     	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
-		//     	$("#numDeposits"+requestID).html(depositsPaid-1);
-		//     	$("#depositMarkedPaid"+requestID+"Z"+userID).hide();
-		//     	$("#markDepositPaid"+requestID+"Z"+userID).show();
-		//     	setTimeout(function () {
-		//         	$("#markDepositPaid"+requestID+"Z"+userID).hide();
-		//         	$("#depositUnpaid"+requestID+"Z"+userID).show();		        	
-		//         }, 1200);
-		//     }
-		//     else{
-		//     	alert("Something went wrong, try again later");
-		//     }
-		// }); 	
-    	// console.log(cart);
+	    preCheckoutJSONElement = document.getElementById("preCheckoutJSON")
+	    preCheckoutJSONElement.value = cart
+	    precheckoutElement = document.getElementById("preCheckoutForm")
+	    precheckoutElement.submit()
     }
 
 	$(document).ready(function() {

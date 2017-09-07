@@ -195,7 +195,7 @@
 		        {% block content %}{% endblock %}
             </div>
         </div>
-        <div class="row" style="width: 100%; padding-top: 0px; margin-left: 0px; overflow-x: hidden;">
+        <div class="row" style="width: 100%; padding-top: 0px; margin-left: 0px; overflow-x: hidden; background-color: #656264;">
             <div class="col-xs-12">
                 {% include 'footer.html' %}
             </div>
@@ -219,6 +219,8 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
         {% block scripts %}
         {% endblock %}
+        {% if current_user %}
+            {% if current_user.is_authenticated %}
 		<script>
             $( document ).ready(function() {
                 requestURL = "/user/getNotifications/1";
@@ -370,219 +372,168 @@
                     $(this).html(formattedTime);
                 });
             });
-            $(document).on('click', '.dropdown-notifications', function (e) {
-              e.stopPropagation();
-            });
-            var currentNotificationPage = 1;
-            var currentMessagePage = 1;
-			//Login Modal
-            $('#loginModal').on('show.bs.modal', function (event) {
-              var button = $(event.relatedTarget);
-              var modal = $(this);
-              modal.find('.modal-title').text('Sign In');
-            });
-            //Password Change Modal
-            $('#passwordChangeModal').on('show.bs.modal', function (event) {
-              var button = $(event.relatedTarget);
-              var modal = $(this);
-            });
-            //Avatar Change Modal
-            $('#changeAvatarModal').on('show.bs.modal', function (event) {
-              var button = $(event.relatedTarget);
-              var modal = $(this);
-              modal.find('.modal-title').text('Change Profile Picture');
-            });
-            //Platform Report
-            $('#platformReportModal').on('show.bs.modal', function (event) {
-              var button = $(event.relatedTarget);
-              var modal = $(this);
-              modal.find('.modal-title').text('Give us Your Feedback!');
-              var url = window.location.href;
-              $("#sourceURL").val(url);
-            });
-
-            //Platform Report
-            $('#contactUsModal').on('show.bs.modal', function (event) {
-              var button = $(event.relatedTarget);
-              var modal = $(this);
-            });
-
-            //Direct Message
-            $('#sendDirectMessageModal').on('show.bs.modal', function (event) {
-                console.log(event);
-              var button = $(event.relatedTarget);
-              var modal = $(this);
-              var target_name = $(event.relatedTarget).attr("data-targetname");
-              console.log(target_name);
-              modal.find('.modal-title').text('Send Direct Message to ' + target_name);
-              var target_user_id = $(event.relatedTarget).attr("data-targetID");
-              console.log(target_user_id);
-              var target_url = '/user/directMessages/'+target_user_id;
-              $("#target_user_id").val(target_user_id);
-              $('#urlToConversation').attr('href',target_url);
-            });
-
-            $(document).on('click','.noti', function (event) {
-                event.preventDefault();
-                var type = $(event.currentTarget).attr("data-type");
-                var redirect = $(event.currentTarget).attr("data-redirect");
-                $.ajax({
-                    type: "GET",
-                    url: "/notification/"+ event.currentTarget.id +"/read/AJAX",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function(data){
-                        window.location.replace(redirect)
-                    },
-                    failure: function(errMsg) {
-                        console.log(errMsg);
-                    }
+            </script>
+            {% endif %}
+            {% endif %}
+            <script>
+            $(document).ready(function() {
+                $(document).on('click', '.dropdown-notifications', function (e) {
+                  e.stopPropagation();
                 });
-            });
-
-            $("#markAllNotif").click(function(event){
-                $.ajax({
-                    type: "GET",
-                    url: "/notification/allRead",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function(data){
-                        location.reload();                        
-                    },
-                    failure: function(errMsg) {
-                        console.log(errMsg);
-                    }
+                var currentNotificationPage = 1;
+                var currentMessagePage = 1;
+                //Login Modal
+                $('#loginModal').on('show.bs.modal', function (event) {
+                  var button = $(event.relatedTarget);
+                  var modal = $(this);
+                  modal.find('.modal-title').text('Sign In');
                 });
-            });
-
-            $("#markAllMessages").click(function(event){
-                $.ajax({
-                    type: "GET",
-                    url: "/messages/allRead",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function(data){
-                        location.reload();
-                    },
-                    failure: function(errMsg) {
-                        console.log(errMsg);
-                    }
+                //Password Change Modal
+                $('#passwordChangeModal').on('show.bs.modal', function (event) {
+                  var button = $(event.relatedTarget);
+                  var modal = $(this);
                 });
-            });
-
-            $("#moreNotifications").click(function(event){
-                currentNotificationPage++;
-                requestURL = "/user/getNotifications/"+currentNotificationPage;
-                $.getJSON(requestURL, function(data) {
-                    notifications = data['notifications'];
-                    notificationDetails = data['paginateDetails'];
-                   
-                   DisplayNotifications();
-                   if(notificationDetails.hasNext == true){
-                        $("#doIShowMoreNotifications").show();
-                   }
-                   else{
-                        $("#doIShowMoreNotifications").hide();
-                   }
+                //Avatar Change Modal
+                $('#changeAvatarModal').on('show.bs.modal', function (event) {
+                  var button = $(event.relatedTarget);
+                  var modal = $(this);
+                  modal.find('.modal-title').text('Change Profile Picture');
                 });
-            });
-            $("#moreMessages").click(function(event){
-                currentMessagePage++;
-                requestURL = "/user/getMessageNotifications/"+currentMessagePage;
-                $.getJSON(requestURL, function(data) {
-                    notifications = data['notifications'];
-                    notificationDetails = data['paginateDetails'];
-                   
-                   $.each(notifications, function(index, message) {
-                    if(message.category == "generic_message"){
-                        console.log(message);
-                        var newNotification = `<a href="`+ message.redirectURL +`" id="`+ message.id +`" class="noti" data-redirect="`+ message.redirectURL +`" style="text-decoration: none;">`;
-                            if(message.viewed == false){
-                                newNotification += `<li class="notification" style="background-color: rgba(86, 134, 197, 0.39); color: #656264;">`;
-                            }
-                            else{
-                                newNotification += `<li class="notification">`;
-                            }
-                            newNotification += `<div class="media">
-                                <div class="media-left vertical-center" style="text-align: center">
-                                    <div class="media-object">`;                                        
-                                        if(message.notifType == "maintenance_message"){
-                                            newNotification += `<i class="fa fa-wrench fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }
-                                        else if(message.notifType == "tour_message"){
-                                            newNotification += `<i class="fa fa-calendar fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }
-                                        else if(message.notifType == "group_listing_message"){
-                                            newNotification += `<i class="fa fa-handshake-o fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }
-                                        else if(message.notifType == "house_message"){
-                                            newNotification += `<i class="fa fa-home fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }
-                                        else{
-                                            newNotification += `<i class="fa fa-users fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
-                                        }
-                                    newNotification+= `</div>
-                                </div>
-                                <div class="media-body">
-                                    <div class="row">
-                                        <div class="col-xs-6">
-                                            <strong class="notification-title">New Message(s)</strong>
-                                        </div>`;
-                                        if(message.viewed == false){
-                                            newNotification += `
-                                            <div class="col-xs-6" style="text-align: right;">
-                                                <span class="tag tag-nexnest-blue">New Message</span>
-                                            </div>`;
-                                        }
-                                    newNotification += `
-                                    </div>
-                                    <p class="notification-desc">`+ message.messageObject.contentBrief +`</p>
-                                    <div class="notification-meta">
-                                        <div class="row">
-                                            <div class="col-xs-12 notification-item-footer">`;
-                                                    if(message.notifType == "maintenance_message"){
-                                                        newNotification += `<strong>Maintenance Request - </strong>`;
-                                                    }
-                                                    else if(message.notifType == "tour_message"){
-                                                        newNotification += `<strong>Tour Request - </strong>`;
-                                                    }
-                                                    else if(message.notifType == "group_listing_message"){
-                                                        newNotification += `<strong>Property Request - </strong>`;
-                                                    }
-                                                    else if(message.notifType == "house_message"){
-                                                        newNotification += `<strong>My House - </strong>`;
-                                                    }
-                                                    else{
-                                                        newNotification += `<strong>Group Message - </strong>`;
-                                                    }
-                                                newNotification += `
-                                                <small class="timestamp timeago notification-item-footer">`+ moment.utc(message.messageObject.date).fromNow() +` </small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </a>`;
-                    }
-                    else{
-                        var newNotification = `<a href="`+message.redirectURL+`" id="`+message.id+`" class="noti" data-redirect="`+ message.redirectURL +`" style="text-decoration: none;">`;
-                            if(message.viewed == false){
-                                newNotification += `<li class="notification" style="background-color: rgba(86, 134, 197, 0.39); color: #656264;">`;
-                            }
-                            else{
-                                newNotification += `<li class="notification">`;
-                            }
+                //Platform Report
+                $('#platformReportModal').on('show.bs.modal', function (event) {
+                  var button = $(event.relatedTarget);
+                  var modal = $(this);
+                  modal.find('.modal-title').text('Give us Your Feedback!');
+                  var url = window.location.href;
+                  $("#sourceURL").val(url);
+                });
+
+                //Platform Report
+                $('#contactUsModal').on('show.bs.modal', function (event) {
+                  var button = $(event.relatedTarget);
+                  var modal = $(this);
+                });
+
+                //Direct Message
+                $('#sendDirectMessageModal').on('show.bs.modal', function (event) {
+                    console.log(event);
+                  var button = $(event.relatedTarget);
+                  var modal = $(this);
+                  var target_name = $(event.relatedTarget).attr("data-targetname");
+                  console.log(target_name);
+                  modal.find('.modal-title').text('Send Direct Message to ' + target_name);
+                  var target_user_id = $(event.relatedTarget).attr("data-targetID");
+                  console.log(target_user_id);
+                  var target_url = '/user/directMessages/'+target_user_id;
+                  $("#target_user_id").val(target_user_id);
+                  $('#urlToConversation').attr('href',target_url);
+                });
+
+                $(document).on('click','.noti', function (event) {
+                    event.preventDefault();
+                    var type = $(event.currentTarget).attr("data-type");
+                    var redirect = $(event.currentTarget).attr("data-redirect");
+                    $.ajax({
+                        type: "GET",
+                        url: "/notification/"+ event.currentTarget.id +"/read/AJAX",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function(data){
+                            window.location.replace(redirect)
+                        },
+                        failure: function(errMsg) {
+                            console.log(errMsg);
+                        }
+                    });
+                });
+
+                $("#markAllNotif").click(function(event){
+                    $.ajax({
+                        type: "GET",
+                        url: "/notification/allRead",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function(data){
+                            location.reload();                        
+                        },
+                        failure: function(errMsg) {
+                            console.log(errMsg);
+                        }
+                    });
+                });
+
+                $("#markAllMessages").click(function(event){
+                    $.ajax({
+                        type: "GET",
+                        url: "/messages/allRead",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function(data){
+                            location.reload();
+                        },
+                        failure: function(errMsg) {
+                            console.log(errMsg);
+                        }
+                    });
+                });
+
+                $("#moreNotifications").click(function(event){
+                    currentNotificationPage++;
+                    requestURL = "/user/getNotifications/"+currentNotificationPage;
+                    $.getJSON(requestURL, function(data) {
+                        notifications = data['notifications'];
+                        notificationDetails = data['paginateDetails'];
+                       
+                       DisplayNotifications();
+                       if(notificationDetails.hasNext == true){
+                            $("#doIShowMoreNotifications").show();
+                       }
+                       else{
+                            $("#doIShowMoreNotifications").hide();
+                       }
+                    });
+                });
+                $("#moreMessages").click(function(event){
+                    currentMessagePage++;
+                    requestURL = "/user/getMessageNotifications/"+currentMessagePage;
+                    $.getJSON(requestURL, function(data) {
+                        notifications = data['notifications'];
+                        notificationDetails = data['paginateDetails'];
+                       
+                       $.each(notifications, function(index, message) {
+                        if(message.category == "generic_message"){
+                            console.log(message);
+                            var newNotification = `<a href="`+ message.redirectURL +`" id="`+ message.id +`" class="noti" data-redirect="`+ message.redirectURL +`" style="text-decoration: none;">`;
+                                if(message.viewed == false){
+                                    newNotification += `<li class="notification" style="background-color: rgba(86, 134, 197, 0.39); color: #656264;">`;
+                                }
+                                else{
+                                    newNotification += `<li class="notification">`;
+                                }
                                 newNotification += `<div class="media">
-                                    <div class="media-left vertical-center" style="text-align: center;">
-                                        <div class="media-object">
-                                            <img src="`+message.messageObject.user.profileImageURL+`" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle" alt="Name" />
-                                        </div>
+                                    <div class="media-left vertical-center" style="text-align: center">
+                                        <div class="media-object">`;                                        
+                                            if(message.notifType == "maintenance_message"){
+                                                newNotification += `<i class="fa fa-wrench fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                            }
+                                            else if(message.notifType == "tour_message"){
+                                                newNotification += `<i class="fa fa-calendar fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                            }
+                                            else if(message.notifType == "group_listing_message"){
+                                                newNotification += `<i class="fa fa-handshake-o fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                            }
+                                            else if(message.notifType == "house_message"){
+                                                newNotification += `<i class="fa fa-home fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                            }
+                                            else{
+                                                newNotification += `<i class="fa fa-users fa-2x" aria-hidden="true" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle"></i>`;
+                                            }
+                                        newNotification+= `</div>
                                     </div>
                                     <div class="media-body">
                                         <div class="row">
                                             <div class="col-xs-6">
-                                                <strong class="notification-title"> `+message.messageObject.user.fname + " " + message.messageObject.user.lname +` </strong>
+                                                <strong class="notification-title">New Message(s)</strong>
                                             </div>`;
                                             if(message.viewed == false){
                                                 newNotification += `
@@ -592,12 +543,27 @@
                                             }
                                         newNotification += `
                                         </div>
-                                        <p class="notification-desc">`+message.messageObject.contentBrief+`</p>
+                                        <p class="notification-desc">`+ message.messageObject.contentBrief +`</p>
                                         <div class="notification-meta">
                                             <div class="row">
-                                                <div class="col-xs-12 notification-item-footer">
-                                                    <strong>Direct Message - </strong>
-                                                    <small class="timestamp timeago">`+ moment.utc(message.messageObject.date).fromNow() +`</small>
+                                                <div class="col-xs-12 notification-item-footer">`;
+                                                        if(message.notifType == "maintenance_message"){
+                                                            newNotification += `<strong>Maintenance Request - </strong>`;
+                                                        }
+                                                        else if(message.notifType == "tour_message"){
+                                                            newNotification += `<strong>Tour Request - </strong>`;
+                                                        }
+                                                        else if(message.notifType == "group_listing_message"){
+                                                            newNotification += `<strong>Property Request - </strong>`;
+                                                        }
+                                                        else if(message.notifType == "house_message"){
+                                                            newNotification += `<strong>My House - </strong>`;
+                                                        }
+                                                        else{
+                                                            newNotification += `<strong>Group Message - </strong>`;
+                                                        }
+                                                    newNotification += `
+                                                    <small class="timestamp timeago notification-item-footer">`+ moment.utc(message.messageObject.date).fromNow() +` </small>
                                                 </div>
                                             </div>
                                         </div>
@@ -605,27 +571,70 @@
                                 </div>
                             </li>
                         </a>`;
-                    }
-                    $("#messageArea").append(newNotification);
-                   });
-                   if(notificationDetails.hasNext == true){
-                        $("#doIShowMoreMessages").show();
-                   }
-                   else{
-                        $("#doIShowMoreMessages").hide();
-                   }
+                        }
+                        else{
+                            var newNotification = `<a href="`+message.redirectURL+`" id="`+message.id+`" class="noti" data-redirect="`+ message.redirectURL +`" style="text-decoration: none;">`;
+                                if(message.viewed == false){
+                                    newNotification += `<li class="notification" style="background-color: rgba(86, 134, 197, 0.39); color: #656264;">`;
+                                }
+                                else{
+                                    newNotification += `<li class="notification">`;
+                                }
+                                    newNotification += `<div class="media">
+                                        <div class="media-left vertical-center" style="text-align: center;">
+                                            <div class="media-object">
+                                                <img src="`+message.messageObject.user.profileImageURL+`" style="height: 50px; width: 50px; border-radius: 30px;" class="img-circle" alt="Name" />
+                                            </div>
+                                        </div>
+                                        <div class="media-body">
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <strong class="notification-title"> `+message.messageObject.user.fname + " " + message.messageObject.user.lname +` </strong>
+                                                </div>`;
+                                                if(message.viewed == false){
+                                                    newNotification += `
+                                                    <div class="col-xs-6" style="text-align: right;">
+                                                        <span class="tag tag-nexnest-blue">New Message</span>
+                                                    </div>`;
+                                                }
+                                            newNotification += `
+                                            </div>
+                                            <p class="notification-desc">`+message.messageObject.contentBrief+`</p>
+                                            <div class="notification-meta">
+                                                <div class="row">
+                                                    <div class="col-xs-12 notification-item-footer">
+                                                        <strong>Direct Message - </strong>
+                                                        <small class="timestamp timeago">`+ moment.utc(message.messageObject.date).fromNow() +`</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </a>`;
+                        }
+                        $("#messageArea").append(newNotification);
+                       });
+                       if(notificationDetails.hasNext == true){
+                            $("#doIShowMoreMessages").show();
+                       }
+                       else{
+                            $("#doIShowMoreMessages").hide();
+                       }
+                    });
                 });
-            });
-            
-            $("#showMoreHouses").click(function(e) {
-                 e.stopPropagation(); 
-                $(".moreHouses").show();
-            });
+                
+                $("#showMoreHouses").click(function(e) {
+                     e.stopPropagation(); 
+                    $(".moreHouses").show();
+                });
 
-            //limit text shown of each house
-            $(".extraHouse").text(function(index, currentText) {
-                return currentText.substr(0, 10);
-            });
+                //limit text shown of each house
+                $(".extraHouse").text(function(index, currentText) {
+                    return currentText.substr(0, 10);
+                });
+            })
+            
 		</script>
 	</body>
 </html>
