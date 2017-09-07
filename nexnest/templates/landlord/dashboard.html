@@ -2446,82 +2446,46 @@
     	cart.items = [];
     	var selectedItem = {};
     	var count = 0;
-    	$(".checkoutListingSelect").each(function(i, obj){
-    		if($(obj).is(":checked")){
-    			var id = obj.id.match(/\d+/)[0];
-    			var street = obj.dataset.street;
-    			var leasePeriod = obj.dataset.lease;
-    			var time = obj.dataset.time;
-    			//console.log(id);
-    			if($("#standardLabel"+id).hasClass("active")){
-    				selectedItem = {
-    					index: count,
-    					listing_id: id,
-    					listing_street: street,
-    					leasePeriod: leasePeriod,
-    					timePeriod: time,
-    					plan: 'standard'    					
-    				}
-    				cart.items.push(selectedItem);
-    			}
-    			else if($("#deluxeLabel"+id).hasClass("active")){
-    				selectedItem = {
-    					index: count,
-    					listing_id: id,
-    					listing_street: street,
-    					leasePeriod: leasePeriod,
-    					timePeriod: time,
-    					plan: 'premium'    					
-    				}
-    				cart.items.push(selectedItem);
-    			}
-    			count++;
-    		}    		
-    	});
-    	cart = JSON.stringify(cart);
-    	console.log(cart);
+    	//ensure checout total is less than $1500 due to Braintree conditions
+		$(".checkoutListingSelect").each(function(i, obj){
+			if($(obj).is(":checked")){
+				var id = obj.id.match(/\d+/)[0];
+				var street = obj.dataset.street;
+				var leasePeriod = obj.dataset.lease;
+				var time = obj.dataset.time;
+				//console.log(id);
+				if($("#standardLabel"+id).hasClass("active")){
+					selectedItem = {
+						index: count,
+						listing_id: id,
+						listing_street: street,
+						leasePeriod: leasePeriod,
+						timePeriod: time,
+						plan: 'standard'    					
+					}
+					cart.items.push(selectedItem);
+				}
+				else if($("#deluxeLabel"+id).hasClass("active")){
+					selectedItem = {
+						index: count,
+						listing_id: id,
+						listing_street: street,
+						leasePeriod: leasePeriod,
+						timePeriod: time,
+						plan: 'premium'    					
+					}
+					cart.items.push(selectedItem);
+				}
+				count++;
+			}    		
+		});
+		cart = JSON.stringify(cart);
+		console.log(cart);
 
-        preCheckoutJSONElement = document.getElementById("preCheckoutJSON")
-        preCheckoutJSONElement.value = cart
-        precheckoutElement = document.getElementById("preCheckoutForm")
-        precheckoutElement.submit()
-
-    	// $.ajax({
-    	//     type: "POST",
-    	//     url: '/preCheckout',
-    	//     // The key needs to match your method's input parameter (case-sensitive).
-    	//     data: cart,
-    	//     contentType: "application/json; charset=utf-8",
-    	//     dataType: "json",
-    	//     beforeSend: function(xhr, settings) {
-	    // 	                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-	    // 	                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token() }}');
-	    // 	                }
-    	//             	},
-    	//     success: function(data){alert(data);},
-    	//     failure: function(errMsg) {
-    	//         alert(errMsg);
-    	//     }
-    	// });
-
-  //   	$.getJSON(requestURL, function(data) {
-  //           results = data['results'];
-  //           // alert(data['results'].success);
-  //           if (results.success == true){ 
-		//     	var depositsPaid = parseFloat($("#numDeposits"+requestID).html()) || 0;
-		//     	$("#numDeposits"+requestID).html(depositsPaid-1);
-		//     	$("#depositMarkedPaid"+requestID+"Z"+userID).hide();
-		//     	$("#markDepositPaid"+requestID+"Z"+userID).show();
-		//     	setTimeout(function () {
-		//         	$("#markDepositPaid"+requestID+"Z"+userID).hide();
-		//         	$("#depositUnpaid"+requestID+"Z"+userID).show();		        	
-		//         }, 1200);
-		//     }
-		//     else{
-		//     	alert("Something went wrong, try again later");
-		//     }
-		// }); 	
-    	// console.log(cart);
+	    preCheckoutJSONElement = document.getElementById("preCheckoutJSON")
+	    preCheckoutJSONElement.value = cart
+	    precheckoutElement = document.getElementById("preCheckoutForm")
+	    precheckoutElement.submit()
     }
 
 	$(document).ready(function() {
