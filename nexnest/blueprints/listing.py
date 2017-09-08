@@ -798,7 +798,10 @@ def searchListingsAJAX():
         returnDict['school'] = None
 
     if current_user.is_authenticated:
-        returnDict['currentUserSchool'] = current_user.school.serialize
+        if not current_user.isLandlord:
+            returnDict['currentUserSchool'] = current_user.school.serialize
+        else:
+            returnDict['currentUserSchool'] = None
     else:
         returnDict['currentUserSchool'] = None
 

@@ -259,7 +259,7 @@ def updateTourTimes(tourID):
         if tour.last_requested == 'group':
             tour.last_requested = 'landlord'
         elif tour.last_requested == 'landlord':
-            tour.last_request = 'group'
+            tour.last_requested = 'group'
         else:
             app.logger.error('updateTourTimes() :  Unknown last_requested %s' % tour.last_requested)
         session.commit()

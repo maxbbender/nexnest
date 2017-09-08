@@ -48,29 +48,40 @@ def create():
                     .filter_by(id=rLForm.listingID.data) \
                     .first()
 
+                # Make sure there isn't already a request
+                glCheck = GroupListing.query.filter_by(group=group, listing=listing).count()
+
                 if listing is not None:
-                    newGL = GroupListing(group=group,
-                                         listing=listing)
-                    session.add(newGL)
-                    session.commit()
 
-                    newGL.genNotifications()
+                    if glCheck == 0:
 
-                    newGLM = GroupListingMessage(groupListing=newGL,
-                                                 user=current_user,
-                                                 content=rLForm.reqDescription.data)
+                        newGL = GroupListing(group=group,
+                                             listing=listing)
+                        session.add(newGL)
+                        session.commit()
 
-                    session.add(newGLM)
-                    session.commit()
+                        newGL.genNotifications()
 
-                    flash("You have requested to live at this listing!", 'success')
+                        if rLForm.reqDescription.data != "":
 
-                    # Invalidate all open group invitations
-                    newGL.group.invalidateOpenInvitations()
+                            newGLM = GroupListingMessage(groupListing=newGL,
+                                                         user=current_user,
+                                                         content=rLForm.reqDescription.data)
 
-                    return redirect(url_for('housingRequests.view', id=newGL.id))
+                            session.add(newGLM)
+                            session.commit()
+
+                        flash("You have requested to live at this listing!", 'success')
+
+                        # Invalidate all open group invitations
+                        newGL.group.invalidateOpenInvitations()
+
+                        return redirect(url_for('housingRequests.view', id=newGL.id))
+                    else:
+                        flash('%s has already requested to live at %s!' % (group.name, listing.briefStreet), 'danger')
                 else:
                     flash("Listing does not exist", 'warning')
+
         else:
             flash("Group does not exist", 'warning')
 

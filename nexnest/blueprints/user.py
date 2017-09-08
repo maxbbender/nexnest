@@ -832,3 +832,7 @@ def resetPasswordConfirm(payload):
         flash_errors(form)
 
     return render_template('resetPassword.html', form=form, payload=payload)
+
+@users.route('/user/forgotPassword', methods=['GET', 'POST'])
+def forgotPassword():
+    return render_template('forgotPassword.html', title="Forgot Password")

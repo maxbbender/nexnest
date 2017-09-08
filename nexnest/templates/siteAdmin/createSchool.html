@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<form action="{{url_for('siteAdmin.createSchool')}}" method="POST">
+{{form.csrf_token}}
+{{form.name.label}}{{form.name}}
+{{form.street.label}}{{form.street}}
+{{form.city.label}}{{form.city}}
+{{form.state.label}}{{form.state}}
+{{form.zip_code.label}}{{form.zip_code}}
+{{form.phone.label}}{{form.phone}}
+{{form.website.label}}{{form.website}}
+<input type="submit">
+</form>
+{% endblock %}

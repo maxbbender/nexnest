@@ -6,10 +6,12 @@ from flask_login import current_user, login_required
 from nexnest import db
 from nexnest.models.coupon import Coupon
 from nexnest.models.user import User
+from nexnest.models.school import School
 from nexnest.models.platform_report import PlatformReport
 from nexnest.utils.coupon import couponExists
+from nexnest.utils.flash import flash_errors
 from nexnest.utils.misc import idGenerator
-from nexnest.forms import CreateCouponForm
+from nexnest.forms import CreateCouponForm, CreateSchoolForm
 
 siteAdmin = Blueprint('siteAdmin', __name__,
                       template_folder='../templates/siteAdmin')
@@ -151,3 +153,37 @@ def viewPlatformReports():
 
     return render_template('viewPlatformReports.html',
                            reports=allPlatformReports)
+
+
+@siteAdmin.route('/school/create', methods=['GET', 'POST'])
+def createSchool():
+    form = CreateSchoolForm()
+
+    if form.validate_on_submit():
+        schoolCheck = School.query.filter_by(name=form.name.data).count()
+
+        if schoolCheck == 0:
+            newSchool = School(form.name.data,
+                               street=form.street.data,
+                               city=form.city.data,
+                               state=form.state.data,
+                               zip_code=form.zip_code.data)
+
+            if form.phone.data != "":
+                newSchool.phone = form.phone.data
+
+            if form.website.data != "":
+                newSchool.website = form.website.data
+
+            db.session.add(newSchool)
+            db.session.commit()
+
+            flash('School %s has been created!' % newSchool.name, 'success')
+        else:
+            flash('School %s has already been created!' % form.name.data, 'warning')
+    else:
+        flash_errors(form)
+        return render_template('createSchool.html',
+                               form=form)
+
+    return form.redirect()

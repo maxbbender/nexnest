@@ -1,10 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
 <br><br>
-<div class="row">
-	<div class="col-xs-12">
-		<h1>Thank you for signing up for NexNest!</h1>
-		<h4>We have sent an email to {{email}}. Please go and click the link to activate your account.</h4>
+<div class="row nexnest-font" style="color: #4fac80;">
+	<div class="col-xs-4 col-md-3" style="text-align: right;">
+		<img src="/static/img/mailBird.png" style="max-height: 450px;">
+	</div>
+	<div class="col-xs-8 col-md-9" style="padding-top: 5%;">
+		<h1 style="color: #4fac80;">Thank you for signing up for NexNest!</h1>
+		<h4 style="color: #5686c5;">
+			We have sent an email to {{email}}. Please go and click the link to activate your account.
+			<br>
+			If you do not see it, please check your spam folder.
+		</h4>
 	</div>
 </div>
 {% endblock %}
