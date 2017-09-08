@@ -108,18 +108,18 @@
                 </div>
 				<div class="row hidden-md-down">
 					<div class="col-xs-12 col-lg-3" style="text-align:left">
-						<a href="#" data-toggle="modal" data-target="#sendDirectMessageModal" data-targetID="{{listing.landLordsAsUsers()[0].id}}" data-targetname="{{listing.landLordsAsUsers()[0].name}}" class="btn btn-light-green" style="font-size: 20px; width: 202px;">
-							<i class="icon icon-user-circle" style="margin-right: 5px; color: #fff;"></i>Contact Landlord
+						<a href="#" data-toggle="modal" data-target="#sendDirectMessageModal" data-targetID="{{listing.landLordsAsUsers()[0].id}}" data-targetname="{{listing.landLordsAsUsers()[0].name}}" data-listing="{{ listing.street }}, {{ listing.city }}, {{ listing.state }} {{ listing.zip_code }}" class="btn btn-light-green" style="font-size: 20px; width: 202px;">
+							<i class="icon icon-user-circle" style="margin-right: 5px; color: #fff;"></i>Request More Info
 						</a>
 					</div>
 					<div class="col-xs-12 col-lg-3 col-centered">					
 			            <a href='#' class="btn btn-blue" data-toggle="modal" data-target="#selectGroupForTourModal" style="font-size: 20px; width: 202px;">
-			            	<i class="fa fa-calendar" aria-hidden="true" style="margin-right: 5px; color: #fff;"></i>Request Tour
+			            	<i class="fa fa-calendar" aria-hidden="true" style="margin-right: 5px; color: #fff;"></i>Tour Me
 			            </a>
 					</div>
 					<div class="col-xs-12 col-lg-3 col-centered">
 						<a href='#' class="btn btn-blue" data-toggle="modal" data-target="#selectGroupForHouseModal" style="font-size: 20px; width: 202px;">
-							<i class="fa fa-home" aria-hidden="true" style="margin-right: 5px; color: #fff;"></i>Request House
+							<i class="fa fa-home" aria-hidden="true" style="margin-right: 5px; color: #fff;"></i>Rent Me
 						</a>
 					</div>
 					<div class="col-xs-12 col-lg-3" style="text-align:right">
@@ -130,36 +130,49 @@
 				</div>
 				<div class="row hidden-lg-up">
 					<div class="col-xs-12 col-md-6 col-lg-3 col-centered">
-						<a href="#" data-toggle="modal" data-target="#sendDirectMessageModal" data-targetID="{{listing.landLordsAsUsers()[0].id}}" data-targetname="{{listing.landLordsAsUsers()[0].name}}" class="btn btn-light-green" style="width: 160.31px;">
-							<i class="icon icon-user-circle" style="margin-right: 5px; color: #fff;"></i>Contact Landlord
+						<a href="#" data-toggle="modal" data-target="#sendDirectMessageModal" data-targetID="{{listing.landLordsAsUsers()[0].id}}" data-targetname="{{listing.landLordsAsUsers()[0].name}}" data-listing="{{ listing.street }}, {{ listing.city }}, {{ listing.state }} {{ listing.zip_code }}" class="btn btn-light-green" style="width: 202px;">
+							<i class="icon icon-user-circle" style="margin-right: 5px; color: #fff;"></i>Request More Info
 						</a>
 					</div>
 					<br><br>
 					<div class="col-xs-12 col-md-6 col-lg-3 col-centered">					
-			            <a href='#' class="btn btn-blue" data-toggle="modal" data-target="#selectGroupForTourModal" style="width: 160.31px;">
-			            	<i class="fa fa-calendar" aria-hidden="true" style="margin-right: 5px; color: #fff;"></i>Request Tour
+			            <a href='#' class="btn btn-blue" data-toggle="modal" data-target="#selectGroupForTourModal" style="width: 202px;">
+			            	<i class="fa fa-calendar" aria-hidden="true" style="margin-right: 5px; color: #fff;"></i>Tour Me
 			            </a>
 					</div>
 					<br><br>
 					<div class="col-xs-12 col-md-6 col-lg-3 col-centered">
-						<a href='#' class="btn btn-blue" data-toggle="modal" data-target="#selectGroupForHouseModal" style="width: 160.31px;">
-							<i class="fa fa-home" aria-hidden="true" style="margin-right: 5px; color: #fff;"></i>Request House
+						<a href='#' class="btn btn-blue" data-toggle="modal" data-target="#selectGroupForHouseModal" style="width: 202px;">
+							<i class="fa fa-home" aria-hidden="true" style="margin-right: 5px; color: #fff;"></i>Rent Me
 						</a>
 					</div>
 					<br><br>
 					<div class="col-xs-12 col-md-6 col-lg-3 col-centered">
-						<a href='#' class="btn btn-yellow" data-toggle="modal" data-target="#suggestListingModal" style="width: 160.31px;">
+						<a href='#' class="btn btn-yellow" data-toggle="modal" data-target="#suggestListingModal" style="width: 202px;">
 							<i class="fa fa-heart" aria-hidden="true" style="margin-right: 5px; color: #fff;"></i>Add to Group
 						</a>
 					</div>
 				</div>
 				{% endif %}
 				{% if current_user in listing.landLordsAsUsers() %}
-					<a href="{{url_for('listings.cloneListing', listingID=listing.id)}}" class="btn btn-primary">Clone Listing</a>
-					{% if listing.isEditableBy(current_user) %}
-						<a href="{{url_for('listings.editListing', listingID=listing.id)}}" class="btn btn-primary">Edit Listing</a>
-					{% endif %}
+					<div class="row">
+						<div class="col-xs-12" style="text-align: right;">
+							<a href="{{url_for('listings.cloneListing', listingID=listing.id)}}" class="btn btn-blue"><i class="fa fa-clone" aria-hidden="true"></i> Copy Listing</a>
+							{% if listing.isEditableBy(current_user) %}
+								<a href="{{url_for('listings.editListing', listingID=listing.id)}}" class="btn btn-blue"><i class="fa fa-pencil" aria-hidden="true"></i> Edit Listing</a>
+							{% endif %}
+						</div>
+					</div>
 				{% endif %}
+			{% else %}
+				<div class="row" style="padding-top: 15px; padding-left: 15px;">
+					<div class="col-xs-12" style="text-align:left">
+						<i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 5px;"></i> Please 
+						<a class="hidden-xs-down" href="#" data-toggle="modal" data-target="#loginModal">sign in</a>
+						<a class="hidden-sm-up" href="{{url_for('users.login')}}">sign in</a>
+						to request to tour me, rent me, or get additional information.
+					</div>
+				</div>
 			{% endif %}
 			
 			<hr>
