@@ -15,6 +15,8 @@
 							  	<dl>
 								    {{ render_field(login_form.email, class="form-control", type="email") }}
 				                    {{ render_field(login_form.password, class="form-control", type="password") }}
+                                    <a href="{{url_for('users.forgotPassword')}}">Forgot Password?</a>
+
 							  	</dl>
                                 {{login_form.next}}
 							  	<div class="row" style="float: right;">
