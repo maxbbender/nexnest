@@ -20,6 +20,7 @@ from nexnest.models.tour import Tour
 from nexnest.models.user import User
 from nexnest.utils.email import send_email
 from nexnest.utils.flash import flash_errors
+from nexnest.utils.group import genGroupEmailInviteNoUser
 from sqlalchemy import asc, desc
 
 groups = Blueprint('groups', __name__, template_folder='../templates')
@@ -318,7 +319,7 @@ def inviteUserByEmail(groupID, emailAddress):
     # No Errors
     if errorMessage is None:
         if user is None:
-            message = 'you are not a part of the site yet! Lets invite you'
+            message = genGroupEmailInviteNoUser(group)
         else:
             message = 'you are already a part of the site. here is the link to confirm'
 
