@@ -367,3 +367,13 @@ class NewPasswordForm(RedirectForm):
                               EqualTo('confirm',
                                       message="Passwords must match")])
     confirm = PasswordField('Confirm Password', [InputRequired()])
+
+
+class CreateSchoolForm(RedirectForm):
+    name = StringField('School Name', [InputRequired()])
+    street = StringField('Street', [InputRequired()])
+    city = StringField('City', [Length(min=2, max=50), InputRequired()])
+    state = SelectField('State', choices=statesLong)
+    zip_code = StringField('Zipcode', [Length(min=5, max=5), InputRequired()])
+    phone = StringField('Phone Number', validators=[Optional(), Length(10, 10, 'Phone number must be 10 digits long')])
+    website = StringField('Website', [Optional()])
