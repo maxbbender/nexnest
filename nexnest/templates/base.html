@@ -423,9 +423,12 @@
                   console.log(target_name);
                   modal.find('.modal-title').text('Send Direct Message to ' + target_name);
                   var target_user_id = $(event.relatedTarget).attr("data-targetID");
+                  var listingDetails = $(event.relatedTarget).attr("data-listing");
+                  console.log(listingDetails);
                   console.log(target_user_id);
                   var target_url = '/user/directMessages/'+target_user_id;
                   $("#target_user_id").val(target_user_id);
+                  $('.direct_message_modal').prepend("I would like to get more information about your property, " + listingDetails);
                   $('#urlToConversation').attr('href',target_url);
                 });
 
