@@ -409,7 +409,9 @@ def editAccountInfo():
     else:
         schools = [r for r, in session.query(School.name).all()]
         form = EditAccountForm(request.form, obj=current_user)
-        form.school.data = current_user.school.name
+
+        if current_user.school:
+            form.school.data = current_user.school.name
         return render_template('editAccount.html',
                                form=form,
                                title='Edit Account',
