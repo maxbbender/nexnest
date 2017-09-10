@@ -9,6 +9,7 @@ from nexnest.models.security_deposit import SecurityDeposit
 
 session = db.session
 
+
 class Landlord(Base):
     __tablename__ = 'landlords'
     user_id = db.Column(db.Integer,
@@ -281,17 +282,18 @@ class Landlord(Base):
                     groupListingDict = groupListing.serialize
 
                     securityDeposit = session.query(SecurityDeposit) \
-                        .filter_by(
-                        group_listing_id=int(groupListingDict['id']),
-                        user_id=int(groupListingDict['group']['leader']['id'])) \
+                        .filter_by(group_listing_id=int(groupListingDict['id']),
+                                   user_id=int(groupListingDict['group']['leader']['id'])) \
                         .first()
 
-                    groupListingDict['group']['leader']['securityDepositPaid'] = securityDeposit.completed
+                    if securityDeposit:
+                        groupListingDict['group']['leader']['securityDepositPaid'] = securityDeposit.completed
+                    else:
+                        groupListingDict['group']['leader']['securityDepositPaid'] = False
 
                     numSecurityDepositsPaid = session.query(SecurityDeposit) \
-                        .filter_by(
-                        group_listing_id=int(groupListingDict['id']),
-                        completed=True) \
+                        .filter_by(group_listing_id=int(groupListingDict['id']),
+                                   completed=True) \
                         .count()
 
                     groupListingDict['numSecurityDepositsPaid'] = numSecurityDepositsPaid
