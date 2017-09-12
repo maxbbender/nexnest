@@ -30,6 +30,10 @@ from nexnest.utils.file import allowed_file
 from nexnest.utils.flash import flash_errors
 from nexnest.utils.password import check_password
 from nexnest.utils.school import allSchoolsAsStrings
+<<<<<<< Updated upstream
+=======
+from nexnest.utils.user import genEmailVerificationContent, genEmailPasswordResetContent
+>>>>>>> Stashed changes
 from sqlalchemy import and_, asc, func, or_, desc
 from werkzeug.utils import secure_filename
 
@@ -741,3 +745,49 @@ def getAvailability(landlordID=None):
             availabilityList.append(avail.serialize)
 
     return jsonify(availabilityList)
+<<<<<<< Updated upstream
+=======
+
+
+@users.route('/user/passwordReset/<email>')
+def resetPassword(email):
+    user = User.query.filter_by(email=email).first_or_404()
+
+    emailConfirmURL = url_for('users.resetPasswordConfirm',
+                              payload=generate_confirmation_token(user.email),
+                              _external=True)
+
+    # Send EMAIL
+    user.sendEmail('passwordReset', genEmailPasswordResetContent(user, passwordURL))
+
+    flash('Password Reset Email sent to %s' % email, 'success')
+    return redirect(url_for('users.login'))
+
+
+@users.route('/user/password/reset/<payload>', methods=['GET', 'POST'])
+def resetPasswordConfirm(payload):
+    try:
+        email = confirm_token(payload)
+    except:
+        flash('The confirmation link is invalid or has expired.', 'danger')
+        app.logger.warning('User just tried to reset password with an invalid or expired token')
+        abort(404)
+
+    user = User.query.filter_by(email=email).first_or_404()
+    form = NewPasswordForm()
+
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        db.session.commit()
+
+        flash('Password updated!', 'success')
+        return redirect(url_for('indexs.index'))
+    else:
+        flash_errors(form)
+
+    return render_template('resetPassword.html', form=form, payload=payload)
+
+@users.route('/user/forgotPassword', methods=['GET', 'POST'])
+def forgotPassword():
+    return render_template('forgotPassword.html', title="Forgot Password")
+>>>>>>> Stashed changes
