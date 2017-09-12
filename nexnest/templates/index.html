@@ -444,8 +444,12 @@
 			$('#rooms2').val(sessionStorageBedrooms);
 		}
 		if(sessionStorageTerm != undefined){
+			console.log(sessionStorageTerm);
 			$('#when').val(sessionStorageTerm);
 			$('#when2').val(sessionStorageTerm);
+		}else{
+			$('#when').val("2018-2019");
+			$('#when2').val("2018-2019");
 		}
 		if(sessionStorageMinPrice != undefined){
 			priceSlider.setValue([parseInt(sessionStorageMinPrice), parseInt(sessionStorageMaxPrice)]);
