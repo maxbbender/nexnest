@@ -235,9 +235,9 @@ def login():
                                         session.commit()
 
                         else:
-                            flash('You must confirm your email before logging in. Click <a href="'
+                            flash('The email %s has not been confirmed with Nexnest. Click <a href="'
                                   + url_for('users.resendEmailVerification', email=user.email) +
-                                  '">here</a> to resend the email verification', 'danger')
+                                  '">here</a> to resend the email verification' % user.email, 'danger')
                     else:
                         flash("Error validating login credentials", 'danger')
                         return login_form.redirect()
@@ -268,7 +268,7 @@ def resendEmailVerification(email):
             user.email), _external=True)
         user.sendEmail('emailVerification',
                        genEmailVerificationContent(user, emailConfirmURL))
-        flash('Email for account verification has been resent!', 'success')
+        flash('An email has been sent to %s for verification.' % email, 'success')
     else:
         flash('This user account has already been confirmed', 'warning')
 
