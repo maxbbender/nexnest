@@ -50,7 +50,7 @@ def viewListing(listingID):
                            pictures=listing.getPhotoURLs(),
                            bannerPhoto=listing.banner_photo_url,
                            ListingReportForm=ListingReportForm(),
-                           groupCreateForm=CreateGroupForm())
+                           createGroupForm=CreateGroupForm())
 
 
 @listings.route('/listing/create', methods=['GET', 'POST'])

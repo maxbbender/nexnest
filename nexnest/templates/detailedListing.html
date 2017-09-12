@@ -577,7 +577,7 @@
 						      					</script>
 					      					{% endfor %}
 					      				{% else %}
-					      					<h3>You first need to be in a group. <a href="{{ url_for('users.myGroups') }}">Create one!</a></h3>
+					      					<h3>You first need to be in a group. <a href="#" data-toggle="modal" data-target="#createGroupModal">Create one!</a></h3>
 					      				{% endif %}
 			      					{% endif %}
 		      					{% endif %}
@@ -628,7 +628,7 @@
 						      					    		</div>
 						      					    	</p>
 						      					    	<!-- If group.hasTourForLisiting -->
-								      					<button class="btn btn-primary" data-toggle="modal" data-target="#requestTourModal" data-group="{{group.id}}" data-dismiss="modal">Select Group</button>
+								      					<button class="btn btn-blue pull-right" data-toggle="modal" data-target="#requestTourModal" data-group="{{group.id}}" data-dismiss="modal">Select Group</button>
 						      					    </div>
 						      					</div>
 						      					<script>
@@ -639,7 +639,7 @@
 						      					</script>
 					      					{% endfor %}
 					      				{% else %}
-					      					<h3>You first need to be in a group. <a href="{{ url_for('users.myGroups') }}">Create one!</a></h3>
+					      					<h3>You first need to be in a group. <a href="#" data-toggle="modal" data-target="#createGroupModal">Create one!</a></h3>
 					      				{% endif %}
 			      					{% endif %}
 		      					{% endif %}
@@ -736,7 +736,7 @@
 						      					    		</div>
 						      					    	</p>
 						      					    	<!-- If group.hasTourForLisiting -->
-								      					<button class="btn btn-primary" data-toggle="modal" data-target="#requestHouseModal" data-group="{{group.id}}" data-dismiss="modal">Select Group</button>
+								      					<button class="btn btn-blue pull-right" data-toggle="modal" data-target="#requestHouseModal" data-group="{{group.id}}" data-dismiss="modal">Select Group</button>
 						      					    </div>
 						      					</div>
 						      					<script>
@@ -747,7 +747,7 @@
 						      					</script>
 					      					{% endfor %}
 					      				{% else %}
-					      					<h3>You first need to be in a group. <a href="{{ url_for('users.myGroups') }}">Create one!</a></h3>
+					      					<h3>You first need to be in a group. <a href="#" data-toggle="modal" data-target="#createGroupModal">Create one!</a></h3>
 					      				{% endif %}
 			      					{% endif %}
 		      					{% endif %}
@@ -794,6 +794,7 @@
 		</div>
 	</body>
 </html>
+{% include 'group/createGroupModal.html' %}
 {% endblock %}
 {% block scripts %}
 <script>
@@ -813,7 +814,7 @@
 	        flags[landlordAvailability[i].day] = true;
 	        availableDays.push(landlordAvailability[i].day);
 	    }
-	    console.log(availableDays);
+	    //console.log(availableDays);
 
 	    $datePicker.datepicker({ 
 	        changeMonth: true,
@@ -848,8 +849,8 @@
 	     }).change(function(e){
 	        setTimeout(function(){
 	        	$("#validTimes").empty();
-	        	console.log(landlordAvailability);
-	        	console.log($datePicker.datepicker('getDate'));
+	        	//console.log(landlordAvailability);
+	        	//console.log($datePicker.datepicker('getDate'));
 	        	var date = $datePicker.datepicker('getDate');
 	        	var month = date.getUTCMonth() +1;
 	        	var monthName = monthNames[month-1];
@@ -858,10 +859,10 @@
 	        	var dayOfWeek = date.getUTCDay();
 	        	var dateForMax = ""+month+"-"+day+"-"+year;
 	       		var returnDate = ""+monthName+" "+day+" "+year;
-	       		console.log(returnDate);
-	        	console.log(dayOfWeek);
+	       		//console.log(returnDate);
+	        	//console.log(dayOfWeek);
 	        	var alreadySelectedTimes = returnTimes(selectedDateTimes, dateForMax)
-	        	console.log(alreadySelectedTimes);
+	        	//console.log(alreadySelectedTimes);
 	        	var timesShown =`<div class="row">`;
 	        	for (var i = 0; i < landlordAvailability.length; i++ )
 	        	{
@@ -902,11 +903,11 @@
 		}
 		else{
 			$('#selectedTourTimes').tagsinput('remove', ""+ date + " @ " +time);
-			console.log('already exists');
+			//console.log('already exists');
 		}
-		console.log(selectedDateTimes);
+		//console.log(selectedDateTimes);
 		$("#requestedDateTime").val(JSON.stringify(selectedDateTimes));
-		console.log($("#requestedDateTime").val());
+		//console.log($("#requestedDateTime").val());
 	}
 
 
@@ -917,7 +918,7 @@
 	function checkDateTime(obj, date, time)
 	{
 		//debugger;
-		console.log(obj);
+		//console.log(obj);
 	    for (i = 0; i < obj.length; i++ )
 	    {
 	        if (obj[i] == ""+date+ " " + time)
@@ -931,12 +932,12 @@
 
 	function returnTimes(obj, date)
 	{
-		console.log(obj);
+		//console.log(obj);
         
 		var times= [];
 	    for (i = 0; i < obj.length; i++ )
-	    {	console.log(obj[i].split(" ")[0]);
-	    	console.log(date.toString());
+	    {	//console.log(obj[i].split(" ")[0]);
+	    	//console.log(date.toString());
 	        if (obj[i].split(" ")[0] == date.toString())
 	        {
 	        	times.push(obj[i].split(" ")[1]);
@@ -951,21 +952,21 @@
 	});
 
 	$('input').on('itemRemoved', function(event) {
-	  console.log(event);
+	  //console.log(event);
 	  var removedItem = event.item;
 	  var fields = removedItem.split('@');
 	  var date = fields[0];
 	  date = date.trim();
 	  var time = fields[1];
 	  time = time.trim();
-	  console.log(date);
-	  console.log(time);
+	  //console.log(date);
+	  //console.log(time);
 	  checkDateTime(selectedDateTimes, date, time);
-	  console.log(selectedDateTimes);
+	  //console.log(selectedDateTimes);
 	  $("#date_"+date+"_time_"+time).prop('checked', false);
-	  console.log("#date_"+date+"_time_"+time);
+	  //console.log("#date_"+date+"_time_"+time);
 	  var elementExists = document.getElementById("date_"+date+"_time_"+time);
-	  console.log(elementExists);
+	  //console.log(elementExists);
 	});
 
     //Request Tour Modal
@@ -988,6 +989,12 @@
       modal.find('#groupNumberHouse').text(group);
       window.scrollTo(0, 0);
     })
+
+	$('#createGroupModal').on('show.bs.modal', function (event) {
+	  var button = $(event.relatedTarget)
+	  var modal = $(this)
+	  modal.find('.modal-title').text('Create Group')
+	});
 
     //Listing Report
     $('#listingReportModal').on('show.bs.modal', function (event) {
