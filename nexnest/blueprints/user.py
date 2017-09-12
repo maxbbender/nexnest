@@ -33,8 +33,8 @@ from nexnest.utils.file import allowed_file
 from nexnest.utils.flash import flash_errors
 from nexnest.utils.password import check_password
 from nexnest.utils.school import allSchoolsAsStrings
-from nexnest.utils.user import genEmailVerificationContent
 from sqlalchemy import and_, asc, desc, func, or_
+from nexnest.utils.user import genEmailVerificationContent, genEmailPasswordResetContent
 from werkzeug.utils import secure_filename
 
 users = Blueprint('users', __name__, template_folder='../templates/user')
@@ -816,8 +816,7 @@ def resetPassword(email):
                               _external=True)
 
     # Send EMAIL
-    user.sendEmail(
-        'passwordReset', 'Click <a href="%s">here</a> to reset your password' % emailConfirmURL)
+    user.sendEmail('passwordReset', genEmailPasswordResetContent(user, passwordURL))
 
     flash('Password Reset Email sent to %s' % email, 'success')
     return redirect(url_for('users.login'))
@@ -829,8 +828,7 @@ def resetPasswordConfirm(payload):
         email = confirm_token(payload)
     except:
         flash('The confirmation link is invalid or has expired.', 'danger')
-        app.logger.warning(
-            'User just tried to reset password with an invalid or expired token')
+        app.logger.warning('User just tried to reset password with an invalid or expired token')
         abort(404)
 
     user = User.query.filter_by(email=email).first_or_404()
@@ -846,7 +844,6 @@ def resetPasswordConfirm(payload):
         flash_errors(form)
 
     return render_template('resetPassword.html', form=form, payload=payload)
-
 
 @users.route('/user/forgotPassword', methods=['GET', 'POST'])
 def forgotPassword():
