@@ -33,8 +33,9 @@ from nexnest.utils.file import allowed_file
 from nexnest.utils.flash import flash_errors
 from nexnest.utils.password import check_password
 from nexnest.utils.school import allSchoolsAsStrings
+from nexnest.utils.user import (genEmailPasswordResetContent,
+                                genEmailVerificationContent)
 from sqlalchemy import and_, asc, desc, func, or_
-from nexnest.utils.user import genEmailVerificationContent, genEmailPasswordResetContent
 from werkzeug.utils import secure_filename
 
 users = Blueprint('users', __name__, template_folder='../templates/user')
@@ -816,7 +817,7 @@ def resetPassword(email):
                               _external=True)
 
     # Send EMAIL
-    user.sendEmail('passwordReset', genEmailPasswordResetContent(user, passwordURL))
+    user.sendEmail('passwordReset', genEmailPasswordResetContent(user, emailConfirmURL))
 
     flash('Password Reset Email sent to %s' % email, 'success')
     return redirect(url_for('users.login'))
@@ -844,6 +845,7 @@ def resetPasswordConfirm(payload):
         flash_errors(form)
 
     return render_template('resetPassword.html', form=form, payload=payload)
+
 
 @users.route('/user/forgotPassword', methods=['GET', 'POST'])
 def forgotPassword():
