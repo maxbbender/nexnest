@@ -16,3 +16,23 @@ def genEmailVerificationContent(user, emailConfirmURL):
         </div>
     </div>
     ''' % (user.fname, emailConfirmURL)
+
+
+def genEmailPasswordResetContent(user, passwordURL):
+    return '''
+    <div class="col-xs-1"></div>
+    <div class="col-xs-10">
+        <span>Hello, %s</span>
+        <br><br>
+        <span>
+            You have requested to reset your password for your nexnest account.
+            <br><br><br>
+            <a href="%s">Reset my password</a>
+            <br><br>
+            Need help?
+            Contact us at <a href="mailto:contact@nexnest.com?subject=Contact nexnest">contact@nexnest.com</a>
+            <br><br>
+        </span>
+        <br><br>
+    </div>
+    ''' % (user.name, passwordURL)

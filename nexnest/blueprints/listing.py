@@ -11,7 +11,7 @@ from flask import (Blueprint, flash, jsonify, redirect, render_template,
 from flask_login import current_user, login_required
 from nexnest import csrf, db
 from nexnest.forms import (GroupListingForm, ListingForm, ListingReportForm,
-                           PhotoForm, SuggestListingForm, TourForm)
+                           PhotoForm, SuggestListingForm, TourForm, CreateGroupForm)
 from nexnest.models.landlord_listing import LandlordListing
 from nexnest.models.listing import Listing
 from nexnest.models.listing_school import ListingSchool
@@ -49,7 +49,8 @@ def viewListing(listingID):
                            title='Listing',
                            pictures=listing.getPhotoURLs(),
                            bannerPhoto=listing.banner_photo_url,
-                           ListingReportForm=ListingReportForm())
+                           ListingReportForm=ListingReportForm(),
+                           createGroupForm=CreateGroupForm())
 
 
 @listings.route('/listing/create', methods=['GET', 'POST'])

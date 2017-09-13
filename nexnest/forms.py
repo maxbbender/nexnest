@@ -178,15 +178,12 @@ class PhotoForm(RedirectForm):
 
 class CreateGroupForm(RedirectForm):
     name = StringField('Group Name:', [Length(min=2, max=50), InputRequired()])
-    time_frame = SelectField(
-        'When are you looking to rent?', choices=valid_time_frames)
+    time_frame = SelectField('When are you looking to rent?', choices=valid_time_frames)
 
 
 class GroupMessageForm(RedirectForm):
-    group_id = HiddenField(
-        'groupID', [InputRequired("Group ID Field Required")])
-    content = TextAreaField(
-        'Message', [InputRequired("You must put in a message")])
+    group_id = HiddenField('groupID', [InputRequired("Group ID Field Required")])
+    content = TextAreaField('Message', [InputRequired("You must put in a message")])
 
 
 class DirectMessageForm(RedirectForm):

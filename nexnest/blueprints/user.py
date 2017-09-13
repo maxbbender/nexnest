@@ -1,19 +1,21 @@
 import json
 import os
+from pprint import pformat
+
 import requests
 from dateutil import parser
+from flask import current_app as app
 from flask import (Blueprint, abort, flash, jsonify, redirect, render_template,
                    request, url_for)
 from flask_login import current_user, login_required, login_user, logout_user
 from itsdangerous import BadSignature
 from nexnest import csrf, db
-from flask import current_app as app
-
 from nexnest.decorators import user_editable
 from nexnest.forms import (CreateGroupForm, DirectMessageForm, EditAccountForm,
                            EmailPreferencesForm, LandlordEditAccountForm,
-                           LandlordMoreInfoForm, LoginForm, PasswordChangeForm,
-                           ProfilePictureForm, RegistrationForm, NewPasswordForm)
+                           LandlordMoreInfoForm, LoginForm, NewPasswordForm,
+                           PasswordChangeForm, ProfilePictureForm,
+                           RegistrationForm)
 from nexnest.models.availability import Availability
 from nexnest.models.direct_message import DirectMessage
 from nexnest.models.group import Group
@@ -31,11 +33,10 @@ from nexnest.utils.file import allowed_file
 from nexnest.utils.flash import flash_errors
 from nexnest.utils.password import check_password
 from nexnest.utils.school import allSchoolsAsStrings
-from nexnest.utils.user import genEmailVerificationContent
-from sqlalchemy import and_, asc, func, or_, desc
+from nexnest.utils.user import (genEmailPasswordResetContent,
+                                genEmailVerificationContent)
+from sqlalchemy import and_, asc, desc, func, or_
 from werkzeug.utils import secure_filename
-
-from pprint import pformat
 
 users = Blueprint('users', __name__, template_folder='../templates/user')
 
@@ -59,7 +60,8 @@ def register():
             userType = registerForm.landlord.data
             app.logger.debug('Verifying Captcha')
             captchaConfirmURL = 'https://www.google.com/recaptcha/api/siteverify'
-            payload = {'response': request.form['g-recaptcha-response'], 'secret': app.config['GOOGLE_CAPTCHA_SECRET']}
+            payload = {'response': request.form['g-recaptcha-response'],
+                       'secret': app.config['GOOGLE_CAPTCHA_SECRET']}
 
             response = requests.post(captchaConfirmURL, data=payload)
 
@@ -81,7 +83,8 @@ def register():
                     # Make them a Landlord
 
                     # Notification Preference Table init
-                    session.add(NotificationPreference(user=newUser, newsletter=registerForm.newsletter.data))
+                    session.add(NotificationPreference(
+                        user=newUser, newsletter=registerForm.newsletter.data))
                     session.commit()
 
                     newLandlord = Landlord(newUser)
@@ -104,7 +107,8 @@ def register():
                         session.commit()
 
                         # Notification Preference Table init
-                        session.add(NotificationPreference(user=newUser, newsletter=registerForm.newsletter.data))
+                        session.add(NotificationPreference(
+                            user=newUser, newsletter=registerForm.newsletter.data))
                         session.commit()
 
                         # emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(newUser.email), _external=True)
@@ -118,7 +122,8 @@ def register():
 
                 return redirect(url_for('users.emailConfirmNotice', email=registerForm.email.data))
             else:
-                flash('Captcha Error: Codes %r' % responseObject['error-codes'], 'danger')
+                flash('Captcha Error: Codes %r' %
+                      responseObject['error-codes'], 'danger')
                 return render_template('register.html', form=registerForm, schools=allSchoolsAsStrings())
 
         flash_errors(registerForm)
@@ -226,7 +231,8 @@ def login():
                 else:
                     flash("User account has been deleted", 'warning')
             else:
-                flash("There was no account found with an email address matching %s" % login_form.email.data, 'warning')
+                flash("There was no account found with an email address matching %s" %
+                      login_form.email.data, 'warning')
         else:
             flash_errors(login_form)
 
@@ -265,7 +271,7 @@ def emailConfirm(payload):
     else:
         user.email_confirmed = True
         session.commit()
-        flash('You have confirmed your account, you can now log in!', 'success')
+        flash('You have confirmed your account, you can now sign in!', 'success')
 
     return redirect(url_for('indexs.index'))
 
@@ -409,7 +415,9 @@ def editAccountInfo():
     else:
         schools = [r for r, in session.query(School.name).all()]
         form = EditAccountForm(request.form, obj=current_user)
-        form.school.data = current_user.school.name
+
+        if current_user.school:
+            form.school.data = current_user.school.name
         return render_template('editAccount.html',
                                form=form,
                                title='Edit Account',
@@ -684,17 +692,21 @@ def getMessageNotifications(page=1):
         startNumber = (page * 10) - 10
         endNumber = (page * 10)
 
-    directMessage = Notification.query.filter_by(user=current_user, category='direct_message')
+    directMessage = Notification.query.filter_by(
+        user=current_user, category='direct_message')
 
-    genericMessage = Notification.query.filter_by(user=current_user, category='generic_message')
+    genericMessage = Notification.query.filter_by(
+        user=current_user, category='generic_message')
 
     print('directMessage ', directMessage.all())
     print('generic ', genericMessage.all())
 
     print('Distinct')
 
-    directMessage = directMessage.distinct(Notification.notif_type, Notification.viewed, Notification.target_model_id)
-    genericMessage = genericMessage.distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed)
+    directMessage = directMessage.distinct(
+        Notification.notif_type, Notification.viewed, Notification.target_model_id)
+    genericMessage = genericMessage.distinct(
+        Notification.notif_type, Notification.redirect_url, Notification.viewed)
 
     print('directMessage ', directMessage.all())
     print('generic ', genericMessage.all())
@@ -708,7 +720,8 @@ def getMessageNotifications(page=1):
 
     print('compiledMessages : \n %s' % pformat(compiledMessages))
 
-    sortedCompiled = sorted(compiledMessages, key=lambda n: n.date_created, reverse=True)
+    sortedCompiled = sorted(
+        compiledMessages, key=lambda n: n.date_created, reverse=True)
 
     print('sortedCompiled : \n %s' % pformat(sortedCompiled))
 
@@ -804,7 +817,7 @@ def resetPassword(email):
                               _external=True)
 
     # Send EMAIL
-    user.sendEmail('passwordReset', 'Click <a href="%s">here</a> to reset your password' % emailConfirmURL)
+    user.sendEmail('passwordReset', genEmailPasswordResetContent(user, emailConfirmURL))
 
     flash('Password Reset Email sent to %s' % email, 'success')
     return redirect(url_for('users.login'))
@@ -832,6 +845,7 @@ def resetPasswordConfirm(payload):
         flash_errors(form)
 
     return render_template('resetPassword.html', form=form, payload=payload)
+
 
 @users.route('/user/forgotPassword', methods=['GET', 'POST'])
 def forgotPassword():

@@ -743,7 +743,7 @@
         var state;
         var zipcode;
         //get all the info we need
-        console.log(place);
+        //console.log(place);
         for(var i = 0; i < place.address_components.length; i++){
             if(place.address_components[i].types[0] == "postal_code"){
                 zipcode = place.address_components[i].long_name;
@@ -779,7 +779,7 @@
 
         // // Get each component of the address from the place details
         // // and fill the corresponding field on the form.
-        // console.log(place.address_components)
+        // //console.log(place.address_components)
         // for (var i = 0; i < place.address_components.length; i++) {
         //     var addressType = place.address_components[i].types[0];
         //     if (componentForm[addressType]) {
@@ -891,7 +891,7 @@
         //If clone listing, prefill lease start date
         {% if endDate %}
             var oldEnd = new Date("{{endDate}}");
-            console.log("oldEnd: " + oldEnd);
+            //console.log("oldEnd: " + oldEnd);
             var m = moment(oldEnd);
             m.add(2, 'd');
             startLeaseFlat.setDate(m.format()); // Set to the exact date
@@ -997,7 +997,7 @@
 
         //try to format rent price
         $("#price").on('input', function() {
-            console.log('hi');
+            //console.log('hi');
             $("#price").val($("#price").val().replace(/([,$])/g, ''));
             $("#price").val($("#price").val().replace(/$/g, ''));
         });
@@ -1033,7 +1033,7 @@
 
             $(".form-group").removeClass("has-danger");
             $(".form-group").removeClass("has-error");
-            console.log(curInputs);
+            //console.log(curInputs);
             for (var i = 0; i < curInputs.length; i++) {
                 if (!curInputs[i].validity.valid) {
                     isValid = false;
@@ -1064,7 +1064,7 @@
                     var errorExists = false;
 
                     if($("#price").val().indexOf('.') > -1){
-                        console.log('hi');
+                        //console.log('hi');
                         $("#incorrect_rent_format").show();
                         errorExists = true;
                     }
@@ -1139,8 +1139,8 @@
                     {% if endDate %}
                         var new_start_date = new Date($("#leaseStartDateInput").val());
                         var oldEnd = new Date("{{endDate}}");
-                        console.log("new_start_date: " + new_start_date);
-                        console.log("oldEnd: " + oldEnd);
+                        //console.log("new_start_date: " + new_start_date);
+                        //console.log("oldEnd: " + oldEnd);
                         if(oldEnd > new_start_date){
                             errorExists = true;
                             $("#leaseStartDateInput").closest(".form-group").addClass("has-error");

@@ -53,7 +53,7 @@
 					    						<strong><i class="fa fa-map-marker" aria-hidden="true"></i> Where</strong>
 					    					</h2>
 				    					</label>
-			    					    <select class="form-control" id="school" style="width: 85%;">
+			    					    <select class="form-control nexnest-font" id="school" style="width: 85%;">
 			    					    	{% for school in schools %}
 			    					      		<option value="{{school}}">{{school}}</option>
 			    					    	{% endfor %}
@@ -65,7 +65,7 @@
 				    							<strong><i class="fa fa-calendar" aria-hidden="true"></i> When</strong>
 				    						</h2>
 				    					</label>
-			    					    <select class="form-control" id="when" style="width: 85%;">
+			    					    <select class="form-control nexnest-font" id="when" style="width: 85%;">
 			    					    	{% for timeFrame in validTimeFrames %}
 			    					    		<option value="{{timeFrame[0]}}">{{timeFrame[1]}}</option>
 			    					    	{% endfor %}
@@ -81,7 +81,7 @@
 					    						<strong><i class="fa fa-bed" aria-hidden="true"></i> Bedrooms</strong>
 					    					</h2>
 				    					</label>
-			    					    <select class="form-control" id="rooms" style="width: 85%;">
+			    					    <select class="form-control nexnest-font" id="rooms" style="width: 85%;">
 			    					      	<option value="1">1</option>
 			    					      	<option value="2">2</option>
 			    					      	<option value="3">3</option>
@@ -229,13 +229,13 @@
 				    </div>
 			    </div>
 			    <div class="row" style="padding-top: 10px;">
-			    	<div class="col-xs-6 col-sm-6 col-md-4" style="padding-left: 15px;">
+			    	<div class="col-xs-6 col-sm-6 col-md-4" style="padding-left: 15px; color: #656264;">
 						Monthly Price Range
 						<br>
 					    <span class="text-nowrap"><b id="minPriceDisplay" style="padding-right: 10px;">$0</b> <input id="priceSlider" type="text" class="span2 filterOption" value="" data-slider-min="0" data-slider-max="1500" data-slider-step="100" data-slider-tooltip="hide" data-slider-value="[0,1500]"/> <b id="maxPriceDisplay" style="padding-left: 10px;">$1,500</b></span>
 					</div>
 			    	<div class="col-xs-6 col-md-4">
-				        <button class="btn btn-secondary" onClick="showMoreFilters()" style="width: 100%; text-align: left;">More Filters <i class="fa fa-chevron-down" aria-hidden="true"></i></button>
+				        <button class="btn btn-secondary nexnest-font" onClick="showMoreFilters()" style="width: 100%; text-align: left; color: #656264">More Filters <i class="fa fa-chevron-down" aria-hidden="true"></i></button>
 				    </div>
 					<div class="col-xs-6 col-md-4">
 						<select class="form-control filterOption" id="sortBy" style="width: 100%;">
@@ -420,7 +420,7 @@
   	var map, mobileMap, markerCluster, infowindow;
   	var iconBase = "static/img/";
   	var schoolName = $("#school2 option:selected").text().replace(/[0-9]/g, '').replace(/\s/g, '');
-  	console.log(schoolName);
+  	
   	var icons = {
 	  		school: { name: schoolName, icon: iconBase + schoolName.toLowerCase()+ '_pin_45.png' },
 	  		house: { name: 'House', icon: iconBase + 'house_pin_45.png' },
@@ -444,8 +444,12 @@
 			$('#rooms2').val(sessionStorageBedrooms);
 		}
 		if(sessionStorageTerm != undefined){
+			console.log(sessionStorageTerm);
 			$('#when').val(sessionStorageTerm);
 			$('#when2').val(sessionStorageTerm);
+		}else{
+			$('#when').val("2018-2019");
+			$('#when2').val("2018-2019");
 		}
 		if(sessionStorageMinPrice != undefined){
 			priceSlider.setValue([parseInt(sessionStorageMinPrice), parseInt(sessionStorageMaxPrice)]);
@@ -500,7 +504,7 @@
 		    image       : "",
 		    fontawesome : "fa fa-spinner fa-spin"
 		});
-        console.log('JSON Filters : ' + JSON.stringify(filters))
+        
 
         var csrf_token = "{{ csrf_token() }}";
 
@@ -522,19 +526,19 @@
     	    	    $("#listingsGoHere").LoadingOverlay("hide");
     	    	}, 1000);
     	    	displayListings(data.listings, data.featuredListings);
-    	    	console.log(data.school.lat);
-    	    	console.log(data.school.lng);
+    	    	
+    	    	
     	    	schoolName = $("#school option:selected").text().replace(/[0-9]/g, '').replace(/\s/g, '');
     	    	icons.school['name'] = schoolName;
     	    	icons.school['icon'] = iconBase + schoolName.toLowerCase()+ '_pin_45.png';
-    	    	console.log("schoolname: " + schoolName);
+    	    	
     	    	mapUpdate(data.listings, data.featuredListings, data.school.lat, data.school.lng);
     	    	$.ajax({
     	    		url: '/listings/getAddresses/'+filters.school,
     	    		async: false,
     	    		dataType: 'json',
     	    		success: function(data){
-    	    			console.log(data);
+    	    			
     	    			$("input#addressSearch").autocomplete({
     	    				  source: data.listings,
     	    				  select: function(event, ui) { 
@@ -560,7 +564,7 @@
 	function buildFilters(refresh){
 		//If they had already changed something clear the timer
 		clearTimeout(loadingScreenTimer);
-		console.log('Building the filters')
+		
 		var filters = {};
     	filters.school = $("#school2 option:selected").text();
     	sessionStorage.setItem('school', $("#school2 option:selected").text());
@@ -618,8 +622,8 @@
 
     	filters.sortBy = $("#sortBy").val();
     	sessionStorage.setItem('sortby', $("#sortBy").val());
-    	// console.log('Filters')
-    	// console.log(JSON.stringify(filters));
+    	// 
+    	// 
 
     	if(refresh == 'True'){
     		$("#listingsGoHere").LoadingOverlay("show", {
@@ -635,7 +639,7 @@
 				    fontawesome : "fa fa-spinner fa-spin"
 				});
 	    	}
-            console.log('JSON Filters : ' + JSON.stringify(filters))
+            
             var csrf_token = "{{ csrf_token() }}";
 
             $.ajaxSetup({
@@ -652,8 +656,8 @@
 	    	    contentType: "application/json; charset=utf-8",
 	    	    dataType: "json",
 	    	    success: function(data){
-                    console.log('Response from /listing/search/AJAX')
-                    console.log(data)
+                    
+                    
 	    	    	setTimeout(function(){
 	    	    	    $("#listingsGoHere").LoadingOverlay("hide");
 	    	    	}, 1000);
@@ -662,14 +666,14 @@
 	    	    	schoolName = $("#school2 option:selected").text().replace(/[0-9]/g, '').replace(/\s/g, '');
 	    	    	icons.school['name'] = schoolName;
 	    	    	icons.school['icon'] = iconBase + schoolName.toLowerCase()+ '_pin_45.png';
-	    	    	console.log("schoolname: " + schoolName);
+	    	    	
 	    	    	mapUpdate(data.listings, data.featuredListings, data.school.lat, data.school.lng);
 	    	    	$.ajax({
 	    	    		url: '/listings/getAddresses/'+filters.school,
 	    	    		async: false,
 	    	    		dataType: 'json',
 	    	    		success: function(data){
-	    	    			console.log(data);
+	    	    			
 	    	    			$("input#addressSearch").autocomplete({
 	    	    				  source: data.listings,
 	    	    				  select: function(event, ui) { 
@@ -687,7 +691,7 @@
 	    	        alert(errMsg);
 	    	    }
 	    	});
-		}, 2000);				
+		}, 750);				
 	}
 
 	$("#toggleMap").click(function() {
@@ -702,12 +706,12 @@
   	});
   	
 	function displayListings(listings, featuredListings){
-		console.log(listings);
+		
 		$("#listingsGoHere").empty();
 		//Featured
-		console.log(featuredListings);
+		
 		$.each(featuredListings, function(index, listing) {
-			console.log(listing);
+			
 
 			var nextListing = `<div class="card" style="width: 100%;">
 				<div class="ribbon-wrapper-green"><div class="ribbon-green">FEATURED</div></div>
@@ -762,7 +766,7 @@
 
 		//Non Featured
 		$.each(listings, function(index, listing) {
-			console.log(listing);
+			
 			var nextListing = `<div class="card" style="width: 100%;" style="background-color: #d2d2d2;">
 				<a href="`+ listing.url +`">`;
 					if(listing.bannerPhotoURL == null){						
@@ -864,11 +868,11 @@
 	$(document).on('click', ".listingFavorite", function() {
   		var id = $(this).attr("id");
   		id = id.split("_")[1];
-  		console.log(id);
-  		console.log($(this));
+  		
+  		
   		if($(this).hasClass("fa-star")){
-  			console.log("unfav");
-  			console.log(id);
+  			
+  			
   			$.ajax({
 	    	    type: "POST",
 	    	    url: "/user/unFavoriteListing/"+id,
@@ -882,9 +886,9 @@
     		});
   		}
   		else if($(this).hasClass("fa-heart-o")){
-  			console.log("fav");
-  			console.log($(this));
-  			console.log(id);
+  			
+  			
+  			
 			$.ajax({
 	    	    type: "POST",
 	    	    url: "/user/favoriteListing/"+id,
@@ -898,7 +902,7 @@
 	    	});
   		}
   		else{
-  			console.log("ererree");
+  			
   		}
   	});	
   			
@@ -942,7 +946,7 @@
   	    for (var key in icons) {  	  	    	
   	        var type = icons[key];
   	        var name = type.name;
-  	        console.log(name);
+  	        
   	        var icon = type.icon;
   	        var div = document.createElement('div');
   	        div.innerHTML = '<img src="' + icon + '" height="40em" width="auto"> ' + name;
@@ -952,7 +956,7 @@
   	    for (var key in icons) {  	  	    	
   	        var type = icons[key];
   	        var name = type.name;
-  	        console.log(name);
+  	        
   	        var icon = type.icon;
   	        var div = document.createElement('div');
   	        div.innerHTML = '<img src="' + icon + '" height="40em" width="auto"> ' + name;
@@ -985,7 +989,7 @@
   		//this fixed display issue
   		$("#map").css('position', 'sticky');
   		$("#mapView").css('position', 'absolute');
-  		console.log('try resize');
+  		
   		google.maps.event.trigger(map, "resize");
   		google.maps.event.trigger(mobileMap, "resize");
   	}	

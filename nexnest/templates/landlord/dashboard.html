@@ -1515,8 +1515,8 @@
 			}
 		});
         // Send AJAX request to backend
-        console.log('chosenTime : ' + chosenTime)
-        console.log('dateTimeParse : ' + Date.parse(chosenTime))
+        //console.log('chosenTime : ' + chosenTime)
+        //console.log('dateTimeParse : ' + Date.parse(chosenTime))
         requestURL = '/tour/confirmTime/'+ id
 
         $.ajax({
@@ -1525,9 +1525,9 @@
           url: requestURL,
           data: JSON.stringify({tourTime: chosenTime}),
           success: function (data) {
-          	console.log('Success for confirmTime')
-          	console.log('Returned Data ')
-          	console.log(data)
+          	//console.log('Success for confirmTime')
+          	//console.log('Returned Data ')
+          	//console.log(data)
           	getScheduledToursJSON();
           },
           dataType: "json"
@@ -2220,7 +2220,7 @@
     }
 
     function markLeasesCollected(requestID){
-    	console.log(requestID);
+    	//console.log(requestID);
     	requestURL = '/houseRequest/'+ requestID +'/allLeasesSubmitted/ajax'
     	$.getJSON(requestURL, function(data) {
             results = data['results'];
@@ -2453,7 +2453,7 @@
 				var street = obj.dataset.street;
 				var leasePeriod = obj.dataset.lease;
 				var time = obj.dataset.time;
-				//console.log(id);
+				////console.log(id);
 				if($("#standardLabel"+id).hasClass("active")){
 					selectedItem = {
 						index: count,
@@ -2480,7 +2480,7 @@
 			}    		
 		});
 		cart = JSON.stringify(cart);
-		console.log(cart);
+		//console.log(cart);
 
 	    preCheckoutJSONElement = document.getElementById("preCheckoutJSON")
 	    preCheckoutJSONElement.value = cart
@@ -2509,14 +2509,14 @@
     $('#suggestTimeTourModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget);
       var modal = $(this);
-      console.log(selectedDateTimes);
+      //console.log(selectedDateTimes);
       selectedDateTimes.length = 0;
-      console.log(selectedDateTimes);
+      //console.log(selectedDateTimes);
       $('#selectedTourTimes').tagsinput('removeAll');
       $("#validTimes").empty();
       $("#currentTour").val($(button).attr("data-tourid"));
       $("#currentTour").innerHTML = "hi";
-      console.log($("#currentTour").val());
+      //console.log($("#currentTour").val());
       modal.find('.modal-title').text('Suggest Different Tour Dates/Times');
     })
 
@@ -2538,7 +2538,7 @@
     	$("#newMaintenanceTab").empty();
 
     	$.getJSON(requestURL, function(data) {
-    		//console.log(data)
+    		////console.log(data)
             openMaintenanceRequests = data['openMaintenanceRequests'];
             if((openMaintenanceRequests == "") || (openMaintenanceRequests.length == 0)){
             	var noOpenMaintenanceRequests = `<div class="alert alert-light-blue" role="alert">
@@ -2547,10 +2547,10 @@
             	$("#newMaintenanceTab").append(noOpenMaintenanceRequests);
             }
             // alert(openMaintenanceRequests)
-            //console.log(openMaintenanceRequests);
+            ////console.log(openMaintenanceRequests);
             $.each(openMaintenanceRequests, function(index, maintenanceRequestObject) {
-            	//console.log(maintenanceRequestObject);
-            	//console.log(maintenanceRequestObject.listing.street);
+            	////console.log(maintenanceRequestObject);
+            	////console.log(maintenanceRequestObject.listing.street);
 
             var outerDiv =`
             <div id="numberOfOpenRequests`+maintenanceRequestObject.listing.id+`" style="display: none;">`+maintenanceRequestObject.requestCount+`</div>
@@ -2662,9 +2662,9 @@
     	$("#inProgressMaintenanceTab").empty();
 
     	$.getJSON(requestURL, function(data) {
-    		console.log(data)
+    		//console.log(data)
             inProgressMaintenanceRequests = data['inProgressMaintenanceRequests'];
-            console.log(inProgressMaintenanceRequests);
+            //console.log(inProgressMaintenanceRequests);
             if((inProgressMaintenanceRequests == "") || (inProgressMaintenanceRequests.length == 0)){
             	var noInProgressMaintenanceRequests = `<div class="alert alert-light-blue" role="alert">
 		            						<strong>No In-Progress Maintenance Requests for any of your listings</strong>
@@ -2672,8 +2672,8 @@
             	$("#inProgressMaintenanceTab").append(noInProgressMaintenanceRequests);
             }
             $.each(inProgressMaintenanceRequests, function(index, maintenanceRequestObject) {
-            	console.log(maintenanceRequestObject);
-            	console.log(maintenanceRequestObject.listing.street);
+            	//console.log(maintenanceRequestObject);
+            	//console.log(maintenanceRequestObject.listing.street);
 
             var outerDiv =`
             	<div id="numberOfInProgressRequests`+maintenanceRequestObject.listing.id+`" style="display: none;">`+maintenanceRequestObject.requestCount+`</div>
@@ -2774,9 +2774,9 @@
     	$("#completedMaintenanceTab").empty();
 
     	$.getJSON(requestURL, function(data) {
-    		console.log(data)
+    		//console.log(data)
             completedMaintenanceRequests = data['completedMaintenanceRequests'];
-            console.log(completedMaintenanceRequests);
+            //console.log(completedMaintenanceRequests);
             if((completedMaintenanceRequests == "") || (completedMaintenanceRequests.length == 0)){
             	var nocompletedMaintenanceRequests = `<div class="alert alert-light-blue" role="alert">
 		            						<strong>No Completed Maintenance Requests for any of your listings</strong>
@@ -2784,8 +2784,8 @@
             	$("#completedMaintenanceTab").append(nocompletedMaintenanceRequests);
             }
             $.each(completedMaintenanceRequests, function(index, maintenanceRequestObject) {
-            	console.log(maintenanceRequestObject);
-            	console.log(maintenanceRequestObject.listing.street);
+            	//console.log(maintenanceRequestObject);
+            	//console.log(maintenanceRequestObject.listing.street);
 
             var outerDiv =`
             	<div class="card" id="completedRequestListing`+maintenanceRequestObject.listing.id+`" style="width:100%; border: 0px solid rgba(0, 0, 0, 0.125);">
@@ -2855,9 +2855,9 @@
     	$("#unacceptedTab").empty();
 
     	$.getJSON(requestURL, function(data) {
-    		console.log(data)
+    		//console.log(data)
             unAcceptedGroupListings = data['unAcceptedGroupListings'];
-            console.log(unAcceptedGroupListings);
+            //console.log(unAcceptedGroupListings);
             if((unAcceptedGroupListings == "") || (unAcceptedGroupListings.length == 0)){
             	var noUnAcceptedListings = `<div class="alert alert-light-blue" role="alert">
 		            						<strong>No pending requests for any of your listings</strong>
@@ -2865,8 +2865,8 @@
             	$("#unacceptedTab").append(noUnAcceptedListings);
             }
            $.each(unAcceptedGroupListings, function(index, housingRequestObject) {
-            	console.log(housingRequestObject);
-            	console.log(housingRequestObject.listing.street);
+            	//console.log(housingRequestObject);
+            	//console.log(housingRequestObject.listing.street);
 
             var outerDiv =`
             	<div id="numberOfUnacceptedRequests`+ housingRequestObject.listing.id +`" style="display: none;">`+ housingRequestObject.requestCount +`</div>
@@ -3021,7 +3021,7 @@
     	$("#acceptedTab").empty();
 
     	$.getJSON(requestURL, function(data) {
-    		//console.log(data)
+    		////console.log(data)
             acceptedGroupListings = data['acceptedGroupListings'];
             if((acceptedGroupListings == "") || (acceptedGroupListings.length == 0)){
             	var noAcceptedListings = `<div class="alert alert-light-blue" role="alert">
@@ -3029,12 +3029,12 @@
 		            					</div>`;
             	$("#acceptedTab").append(noAcceptedListings);
             }
-            //console.log(acceptedGroupListings);
+            ////console.log(acceptedGroupListings);
            $.each(acceptedGroupListings, function(index, housingRequest) {
-           		console.log("%%%%%%%%%%%%")
-            	console.log(housingRequest);
-            	console.log(housingRequest.listing.street);
-            	console.log(housingRequest.groupListings[0].leasesCollected);
+           		//console.log("%%%%%%%%%%%%")
+            	//console.log(housingRequest);
+            	//console.log(housingRequest.listing.street);
+            	//console.log(housingRequest.groupListings[0].leasesCollected);
             	membersNotLeaderCount = parseInt(housingRequest.groupListings[0].group.userCount)-1;
 
             	var div =`
@@ -3108,7 +3108,7 @@
 			                    		    				                    <div class="col-xs-12 col-md-6">
 			                    		    				                        <div class="row">
 			                    		    				                            <h2 style="margin-top: 5px;">`+ user.name +``;
-			                    		    				                            	console.log(user.id + "  " + housingRequest.groupListings[0].group.leader.id)
+			                    		    				                            	//console.log(user.id + "  " + housingRequest.groupListings[0].group.leader.id)
 				        							    					            	if(user.id == housingRequest.groupListings[0].group.leader.id){
 				        							    					            		div +=
 				        							    					            		 `<div class="customTooltip" style="padding-left: 15px;">
@@ -3187,9 +3187,9 @@
     	$("#requestedToursTab").empty();
 
     	$.getJSON(requestURL, function(data) {
-    		console.log("tours: ")
+    		//console.log("tours: ")
             requestedTours = data['requestedTours'];
-            console.log(requestedTours);            
+            //console.log(requestedTours);            
             if(requestedTours == ""){
             	var noRequestedTours = `<div class="alert alert-light-blue" role="alert">
 		            						<strong>No Requested Tours</strong>
@@ -3197,10 +3197,10 @@
             	$("#requestedToursTab").append(noRequestedTours);
             }
             $.each(requestedTours, function(index, requestedTourObject) {
-            	//console.log(requestedTourObject);
-            	//console.log(requestedTourObject.listing.street);
-           	console.log("*****");
-           	console.log(requestedTourObject);
+            	////console.log(requestedTourObject);
+            	////console.log(requestedTourObject.listing.street);
+           	//console.log("*****");
+           	//console.log(requestedTourObject);
             var outerDiv =`
             	<div id="numberOfRequestedTours`+ requestedTourObject.listing.id +`" style="display: none;">`+ requestedTourObject.tourCount +`</div>
                 	<div id="doIShowDiv`+ requestedTourObject.listing.id +`" style="display: none;">show</div>
@@ -3237,8 +3237,8 @@
             			requestedTimes = data;
             		}
             	});
-            	console.log("requestedTimes");
-            	console.log(requestedTimes);
+            	//console.log("requestedTimes");
+            	//console.log(requestedTimes);
             		var membersNotLeaderCount = parseInt(tour.group.userCount) -1;
             		individualElement = `
             		<div class="row" id="requestedTour`+ tour.id +`">
@@ -3428,9 +3428,9 @@
     	$("#scheduledToursTab").empty();
 
     	$.getJSON(requestURL, function(data) {
-    		console.log(data)
+    		//console.log(data)
             scheduledTours = data['scheduledTours'];
-            //console.log(scheduledTours);
+            ////console.log(scheduledTours);
             if(scheduledTours.length == 0){
             	var noScheduledTours = `<div class="alert alert-light-blue" role="alert">
 		            						<strong>No Scheduled Tours</strong>
@@ -3438,8 +3438,8 @@
             	$("#scheduledToursTab").append(noScheduledTours);
             }
             $.each(scheduledTours, function(index, scheduledTourObject) {
-            	//console.log(scheduledTourObject);
-            	//console.log(scheduledTourObject.listing.street);
+            	////console.log(scheduledTourObject);
+            	////console.log(scheduledTourObject.listing.street);
 
             var outerDiv =`
             	<div id="numberOfScheduledTours`+ scheduledTourObject.listing.id +`" style="display: none;">`+ scheduledTourObject.tourCount +`</div>
@@ -3468,7 +3468,7 @@
             	scheduledToursElements = outerDiv;
 
             	$.each(scheduledTourObject.tours, function(index, tour) {
-            		console.log(tour);
+            		//console.log(tour);
             		var membersNotLeaderCount = parseInt(tour.group.userCount) -1;
             		individualElement = `
             		<div class="row" id="scheduledTour`+ tour.id +`">
@@ -3581,9 +3581,9 @@
     	requestURL = '/landlord/acceptedGroupListings/JSON'
 
     	$.getJSON(requestURL, function(data) {
-    		console.log(data)
+    		//console.log(data)
             acceptedGroupListings = data['acceptedGroupListings'];
-            console.log(acceptedGroupListings);
+            //console.log(acceptedGroupListings);
         })
     }
 
@@ -3601,7 +3601,7 @@
       	requestURL="/landlord/getAvailability/JSON";
       	$.getJSON(requestURL, function(data) {
   	    	//Fill in the boxes that should be filled in
-  	    	console.log(data);
+  	    	//console.log(data);
   	        $( ".time-slot" ).each(function( index ) {
   	        	for(var i=0; i< data.length; i++){
   	        		if($( this ).attr( "data-day" ) == data[i].day){          			
@@ -3637,7 +3637,7 @@
 	      if($( this ).attr( "data-selected" )){
 	      	var day = $(this).attr("data-day");
 	      	var time = $(this).attr("data-time");
-	      	console.log("Day: " + day + " Time: " + time);
+	      	//console.log("Day: " + day + " Time: " + time);
 	      	if(day == 0){
 	      		day0.push(time);
 	      	}
@@ -3670,9 +3670,9 @@
 	    	5: day5,
 	    	6: day6
 	    };
-        console.log(typeof(returnDict))
-	    console.log(returnDict);
-        console.log(JSON.stringify(returnDict))
+        //console.log(typeof(returnDict))
+	    //console.log(returnDict);
+        //console.log(JSON.stringify(returnDict))
 
         $.ajax({
           type: "POST",
@@ -3680,7 +3680,7 @@
           url: "/landlord/updateAvailability",
           data: JSON.stringify(returnDict),
           success: function (data) {
-          	console.log(data);
+          	//console.log(data);
           	$("#updateTourAvailabilty").hide();
           	$("#updateTourAvailabiltyLoading").show();
           	setTimeout(function () {
@@ -3707,16 +3707,16 @@
 	function updateUnBooked(){
     	requestURL = '/landlord/unBookedHouses/JSON'
     	$("#unBookedGoHere").empty();
-    	console.log($("#unbooked_time_range_select").val());
+    	//console.log($("#unbooked_time_range_select").val());
     	$.getJSON(requestURL, function(data) {
-    		console.log(data)
+    		//console.log(data)
             unBookedHouses = data['unBookedHouses'];
-            console.log(unBookedHouses);
+            //console.log(unBookedHouses);
             var anythingChosen = false;
             $.each(unBookedHouses, function(index, listing) {
             	listing=listing.listing;
-            	console.log("------");
-            	console.log(listing);
+            	//console.log("------");
+            	//console.log(listing);
 	            if(listing.timePeriodDateRange == $("#unbooked_time_range_select").val()){
 	            	anythingChosen = true;
 	            	var nextHouse =`
@@ -3738,10 +3738,10 @@
 	        				                    		    results = data['results'];
 	        				                    		    //alert(data['results'].success);
 	        				                    		    if (results.success == true){
-	        				                    		    	console.log("should be editable");
+	        				                    		    	//console.log("should be editable");
 	        				                    		        nextHouse += `<a href="/listing/edit/`+listing.id+`" class="btn btn-blue">Edit Listing</a>`;
 	        				                    		    } else {
-	        				                    		       console.log("is not editable");
+	        				                    		       //console.log("is not editable");
 	        				                    		    }
 	        				                    		});
 	        				                    	nextHouse += `
@@ -3810,7 +3810,7 @@
      }).change(function(e){
         setTimeout(function(){
             $("#validTimes").empty();
-            console.log($datePicker.datepicker('getDate'));
+            //console.log($datePicker.datepicker('getDate'));
             var date = $datePicker.datepicker('getDate');
             var month = date.getUTCMonth() +1;
             var monthName = monthNames[month-1];
@@ -3819,10 +3819,10 @@
             var dayOfWeek = date.getUTCDay();
             var dateForMax = ""+month+"-"+day+"-"+year;
             var returnDate = ""+monthName+" "+day+" "+year;
-            console.log(returnDate);
-            console.log(dayOfWeek);
+            //console.log(returnDate);
+            //console.log(dayOfWeek);
             var alreadySelectedTimes = returnTimes(selectedDateTimes, dateForMax)
-            console.log(alreadySelectedTimes);
+            //console.log(alreadySelectedTimes);
             var timesShown =`<div class="row">`;
             for (var i = 0; i < validTourTimes.length; i++ )
             {
@@ -3859,9 +3859,9 @@
 	    }
 	    else{
 	        $('#selectedTourTimes').tagsinput('remove', ""+ date + " @ " +time);
-	        console.log('already exists');
+	        //console.log('already exists');
 	    }
-	    console.log(selectedDateTimes);
+	    //console.log(selectedDateTimes);
 	}
 
 
@@ -3872,7 +3872,7 @@
 	function checkDateTime(obj, date, time)
 	{
 	    //debugger;
-	    console.log(obj);
+	    //console.log(obj);
 	    for (i = 0; i < obj.length; i++ )
 	    {
 	        if (obj[i] == ""+date+ " " + time)
@@ -3886,12 +3886,12 @@
 
 	function returnTimes(obj, date)
     {
-        console.log(obj);
+        //console.log(obj);
         
         var times= [];
         for (i = 0; i < obj.length; i++ )
-        {   console.log(obj[i].split(" ")[0]);
-            console.log(date.toString());
+        {   //console.log(obj[i].split(" ")[0]);
+            //console.log(date.toString());
             if (obj[i].split(" ")[0] == date.toString())
             {
                 times.push(obj[i].split(" ")[1]);
@@ -3906,21 +3906,21 @@
 	});
 
 	$('input').on('itemRemoved', function(event) {
-	  console.log(event);
+	  //console.log(event);
 	  var removedItem = event.item;
 	  var fields = removedItem.split('@');
 	  var date = fields[0];
 	  date = date.trim();
 	  var time = fields[1];
 	  time = time.trim();
-	  console.log(date);
-	  console.log(time);
+	  //console.log(date);
+	  //console.log(time);
 	  checkDateTime(selectedDateTimes, date, time);
-	  console.log(selectedDateTimes);
+	  //console.log(selectedDateTimes);
 	  $("#date_"+date+"_time_"+time).prop('checked', false);
-	  console.log("#date_"+date+"_time_"+time);
+	  //console.log("#date_"+date+"_time_"+time);
 	  var elementExists = document.getElementById("date_"+date+"_time_"+time);
-	  console.log(elementExists);
+	  //console.log(elementExists);
 	});
 
 	function suggestDifferentTimes(){
@@ -3932,9 +3932,9 @@
           url: requestURL,
           data: JSON.stringify(selectedDateTimes),
           success: function (data) {
-            console.log('Success for confirmTime')
-            console.log('Returned Data ')
-            console.log(data)
+            //console.log('Success for confirmTime')
+            //console.log('Returned Data ')
+            //console.log(data)
           },
           dataType: "json"
         });
@@ -3950,8 +3950,8 @@
 		      contentType: "application/json; charset=utf-8",
 		      url: requestURL,
 		      success: function (data) {
-		        console.log('Success marking rent paid');
-		        console.log(data)
+		        //console.log('Success marking rent paid');
+		        //console.log(data)
 		      }
 		    });
 		}
@@ -3962,8 +3962,8 @@
               contentType: "application/json; charset=utf-8",
               url: requestURL,
               success: function (data) {
-                console.log('Success marking rent unpaid');
-                console.log(data)
+                //console.log('Success marking rent unpaid');
+                //console.log(data)
               }
             });            
         }

@@ -46,6 +46,7 @@
         <script src='https://www.google.com/recaptcha/api.js'></script>
         <script src="https://use.fortawesome.com/2734d16a.js"></script>        
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
 	</head>
 	<body>
 		<nav class="navbar navbar-light bg-faded" style="max-height: 62px; background-color: #656264;">
@@ -174,7 +175,7 @@
 				                <a class="dropdown-item" href="{{ url_for('users.viewUser', userID=current_user.id) }}"><strong class="hamburgerMenuItem">My Account</strong></a>
                                 <a class="dropdown-item" href="{{ url_for('users.directMessagesAll') }}"><strong class="hamburgerMenuItem">My Messages</strong></a>
                                 <div class="dropdown-divider hidden-sm-up"></div>
-                                <a class="dropdown-item hidden-sm-up" href="{{url_for('users.logout')}}"><strong class="hamburgerMenuItem">Logout</strong></a>
+                                <a class="dropdown-item" href="{{url_for('users.logout')}}"><strong class="hamburgerMenuItem">Logout</strong></a>
 		                	</div>
 		               </div>
 	               </li>
