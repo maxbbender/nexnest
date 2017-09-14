@@ -3,7 +3,7 @@ def genEmailVerificationContent(user, emailConfirmURL):
     <div class="row">
         <div class="col-xs-1"></div>
         <div class="col-xs-10">
-            <span>Hi  %s ,</span>
+            <span>Hi  %s,</span>
             <br><br>
             <span>
                 <strong>Welcome to the nexnest family!
@@ -22,7 +22,7 @@ def genEmailPasswordResetContent(user, passwordURL):
     return '''
     <div class="col-xs-1"></div>
     <div class="col-xs-10">
-        <span>Hello, %s</span>
+        <span>Hello %s,</span>
         <br><br>
         <span>
             You have requested to reset your password for your nexnest account.

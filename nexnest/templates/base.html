@@ -159,6 +159,9 @@
 		                <div class="dropdown nexnest-font" style="color: #656264;">
 			                <i class="fa fa-bars fa-2x dropdown-toggle" style="padding-top: 4px; color: #d2d2d2;" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true"></i>
 			                <div class="dropdown-menu dropdown-menu-right hamburger-menu" style="top: 51px; right: -16px;" aria-labelledby="dropdownMenuButton">
+                                {% if current_user.isAdmin %}
+                                    <a class="dropdown-item" href="{{ url_for('siteAdmin.siteAdminDashboard') }}"><strong class="hamburgerMenuItem">Admin Portal</strong></a>
+                                {% endif %}
                                 {% if current_user.isLandlord %}
                                     <a class="dropdown-item" href="{{ url_for('landlords.landlordDashboard') }}"><strong class="hamburgerMenuItem">My Dashboard</strong></a>
                                 {% else %}

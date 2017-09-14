@@ -227,7 +227,7 @@ def login():
                                 'You must confirm your email before logging in', 'danger')
                     else:
                         flash("Error validating login credentials", 'danger')
-                        return login_form.redirect()
+                        return redirect(url_for('users.login'))
                 else:
                     flash("User account has been deleted", 'warning')
             else:

@@ -359,7 +359,7 @@ class ContactForm(RedirectForm):
 
 
 class NewPasswordForm(RedirectForm):
-    password = PasswordField('Password',
+    password = PasswordField('New Password',
                              [InputRequired(),
                               EqualTo('confirm',
                                       message="Passwords must match")])
