@@ -8,7 +8,7 @@ def genEmailVerificationContent(user, emailConfirmURL):
             <span>
                 <strong>Welcome to the nexnest family!
                 <br><br>
-                In order to confirm your account and get started on nexnest please <a href="%s"> click here</a>
+                In order to confirm your account and get started on nexnest please <a style="color: #5686c5;" href="%s"> click here</a>
                 <br><br>
                 We're so excited to welcome you into our nest!
             </span>
