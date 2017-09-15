@@ -106,7 +106,6 @@ class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     DEBUG = False
     TESTING = False
-    GOOGLE_ANALYTIC_KEY = os.environ.get('GOOGLE_ANALYTIC_KEY')
 
 
 class UnixConfig(ProductionConfig):
