@@ -3,22 +3,17 @@
 # OS Functions
 import os
 from os import environ
-from os.path import join, dirname, exists
-
-
-# Flask
-from flask import Flask, render_template, url_for, redirect
-from flask_mail import Mail, email_dispatched
-from flask_wtf.csrf import CSRFProtect
-from flask_login import LoginManager, current_user
-from flask_admin import Admin
-
-
-from config import config
+from os.path import dirname, exists, join
 
 import braintree
-
+from config import config
+# Flask
+from flask import Flask, redirect, render_template, url_for
+from flask_admin import Admin
+from flask_login import LoginManager, current_user
+from flask_mail import Mail, email_dispatched
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf.csrf import CSRFProtect
 
 db = SQLAlchemy()
 mail = Mail()
@@ -160,6 +155,16 @@ def createApp(configName):
                                          endpoint, filename)
                 values['q'] = int(os.stat(file_path).st_mtime)
         return url_for(endpoint, **values)
+
+    # CSRF Error Handler
+    from flask_wtf.csrf import CSRFError
+    from flask import abort
+
+    @app.errorhandler(CSRFError)
+    def handle_csrf_error(e):
+        app.logger.error('CSRF error : %r' % e)
+        flash('CSRF Error. Please go back and try again.', 'warning')
+        return abort(405)
 
     return app
 
