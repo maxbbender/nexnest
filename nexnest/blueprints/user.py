@@ -187,6 +187,7 @@ def login():
 
         return render_template('login.html', login_form=loginForm)
     else:  # POST
+        print('Login Form Next %r' % login_form.next.data)
         login_form = LoginForm(request.form)
 
         if login_form.validate():
@@ -272,6 +273,7 @@ def emailConfirm(payload):
         user.email_confirmed = True
         session.commit()
         flash('You have confirmed your account, you can now sign in!', 'success')
+        return redirect(url_for('users.login'))
 
     return redirect(url_for('indexs.index'))
 

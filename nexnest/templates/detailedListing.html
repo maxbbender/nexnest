@@ -23,7 +23,7 @@
 					<div class="col-xs-12">
 						<div class="wrap">
 							<div>
-								<div class="frame" id="basic" style="padding-left: 30px; padding-right: 30px;">								
+								<div class="frame" id="basic" style="padding-left: 30px; padding-right: 30px;">
 								  	<ul class="clearfix">
 								      	{% for picture in pictures %}
 								      		<li>
@@ -41,7 +41,7 @@
 					</div>
 				</div>
 			{% else %}
-				
+
 			{% endif %}
 		</div>
 	</div>
@@ -60,11 +60,11 @@
 						</div>
 						<div class="col-xs-12 col-md-9 col-lg-10 col-xl-11">
 							<h4 style="line-height: 1;">
-							<br>							
+							<br>
 							{{ listing.street }}
 							<br>
 							{{ listing.city }}, {{ listing.state }} {{ listing.zip_code }}</h4>
-						</div>						
+						</div>
 					</div>
 				</div>
 				<div class="col-xs-12 col-lg-5 hidden-md-down" style="text-align: right; margin-top: -20px;">
@@ -72,7 +72,7 @@
 						<br>
 						From <span style="font-size: 40px; color: #4fac80;">${{ listing.price }}</span>
 						<br>
-						Per Bedroom Per 
+						Per Bedroom Per
 						<span style="text-transform: capitalize;">
 							{% if listing.rent_due == 'monthly' %}
 								month
@@ -87,7 +87,7 @@
 						<br>
 						From <span style="font-size: 40px; color: #4fac80;">${{ listing.price }}</span>
 						<br>
-						Per Bedroom Per 
+						Per Bedroom Per
 						<span style="text-transform: capitalize;">
 							{% if listing.rent_due == 'monthly' %}
 								month
@@ -97,7 +97,7 @@
 						</span>
 					</h4>
 				</div>
-			</div>			
+			</div>
 			{% if current_user.is_authenticated %}
 				{% if not current_user in listing.landLordsAsUsers() %}
 				<hr>
@@ -112,7 +112,7 @@
 							<i class="icon icon-user-circle" style="margin-right: 5px; color: #fff;"></i>Request More Info
 						</a>
 					</div>
-					<div class="col-xs-12 col-lg-3 col-centered">					
+					<div class="col-xs-12 col-lg-3 col-centered">
 			            <a href='#' class="btn btn-blue" data-toggle="modal" data-target="#selectGroupForTourModal" style="font-size: 20px; width: 202px;">
 			            	<i class="fa fa-calendar" aria-hidden="true" style="margin-right: 5px; color: #fff;"></i>Tour Me
 			            </a>
@@ -135,7 +135,7 @@
 						</a>
 					</div>
 					<br><br>
-					<div class="col-xs-12 col-md-6 col-lg-3 col-centered">					
+					<div class="col-xs-12 col-md-6 col-lg-3 col-centered">
 			            <a href='#' class="btn btn-blue" data-toggle="modal" data-target="#selectGroupForTourModal" style="width: 202px;">
 			            	<i class="fa fa-calendar" aria-hidden="true" style="margin-right: 5px; color: #fff;"></i>Tour Me
 			            </a>
@@ -167,14 +167,14 @@
 			{% else %}
 				<div class="row" style="padding-top: 15px; padding-left: 15px;">
 					<div class="col-xs-12" style="text-align:left">
-						<i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 5px;"></i> Please 
+						<i class="fa fa-info-circle" aria-hidden="true" style="margin-right: 5px;"></i> Please
 						<a class="hidden-xs-down" href="#" data-toggle="modal" data-target="#loginModal">sign in</a>
 						<a class="hidden-sm-up" href="{{url_for('users.login')}}">sign in</a>
 						to request to tour me, rent me, or get additional information.
 					</div>
 				</div>
 			{% endif %}
-			
+
 			<hr>
 			<div class="row">
 				<div class="col-sm-4">
@@ -206,7 +206,7 @@
 			<hr style="padding-bottom: 15px;">
 			<div class="row">
 				<div class="col-sm-4">
-					<h3>Description: </h3> 
+					<h3>Description: </h3>
 				</div>
 				<div class="col-sm-8">
 					{{ listing.description }}
@@ -220,7 +220,7 @@
 							{% if listing.floor_plan_url %}
 								<a class="btn btn-blue" href="{{listing.floor_plan_url}}" target="_blank" style="margin-top: 15px; margin-bottom: 15px;"><i class="icon icon-view-dashboard"></i> Floor Plan</a>
 							{% endif %}
-						</div>						
+						</div>
 					</div>
 				</div>
 			</div>
@@ -271,14 +271,14 @@
 								<i class="icon icon-event-seat icon-3x" aria-hidden="true"></i>
 								<br>
 								Furnished
-							</div>							
+							</div>
 						{% endif %}
 						{% if listing.handicap %}
 							<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
 								<i class="icon icon-wheelchair-alt icon-3x" aria-hidden="true"></i>
 								<br>
 								Handicap Accessible
-							</div>							
+							</div>
 						{% endif %}
 						<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
 							<i class="icon icon-parking icon-3x" aria-hidden="true"></i>
@@ -291,7 +291,7 @@
 			<hr style="padding-bottom: 15px;">
 			<div class="row">
 				<div class="col-sm-4">
-					<h3>Lease: </h3>				
+					<h3>Lease: </h3>
 				</div>
 				<div class="col-sm-8">
 					<div class="row">
@@ -304,8 +304,8 @@
 							<br>
 							<i class="fa fa-calendar" aria-hidden="true"></i> {{ listing.end_date|format_date }}
 						</div>
-						{% if listing.rent_due == "semester" %}	
-							<div class="col-xs-12 col-md-6 col-xl-4" style="align-self: center; padding-bottom: 15px;">				
+						{% if listing.rent_due == "semester" %}
+							<div class="col-xs-12 col-md-6 col-xl-4" style="align-self: center; padding-bottom: 15px;">
 								<strong>1st Semester
 								<br>
 								Rent Due:</strong>
@@ -327,7 +327,7 @@
 						{% endif %}
 					</div>
 				</div>
-			</div>			
+			</div>
 			<hr style="padding-bottom: 15px;">
 			{% if listing.hasUtilities %}
 				<div class="row">
@@ -355,7 +355,7 @@
 									<i class="fa fa-tint fa-3x" aria-hidden="true"></i>
 									<br>
 									<span class="text-nowrap">Water</span>
-								</div>						
+								</div>
 							{% endif %}
 							{% if listing.internet %}
 								<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
@@ -370,7 +370,7 @@
 									<br>
 									<span class="text-nowrap">Cable</span>
 								</div>
-							{% endif %}					
+							{% endif %}
 						</div>
 					</div>
 				</div>
@@ -382,7 +382,7 @@
 						<h3>Appliances:</h3>
 					</div>
 					<div class="col-sm-8">
-						<div class="row" style="text-align: center;">						
+						<div class="row" style="text-align: center;">
 							{% if listing.air_conditioning %}
 								<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
 									<i class="icon icon-fan icon-3x" aria-hidden="true"></i>
@@ -396,7 +396,7 @@
 									<br>
 									<span class="text-nowrap">Dishwasher</span>
 								</div>
-							{% endif %}	
+							{% endif %}
 							{% if listing.washer %}
 								<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
 									<i class="icon icon-local-laundry-service icon-3x" aria-hidden="true"></i>
@@ -430,7 +430,7 @@
 						<h3>Services Included:</h3>
 					</div>
 					<div class="col-sm-8">
-						<div class="row" style="text-align: center;">						
+						<div class="row" style="text-align: center;">
 							{% if listing.snow_plowing %}
 								<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
 									<i class="fa fa-snowflake-o fa-3x" aria-hidden="true"></i>
@@ -466,7 +466,7 @@
 									<br>
 									Maintenance
 								</div>
-							{% endif %}				
+							{% endif %}
 						</div>
 					</div>
 				</div>
@@ -478,7 +478,7 @@
 					<h3>Pets Allowed:</h3>
 				</div>
 				<div class="col-sm-8">
-					<div class="row" style="text-align: center;">						
+					<div class="row" style="text-align: center;">
 						{% if listing.dogs %}
 							<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
 								<i class="icon icon-guide-dog icon-3x" aria-hidden="true"></i>
@@ -500,13 +500,13 @@
 						{% if listing.other_pets %}
 							<div class="col-xs-12 col-md-12 col-xl-12" style="text-align: left;">
 								{{listing.other_pets}}
-							</div>							
-						{% endif %}		
+							</div>
+						{% endif %}
 					</div>
 				</div>
 			</div>
 			<hr style="padding-bottom: 15px;">
-			{% endif %}			
+			{% endif %}
 			<div class="row">
 				<div class="col-sm-6">
 					<h3>
@@ -544,7 +544,7 @@
 					      					{% for group in groups %}
 						      					<div class="card" style="width:100%;">
 						      					    <h3 class="card-header">{{ group.name }}</h3>
-						      					    <div class="card-block">	        
+						      					    <div class="card-block">
 						      					        <p class="card-text">
 						      					        	<strong>Group Leader:</strong>{{ group.leader.fname }} {{ group.leader.lname }}
 						      					        </p>
@@ -558,7 +558,7 @@
 					      					    			    	<li>{{ user.fname }} {{ user.lname }}</li>
 					      					    			    {% endfor %}
 						      					    		</div>
-						      					    	</p>	      					    	
+						      					    	</p>
 								      					<button class="btn btn-yellow pull-right" onClick="favoriteLisitng({{group.id}}, {{listing.id}})" data-dismiss="modal"><i class="fa fa-heart" aria-hidden="true" style="margin-right: 5px; color: #fff;"></i> Add to Group</button>
 						      					    </div>
 						      					</div>
@@ -612,7 +612,7 @@
 					      					{% for group in groups %}
 						      					<div class="card" style="width:100%;">
 						      					    <h3 class="card-header">{{ group.name }}</h3>
-						      					    <div class="card-block">	        
+						      					    <div class="card-block">
 						      					        <p class="card-text">
 						      					        	<strong>Group Leader:</strong>{{ group.leader.fname }} {{ group.leader.lname }}
 						      					        </p>
@@ -657,7 +657,7 @@
 		<div class="modal fade" id="requestTourModal" tabindex="-1" role="dialog" aria-labelledby="requestTour" aria-hidden="true" style="display: absolute;">
 		  	<div class="modal-dialog" role="document">
 		    	<div class="modal-content nexnest-font" style="color: #656264;">
-		      		<div class="modal-header" style="background-color: #d2d2d2;">		      		
+		      		<div class="modal-header" style="background-color: #d2d2d2;">
 		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		          			<span aria-hidden="true">&times;</span>
 		        		</button>
@@ -671,11 +671,11 @@
 		      					    {{ requestTourForm.csrf_token }}
 		      					    {{ requestTourForm.group_tour_id }}
 		      					    {{ requestTourForm.listing_id(value=listing.id) }}
-		      					    {{ requestTourForm.requestedDateTime() }}		
-		      					    <input type="text" id="datep" />      					
+		      					    {{ requestTourForm.requestedDateTime() }}
+		      					    <input type="text" id="datep" />
 			      					<div id="datepicker">
-			      					  
-			      					  
+
+
 			      					</div>
 			      					<br>
 			      					<div id="validTimes"></div>
@@ -687,7 +687,7 @@
 			      					{% from "_formhelpers.html" import render_field %}
 			      					<br>
 			      					{{ render_field(requestTourForm.description, class="form-control", type="text", required="required") }}
-		      					</form>  
+		      					</form>
 		      				</div>
 		      			</div>
 		      			<div id="groupNumber" style="display: none;"></div>
@@ -720,7 +720,7 @@
 					      					{% for group in groups %}
 						      					<div class="card" style="width:100%;">
 						      					    <h3 class="card-header">{{ group.name }}</h3>
-						      					    <div class="card-block">	        
+						      					    <div class="card-block">
 						      					        <p class="card-text">
 						      					        	<strong>Group Leader:</strong>{{ group.leader.fname }} {{ group.leader.lname }}
 						      					        </p>
@@ -778,10 +778,10 @@
 		      					<form id="request_house" action="{{url_for('housingRequests.create')}}" method="POST">
 		      					    {{ requestListingForm.csrf_token }}
 		      					    {{ requestListingForm.groupID }}
-		      					    {{ requestListingForm.listingID(value=listing.id) }}		      					
+		      					    {{ requestListingForm.listingID(value=listing.id) }}
 			      					{% from "_formhelpers.html" import render_field %}
 			      					{{ render_field(requestListingForm.reqDescription, class="form-control", type="text") }}
-		      					</form>  
+		      					</form>
 		      				</div>
 		      			</div>
 		      			<div id="groupNumberHouse" style="display: none;"></div>
@@ -803,7 +803,7 @@
 	requestURL="/landlord/getAvailability/JSON/{{listing.landLordsAsUsers()[0].id}}";
 	$.getJSON(requestURL, function(data) {
     	var landlordAvailability = data;
-	
+
     // var landlordAvailability = [{day: 1, time: '8:00AM'}, {day: 2, time: '8:00AM'}, {day: 4, time: '8:00AM'}, {day: 2, time: '10:00AM'}, {day: 4, time: '9:00AM'}, {day: 5, time: '2:00PM'}, {day: 5, time: '3:00PM'}, {day: 5, time: '4:00PM'}, {day: 5, time: '5:00PM'}];
 	    var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
 	    ];
@@ -816,12 +816,12 @@
 	    }
 	    //console.log(availableDays);
 
-	    $datePicker.datepicker({ 
+	    $datePicker.datepicker({
 	        changeMonth: true,
 	        changeYear: true,
 	        inline: true,
 	        altField: "#datep",
-	        beforeShowDay:function(date){ 
+	        beforeShowDay:function(date){
 	                       var day = date.getDay();
 	                       if(availableDays.length == 7){
 	                       		return [(day == availableDays[0] || day == availableDays[1] || day == availableDays[2] || day == availableDays[3] || day == availableDays[4] || day == availableDays[5] || day == availableDays[6]),""];
@@ -844,8 +844,8 @@
 	                       else if(availableDays.length == 1){
 	                       		return [(day == availableDays[0]),""];
 	                       }
-	                       
-	        }   
+
+	        }
 	     }).change(function(e){
 	        setTimeout(function(){
 	        	$("#validTimes").empty();
@@ -922,9 +922,9 @@
 	    for (i = 0; i < obj.length; i++ )
 	    {
 	        if (obj[i] == ""+date+ " " + time)
-	        {	        	
+	        {
         		selectedDateTimes.splice(i,1);
-            	return true;	        	
+            	return true;
 	        }
 	    }
 	    return false;
@@ -933,7 +933,7 @@
 	function returnTimes(obj, date)
 	{
 		//console.log(obj);
-        
+
 		var times= [];
 	    for (i = 0; i < obj.length; i++ )
 	    {	//console.log(obj[i].split(" ")[0]);
@@ -1022,7 +1022,7 @@
 		$.ajax({
 		    type: "GET",
 		    url: "/group/"+groupID+"/favoriteListing/"+listingID,
-		    success: function(data){	    	    	
+		    success: function(data){
 		    	if(data.results.success == false){
 		    	    $("#favorited"+listingID).empty();
 		    	    $("#favorited"+listingID).append(
@@ -1053,24 +1053,24 @@
     var groups = {};
     $('.galleryItem').each(function() {
       var id = parseInt($(this).attr('data-group'), 10);
-      
+
       if(!groups[id]) {
         groups[id] = [];
-      } 
-      
+      }
+
       groups[id].push( this );
     });
 
 
     $.each(groups, function() {
-      
+
       $(this).magnificPopup({
           type: 'image',
           closeOnContentClick: true,
           closeBtnInside: false,
           gallery: { enabled:true }
       })
-      
+
     });
 
     $('.test-popup-link').magnificPopup({
@@ -1433,3 +1433,5 @@
     });
 </script>
 {% endblock %}
+
+{% include 'analytics.html' %}
