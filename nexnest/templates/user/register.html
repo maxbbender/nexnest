@@ -76,7 +76,7 @@
                                         {{form.email(class='form-control', required='required', type="email")}}
                                         <p id="validEmail" style="display: none;" class="form-text text-muted">
                                             *Please Enter a Valid Email Address. EX. joesmith@gmail.com
-                                        </p>  
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -88,7 +88,7 @@
                                         {{form.password(class='form-control', required='required', type="password", autocomplete="new-password")}}
                                         <p id="passwordValidation" style="display: none;" class="form-text text-muted">
                                             *Password must: Be at least 8 characters long, Contain 1 Number, Contain 1 Upper Case Letter
-                                        </p>                                        
+                                        </p>
                                     </div>
                                 </div>
                                 <div style="position: relative; width: 0; height: 0">
@@ -157,7 +157,7 @@
 						  	<p>
 						  		<button id="submitRegistration" type="button" style="float: right;" class="btn btn-light-green" onClick="submitForm()">Sign Up As Tenant</button>
 						  	</p>
-        				</form>            
+        				</form>
                     </div>
                 </div>
             </div>
@@ -198,7 +198,7 @@ $( document ).ready(function() {
     var newOptions = {
         {% for school in schools %}
         '{{school}}': '{{school}}',
-        {% endfor %}        
+        {% endfor %}
     };
 
     var registerAs = sessionStorage.getItem('registerAs');
@@ -253,7 +253,7 @@ $( document ).ready(function() {
             $('#number').removeClass('invalidPassword').addClass('validPassword');
         } else {
             $('#number').removeClass('validPassword').addClass('invalidPassword');
-        }        
+        }
     }).focus(function() {
         $('#pswd_info').show();
     }).blur(function() {
@@ -337,7 +337,7 @@ function submitForm(){
         $("#matchPasswords").hide();
 
         //Ensure Password is strong enough
-        if(( password.length >= 8 ) && password.match(/[A-Z]/) && password.match(/\d/)){            
+        if(( password.length >= 8 ) && password.match(/[A-Z]/) && password.match(/\d/)){
             $("#password").closest(".form-group").removeClass("has-danger");
             $("#password").closest(".form-group").removeClass("has-error");
             $("#passwordValidation").hide();
@@ -375,3 +375,5 @@ function submitForm(){
 
 </script>
 {% endblock %}
+
+{% include 'analytics.html' %}
