@@ -26,8 +26,8 @@
                         </li>
                     {% endif %}
                     {% if not current_user.isLandlord %}
-                        <li class="nav-item">
-                            <a class="nav-link" style="padding-left: 10px;" href="{{ url_for('users.myGroups') }}">
+                         <li class="nav-item">
+                            <a class="nav-link" style="padding-left: 10px;" data-toggle="tab" href="#groupsTab" role="tab">
                                 <i class="fa fa-users" aria-hidden="true"></i><span class="hidden-md-down">My Groups</span>
                             </a>
                         </li>
@@ -754,6 +754,57 @@
                     </div>
                 </div>                
             </div>
+            <div class="tab-pane" id="groupsTab" role="tabpanel" style="padding: 0px;">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="callout-block text-center fade-in-b" style="background-color: #d2d2d2;">
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    <h1>My Groups:</h1>
+                                </div>
+                                <div class="col-xs-4" style="align-self: center;">
+                                    <a class="btn btn-light-green" href="#" data-toggle="modal" data-target="#createGroupModal" style="float: right;"><i class="fa fa-plus" aria-hidden="true"></i> Create New Group</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-xs-0 col-xl-1"></div>
+                    <div class="col-xs-12 col-xl-10">
+                        <div class="row">
+                            {% if not groups %}
+                                <div class="alert alert-light-blue" role="alert">
+                                    <strong>You are not a part of any group!</strong> <a href="#" data-toggle="modal" data-target="#createGroupModal" style="color: #5686c5;"> Create a New Group</a> to invite your friends to join!
+                                </div>
+                            {% endif %}
+                            {% for group in groups %}
+                                <div class="col-xs-12 col-md-10 col-lg-10 col-xl-6">                                    
+                                    <div class="card">
+                                        <div class="card-header" style="background-color: #d2d2d2; height: 111px;">
+                                            <div class="row">
+                                                <div class="col-xs-8">
+                                                    <h3><i class="fa fa-users" aria-hidden="true" style="padding-right: 5px;"></i> {{ group.name }}</h3>
+                                                </div>
+                                                <div class="col-xs-4" style="align-self: center;">
+                                                    <a href="{{ url_for('groups.viewGroup', groupID=group.id) }}" class="btn btn-blue" style="float: right;">View Group</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-block" style="padding-top: 0px; padding-left: 15px; padding-right: 15px;">
+                                            <h4 style="padding-top: 25px;">
+                                                <p class="card-text"><i class="icon icon-crown" style="padding-right: 7px;"></i> Group Leader: {{ group.leader.fname }} {{ group.leader.lname }}</p>
+                                                <p class="card-text"><i class="fa fa-clock-o" style="padding-right: 5px;"></i> Lease Period: {{ group.humanTimePeriod }} </p>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>                
+            </div>
         </div>
     </div>
     <!-- Suggest to Group Modal -->
@@ -821,6 +872,7 @@
 
     {% include 'changePasswordModal.html' %}
     {% include 'changeAvatarModal.html' %}
+    {% include 'group/createGroupModal.html' %}
 {% endblock %}
 {% block scripts %}
 <script>
