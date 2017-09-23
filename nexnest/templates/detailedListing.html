@@ -157,7 +157,11 @@
 				{% if current_user in listing.landLordsAsUsers() %}
 					<div class="row">
 						<div class="col-xs-12" style="text-align: right;">
-							<a href="{{url_for('listings.cloneListing', listingID=listing.id)}}" class="btn btn-blue"><i class="fa fa-clone" aria-hidden="true"></i> Copy Listing</a>
+							<div class="customTooltip">
+							    <a href="{{url_for('listings.cloneListing', listingID=listing.id)}}" class="btn btn-blue"><i class="fa fa-clone" aria-hidden="true"></i> Relist Property</a>
+							    <span class="customTooltiptext" style="margin-bottom: 6px; font-size: 18px;">Relist for another lease period.</span>
+							</div>
+							
 							{% if listing.isEditableBy(current_user) %}
 								<a href="{{url_for('listings.editListing', listingID=listing.id)}}" class="btn btn-blue"><i class="fa fa-pencil" aria-hidden="true"></i> Edit Listing</a>
 							{% endif %}
