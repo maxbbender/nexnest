@@ -187,7 +187,6 @@ def login():
 
         return render_template('login.html', login_form=loginForm)
     else:  # POST
-        print('Login Form Next %r' % login_form.next.data)
         login_form = LoginForm(request.form)
 
         if login_form.validate():
