@@ -157,7 +157,11 @@
 				{% if current_user in listing.landLordsAsUsers() %}
 					<div class="row">
 						<div class="col-xs-12" style="text-align: right;">
-							<a href="{{url_for('listings.cloneListing', listingID=listing.id)}}" class="btn btn-blue"><i class="fa fa-clone" aria-hidden="true"></i> Copy Listing</a>
+							<div class="customTooltip">
+							    <a href="{{url_for('listings.cloneListing', listingID=listing.id)}}" class="btn btn-blue"><i class="fa fa-clone" aria-hidden="true"></i> Relist Property</a>
+							    <span class="customTooltiptext" style="margin-bottom: 6px; font-size: 18px;">Relist for another lease period.</span>
+							</div>
+							
 							{% if listing.isEditableBy(current_user) %}
 								<a href="{{url_for('listings.editListing', listingID=listing.id)}}" class="btn btn-blue"><i class="fa fa-pencil" aria-hidden="true"></i> Edit Listing</a>
 							{% endif %}
@@ -254,7 +258,7 @@
 						</div>
 						{% if listing.num_half_baths %}
 							<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
-								<i class="fa fa-shower fa-3x" aria-hidden="true"></i>
+								<i class="icon icon-toilet icon-3x" aria-hidden="true"></i>
 								<br>
 								{{ listing.num_half_baths }} Half Bath{% if listing.num_half_baths > 1 %}s{% endif %}
 							</div>
@@ -268,7 +272,7 @@
 						{% endif %}
 						{% if listing.furnished %}
 							<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
-								<i class="icon icon-event-seat icon-3x" aria-hidden="true"></i>
+								<i class="icon icon-furnished icon-3x" aria-hidden="true"></i>
 								<br>
 								Furnished
 							</div>
@@ -392,7 +396,7 @@
 							{% endif %}
 							{% if listing.dishwasher %}
 								<div class="col-xs-4 col-md-4 col-lg-3 col-xl-3" style="padding-bottom: 10px;">
-									<i class="icon icon-silverware-variant icon-3x" aria-hidden="true"></i>
+									<i class="icon icon-dishwasher icon-3x" aria-hidden="true"></i>
 									<br>
 									<span class="text-nowrap">Dishwasher</span>
 								</div>

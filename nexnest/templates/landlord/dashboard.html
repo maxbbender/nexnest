@@ -103,14 +103,14 @@
 								                    	<div class="col-xs-1 col-md-1 col-lg-1" style="align-items: center; display: flex;">
 							                    			<div class="checkbox">
 							                    			    <label style="font-size: 1.5em">
-							                    			    {% if listing.time_period == "school" %}
-							                    			        <input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" data-time="{{listing.time_period}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', 79.99);"/>
-							                    			        <span class="cr" style="border-color: #4fac80; border-width: 2px;"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
-							                    			    {% elif listing.time_period == "summer" %}
+							                    			    {% if listing.time_period == "summer" %}
 							                    			    	<input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" data-time="{{listing.time_period}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', 39.99);"/>
 							                    			        <span class="cr" style="border-color: #4fac80; border-width: 2px;"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
+							                    			    {% else %}
+							                    			        <input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" data-time="{{listing.time_period}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', 79.99);"/>
+							                    			        <span class="cr" style="border-color: #4fac80; border-width: 2px;"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
 							                    			    {% endif %}
-							                    			    </label>
+							                    			    </label>							                    			    
 							                    			</div>						                    		
 								                    	</div>
 								                    	<div class="col-xs-6 col-md-11 col-lg-11 col-xl-6" style="padding-bottom: 15px;">				                    		
@@ -123,7 +123,20 @@
 							                    			<br>
 							                    			<small style="font-size: 1.5vh;">Lease Period: {{ listing.start_date|format_date }} - {{ listing.end_date|format_date }}</small>
 								                    	</div>
-								                    	{% if listing.time_period == "school" %}
+								                    	{% if listing.time_period == "summer" %}
+								                    	<div class="col-xs-5 col-md-12 col-lg-12 col-xl-4" id="packageOptions{{listing.id}}" style="display: none; align-items: center; text-align: center;">
+								                    		<div class="btn-group" data-toggle="buttons" style="display: flex;">
+								                    		    <label class="btn btn-outline-primary active" id="standardLabel{{listing.id}}" onclick="downgradeToStandard({{listing.id}}, 39.99, 69.99)" style="font-size: 18px;">
+								                    		    	<input type="radio" name="packageChoice" id="standard{{listing.id}}" checked autocomplete="off"> PRO
+								                    		  	</label>
+								                    		  	<label class="btn btn-outline-primary" id="deluxeLabel{{listing.id}}" onclick="upgradeToDeluxe({{listing.id}}, 69.99, 39.99)" style="font-size: 18px;">
+								                    		    	<input type="radio" name="packageChoice" id="deluxe{{listing.id}}" autocomplete="off"> PREMIUM
+								                    		  	</label>
+								                    		</div>
+								                    		<br>
+								                    		<a href="#!" data-toggle="modal" data-target="#packageDescriptionModal">View Differences</a>
+								                    	</div>	
+								                    	{% else %}								                    	
 								                    	<div class="col-xs-5 col-md-12 col-lg-12 col-xl-4" id="packageOptions{{listing.id}}" style="display: none; align-self: center; text-align: center;">
 								                    		<div class="btn-group" data-toggle="buttons" style="display: flex;">
 								                    		    <label class="btn btn-blue-outline active" id="standardLabel{{listing.id}}" onclick="downgradeToStandard({{listing.id}}, 79.99, 129.99)" style="font-size: 18px;">
@@ -136,26 +149,16 @@
 								                    		<br>
 								                    		<a href="#!" data-toggle="modal" data-target="#packageDescriptionModal">View Differences</a>
 								                    	</div>
-								                    	{% elif listing.time_period == "summer" %}
-								                    	<div class="col-xs-5 col-md-12 col-lg-12 col-xl-4" id="packageOptions{{listing.id}}" style="display: none; align-items: center; text-align: center;">
-								                    		<div class="btn-group" data-toggle="buttons" style="display: flex;">
-								                    		    <label class="btn btn-outline-primary active" id="standardLabel{{listing.id}}" onclick="downgradeToStandard({{listing.id}}, 39.99, 69.99)" style="font-size: 18px;">
-								                    		    	<input type="radio" name="packageChoice" id="standard{{listing.id}}" checked autocomplete="off"> PRO
-								                    		  	</label>
-								                    		  	<label class="btn btn-outline-primary" id="deluxeLabel{{listing.id}}" onclick="upgradeToDeluxe({{listing.id}}, 69.99, 39.99)" style="font-size: 18px;">
-								                    		    	<input type="radio" name="packageChoice" id="deluxe{{listing.id}}" autocomplete="off"> PREMIUM
-								                    		  	</label>
-								                    		</div>
-								                    		<br>
-								                    		<a href="#!" data-toggle="modal" data-target="#packageDescriptionModal">View Differences</a>
-								                    	</div>
 								                    	{% endif %}						                    	
 								                    </div>
 								                </div>
 								                <div class="col-xs-1" style="font-size: 20px; margin-left: -30px;">
-	                			                	<a href="{{ url_for('listings.editListing', listingID=listing.id) }}"><strong class="text-nowrap"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</strong></a>
+								                	<div class="customTooltip">
+	                			                	   <a href="{{ url_for('listings.cloneListing', listingID=listing.id) }}"><strong class="text-nowrap"><i class="fa fa-clone" aria-hidden="true"></i> Relist</strong></a>
+	                			                	    <span class="customTooltiptext" style="margin-bottom: 6px; font-size: 18px;">Relist for another lease period.</span>
+	                			                	</div>
 	                			                	<br>
-	                			                	<a href="{{ url_for('listings.cloneListing', listingID=listing.id) }}"><strong class="text-nowrap"><i class="fa fa-clone" aria-hidden="true"></i> Copy</strong></a>
+	                			                	<a href="{{ url_for('listings.editListing', listingID=listing.id) }}"><strong class="text-nowrap"><i class="fa fa-pencil" aria-hidden="true" style="padding-right: 4px;"></i> Edit</strong></a>	                			                	
 						                    	</div>
 						                    </div>
 					                    </div>
@@ -3732,7 +3735,10 @@
 	        				                    		</a>
 	        				                    	</div>
 	        				                    	<div class="col-xs-2 col-md-4 col-lg-4" style="text-align: right;">
-	        				                    		<a href="/listing/clone/`+listing.id+`" class="btn btn-blue"><i class="fa fa-clone" aria-hidden="true"></i> Copy Listing</a>`;
+	        				                    		<div class="customTooltip">
+	        				                    		    <a href="/listing/clone/`+listing.id+`" class="btn btn-blue"><i class="fa fa-clone" aria-hidden="true"></i> Relist Property</a>
+	        				                    		    <span class="customTooltiptext" style="margin-bottom: 6px; font-size: 18px;">Relist for another lease period.</span>
+	        				                    		</div>`;
 	        				                    		requestURL = '/landlord/' + listing.id + '/isEditable/AJAX';
 	        				                    		$.getJSON(requestURL, function(data) {
 	        				                    		    results = data['results'];

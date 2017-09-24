@@ -15,7 +15,7 @@ from nexnest.forms import (CreateGroupForm, DirectMessageForm, EditAccountForm,
                            EmailPreferencesForm, LandlordEditAccountForm,
                            LandlordMoreInfoForm, LoginForm, NewPasswordForm,
                            PasswordChangeForm, ProfilePictureForm,
-                           RegistrationForm)
+                           RegistrationForm, CreateGroupForm)
 from nexnest.models.availability import Availability
 from nexnest.models.direct_message import DirectMessage
 from nexnest.models.group import Group
@@ -187,7 +187,6 @@ def login():
 
         return render_template('login.html', login_form=loginForm)
     else:  # POST
-        print('Login Form Next %r' % login_form.next.data)
         login_form = LoginForm(request.form)
 
         if login_form.validate():
@@ -300,7 +299,8 @@ def viewUser(userID):
                                    form=form,
                                    title=user.fname,
                                    userFavorites=userFavorites,
-                                   groups=myGroups
+                                   groups=myGroups,
+                                   createGroupForm=CreateGroupForm()
                                    )
 
         else:
