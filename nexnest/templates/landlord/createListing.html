@@ -1192,48 +1192,6 @@
         $(this).prop('readonly', false);
     });
 
-
-    $('#rent_due').change(function() {
-        if ($("#price").val().length > 0 && $("#num_bedrooms").val().length > 0) {
-            var bedPrice = parseInt($("#price").val());
-            var beds = parseInt($("#num_bedrooms").val());
-            var frequency = $("#rent_due").val();
-
-            if (frequency == "monthly") {
-                $("#estimatedRevenue").html("Estimated Revenue: $" + bedPrice * beds + " per month");
-            } else {
-                $("#estimatedRevenue").html("Estimated Revenue: $" + bedPrice * beds + " per semester");
-            }
-        }
-    });
-
-    $('#num_bedrooms').change(function() {
-        if ($("#price").val().length > 0 && $("#num_bedrooms").val().length > 0) {
-            var bedPrice = parseInt($("#price").val());
-            var beds = parseInt($("#num_bedrooms").val());
-            var frequency = $("#rent_due").val();
-            if (frequency == "monthly") {
-                $("#estimatedRevenue").html("Estimated Revenue: $" + bedPrice * beds + " per month");
-            } else {
-                $("#estimatedRevenue").html("Estimated Revenue: $" + bedPrice * beds + " per semester");
-            }
-        }
-    });
-
-    $('#price').change(function() {
-        if ($("#price").val().length > 0 && $("#num_bedrooms").val().length > 0) {
-            var bedPrice = parseInt($("#price").val());
-            var beds = parseInt($("#num_bedrooms").val());
-            var frequency = $("#rent_due").val();
-
-            if (frequency == "monthly") {
-                $("#estimatedRevenue").html("Estimated Revenue: $" + bedPrice * beds + " per month");
-            } else {
-                $("#estimatedRevenue").html("Estimated Revenue: $" + bedPrice * beds + " per semester");
-            }
-        }
-    });
-
     $('#time_period').change(function() {
         if($("#time_period").val()=="school"){
             $("#time_range_full_year").show();
