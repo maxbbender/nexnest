@@ -162,8 +162,8 @@ def createApp(configName):
 
     @app.errorhandler(CSRFError)
     def handle_csrf_error(e):
-        app.logger.error('CSRF error : %r' % e)
-        flash('CSRF Error. Please go back and try again.', 'warning')
+        app.logger.warning('CSRF error : %r' % e)
+        flash('CSRF Error. Please refresh the page and try again.', 'warning')
         return abort(405)
 
     return app
