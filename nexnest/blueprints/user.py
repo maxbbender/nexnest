@@ -231,8 +231,7 @@ def login():
                 else:
                     flash("User account has been deleted", 'warning')
             else:
-                flash("There was no account found with an email address matching %s" %
-                      login_form.email.data, 'warning')
+                flash("Error validating login credentials", 'danger')
         else:
             flash_errors(login_form)
 
