@@ -91,14 +91,14 @@ class Listing(Base):
     date_modified = db.Column(db.DateTime)
 
     groups = relationship("GroupListing", back_populates='listing')
-    landlords = relationship("LandlordListing", back_populates='listing')
+    landlords = relationship("LandlordListing", back_populates='listing', cascade="all")
     tours = relationship("Tour", backref='listing')
     house = relationship("House", backref=backref('listing', uselist=False))
-    favorite = relationship("GroupListingFavorite", backref='listing')
-    individualFavorite = relationship('ListingFavorite', backref='listing')
+    favorite = relationship("GroupListingFavorite", backref='listing', cascade="all")
+    individualFavorite = relationship('ListingFavorite', backref='listing', cascade="all")
     listingTransactionListing = relationship("ListingTransactionListing", backref='listing')
-    schools = relationship("ListingSchool", back_populates='listing')
-    reports = relationship("ReportListing", backref='listing')
+    schools = relationship("ListingSchool", back_populates='listing', cascade="all")
+    reports = relationship("ReportListing", backref='listing', cascade="all")
 
     def __init__(
             self,

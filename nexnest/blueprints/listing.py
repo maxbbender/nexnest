@@ -298,6 +298,23 @@ def editListing(listingID):
                                bannerPath=listing.banner_photo_url)
 
 
+@listings.route('/listing/delete/<listingID>', methods=['GET'])
+@login_required
+@listing_editable
+def deleteListing(listingID):
+    listing = Listing.query.filter_by(id=listingID).first()
+
+    if listing is not None:
+        db.session.delete(listing)
+        db.session.commit()
+        flash('Listing Deleted!', 'success')
+    else:
+        flash('Unable to find that listing to delete', 'warning')
+        app.logger.warning('Listing was attempted to delete but does not exists %d' % listingID)
+
+    return redirect(url_for('landlords.landlordDashboard'))
+
+
 @listings.route("/listing/upload/<listingID>", methods=["POST"])
 @login_required
 @csrf.exempt
