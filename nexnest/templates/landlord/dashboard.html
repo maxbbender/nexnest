@@ -153,9 +153,12 @@
 								                    </div>
 								                </div>
 								                <div class="col-xs-1" style="font-size: 20px; margin-left: -30px;">
-	                			                	<a href="{{ url_for('listings.editListing', listingID=listing.id) }}"><strong class="text-nowrap"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</strong></a>
+								                	<div class="customTooltip">
+	                			                	   <a href="{{ url_for('listings.cloneListing', listingID=listing.id) }}"><strong class="text-nowrap"><i class="fa fa-clone" aria-hidden="true"></i> Relist</strong></a>
+	                			                	    <span class="customTooltiptext" style="margin-bottom: 6px; font-size: 18px;">Relist for another lease period.</span>
+	                			                	</div>
 	                			                	<br>
-	                			                	<a href="{{ url_for('listings.cloneListing', listingID=listing.id) }}"><strong class="text-nowrap"><i class="fa fa-clone" aria-hidden="true"></i> Copy</strong></a>
+	                			                	<a href="{{ url_for('listings.editListing', listingID=listing.id) }}"><strong class="text-nowrap"><i class="fa fa-pencil" aria-hidden="true" style="padding-right: 4px;"></i> Edit</strong></a>	                			                	
 						                    	</div>
 						                    </div>
 					                    </div>
@@ -3732,7 +3735,10 @@
 	        				                    		</a>
 	        				                    	</div>
 	        				                    	<div class="col-xs-2 col-md-4 col-lg-4" style="text-align: right;">
-	        				                    		<a href="/listing/clone/`+listing.id+`" class="btn btn-blue"><i class="fa fa-clone" aria-hidden="true"></i> Copy Listing</a>`;
+	        				                    		<div class="customTooltip">
+	        				                    		    <a href="/listing/clone/`+listing.id+`" class="btn btn-blue"><i class="fa fa-clone" aria-hidden="true"></i> Relist Property</a>
+	        				                    		    <span class="customTooltiptext" style="margin-bottom: 6px; font-size: 18px;">Relist for another lease period.</span>
+	        				                    		</div>`;
 	        				                    		requestURL = '/landlord/' + listing.id + '/isEditable/AJAX';
 	        				                    		$.getJSON(requestURL, function(data) {
 	        				                    		    results = data['results'];

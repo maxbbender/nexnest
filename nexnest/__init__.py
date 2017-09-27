@@ -158,7 +158,7 @@ def createApp(configName):
 
     # CSRF Error Handler
     from flask_wtf.csrf import CSRFError
-    from flask import abort
+    from flask import abort, flash
 
     @app.errorhandler(CSRFError)
     def handle_csrf_error(e):
