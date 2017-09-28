@@ -263,17 +263,22 @@ def emailConfirm(payload):
         email = confirm_token(payload)
     except:
         flash('The confirmation link is invalid or has expired.', 'danger')
-    user = User.query.filter_by(email=email).first_or_404()
 
-    if user.email_confirmed:
-        flash('Account already confirmed. Please login.', 'success')
+    if email:
+        user = User.query.filter_by(email=email).first_or_404()
+
+        if user.email_confirmed:
+            flash('Account already confirmed. Please login.', 'success')
+        else:
+            user.email_confirmed = True
+            session.commit()
+            flash('You have confirmed your account, you can now sign in!', 'success')
+            return redirect(url_for('users.login'))
+
+        return redirect(url_for('indexs.index'))
     else:
-        user.email_confirmed = True
-        session.commit()
-        flash('You have confirmed your account, you can now sign in!', 'success')
+        flash('Unable to confirm your email, please contact Nexnest staff at the contact form below.', 'warning')
         return redirect(url_for('users.login'))
-
-    return redirect(url_for('indexs.index'))
 
 
 @users.route('/user/view/<userID>', methods=['GET', 'POST'])
