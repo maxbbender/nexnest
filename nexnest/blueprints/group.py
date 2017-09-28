@@ -58,7 +58,7 @@ def createGroup():
             session.add(newGroup)
             session.commit()
 
-            flash('Group Created', 'success')
+            flash('Group Created! <a href="%s">Click here</a> to view group and invite your future housemates' % url_for('groups.view', groupID=newGroup.id), 'success')
 
             return form.redirect()
         else:
