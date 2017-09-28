@@ -688,8 +688,12 @@
           type: "GET",
           contentType: "application/json; charset=utf-8",
           url: requestURL,          
-          success: function () {
+          success: function (data) {
             console.log('deleted group')
+            console.log(data)
+            if (data['success']) {
+                window.location.href = "{{url_for('indexs.index')}}";
+            }
           },
         });
     }

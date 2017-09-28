@@ -90,10 +90,10 @@ class Listing(Base):
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
 
-    groups = relationship("GroupListing", back_populates='listing')
+    groups = relationship("GroupListing", back_populates='listing', cascade="all")
     landlords = relationship("LandlordListing", back_populates='listing', cascade="all")
-    tours = relationship("Tour", backref='listing')
-    house = relationship("House", backref=backref('listing', uselist=False))
+    tours = relationship("Tour", backref='listing', cascade="all")
+    house = relationship("House", backref=backref('listing', uselist=False), cascade="all")
     favorite = relationship("GroupListingFavorite", backref='listing', cascade="all")
     individualFavorite = relationship('ListingFavorite', backref='listing', cascade="all")
     listingTransactionListing = relationship("ListingTransactionListing", backref='listing')

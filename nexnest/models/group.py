@@ -24,18 +24,20 @@ class Group(Base):
     name = db.Column(db.Text)
     leader_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     target_time_period = db.Column(db.Text)
+    active = db.Column(db.Boolean)
     # start_date = db.Column(db.Date)
     # end_date = db.Column(db.Date)
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
-    users = relationship("GroupUser", back_populates='group')
-    listings = relationship("GroupListing", back_populates='group')
-    messages = relationship("GroupMessage", backref='group')
-    tours = relationship("Tour", backref='group')
-    house = relationship("House", backref='group')
-    favorites = relationship("GroupListingFavorite", backref='group')
-    reports = relationship("ReportGroup", backref='group')
-    emailInvites = relationship('GroupEmail', backref='group')
+
+    users = relationship("GroupUser", back_populates='group', cascade="all")
+    listings = relationship("GroupListing", back_populates='group', cascade="all")
+    messages = relationship("GroupMessage", backref='group', cascade="all")
+    tours = relationship("Tour", backref='group', cascade="all")
+    house = relationship("House", backref='group', cascade="all")
+    favorites = relationship("GroupListingFavorite", backref='group', cascade="all")
+    reports = relationship("ReportGroup", backref='group', cascade="all")
+    emailInvites = relationship('GroupEmail', backref='group', cascade="all")
 
     def __init__(
             self,
@@ -57,6 +59,8 @@ class Group(Base):
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
         self.date_created = now
         self.date_modified = now
+
+        self.active = True
 
         # Group User
         newGU = GroupUser(group=self, user=leader)

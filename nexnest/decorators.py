@@ -64,7 +64,7 @@ def group_editable(f):
         if 'groupID' in kwargs:
             group = Group.query.filter_by(id=int(kwargs['groupID'])).first()
 
-            if group is None:
+            if group is None or not group.active:
                 abort(404)
 
             if not group.isEditableBy(current_user, False):
@@ -80,7 +80,7 @@ def group_viewable(f):
         if 'groupID' in kwargs:
             group = Group.query.filter_by(id=int(kwargs['groupID'])).first()
 
-            if group is None:
+            if group is None or not group.active:
                 abort(404)
 
             if not group.isViewableBy(current_user, False):

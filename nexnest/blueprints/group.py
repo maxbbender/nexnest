@@ -194,8 +194,8 @@ def assignNewLeader(groupID, userID):
 @login_required
 @group_editable
 def removeMember(groupID, userID):
-    groupUser = GroupUser.query.fitler_by(
-        group_id=groupID, user_id=userID).first_or_404()
+    groupUser = GroupUser.query.filter_by(group_id=groupID, user_id=userID) \
+        .first_or_404()
 
     groupUser.accepted = False
     groupUser.show = False
@@ -387,9 +387,10 @@ def deleteGroup(groupID):
     group = Group.query.filter_by(id=groupID).first_or_404()
 
     # There can't be any users in the group if it is to be deleted
-    if len(group.users) == 1:
-        session.delete(group)
-        session.commit()
+    if len(group.acceptedUsers) == 1:
+        group.active = False
+        group.leader_id = 1
+        db.session.commit()
     else:
         errorMessage = 'You cannot delete %s because there are still other members in it. Delete them or assign a new group leader' % group.name
 
