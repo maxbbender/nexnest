@@ -16,7 +16,6 @@ def serve_upload(path):
 
 
 @base.route('/contactUs', methods=['POST'])
-@login_required
 def contactUs():
     form = ContactForm()
 
