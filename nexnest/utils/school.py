@@ -19,6 +19,20 @@ def allSchoolsAsStrings():
     return schoolStringArray
 
 
+def allSchoolsAsChoices():
+    app.logger.debug("allSchoolsAsStrings()")
+    allSchools = School.query.all()
+
+    app.logger.debug("allSchools : %r" % allSchools)
+
+    schoolStringArray = []
+
+    for school in allSchools:
+        schoolStringArray.append((school.name, school.name))
+
+    return schoolStringArray
+
+
 def allSchools():
     app.logger.debug('allSchoolsAsStringsWithCord()')
 
