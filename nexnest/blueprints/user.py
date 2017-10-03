@@ -32,7 +32,7 @@ from nexnest.utils.email import confirm_token, generate_confirmation_token
 from nexnest.utils.file import allowed_file
 from nexnest.utils.flash import flash_errors
 from nexnest.utils.password import check_password
-from nexnest.utils.school import allSchoolsAsStrings
+from nexnest.utils.school import allSchoolsAsStrings, allSchoolsAsChoices
 from nexnest.utils.user import (genEmailPasswordResetContent,
                                 genEmailVerificationContent)
 from sqlalchemy import and_, asc, desc, func, or_
@@ -49,11 +49,16 @@ def register():
         if current_user.is_authenticated:
             return redirect(url_for('indexs.index'))
 
+        form = RegistrationForm()
+        form.school.choices = allSchoolsAsChoices()
+
         return render_template('register.html',
-                               form=RegistrationForm(),
+                               form=form,
                                schools=allSchoolsAsStrings())
     else:
         registerForm = RegistrationForm(request.form)
+        registerForm.school.choices = allSchoolsAsChoices()
+
 
         if registerForm.validate():
             # Determine if registering as tenant or landlord
@@ -180,6 +185,9 @@ def landlordInformation():
 
 @users.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('indexs.index'))
+
     if request.method == 'GET':
         loginForm = LoginForm()
         if request.args.get('next') is not None:
@@ -253,6 +261,9 @@ def logout():
 
 @users.route('/emailConfirm/<email>')
 def emailConfirmNotice(email):
+    if current_user.is_authenticated:
+        return redirect(url_for('indexs.index'))
+        
     return render_template('/user/confirmEmail.html',
                            email=email)
 
