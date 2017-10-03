@@ -185,6 +185,9 @@ def landlordInformation():
 
 @users.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('indexs.index'))
+        
     if request.method == 'GET':
         loginForm = LoginForm()
         if request.args.get('next') is not None:
