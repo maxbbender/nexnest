@@ -187,7 +187,7 @@ def landlordInformation():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('indexs.index'))
-        
+
     if request.method == 'GET':
         loginForm = LoginForm()
         if request.args.get('next') is not None:
@@ -261,6 +261,9 @@ def logout():
 
 @users.route('/emailConfirm/<email>')
 def emailConfirmNotice(email):
+    if current_user.is_authenticated:
+        return redirect(url_for('indexs.index'))
+        
     return render_template('/user/confirmEmail.html',
                            email=email)
 
