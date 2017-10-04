@@ -34,7 +34,7 @@
                             <label class="control-label form-control-feedback">Sign Up As</label>
                             <div class="btn-group" data-toggle="buttons" style="display: flex;">
                                 <label class="btn btn-outline-green active" id="registerAsTenant" style="font-size: 20px;">
-                                    <input type="radio" checked autocomplete="off"> <i class="fa fa-graduation-cap" aria-hidden="true"></i> Tenant
+                                    <input type="radio" checked autocomplete="off"> <i class="fa fa-graduation-cap" aria-hidden="true"></i> Student
                                 </label>
                                 <label class="btn btn-outline-green" id="registerAsLandlord" style="font-size: 20px;">
                                     <input type="radio" autocomplete="off"><i class="fa fa-home" aria-hidden="true"></i>  Landlord
@@ -155,7 +155,7 @@
                             </div>
                             {{form.landlord}}
 						  	<p>
-						  		<button id="submitRegistration" type="button" style="float: right;" class="btn btn-light-green" onClick="submitForm()">Sign Up As Tenant</button>
+						  		<button id="submitRegistration" type="button" style="float: right;" class="btn btn-light-green" onClick="submitForm()">Sign Up As Student</button>
 						  	</p>
         				</form>
                     </div>
@@ -191,7 +191,7 @@ $("#registerAsTenant").change(function () {
      .attr("value", value).text(key));
     });
     $("#landlord").val("tenant");
-    $("#submitRegistration").text("Sign Up as Tenant");
+    $("#submitRegistration").text("Sign Up as Student");
 });
 
 $( document ).ready(function() {
@@ -229,7 +229,7 @@ $( document ).ready(function() {
        .attr("value", value).text(key));
       });
       $("#landlord").val("tenant");
-      $("#submitRegistration").text("Sign Up as Tenant");
+      $("#submitRegistration").text("Sign Up as Student");
     }
 
     $('input[type=password]').keyup(function() {

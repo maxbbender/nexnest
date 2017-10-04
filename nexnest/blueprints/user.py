@@ -262,7 +262,7 @@ def logout():
 def emailConfirmNotice(email):
     if current_user.is_authenticated:
         return redirect(url_for('indexs.index'))
-
+        
     return render_template('/user/confirmEmail.html',
                            email=email)
 
