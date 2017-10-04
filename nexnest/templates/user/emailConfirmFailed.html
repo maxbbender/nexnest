@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+    <h1>Request a new email confirmation link</h1>
+    
+</div>
+<div class="row">
+    <input id="email" type="text">
+    <button id="emailConfirm" value="Resend Email Verification">Resend Email Verification</button>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$('#emailConfirm').click(function() {
+    email = $('#email').val();
+    url = '/emailConfirm/resend/' + email;
+    $.getJSON(url, function(data){ 
+        if (data['success']) {
+            console.log('success');
+        } else {
+            console.log('failure');
+        }
+    });
+});
+</script>
+{% endblock %}

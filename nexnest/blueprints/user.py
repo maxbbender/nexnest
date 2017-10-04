@@ -87,8 +87,7 @@ def register():
                     # Make them a Landlord
 
                     # Notification Preference Table init
-                    session.add(NotificationPreference(
-                        user=newUser, newsletter=registerForm.newsletter.data))
+                    session.add(NotificationPreference(user=newUser, newsletter=registerForm.newsletter.data))
                     session.commit()
 
                     newLandlord = Landlord(newUser)
@@ -262,7 +261,7 @@ def logout():
 def emailConfirmNotice(email):
     if current_user.is_authenticated:
         return redirect(url_for('indexs.index'))
-        
+
     return render_template('/user/confirmEmail.html',
                            email=email)
 
@@ -287,8 +286,44 @@ def emailConfirm(payload):
 
         return redirect(url_for('indexs.index'))
     else:
-        flash('Unable to confirm your email, please contact Nexnest staff at the contact form below.', 'warning')
-        return redirect(url_for('users.login'))
+        flash('Unable to confirm your email, please contact nexnest staff at the contact form below or try and resend the email verificaiton link below.', 'warning')
+        return redirect(url_for('users.emailConfirmFailed'))
+
+
+@users.route('/emailConfirm/resend/<email>')
+def emailConfirmResend(email):
+    user = User.query.filter_by(email=email).first()
+
+    if user:
+        if user.email_confirmed:
+            if request.is_xhr:
+                return jsonify({'success': False})
+            else:
+                flash('Your email has already been confirmed, no need to spam your inbox!', 'warning')
+                return redirect(url_for('users.viewUser', userID=user.id))
+            
+        emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(
+            user.email), _external=True)
+        user.sendEmail('emailVerification',
+                       genEmailVerificationContent(user, emailConfirmURL))
+
+        if request.is_xhr:
+            return jsonify({'success': True})
+        else:
+            return redirect(url_for('users.emailConfirmNotice', email=user.email.data))
+    else:
+        app.logger.warning('User just requested another email verification for an email that does not exists %s' % email)
+
+        if request.is_xhr:
+            return jsonify({'success': False})
+        else:
+            flash('Sorry! We were unable to process your request', 'warning')
+            return redirect(url_for('users.emailConfirmFailed'))
+        
+
+@users.route('/user/emailConfirmFailed')
+def emailConfirmedFailed():
+    return render_template('/user/emailConfirmFailed.html')
 
 
 @users.route('/user/view/<userID>', methods=['GET', 'POST'])
