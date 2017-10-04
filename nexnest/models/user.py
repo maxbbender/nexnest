@@ -177,8 +177,9 @@ class User(Base):
         if not self.isLandlord:
             acceptedGroups = []
             for groupUser in self.groups:
-                if groupUser.accepted:
-                    acceptedGroups.append(groupUser.group)
+                if groupUser.group.active:
+                    if groupUser.accepted:
+                        acceptedGroups.append(groupUser.group)
 
             return acceptedGroups
         else:
@@ -312,7 +313,7 @@ class User(Base):
             .filter(Notification.category.in_(('direct_message', 'generic_message'))) \
             .distinct(Notification.notif_type, Notification.redirect_url, Notification.viewed) \
             .paginate(1, 10, False).items
-        app.logger.debug(pformat(returnList))
+        # app.logger.debug(pformat(returnList))
         return returnList
 
     def getUnreadMessageNotificationCount(self):
@@ -320,16 +321,8 @@ class User(Base):
 
         genericMessage = Notification.query.filter_by(user=self, category='generic_message', viewed=False)
 
-        print('directMessage ', directMessage.all())
-        print('generic ', genericMessage.all())
-
-        print('Distinct')
-
         directMessage = directMessage.distinct(Notification.notif_type, Notification.target_model_id)
         genericMessage = genericMessage.distinct(Notification.notif_type, Notification.redirect_url)
-
-        print('directMessage ', directMessage.all())
-        print('generic ', genericMessage.all())
 
         compiledMessages = []
         allDirect = directMessage.all()
