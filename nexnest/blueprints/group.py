@@ -58,7 +58,7 @@ def createGroup():
             session.add(newGroup)
             session.commit()
 
-            flash('Group Created! <a href="%s">Click here</a> to view group and invite your future housemates' % url_for('groups.view', groupID=newGroup.id), 'success')
+            flash('Group Created! Navigate to "My Groups" in your menu to view group and invite your future housemates', 'success')
 
             return form.redirect()
         else:
@@ -391,6 +391,7 @@ def deleteGroup(groupID):
         group.active = False
         group.leader_id = 1
         db.session.commit()
+        flash('Your group %s has been deleted!' % group.name, 'success')
     else:
         errorMessage = 'You cannot delete %s because there are still other members in it. Delete them or assign a new group leader' % group.name
 

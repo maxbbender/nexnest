@@ -59,7 +59,6 @@ def register():
         registerForm = RegistrationForm(request.form)
         registerForm.school.choices = allSchoolsAsChoices()
 
-
         if registerForm.validate():
             # Determine if registering as tenant or landlord
             userType = registerForm.landlord.data
@@ -709,24 +708,16 @@ def getMessageNotifications(page=1):
         startNumber = (page * 10) - 10
         endNumber = (page * 10)
 
-    directMessage = Notification.query.filter_by(
-        user=current_user, category='direct_message')
+    directMessage = Notification.query.filter_by(user=current_user, category='direct_message')
+    genericMessage = Notification.query.filter_by(user=current_user, category='generic_message')
 
-    genericMessage = Notification.query.filter_by(
-        user=current_user, category='generic_message')
+    directMessage = directMessage.distinct(Notification.notif_type,
+                                           Notification.viewed,
+                                           Notification.target_model_id)
 
-    print('directMessage ', directMessage.all())
-    print('generic ', genericMessage.all())
-
-    print('Distinct')
-
-    directMessage = directMessage.distinct(
-        Notification.notif_type, Notification.viewed, Notification.target_model_id)
-    genericMessage = genericMessage.distinct(
-        Notification.notif_type, Notification.redirect_url, Notification.viewed)
-
-    print('directMessage ', directMessage.all())
-    print('generic ', genericMessage.all())
+    genericMessage = genericMessage.distinct(Notification.notif_type,
+                                             Notification.redirect_url,
+                                             Notification.viewed)
 
     compiledMessages = []
     allDirect = directMessage.all()
@@ -735,12 +726,7 @@ def getMessageNotifications(page=1):
     compiledMessages.extend(allDirect)
     compiledMessages.extend(allGeneric)
 
-    print('compiledMessages : \n %s' % pformat(compiledMessages))
-
-    sortedCompiled = sorted(
-        compiledMessages, key=lambda n: n.date_created, reverse=True)
-
-    print('sortedCompiled : \n %s' % pformat(sortedCompiled))
+    sortedCompiled = sorted(compiledMessages, key=lambda n: n.date_created, reverse=True)
 
     serializedReturn = []
 
@@ -771,8 +757,8 @@ def favoriteListing(listingID):
     listing = session.query(Listing).filter_by(id=listingID).first_or_404()
 
     # Make sure one doesn't already exist
-    lf = ListingFavorite.query.filter_by(
-        listing=listing, user=current_user).first()
+    lf = ListingFavorite.query.filter_by(listing=listing,
+                                         user=current_user).first()
 
     if lf is None:
         app.logger.debug("Listing %r" % listing)
