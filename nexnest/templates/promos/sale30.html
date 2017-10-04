@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
 	<div class="row" style="padding-top: 15px; padding-bottom: 100px;">
-		<div class="col-xs-12 col-md-5" style="padding-top: 15px;">
-			<img src="/static/img/promo30.jpg" style="height: auto; max-width: 100%;">
+		<div class="col-xs-12 col-md-5" style="padding-top: 15px; text-align: center;">
+			<img src="/static/img/promo30.jpg" style="height: auto; max-width: 75%;">
 			<br>
 			<div class="row" style="padding-top: 15px;">
-				<div class="col-xs-6 col-md-12 col-lg-6" style="text-align: center; padding-top: 15px;">
-					<a class="btn btn-blue" href="#" data-toggle="modal" data-target="#packageDescriptionModal">Pricing & Packages</a>
+				<div class="col-md-12 col-lg-6" style="text-align: center; padding-top: 15px;">
+					<a class="btn btn-blue" href="#" data-toggle="modal" data-target="#packageDescriptionModal" style="width: 231px; font-size: 22px;"><strong>Pricing & Packages</strong></a>
 				</div>
-				<div class="col-xs-6 col-md-12 col-lg-6" style="text-align: center; padding-top: 15px;">
-					<a class="btn btn-light-green" href="{{url_for('users.register')}}" style="width: 168.33px;">Sign Me Up!</a>
+				<div class="col-md-12 col-lg-6" style="text-align: center; padding-top: 15px;">
+					<a class="btn btn-light-green" href="{{url_for('users.register')}}" style="width: 231px; font-size: 22px;"><strong>Sign Me Up!</strong></a>
 				</div>
 			</div>
 		</div>
