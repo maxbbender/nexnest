@@ -226,6 +226,9 @@
                                                 <option value="2020">2020</option>
                                                 <option value="2021">2021</option>
                                             </select>
+                                            <p id="time_range_summer_select_dateWarning" style="display: none;" class="form-text text-muted">
+                                                *The year you have selected does not match the lease start date
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -1081,12 +1084,28 @@
                     }
                     //Ensure time period and lease start date match
                     var selectedTimePeriod = $("#time_range_full_select").val().split("-")[0];
+                    var selectedSummer = $("#time_range_summer_select").val().split("-")[0];
                     var selectedStartDateYear = $("#leaseStartDateInput").val().split("-")[0];
-                    if(selectedTimePeriod != selectedStartDateYear){
-                        $("#time_range_full_select").closest(".form-group").addClass("has-error");
-                        $("#time_range_full_select").closest(".form-group").addClass("has-danger");
-                        errorExists = true;
-                        $("#time_range_full_select_dateWarning").show();
+
+                    if($("#time_period").val()=="summer"){
+                        console.log('summer');
+                        if(selectedSummer != selectedStartDateYear){
+                            console.log('summer year wrong');
+                            $("#time_range_summer_select").closest(".form-group").addClass("has-error");
+                            $("#time_range_summer_select").closest(".form-group").addClass("has-danger");
+                            errorExists = true;
+                            $("#time_range_summer_select_dateWarning").show();
+                        }
+                    }
+                    else{
+                        console.log('not summer');
+                        if(selectedTimePeriod != selectedStartDateYear){
+                            console.log('year wrong');
+                            $("#time_range_full_select").closest(".form-group").addClass("has-error");
+                            $("#time_range_full_select").closest(".form-group").addClass("has-danger");
+                            errorExists = true;
+                            $("#time_range_full_select_dateWarning").show();
+                        }
                     }
 
                     if($("#rent_due").val() == "semester"){
