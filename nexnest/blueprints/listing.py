@@ -432,7 +432,7 @@ def uploadPhotos(listingID):
             return redirect(url_for('listings.createListing'))
         elif form.nextAction.data == 'createCopy':
             flash('Listing Created!', 'success')
-            return redirect(url_for('listing.cloneListing', listingID=listingID))
+            return redirect(url_for('listings.cloneListing', listingID=listingID))
             # selectedSchools = ListingSchool.query.filter_by(listing_id=listingID).all()
             # # Get Pictures
             # form = ListingForm()
