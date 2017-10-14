@@ -144,19 +144,19 @@
                                     <div class="col-xs-col-xs-12 col-md-6 col-lg-6 col-xl-4">
                                         <div class="form-group">
                                             <label class="control-label form-control-feedback text-nowrap">Number of Bedrooms</label>
-                                            {{form.num_bedrooms(class='form-control', required='required', maxlength='1', type="number")}}
+                                            {{form.num_bedrooms(class='form-control', required='required', maxlength='1', type="number", min="0")}}
                                         </div>
                                     </div>
                                     <div class="col-xs-col-xs-12 col-md-6 col-lg-6 col-xl-4">
                                         <div class="form-group">
                                             <label class="control-label form-control-feedback text-nowrap">Number of Full Bathrooms</label>
-                                            {{form.num_full_baths(class='form-control', required='required', maxlength='1', type="number")}}
+                                            {{form.num_full_baths(class='form-control', required='required', maxlength='1', type="number", min="0")}}
                                         </div>
                                     </div>
                                     <div class="col-xs-col-xs-12 col-md-6 col-lg-6 col-xl-4">
                                         <div class="form-group">
                                             <label class="control-label form-control-feedback text-nowrap">Number of Half Bathrooms</label>
-                                            {{form.num_half_baths(class='form-control', maxlength='1', type="number")}}
+                                            {{form.num_half_baths(class='form-control', maxlength='1', type="number", min="0")}}
                                         </div>
                                     </div>
                                 </div>
@@ -171,7 +171,7 @@
                                         <div class="form-group">
                                             <label class="control-label form-control-feedback">Square Footage of Property</label>
                                             <div class="input-group">
-                                                {{form.square_footage(class='form-control', type="number")}}
+                                                {{form.square_footage(class='form-control', type="number", min="0")}}
                                                 <span class="input-group-addon nexnest-font">FT</span>
                                             </div>
                                             <!-- <input id="footage" maxlength="100" type="number" name="square_footage" required="required" class="form-control" /> -->
