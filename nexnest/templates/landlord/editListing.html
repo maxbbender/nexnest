@@ -693,7 +693,8 @@
                                         {{form.nextAction}}                        
                                     </div>
                                 </div>
-                                <button onClick="submitListingForm()" class="btn btn-light-green btn-lg pull-right">Save Changes</a>
+                                <button id="saveChanges" onClick="submitListingForm()" class="btn btn-light-green btn-lg pull-right">Save Changes</a>
+                                <button id="saveChanges_Loading" class="btn btn-light-green btn-lg pull-right" disabled="" style="width: 167px; display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
                             </div>
                         </div>
                     </div>
@@ -1231,6 +1232,8 @@
         else if($("#time_period").val()=="summer"){
             $("#time_period_date_range").val($("#time_range_summer_select").val());
         }
+        $("#saveChanges").hide();
+        $("#saveChanges_Loading").show();
         $("form#editListingForm").submit();
     }
 
