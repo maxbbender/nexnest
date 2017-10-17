@@ -304,6 +304,8 @@ def editListing(listingID):
                                schools=allSchoolsAsStrings(),
                                selectedSchools=selectedSchools,
                                picturePaths=picturePaths,
+                               startDate=listing.start_date,
+                               endDate=listing.end_date,
                                bannerPath=listing.banner_photo_url)
 
 
