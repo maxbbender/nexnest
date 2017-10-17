@@ -123,7 +123,9 @@
                                         <div class="form-group" style="display: none;" id="apartmentNumberInput">
                                             <label class="control-label form-control-feedback" id="apartment_number_label">Apartment Number</label>
                                             {{form.apartment_number(class='form-control')}}
-                                            <!-- <input id="apartment_number" name="apartment_number" maxlength="100" type="number" class="form-control" /> -->
+                                            <p id="apartment_number_error" style="display: none;" class="form-text text-muted">
+                                                *Please only enter a number. Ex. 27
+                                            </p>
                                         </div>
                                     </div>
                                 </div>                                
@@ -245,8 +247,12 @@
                                             <p id="start_date_before_previous_listing_end_date" style="display: none;" class="form-text text-muted">
                                                 *You are trying to create another listing for this property, but the lease dates overlap
                                                 <br>
-                                                <span id="previousListingDates">
                                             </p>
+                                            <p id="start_date_before_previous_listing_end_date_apartment" style="display: none;" class="form-text text-muted">
+                                                *You are trying to create another listing for this apartment number, but the lease dates overlap. Please either switch the apartment number(on step 2) or choose a new lease start date.
+                                                <br>
+                                            </p>
+                                            <span id="previousListingDates" style="display: none;" class="form-text text-muted">
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
@@ -893,11 +899,25 @@
 
         //If clone listing, prefill lease start date
         {% if endDate %}
-            var oldEnd = new Date("{{endDate}}");
-            //console.log("oldEnd: " + oldEnd);
-            var m = moment(oldEnd);
-            m.add(2, 'd');
-            startLeaseFlat.setDate(m.format()); // Set to the exact date
+            {% if not aptNumber %}
+                var oldEnd = new Date("{{endDate}}");
+                //console.log("oldEnd: " + oldEnd);
+                var m = moment(oldEnd);
+                m.add(2, 'd');
+                startLeaseFlat.setDate(m.format()); // Set to the exact date
+            {% else %}
+                console.log("dsd");
+                console.log("{{startDate}}");
+                console.log("{{endDate}}");
+                var start = new Date("{{startDate}}");
+                var end = new Date("{{endDate}}");
+                start = moment(start);
+                end = moment(end);
+                start.add(1, 'd');
+                end.add(1, 'd');
+                startLeaseFlat.setDate(start.format());
+                endLeaseFlat.setDate(end.format());
+            {% endif %}
         {% endif %}
 
         $('.flatpickr-calendar').css('z-index', 99999999999999);
@@ -998,6 +1018,20 @@
             }
         });
 
+
+        //validate integers
+        function validInteger(input){
+            console.log(input);
+            if (input == parseInt(input, 10)){
+                console.log("valid int");
+                return true;
+            }
+            else{
+                console.log("not valid int");
+                return false;
+            }
+        }
+
         //try to format rent price
         $("#price").on('input', function() {
             //console.log('hi');
@@ -1063,7 +1097,26 @@
                     } else {
                         nextStepWizard.removeClass('disabled').trigger('click');
                     }
-                }else if(curStep[0].id == "step-3"){
+                }else if(curStep[0].id == "step-2"){
+                    //validate that apartment number is only an integer
+                    if($("#property_type").val() == "apartment"){
+                        if(!validInteger($("#apartment_number").val())){
+                            $("#apartment_number").closest(".form-group").addClass("has-error");
+                            $("#apartment_number").closest(".form-group").addClass("has-danger");
+                            $("#apartment_number_error").show();
+                        }
+                        else {
+                            $("#apartment_number_error").hide();
+                            $("#apartment_number").closest(".form-group").removeClass("has-error");
+                            $("#apartment_number").closest(".form-group").removeClass("has-danger");
+                            nextStepWizard.removeClass('disabled').trigger('click');
+                        }
+                    }
+                    else{
+                        nextStepWizard.removeClass('disabled').trigger('click');
+                    }
+                }
+                else if(curStep[0].id == "step-3"){
                     var errorExists = false;
 
                     if($("#price").val().indexOf('.') > -1){
@@ -1088,9 +1141,7 @@
                     var selectedStartDateYear = $("#leaseStartDateInput").val().split("-")[0];
 
                     if($("#time_period").val()=="summer"){
-                        console.log('summer');
                         if(selectedSummer != selectedStartDateYear){
-                            console.log('summer year wrong');
                             $("#time_range_summer_select").closest(".form-group").addClass("has-error");
                             $("#time_range_summer_select").closest(".form-group").addClass("has-danger");
                             errorExists = true;
@@ -1098,9 +1149,7 @@
                         }
                     }
                     else{
-                        console.log('not summer');
                         if(selectedTimePeriod != selectedStartDateYear){
-                            console.log('year wrong');
                             $("#time_range_full_select").closest(".form-group").addClass("has-error");
                             $("#time_range_full_select").closest(".form-group").addClass("has-danger");
                             errorExists = true;
@@ -1161,11 +1210,33 @@
                         //console.log("new_start_date: " + new_start_date);
                         //console.log("oldEnd: " + oldEnd);
                         if(oldEnd > new_start_date){
-                            errorExists = true;
-                            $("#leaseStartDateInput").closest(".form-group").addClass("has-error");
-                            $("#leaseStartDateInput").closest(".form-group").addClass("has-danger");
-                            $("#start_date_before_previous_listing_end_date").show();
-                            $("#previousListingDates").text("The previous lease ends : " + oldEnd)
+                            {% if aptNumber %}
+                                var aptNumber = {{aptNumber}}
+                                console.log(aptNumber);
+                                if($("#apartment_number").val() == aptNumber){
+                                    errorExists = true;
+                                    $("#leaseStartDateInput").closest(".form-group").addClass("has-error");
+                                    $("#leaseStartDateInput").closest(".form-group").addClass("has-danger");
+                                    $("#start_date_before_previous_listing_end_date_apartment").show();
+                                    $("#previousListingDates").show();
+                                    $("#previousListingDates").text("The previous lease ends : " + oldEnd);
+                                }
+                                else{
+                                    $("#previousListingDates").hide();
+                                    $("#leaseStartDateInput").closest(".form-group").removeClass("has-error");
+                                    $("#leaseStartDateInput").closest(".form-group").removeClass("has-danger");
+                                    if(errorExists == false){
+                                        nextStepWizard.removeClass('disabled').trigger('click');
+                                    }
+                                }
+                            {% else %}
+                                errorExists = true;
+                                $("#leaseStartDateInput").closest(".form-group").addClass("has-error");
+                                $("#leaseStartDateInput").closest(".form-group").addClass("has-danger");
+                                $("#start_date_before_previous_listing_end_date").show();
+                                $("#previousListingDates").show();
+                                $("#previousListingDates").text("The previous lease ends : " + oldEnd);
+                            {% endif %}
                         }
                         else{
                             if(errorExists == false){
