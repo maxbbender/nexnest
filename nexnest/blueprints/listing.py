@@ -237,6 +237,13 @@ def cloneListing(listingID):
         listingPicturePath = os.path.join(folderPath, 'pictures')
         picturePaths = os.listdir(listingPicturePath)
 
+        #If it is an apartment we need to pass the apartment number along as well
+        #Because if it is an apartment we need to take the apt number and end date in account
+        #When determining if the listing is cloneable
+        aptNumber = None
+        if listingToClone.property_type == 'apartment':
+            aptNumber = listingToClone.apartment_number
+
         form = ListingForm(obj=listingToClone)
         return render_template('/landlord/createListing.html',
                                form=form,
@@ -244,7 +251,9 @@ def cloneListing(listingID):
                                schools=allSchoolsAsStrings(),
                                selectedSchools=selectedSchools,
                                picturePaths=picturePaths,
-                               endDate=listingToClone.end_date)
+                               startDate=listingToClone.start_date,
+                               endDate=listingToClone.end_date,
+                               aptNumber=aptNumber)
     else:
         flash("You are not the landlord of this listing", 'warning')
 
@@ -295,6 +304,8 @@ def editListing(listingID):
                                schools=allSchoolsAsStrings(),
                                selectedSchools=selectedSchools,
                                picturePaths=picturePaths,
+                               startDate=listing.start_date,
+                               endDate=listing.end_date,
                                bannerPath=listing.banner_photo_url)
 
 
