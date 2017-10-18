@@ -13,9 +13,9 @@ yesNo = [
 ]
 
 valid_parking_types = [
-    ('0', 'On-street'),
-    ('1', 'Off-street'),
-    ('2', 'None')
+    ('On-street', 'On-street'),
+    ('Off-street', 'Off-street'),
+    ('None', 'None')
 ]
 
 valid_time_periods = [
