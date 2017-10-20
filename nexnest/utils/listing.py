@@ -92,3 +92,4 @@ def updatePictures(listing, request):
             flash("Error saving file %s" % file.filename, 'danger')
 
     flash('Listing Updated', 'info')
+

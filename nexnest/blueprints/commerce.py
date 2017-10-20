@@ -19,6 +19,8 @@ from nexnest.utils.flash import flash_errors
 
 import json
 
+import datetime
+
 session = db.session
 
 commerce = Blueprint('commerce', __name__, template_folder='../templates/commerce')
@@ -184,6 +186,63 @@ def genTransaction():
                             listing.featured = True
 
                     session.commit()
+
+                    # We also want to delete all other listings with the same address that
+                    # are inactive and for the same time period
+                    app.logger.debug("Trying to find other inactive listings with the same address")
+
+                    # Listings with the same addresses
+                    otherListingsWithSameAddress = None
+                    if listing.property_type == 'apartment':
+                        otherListingsWithSameAddress = session.query(Listing) \
+                            .filter_by(street=listing.street,
+                                       city=listing.city,
+                                       state=listing.state,
+                                       zip_code=listing.zip_code,
+                                       apartment_number=listing.apartment_number,
+                                       active=False
+                                       ) \
+                            .all()
+                    else:
+                        otherListingsWithSameAddress = session.query(Listing) \
+                            .filter_by(street=listing.street,
+                                       city=listing.city,
+                                       state=listing.state,
+                                       zip_code=listing.zip_code,
+                                       active=False
+                                       ) \
+                            .all()
+
+                    app.logger.debug("Other listings with the same address : %r" % otherListingsWithSameAddress)
+                    app.logger.debug("Determining which ones have conflicting dates")
+
+                    conflictingDates = False
+                    conflictingListings = []
+                    for otherListing in otherListingsWithSameAddress:
+
+                        # Serialize the dates into python Date
+                        otherListingStartDate = otherListing.start_date
+                        otherListingEndDate = otherListing.end_date
+                        
+                        # If the other listing starts before the end, and after the start (conflict)
+                        if otherListingStartDate <= listing.end_date and otherListingStartDate >= listing.start_date:
+                            app.logger.debug("Found a listing with conflicting dates : %r" % otherListing)
+                            db.session.delete(otherListing)
+                            conflictingDates = True
+
+                        # If the other listing starts before the start but ends after the start (conflict)
+                        elif otherListingStartDate <= listing.start_date and otherListingEndDate >= listing.start_date:
+                            app.logger.debug("Found a listing with conflicting dates : %r" % otherListing)
+                            db.session.delete(otherListing)
+                            conflictingDates = True
+                        else:
+                            app.logger.debug("Listing %s does not have conflicting dates" % otherListing)
+
+                    if conflictingDates:
+                        db.session.commit()
+
+
+
 
                 flash('Transaction Success, your listings are now live!', 'success')
                 return redirect(url_for('indexs.index'))

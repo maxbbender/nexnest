@@ -122,7 +122,8 @@ def createListing():
                                city=newListing.city,
                                state=newListing.state,
                                zip_code=newListing.zip_code,
-                               apartment_number=newListing.apartment_number
+                               apartment_number=newListing.apartment_number,
+                               active=True
                                ) \
                     .all()
             else:
@@ -130,7 +131,8 @@ def createListing():
                     .filter_by(street=newListing.street,
                                city=newListing.city,
                                state=newListing.state,
-                               zip_code=newListing.zip_code
+                               zip_code=newListing.zip_code,
+                               active=True
                                ) \
                     .all()
 
