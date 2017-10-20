@@ -132,12 +132,12 @@ def createApp(configName):
 
     def format_datetime(value, format='human'):
         if format == 'human':
-            format = '%B %m, %Y at %-I:%-M%p'
+            format = '%B %d, %Y at %-I:%-M%p'
         return value.strftime(format)
 
     def format_date(value, format='human'):
         if format == 'human':
-            format = '%B %m, %Y'
+            format = '%B %d, %Y'
         return value.strftime(format)
 
     app.jinja_env.filters['format_datetime'] = format_datetime
