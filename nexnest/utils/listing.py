@@ -47,6 +47,7 @@ def updateListing(listing, form):
     listing.cable = form.cable.data
     listing.washer_free = form.washer_free.data
     listing.youtube_url = form.youtube_url.data
+    listing.time_period_date_range = form.time_period_date_range.data
 
     if form.property_type == 'apartment':
         listing.apartment_number = form.apartment_number.data
