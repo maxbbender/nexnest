@@ -198,7 +198,7 @@ def genTransaction():
                 app.logger.error('Transaction Error %s (%s|%s)' % (result.transaction.status, result.transaction.processor_response_code, result.transaction.processor_response_text))
 
                 if request.is_xhr:
-                    return jsonify({'success': False, 'message': 'Transaction Error! Please check your information and try again, if you believe this is an error on our end please let us know!'})
+                    return jsonify({'success': False, 'message': 'Transaction Error!'})
                 else:
                     flash('Transaction Error! Please check your information and try again, if you believe this is an error on our end please let us know!', 'danger')
                     return redirect('/landlord/dashboard#checkoutTab')
