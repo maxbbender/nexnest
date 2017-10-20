@@ -36,82 +36,128 @@
   </div>
 </div>
 
+<div id="output" class="row">
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+
 <!-- Load the Client component. -->
 <script src="https://js.braintreegateway.com/web/3.11.0/js/client.min.js"></script>
 
 <!-- Load the Hosted Fields component. -->
 <script src="https://js.braintreegateway.com/web/3.11.0/js/hosted-fields.min.js"></script>
 
+<script src="{{url_for('static', filename='js/jquery.form.min.js')}}"></script>
+
 <script>
-// We generated a client token for you so you can test out this code
-// immediately. In a production-ready integration, you will need to
-// generate a client token on your server (see section below).
-var form = document.querySelector('#checkout-form');
-var authorization = '{{clientToken}}';
-var submit = document.querySelector('input[type="submit"]');
+$(document).ready(function() {
 
-braintree.client.create({
-  authorization: authorization
-}, function (clientErr, clientInstance) {
-  if (clientErr) {
-    // Handle error in client creation
-    console.error("Client Error : " + clientErr)
-    return;
-  }
 
-  braintree.hostedFields.create({
-    client: clientInstance,
-    styles: {
-      'input': {
-        'font-size': '14pt'
-      },
-      'input.invalid': {
-        'color': 'red'
-      },
-      'input.valid': {
-        'color': 'green'
-      }
-    },
-    fields: {
-      number: {
-        selector: '#card-number',
-        placeholder: '4111 1111 1111 1111'
-      },
-      cvv: {
-        selector: '#cvv',
-        placeholder: '123'
-      },
-      expirationDate: {
-        selector: '#expiration-date',
-        placeholder: '10/2019'
-      }
-    }
-  }, function (hostedFieldsErr, hostedFieldsInstance) {
-    if (hostedFieldsErr) {
-      // Handle error in Hosted Fields creation
-      console.error("Error in Hosted Fields creation : " + hostedFieldsErr)
+  $('#checkout-form').ajaxForm({
+    success: postResponse
+  });
+
+  $('.pay-button').on('click', function() {
+    $(this).prop("disabled",true);
+  })
+
+
+
+  // We generated a client token for you so you can test out this code
+  // immediately. In a production-ready integration, you will need to
+  // generate a client token on your server (see section below).
+  var form = document.querySelector('#checkout-form');
+  var authorization = '{{clientToken}}';
+  var submit = document.querySelector('input[type="submit"]');
+
+  braintree.client.create({
+    authorization: authorization
+  }, function (clientErr, clientInstance) {
+    if (clientErr) {
+      // Handle error in client creation
+      console.error("Client Error : " + clientErr)
       return;
     }
 
-    submit.removeAttribute('disabled');
-    console.log(form)
-    form.addEventListener('submit', function (event) {
-      event.preventDefault();
-
-      hostedFieldsInstance.tokenize(function (tokenizeErr, payload) {
-        if (tokenizeErr) {
-          // Handle error in Hosted Fields tokenization
-          return;
+    braintree.hostedFields.create({
+      client: clientInstance,
+      styles: {
+        'input': {
+          'font-size': '14pt'
+        },
+        'input.invalid': {
+          'color': 'red'
+        },
+        'input.valid': {
+          'color': 'green'
         }
+      },
+      fields: {
+        number: {
+          selector: '#card-number',
+          placeholder: '4111 1111 1111 1111'
+        },
+        cvv: {
+          selector: '#cvv',
+          placeholder: '123'
+        },
+        expirationDate: {
+          selector: '#expiration-date',
+          placeholder: '10/2019'
+        }
+      }
+    }, function (hostedFieldsErr, hostedFieldsInstance) {
+      if (hostedFieldsErr) {
+        // Handle error in Hosted Fields creation
+        console.error("Error in Hosted Fields creation : " + hostedFieldsErr)
+        return;
+      }
 
-        // Put `payload.nonce` into the `payment_method_nonce` input, and then
-        // submit the form. Alternatively, you could send the nonce to your server
-        // with AJAX.
-        document.querySelector('input[name="payment_method_nonce"]').value = payload.nonce;
-        form.submit();
-      });
-    }, false);
+      submit.removeAttribute('disabled');
+      console.log(form)
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        submit.setAttribute('disabled');
+
+        hostedFieldsInstance.tokenize(function (tokenizeErr, payload) {
+          if (tokenizeErr) {
+            // Handle error in Hosted Fields tokenization
+            return;
+          }
+
+          // Put `payload.nonce` into the `payment_method_nonce` input, and then
+          // submit the form. Alternatively, you could send the nonce to your server
+          // with AJAX.
+          document.querySelector('input[name="payment_method_nonce"]').value = payload.nonce;
+
+          $('#checkout-form').ajaxSubmit({success: postResponse});
+        });
+      }, false);
+    });
   });
+
+  function postResponse(responseText, statusText, xhr, $form) {
+    alert('status : ' + responseText + ' ==== ' + statusText);
+
+    if (responseText['success']) {
+      // So we were successfull, maybe redirect to dashboard??
+      alert('We were successfull!')
+    } else {
+
+      // Not successfull, you can find the reason why (from me) in the 
+      // message part. We should look at what things we could display to
+      // let the user know what went wrong and what we should not
+      alert('We were unsuccessfull ;-( : ' + responseText['message'])
+
+      // At this point, the pay button has also been disabled so make sure
+      // to turn that back on. I did this so people couldn't just spam click
+      // the submit. The class for the pay button is pay .pay-button (62)
+
+    }
+  }
 });
+
 </script>
 {% endblock %}

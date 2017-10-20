@@ -136,6 +136,7 @@ def genTransaction():
 
             app.logger.debug('Generating Transaction for %r | Price %d | Nonce %s' % (listingTransaction, transactionAmount, request.form['payment_method_nonce']))
 
+
             # If we are in development we are going to use the fake payment
             # setup for braintree
             result = None
@@ -185,15 +186,22 @@ def genTransaction():
 
                     session.commit()
 
-                flash('Transaction Success, your listings are now live!', 'success')
-                return redirect(url_for('indexs.index'))
+                if request.is_xhr:
+                    return jsonify({'success': True})
+                else:
+                    flash('Transaction Success, your listings are now live!', 'success')
+                    return redirect(url_for('indexs.index'))
 
             # The Transaction was NOT successfull
             else:
                 app.logger.error('Unsuccessfull Result')
                 app.logger.error('Transaction Error %s (%s|%s)' % (result.transaction.status, result.transaction.processor_response_code, result.transaction.processor_response_text))
-                flash('Transaction Error %s (%s|%s) Contact an administrator if you believe this is an error our our end.' % (result.transaction.status, result.transaction.processor_response_code, result.transaction.processor_response_text), 'danger')
-                return redirect('/landlord/dashboard#checkoutTab')
+
+                if request.is_xhr:
+                    return jsonify({'success': False, 'message': 'Transaction Error! Please check your information and try again, if you believe this is an error on our end please let us know!'})
+                else:
+                    flash('Transaction Error! Please check your information and try again, if you believe this is an error on our end please let us know!', 'danger')
+                    return redirect('/landlord/dashboard#checkoutTab')
 
 
 @commerce.route('/coupon/<couponCode>/check', methods=['GET'])
