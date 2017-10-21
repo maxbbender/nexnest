@@ -326,6 +326,7 @@ def emailConfirmedFailed():
     return render_template('/user/emailConfirmFailed.html')
 
 
+
 @users.route('/user/view/<userID>', methods=['GET', 'POST'])
 @login_required
 def viewUser(userID):

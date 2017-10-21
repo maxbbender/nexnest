@@ -43,7 +43,7 @@
             </div>
         </div>
         <br>
-        <form id="createListingForm" action="{{url_for('listings.createListing')}}" role="form" data-toggle="validator" method='POST' enctype="multipart/form-data">
+        <form id="createListingForm" action="{{url_for('listings.createListing')}}" role="form" data-toggle="validator" method='POST' enctype="multipart/form-data" style="padding-bottom: 30px;">
             {{form.csrf_token}}
             <div class="row setup-content" id="step-1">
                 <div class="col-xs-12">
@@ -123,7 +123,9 @@
                                         <div class="form-group" style="display: none;" id="apartmentNumberInput">
                                             <label class="control-label form-control-feedback" id="apartment_number_label">Apartment Number</label>
                                             {{form.apartment_number(class='form-control')}}
-                                            <!-- <input id="apartment_number" name="apartment_number" maxlength="100" type="number" class="form-control" /> -->
+                                            <p id="apartment_number_error" style="display: none;" class="form-text text-muted">
+                                                *Please only enter a number. Ex. 27
+                                            </p>
                                         </div>
                                     </div>
                                 </div>                                
@@ -144,19 +146,19 @@
                                     <div class="col-xs-col-xs-12 col-md-6 col-lg-6 col-xl-4">
                                         <div class="form-group">
                                             <label class="control-label form-control-feedback text-nowrap">Number of Bedrooms</label>
-                                            {{form.num_bedrooms(class='form-control', required='required', maxlength='1', type="number")}}
+                                            {{form.num_bedrooms(class='form-control', required='required', maxlength='1', type="number", min="0")}}
                                         </div>
                                     </div>
                                     <div class="col-xs-col-xs-12 col-md-6 col-lg-6 col-xl-4">
                                         <div class="form-group">
                                             <label class="control-label form-control-feedback text-nowrap">Number of Full Bathrooms</label>
-                                            {{form.num_full_baths(class='form-control', required='required', maxlength='1', type="number")}}
+                                            {{form.num_full_baths(class='form-control', required='required', maxlength='1', type="number", min="0")}}
                                         </div>
                                     </div>
                                     <div class="col-xs-col-xs-12 col-md-6 col-lg-6 col-xl-4">
                                         <div class="form-group">
                                             <label class="control-label form-control-feedback text-nowrap">Number of Half Bathrooms</label>
-                                            {{form.num_half_baths(class='form-control', maxlength='1', type="number")}}
+                                            {{form.num_half_baths(class='form-control', maxlength='1', type="number", min="0")}}
                                         </div>
                                     </div>
                                 </div>
@@ -171,7 +173,7 @@
                                         <div class="form-group">
                                             <label class="control-label form-control-feedback">Square Footage of Property</label>
                                             <div class="input-group">
-                                                {{form.square_footage(class='form-control', type="number")}}
+                                                {{form.square_footage(class='form-control', type="number", min="0")}}
                                                 <span class="input-group-addon nexnest-font">FT</span>
                                             </div>
                                             <!-- <input id="footage" maxlength="100" type="number" name="square_footage" required="required" class="form-control" /> -->
@@ -226,6 +228,9 @@
                                                 <option value="2020">2020</option>
                                                 <option value="2021">2021</option>
                                             </select>
+                                            <p id="time_range_summer_select_dateWarning" style="display: none;" class="form-text text-muted">
+                                                *The year you have selected does not match the lease start date
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -242,8 +247,12 @@
                                             <p id="start_date_before_previous_listing_end_date" style="display: none;" class="form-text text-muted">
                                                 *You are trying to create another listing for this property, but the lease dates overlap
                                                 <br>
-                                                <span id="previousListingDates">
                                             </p>
+                                            <p id="start_date_before_previous_listing_end_date_apartment" style="display: none;" class="form-text text-muted">
+                                                *You are trying to create another listing for this apartment number, but the lease dates overlap. Please either switch the apartment number(on step 2) or choose a new lease start date.
+                                                <br>
+                                            </p>
+                                            <span id="previousListingDates" style="display: none;" class="form-text text-muted">
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
@@ -890,11 +899,22 @@
 
         //If clone listing, prefill lease start date
         {% if endDate %}
-            var oldEnd = new Date("{{endDate}}");
-            //console.log("oldEnd: " + oldEnd);
-            var m = moment(oldEnd);
-            m.add(2, 'd');
-            startLeaseFlat.setDate(m.format()); // Set to the exact date
+            {% if not aptNumber %}
+                var oldEnd = new Date("{{endDate}}");
+                //console.log("oldEnd: " + oldEnd);
+                var m = moment(oldEnd);
+                m.add(2, 'd');
+                startLeaseFlat.setDate(m.format()); // Set to the exact date
+            {% else %}
+                var start = new Date("{{startDate}}");
+                var end = new Date("{{endDate}}");
+                start = moment(start);
+                end = moment(end);
+                start.add(1, 'd');
+                end.add(1, 'd');
+                startLeaseFlat.setDate(start.format());
+                endLeaseFlat.setDate(end.format());
+            {% endif %}
         {% endif %}
 
         $('.flatpickr-calendar').css('z-index', 99999999999999);
@@ -995,6 +1015,17 @@
             }
         });
 
+
+        //validate integers
+        function validInteger(input){
+            if (input == parseInt(input, 10)){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+
         //try to format rent price
         $("#price").on('input', function() {
             //console.log('hi');
@@ -1060,7 +1091,26 @@
                     } else {
                         nextStepWizard.removeClass('disabled').trigger('click');
                     }
-                }else if(curStep[0].id == "step-3"){
+                }else if(curStep[0].id == "step-2"){
+                    //validate that apartment number is only an integer
+                    if($("#property_type").val() == "apartment"){
+                        if(!validInteger($("#apartment_number").val())){
+                            $("#apartment_number").closest(".form-group").addClass("has-error");
+                            $("#apartment_number").closest(".form-group").addClass("has-danger");
+                            $("#apartment_number_error").show();
+                        }
+                        else {
+                            $("#apartment_number_error").hide();
+                            $("#apartment_number").closest(".form-group").removeClass("has-error");
+                            $("#apartment_number").closest(".form-group").removeClass("has-danger");
+                            nextStepWizard.removeClass('disabled').trigger('click');
+                        }
+                    }
+                    else{
+                        nextStepWizard.removeClass('disabled').trigger('click');
+                    }
+                }
+                else if(curStep[0].id == "step-3"){
                     var errorExists = false;
 
                     if($("#price").val().indexOf('.') > -1){
@@ -1081,12 +1131,24 @@
                     }
                     //Ensure time period and lease start date match
                     var selectedTimePeriod = $("#time_range_full_select").val().split("-")[0];
+                    var selectedSummer = $("#time_range_summer_select").val().split("-")[0];
                     var selectedStartDateYear = $("#leaseStartDateInput").val().split("-")[0];
-                    if(selectedTimePeriod != selectedStartDateYear){
-                        $("#time_range_full_select").closest(".form-group").addClass("has-error");
-                        $("#time_range_full_select").closest(".form-group").addClass("has-danger");
-                        errorExists = true;
-                        $("#time_range_full_select_dateWarning").show();
+
+                    if($("#time_period").val()=="summer"){
+                        if(selectedSummer != selectedStartDateYear){
+                            $("#time_range_summer_select").closest(".form-group").addClass("has-error");
+                            $("#time_range_summer_select").closest(".form-group").addClass("has-danger");
+                            errorExists = true;
+                            $("#time_range_summer_select_dateWarning").show();
+                        }
+                    }
+                    else{
+                        if(selectedTimePeriod != selectedStartDateYear){
+                            $("#time_range_full_select").closest(".form-group").addClass("has-error");
+                            $("#time_range_full_select").closest(".form-group").addClass("has-danger");
+                            errorExists = true;
+                            $("#time_range_full_select_dateWarning").show();
+                        }
                     }
 
                     if($("#rent_due").val() == "semester"){
@@ -1142,11 +1204,32 @@
                         //console.log("new_start_date: " + new_start_date);
                         //console.log("oldEnd: " + oldEnd);
                         if(oldEnd > new_start_date){
-                            errorExists = true;
-                            $("#leaseStartDateInput").closest(".form-group").addClass("has-error");
-                            $("#leaseStartDateInput").closest(".form-group").addClass("has-danger");
-                            $("#start_date_before_previous_listing_end_date").show();
-                            $("#previousListingDates").text("The previous lease ends : " + oldEnd)
+                            {% if aptNumber %}
+                                var aptNumber = {{aptNumber}}
+                                if($("#apartment_number").val() == aptNumber){
+                                    errorExists = true;
+                                    $("#leaseStartDateInput").closest(".form-group").addClass("has-error");
+                                    $("#leaseStartDateInput").closest(".form-group").addClass("has-danger");
+                                    $("#start_date_before_previous_listing_end_date_apartment").show();
+                                    $("#previousListingDates").show();
+                                    $("#previousListingDates").text("The previous lease ends : " + oldEnd);
+                                }
+                                else{
+                                    $("#previousListingDates").hide();
+                                    $("#leaseStartDateInput").closest(".form-group").removeClass("has-error");
+                                    $("#leaseStartDateInput").closest(".form-group").removeClass("has-danger");
+                                    if(errorExists == false){
+                                        nextStepWizard.removeClass('disabled').trigger('click');
+                                    }
+                                }
+                            {% else %}
+                                errorExists = true;
+                                $("#leaseStartDateInput").closest(".form-group").addClass("has-error");
+                                $("#leaseStartDateInput").closest(".form-group").addClass("has-danger");
+                                $("#start_date_before_previous_listing_end_date").show();
+                                $("#previousListingDates").show();
+                                $("#previousListingDates").text("The previous lease ends : " + oldEnd);
+                            {% endif %}
                         }
                         else{
                             if(errorExists == false){

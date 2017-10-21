@@ -116,10 +116,22 @@
 								                    	<div class="col-xs-6 col-md-11 col-lg-11 col-xl-6" style="padding-bottom: 15px;">				                    		
 							                    			<h4 style="font-size: 2.5vh;"><strong>
 							                    				{{ listing.street }}
+							                    				{% if listing.property_type == "apartment" %}
+							                    					Apt {{ listing.apartment_number }}
+							                    				{% endif %}
 							                    				<br>
 							                    				{{ listing.city }}, {{ listing.state }}</strong>
 							                    			</h4>
-							                    			<small style="font-size: 1.5vh; text-transform: capitalize;">Time Period: {{ listing.humanTimePeriod }}</small>
+							                    			<small style="font-size: 1.5vh; text-transform: capitalize;">
+							                    				Time Period:
+							                    				{% if listing.time_period == "summer" %}
+							                    					Summer {{ listing.humanTimePeriod }}	
+							                    				{% elif listing.time_period == "school" %}
+							                    					{{ listing.humanTimePeriod }} School Year
+							                    				{% else %}
+							                    					{{ listing.humanTimePeriod }}
+							                    				{% endif %}
+							                    			</small>
 							                    			<br>
 							                    			<small style="font-size: 1.5vh;">Lease Period: {{ listing.start_date|format_date }} - {{ listing.end_date|format_date }}</small>
 								                    	</div>
@@ -152,13 +164,14 @@
 								                    	{% endif %}						                    	
 								                    </div>
 								                </div>
-								                <div class="col-xs-1" style="font-size: 20px; margin-left: -30px;">
+								                <div class="col-xs-1" style="font-size: 20px; margin-left: -60px;">
 								                	<div class="customTooltip">
 	                			                	   <a href="{{ url_for('listings.cloneListing', listingID=listing.id) }}"><strong class="text-nowrap"><i class="fa fa-clone" aria-hidden="true"></i> Relist</strong></a>
 	                			                	    <span class="customTooltiptext" style="margin-bottom: 6px; font-size: 18px;">Relist for another lease period.</span>
 	                			                	</div>
 	                			                	<br>
-	                			                	<a href="{{ url_for('listings.editListing', listingID=listing.id) }}"><strong class="text-nowrap"><i class="fa fa-pencil" aria-hidden="true" style="padding-right: 4px;"></i> Edit</strong></a>	                			                	
+	                			                	<a href="{{ url_for('listings.editListing', listingID=listing.id) }}"><strong class="text-nowrap"><i class="fa fa-pencil" aria-hidden="true" style="padding-right: 4px;"></i> Edit</strong></a>
+	                			                	<a href="{{ url_for('listings.deleteListing', listingID=listing.id) }}"><strong class="text-nowrap"><i class="fa fa-trash" aria-hidden="true" style="padding-right: 4px;"></i> Delete</strong></a>
 						                    	</div>
 						                    </div>
 					                    </div>
@@ -1260,7 +1273,7 @@
             </div>
         </div>
     </div>
-    {% include './packageOptionsModal.html' %}
+    {% include './checkoutOptionsModal.html' %}
 {% endblock %}
 {% block scripts %}
 <script>
