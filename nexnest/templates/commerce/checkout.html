@@ -69,13 +69,6 @@
 
 <script>
 $(document).ready(function() {
-
-
-  $('#checkout-form').ajaxForm({
-    success: postResponse
-  });
-
-
   // We generated a client token for you so you can test out this code
   // immediately. In a production-ready integration, you will need to
   // generate a client token on your server (see section below).
@@ -127,7 +120,7 @@ $(document).ready(function() {
       }
       submit.removeAttribute('disabled');
       form.addEventListener('submit', function (event) {
-      $('.pay-button').attr("disabled", "disabled");
+        $('.pay-button').attr("disabled", "disabled");
         event.preventDefault();
         hostedFieldsInstance.tokenize(function (tokenizeErr, payload) {
           if (tokenizeErr) {

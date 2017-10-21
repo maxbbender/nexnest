@@ -21,7 +21,8 @@ import json
 
 session = db.session
 
-commerce = Blueprint('commerce', __name__, template_folder='../templates/commerce')
+commerce = Blueprint('commerce', __name__,
+                     template_folder='../templates/commerce')
 
 
 @commerce.route('/client_token', methods=['GET'])
@@ -56,8 +57,10 @@ def checkout():
         if form.validate():
             listingObjects = json.loads(form.json.data)
             app.logger.debug('Form Validated')
-            app.logger.debug('RAW Form JSON %s | Type %r' % (form.json.data, type(form.json.data)))
-            app.logger.debug('Parsed JSON %s | Type %r' % (pformat(listingObjects), type(listingObjects)))
+            app.logger.debug('RAW Form JSON %s | Type %r' %
+                             (form.json.data, type(form.json.data)))
+            app.logger.debug('Parsed JSON %s | Type %r' %
+                             (pformat(listingObjects), type(listingObjects)))
 
             # Create our transaction record
             newListingTransaction = ListingTransaction(user=current_user)
@@ -68,7 +71,8 @@ def checkout():
                 couponCodeString = listingObjects['couponCode']
 
                 # Lets check that the coupon is valid
-                coupon = Coupon.query.filter_by(coupon_key=couponCodeString).first()
+                coupon = Coupon.query.filter_by(
+                    coupon_key=couponCodeString).first()
 
                 if coupon is not None:
                     if coupon.unlimited:
@@ -80,10 +84,12 @@ def checkout():
                             coupon.uses = coupon.uses - 1
                             session.commit()
                         else:
-                            app.logger.info('%r used coupon %r that has no uses left' % (current_user, coupon))
+                            app.logger.info(
+                                '%r used coupon %r that has no uses left' % (current_user, coupon))
                 else:
                     if couponCodeString != "":
-                        app.logger.info('Coupon got passed through that is invalid. Code : %s' % couponCodeString)
+                        app.logger.info(
+                            'Coupon got passed through that is invalid. Code : %s' % couponCodeString)
 
             for item in listingObjects['items']:
                 # Ambiguous variables because my database setup is stupid
@@ -96,8 +102,10 @@ def checkout():
                 session.add(newLTL)
                 session.commit()
 
-            app.logger.debug("NewListingTransaction %r" % newListingTransaction)
-            app.logger.debug("NewListingTransaction LTL Objects %r" % newListingTransaction.listings)
+            app.logger.debug("NewListingTransaction %r" %
+                             newListingTransaction)
+            app.logger.debug("NewListingTransaction LTL Objects %r" %
+                             newListingTransaction.listings)
 
         else:
             app.logger.warning('Invalid PreCheckoutForm')
@@ -134,37 +142,29 @@ def genTransaction():
 
             transactionAmount = listingTransaction.totalTransactionPrice
 
-            app.logger.debug('Generating Transaction for %r | Price %d | Nonce %s' % (listingTransaction, transactionAmount, request.form['payment_method_nonce']))
+            app.logger.debug('Generating Transaction for %r | Price %d | Nonce %s' % (
+                listingTransaction, transactionAmount, request.form['payment_method_nonce']))
 
-
-            # If we are in development we are going to use the fake payment
-            # setup for braintree
             result = None
-            if app.config['BRAINTREE_ENV'] == 'sandbox':
-                app.logger.debug('genTransaction() - DEVELOPMENT SETTINGS')
 
-                result = braintree.Transaction.sale({
-                    'amount': str(transactionAmount),
-                    'payment_method_nonce': 'fake-valid-visa-nonce',
-                    'options': {
-                        'submit_for_settlement': True
-                    }
-                })
-            elif app.config['BRAINTREE_ENV'] == 'production':
-                app.logger.debug('genTransaction() - PRODUCTION SETTINGS')
-                app.logger.debug('payment_method_nonce: %r' % request.form['payment_method_nonce'])
+            # Let's confirm the card
+            # cardVerifResult = braintree.PaymentMethod.create({
+            #     "customer_id": str(current_user.id),
+            #     "payment_method_nonce": request.form['payment_method_nonce'],
+            #     "options": {
+            #         "verify_card": True
+            #     }
+            # })
 
-                result = braintree.Transaction.sale({
-                    'amount': str(transactionAmount),
-                    'payment_method_nonce': request.form['payment_method_nonce'],
-                    'options': {
-                        'submit_for_settlement': True
-                    }
-                })
-            else:
-                app.logger.error('Unknown BRAINTREE_ENV : %s' % app.config['BRAINTREE_ENV'])
+            # if cardVerifResult.is_success:
+            result = braintree.Transaction.sale({
+                'amount': str(transactionAmount),
+                'payment_method_nonce': request.form['payment_method_nonce'],
+                'options': {
+                    'submit_for_settlement': True
+                }
+            })
 
-            # The Transaction was successfull
             if result.is_success:
                 listingTransaction.success = True
                 listingTransaction.status = result.transaction.status
@@ -173,12 +173,14 @@ def genTransaction():
 
                 # Now we want to go through the listings and set them to active
                 app.logger.debug('Successfull Result')
-                app.logger.debug("Setting these listings to active %r" % listingTransaction.listings)
+                app.logger.debug("Setting these listings to active %r" %
+                                 listingTransaction.listings)
                 for ltl in listingTransaction.listings:
                     listing = ltl.listing
                     listing.active = True
 
-                    ltl = ListingTransactionListing.query.filter_by(listing=listing).first()
+                    ltl = ListingTransactionListing.query.filter_by(
+                        listing=listing).first()
 
                     if ltl is not None:
                         if ltl.plan == 'premium':
@@ -194,14 +196,28 @@ def genTransaction():
 
             # The Transaction was NOT successfull
             else:
-                app.logger.error('Unsuccessfull Result')
-                app.logger.error('Transaction Error %s (%s|%s)' % (result.transaction.status, result.transaction.processor_response_code, result.transaction.processor_response_text))
+                app.logger.warning('Unsuccessfull Result for Commerce Checkout')
+                # app.logger.warning('Transaction Error %s' % result.transaction.status)
 
                 if request.is_xhr:
                     return jsonify({'success': False, 'message': 'Transaction Error!'})
                 else:
                     flash('Transaction Error! Please check your information and try again, if you believe this is an error on our end please let us know!', 'danger')
                     return redirect('/landlord/dashboard#checkoutTab')
+            # else:
+            #     verification = cardVerifResult.credit_card_verification
+            #     if verification:
+            #         app.logger.warning('Unsuccessfull Result for Card Verification : %r' % (verification.status))
+            #     else:
+            #         app.logger.warning('Unsucess Result for Card Verification but unknown why')
+
+            #     if request.is_xhr:
+            #         return jsonify({'success': False, 'message': 'Transaction Error!'})
+            #     else:
+            #         flash('Transaction Error! Please check your information and try again, if you believe this is an error on our end please let us know!', 'danger')
+            #         return redirect('/landlord/dashboard#checkoutTab')
+
+
 
 
 @commerce.route('/coupon/<couponCode>/check', methods=['GET'])
