@@ -287,7 +287,7 @@ def emailConfirm(payload):
         return redirect(url_for('indexs.index'))
     else:
         flash('Unable to confirm your email, please contact nexnest staff at the contact form below or try and resend the email verificaiton link below.', 'warning')
-        return redirect(url_for('users.emailConfirmFailed'))
+        return redirect(url_for('users.emailConfirmedFailed'))
 
 
 @users.route('/emailConfirm/resend/<email>')
@@ -301,7 +301,7 @@ def emailConfirmResend(email):
             else:
                 flash('Your email has already been confirmed, no need to spam your inbox!', 'warning')
                 return redirect(url_for('users.viewUser', userID=user.id))
-            
+
         emailConfirmURL = url_for('users.emailConfirm', payload=generate_confirmation_token(
             user.email), _external=True)
         user.sendEmail('emailVerification',
@@ -310,7 +310,7 @@ def emailConfirmResend(email):
         if request.is_xhr:
             return jsonify({'success': True})
         else:
-            return redirect(url_for('users.emailConfirmNotice', email=user.email.data))
+            return redirect(url_for('users.emailConfirmedNotice', email=user.email.data))
     else:
         app.logger.warning('User just requested another email verification for an email that does not exists %s' % email)
 
@@ -318,13 +318,12 @@ def emailConfirmResend(email):
             return jsonify({'success': False})
         else:
             flash('Sorry! We were unable to process your request', 'warning')
-            return redirect(url_for('users.emailConfirmFailed'))
-        
+            return redirect(url_for('users.emailConfirmedFailed'))
+
 
 @users.route('/user/emailConfirmFailed')
 def emailConfirmedFailed():
     return render_template('/user/emailConfirmFailed.html')
-
 
 
 @users.route('/user/view/<userID>', methods=['GET', 'POST'])
