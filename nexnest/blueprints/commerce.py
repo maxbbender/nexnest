@@ -1,23 +1,18 @@
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
-from flask_login import current_user, login_required
-
-from flask import current_app as app
-
-
-import braintree
-
+import json
 from pprint import pformat
 
+import braintree
+from flask import current_app as app
+from flask import (Blueprint, flash, jsonify, redirect, render_template,
+                   request, url_for)
+from flask_login import current_user, login_required
 from nexnest import db
-
-from nexnest.models.transaction import ListingTransaction, ListingTransactionListing
-from nexnest.models.listing import Listing
-from nexnest.models.coupon import Coupon
-
 from nexnest.forms import PreCheckoutForm
+from nexnest.models.coupon import Coupon
+from nexnest.models.listing import Listing
+from nexnest.models.transaction import (ListingTransaction,
+                                        ListingTransactionListing)
 from nexnest.utils.flash import flash_errors
-
-import json
 
 session = db.session
 
@@ -165,7 +160,7 @@ def genTransaction():
                 }
             })
 
-            if result.is_success:
+            if result.is_success or result.transaction:
                 listingTransaction.success = True
                 listingTransaction.status = result.transaction.status
                 listingTransaction.braintree_transaction_id = result.transaction.id
@@ -198,6 +193,8 @@ def genTransaction():
             else:
                 app.logger.warning('Unsuccessfull Result for Commerce Checkout')
                 # app.logger.warning('Transaction Error %s' % result.transaction.status)
+                for x in result.errors.deep_errors:
+                    app.logger.warning('Error: %s: %s' % (x.code, x.message))
 
                 if request.is_xhr:
                     return jsonify({'success': False, 'message': 'Transaction Error!'})
@@ -216,8 +213,6 @@ def genTransaction():
             #     else:
             #         flash('Transaction Error! Please check your information and try again, if you believe this is an error on our end please let us know!', 'danger')
             #         return redirect('/landlord/dashboard#checkoutTab')
-
-
 
 
 @commerce.route('/coupon/<couponCode>/check', methods=['GET'])
