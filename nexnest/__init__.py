@@ -40,18 +40,29 @@ def createApp(configName):
         from nexnest.models.user import User
         return db.session.query(User).filter_by(id=user_id).first()
 
+    @login_manager.unauthorized_handler
+    def unauthorized():
+        app.logger.warning('User unauthorized')
+        # do stuff
+        return redirect(url_for('users.login'))
+
     if app.config['BRAINTREE_ENV'] == 'sandbox':
         braintree.Configuration.configure(braintree.Environment.Sandbox,
-                                          merchant_id=app.config['BRAINTREE_MERCHANT_ID'],
-                                          public_key=app.config['BRAINTREE_PUBLIC_KEY'],
+                                          merchant_id=app.config[
+                                              'BRAINTREE_MERCHANT_ID'],
+                                          public_key=app.config[
+                                              'BRAINTREE_PUBLIC_KEY'],
                                           private_key=app.config['BRAINTREE_PRIVATE_KEY'])
     elif app.config['BRAINTREE_ENV'] == 'production':
         braintree.Configuration.configure(braintree.Environment.Production,
-                                          merchant_id=app.config['BRAINTREE_MERCHANT_ID'],
-                                          public_key=app.config['BRAINTREE_PUBLIC_KEY'],
+                                          merchant_id=app.config[
+                                              'BRAINTREE_MERCHANT_ID'],
+                                          public_key=app.config[
+                                              'BRAINTREE_PUBLIC_KEY'],
                                           private_key=app.config['BRAINTREE_PRIVATE_KEY'])
     else:
-        app.logger.error('Unknown BRAINTREE_ENV : %s' % app.config['BRAINTREE_ENV'])
+        app.logger.error('Unknown BRAINTREE_ENV : %s' %
+                         app.config['BRAINTREE_ENV'])
 
     # Blueprints
     from nexnest.blueprints.base import base
@@ -85,12 +96,6 @@ def createApp(configName):
     app.register_blueprint(reports)
     app.register_blueprint(rents)
     app.register_blueprint(siteAdminBlueprint, url_prefix='/siteAdmin')
-
-    @login_manager.unauthorized_handler
-    def unauthorized():
-        app.logger.warning('User unauthorized')
-        # do stuff
-        return redirect(url_for('users.login'))
 
     from nexnest.forms import LoginForm, PasswordChangeForm, ProfilePictureForm, PlatformReportForm, DirectMessageForm, ContactForm
 
@@ -170,7 +175,8 @@ def createApp(configName):
 
 
 def logEmailDispatch(message, app):
-    app.logger.debug('Email Sent! Subject %s | Text %s' % (message.subject, message.html))
+    app.logger.debug('Email Sent! Subject %s | Text %s' %
+                     (message.subject, message.html))
 
 
 email_dispatched.connect(logEmailDispatch)
