@@ -1,6 +1,7 @@
 from pprint import pformat
 
 from flask import Blueprint, flash, send_from_directory, render_template
+from flask import current_app as app
 from flask_login import current_user, login_required
 from nexnest.forms import ContactForm
 from nexnest.utils.email import send_email
@@ -49,3 +50,10 @@ def contactUs():
 def sale30():
     return render_template('promos/sale30.html',
                                    title='Promo!')
+
+
+
+@base.route('/debug')
+def debug():
+    app.logger.debug('Tetso')
+    return 'hey'
