@@ -297,7 +297,7 @@ def emailConfirmResend(email):
     if user:
         if user.email_confirmed:
             if request.is_xhr:
-                return jsonify({'success': False})
+                return jsonify({'success': False, 'message':'Your email has already been confirmed, no need to spam your inbox!'})
             else:
                 flash('Your email has already been confirmed, no need to spam your inbox!', 'warning')
                 return redirect(url_for('users.viewUser', userID=user.id))
