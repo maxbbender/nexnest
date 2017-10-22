@@ -22,7 +22,8 @@ class Config:
     BRAINTREE_PUBLIC_KEY = os.environ.get('BRAINTREE_PUBLIC_KEY')
     BRAINTREE_PRIVATE_KEY = os.environ.get('BRAINTREE_PRIVATE_KEY')
     BRAINTREE_ENV = os.environ.get('BRAINTREE_ENV') or 'sandbox'
-    SLACK_LOG_URL = os.environ.get('SLACK_LOG_URL') or 'https://hooks.slack.com/services/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'
+    SLACK_LOG_URL = os.environ.get(
+        'SLACK_LOG_URL') or 'https://hooks.slack.com/services/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'
     SLACK_WARNING_URL = os.environ.get('SLACK_WARNING_URL')
     SLACK_ERROR_URL = os.environ.get('SLACK_ERROR_URL')
 
@@ -34,7 +35,8 @@ class Config:
         import sys
         ch = logging.StreamHandler(sys.stdout)
         ch.setLevel(logging.DEBUG)
-        formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+        formatter = logging.Formatter(
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
         ch.setFormatter(formatter)
         app.logger.addHandler(ch)
         pass
@@ -49,6 +51,7 @@ class DevelopmentConfig(Config):
         slackHandler = SlackLogHandler(Config.SLACK_LOG_URL)
         slackHandler.setLevel(logging.WARNING)
         app.logger.addHandler(slackHandler)
+
     DEBUG = True
     MAIL_SERVER = 'mail.nexnest.com'
     MAIL_PORT = 587
@@ -56,12 +59,14 @@ class DevelopmentConfig(Config):
     MAIL_USE_SSL = False
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    MAIL_SUPPRESS_SEND = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
         'postgres://nexnest_development:domislove@localhost:5432/nexnest_development'
 
 
 class TestingConfig(Config):
     TESTING = True
+    MAIL_SUPPRESS_SEND = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
         'postgres://nexnest_test:domislove@localhost:5432/nexnest_test'
 
@@ -78,22 +83,26 @@ class ProductionConfig(Config):
         from slack_log_handler import SlackLogHandler
 
         # Slack Warning
-        slackWarningHandler = SlackLogHandler(Config.SLACK_WARNING_URL) or Config.SLACK_LOG_URL
+        slackWarningHandler = SlackLogHandler(
+            Config.SLACK_WARNING_URL) or Config.SLACK_LOG_URL
         slackWarningHandler.setLevel(logging.WARNING)
         app.logger.addHandler(slackWarningHandler)
 
         # Slack Error
-        slackErrHandler = SlackLogHandler(Config.SLACK_ERROR_URL) or Config.SLACK_LOG_URL
+        slackErrHandler = SlackLogHandler(
+            Config.SLACK_ERROR_URL) or Config.SLACK_LOG_URL
         slackErrHandler.setLevel(logging.ERROR)
         app.logger.addHandler(slackErrHandler)
 
         # Debug Handler
-        debugHandler = RotatingFileHandler('/var/log/nexnest/debug.log', maxBytes=10000, backupCount=5)
+        debugHandler = RotatingFileHandler(
+            '/var/log/nexnest/debug.log', maxBytes=10000, backupCount=5)
         debugHandler.setLevel(logging.DEBUG)
         app.logger.addHandler(debugHandler)
 
         # Info Handler
-        infoHandler = RotatingFileHandler('/var/log/nexnest/info.log', maxBytes=10000, backupCount=5)
+        infoHandler = RotatingFileHandler(
+            '/var/log/nexnest/info.log', maxBytes=10000, backupCount=5)
         infoHandler.setLevel(logging.INFO)
         app.logger.addHandler(infoHandler)
 

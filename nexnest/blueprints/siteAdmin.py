@@ -146,6 +146,19 @@ def searchUsersByLastName(lastName):
     return jsonify({'users': userReturnArray})
 
 
+@siteAdmin.route('/searchUsers/email/<email>')
+@login_required
+def searchUsersByEmail(email):
+    allUsers = User.query.filter(User.email.ilike(email + "%")).all()
+
+    userReturnArray = []
+
+    for user in allUsers:
+        userReturnArray.append(user.serialize)
+
+    return jsonify({'users': userReturnArray})
+
+
 @siteAdmin.route('/viewPlatformReports')
 def viewPlatformReports():
     """Show the current platform reports"""

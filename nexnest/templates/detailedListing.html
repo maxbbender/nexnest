@@ -62,6 +62,9 @@
 							<h4 style="line-height: 1;">
 							<br>
 							{{ listing.street }}
+							{% if listing.property_type == "apartment" %}
+								Apt {{ listing.apartment_number }}
+							{% endif %}
 							<br>
 							{{ listing.city }}, {{ listing.state }} {{ listing.zip_code }}</h4>
 						</div>
