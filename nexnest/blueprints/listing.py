@@ -286,8 +286,6 @@ def editListing(listingID):
     form.start_date.data = listing.start_date.strftime('%Y-%m-%d')
     form.end_date.data = listing.end_date.strftime('%Y-%m-%d')
 
-    
-
     if form.validate_on_submit():
         listing = updateListing(listing, form)
         updatePictures(listing, request)
