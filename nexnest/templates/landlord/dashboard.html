@@ -115,11 +115,23 @@
 								                    	</div>
 								                    	<div class="col-xs-6 col-md-11 col-lg-11 col-xl-6" style="padding-bottom: 15px;">				                    		
 							                    			<h4 style="font-size: 2.5vh;"><strong>
-							                    				{{ listing.street }} {{listing.id}} {{listing.start_date}} {{listing.end_date}}
+							                    				{{ listing.street }}
+							                    				{% if listing.property_type == "apartment" %}
+							                    					Apt {{ listing.apartment_number }}
+							                    				{% endif %}
 							                    				<br>
 							                    				{{ listing.city }}, {{ listing.state }}</strong>
 							                    			</h4>
-							                    			<small style="font-size: 1.5vh; text-transform: capitalize;">Time Period: {{ listing.humanTimePeriod }}</small>
+							                    			<small style="font-size: 1.5vh; text-transform: capitalize;">
+							                    				Time Period:
+							                    				{% if listing.time_period == "summer" %}
+							                    					Summer {{ listing.humanTimePeriod }}	
+							                    				{% elif listing.time_period == "school" %}
+							                    					{{ listing.humanTimePeriod }} School Year
+							                    				{% else %}
+							                    					{{ listing.humanTimePeriod }}
+							                    				{% endif %}
+							                    			</small>
 							                    			<br>
 							                    			<small style="font-size: 1.5vh;">Lease Period: {{ listing.start_date|format_date }} - {{ listing.end_date|format_date }}</small>
 								                    	</div>
@@ -152,13 +164,14 @@
 								                    	{% endif %}						                    	
 								                    </div>
 								                </div>
-								                <div class="col-xs-1" style="font-size: 20px; margin-left: -30px;">
+								                <div class="col-xs-1" style="font-size: 20px; margin-left: -60px;">
 								                	<div class="customTooltip">
 	                			                	   <a href="{{ url_for('listings.cloneListing', listingID=listing.id) }}"><strong class="text-nowrap"><i class="fa fa-clone" aria-hidden="true"></i> Relist</strong></a>
 	                			                	    <span class="customTooltiptext" style="margin-bottom: 6px; font-size: 18px;">Relist for another lease period.</span>
 	                			                	</div>
 	                			                	<br>
-	                			                	<a href="{{ url_for('listings.editListing', listingID=listing.id) }}"><strong class="text-nowrap"><i class="fa fa-pencil" aria-hidden="true" style="padding-right: 4px;"></i> Edit</strong></a>	                			                	
+	                			                	<a href="{{ url_for('listings.editListing', listingID=listing.id) }}"><strong class="text-nowrap"><i class="fa fa-pencil" aria-hidden="true" style="padding-right: 4px;"></i> Edit</strong></a>
+	                			                	<a href="{{ url_for('listings.deleteListing', listingID=listing.id) }}"><strong class="text-nowrap"><i class="fa fa-trash" aria-hidden="true" style="padding-right: 4px;"></i> Delete</strong></a>
 						                    	</div>
 						                    </div>
 					                    </div>
@@ -270,7 +283,11 @@
 			        	                            				<div class="card-header" style="background-color: #d2d2d2;">
 			        	                            					<div class="row">
 			        	                            						<div class="col-xs-12">	
-												                    			<h3 style="font-size: 3.5vh;"><strong>{{ house.listing.street }}, {{ house.listing.city }} {{ house.listing.state }}</strong></h3>
+												                    			<h3 style="font-size: 3.5vh;"><strong>{{ house.listing.street }}
+												                    			{% if house.listing.property_type == "apartment" %}
+												                    				Apt {{house.listing.apartment_number}},
+												                    			{% endif %}
+												                    			{{ house.listing.city }} {{ house.listing.state }}</strong></h3>
 												                    			<small style="font-size: 2.5vh;">Lease Period: {{ house.listing.start_date|format_date }} - {{ house.listing.end_date|format_date }}</small>
 												                    		</div>
 												                    	</div>
@@ -1260,7 +1277,7 @@
             </div>
         </div>
     </div>
-    {% include './packageOptionsModal.html' %}
+    {% include './checkoutOptionsModal.html' %}
 {% endblock %}
 {% block scripts %}
 <script>
@@ -3730,7 +3747,11 @@
 	        				                    <div class="row">
 	        				                    	<div class="col-xs-12 col-md-8 col-lg-8">
 	        				                    		<a href="`+listing.url+`">
-	        				                    			<h3 style="font-size: 3.5vh;"><strong>`+listing.street+`, `+listing.city+` `+listing.state+`</strong></h3>
+	        				                    			<h3 style="font-size: 3.5vh;"><strong>`+listing.street;
+	        				                    			if(listing.propertyType == 'apartment'){
+                    												nextHouse += ` Apt `+ listing.apartmentNumber;
+                    											}								
+                    											nextHouse += `, <br>`+ listing.city +`, `+ listing.state +`</strong></h3>
 	        				                    			<small style="font-size: 2.5vh;">Lease Period: `+listing.startDate+` - `+listing.endDate+`</small>
 	        				                    		</a>
 	        				                    	</div>
@@ -3765,7 +3786,14 @@
 	        				                    		}
 	        				                    	nextHouse+= `</div>
 	        				                    	<div class="col-xs-12 col-lg-8">
-	        				                    		<h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>`+listing.price+`</strong> per bedroom per `+listing.priceTerm+`</h3>
+	        				                    		<h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>`+listing.price+`</strong> per bedroom per `;
+	        				                    		if(listing.priceTerm == "monthly"){
+	        				                    			nextHouse+= `month`;
+	        				                    		}
+	        				                    		else{
+	        				                    			nextHouse+= `semester`;
+	        				                    		}
+	        				                    		nextHouse+= `</h3>
 	        				                    		<h3 style="font-size: 3.0vh;"><strong><i class="fa fa-bed" aria-hidden="true"></i> `+ listing.numBedrooms+` Bedrooms
 	        				                    		&nbsp;
 	        				                    		<i class="fa fa-bath" aria-hidden="true"></i> `+listing.numFullBaths+` Bathrooms</strong></h3>

@@ -244,7 +244,6 @@
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                         <div class="form-group" id="startDate">
                                             <label class="control-label form-control-feedback">Lease Start Date</label>
-                                            <!-- {{form.start_date(class='form-control', required='required', maxlength='100', type="date")}} -->
                                             <p id="start" class="flatpickr input-group" data-wrap="true" data-clickOpens="false">
                                                 {{form.start_date(id="leaseStartDateInput", class='form-control', data_input="true", required='required', maxlength='100', type="date", style="background-color: inherit;")}}
                                                 <a class="btn input-btn" style="border-color: #ddd;" data-toggle><i class="fa fa-calendar" aria-hidden="true"></i></a>
@@ -807,6 +806,12 @@
     </script>
     <script>
     $(document).ready(function() {
+        // Set the default field
+        $('#time_range_full_select').val('{{form.time_period_date_range.data}}');
+        $('#time_range_summer_select').val('{{form.time_period_date_range.data}}');
+
+
+
         //Determine wether or not to show the apartment # field
         if ($("#property_type").val() == "apartment") {
             $("#apartmentNumberInput").show();
@@ -1008,10 +1013,11 @@
                     }
                     //Ensure time period and lease start date match
                     var selectedTimePeriod = $("#time_range_full_select").val().split("-")[0];
-                    var selectedSummer = $("#time_range_summer_select").val().split("-")[0];
+                    
                     var selectedStartDateYear = $("#leaseStartDateInput").val().split("-")[0];
 
                     if($("#time_period").val()=="summer"){
+                        var selectedSummer = $("#time_range_summer_select").val().split("-")[0];
                         if(selectedSummer != selectedStartDateYear){
                             $("#time_range_summer_select").closest(".form-group").addClass("has-error");
                             $("#time_range_summer_select").closest(".form-group").addClass("has-danger");
@@ -1074,10 +1080,8 @@
                             }
                         }
                     }
-                    else {
-                        if(errorExists == false){
-                            nextStepWizard.removeClass('disabled').trigger('click');
-                        }
+                    if(errorExists == false){
+                        nextStepWizard.removeClass('disabled').trigger('click');
                     }
                 }
                 else {

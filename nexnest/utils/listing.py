@@ -7,6 +7,9 @@ from nexnest import db
 from nexnest.utils.misc import idGenerator
 
 from nexnest.utils.file import allowed_file
+from nexnest.models.school import School
+from nexnest.models.listing_school import ListingSchool
+import json
 
 
 def updateListing(listing, form):
@@ -55,6 +58,45 @@ def updateListing(listing, form):
     if form.rent_due == 'semester':
         listing.first_semester_rent_due_date = form.first_semester_rent_due_date.data
         listing.second_semester_rent_due_date = form.second_semester_rent_due_date.data
+
+    # Update the colleges for the lsitings
+    collegeNames = json.loads(form.colleges.data)
+
+    listingCurrentSchools = ListingSchool.query.filter_by(listing=listing).all()
+
+    app.logger.debug('form.colleges.data : %s' % form.colleges.data)
+    app.logger.debug('collegeNames %r' % collegeNames)
+    app.logger.debug('listingCurrentSchools %r' % listingCurrentSchools)
+
+    for collegeName in collegeNames:
+        school = School.query.filter_by(name=collegeName).first()
+
+        if school is not None:
+
+            # Check to see if the school already exists for listing
+            listingSchoolCheck = ListingSchool.query.filter_by(listing=listing, school=school).first()
+
+            if not listingSchoolCheck:
+                newListingSchool = ListingSchool(listing=listing, school=school)
+                db.session.add(newListingSchool)
+                db.session.commit()
+                app.logger.debug('newListingSchool %r' % newListingSchool)
+            else:
+                listingCurrentSchools.remove(listingSchoolCheck)
+                app.logger.debug('Listing School %r already exists, not updating' % listingSchoolCheck)
+
+        else:
+            app.logger.error('Could not find school with name %s. Could not associated listing %r with school' % (collegeName, listing))
+
+    # At this point the listing schools left in listingCurrentSchools were not
+    # a part of form that came in. Because of this we now want to remove them
+    # from this listing
+    for ls in listingCurrentSchools:
+        db.session.delete(ls)
+
+    db.session.commit()
+
+    
 
     return listing
 
