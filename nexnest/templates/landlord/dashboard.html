@@ -283,7 +283,11 @@
 			        	                            				<div class="card-header" style="background-color: #d2d2d2;">
 			        	                            					<div class="row">
 			        	                            						<div class="col-xs-12">	
-												                    			<h3 style="font-size: 3.5vh;"><strong>{{ house.listing.street }}, {{ house.listing.city }} {{ house.listing.state }}</strong></h3>
+												                    			<h3 style="font-size: 3.5vh;"><strong>{{ house.listing.street }}
+												                    			{% if house.listing.property_type == "apartment" %}
+												                    				Apt {{house.listing.apartment_number}},
+												                    			{% endif %}
+												                    			{{ house.listing.city }} {{ house.listing.state }}</strong></h3>
 												                    			<small style="font-size: 2.5vh;">Lease Period: {{ house.listing.start_date|format_date }} - {{ house.listing.end_date|format_date }}</small>
 												                    		</div>
 												                    	</div>
@@ -3743,7 +3747,11 @@
 	        				                    <div class="row">
 	        				                    	<div class="col-xs-12 col-md-8 col-lg-8">
 	        				                    		<a href="`+listing.url+`">
-	        				                    			<h3 style="font-size: 3.5vh;"><strong>`+listing.street+`, `+listing.city+` `+listing.state+`</strong></h3>
+	        				                    			<h3 style="font-size: 3.5vh;"><strong>`+listing.street;
+	        				                    			if(listing.propertyType == 'apartment'){
+                    												nextHouse += ` Apt `+ listing.apartmentNumber;
+                    											}								
+                    											nextHouse += `, <br>`+ listing.city +`, `+ listing.state +`</strong></h3>
 	        				                    			<small style="font-size: 2.5vh;">Lease Period: `+listing.startDate+` - `+listing.endDate+`</small>
 	        				                    		</a>
 	        				                    	</div>
@@ -3778,7 +3786,14 @@
 	        				                    		}
 	        				                    	nextHouse+= `</div>
 	        				                    	<div class="col-xs-12 col-lg-8">
-	        				                    		<h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>`+listing.price+`</strong> per bedroom per `+listing.priceTerm+`</h3>
+	        				                    		<h3 style="font-size: 3.0vh;"><strong style="color:green;"><i class="fa fa-usd" aria-hidden="true"></i>`+listing.price+`</strong> per bedroom per `;
+	        				                    		if(listing.priceTerm == "monthly"){
+	        				                    			nextHouse+= `month`;
+	        				                    		}
+	        				                    		else{
+	        				                    			nextHouse+= `semester`;
+	        				                    		}
+	        				                    		nextHouse+= `</h3>
 	        				                    		<h3 style="font-size: 3.0vh;"><strong><i class="fa fa-bed" aria-hidden="true"></i> `+ listing.numBedrooms+` Bedrooms
 	        				                    		&nbsp;
 	        				                    		<i class="fa fa-bath" aria-hidden="true"></i> `+listing.numFullBaths+` Bathrooms</strong></h3>
