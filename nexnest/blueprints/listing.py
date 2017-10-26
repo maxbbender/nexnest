@@ -225,6 +225,7 @@ def createListing():
 
 @listings.route('/listing/clone/<listingID>', methods=['GET', 'POST'])
 @login_required
+@listing_editable
 def cloneListing(listingID):
     listingToClone = Listing.query.filter_by(id=listingID).first_or_404()
 
@@ -237,9 +238,9 @@ def cloneListing(listingID):
         listingPicturePath = os.path.join(folderPath, 'pictures')
         picturePaths = os.listdir(listingPicturePath)
 
-        #If it is an apartment we need to pass the apartment number along as well
-        #Because if it is an apartment we need to take the apt number and end date in account
-        #When determining if the listing is cloneable
+        # If it is an apartment we need to pass the apartment number along as well
+        # Because if it is an apartment we need to take the apt number and end date in account
+        # When determining if the listing is cloneable
         aptNumber = None
         if listingToClone.property_type == 'apartment':
             aptNumber = listingToClone.apartment_number
@@ -328,6 +329,7 @@ def deleteListing(listingID):
 
 @listings.route("/listing/upload/<listingID>", methods=["POST"])
 @login_required
+@listing_editable
 @csrf.exempt
 def upload(listingID):
     """Handle the upload of a file."""
@@ -375,6 +377,7 @@ def upload(listingID):
 
 @listings.route("/listing/delete/<listingID>/<filename>", methods=["POST"])
 @login_required
+@listing_editable
 def deletePhoto(listingID, filename):
     listing = Listing.query.filter_by(id=listingID).first_or_404()
 
@@ -391,6 +394,7 @@ def deletePhoto(listingID, filename):
 
 @listings.route("/listing/deleteBanner/<listingID>/<filename>", methods=["POST"])
 @login_required
+@listing_editable
 def deleteBannerPhoto(listingID, filename):
     listing = Listing.query.filter_by(id=listingID).first_or_404()
 
