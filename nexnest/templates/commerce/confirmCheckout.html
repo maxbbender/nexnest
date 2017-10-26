@@ -39,7 +39,7 @@
 							<span id="discount" style="color: green;"></span>
 						</div>
 						<div class="col-xs-6 col-lg-2 col-xl-2">
-								<button class="btn btn-info" id="sumbitCouponCode" onClick="validateCoupon()" style="float: right; display: none;">Submit Code</button>
+								<button class="btn btn-light-green" id="sumbitCouponCode" onClick="validateCoupon()" style="float: right; display: none;">Submit Code</button>
 						</div>
 					</div>
 				</div>
@@ -206,18 +206,30 @@
 				results = data['results'];
 				console.log(results);
 				if(results.validCoupon == true){
-					//update total price div
-					subtotalAfterCoupon = Number(totalPrice*((100-results.coupon.percentageOff)/100)).toFixed(2);
-					taxAfterCoupon = Number(subtotalAfterCoupon*.075).toFixed(2);
-					priceAfterCoupon = Number((subtotalAfterCoupon*1.075)).toFixed(2);
-					//totalPrice = totalPrice-results.coupon.percentageOff;
-					$("#totalPrice").html(`<h2>Total Price: `+"$"+priceAfterCoupon+`</h2>`);
-					$("#subTotal").html(`<h4>Subtoal: `+"$"+subtotalAfterCoupon+`</h4>`);
-					$("#tax").html(`<h4>Tax: `+"$"+taxAfterCoupon+`</h4>`);
-					//display the valid coupon percentage off
-					$("#discount").html("<strong>"+results.coupon.percentageOff+"% Off"+"</strong>");
-			 	    $("#discount").css("color", "green");
-			 	    determineIfPriceLowEnough(priceAfterCoupon);
+					if(results.coupon.uses > 0 || results.coupon.unlimited == true){
+						console.log(results.coupon.uses);
+						//update total price div
+						subtotalAfterCoupon = Number(totalPrice*((100-results.coupon.percentageOff)/100)).toFixed(2);
+						taxAfterCoupon = Number(subtotalAfterCoupon*.075).toFixed(2);
+						priceAfterCoupon = Number((subtotalAfterCoupon*1.075)).toFixed(2);
+						//totalPrice = totalPrice-results.coupon.percentageOff;
+						$("#totalPrice").html(`<h2>Total Price: `+"$"+priceAfterCoupon+`</h2>`);
+						$("#subTotal").html(`<h4>Subtoal: `+"$"+subtotalAfterCoupon+`</h4>`);
+						$("#tax").html(`<h4>Tax: `+"$"+taxAfterCoupon+`</h4>`);
+						//display the valid coupon percentage off
+						$("#discount").html("<strong>"+results.coupon.percentageOff+"% Off"+"</strong>");
+				 	    $("#discount").css("color", "green");
+				 	    determineIfPriceLowEnough(priceAfterCoupon);
+					}
+					else{
+						$("#discount").html("<strong>"+"Out of Uses"+"</strong>");
+						$("#discount").css("color", "red");
+						//if the user had a correct code and then enters a wrong one display orighinal price
+						$("#subTotal").html(`<h4>Subtoal: `+"$"+subTotal+`</h4>`);
+						$("#totalPrice").html(`<h2>Total Price: `+"$"+totalPrice+`</h2>`);
+						$("#tax").html(`<h4>Tax: `+"$"+taxBeforeCoupon+`</h4>`);
+						determineIfPriceLowEnough(totalPrice);
+					}
 				}
 				else{
 					$("#discount").html("<strong>"+"Invlaid Code"+"</strong>");
