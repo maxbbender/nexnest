@@ -63,7 +63,8 @@ def createListing():
 
         if form.validate_on_submit():
             app.logger.debug('POST form : %r' % form)
-            app.logger.debug('TimePeriodDateRange : %s' % form.time_period_date_range.data)
+            app.logger.debug('TimePeriodDateRange : %s' %
+                             form.time_period_date_range.data)
             app.logger.debug('Start Date : %r' % form.start_date.data)
 
             newListing = Listing(street=form.street.data,
@@ -109,11 +110,13 @@ def createListing():
             if newListing.property_type == 'apartment':
                 newListing.apartment_number = form.apartment_number.data
 
-            app.logger.debug('newListing.property_type : %r' % newListing.property_type)
+            app.logger.debug('newListing.property_type : %r' %
+                             newListing.property_type)
             app.logger.debug('newListing.street : %r' % newListing.street)
             app.logger.debug('newListing.city : %r' % newListing.city)
             app.logger.debug('newListing.zip_code : %r' % newListing.zip_code)
-            app.logger.debug('newListing.apartment_number : %r' % newListing.apartment_number)
+            app.logger.debug('newListing.apartment_number : %r' %
+                             newListing.apartment_number)
 
             otherListingsWithSameAddress = None
             if newListing.property_type == 'apartment':
@@ -134,13 +137,16 @@ def createListing():
                                ) \
                     .all()
 
-            app.logger.debug('Found other listings with the same address : %r' % otherListingsWithSameAddress)
+            app.logger.debug(
+                'Found other listings with the same address : %r' % otherListingsWithSameAddress)
 
             conflictingDates = False
             conflictingListing = None
             for listing in otherListingsWithSameAddress:
-                newListingStartDate = datetime.datetime.strptime(newListing.start_date, "%Y-%m-%d").date()
-                newListingEndDate = datetime.datetime.strptime(newListing.end_date, "%Y-%m-%d").date()
+                newListingStartDate = datetime.datetime.strptime(
+                    newListing.start_date, "%Y-%m-%d").date()
+                newListingEndDate = datetime.datetime.strptime(
+                    newListing.end_date, "%Y-%m-%d").date()
                 if newListingStartDate <= listing.end_date and newListingStartDate >= listing.start_date:
                     conflictingListing = listing
                     conflictingDates = True
@@ -157,27 +163,34 @@ def createListing():
 
                 newListing.createUploadDirectories()
 
-                # Lets assign the current user to be the landlord of this listing
+                # Lets assign the current user to be the landlord of this
+                # listing
                 newLandLordListing = LandlordListing(landlord=current_user.landlord[0],
                                                      listing=newListing)
                 session.add(newLandLordListing)
                 session.commit()
 
-                # Now we want to define the colleges this listing is associated with
+                # Now we want to define the colleges this listing is associated
+                # with
                 collegeNames = json.loads(form.colleges.data)
 
                 for collegeName in collegeNames:
-                    school = session.query(School).filter_by(name=collegeName).first()
+                    school = session.query(School).filter_by(
+                        name=collegeName).first()
 
                     if school is not None:
-                        newListingSchool = ListingSchool(listing=newListing, school=school)
+                        newListingSchool = ListingSchool(
+                            listing=newListing, school=school)
                         session.add(newListingSchool)
                         session.commit()
-                        app.logger.debug('newListingSchool %r' % newListingSchool)
+                        app.logger.debug('newListingSchool %r' %
+                                         newListingSchool)
                     else:
-                        app.logger.error('Could not find school with name %s. Could not associated listing %r with school' % (collegeName, newListing))
+                        app.logger.error('Could not find school with name %s. Could not associated listing %r with school' % (
+                            collegeName, newListing))
 
-                app.logger.debug('form.colleges.data : %s' % form.colleges.data)
+                app.logger.debug('form.colleges.data : %s' %
+                                 form.colleges.data)
                 app.logger.debug('collegeNames %r' % collegeNames)
 
                 if newListing.property_type == 'apartment':
@@ -193,12 +206,15 @@ def createListing():
                     file = request.files['floor_plan']
 
                     if file and isPDF(file.filename):
-                        filename = secure_filename(request.files['floor_plan'].filename)
+                        filename = secure_filename(
+                            request.files['floor_plan'].filename)
 
                         if file and allowed_file(filename):
-                            file.save(os.path.join(newListing.uploadPath, 'floorplan.pdf'))
+                            file.save(os.path.join(
+                                newListing.uploadPath, 'floorplan.pdf'))
 
-                    newListing.floor_plan_url = '/uploads/listings/%s/floorplan.pdf' % str(newListing.id)
+                    newListing.floor_plan_url = '/uploads/listings/%s/floorplan.pdf' % str(
+                        newListing.id)
 
                     session.commit()
 
@@ -225,21 +241,24 @@ def createListing():
 
 @listings.route('/listing/clone/<listingID>', methods=['GET', 'POST'])
 @login_required
+@listing_editable
 def cloneListing(listingID):
     listingToClone = Listing.query.filter_by(id=listingID).first_or_404()
 
     if listingToClone.isCloneableBy(current_user):
         # Get colleges associated with the listing
-        selectedSchools = ListingSchool.query.filter_by(listing=listingToClone).all()
+        selectedSchools = ListingSchool.query.filter_by(
+            listing=listingToClone).all()
 
         # Get the previous pictures
-        folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
+        folderPath = os.path.join(
+            app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
         listingPicturePath = os.path.join(folderPath, 'pictures')
         picturePaths = os.listdir(listingPicturePath)
 
-        #If it is an apartment we need to pass the apartment number along as well
-        #Because if it is an apartment we need to take the apt number and end date in account
-        #When determining if the listing is cloneable
+        # If it is an apartment we need to pass the apartment number along as well
+        # Because if it is an apartment we need to take the apt number and end date in account
+        # When determining if the listing is cloneable
         aptNumber = None
         if listingToClone.property_type == 'apartment':
             aptNumber = listingToClone.apartment_number
@@ -271,7 +290,8 @@ def editListing(listingID):
     selectedSchools = ListingSchool.query.filter_by(listing=listing).all()
 
     # Listing Folder Path
-    folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
+    folderPath = os.path.join(
+        app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
 
     # Get the pictures from the liting
     listingPicturePath = os.path.join(folderPath, 'pictures')
@@ -321,7 +341,8 @@ def deleteListing(listingID):
         flash('Listing Deleted!', 'success')
     else:
         flash('Unable to find that listing to delete', 'warning')
-        app.logger.warning('Listing was attempted to delete but does not exists %d' % listingID)
+        app.logger.warning(
+            'Listing was attempted to delete but does not exists %d' % listingID)
 
     return redirect(url_for('landlords.landlordDashboard'))
 
@@ -340,11 +361,13 @@ def upload(listingID):
     # Can this listing be changed by the current user
     if listing.isEditableBy(current_user):
         try:
-            listingUploadFolder = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listing.id))
+            listingUploadFolder = os.path.join(
+                app.config['UPLOAD_FOLDER'], 'listings', str(listing.id))
             if not os.path.exists(listingUploadFolder):
                 os.makedirs(listingUploadFolder)
 
-            listingPictureFolder = os.path.join(listingUploadFolder, 'pictures')
+            listingPictureFolder = os.path.join(
+                listingUploadFolder, 'pictures')
             if not os.path.exists(listingPictureFolder):
                 os.makedirs(listingPictureFolder)
         except:
@@ -375,12 +398,14 @@ def upload(listingID):
 
 @listings.route("/listing/delete/<listingID>/<filename>", methods=["POST"])
 @login_required
+@listing_editable
 def deletePhoto(listingID, filename):
     listing = Listing.query.filter_by(id=listingID).first_or_404()
 
     if listing.isEditableBy(current_user):
 
-        folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
+        folderPath = os.path.join(
+            app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
         listingPicturePath = os.path.join(folderPath, 'pictures')
         os.remove(listingPicturePath + "/" + filename)
 
@@ -391,11 +416,13 @@ def deletePhoto(listingID, filename):
 
 @listings.route("/listing/deleteBanner/<listingID>/<filename>", methods=["POST"])
 @login_required
+@listing_editable
 def deleteBannerPhoto(listingID, filename):
     listing = Listing.query.filter_by(id=listingID).first_or_404()
 
     if listing.isEditableBy(current_user):
-        folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
+        folderPath = os.path.join(
+            app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
         listingPicturePath = os.path.join(folderPath, 'bannerPhoto')
         os.remove(listingPicturePath + "/" + filename)
         return jsonify(results={'success': True})
@@ -430,7 +457,8 @@ def uploadPhotos(listingID):
 
                 file.save(savePath)
 
-                listing.banner_photo_url = '/uploads/listings/%s/bannerPhoto/%s' % (listingID, filename)
+                listing.banner_photo_url = '/uploads/listings/%s/bannerPhoto/%s' % (
+                    listingID, filename)
                 session.commit()
             else:
                 flash("Error saving file %s" % file.filename, 'danger')
@@ -459,7 +487,8 @@ def uploadPhotos(listingID):
         app.logger.debug("Trying to copy photos from one listing to another")
 
         # Is there any pictures for the listing
-        # if not lets try to find another listing with the same address and copy it's pictures
+        # if not lets try to find another listing with the same address and
+        # copy it's pictures
         picturePaths = listing.allPictureURL
         if picturePaths is not None and len(picturePaths) == 0:
 
@@ -470,17 +499,22 @@ def uploadPhotos(listingID):
                                                    zip_code=listing.zip_code) \
                 .first()
 
-            app.logger.debug("Found listing with same address %r" % otherListing)
+            app.logger.debug(
+                "Found listing with same address %r" % otherListing)
 
             if otherListing is not None:
                 # Let's get the photos from that listing and copy them over....
-                otherListingPictureFolder = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(otherListing.id), 'pictures')
-                otherListingPicturePaths = os.listdir(otherListingPictureFolder)
+                otherListingPictureFolder = os.path.join(
+                    app.config['UPLOAD_FOLDER'], 'listings', str(otherListing.id), 'pictures')
+                otherListingPicturePaths = os.listdir(
+                    otherListingPictureFolder)
 
-                app.logger.debug('Other Listing otherListingPicturePaths : %r' % otherListingPicturePaths)
+                app.logger.debug(
+                    'Other Listing otherListingPicturePaths : %r' % otherListingPicturePaths)
 
                 for picture in otherListingPicturePaths:
-                    copy2(os.path.join(otherListingPictureFolder, picture), listing.picturePath)
+                    copy2(os.path.join(otherListingPictureFolder,
+                                       picture), listing.picturePath)
 
             app.logger.debug("Copied photos!")
             app.logger.debug("NewListing picturePaths %r" % picturePaths)
@@ -501,23 +535,29 @@ def uploadPhotos(listingID):
                                                        zip_code=listing.zip_code) \
                     .first()
 
-                app.logger.debug("Found listing with same address %r" % otherListing)
+                app.logger.debug(
+                    "Found listing with same address %r" % otherListing)
 
                 if otherListing is not None:
-                    otherListingBannerFolder = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(otherListing.id), 'bannerPhoto')
-                    otherListingBannerPaths = os.listdir(otherListingBannerFolder)
+                    otherListingBannerFolder = os.path.join(
+                        app.config['UPLOAD_FOLDER'], 'listings', str(otherListing.id), 'bannerPhoto')
+                    otherListingBannerPaths = os.listdir(
+                        otherListingBannerFolder)
 
-                    app.logger.debug('Other Listing otherListingBannerPaths : %r' % otherListingBannerPaths)
+                    app.logger.debug(
+                        'Other Listing otherListingBannerPaths : %r' % otherListingBannerPaths)
 
                     for picture in otherListingBannerPaths:
-                        copy2(os.path.join(otherListingBannerFolder, picture), bannerlistingPicturePath)
+                        copy2(os.path.join(otherListingBannerFolder,
+                                           picture), bannerlistingPicturePath)
 
                     app.logger.debug('Copied Photos!')
 
                 bannerPathList = os.listdir(bannerlistingPicturePath)
                 if len(bannerPathList) > 0:
                     bannerPath = bannerPathList[0]
-                    listing.banner_photo_url = '/uploads/listings/%s/bannerPhoto/%s' % (listing.id, bannerPath)
+                    listing.banner_photo_url = '/uploads/listings/%s/bannerPhoto/%s' % (
+                        listing.id, bannerPath)
                     session.commit()
                     app.logger.debug("NewListing bannerPath %r" % bannerPath)
 
@@ -539,7 +579,8 @@ def searchListingsAJAX():
     app.logger.debug("Incoming POSTEDJSON")
     app.logger.debug(pprint(postedJSON))
 
-    # Required Fields : `bedrooms` | `minPrice` | `maxPrice` | `priceTerm` | `school`
+    # Required Fields : `bedrooms` | `minPrice` | `maxPrice` | `priceTerm` |
+    # `school`
     allListings = session.query(Listing).filter(Listing.active == True,
                                                 Listing.show == True)
 
@@ -549,7 +590,8 @@ def searchListingsAJAX():
     # Bedroom Checks:
     if 'bedrooms' in postedJSON:
         if postedJSON['bedrooms'] < 4:
-            allListings = allListings.filter(Listing.num_bedrooms == postedJSON['bedrooms'])
+            allListings = allListings.filter(
+                Listing.num_bedrooms == postedJSON['bedrooms'])
         else:
             allListings = allListings.filter(Listing.num_bedrooms >= 4)
     else:
@@ -559,9 +601,11 @@ def searchListingsAJAX():
 
     # Price Checks
     if 'minPrice' in postedJSON and 'maxPrice' in postedJSON:
-        allListings = allListings.filter(Listing.price_per_month >= postedJSON['minPrice'], Listing.price_per_month <= postedJSON['maxPrice'])
+        allListings = allListings.filter(Listing.price_per_month >= postedJSON[
+                                         'minPrice'], Listing.price_per_month <= postedJSON['maxPrice'])
     else:
-        app.logger.error('Minimum or Maximum price not found in listing search query')
+        app.logger.error(
+            'Minimum or Maximum price not found in listing search query')
 
     app.logger.debug("Price allListings %r" % allListings.all())
 
@@ -584,7 +628,8 @@ def searchListingsAJAX():
                 allListings = allListings.filter(Listing.time_period_date_range == match.group(1),
                                                  Listing.time_period == 'summer')
             else:
-                app.logger.error("term input is invalid and does not match any patterns defined. postedJSON['term'] : %s" % postedJSON['term'])
+                app.logger.error(
+                    "term input is invalid and does not match any patterns defined. postedJSON['term'] : %s" % postedJSON['term'])
     else:
         app.logger.error("Term not found in listing search query")
 
@@ -593,18 +638,22 @@ def searchListingsAJAX():
     # School
     if 'school' in postedJSON:
         app.logger.debug('Looking at school %s' % postedJSON['school'])
-        school = session.query(School).filter_by(name=postedJSON['school']).first()
+        school = session.query(School).filter_by(
+            name=postedJSON['school']).first()
 
         if school is not None:
             if 'distanceToCampus' in postedJSON:
-                app.logger.debug('Distance to Campus %d' % postedJSON['distanceToCampus'])
+                app.logger.debug('Distance to Campus %d' %
+                                 postedJSON['distanceToCampus'])
                 allListings = allListings.join(ListingSchool) \
                     .filter(ListingSchool.school_id == school.id,
                             postedJSON['distanceToCampus'] >= ListingSchool.driving_miles)
             else:
-                allListings = allListings.join(ListingSchool).filter(ListingSchool.school_id == school.id)
+                allListings = allListings.join(ListingSchool).filter(
+                    ListingSchool.school_id == school.id)
         else:
-            app.logger.error("Could not find school to apply to search filter. postedJSON['school'] : %s" % postedJSON['school'])
+            app.logger.error(
+                "Could not find school to apply to search filter. postedJSON['school'] : %s" % postedJSON['school'])
     else:
         app.logger.error("School not found in listing search query")
 
@@ -674,17 +723,21 @@ def searchListingsAJAX():
                                                  Listing.property_type == 'complex'
                                                  ))
         elif 'apartment' in typeList:
-            allListings = allListings.filter(Listing.property_type == 'apartment')
+            allListings = allListings.filter(
+                Listing.property_type == 'apartment')
 
         elif 'complex' in typeList:
-            allListings = allListings.filter(Listing.property_type == 'complex')
+            allListings = allListings.filter(
+                Listing.property_type == 'complex')
         else:
             app.logger.error("No Listing Types were defined to search for")
 
     standardListings = allListings.filter(Listing.featured == False).all()
-    featuredListings = allListings.filter(Listing.featured == True).order_by(func.random()).limit(2).all()
+    featuredListings = allListings.filter(
+        Listing.featured == True).order_by(func.random()).limit(2).all()
 
-    unAddedFeaturedListings = allListings.filter(Listing.featured == True).all()
+    unAddedFeaturedListings = allListings.filter(
+        Listing.featured == True).all()
 
     for listing in unAddedFeaturedListings:
         if listing not in featuredListings:
@@ -769,20 +822,23 @@ def searchListingsAJAX():
         else:
             listingDict['isFavorited'] = False
 
-        listingSchool = ListingSchool.query.filter_by(listing=listing, school=school).first()
+        listingSchool = ListingSchool.query.filter_by(
+            listing=listing, school=school).first()
 
         if listingSchool is not None:
             if listingSchool.driving_time is not None:
                 listingDict['drivingTime'] = float(listingSchool.driving_time)
 
             if listingSchool.driving_miles is not None:
-                listingDict['drivingMiles'] = float(listingSchool.driving_miles)
+                listingDict['drivingMiles'] = float(
+                    listingSchool.driving_miles)
 
             if listingSchool.walking_time is not None:
                 listingDict['walkingTime'] = float(listingSchool.walking_time)
 
             if listingSchool.walking_miles is not None:
-                listingDict['walkingMiles'] = float(listingSchool.walking_miles)
+                listingDict['walkingMiles'] = float(
+                    listingSchool.walking_miles)
 
         listingJSONList.append(listingDict)
 
@@ -799,20 +855,23 @@ def searchListingsAJAX():
         else:
             listingDict['isFavorited'] = False
 
-        listingSchool = ListingSchool.query.filter_by(listing=listing, school=school).first()
+        listingSchool = ListingSchool.query.filter_by(
+            listing=listing, school=school).first()
 
         if listingSchool is not None:
             if listingSchool.driving_time is not None:
                 listingDict['drivingTime'] = float(listingSchool.driving_time)
 
             if listingSchool.driving_miles is not None:
-                listingDict['drivingMiles'] = float(listingSchool.driving_miles)
+                listingDict['drivingMiles'] = float(
+                    listingSchool.driving_miles)
 
             if listingSchool.walking_time is not None:
                 listingDict['walkingTime'] = float(listingSchool.walking_time)
 
             if listingSchool.walking_miles is not None:
-                listingDict['walkingMiles'] = float(listingSchool.walking_miles)
+                listingDict['walkingMiles'] = float(
+                    listingSchool.walking_miles)
 
         featuredJSONList.append(listingDict)
 
@@ -860,6 +919,7 @@ def getListingAddresses(schoolName=None):
 
     for listing in listings:
         serialiedListing = listing.serialize
-        returnListingList.append({'value': serialiedListing['address'], 'id': listing.id})
+        returnListingList.append(
+            {'value': serialiedListing['address'], 'id': listing.id})
 
     return jsonify({'listings': returnListingList})
