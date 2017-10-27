@@ -1197,50 +1197,9 @@
                             }
                         }
                     }
-
-                    {% if endDate %}
-                        var new_start_date = new Date($("#leaseStartDateInput").val());
-                        var oldEnd = new Date("{{endDate}}");
-                        //console.log("new_start_date: " + new_start_date);
-                        //console.log("oldEnd: " + oldEnd);
-                        if(oldEnd > new_start_date){
-                            {% if aptNumber %}
-                                var aptNumber = {{aptNumber}}
-                                if($("#apartment_number").val() == aptNumber){
-                                    errorExists = true;
-                                    $("#leaseStartDateInput").closest(".form-group").addClass("has-error");
-                                    $("#leaseStartDateInput").closest(".form-group").addClass("has-danger");
-                                    $("#start_date_before_previous_listing_end_date_apartment").show();
-                                    $("#previousListingDates").show();
-                                    $("#previousListingDates").text("The previous lease ends : " + oldEnd);
-                                }
-                                else{
-                                    $("#previousListingDates").hide();
-                                    $("#leaseStartDateInput").closest(".form-group").removeClass("has-error");
-                                    $("#leaseStartDateInput").closest(".form-group").removeClass("has-danger");
-                                    if(errorExists == false){
-                                        nextStepWizard.removeClass('disabled').trigger('click');
-                                    }
-                                }
-                            {% else %}
-                                errorExists = true;
-                                $("#leaseStartDateInput").closest(".form-group").addClass("has-error");
-                                $("#leaseStartDateInput").closest(".form-group").addClass("has-danger");
-                                $("#start_date_before_previous_listing_end_date").show();
-                                $("#previousListingDates").show();
-                                $("#previousListingDates").text("The previous lease ends : " + oldEnd);
-                            {% endif %}
-                        }
-                        else{
-                            if(errorExists == false){
-                                nextStepWizard.removeClass('disabled').trigger('click');
-                            }
-                        }
-                    {% else %}
-                        if(errorExists == false){
-                            nextStepWizard.removeClass('disabled').trigger('click');
-                        }                        
-                    {% endif %}
+                    if(errorExists == false){
+                        nextStepWizard.removeClass('disabled').trigger('click');
+                    } 
                 }
                 else {
                     nextStepWizard.removeClass('disabled').trigger('click');
