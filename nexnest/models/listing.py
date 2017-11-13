@@ -154,7 +154,7 @@ class Listing(Base):
             lng=None,
             banner_photo_url=None,
             show=True,
-            active=False):
+            active=True):
 
         self.street = street
         self.city = city
