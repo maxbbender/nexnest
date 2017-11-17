@@ -6,6 +6,8 @@ from flask_wtf.file import FileField, FileRequired
 
 from wtforms.fields import StringField, PasswordField, SubmitField, BooleanField, IntegerField, TextAreaField, SelectField, DateField, HiddenField
 
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
+
 from wtforms.validators import InputRequired, Length, Email, EqualTo, Optional, URL
 
 from nexnest.static.dataSets import *
@@ -169,6 +171,7 @@ class ListingForm(RedirectForm):
     colleges = HiddenField('Colleges', [InputRequired()])
     pictures = FileField('Pictures for Listing')
     bannerPicture = FileField('Pictures for Listing')
+    landlord = SelectField('Landlord', [Optional()])
 
 
 class PhotoForm(RedirectForm):

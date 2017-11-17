@@ -40,6 +40,12 @@
                     <a href="#step-8" type="button" class="btn btn-default btn-circle disabled">8</a>
                     <p class="hidden-md-down">Description</p>
                 </div>
+                {% if current_user.isAdmin %}
+                <div class="stepwizard-step" style="width: 150px;">
+                    <a href="#step-9" type="button" class="btn btn-default btn-circle disabled">9</a>
+                    <p class="hidden-md-down">Landlord</p>
+                </div>
+                {% endif %}
             </div>
         </div>
         <br>
@@ -669,14 +675,27 @@
                                 <div class="row" style="align-items: center; text-align: right;">
                                     <div class="col-xs-12">
                                         <u><a href="#" data-toggle="modal" data-target="#contactUsModal" style="padding-right: 30px;">need help?</a></u>
-                                        <button id="uploadPhotosButton" class="btn btn-blue btn-lg" onClick="submitListingForm();">Add Photos</button>
-                                        <button id="uploadPhotosButton_Loading" class="btn btn-blue btn-lg" disabled="" style="width: 142px; display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+                                        <!-- <button id="uploadPhotosButton" class="btn btn-blue btn-lg" onClick="submitListingForm();">Add Photos</button>
+                                        <button id="uploadPhotosButton_Loading" class="btn btn-blue btn-lg" disabled="" style="width: 142px; display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button> -->
+                                        <button class="btn btn-blue nextBtn btn-lg" type="button">Next</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                {% if current_user.isAdmin %}
+                <div class="row setup-content" id="step-9">
+                    Choose Landlord
+                    <div class="row" style="align-items: center; text-align: right;">
+                        <div class="col-xs-12">
+                            <u><a href="#" data-toggle="modal" data-target="#contactUsModal" style="padding-right: 30px;">need help?</a></u>
+                            <button id="uploadPhotosButton" class="btn btn-blue btn-lg" onClick="submitListingForm();">Add Photos</button>
+                            <button id="uploadPhotosButton_Loading" class="btn btn-blue btn-lg" disabled="" style="width: 142px; display: none;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
         </form>
         </div>
     </div>
