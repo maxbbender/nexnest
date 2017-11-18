@@ -102,7 +102,7 @@
 				</div>
 			</div>
 			{% if current_user.is_authenticated %}
-				{% if not current_user in listing.landLordsAsUsers() %}
+				{% if not current_user in listing.landLordsAsUsers() and not current_user.isAdmin %}
 				<hr>
 				<div class="row">
                     <div class="col-xs-12" id="favorited{{listing.id}}">
@@ -157,7 +157,7 @@
 					</div>
 				</div>
 				{% endif %}
-				{% if current_user in listing.landLordsAsUsers() %}
+				{% if current_user in listing.landLordsAsUsers() or current_user.isAdmin %}
 					<div class="row">
 						<div class="col-xs-12" style="text-align: right;">
 							<div class="customTooltip">

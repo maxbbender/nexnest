@@ -1,0 +1,139 @@
+{% extends "base.html" %} {% block content %}
+	<div class="row nexnest-font" style="color: #656264; padding-top: 30px; font-size: 20px;">
+		<div class="col-lg-6 col-xl-8">
+			<div class="callout-block text-center fade-in-b" style="background-color: #4fac80; color: white;">
+				<h1 style="font-size: 3.5vh;">Listing Posted!</h1>
+			</div>
+			<br>
+			<span style="display: table-cell; padding-left: 5px;">Congrats, you have succesfully posted your listing. Students can now <span style="color: #4fac80">search</span> for this property, <span style="color: #4fac80">request to tour</span> and <span style="color: #4fac80">request to rent</span> for the chosen lease period.</span>
+		</div>
+		<div class="col-lg-6 col-xl-4" style="text-align: center; padding-top: 30px;">
+			<div class="col-xs-12">
+				<a href="#" data-target="#postAnotherModal" data-toggle="modal" class="btn btn-light-green" style="width: 200px;">Post Another</a>
+			</div>
+			<div class="col-xs-12" style="padding-top: 15px;">
+				<a href="" class="btn btn-yellow" style="width: 200px;">Upgrade</a>
+			</div>
+			<div class="col-xs-12" style="padding-top: 15px;">
+				<a href="{{ url_for('landlords.landlordDashboard') }}" class="btn btn-blue" style="width: 200px;">Go to My Dashboard</a>
+			</div>
+		</div>
+	</div>
+	<div class="row nexnest-font" style="padding-top: 30px; color: #656264; font-size: 20px;">
+		<div class="col-lg-6 col-xl-8">
+			<div class="card" style="border-width: 5px; border-color: #656264;">
+				<div class="card-block">
+					<div class="row">
+						<div class="col-xs-12 col-lg-6" style="align-self: center; padding-top: 15px;">
+							<img src="{{bannerPhoto}}" style="height: auto; max-width: 100%;">
+						</div>
+						<div class="col-xs-12 col-lg-6" style="padding-top: 15px;">
+							<div class="row">
+								<div class="col-xs-6" style="text-align: center;">
+									<a href="{{url_for('listings.editListing', listingID=listingID)}}" class="btn btn-blue"> Edit Listing </a>
+								</div>
+								<div class="col-xs-6" style="text-align: center;">
+									<a href="{{url_for('listings.viewListing', listingID=listingID)}}" class="btn btn-blue"> View Listing </a>
+								</div>
+							</div>
+							<div class="row" style="padding-top: 15px;">
+								<div class="col-xs-2">
+									{% if listing.property_type == "house" %}
+									    <img src="/static/img/housePin.png" style="height: 60px;">
+									{% elif listing.property_type == "apartment" %}
+									    <img src="/static/img/apartmentPin.png" style="height: 60px;">
+									{% endif %}
+								</div>
+								<div class="col-xs-10">
+									<div class="row">
+										<div class="col-xs-12">
+											{{ listing.street }}
+											{% if listing.property_type == "apartment" %}
+												Apt {{ listing.apartment_number }}
+											{% endif %}
+											<br>
+											{{ listing.city }}, {{ listing.state }} {{ listing.zip_code }}
+										</div>
+									</div>
+									<div class="row" style="padding-top: 10px;">
+										<div class="col-xs-12">
+											<i class="fa fa-bed" aria-hidden="true" style="padding-right: 5px;"></i>{{ listing.num_bedrooms }} Bed
+											<i class="fa fa-bath" aria-hidden="true" style="padding-left: 10px; padding-right: 5px;"></i>{{ listing.num_full_baths }} Bath
+										</div>
+									</div>
+									<div class="row" style="padding-top: 10px;">
+										<div class="col-xs-7">
+											Start Date:
+											<br>
+											<i class="fa fa-calendar" aria-hidden="true"></i> {{ listing.start_date|format_date }}
+											<br>
+											End Date:
+											<br>
+											<i class="fa fa-calendar" aria-hidden="true"></i> {{ listing.end_date|format_date }}
+										</div>
+										<div class="col-xs-5" style="text-align: right; align-self: flex-end;">
+											<span style="color: #4fac80">${{ listing.price }}</span>
+											<br>
+											Per Bedroom
+											<br>
+											Per
+											<span style="text-transform: capitalize;">
+												{% if listing.rent_due == 'monthly' %}
+													month
+												{% else %}
+													semester
+												{% endif %}
+											</span>
+										</div>
+									</div>									
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12">
+							{{ listing.description }}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Post Another Listing Modal -->
+	<div class="modal fade" id="postAnotherModal" tabindex="-1" role="dialog" aria-labelledby="confirm" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="max-width: 700px;">
+            <div class="modal-content nexnest-font" style="font-size: 20px; color: #656264;">
+                <div class="modal-header" style="background-color: #f4c359;">                  
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h1 style="color: white;"><i class="fa fa-home" aria-hidden="true" style="padding-right: 5px;"></i> Post Another Listing</h1>
+                </div>
+                <div class="modal-body nexnest-font" style="font-size: 20px; color: #656264;">
+                    <div class="row">
+                        <div class="col-xs-1"></div>
+                        <div class="col-xs-10">                            
+                            <div class="row">
+                            	<div class="col-xs-12">
+                            		<i class="fa fa-plus" aria-hidden="true" style="padding-right: 5px;"></i> <strong> Create Another Listing</strong>
+                                    <br><br>
+                                    <i class="fa fa-clone" aria-hidden="true" style="padding-right: 5px;"></i> Use <strong">Listing as Template</strong> to pre-fill a new listing with the same specifications of this listing (ideal when posting this property for multiple years)
+                                    <br><br>
+                            	</div>
+                            </div>
+                            <div class="row">
+                            	<div class="col-xs-6">
+                            		<a href="{{url_for('listings.cloneListing', listingID=listing.id)}}" class="btn btn-blue"><i class="fa fa-clone" aria-hidden="true" style="padding-right: 5px;"></i> Use Listing as Template</a>
+                            	</div>
+                            	<div class="col-xs-6">
+                            		<a href="{{url_for('listings.createListing')}}" class="btn btn-blue"><i class="fa fa-plus" aria-hidden="true" style="padding-right: 5px;"></i> Create Another Listing</a>
+                            	</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -456,15 +456,15 @@ def uploadPhotos(listingID):
             else:
                 flash("Error saving file %s" % file.filename, 'danger')
 
-        if form.nextAction.data == 'checkout':
+        if form.nextAction.data == 'makeLive':
             flash('Listing Created!', 'success')
-            return redirect(url_for('landlords.landlordDashboard'))
-        elif form.nextAction.data == 'createNew':
+            return redirect(url_for('listings.listingConfirmation', listingID=listingID))
+        elif form.nextAction.data == 'upgrade':
             flash('Listing Created!', 'success')
             return redirect(url_for('listings.createListing'))
-        elif form.nextAction.data == 'createCopy':
-            flash('Listing Created!', 'success')
-            return redirect(url_for('listings.cloneListing', listingID=listingID))
+        # elif form.nextAction.data == 'createCopy':
+        #     flash('Listing Created!', 'success')
+        #     return redirect(url_for('listings.cloneListing', listingID=listingID))
             # selectedSchools = ListingSchool.query.filter_by(listing_id=listingID).all()
             # # Get Pictures
             # form = ListingForm()
@@ -884,3 +884,12 @@ def getListingAddresses(schoolName=None):
         returnListingList.append({'value': serialiedListing['address'], 'id': listing.id})
 
     return jsonify({'listings': returnListingList})
+
+@listings.route('/listing/create/confirmation/<int:listingID>', methods=['GET', 'POST'])
+def listingConfirmation(listingID):
+    listing = Listing.query.filter_by(id=listingID).first_or_404()
+    return render_template('listingConfirmation.html',
+                           listing=listing,
+                           title='Confirmation',
+                           listingID=listingID,
+                           bannerPhoto=listing.banner_photo_url)
