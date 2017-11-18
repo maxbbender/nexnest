@@ -58,7 +58,7 @@ def viewListing(listingID):
 def createListing():
     app.logger.debug('/listing/create createListing()')
     # User can only create listing if landlord
-    if current_user.isLandlord:
+    if current_user.isLandlord or current_user.isAdmin:
         form = ListingForm(request.form)
 
         if form.validate_on_submit():
@@ -122,7 +122,8 @@ def createListing():
                                city=newListing.city,
                                state=newListing.state,
                                zip_code=newListing.zip_code,
-                               apartment_number=newListing.apartment_number
+                               apartment_number=newListing.apartment_number,
+                               active=True
                                ) \
                     .all()
             else:
@@ -130,7 +131,8 @@ def createListing():
                     .filter_by(street=newListing.street,
                                city=newListing.city,
                                state=newListing.state,
-                               zip_code=newListing.zip_code
+                               zip_code=newListing.zip_code,
+                               active=True
                                ) \
                     .all()
 
@@ -156,6 +158,9 @@ def createListing():
                 session.commit()
 
                 newListing.createUploadDirectories()
+
+                # Now we need to figure out whether this is an Admin creating the listing
+                # or if it is a landlord.
 
                 # Lets assign the current user to be the landlord of this listing
                 newLandLordListing = LandlordListing(landlord=current_user.landlord[0],

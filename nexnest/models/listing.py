@@ -90,14 +90,21 @@ class Listing(Base):
     date_created = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime)
 
-    groups = relationship("GroupListing", back_populates='listing', cascade="all")
-    landlords = relationship("LandlordListing", back_populates='listing', cascade="all")
+    groups = relationship(
+        "GroupListing", back_populates='listing', cascade="all")
+    landlords = relationship(
+        "LandlordListing", back_populates='listing', cascade="all")
     tours = relationship("Tour", backref='listing', cascade="all")
-    house = relationship("House", backref=backref('listing', uselist=False), cascade="all")
-    favorite = relationship("GroupListingFavorite", backref='listing', cascade="all")
-    individualFavorite = relationship('ListingFavorite', backref='listing', cascade="all")
-    listingTransactionListing = relationship("ListingTransactionListing", backref='listing')
-    schools = relationship("ListingSchool", back_populates='listing', cascade="all")
+    house = relationship("House", backref=backref(
+        'listing', uselist=False), cascade="all")
+    favorite = relationship("GroupListingFavorite",
+                            backref='listing', cascade="all")
+    individualFavorite = relationship(
+        'ListingFavorite', backref='listing', cascade="all")
+    listingTransactionListing = relationship(
+        "ListingTransactionListing", backref='listing')
+    schools = relationship(
+        "ListingSchool", back_populates='listing', cascade="all")
     reports = relationship("ReportListing", backref='listing', cascade="all")
 
     def __init__(
@@ -147,7 +154,7 @@ class Listing(Base):
             lng=None,
             banner_photo_url=None,
             show=True,
-            active=False):
+            active=True):
 
         self.street = street
         self.city = city
@@ -195,7 +202,8 @@ class Listing(Base):
         self.banner_photo_url = banner_photo_url
         if self.rent_due == 'monthly':
             self.price_per_month = self.price
-            self.price_per_semester = (self.price * diffMonth(self.endDate, self.startDate)) / 2
+            self.price_per_semester = (
+                self.price * diffMonth(self.endDate, self.startDate)) / 2
             # self.price_per_semester = (self.price * diffMonth(self.endDate, self.startDate)) / 2
         elif self.rent_due == 'semester':
             # numMonths = int((self.end_date - self.start_date).days / 30)
@@ -207,7 +215,8 @@ class Listing(Base):
 
             self.price_per_semester = self.price
         else:
-            logger.error('Unknown Rent Due Value while create listing : %s' % self.rent_due)
+            logger.error(
+                'Unknown Rent Due Value while create listing : %s' % self.rent_due)
 
         # Default Values
         now = dt.now().isoformat()  # Current Time to Insert into Datamodels
@@ -477,11 +486,13 @@ class Listing(Base):
 
     def getPhotoURLs(self):
         photoURLs = []
-        folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(self.id), 'pictures')
+        folderPath = os.path.join(
+            app.config['UPLOAD_FOLDER'], 'listings', str(self.id), 'pictures')
 
         if os.path.exists(folderPath):
             for filename in os.listdir(folderPath):
-                photoURLs.append("/uploads/listings/%r/pictures/%s" % (self.id, filename.replace("\'", "")))
+                photoURLs.append("/uploads/listings/%r/pictures/%s" %
+                                 (self.id, filename.replace("\'", "")))
         return photoURLs
 
     def getBannerPhotoURL(self):
@@ -489,11 +500,13 @@ class Listing(Base):
             return self.banner_photo_url
         else:
             photoURL = []
-            folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(self.id), 'bannerPhoto')
+            folderPath = os.path.join(
+                app.config['UPLOAD_FOLDER'], 'listings', str(self.id), 'bannerPhoto')
 
             if os.path.exists(folderPath):
                 for filename in os.listdir(folderPath):
-                    photoURL.append("/uploads/listings/%r/bannerPhoto/%s" % (self.id, filename.replace("\'", "")))
+                    photoURL.append("/uploads/listings/%r/bannerPhoto/%s" %
+                                    (self.id, filename.replace("\'", "")))
 
             if len(photoURL) > 0:
                 return photoURL[0]
@@ -509,6 +522,13 @@ class Listing(Base):
                 return True
 
         return False
+
+    def getDistanceForSchool(self, school):
+        for listingSchool in self.schools:
+            if listingSchool.school == school:
+                return listingSchool.driving_time, listingSchool.driving_miles, listingSchool.walking_time, listingSchool.walking_miles
+
+        return None, None, None, None
 
     def cancelTours(self):
         app.logger.debug('Cancel Tours')

@@ -1,0 +1,31 @@
+{% for lschool in listing.schools %}
+
+<div class="row">
+    <div class="col-sm-4">
+        <h3>Distance to {{ lschool.school.name }}:</h3>
+    </div>
+    <div class="col-sm-8">
+        <div class="row" style="text-align: center;">
+            <div class="col-xs-6 col-md-6 col-lg-4 col-xl-4" style="padding-bottom: 10px;">
+                Distance:
+                <br>
+                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                {{ lschool.driving_miles }} Miles
+            </div>
+            <div class="col-xs-6 col-md-6 col-lg-4 col-xl-4" style="padding-bottom: 10px;">
+                Driving Time:
+                <br>
+                <i class="fa fa-car" aria-hidden="true"></i>
+                {{ lschool.driving_time }} Minutes
+            </div>
+            <div class="col-xs-6 col-md-6 col-lg-4 col-xl-4" style="padding-bottom: 10px;">
+                Walking Time:
+                <br>
+                <i class="icon icon-directions-walk" aria-hidden="true"></i>
+                {{ lschool.walking_time }} Minutes
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
