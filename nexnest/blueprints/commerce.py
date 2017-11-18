@@ -4,7 +4,7 @@ from pprint import pformat
 import braintree
 from flask import current_app as app
 from flask import (Blueprint, flash, jsonify, redirect, render_template,
-                   request, url_for)
+                   request, url_for, abort)
 from flask_login import current_user, login_required
 from nexnest import db
 from nexnest.forms import PreCheckoutForm
@@ -46,9 +46,10 @@ def viewPreCheckout():
         return 'error'
 
 
-@commerce.route('/checkout', methods=['GET', 'POST'])
+@commerce.route('/checkout', methods=['GET', 'POST'], defaults={'listingTransactionID': None})
+@commerce.route('/checkout/<int:listingTransactionID>', methods=['GET', 'POST'])
 @login_required
-def checkout():
+def checkout(listingTransactionID):
     app.logger.debug('commerce.checkout() /checkout')
     if request.method == 'POST':
         form = PreCheckoutForm(request.form)
@@ -70,8 +71,7 @@ def checkout():
                 couponCodeString = listingObjects['couponCode']
 
                 # Lets check that the coupon is valid
-                coupon = Coupon.query.filter_by(
-                    coupon_key=couponCodeString).first()
+                coupon = Coupon.query.filter_by(coupon_key=couponCodeString).first()
 
                 if coupon is not None:
                     if coupon.unlimited:
@@ -80,15 +80,13 @@ def checkout():
                     else:
                         if coupon.uses > 0:
                             newListingTransaction.coupon_id = coupon.id
-                            coupon.uses = coupon.uses - 1
                             session.commit()
                         else:
-                            app.logger.info(
-                                '%r used coupon %r that has no uses left' % (current_user, coupon))
+                            flash('Unable to apply coupon to purchase, it has not no uses left. Sorry!', 'warning')
+                            app.logger.info('%r used coupon %r that has no uses left' % (current_user, coupon))
                 else:
                     if couponCodeString != "":
-                        app.logger.info(
-                            'Coupon got passed through that is invalid. Code : %s' % couponCodeString)
+                        app.logger.info('Coupon got passed through that is invalid. Code : %s' % couponCodeString)
 
             for item in listingObjects['items']:
                 # Ambiguous variables because my database setup is stupid
@@ -115,7 +113,7 @@ def checkout():
                                totalPrice=newListingTransaction.totalTransactionPrice,
                                listingTransaction=newListingTransaction)
     else:
-        if 'listingTransactionID' in request.args:
+        if listingTransactionID:
             listingTransaction = session.query(ListingTransaction) \
                 .filter_by(id=int(request.args['listingTransactionID'])) \
                 .first()
@@ -126,9 +124,11 @@ def checkout():
                                            clientToken=braintree.ClientToken.generate(),
                                            totalPrice=listingTransaction.totalTransactionPrice,
                                            listingTransaction=listingTransaction)
+        abort(404)
 
 
 @commerce.route('/transactionGenerate', methods=['POST'])
+@login_required
 def genTransaction():
     app.logger.debug('commerce.genTransaction() /transactionGenerate')
 
@@ -174,79 +174,78 @@ def genTransaction():
                 app.logger.debug('Successfull Result')
                 app.logger.debug("Setting these listings to active %r" %
                                  listingTransaction.listings)
+
+                # Subtract Coupon
+                if listingTransaction.coupon:
+                    coupon.uses = coupon.uses - 1
+                    session.commit()
+
+
                 for ltl in listingTransaction.listings:
                     listing = ltl.listing
-                    listing.active = True
-
-                    ltl = ListingTransactionListing.query.filter_by(
-                        listing=listing).first()
-
-                    if ltl is not None:
-                        if ltl.plan == 'premium':
-                            listing.featured = True
-
+                    listing.featured = True
+                            
                     session.commit()
 
                     # We also want to delete all other listings with the same address that
                     # are inactive and for the same time period
-                    app.logger.debug("Trying to find other inactive listings with the same address")
+                    # app.logger.debug("Trying to find other inactive listings with the same address")
 
                     # Listings with the same addresses
-                    otherListingsWithSameAddress = None
-                    if listing.property_type == 'apartment':
-                        otherListingsWithSameAddress = session.query(Listing) \
-                            .filter_by(street=listing.street,
-                                       city=listing.city,
-                                       state=listing.state,
-                                       zip_code=listing.zip_code,
-                                       apartment_number=listing.apartment_number,
-                                       active=False
-                                       ) \
-                            .all()
-                    else:
-                        otherListingsWithSameAddress = session.query(Listing) \
-                            .filter_by(street=listing.street,
-                                       city=listing.city,
-                                       state=listing.state,
-                                       zip_code=listing.zip_code,
-                                       active=False
-                                       ) \
-                            .all()
+                    # otherListingsWithSameAddress = None
+                    # if listing.property_type == 'apartment':
+                    #     otherListingsWithSameAddress = session.query(Listing) \
+                    #         .filter_by(street=listing.street,
+                    #                    city=listing.city,
+                    #                    state=listing.state,
+                    #                    zip_code=listing.zip_code,
+                    #                    apartment_number=listing.apartment_number,
+                    #                    active=False
+                    #                    ) \
+                    #         .all()
+                    # else:
+                    #     otherListingsWithSameAddress = session.query(Listing) \
+                    #         .filter_by(street=listing.street,
+                    #                    city=listing.city,
+                    #                    state=listing.state,
+                    #                    zip_code=listing.zip_code,
+                    #                    active=False
+                    #                    ) \
+                    #         .all()
 
-                    app.logger.debug("Other listings with the same address : %r" % otherListingsWithSameAddress)
-                    app.logger.debug("Determining which ones have conflicting dates")
+                    # app.logger.debug("Other listings with the same address : %r" % otherListingsWithSameAddress)
+                    # app.logger.debug("Determining which ones have conflicting dates")
 
-                    conflictingDates = False
-                    conflictingListings = []
-                    for otherListing in otherListingsWithSameAddress:
+                    # conflictingDates = False
+                    # conflictingListings = []
+                    # for otherListing in otherListingsWithSameAddress:
 
-                        # Serialize the dates into python Date
-                        otherListingStartDate = otherListing.start_date
-                        otherListingEndDate = otherListing.end_date
-                        
-                        # If the other listing starts before the end, and after the start (conflict)
-                        if otherListingStartDate <= listing.end_date and otherListingStartDate >= listing.start_date:
-                            app.logger.debug("Found a listing with conflicting dates : %r" % otherListing)
-                            db.session.delete(otherListing)
-                            conflictingDates = True
+                    #     # Serialize the dates into python Date
+                    #     otherListingStartDate = otherListing.start_date
+                    #     otherListingEndDate = otherListing.end_date
 
-                        # If the other listing starts before the start but ends after the start (conflict)
-                        elif otherListingStartDate <= listing.start_date and otherListingEndDate >= listing.start_date:
-                            app.logger.debug("Found a listing with conflicting dates : %r" % otherListing)
-                            db.session.delete(otherListing)
-                            conflictingDates = True
-                        else:
-                            app.logger.debug("Listing %s does not have conflicting dates" % otherListing)
+                    #     # If the other listing starts before the end, and after the start (conflict)
+                    #     if otherListingStartDate <= listing.end_date and otherListingStartDate >= listing.start_date:
+                    #         app.logger.debug("Found a listing with conflicting dates : %r" % otherListing)
+                    #         db.session.delete(otherListing)
+                    #         conflictingDates = True
 
-                    if conflictingDates:
-                        db.session.commit()
+                    #     # If the other listing starts before the start but ends after the start (conflict)
+                    #     elif otherListingStartDate <= listing.start_date and otherListingEndDate >= listing.start_date:
+                    #         app.logger.debug("Found a listing with conflicting dates : %r" % otherListing)
+                    #         db.session.delete(otherListing)
+                    #         conflictingDates = True
+                    #     else:
+                    #         app.logger.debug("Listing %s does not have conflicting dates" % otherListing)
+
+                    # if conflictingDates:
+                    #     db.session.commit()
 
                 if request.is_xhr:
                     return jsonify({'success': True})
                 else:
                     flash('Transaction Success, your listings are now live!', 'success')
                     return redirect(url_for('indexs.index'))
-
 
             # The Transaction was NOT successfull
             else:
@@ -259,7 +258,7 @@ def genTransaction():
                     return jsonify({'success': False, 'message': 'Transaction Error!'})
                 else:
                     flash('Transaction Error! Please check your information and try again, if you believe this is an error on our end please let us know!', 'danger')
-                    return redirect('/landlord/dashboard#checkoutTab')
+                    return redirect(url_for('commerce.checkout', listingTransactionID=listingTransaction.id))
             # else:
             #     verification = cardVerifResult.credit_card_verification
             #     if verification:
