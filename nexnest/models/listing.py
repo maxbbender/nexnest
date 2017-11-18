@@ -4,6 +4,8 @@ from datetime import datetime as dt
 from flask import current_app as app
 from flask import flash
 
+from flask_login import current_user
+
 from nexnest import db
 from nexnest.models.listing_favorite import ListingFavorite
 from nexnest.sysLogger import logger
@@ -330,11 +332,16 @@ class Listing(Base):
             'priceTerm': self.rent_due,
             'bannerPhotoURL': self.banner_photo_url,
             'lat': float(self.lat),
-            'long': float(self.lng)
+            'long': float(self.lng),
+            'isUpgradeable': self.isUpgradeable
         }
 
-        # if current_user is not None:
-        #     if current_user.is_authenticated:
+        if current_user is not None:
+            if current_user.is_authenticated:
+                if self.isEditableBy(current_user):
+                    returnDict['isEditable'] = True
+                else:
+                    returnDict['isEditable'] = False
         #         if self.isFavoritedBy(current_user):
         #             returnDict['isFavorited'] = True
 
@@ -437,6 +444,12 @@ class Listing(Base):
         if os.path.exists(self.picturePath):
             return os.listdir(self.picturePath)
 
+    @property
+    def isUpgradeable(self):
+        if not self.house and not self.featured:
+            return True
+        return False
+
     def isEditableBy(self, user, toFlash=False):
         if self.hasHouse() or self.hasAcceptedGroupListing:
             if toFlash:
@@ -455,7 +468,9 @@ class Listing(Base):
         return False
 
     def isViewableBy(self, user, toFlash=False):
-        if self.isEditableBy(user):
+        if user in self.landLordsAsUsers():
+            return True
+        elif self.isEditableBy(user):
             return True
         elif self.active and self.show:
             return True

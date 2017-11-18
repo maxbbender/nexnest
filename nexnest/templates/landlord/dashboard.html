@@ -10,10 +10,10 @@
                         </i><h4 class="hidden-md-down"><strong>My Dashboard</strong></h4>
                     </a>
                 </li>
-                {% if current_user.landlord[0].hasListingsToCheckout %}
+                {% if current_user.landlord[0].hasListingsToUpgrade %}
 	                <li class="nav-item">
 	        	        <a class="nav-link left-panel active" style="padding-left: 5px;" id="checkoutTab2" data-toggle="tab" href="#checkoutTab" role="tab">
-	        	        	<i class="fa fa-shopping-cart" aria-hidden="true"></i><span class="hidden-md-down">Checkout</span>
+	        	        	<i class="fa fa-shopping-cart" aria-hidden="true"></i><span class="hidden-md-down">Upgrade</span>
 	        	        </a>
 	        	    </li>
 	        	    <li class="nav-item">
@@ -77,21 +77,21 @@
 	        	<div class="row">
 			    	<div class="col-xs-12 col-md-12">
 				    	<div class="callout-block text-center fade-in-b" style="background-color: #d2d2d2;">
-				    		<h1 style="font-size: 3.5vh;">Select the Listings and Packages You Wish to Purchase</h1>
+				    		<h1 style="font-size: 3.5vh;">Select the Listings You Wish to Upgrade</h1>
 				    	</div>
 			    	</div>
 			    </div>
 		    	<br>
 		    	<div class="row">
 		    		<div class="col-xs-12">
-		    			<a href="#!" class="btn btn-blue" data-toggle="modal" data-target="#packageDescriptionModal">View Packages and Pricing</a>
+		    			<a href="#!" class="btn btn-blue" data-toggle="modal" data-target="#packageDescriptionModal">Upgrade Information</a>
 		    		</div>
 		    	</div>
 		    	<br>
 		    	<div class="row">		    		
 		    		<div class="col-xs-12 col-lg-8">
 			            {% for listing in listings %}
-			            {% if not listing.active %}
+			            {% if not listing.house and not listing.featured %}
 			            	<div class="row">
 			            		<div class="col-xs-0"></div>
 			            		<div class="col-xs-12 col-lg-12" style="width: 100%">
@@ -113,7 +113,7 @@
 							                    			    </label>							                    			    
 							                    			</div>						                    		
 								                    	</div>
-								                    	<div class="col-xs-6 col-md-11 col-lg-11 col-xl-6" style="padding-bottom: 15px;">				                    		
+								                    	<div class="col-xs-11 col-md-11 col-lg-11 col-xl-11" style="padding-bottom: 15px;">				                    		
 							                    			<h4 style="font-size: 2.5vh;"><strong>
 							                    				{{ listing.street }}
 							                    				{% if listing.property_type == "apartment" %}
@@ -134,37 +134,10 @@
 							                    			</small>
 							                    			<br>
 							                    			<small style="font-size: 1.5vh;">Lease Period: {{ listing.start_date|format_date }} - {{ listing.end_date|format_date }}</small>
-								                    	</div>
-								                    	{% if listing.time_period == "summer" %}
-								                    	<div class="col-xs-5 col-md-12 col-lg-12 col-xl-4" id="packageOptions{{listing.id}}" style="display: none; align-items: center; text-align: center;">
-								                    		<div class="btn-group" data-toggle="buttons" style="display: flex;">
-								                    		    <label class="btn btn-outline-primary active" id="standardLabel{{listing.id}}" onclick="downgradeToStandard({{listing.id}}, 39.99, 69.99)" style="font-size: 18px;">
-								                    		    	<input type="radio" name="packageChoice" id="standard{{listing.id}}" checked autocomplete="off"> PRO
-								                    		  	</label>
-								                    		  	<label class="btn btn-outline-primary" id="deluxeLabel{{listing.id}}" onclick="upgradeToDeluxe({{listing.id}}, 69.99, 39.99)" style="font-size: 18px;">
-								                    		    	<input type="radio" name="packageChoice" id="deluxe{{listing.id}}" autocomplete="off"> PREMIUM
-								                    		  	</label>
-								                    		</div>
-								                    		<br>
-								                    		<a href="#!" data-toggle="modal" data-target="#packageDescriptionModal">View Differences</a>
-								                    	</div>	
-								                    	{% else %}								                    	
-								                    	<div class="col-xs-5 col-md-12 col-lg-12 col-xl-4" id="packageOptions{{listing.id}}" style="display: none; align-self: center; text-align: center;">
-								                    		<div class="btn-group" data-toggle="buttons" style="display: flex;">
-								                    		    <label class="btn btn-blue-outline active" id="standardLabel{{listing.id}}" onclick="downgradeToStandard({{listing.id}}, 79.99, 129.99)" style="font-size: 18px;">
-								                    		    	<input type="radio" name="packageChoice" id="standard{{listing.id}}" checked autocomplete="off"> PRO
-								                    		  	</label>
-								                    		  	<label class="btn btn-blue-outline" id="deluxeLabel{{listing.id}}" onclick="upgradeToDeluxe({{listing.id}}, 129.99, 79.99)" style="font-size: 18px;">
-								                    		    	<input type="radio" name="packageChoice" id="deluxe{{listing.id}}" autocomplete="off"> PREMIUM
-								                    		  	</label>
-								                    		</div>
-								                    		<br>
-								                    		<a href="#!" data-toggle="modal" data-target="#packageDescriptionModal">View Differences</a>
-								                    	</div>
-								                    	{% endif %}						                    	
+								                    	</div>				                    	
 								                    </div>
 								                </div>
-								                <div class="col-xs-1" style="font-size: 20px; margin-left: -60px;">
+								                <!-- <div class="col-xs-1" style="font-size: 20px; margin-left: -60px;">
 								                	<div class="customTooltip">
 	                			                	   <a href="{{ url_for('listings.cloneListing', listingID=listing.id) }}"><strong class="text-nowrap"><i class="fa fa-clone" aria-hidden="true"></i> Relist</strong></a>
 	                			                	    <span class="customTooltiptext" style="margin-bottom: 6px; font-size: 18px;">Relist for another lease period.</span>
@@ -172,7 +145,7 @@
 	                			                	<br>
 	                			                	<a href="{{ url_for('listings.editListing', listingID=listing.id) }}"><strong class="text-nowrap"><i class="fa fa-pencil" aria-hidden="true" style="padding-right: 4px;"></i> Edit</strong></a>
 	                			                	<a href="{{ url_for('listings.deleteListing', listingID=listing.id) }}"><strong class="text-nowrap"><i class="fa fa-trash" aria-hidden="true" style="padding-right: 4px;"></i> Delete</strong></a>
-						                    	</div>
+						                    	</div> -->
 						                    </div>
 					                    </div>
 					                </div>
@@ -2473,29 +2446,17 @@
 				var street = obj.dataset.street;
 				var leasePeriod = obj.dataset.lease;
 				var time = obj.dataset.time;
-				////console.log(id);
-				if($("#standardLabel"+id).hasClass("active")){
-					selectedItem = {
-						index: count,
-						listing_id: id,
-						listing_street: street,
-						leasePeriod: leasePeriod,
-						timePeriod: time,
-						plan: 'standard'    					
-					}
-					cart.items.push(selectedItem);
+				
+				selectedItem = {
+					index: count,
+					listing_id: id,
+					listing_street: street,
+					leasePeriod: leasePeriod,
+					timePeriod: time,
+					plan: 'Upgrade'    					
 				}
-				else if($("#deluxeLabel"+id).hasClass("active")){
-					selectedItem = {
-						index: count,
-						listing_id: id,
-						listing_street: street,
-						leasePeriod: leasePeriod,
-						timePeriod: time,
-						plan: 'premium'    					
-					}
-					cart.items.push(selectedItem);
-				}
+				cart.items.push(selectedItem);
+				
 				count++;
 			}    		
 		});
@@ -3757,20 +3718,15 @@
 	        				                    	</div>
 	        				                    	<div class="col-xs-2 col-md-4 col-lg-4" style="text-align: right;">
 	        				                    		<div class="customTooltip">
-	        				                    		    <a href="/listing/clone/`+listing.id+`" class="btn btn-blue"><i class="fa fa-clone" aria-hidden="true"></i> Relist Property</a>
+	        				                    		    <a href="/listing/clone/`+listing.id+`" class="btn btn-blue" style="width: 150px;"><i class="fa fa-clone" aria-hidden="true"></i> Relist Property</a>
 	        				                    		    <span class="customTooltiptext" style="margin-bottom: 6px; font-size: 18px;">Relist for another lease period.</span>
-	        				                    		</div>`;
-	        				                    		requestURL = '/landlord/' + listing.id + '/isEditable/AJAX';
-	        				                    		$.getJSON(requestURL, function(data) {
-	        				                    		    results = data['results'];
-	        				                    		    //alert(data['results'].success);
-	        				                    		    if (results.success == true){
-	        				                    		    	//console.log("should be editable");
-	        				                    		        nextHouse += `<a href="/listing/edit/`+listing.id+`" class="btn btn-blue">Edit Listing</a>`;
-	        				                    		    } else {
-	        				                    		       //console.log("is not editable");
-	        				                    		    }
-	        				                    		});
+	        				                    		</div><br>`;	        				                    		
+	        				                    		if(listing.isEditable){
+	        				                    		    nextHouse += `<a href="/listing/edit/`+listing.id+`" class="btn btn-blue" style="width: 150px; margin-top: 15px;"><i class="fa fa-pencil" aria-hidden="true"></i> Edit Listing</a><br>`;
+	        				                    		};
+	        				                    		if(listing.isUpgradeable){
+	        				                    		    nextHouse += `<a href="/listing/upgrade/`+listing.id+`" class="btn btn-yellow" style="width: 150px; margin-top: 15px;"><i class="icon icon-crown" aria-hidden="true"></i> Upgrade Listing</a>`;
+	        				                    		};
 	        				                    	nextHouse += `
 	        				                    	</div>
 	        				                    </div>			                    

@@ -1,3 +1,4 @@
+
 from flask import current_app as app
 from nexnest import db
 from nexnest.data_gen.factories import *

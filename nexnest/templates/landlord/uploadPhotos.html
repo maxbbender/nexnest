@@ -31,7 +31,7 @@
                 </div>
                 <div class="row" style="padding-bottom: 60px;">
                     <div class="col-xs-12" style="text-align: right;">
-                        <a id="createListingButton" href='#' class="btn btn-light-green" data-toggle="modal" data-target="#confirmModal" style="margin-right: 15px;"><i class="fa fa-plus" aria-hidden="true" style="padding-right: 5px;"></i> Create Listing</a>
+                        <a id="createListingButton" href='#' class="btn btn-light-green" data-toggle="modal" data-target="#confirmModal" style="margin-right: 15px;"><i class="fa fa-plus" aria-hidden="true" style="padding-right: 5px;"></i> Post Listing</a>
                         <button id="createListingButton_Loading" disabled class="btn btn-light-green" data-toggle="modal" data-target="#confirmModal" style="margin-right: 15px; display: none; width: 148px;"><i class="fa fa-spinner fa-spin" aria-hidden="true" style="padding-right: 5px;"></i></button>
                     </div>
                 </div>
@@ -42,28 +42,11 @@
     <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirm" aria-hidden="true">
         <div class="modal-dialog" role="document" style="max-width: 700px;">
             <div class="modal-content nexnest-font" style="font-size: 20px; color: #656264;">
-                <div class="modal-header" style="background-color: #656264;">                  
+                <div class="modal-header" style="background-color: #f4c359;">                  
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <div class="row">
-                        <div class="col-xs-0 col-sm-0 col-md-0 col-lg-0 col-xl-1"></div>
-                        <div class="col-xs-1 col-md-2 col-xl-1 hidden-sm-down" style="align-self: center; padding: 0px;">
-                            <img src="/static/img/housePin.png" style="height: auto; max-width: 100%; padding-left: 15px;">
-                        </div>
-                        <div class="col-xs-1 hidden-lg-down" style="align-self: center; padding: 0px;">
-                            <img src="/static/img/apartmentPin.png" style="height: auto; max-width: 100%; padding-left: 15px;">
-                        </div>
-                        <div class="col-xs-12 col-md-8 col-lg-8 col-xl-6" style="text-align: center;">
-                            <h1 style="padding-top: 15px;">Congrats!</h1>
-                        </div>
-                        <div class="col-xs-1 col-md-2 col-xl-1 hidden-sm-down" style="align-self: center; padding: 0px;">
-                            <img src="/static/img/complexPin.png" style="height: auto; max-width: 100%; padding-left: 15px;">
-                        </div>
-                        <div class="col-xs-1 hidden-lg-down" style="align-self: center; padding: 0px;">
-                            <img src="/static/img/yellowHousePin.png" style="height: auto; max-width: 100%; padding-left: 15px;">
-                        </div>
-                    </div>
+                    <h1 style="color: white;"><i class="icon icon-crown" aria-hidden="true" style="padding-right: 5px;"></i> Upgrade My Listing</h1>
                 </div>
                 <div class="modal-body nexnest-font" style="font-size: 20px; color: #656264;">
                     <div class="row">
@@ -71,15 +54,9 @@
                         <div class="col-xs-10">                            
                             You have succesfully created your listing!
                             <br><br>
-                            Please Proceed with one of the following:
-                            <br><br>
                             <div class="row">
                                 <div class="col-xs-12" style="padding-left: 30px;">
-                                    <i class="fa fa-plus" aria-hidden="true" style="padding-right: 5px;"></i> <strong> Create Another Listing</strong> to add an additional listing to your cart
-                                    <br><br>
-                                    <i class="fa fa-clone" aria-hidden="true" style="padding-right: 5px;"></i> Use <strong">Listing as Template</strong> to pre-fill a new listing with the same specifications of this listing (ideal when posting this property for multiple years)
-                                    <br><br>
-                                    <i class="fa fa-shopping-cart" aria-hidden="true" style="padding-right: 5px;"></i> <strong> Proceed to Checkout</strong> to purchase and display this listing on nexnest
+                                    Your listing will now be made live for anyone to find and request to live there!
                                 </div>
                             </div>
                         </div>
@@ -87,17 +64,10 @@
                     <div id="groupNumber" style="display: none;"></div>
                 </div>
                 <div class="modal-footer" style="text-align: left;">
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12" style="text-align: left;">
-                            <button type="button" style="width: 225px;" class="btn btn-blue" onClick="submitListingForm('createNew')" data-dismiss="modal"><i class="fa fa-plus" aria-hidden="true" style="padding-right: 5px;"></i> Create Another Listing</button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-6" style="padding-top: 10px; text-align: left;">
-                            <button type="button" style="width: 225px;" class="btn btn-blue" onClick="submitListingForm('createCopy')" data-dismiss="modal"><i class="fa fa-clone" aria-hidden="true" style="padding-right: 5px;"></i> Use Listing as Template</button>
-                        </div>
-                        <div class="col-xs-12 col-sm-6" style="padding-top: 10px; text-align: right;">
-                            <button type="button" style="width: 225px;" class="btn btn-light-green pull-right" onClick="submitListingForm('checkout')" data-dismiss="modal"><i class="fa fa-shopping-cart" aria-hidden="true" style="padding-right: 5px;"></i> Proceed to Checkout</button>
+                    <div class="row">                        
+                        <div class="col-xs-12 col-sm-12" style="padding-top: 10px; text-align: right;">
+                            <button style="padding-right: 10px; color: #656264;" onClick="submitListingForm('makeLive')"> No Thanks</button>
+                            <button type="button" style="width: 225px;" class="btn btn-yellow pull-right" onClick="submitListingForm('upgrade')" data-dismiss="modal"><i class="icon icon-crown" aria-hidden="true" style="padding-right: 5px;"></i> Upgrade Listing</button>
                         </div>
                     </div>  
                 </div>
