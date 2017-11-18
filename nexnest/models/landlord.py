@@ -75,11 +75,19 @@ class Landlord(Base):
     def emailAndName(self):
         return self.user.name + ": " + self.user.email
 
-    def getListings(self):
+    def getListings(self, firstListingID=None):
+        firstListing = None
         listings = []
         for landlordListing in self.listings:
-            listings.append(landlordListing.listing)
-
+            if firstListingID:
+                if landlordListing.listing.id == firstListingID:
+                    firstListing = landlordListing.listing
+                else:
+                    listings.append(landlordListing.listing)
+            else:
+                listings.append(landlordListing.listing)
+        if firstListing:
+            listings.insert(0, firstListing)
         return listings
 
     def getSortedListings(self):

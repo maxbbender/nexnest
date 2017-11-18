@@ -67,7 +67,7 @@
                     <div class="row">                        
                         <div class="col-xs-12 col-sm-12" style="padding-top: 10px; text-align: right;">
                             <button style="padding-right: 10px; color: #656264;" onClick="submitListingForm('makeLive')"> No Thanks</button>
-                            <a href="{{ url_for('landlords.landlordDashboard', checkedFeaturedListingID=listingID) }}" type="button" style="width: 225px;" class="btn btn-yellow pull-right"><i class="icon icon-crown" aria-hidden="true" style="padding-right: 5px;"></i> Upgrade Listing</button>
+                            <a href="/landlord/dashboard/{{listingID}}#checkoutTab" type="button" style="width: 225px;" class="btn btn-yellow pull-right"><i class="icon icon-crown" aria-hidden="true" style="padding-right: 5px;"></i> Upgrade Listing</a>
                         </div>
                     </div>  
                 </div>

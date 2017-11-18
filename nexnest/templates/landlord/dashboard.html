@@ -3893,6 +3893,16 @@
 	$( document ).ready(function() {
 	    $(".ui-datepicker").css("margin","auto");
 	    $('.selectedTourTimes').attr('readonly', 'readonly');
+	    // preselect the listing to upgrade if necessary
+	    $("#purchaseListing"+{{checkedFeaturedListingID}}).attr( "checked", true );
+	    $("#purchaseListing"+{{checkedFeaturedListingID}}).prop( "checked", true );
+	    // now trigger logic to add to cart
+	    if("{{checkedFeaturedListing.time_period}}" == "summer"){
+	    	selectListingToPurchase({{checkedFeaturedListingID}}, '{{checkedFeaturedListing.street}}', {{summerUpgradePrice}});
+	    }
+	    else{
+	    	selectListingToPurchase({{checkedFeaturedListingID}}, '{{checkedFeaturedListing.street}}', {{schoolUpgradePrice}});
+	    }	    
 	});
 
 	$('input').on('itemRemoved', function(event) {

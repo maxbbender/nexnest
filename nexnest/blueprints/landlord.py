@@ -41,6 +41,7 @@ def isLandlord():
             abort(403)
 
 
+@landlords.route('/landlord/dashboard/', defaults={'checkedFeaturedListingID': None})
 @landlords.route('/landlord/dashboard/<int:checkedFeaturedListingID>')
 @login_required
 def landlordDashboard(checkedFeaturedListingID=None):
@@ -57,6 +58,8 @@ def landlordDashboard(checkedFeaturedListingID=None):
         if not listing.featured:
             nonFeaturedListings.append(listing)
 
+    checkedFeaturedListing = listing.query.filter_by(id=checkedFeaturedListingID).first()
+
     unAcceptedHousingRequests, acceptedHousingRequests, completedHousingRequests = landlord.getHousingRequests()
     openMaintenanceRequests, inProgressMaintenanceRequests, completedMaintenanceRequests = landlord.getMaintenanceRequests()
     currentHouses, futureHouses, unBookedHouses = landlord.getHouses()
@@ -67,7 +70,7 @@ def landlordDashboard(checkedFeaturedListingID=None):
     return render_template('dashboard.html',
                            landlord=landlord,
                            dateChangeForm=dateChangeForm,
-                           listings=landlord.getListings(),
+                           listings=landlord.getListings(checkedFeaturedListingID),
                            requestedTours=requestedTours,
                            scheduledTours=scheduledTours,
                            unAcceptedHousingRequests=unAcceptedHousingRequests,
@@ -87,7 +90,8 @@ def landlordDashboard(checkedFeaturedListingID=None):
                            completedPayments=completedPayments,
                            schoolUpgradePrice=schoolUpgradePrice,
                            summerUpgradePrice=summerUpgradePrice,
-                           checkedFeaturedListingID=checkedFeaturedListingID)
+                           checkedFeaturedListingID=checkedFeaturedListingID,
+                           checkedFeaturedListing=checkedFeaturedListing)
 
 
 @landlords.route('/landlord/requestedTours/JSON')
