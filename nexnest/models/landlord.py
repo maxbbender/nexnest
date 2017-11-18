@@ -57,6 +57,10 @@ class Landlord(Base):
 
         return False
 
+    @property
+    def name(self):
+        return self.user.name
+
     def getListings(self):
         listings = []
         for landlordListing in self.listings:

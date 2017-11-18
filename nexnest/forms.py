@@ -12,6 +12,7 @@ from wtforms.validators import InputRequired, Length, Email, EqualTo, Optional, 
 
 from nexnest.static.dataSets import *
 from nexnest.utils.school import allSchoolsAsChoices
+from nexnest.models.landlord import Landlord
 
 
 def is_safe_url(target):
@@ -27,6 +28,10 @@ def get_redirect_target():
             continue
         if is_safe_url(target):
             return target
+
+
+def getLandlords():
+    return Landlord.query.all()
 
 
 class RedirectForm(FlaskForm):
@@ -171,7 +176,10 @@ class ListingForm(RedirectForm):
     colleges = HiddenField('Colleges', [InputRequired()])
     pictures = FileField('Pictures for Listing')
     bannerPicture = FileField('Pictures for Listing')
-    landlord = SelectField('Landlord', [Optional()])
+    landlord = QuerySelectField('Landlord',
+                                validators=[Optional()],
+                                query_factory=lambda: Landlord.query.all(),
+                                get_label='name')
 
 
 class PhotoForm(RedirectForm):
