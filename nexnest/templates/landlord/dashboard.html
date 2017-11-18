@@ -91,7 +91,7 @@
 		    	<div class="row">		    		
 		    		<div class="col-xs-12 col-lg-8">
 			            {% for listing in listings %}
-			            {% if not listing.house and not listing.featured %}
+			            {% if listing.isUpgradeable %}
 			            	<div class="row">
 			            		<div class="col-xs-0"></div>
 			            		<div class="col-xs-12 col-lg-12" style="width: 100%">
@@ -104,10 +104,10 @@
 							                    			<div class="checkbox">
 							                    			    <label style="font-size: 1.5em">
 							                    			    {% if listing.time_period == "summer" %}
-							                    			    	<input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" data-time="{{listing.time_period}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', 39.99);"/>
+							                    			    	<input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" data-time="{{listing.time_period}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', {{summerUpgradePrice}});"/>
 							                    			        <span class="cr" style="border-color: #4fac80; border-width: 2px;"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
 							                    			    {% else %}
-							                    			        <input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" data-time="{{listing.time_period}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', 79.99);"/>
+							                    			        <input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" data-time="{{listing.time_period}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', {{schoolUpgradePrice}});"/>
 							                    			        <span class="cr" style="border-color: #4fac80; border-width: 2px;"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
 							                    			    {% endif %}
 							                    			    </label>							                    			    

@@ -14,6 +14,8 @@ from nexnest.models.transaction import (ListingTransaction,
                                         ListingTransactionListing)
 from nexnest.utils.flash import flash_errors
 
+from nexnest.static.dataSets import schoolUpgradePrice, summerUpgradePrice
+
 import json
 
 import datetime
@@ -41,7 +43,9 @@ def viewPreCheckout():
         jsonData = json.loads(request.form["json"])
         return render_template('confirmCheckout.html',
                                preCheckoutForm=PreCheckoutForm(),
-                               jsonData=jsonData)
+                               jsonData=jsonData,
+                               schoolUpgradePrice=schoolUpgradePrice,
+                               summerUpgradePrice=summerUpgradePrice)
     else:
         return 'error'
 

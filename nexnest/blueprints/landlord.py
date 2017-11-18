@@ -10,6 +10,8 @@ from nexnest.models.availability import Availability
 from nexnest.forms import TourDateChangeForm, PreCheckoutForm, LandlordPaymentAccountForm
 from nexnest.utils.flash import flash_errors
 
+from nexnest.static.dataSets import schoolUpgradePrice, summerUpgradePrice
+
 from dateutil import parser
 
 from pprint import pprint, pformat
@@ -82,7 +84,9 @@ def landlordDashboard():
                            upcomingPayments=upcomingPayments,
                            overduePayments=overduePayments,
                            futurePayments=futurePayments,
-                           completedPayments=completedPayments)
+                           completedPayments=completedPayments,
+                           schoolUpgradePrice=schoolUpgradePrice,
+                           summerUpgradePrice=summerUpgradePrice)
 
 
 @landlords.route('/landlord/requestedTours/JSON')

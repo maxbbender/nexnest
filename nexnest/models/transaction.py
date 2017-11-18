@@ -10,6 +10,8 @@ from sqlalchemy.orm import relationship
 from flask import flash
 from flask import current_app as app
 
+from nexnest.static.dataSets import schoolUpgradePrice, summerUpgradePrice
+
 
 class Transaction(Base):
     __tablename__ = 'transactions'
@@ -111,18 +113,12 @@ class ListingTransaction(Transaction):
             # STANDARD 120 | 90 | 30
             # PRIVELEGED 200 | 160 | 70
             for listing in self.listings:
-                app.logger.debug("looking at listing %r" % listing.listing)
-                if listing.plan == 'standard':
-                    if listing.listing.time_period == 'school':
-                        totalPrice += 79.99
-                    elif listing.listing.time_period == 'summer':
-                        totalPrice += 39.99
-                if listing.plan == 'premium':
-                    if listing.listing.time_period == 'school':
-                        totalPrice += 129.99
-                    elif listing.listing.time_period == 'summer':
-                        totalPrice += 69.99
-
+                app.logger.debug("looking at listing %r" % listing.listing)                
+                if listing.listing.time_period == 'school':
+                    totalPrice += schoolUpgradePrice
+                elif listing.listing.time_period == 'summer':
+                    totalPrice += summerUpgradePrice
+                
                 app.logger.debug("New Total : %r" % totalPrice)
 
             if self.coupon is not None:

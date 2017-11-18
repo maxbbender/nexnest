@@ -79,8 +79,8 @@
 	var priceAfterCoupon = 0;
 	var subtotalAfterCoupon = 0;
 	var taxBeforeCoupon = 0;
-	var schoolUpgradePrice = 14.99;
-	var summerUpgradePrice = 4.99;
+	// var schoolUpgradePrice = 14.99;
+	// var summerUpgradePrice = 4.99;
 	$( document ).ready(function() {
 		// data = JSON.parse({{jsonData|tojson}});
         data = {{jsonData|tojson}};
@@ -101,12 +101,12 @@
 									<div class='col-xs-2'>
 										`;										
 										if(item.timePeriod == "school"){
-											checkoutItem += "$"+schoolUpgradePrice.toString();
-											totalPrice += schoolUpgradePrice;
+											checkoutItem += "${{schoolUpgradePrice}}";
+											totalPrice += {{schoolUpgradePrice}};
 										}
 										else if(item.timePeriod == "summer"){
-											checkoutItem += "$"+summerUpgradePrice.toString();
-											totalPrice += summerUpgradePrice;
+											checkoutItem += "${{summerUpgradePrice}}"
+											totalPrice += {{summerUpgradePrice}};
 										}
 									checkoutItem +=`
 									</div>
@@ -137,10 +137,10 @@
 		totalPrice = 0;
 		$.each(items, function(index, item) {			
 			if(item.timePeriod == "school"){
-				totalPrice += schoolUpgradePrice;
+				totalPrice += {{schoolUpgradePrice}};
 			}
 			else if(item.timePeriod == "summer"){
-				totalPrice += summerUpgradePrice;
+				totalPrice += {{summerUpgradePrice}};
 			}						
 		});
 		subTotal = Number(totalPrice).toFixed(2);
