@@ -223,3 +223,6 @@ us_state_abbrev = {
     'Wisconsin': 'WI',
     'Wyoming': 'WY',
 }
+
+schoolUpgradePrice = 14.99;
+summerUpgradePrice = 4.99;

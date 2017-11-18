@@ -10,7 +10,7 @@
                         </i><h4 class="hidden-md-down"><strong>My Dashboard</strong></h4>
                     </a>
                 </li>
-                {% if current_user.landlord[0].hasListingsToCheckout %}
+                {% if current_user.landlord[0].hasListingsToUpgrade %}
 	                <li class="nav-item">
 	        	        <a class="nav-link left-panel active" style="padding-left: 5px;" id="checkoutTab2" data-toggle="tab" href="#checkoutTab" role="tab">
 	        	        	<i class="fa fa-shopping-cart" aria-hidden="true"></i><span class="hidden-md-down">Upgrade</span>
@@ -2446,29 +2446,17 @@
 				var street = obj.dataset.street;
 				var leasePeriod = obj.dataset.lease;
 				var time = obj.dataset.time;
-				////console.log(id);
-				if($("#standardLabel"+id).hasClass("active")){
-					selectedItem = {
-						index: count,
-						listing_id: id,
-						listing_street: street,
-						leasePeriod: leasePeriod,
-						timePeriod: time,
-						plan: 'standard'    					
-					}
-					cart.items.push(selectedItem);
+				
+				selectedItem = {
+					index: count,
+					listing_id: id,
+					listing_street: street,
+					leasePeriod: leasePeriod,
+					timePeriod: time,
+					plan: 'Upgrade'    					
 				}
-				else if($("#deluxeLabel"+id).hasClass("active")){
-					selectedItem = {
-						index: count,
-						listing_id: id,
-						listing_street: street,
-						leasePeriod: leasePeriod,
-						timePeriod: time,
-						plan: 'premium'    					
-					}
-					cart.items.push(selectedItem);
-				}
+				cart.items.push(selectedItem);
+				
 				count++;
 			}    		
 		});
@@ -3730,20 +3718,15 @@
 	        				                    	</div>
 	        				                    	<div class="col-xs-2 col-md-4 col-lg-4" style="text-align: right;">
 	        				                    		<div class="customTooltip">
-	        				                    		    <a href="/listing/clone/`+listing.id+`" class="btn btn-blue"><i class="fa fa-clone" aria-hidden="true"></i> Relist Property</a>
+	        				                    		    <a href="/listing/clone/`+listing.id+`" class="btn btn-blue" style="width: 150px;"><i class="fa fa-clone" aria-hidden="true"></i> Relist Property</a>
 	        				                    		    <span class="customTooltiptext" style="margin-bottom: 6px; font-size: 18px;">Relist for another lease period.</span>
-	        				                    		</div>`;
-	        				                    		requestURL = '/landlord/' + listing.id + '/isEditable/AJAX';
-	        				                    		$.getJSON(requestURL, function(data) {
-	        				                    		    results = data['results'];
-	        				                    		    //alert(data['results'].success);
-	        				                    		    if (results.success == true){
-	        				                    		    	//console.log("should be editable");
-	        				                    		        nextHouse += `<a href="/listing/edit/`+listing.id+`" class="btn btn-blue">Edit Listing</a>`;
-	        				                    		    } else {
-	        				                    		       //console.log("is not editable");
-	        				                    		    }
-	        				                    		});
+	        				                    		</div><br>`;	        				                    		
+	        				                    		if(listing.isEditable){
+	        				                    		    nextHouse += `<a href="/listing/edit/`+listing.id+`" class="btn btn-blue" style="width: 150px; margin-top: 15px;"><i class="fa fa-pencil" aria-hidden="true"></i> Edit Listing</a><br>`;
+	        				                    		};
+	        				                    		if(listing.isUpgradeable){
+	        				                    		    nextHouse += `<a href="/listing/upgrade/`+listing.id+`" class="btn btn-yellow" style="width: 150px; margin-top: 15px;"><i class="icon icon-crown" aria-hidden="true"></i> Upgrade Listing</a>`;
+	        				                    		};
 	        				                    	nextHouse += `
 	        				                    	</div>
 	        				                    </div>			                    

@@ -58,6 +58,16 @@ class Landlord(Base):
         return False
 
     @property
+    def hasListingsToUpgrade(self):
+        hasListingsUpgradeable = False
+        for listing in self.getListings():
+            if listing.isUpgradeable:
+                hasListingsUpgradeable = True
+                break
+
+        return hasListingsUpgradeable
+
+    @property
     def name(self):
         return self.user.name
 
