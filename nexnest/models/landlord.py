@@ -61,6 +61,10 @@ class Landlord(Base):
     def name(self):
         return self.user.name
 
+    @property
+    def emailAndName(self):
+        return self.user.name + ": " + self.user.email
+
     def getListings(self):
         listings = []
         for landlordListing in self.listings:
