@@ -74,7 +74,7 @@ def register():
             app.logger.debug('Response Text %s' % response.text)
             app.logger.debug('Response Dict %r' % pformat(responseObject))
 
-            if responseObject['success']:
+            if responseObject['success'] or app.config['FLASK_CONFIG'] == 'development':
                 if userType == "landlord":
                     newUser = User(email=registerForm.email.data,
                                    password=registerForm.password.data,

@@ -682,6 +682,10 @@
                                 <br>
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                        {% if current_user.isAdmin %}
+                                        {{form.landlord.label}}
+                                        {{form.landlord(class='form-control')}}
+                                        {% endif %}
                                         <br>
                                         <div class="row" style="width: 100%;">
                                             <div class="form-group" style="width: 100%;">
