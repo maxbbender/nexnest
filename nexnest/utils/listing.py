@@ -2,6 +2,7 @@ import os
 
 from flask import current_app as app
 from flask import flash
+from flask_login import current_user
 
 from nexnest import db
 from nexnest.utils.misc import idGenerator
@@ -9,6 +10,7 @@ from nexnest.utils.misc import idGenerator
 from nexnest.utils.file import allowed_file
 from nexnest.models.school import School
 from nexnest.models.listing_school import ListingSchool
+from nexnest.models.landlord_listing import LandlordListing
 import json
 
 
@@ -94,9 +96,17 @@ def updateListing(listing, form):
     for ls in listingCurrentSchools:
         db.session.delete(ls)
 
-    db.session.commit()
+    if current_user.isAdmin:
+        if form.landlord.data not in listing.landLords():
+            # Current Landlords, delete
+            LandlordListing.query.filter_by(listing=listing).delete()
 
-    
+            newLandLordListing = LandlordListing(landlord=form.landlord.data,
+                                                 listing=listing)
+
+            db.session.add(newLandLordListing)
+
+    db.session.commit()
 
     return listing
 
@@ -134,4 +144,3 @@ def updatePictures(listing, request):
             flash("Error saving file %s" % file.filename, 'danger')
 
     flash('Listing Updated', 'info')
-

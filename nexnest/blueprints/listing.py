@@ -294,9 +294,7 @@ def editListing(listingID):
 
     form = ListingForm(obj=listing)
 
-    form.start_date.data = listing.start_date.strftime('%Y-%m-%d')
-    form.end_date.data = listing.end_date.strftime('%Y-%m-%d')
-
+   
     if form.validate_on_submit():
         listing = updateListing(listing, form)
         updatePictures(listing, request)
@@ -311,6 +309,12 @@ def editListing(listingID):
             return redirect(url_for('landlords.landlordDashboard') + '#checkoutTab')
 
     else:
+        form.start_date.data = listing.start_date.strftime('%Y-%m-%d')
+        form.end_date.data = listing.end_date.strftime('%Y-%m-%d')
+        form.landlord.default = listing.landLords()[0]
+        form.state.default = listing.state
+
+        form.process(obj=listing)
         flash_errors(form)
         return render_template('/landlord/editListing.html',
                                form=form,

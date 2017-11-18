@@ -181,6 +181,21 @@ class ListingForm(RedirectForm):
                                 query_factory=lambda: Landlord.query.all(),
                                 get_label='emailAndName')
 
+    # def __init__(self, currLandlord=None, *args, **kwargs):
+    #     super(ListingForm, self).__init__(*args, **kwargs)
+
+    #     if currLandlord:
+    #         self.landlord = QuerySelectField('Landlord',
+    #                                          validators=[Optional()],
+    #                                          query_factory=lambda: Landlord.query.all(),
+    #                                          get_label='emailAndName',
+    #                                          default=currLandlord)
+    #     else:
+    #         self.landlord = QuerySelectField('Landlord',
+    #                                          validators=[Optional()],
+    #                                          query_factory=lambda: Landlord.query.all(),
+    #                                          get_label='emailAndName')
+
 
 class PhotoForm(RedirectForm):
     pictures = FileField('Pictures for Listing')
