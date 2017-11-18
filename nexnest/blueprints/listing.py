@@ -61,6 +61,9 @@ def createListing():
     if current_user.isLandlord or current_user.isAdmin:
         form = ListingForm(request.form)
 
+        # if current_user.isAdmin:
+        #     form.landlord.data = 
+
         if form.validate_on_submit():
             app.logger.debug('POST form : %r' % form)
             app.logger.debug('TimePeriodDateRange : %s' % form.time_period_date_range.data)
