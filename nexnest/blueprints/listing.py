@@ -243,34 +243,31 @@ def createListing():
 def cloneListing(listingID):
     listingToClone = Listing.query.filter_by(id=listingID).first_or_404()
 
-    if listingToClone.isCloneableBy(current_user):
-        # Get colleges associated with the listing
-        selectedSchools = ListingSchool.query.filter_by(listing=listingToClone).all()
+    # Get colleges associated with the listing
+    selectedSchools = ListingSchool.query.filter_by(listing=listingToClone).all()
 
-        # Get the previous pictures
-        folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
-        listingPicturePath = os.path.join(folderPath, 'pictures')
-        picturePaths = os.listdir(listingPicturePath)
+    # Get the previous pictures
+    folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
+    listingPicturePath = os.path.join(folderPath, 'pictures')
+    picturePaths = os.listdir(listingPicturePath)
 
-        # If it is an apartment we need to pass the apartment number along as well
-        # Because if it is an apartment we need to take the apt number and end date in account
-        # When determining if the listing is cloneable
-        aptNumber = None
-        if listingToClone.property_type == 'apartment':
-            aptNumber = listingToClone.apartment_number
+    # If it is an apartment we need to pass the apartment number along as well
+    # Because if it is an apartment we need to take the apt number and end date in account
+    # When determining if the listing is cloneable
+    aptNumber = None
+    if listingToClone.property_type == 'apartment':
+        aptNumber = listingToClone.apartment_number
 
-        form = ListingForm(obj=listingToClone)
-        return render_template('/landlord/createListing.html',
-                               form=form,
-                               title='Create Listing',
-                               schools=allSchoolsAsStrings(),
-                               selectedSchools=selectedSchools,
-                               picturePaths=picturePaths,
-                               startDate=listingToClone.start_date,
-                               endDate=listingToClone.end_date,
-                               aptNumber=aptNumber)
-    else:
-        flash("You are not the landlord of this listing", 'warning')
+    form = ListingForm(obj=listingToClone)
+    return render_template('/landlord/createListing.html',
+                           form=form,
+                           title='Create Listing',
+                           schools=allSchoolsAsStrings(),
+                           selectedSchools=selectedSchools,
+                           picturePaths=picturePaths,
+                           startDate=listingToClone.start_date,
+                           endDate=listingToClone.end_date,
+                           aptNumber=aptNumber)
 
     return redirect(url_for('listings.viewListing',
                             listingID=listingID))
@@ -347,7 +344,6 @@ def deleteListing(listingID):
 @listings.route("/listing/upload/<listingID>", methods=["POST"])
 @login_required
 @listing_editable
-@csrf.exempt
 def upload(listingID):
     """Handle the upload of a file."""
 
@@ -356,19 +352,6 @@ def upload(listingID):
 
     listing = Listing.query.filter_by(id=listingID).first_or_404()
 
-    # Can this listing be changed by the current user
-    if listing.isEditableBy(current_user):
-        try:
-            listingUploadFolder = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listing.id))
-            if not os.path.exists(listingUploadFolder):
-                os.makedirs(listingUploadFolder)
-
-            listingPictureFolder = os.path.join(listingUploadFolder, 'pictures')
-            if not os.path.exists(listingPictureFolder):
-                os.makedirs(listingPictureFolder)
-        except:
-            app.logger.error('Could not create directories')
-
     # Now we uplopad the files
     for file in request.files.getlist("pictures"):
         if file and allowed_file(file.filename):
@@ -376,17 +359,18 @@ def upload(listingID):
 
             filename = "listing" + listingID + "photo" + idGenerator() + extension
 
-            savePath = os.path.join(listingPictureFolder, filename)
+            savePath = os.path.join(listing.picturePath, filename)
 
+            # Make sure there isn't another file with the same name
             while os.path.exists(savePath):
                 filename = "listing" + listingID + "photo" + idGenerator() + extension
-                savePath = os.path.join(listingPictureFolder, filename)
+                savePath = os.path.join(listing.picturePath, filename)
 
             file.save(savePath)
             app.logger.debug("filename is " + filename)
             app.logger.debug("file saved at %s" % savePath)
 
-    if is_ajax:
+    if request.is_xhr:
         return jsonify(results={'success': True})
     else:
         return redirect(url_for("listings.view", listingID=listing.id))
@@ -398,30 +382,35 @@ def upload(listingID):
 def deletePhoto(listingID, filename):
     listing = Listing.query.filter_by(id=listingID).first_or_404()
 
-    if listing.isEditableBy(current_user):
+    folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
+    listingPicturePath = os.path.join(folderPath, 'pictures')
 
-        folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
-        listingPicturePath = os.path.join(folderPath, 'pictures')
-        os.remove(listingPicturePath + "/" + filename)
+    try:
+        os.remove(os.path.join(listingPicturePath, filename))
+    except Exception as e:
+        app.logger.warning("Unable to delete file %s. Got Error %s" % (filename, e))
+        return jsonify(results={'success': False})
 
-        return jsonify(results={'success': True})
-    else:
-        return jsonify(results={'success': False, 'message': 'Permissions Error'})
+
+    return jsonify(results={'success': True})
 
 
 @listings.route("/listing/deleteBanner/<listingID>/<filename>", methods=["POST"])
 @login_required
 @listing_editable
 def deleteBannerPhoto(listingID, filename):
-    listing = Listing.query.filter_by(id=listingID).first_or_404()
 
-    if listing.isEditableBy(current_user):
-        folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
-        listingPicturePath = os.path.join(folderPath, 'bannerPhoto')
-        os.remove(listingPicturePath + "/" + filename)
-        return jsonify(results={'success': True})
-    else:
-        return jsonify(results={'success': False, 'message': 'Permissions Error'})
+    listing = Listing.query.filter_by(id=listingID).first_or_404()
+    folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
+    listingPicturePath = os.path.join(folderPath, 'bannerPhoto')
+
+    try:
+        os.remove(os.path.join(listingPicturePath, filename))
+    except Exception as e:
+        app.logger.warning("Unable to delete file %s. Got Error %s" % (filename, e))
+        return jsonify(results={'success': False})
+
+    return jsonify(results={'success': True})
 
 
 # THIS ONE IS FOR BANNER PHOTOS!
