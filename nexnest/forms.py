@@ -179,7 +179,7 @@ class ListingForm(RedirectForm):
     landlord = QuerySelectField('Landlord',
                                 validators=[Optional()],
                                 query_factory=lambda: Landlord.query.all(),
-                                get_label='name')
+                                get_label='emailAndName')
 
 
 class PhotoForm(RedirectForm):

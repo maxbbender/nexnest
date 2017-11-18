@@ -61,9 +61,6 @@ def createListing():
     if current_user.isLandlord or current_user.isAdmin:
         form = ListingForm(request.form)
 
-        # if current_user.isAdmin:
-        #     form.landlord.data = 
-
         if form.validate_on_submit():
             app.logger.debug('POST form : %r' % form)
             app.logger.debug('TimePeriodDateRange : %s' % form.time_period_date_range.data)
@@ -162,12 +159,21 @@ def createListing():
 
                 newListing.createUploadDirectories()
 
+                newLandLordListing = None
+
                 # Now we need to figure out whether this is an Admin creating the listing
                 # or if it is a landlord.
+                if current_user.isAdmin:
 
-                # Lets assign the current user to be the landlord of this listing
-                newLandLordListing = LandlordListing(landlord=current_user.landlord[0],
-                                                     listing=newListing)
+                    # This is an admin so lets grab the selected landlord
+                    app.logger.debug("Landlord selected : %r" % form.landlord.data)
+
+                    newLandLordListing = LandlordListing(landlord=form.landlord.data,
+                                                         listing=newListing)
+                else:
+                    # Lets assign the current user to be the landlord of this listing
+                    newLandLordListing = LandlordListing(landlord=current_user.landlord[0],
+                                                         listing=newListing)
                 session.add(newLandLordListing)
                 session.commit()
 
