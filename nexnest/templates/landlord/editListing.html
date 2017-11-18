@@ -712,15 +712,6 @@
     {% block scripts %}
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACeJxqY35gOjqNTIukZb6A6Zh6jvQnY3w&libraries=places&callback=initAutocomplete" async defer></script>
     <script>
-    var csrf_token = "{{ csrf_token() }}";
-
-    $.ajaxSetup({
-        beforeSend: function(xhr, settings) {
-            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrf_token);
-            }
-        }
-    });
     // This example displays an address form, using the autocomplete feature
     // of the Google Places API to help users fill in the information.
 
@@ -1305,8 +1296,6 @@
         data: {{schools|tojson}}
     });
 
-    csrfToken = "{{csrf_token()}}"
-
     $(collegeEnter).on('selectionchange', function() {
         $("#colleges").val(JSON.stringify(collegeEnter.getValue()));
     });
@@ -1328,10 +1317,10 @@
         initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
         initialPreviewFileType: 'image', // image is the default and can be overridden in config below
         initialPreviewConfig: [
-            {caption: "Picture 1", size: 827000, width: "120px", url: "{{ bannerPath }}", key: 1, extra:{csrf_token:csrfToken}},
+            {caption: "Picture 1", size: 827000, width: "120px", url: "{{ bannerPath }}", key: 1, extra:{csrf_token:$('#csrf_token').val()}},
         ],
         uploadExtraData: {
-            csrf_token: csrfToken
+            csrf_token: $('#csrf_token').val()
         }
     }).on('filesorted', function(e, params) {
     //console.log('File sorted params', params);
@@ -1360,12 +1349,12 @@
                 width: "120px", 
                 url: "/listing/delete/{{listingID}}/{{picture}}", 
                 key: 1,
-                extra: {csrf_token:csrfToken}},
+                extra: {csrf_token:$('#csrf_token').val()}},
             {% endfor %}
         ],
         purifyHtml: true, // this by default purifies HTML data for preview
         uploadExtraData: {
-            csrf_token: csrfToken
+            csrf_token: $('#csrf_token').val()
         }
     }).on('filesorted', function(e, params) {
     console.log('File sorted params', params);

@@ -443,7 +443,7 @@ class Listing(Base):
                 flash('Permission Error', 'danger')
             return False
 
-        if user in self.landLordsAsUsers():
+        if user in self.landLordsAsUsers() or user.isAdmin:
             return True
 
         return False

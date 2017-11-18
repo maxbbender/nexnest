@@ -107,16 +107,6 @@
 {% endblock %}
 {% block scripts %}
 <script>
-    var csrf_token = "{{ csrf_token() }}";
-
-    $.ajaxSetup({
-        beforeSend: function(xhr, settings) {
-            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-                xhr.setRequestHeader("X-CSRFToken", csrf_token);
-            }
-        }
-    });
-
     function submitListingForm(nextAction) {
         $('#createListingButton').hide();
         $('#createListingButton_Loading').show();
@@ -125,56 +115,71 @@
         $("form#photoForm").submit();
     }
 
-    $("#bannerPicture").fileinput({
-        theme: "fa",
-        showUpload: false,
-        showCancel: false,
-        initialPreview: [
-            {% if bannerPath %}
-                "{{bannerPath}}",
-            {% endif %}
-        ],
-        initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
-        initialPreviewFileType: 'image', // image is the default and can be overridden in config below
-        initialPreviewConfig: [
-            {% if bannerPath %}
-                {caption: "Banner Photo", size: 827000, width: "120px", url: "/listing/delete/{{bannerPath}}", key: 1},
-            {% endif %}
-        ]
+    $(document).ready(function() {
+        $("#bannerPicture").fileinput({
+            theme: "fa",
+            showUpload: false,
+            showCancel: false,
+            uploadExtraData:{'csrf_token':$('#csrf_token').val()},
+            initialPreview: [
+                {% if bannerPath %}
+                    "{{bannerPath}}",
+                {% endif %}
+            ],
+            initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
+            initialPreviewFileType: 'image', // image is the default and can be overridden in config below
+            initialPreviewConfig: [
+                {% if bannerPath %}
+                    {caption: "Banner Photo", size: 827000, width: "120px", url: "/listing/delete/{{bannerPath}}", key: 1},
+                {% endif %}
+            ]
+        });
+
+        $("#pictures").fileinput({
+            uploadUrl: "/listing/upload/{{listingID}}", // server upload action
+            uploadAsync: true,
+            uploadExtraData:{'csrf_token':$('#csrf_token').val()},
+            theme: "fa",
+            maxFileCount: 15,
+            showCancel: false,
+            showPreview: true,
+            overwriteInitial: false,
+            showUpload: false,
+            initialPreview: [
+                {% if picturePaths %}
+                    {% for picture in picturePaths %}
+                        "/uploads/listings/{{listingID}}/pictures/{{picture}}",
+                    {% endfor %}
+                {% endif %}
+            ],
+            initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
+            initialPreviewFileType: 'image', // image is the default and can be overridden in config below
+            initialPreviewConfig: [
+                {% if picturePaths %}
+                    {% for picture in picturePaths %}
+                        {caption: "Picture", size: 827000, width: "120px", url: "/listing/delete/{{listingID}}/{{picture}}", key: 1,extra: {csrf_token:csrfToken}},
+                    {% endfor %}
+                {% endif %}
+            ]
+        }).on('filesorted', function(e, params) {
+        console.log('File sorted params', params);
+        });
+
+        // window.onbeforeunload = function() { return "Do not go back and edit the listing details you just made. Trying to do so can cause major issues. You can edit the listing after you upload photos"; };
+
+        $('#pictures').on('fileloaded', function(event, file, previewId, index, reader) {
+            console.log("fileloaded");
+        });
+
+        $('#pictures').on('filepreajax', function(event, previewId, index) {
+            console.log('File pre ajax triggered');
+        });
+
+        $('#pictures').on('filepreupload', function(event, data, previewId, index) {
+            var form = data.form, files = data.files, extra = data.extra,
+                response = data.response, reader = data.reader;
+            console.log('File pre upload triggered');
+        });
     });
-
-    csrfToken = "{{csrf_token()}}"
-
-    $("#pictures").fileinput({
-        uploadUrl: "/listing/upload/{{listingID}}", // server upload action
-        uploadAsync: true,
-        theme: "fa",
-        maxFileCount: 15,
-        showCancel: false,
-        showPreview: true,
-        overwriteInitial: false,
-        showUpload: false,
-        initialPreview: [
-            {% if picturePaths %}
-                {% for picture in picturePaths %}
-                    "/uploads/listings/{{listingID}}/pictures/{{picture}}",
-                {% endfor %}
-            {% endif %}
-        ],
-        initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
-        initialPreviewFileType: 'image', // image is the default and can be overridden in config below
-        initialPreviewConfig: [
-            {% if picturePaths %}
-                {% for picture in picturePaths %}
-                    {caption: "Picture", size: 827000, width: "120px", url: "/listing/delete/{{listingID}}/{{picture}}", key: 1,extra: {csrf_token:csrfToken}},
-                {% endfor %}
-            {% endif %}
-        ]
-    }).on('filesorted', function(e, params) {
-    console.log('File sorted params', params);
-    });
-
-    // window.onbeforeunload = function() { return "Do not go back and edit the listing details you just made. Trying to do so can cause major issues. You can edit the listing after you upload photos"; };
-
 </script>
 {% endblock %}

@@ -163,7 +163,7 @@ def listing_editable(f):
             if listing is None:
                 abort(404)
 
-            if not listing.isEditableBy(current_user, False):
+            if not listing.isEditableBy(current_user, False) and not current_user.isAdmin:
                 abort(403)
 
         return f(*args, **kwargs)
