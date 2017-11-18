@@ -294,7 +294,6 @@ def editListing(listingID):
 
     form = ListingForm(obj=listing)
 
-   
     if form.validate_on_submit():
         listing = updateListing(listing, form)
         updatePictures(listing, request)
@@ -394,7 +393,6 @@ def deletePhoto(listingID, filename):
     except Exception as e:
         app.logger.warning("Unable to delete file %s. Got Error %s" % (filename, e))
         return jsonify(results={'success': False})
-
 
     return jsonify(results={'success': True})
 
@@ -877,6 +875,7 @@ def getListingAddresses(schoolName=None):
         returnListingList.append({'value': serialiedListing['address'], 'id': listing.id})
 
     return jsonify({'listings': returnListingList})
+
 
 @listings.route('/listing/create/confirmation/<int:listingID>', methods=['GET', 'POST'])
 def listingConfirmation(listingID):
