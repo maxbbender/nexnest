@@ -41,9 +41,9 @@ def isLandlord():
             abort(403)
 
 
-@landlords.route('/landlord/dashboard')
+@landlords.route('/landlord/dashboard/<int:checkedFeaturedListingID>')
 @login_required
-def landlordDashboard():
+def landlordDashboard(checkedFeaturedListingID=None):
     if not current_user.landlord_info_filled:
         return redirect(url_for('users.landlordInformation'))
 
@@ -52,10 +52,10 @@ def landlordDashboard():
         .filter_by(user_id=current_user.id) \
         .first()
 
-    nonActiveListings = []
+    nonFeaturedListings = []
     for listing in landlord.getListings():
-        if not listing.active:
-            nonActiveListings.append(listing)
+        if not listing.featured:
+            nonFeaturedListings.append(listing)
 
     unAcceptedHousingRequests, acceptedHousingRequests, completedHousingRequests = landlord.getHousingRequests()
     openMaintenanceRequests, inProgressMaintenanceRequests, completedMaintenanceRequests = landlord.getMaintenanceRequests()
@@ -80,13 +80,14 @@ def landlordDashboard():
                            inProgressMaintenanceRequests=inProgressMaintenanceRequests,
                            completedMaintenanceRequests=completedMaintenanceRequests,
                            preCheckoutForm=PreCheckoutForm(),
-                           listingsToCheckout=nonActiveListings,
+                           listingsToCheckout=nonFeaturedListings,
                            upcomingPayments=upcomingPayments,
                            overduePayments=overduePayments,
                            futurePayments=futurePayments,
                            completedPayments=completedPayments,
                            schoolUpgradePrice=schoolUpgradePrice,
-                           summerUpgradePrice=summerUpgradePrice)
+                           summerUpgradePrice=summerUpgradePrice,
+                           checkedFeaturedListingID=checkedFeaturedListingID)
 
 
 @landlords.route('/landlord/requestedTours/JSON')

@@ -142,5 +142,3 @@ def updatePictures(listing, request):
             db.session.commit()
         else:
             flash("Error saving file %s" % file.filename, 'danger')
-
-    flash('Listing Updated', 'info')
