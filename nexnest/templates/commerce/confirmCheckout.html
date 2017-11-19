@@ -79,8 +79,6 @@
 	var priceAfterCoupon = 0;
 	var subtotalAfterCoupon = 0;
 	var taxBeforeCoupon = 0;
-	// var schoolUpgradePrice = 14.99;
-	// var summerUpgradePrice = 4.99;
 	$( document ).ready(function() {
 		// data = JSON.parse({{jsonData|tojson}});
         data = {{jsonData|tojson}};
@@ -216,7 +214,7 @@
 					$("#discount").css("color", "red");
 					//if the user had a correct code and then enters a wrong one display orighinal price
 					$("#subTotal").html(`<h4>Subtoal: `+"$"+subTotal+`</h4>`);
-					$("#totalPrice").html(`<h2>Total Price: `+"$"+totalPrice+`</h2>`);
+					$("#totalPrice").html(`<h2>Total Price: `+"$"+Number(totalPrice*1.075).toFixed(2)+`</h2>`);
 					$("#tax").html(`<h4>Tax: `+"$"+taxBeforeCoupon+`</h4>`);
 					determineIfPriceLowEnough(totalPrice);
 				}

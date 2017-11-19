@@ -1328,7 +1328,7 @@
 		}
 	}
 	else{
-		{% if current_user.landlord[0].hasListingsToCheckout %}
+		{% if current_user.landlord[0].hasListingsToUpgrade %}
 			$("#checkoutTab").addClass('active');
 		{% else %}
 			$("#allListingsTab").addClass('active');
@@ -3725,7 +3725,7 @@
 	        				                    		    nextHouse += `<a href="/listing/edit/`+listing.id+`" class="btn btn-blue" style="width: 150px; margin-top: 15px;"><i class="fa fa-pencil" aria-hidden="true"></i> Edit Listing</a><br>`;
 	        				                    		};
 	        				                    		if(listing.isUpgradeable){
-	        				                    		    nextHouse += `<a href="/listing/upgrade/`+listing.id+`" class="btn btn-yellow" style="width: 150px; margin-top: 15px;"><i class="icon icon-crown" aria-hidden="true"></i> Upgrade Listing</a>`;
+	        				                    		    nextHouse += `<button type="button" onclick="makeListingFeatured(`+listing.id+`,'`+ listing.street+`','`+ listing.timePeriod+`');" class="btn btn-yellow" style="width: 150px; margin-top: 15px;"><i class="icon icon-crown" aria-hidden="true"></i> Upgrade Listing</button>`;
 	        				                    		};
 	        				                    	nextHouse += `
 	        				                    	</div>
@@ -3894,16 +3894,38 @@
 	    $(".ui-datepicker").css("margin","auto");
 	    $('.selectedTourTimes').attr('readonly', 'readonly');
 	    // preselect the listing to upgrade if necessary
-	    $("#purchaseListing"+{{checkedFeaturedListingID}}).attr( "checked", true );
-	    $("#purchaseListing"+{{checkedFeaturedListingID}}).prop( "checked", true );
-	    // now trigger logic to add to cart
-	    if("{{checkedFeaturedListing.time_period}}" == "summer"){
-	    	selectListingToPurchase({{checkedFeaturedListingID}}, '{{checkedFeaturedListing.street}}', {{summerUpgradePrice}});
-	    }
-	    else{
-	    	selectListingToPurchase({{checkedFeaturedListingID}}, '{{checkedFeaturedListing.street}}', {{schoolUpgradePrice}});
-	    }	    
+	    {% if checkedFeaturedListingID %}
+	    	$("#purchaseListing"+{{checkedFeaturedListingID}}).attr( "checked", true );
+	    	$("#purchaseListing"+{{checkedFeaturedListingID}}).prop( "checked", true );
+	    	// now trigger logic to add to cart
+	    	if("{{checkedFeaturedListing.time_period}}" == "summer"){
+	    		selectListingToPurchase({{checkedFeaturedListingID}}, '{{checkedFeaturedListing.street}}', {{summerUpgradePrice}});
+	    	}
+	    	else{
+	    		selectListingToPurchase({{checkedFeaturedListingID}}, '{{checkedFeaturedListing.street}}', {{schoolUpgradePrice}});
+	    	}
+	    {% endif %}	    
 	});
+
+	function makeListingFeatured(listingID, street, timePeriod) {
+		$("#purchaseListing"+listingID).attr( "checked", true );
+		$("#purchaseListing"+listingID).prop( "checked", true );
+		// now trigger logic to add to cart
+		if(timePeriod == "summer"){
+			selectListingToPurchase(listingID, street, {{summerUpgradePrice}});
+		}
+		else{
+			selectListingToPurchase(listingID, street, {{schoolUpgradePrice}});
+		}
+		$("#unOccupiedListingsTab").removeClass('active');
+		
+		$(".nav-link").removeClass('active');
+		$("#checkoutTab").addClass('active');
+		//set highlight left tab
+	    $('#checkoutTab2').addClass('active');
+	    location.href = "/landlord/dashboard/#checkoutTab"
+	    window.scrollTo(0, 0);
+	}
 
 	$('input').on('itemRemoved', function(event) {
 	  //console.log(event);

@@ -181,7 +181,7 @@ def genTransaction():
 
                 # Subtract Coupon
                 if listingTransaction.coupon:
-                    coupon.uses = coupon.uses - 1
+                    listingTransaction.coupon.uses = listingTransaction.coupon.uses - 1
                     session.commit()
 
 
