@@ -745,7 +745,7 @@
 						nextListing += `<img src=`+ listing.bannerPhotoURL +` class="listingImg card-img-top">`;
 					}
 				nextListing += `</a>`;
-				{% if current_user.is_authenticated %}
+				{% if current_user.is_authenticated and not current_user.isLandlord %}
 				if(listing.isFavorited == false){
 					nextListing += `<div style="position: relative; width: 0; height: 0">
 					<i id="listingFavoite_`+listing.id+`" class="fa fa-2x fa-heart-o listingFavorite" aria-hidden="true" style="color: #f16e5b; left: 5px; bottom: 255px; position: absolute;"></i>
@@ -802,7 +802,7 @@
 						nextListing += `<img src=`+ listing.bannerPhotoURL +` class="listingImg card-img-top" style="background-color: #d2d2d2;">`;
 					}
 				nextListing += `</a>`;
-				{% if current_user.is_authenticated %}
+				{% if current_user.is_authenticated and not current_user.isLandlord  %}
 				if(listing.isFavorited == false){
 					nextListing += `<div style="position: relative; width: 0; height: 0">
 					<i id="listingFavoite_`+listing.id+`" class="fa fa-2x fa-heart-o listingFavorite" aria-hidden="true" style="color: #f16e5b; left: 5px; bottom: 255px; position: absolute;"></i>
