@@ -114,7 +114,9 @@ def updateListing(listing, form):
 def updatePictures(listing, request):
     # Make sure to delete the original banner photo in case of different extension
     bannerPhotos = os.listdir(listing.bannerPath)
-    if len(bannerPhotos) > 0:
+    uploadedFiles = request.files.getlist("bannerPicture")
+
+    if len(bannerPhotos) > 0 and len(uploadedFiles) > 0:
         for photo in bannerPhotos:
             fullFilePath = os.path.join(listing.bannerPath, photo)
             try:
@@ -123,7 +125,6 @@ def updatePictures(listing, request):
                 app.logger.warning('Tried to delete file %s and got error %s' % (fullFilePath, err))
 
     # Lets add the photos
-    uploadedFiles = request.files.getlist("bannerPicture")
     for file in uploadedFiles:
         if file.filename == '':
             continue

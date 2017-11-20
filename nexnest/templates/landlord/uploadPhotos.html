@@ -1,4 +1,4 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 {% block content %}
     <form id="photoForm" action="{{url_for('listings.uploadPhotos', listingID=listingID)}}" role="form" data-toggle="validator" method='POST' enctype="multipart/form-data">
         {{form.csrf_token}}
@@ -19,14 +19,14 @@
                                 {{form.bannerPicture(class='form-control file')}}
                             </div>
                         </div>
-                        
+
                         <div class="row" style="width: 100%;">
                             <div class="form-group" style="width: 100%;">
                                 <h3><strong>Other Photos of Property (Up to 15)</strong><small class="text-muted" style="padding-left: 10px;">Not Required</small></h3>
                                 {{form.pictures(class='form-control file-loading', multiple='')}}
                             </div>
                         </div>
-                        {{form.nextAction}}                        
+                        {{form.nextAction}}
                     </div>
                 </div>
                 <div class="row" style="padding-bottom: 60px;">
@@ -42,7 +42,7 @@
     <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirm" aria-hidden="true">
         <div class="modal-dialog" role="document" style="max-width: 700px;">
             <div class="modal-content nexnest-font" style="font-size: 20px; color: #656264;">
-                <div class="modal-header" style="background-color: #f4c359;">                  
+                <div class="modal-header" style="background-color: #f4c359;">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -51,7 +51,7 @@
                 <div class="modal-body nexnest-font" style="font-size: 20px; color: #656264;">
                     <div class="row">
                         <div class="col-xs-1"></div>
-                        <div class="col-xs-10">                            
+                        <div class="col-xs-10">
                             You have succesfully created your listing!
                             <br><br>
                             <div class="row">
@@ -64,12 +64,12 @@
                     <div id="groupNumber" style="display: none;"></div>
                 </div>
                 <div class="modal-footer" style="text-align: left;">
-                    <div class="row">                        
+                    <div class="row">
                         <div class="col-xs-12 col-sm-12" style="padding-top: 10px; text-align: right;">
                             <a href="javascript:;" style="color: #656264; padding-right: 15px; top: 3px; position: relative;" onClick="submitListingForm('makeLive')"> No Thanks</a>
                             <a href="/landlord/dashboard/{{listingID}}#checkoutTab" type="button" style="width: 225px;" class="btn btn-yellow pull-right"><i class="icon icon-crown" aria-hidden="true" style="padding-right: 5px;"></i> Upgrade Listing</a>
                         </div>
-                    </div>  
+                    </div>
                 </div>
             </div>
         </div>
@@ -106,8 +106,6 @@
     });
 
     $(document).ready(function() {
-        
-        
 
         $("#pictures").fileinput({
             uploadUrl: "/listing/upload/{{listingID}}", // server upload action
@@ -131,7 +129,7 @@
             initialPreviewConfig: [
                 {% if picturePaths %}
                     {% for picture in picturePaths %}
-                        {caption: "Picture", size: 827000, width: "120px", url: "/listing/delete/{{listingID}}/{{picture}}", key: 1,extra: {csrf_token:csrfToken}},
+                        {caption: "Picture", size: 827000, width: "120px", url: "/listing/delete/{{listingID}}/{{picture}}", key: 1,extra: {csrf_token:$('#csrf_token').val()}},
                     {% endfor %}
                 {% endif %}
             ]

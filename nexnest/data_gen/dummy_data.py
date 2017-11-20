@@ -63,12 +63,12 @@ session.commit()
 
 for i in range(10):
     newAvailability = AvailabilityFactory(landlord=landlord1)
-    newAvailability.time.second = 0
+    # newAvailability.time.second = 0
 
     count = availability.Availability.query.filter_by(landlord=newAvailability.landlord,
                                                       time=newAvailability.time).count()
 
-    if count == 0:
+    if count == 1:
         session.commit()
     else:
         session.delete(newAvailability)
