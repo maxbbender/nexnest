@@ -64,7 +64,7 @@ session.commit()
 for i in range(10):
     newAvailability = AvailabilityFactory(landlord=landlord1)
     #newAvailability.time.second = 0
-
+    
     count = availability.Availability.query.filter_by(landlord=newAvailability.landlord,
                                                       time=newAvailability.time).count()
 
