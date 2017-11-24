@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if listings %}
+<ul>
+  {% for listing in listings %}
+  <li>
+    {{listing.street}} - <a href="{{url_for('listings.editListing', listingID=listing.id)}}">Edit</a>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+No listings!
+{% endif %}
+{% endblock %}

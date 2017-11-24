@@ -7,6 +7,7 @@ from nexnest import db
 from nexnest.models.coupon import Coupon
 from nexnest.models.user import User
 from nexnest.models.school import School
+from nexnest.models.listing import Listing
 from nexnest.models.platform_report import PlatformReport
 from nexnest.utils.coupon import couponExists
 from nexnest.utils.flash import flash_errors
@@ -160,6 +161,7 @@ def searchUsersByEmail(email):
 
 
 @siteAdmin.route('/viewPlatformReports')
+@login_required
 def viewPlatformReports():
     """Show the current platform reports"""
     allPlatformReports = PlatformReport.query.all()
@@ -169,6 +171,7 @@ def viewPlatformReports():
 
 
 @siteAdmin.route('/school/create', methods=['GET', 'POST'])
+@login_required
 def createSchool():
     form = CreateSchoolForm()
 
@@ -200,3 +203,11 @@ def createSchool():
                                form=form)
 
     return form.redirect()
+
+
+@siteAdmin.route('/listings')
+@login_required
+def listings():
+    allListings = Listing.query.all()
+
+    return render_template('adminListing.html', listings=allListings)
