@@ -10,17 +10,17 @@
                         </i><h4 class="hidden-md-down"><strong>My Dashboard</strong></h4>
                     </a>
                 </li>
-                {% if current_user.landlord[0].hasListingsToUpgrade %}
-	                <li class="nav-item">
-	        	        <a class="nav-link left-panel active" style="padding-left: 5px;" id="checkoutTab2" data-toggle="tab" href="#checkoutTab" role="tab">
-	        	        	<i class="fa fa-shopping-cart" aria-hidden="true"></i><span class="hidden-md-down">Upgrade</span>
-	        	        </a>
-	        	    </li>
+                {% if current_user.landlord[0].hasListingsToUpgrade %}	                
 	        	    <li class="nav-item">
 	        	        <a class="nav-link left-panel" style="padding-left: 5px;" href="{{url_for('listings.createListing')}}">
 	        	        	<i class="fa fa-plus" aria-hidden="true"></i><span class="hidden-md-down">Create Listing</span>
 	        	        </a>
         	        </li>
+        	        <li class="nav-item">
+	        	        <a class="nav-link left-panel active" style="padding-left: 5px;" id="checkoutTab2" data-toggle="tab" href="#checkoutTab" role="tab">
+	        	        	<i class="fa fa-shopping-cart" aria-hidden="true"></i><span class="hidden-md-down">Upgrade</span>
+	        	        </a>
+	        	    </li>
 	        	    <li class="nav-item">
 	        	        <a class="nav-link left-panel" style="padding-left: 5px;" id="occupiedListingsTab2" data-toggle="tab" href="#occupiedListingsTab" role="tab">
 	        	        	<i class="fa fa-home" aria-hidden="true"></i><span class="hidden-md-down">Booked</span>
@@ -1280,10 +1280,10 @@
 	var hash = document.location.hash;
 	hash = hash.substr(1);
 	if(!hash){
-		{% if current_user.landlord[0].hasListingsToCheckout %}
-			hash = "checkoutTab";
+		{% if current_user.landlord[0].hasListingsToUpgrade %}
+			hash = "unOccupiedListingsTab";
 		{% else %}
-			hash = "occupiedListingsTab";
+			hash = "unOccupiedListingsTab";
 		{% endif %}
 		window.location.hash = hash;
 	}
@@ -1329,9 +1329,9 @@
 	}
 	else{
 		{% if current_user.landlord[0].hasListingsToUpgrade %}
-			$("#checkoutTab").addClass('active');
+			$("#unOccupiedListingsTab").addClass('active');
 		{% else %}
-			$("#allListingsTab").addClass('active');
+			$("#unOccupiedListingsTab").addClass('active');
 		{% endif %}
 	}
 	//Any time a tab is clicked on left panel update the url to show that
