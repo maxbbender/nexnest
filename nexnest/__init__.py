@@ -8,7 +8,7 @@ from os.path import dirname, exists, join
 import braintree
 from config import config
 # Flask
-from flask import Flask, redirect, render_template, url_for
+from flask import Flask, redirect, render_template, url_for, request
 from flask_admin import Admin
 from flask_login import LoginManager, current_user
 from flask_mail import Mail, email_dispatched
@@ -42,7 +42,7 @@ def createApp(configName):
 
     @login_manager.unauthorized_handler
     def unauthorized():
-        app.logger.warning('User unauthorized')
+        app.logger.warning('User unauthorized : URL(%s)' % (request.url))
         # do stuff
         return redirect(url_for('users.login'))
 

@@ -827,7 +827,6 @@ def unFavoriteListing(listingID):
 
 @users.route('/landlord/getAvailability/JSON', methods=['GET'])
 @users.route('/landlord/getAvailability/JSON/<landlordID>', methods=['GET'])
-@login_required
 def getAvailability(landlordID=None):
     if landlordID is None:
         landlordID = current_user.id

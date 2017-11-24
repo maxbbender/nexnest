@@ -1,26 +1,21 @@
 
+import os
+import re
 from datetime import datetime as dt
 
 from flask import current_app as app
 from flask import flash
-
 from flask_login import current_user
+from sqlalchemy import event
+from sqlalchemy.orm import backref, relationship
 
+import googlemaps
 from nexnest import db
 from nexnest.models.listing_favorite import ListingFavorite
 from nexnest.sysLogger import logger
 from nexnest.utils.date import diffMonth
 
 from .base import Base
-
-from sqlalchemy import event
-
-from sqlalchemy.orm import relationship, backref
-
-import os
-import re
-
-import googlemaps
 
 session = db.session
 
@@ -456,6 +451,9 @@ class Listing(Base):
                 flash('Permission Error', 'danger')
             return False
 
+        # if not user.is_authenticated:
+        #     return False
+
         if user in self.landLordsAsUsers() or user.isAdmin:
             return True
 
@@ -470,7 +468,7 @@ class Listing(Base):
     def isViewableBy(self, user, toFlash=False):
         if user in self.landLordsAsUsers():
             return True
-        elif self.isEditableBy(user):
+        elif user.is_authenticated and self.isEditableBy(user):
             return True
         elif self.active and self.show:
             return True
