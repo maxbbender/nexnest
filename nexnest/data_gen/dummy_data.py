@@ -63,12 +63,12 @@ session.commit()
 
 for i in range(10):
     newAvailability = AvailabilityFactory(landlord=landlord1)
-    newAvailability.time.second = 0
+    #newAvailability.time.second = 0
 
     count = availability.Availability.query.filter_by(landlord=newAvailability.landlord,
                                                       time=newAvailability.time).count()
 
-    if count == 0:
+    if count == 1:
         session.commit()
     else:
         session.delete(newAvailability)
@@ -80,6 +80,7 @@ for i in range(10):
 start_date = fake.date_time_this_year(before_now=True)
 end_date = fake.date_time_this_year(before_now=False, after_now=True)
 listing1 = ListingFactory(start_date=start_date, end_date=end_date, num_bedrooms=4)
+
 listing1.active = True
 listing2 = ListingFactory(start_date=fake.date_time_this_year(before_now=False, after_now=True))
 listing2.active = True
