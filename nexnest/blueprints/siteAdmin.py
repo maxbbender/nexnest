@@ -66,6 +66,7 @@ def createCoupon():
                 session.commit()
 
                 flash('Coupon Created!', 'success')
+                return redirect(url_for('siteAdmin.allCoupons'))
         else:
             flash('Coupon already exists', 'danger')
             return form.redirect()

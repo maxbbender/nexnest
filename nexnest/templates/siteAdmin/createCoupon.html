@@ -13,7 +13,7 @@
                             {{ render_field(form.couponKey, class="form-control", type="text") }}
                         </div>
                         <div class="col-xs-12 col-md-4" style="align-self: center; padding-top: 23px;">
-                            <button class="btn btn-primary" name="randomKey" id="randomKey">Random Key</button>
+                            <a class="btn btn-primary" onclick="getRandomCouponKey()">Random Key</a>
                         </div>
                     </div>
                     <div id="alreadyUsed" class="row" style="display: none; padding-left: 15px;">
@@ -51,22 +51,21 @@
         if ( $(this).is(':checked') ) {
             $('input[name="uses"]').hide();
             $("label[for='uses']").hide();
-        } 
+        }
         else {
             $('input[name="uses"]').show();
             $("label[for='uses']").show();
         }
     });
 
-    $("#randomKey").click(function(){
-        event.preventDefault();
-        var request = "/siteAdmin/getRandomCouponKey";
-        $.get(request, function(data, status){
-            var random = data.couponKey;
-            $("#couponKey").val(random);
-        });
-    });
-    
+    function getRandomCouponKey() {
+      var request = "/siteAdmin/getRandomCouponKey";
+      $.get(request, function(data, status){
+          var random = data.couponKey;
+          $("#couponKey").val(random);
+      });
+    }
+
     $("#createCoupon").click(function(){
         var enteredKey = $("#couponKey").val();
         var enteredDiscount = $("#percentageOff").val();
@@ -89,4 +88,3 @@
     });
 </script>
 {% endblock %}
-

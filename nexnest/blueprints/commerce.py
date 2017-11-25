@@ -188,7 +188,7 @@ def genTransaction():
                 for ltl in listingTransaction.listings:
                     listing = ltl.listing
                     listing.featured = True
-                            
+
                     session.commit()
 
                     # We also want to delete all other listings with the same address that
@@ -288,5 +288,5 @@ def checkCouponCode(couponCode):
         app.logger.debug("Found Coupon %r" % coupon)
         return jsonify(results={'validCoupon': True, 'coupon': coupon.serialize})
     else:
-        app.logger.warning("Could not find coupon with code %s" % couponCode)
+        app.logger.info("Could not find coupon with code %s" % couponCode)
         return jsonify(results={'validCoupon': False})

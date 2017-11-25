@@ -1,8 +1,9 @@
 from pprint import pformat
 
-from flask import Blueprint, flash, send_from_directory, render_template
 from flask import current_app as app
+from flask import Blueprint, flash, render_template, send_from_directory
 from flask_login import current_user, login_required
+
 from nexnest.forms import ContactForm
 from nexnest.utils.email import send_email
 from nexnest.utils.flash import flash_errors
@@ -46,11 +47,11 @@ def contactUs():
 
     return form.redirect()
 
+
 @base.route('/promos/sale30', methods=['GET'])
 def sale30():
     return render_template('promos/sale30.html',
-                                   title='Promo!')
-
+                           title='Promo!')
 
 
 @base.route('/debug')

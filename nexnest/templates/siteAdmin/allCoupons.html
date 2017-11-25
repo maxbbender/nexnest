@@ -20,7 +20,7 @@
 			</div>
 			<hr>
 			{% for coupon in coupons %}
-				<div class="row">
+				<div id="coupon{{coupon.id}}" class="row">
 					<div class="col-xs-3">
 						<strong>{{coupon.coupon_key}}</strong>
 					</div>
@@ -35,7 +35,7 @@
 						{{coupon.percentage_off}}%
 					</div>
 					<div class="col-xs-3">
-						<button name="deleteCoupon" id="{{coupon.id}}" class="btn btn-danger">Delete</button>
+						<button name="deleteCoupon" onclick="deleteCoupon({{coupon.id}})" id="{{coupon.id}}" class="btn btn-danger">Delete</button>
 					</div>
 				</div>
 				<hr>
@@ -43,15 +43,29 @@
 		</div>
 	</div>
 {% endblock %}
+
+
 {% block scripts %}
 	<script>
-		$('button[name="deleteCoupon"]').on('click', function(){
-			var couponToDelete = this.id;
-			var request = `/siteAdmin/coupon/${couponToDelete}/delete`;
-			$.post(request, function(data, status){
-	            var random = data.couponKey;
-	            $("#couponKey").val(random);
-	        });
-    	});
+		function deleteCoupon(couponID) {
+			var url = '/siteAdmin/coupon/' + couponID + '/delete';
+			$.getJSON(url, function(data) {
+				if (data['success']) {
+					$("#coupon" + couponID).hide();
+				} else {
+					console.log('')
+				}
+			}).fail(function(data) {
+			  console.log('Failed JSON Request');
+			});
+		}
+		// $('button[name="deleteCoupon"]').on('click', function(){
+		// 	var couponToDelete = this.id;
+		// 	var request = `/siteAdmin/coupon/${couponToDelete}/delete`;
+		// 	$.post(request, function(data, status){
+	  //           var random = data.couponKey;
+	  //           $("#couponKey").val(random);
+	  //       });
+    // 	});
 	</script>
 {% endblock %}
