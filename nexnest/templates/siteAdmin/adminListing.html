@@ -1,15 +1,55 @@
 {% extends 'base.html' %}
-
 {% block content %}
 {% if listings %}
-<ul>
-  {% for listing in listings %}
-  <li>
-    {{listing.street}} - <a href="{{url_for('listings.editListing', listingID=listing.id)}}">Edit</a>
-  </li>
-  {% endfor %}
-</ul>
+<table>
+	<thead>
+		<th style="padding-right: 30px;">Edit</th>
+		<th style="padding-right: 30px;">View</th>
+		<th style="padding-right: 50px;">Address</th>
+		<th style="padding-right: 30px; padding-left: 30px;">Apt #</th>
+		<th style="padding-right: 30px;">Lease Start Date</th>
+		<th style="padding-right: 30px;">Lease End Date</th>
+		<th style="padding-right: 30px;">Time Period</th>
+		<th style="padding-right: 30px; padding-left: 30px;">Featured?</th>
+		<th style="padding-right: 30px;">Landlord</th>
+	</thead>
+	<tbody>
+  		{% for listing in listings %}
+  		<tr>
+  			<td>
+    			<a href="{{url_for('listings.editListing', listingID=listing.id)}}">Edit</a>
+    		</td>
+    		<td>
+    			<a href="{{url_for('listings.viewListing', listingID=listing.id)}}">View</a>
+    		</td>
+    		<td>
+    			{{listing.street}}
+    		</td>
+    		<td style="padding-left: 30px;">
+    			{% if listing.apartment_number %}
+    				{{listing.apartment_number}}
+    			{% endif %}
+    		</td>
+    		<td>
+    			{{listing.start_date}}
+    		</td>
+    		<td>
+    			{{listing.end_date}}
+    		</td>
+    		<td>
+    			{{listing.time_period}} {{listing.time_period_date_range}}
+    		</td>
+    		<td style="padding-left: 30px;">
+    			{{listing.featured}}
+    		</td>
+    		<td>
+    			{{listing.landlords[0].landlord.name}}
+    		</td>
+  		</tr>
+  		{% endfor %}
+	</tbody>
+</table>
 {% else %}
-No listings!
+	No listings!
 {% endif %}
 {% endblock %}

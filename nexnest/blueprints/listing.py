@@ -448,7 +448,6 @@ def uploadPhotos(listingID):
                 flash("Error saving file %s" % file.filename, 'danger')
 
         if form.nextAction.data == 'makeLive':
-            flash('Listing Created!', 'success')
             return redirect(url_for('listings.listingConfirmation', listingID=listingID))
         elif form.nextAction.data == 'upgrade':
             flash('Listing Created!', 'success')
