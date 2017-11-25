@@ -245,7 +245,7 @@ class Notification(Base):
                 message = "New House Request from %s#%s" % \
                     (returnObject.group.name, returnObject.listing.briefBriefStreet)
 
-                redirectURL = '/group/view/%d' % returnObject.group.id
+                redirectURL = '/houseRequest/view/%d' % returnObject.id
 
                 return message, returnObject, redirectURL
 

@@ -1,24 +1,21 @@
+import datetime
 import json
 from pprint import pformat
 
-import braintree
 from flask import current_app as app
-from flask import (Blueprint, flash, jsonify, redirect, render_template,
-                   request, url_for, abort)
+from flask import (Blueprint, abort, flash, jsonify, redirect, render_template,
+                   request, url_for)
 from flask_login import current_user, login_required
+
+import braintree
 from nexnest import db
 from nexnest.forms import PreCheckoutForm
 from nexnest.models.coupon import Coupon
 from nexnest.models.listing import Listing
 from nexnest.models.transaction import (ListingTransaction,
                                         ListingTransactionListing)
-from nexnest.utils.flash import flash_errors
-
 from nexnest.static.dataSets import schoolUpgradePrice, summerUpgradePrice
-
-import json
-
-import datetime
+from nexnest.utils.flash import flash_errors
 
 session = db.session
 
@@ -183,7 +180,6 @@ def genTransaction():
                 if listingTransaction.coupon:
                     listingTransaction.coupon.uses = listingTransaction.coupon.uses - 1
                     session.commit()
-
 
                 for ltl in listingTransaction.listings:
                     listing = ltl.listing
