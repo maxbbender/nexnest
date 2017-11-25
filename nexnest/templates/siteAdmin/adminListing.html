@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% block content %}
-<link href="{{url_for('static', filename='css/adminListing.css')}}" rel="stylesheet">
 {% if listings %}
 <table>
 	<thead>
@@ -12,6 +11,7 @@
 		<th style="padding-right: 30px;">Lease End Date</th>
 		<th style="padding-right: 30px;">Time Period</th>
 		<th style="padding-right: 30px; padding-left: 30px;">Featured?</th>
+		<th style="padding-right: 30px;">Landlord</th>
 	</thead>
 	<tbody>
   		{% for listing in listings %}
@@ -41,6 +41,9 @@
     		</td>
     		<td style="padding-left: 30px;">
     			{{listing.featured}}
+    		</td>
+    		<td>
+    			{{listing.landlords[0].landlord.name}}
     		</td>
   		</tr>
   		{% endfor %}
