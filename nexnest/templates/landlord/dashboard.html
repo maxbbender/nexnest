@@ -84,7 +84,7 @@
 		    	<br>
 		    	<div class="row">
 		    		<div class="col-xs-12">
-		    			<a href="#!" class="btn btn-blue" data-toggle="modal" data-target="#packageDescriptionModal">Upgrade Information</a>
+		    			<a href="#!" class="btn btn-blue" data-toggle="modal" data-target="#packageDescriptionModal">Why Upgrade?</a>
 		    		</div>
 		    	</div>
 		    	<br>
@@ -104,10 +104,10 @@
 							                    			<div class="checkbox">
 							                    			    <label style="font-size: 1.5em">
 							                    			    {% if listing.time_period == "summer" %}
-							                    			    	<input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" data-time="{{listing.time_period}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', {{summerUpgradePrice}});"/>
+							                    			    	<input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-apartment="{{listing.apartment_number}}" data-lease="{{listing.humanTimePeriod}}" data-time="{{listing.time_period}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', '{{listing.apartment_number}}', {{summerUpgradePrice}});"/>
 							                    			        <span class="cr" style="border-color: #4fac80; border-width: 2px;"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
 							                    			    {% else %}
-							                    			        <input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-lease="{{listing.start_date}}-{{listing.end_date}}" data-time="{{listing.time_period}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', {{schoolUpgradePrice}});"/>
+							                    			        <input type="checkbox" id="purchaseListing{{listing.id}}" data-street="{{listing.street}}" data-apartment="{{listing.apartment_number}}" data-lease="{{listing.humanTimePeriod}}" data-time="{{listing.time_period}}" class="checkoutListingSelect" name="purchaseListing" onclick="selectListingToPurchase({{listing.id}}, '{{listing.street}}', '{{listing.apartment_number}}', {{schoolUpgradePrice}});"/>
 							                    			        <span class="cr" style="border-color: #4fac80; border-width: 2px;"><i class="cr-icon fa fa-check-circle" style="color: #4fac80;"></i></span>
 							                    			    {% endif %}
 							                    			    </label>							                    			    
@@ -2330,7 +2330,7 @@
     var numberOfSelectedForCheckout = 0;
     var totalCost = 0;
 
-    function selectListingToPurchase(id, listing, price)
+    function selectListingToPurchase(id, listing, aptNumber, price)
     {
     	//alert($("#purchaseListing"+id).is(":checked"));
     	if($("#purchaseListing"+id).is(":checked"))
@@ -2343,8 +2343,11 @@
 			//Append to the cart div
 			var newItem =   "<div class='row' id='itemInCart"+id+"'>"+
 		              			"<div class='col-xs-7' style='align-self: center;'>"+
-		                			listing +
-		                		"</div>"+
+		                			listing;
+		                			if(aptNumber != "None"){
+		                				newItem+= " Apt " + aptNumber;
+		                			}
+		                		newItem+= "</div>"+
 		                		"<div class='col-xs-3' id='itemPrice"+id+"' style='align-self: center;'>"+
 		                			"$"+price+
 		                		"</div>"+
@@ -2356,8 +2359,11 @@
 
 		    var newItem2 =   "<div class='row' id='itemInCart2"+id+"'>"+
 		              			"<div class='col-xs-7' style='align-self: center;'>"+
-		                			listing +
-		                		"</div>"+
+		                			listing;
+		                			if(aptNumber != "None"){
+		                				newItem2+= " Apt " + aptNumber;
+		                			}
+		                		newItem2+="</div>"+
 		                		"<div class='col-xs-3' id='itemPrice2"+id+"' style='align-self: center;'>"+
 		                			"$"+price+
 		                		"</div>"+
@@ -2444,6 +2450,7 @@
 			if($(obj).is(":checked")){
 				var id = obj.id.match(/\d+/)[0];
 				var street = obj.dataset.street;
+				var aptNumber = obj.dataset.apartment;
 				var leasePeriod = obj.dataset.lease;
 				var time = obj.dataset.time;
 				
@@ -2451,9 +2458,10 @@
 					index: count,
 					listing_id: id,
 					listing_street: street,
+					listing_apartmentNumber: aptNumber,
 					leasePeriod: leasePeriod,
 					timePeriod: time,
-					plan: 'Upgrade'    					
+					plan: 'Upgrade-'    					
 				}
 				cart.items.push(selectedItem);
 				
@@ -3725,7 +3733,7 @@
 	        				                    		    nextHouse += `<a href="/listing/edit/`+listing.id+`" class="btn btn-blue" style="width: 150px; margin-top: 15px;"><i class="fa fa-pencil" aria-hidden="true"></i> Edit Listing</a><br>`;
 	        				                    		};
 	        				                    		if(listing.isUpgradeable){
-	        				                    		    nextHouse += `<button type="button" onclick="makeListingFeatured(`+listing.id+`,'`+ listing.street+`','`+ listing.timePeriod+`');" class="btn btn-yellow" style="width: 150px; margin-top: 15px;"><i class="icon icon-crown" aria-hidden="true"></i> Upgrade Listing</button>`;
+	        				                    		    nextHouse += `<button type="button" onclick="makeListingFeatured(`+listing.id+`,'`+ listing.street+`','`+listing.apartmentNumber+ `','` + listing.timePeriod+`');" class="btn btn-yellow" style="width: 150px; margin-top: 15px;"><i class="icon icon-crown" aria-hidden="true"></i> Upgrade Listing</button>`;
 	        				                    		};
 	        				                    	nextHouse += `
 	        				                    	</div>
@@ -3899,10 +3907,10 @@
 	    	$("#purchaseListing"+{{checkedFeaturedListingID}}).prop( "checked", true );
 	    	// now trigger logic to add to cart
 	    	if("{{checkedFeaturedListing.time_period}}" == "summer"){
-	    		selectListingToPurchase({{checkedFeaturedListingID}}, '{{checkedFeaturedListing.street}}', {{summerUpgradePrice}});
+	    		selectListingToPurchase({{checkedFeaturedListingID}}, '{{checkedFeaturedListing.street}}', '{{checkedFeaturedListing.apartment_number}}', {{summerUpgradePrice}});
 	    	}
 	    	else{
-	    		selectListingToPurchase({{checkedFeaturedListingID}}, '{{checkedFeaturedListing.street}}', {{schoolUpgradePrice}});
+	    		selectListingToPurchase({{checkedFeaturedListingID}}, '{{checkedFeaturedListing.street}}', '{{checkedFeaturedListing.apartment_number}}', {{schoolUpgradePrice}});
 	    	}
 	    {% endif %}	    
 	});
@@ -3912,10 +3920,10 @@
 		$("#purchaseListing"+listingID).prop( "checked", true );
 		// now trigger logic to add to cart
 		if(timePeriod == "summer"){
-			selectListingToPurchase(listingID, street, {{summerUpgradePrice}});
+			selectListingToPurchase(listingID, street, apartment_number, {{summerUpgradePrice}});
 		}
 		else{
-			selectListingToPurchase(listingID, street, {{schoolUpgradePrice}});
+			selectListingToPurchase(listingID, street, apartment_number, {{schoolUpgradePrice}});
 		}
 		$("#unOccupiedListingsTab").removeClass('active');
 		
