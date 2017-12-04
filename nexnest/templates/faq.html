@@ -30,7 +30,7 @@
 				<div class="question">
 					<strong class="questionHeading">Is it free? </strong>
 					<div class="answer" style="display: none;">
-						Yes, it is 100% free to search and use our services for renters! We charge landlords and property managers a flat fee to post per rental unit.
+						Yes, it is 100% free to search and use our services for renters and landlords. If you are a landlord, you can pay a flat fee and upgrade your listing to become a featured property on nexnest.com.
 					</div>
 					<hr>
 				</div>
@@ -49,22 +49,26 @@
 				<div class="question">
 					<strong class="questionHeading">I am a landlord / property manager. How can I list my property? </strong>
 					<div class="answer" style="display: none;">
-						You can <a href="{{url_for('listings.createListing')}}">Create a Listing here.</a> Simply go through the easy step by step process of creating your listing and add it to your cart. When you’re all done, check out and your listings will be live!
+						You can <a href="{{url_for('listings.createListing')}}">Create a Listing here.</a> Simply go through the easy step by step process of creating your listing. Once all the information is filled out your listing will be live and posted for students to see.
 					</div>
 					<hr>
 				</div>
 
-				{% if current_user %}
-					{% if current_user.isLandlord %}
-						<div class="question">
-							<strong class="questionHeading">How does the pricing work? </strong>
-							<div class="answer" style="display: none;">
-								Each package is priced as a one-time fee per unit, per lease term. Click here to see full details on our <a href="#!" data-toggle="modal" data-target="#packageDescriptionModal">Pricing and Packages.</a>
-							</div>
-							<hr>
-						</div>
-					{% endif %}
-				{% endif %}
+				<div class="question">
+					<strong class="questionHeading">Should I upgrade my property listing? </strong>
+					<div class="answer" style="display: none;">
+						Upgrading your listing gives you the best opportunity to get your property rented for a future rental time period.
+					</div>
+					<hr>
+				</div>
+
+				<div class="question">
+					<strong class="questionHeading">What does upgrading my property give me as a landlord? </strong>
+					<div class="answer" style="display: none;">
+						When you upgrade your listing it maximizes the opportunity to fill your house or apartment. The upgraded package offers an array of services and features for your property listing. These features include: your property is listed 1st within the nexnest.com search results, includes your property in the nexnest email newsletter, and promotes your property through our social media platforms. We also create a listing of your property on Craigslist.com, Apartment.com, Zillow.com and University Registries to expand your property promotion(at landlord's discretion). All of the basic package services are included with the upgraded package. To get more information and view our pricing model <a href="#" data-toggle="modal" data-target="#packageDescriptionModal">click here.</a>
+					</div>
+					<hr>
+				</div>
 
 				<div class="question">
 					<strong class="questionHeading">Why choose nexnest? </strong>

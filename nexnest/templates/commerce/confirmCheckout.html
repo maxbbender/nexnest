@@ -44,7 +44,7 @@
 					</div>
 				</div>
 				<div class="card-footer" style="background-color: #d2d2d2;">
-					<div class="row">
+					<div class="row" style="text-align: right;">
 						<div class="col-xs-12" id="subTotal">
 						</div>
 						<div class="col-xs-12" id="tax">
@@ -89,7 +89,10 @@
 		$.each(items, function(index, item) {
 			var checkoutItem = `<div class='row' id="itemInCart`+item.listing_id+`">
 									<div class='col-xs-5'>
-										<strong>`+ item.listing_street +`</strong>
+										<strong>`+ item.listing_street +``;
+										if(item.listing_apartmentNumber != "None"){
+											checkoutItem+= ` Apt ` + item.listing_apartmentNumber;
+										}checkoutItem+=`</strong>
 										<br>
 										`+ item.leasePeriod +`
 									</div>
