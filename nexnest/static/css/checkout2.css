@@ -13,7 +13,7 @@ GENERAL
 html {
   box-sizing: border-box;
   height: 100%;
-  overflow: hidden;
+  /*overflow: hidden;*/
 }
 
 body {
@@ -166,7 +166,7 @@ Media Queries
 ----------------------*/
 @media (max-width: 600px) {
   html {
-    overflow: auto;
+    /*overflow: auto;*/
   }
 
   #cardForm {

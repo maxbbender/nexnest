@@ -3915,7 +3915,7 @@
 	    {% endif %}	    
 	});
 
-	function makeListingFeatured(listingID, street, timePeriod) {
+	function makeListingFeatured(listingID, street, apartment_number, timePeriod) {
 		$("#purchaseListing"+listingID).attr( "checked", true );
 		$("#purchaseListing"+listingID).prop( "checked", true );
 		// now trigger logic to add to cart
@@ -3931,7 +3931,7 @@
 		$("#checkoutTab").addClass('active');
 		//set highlight left tab
 	    $('#checkoutTab2').addClass('active');
-	    location.href = "/landlord/dashboard/#checkoutTab"
+	    location.href = `/landlord/dashboard/${listingID}#checkoutTab`;
 	    window.scrollTo(0, 0);
 	}
 
