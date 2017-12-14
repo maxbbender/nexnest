@@ -9,7 +9,7 @@ from flask_login import current_user, login_required
 
 import braintree
 from nexnest import db
-from nexnest.forms import PreCheckoutForm
+from nexnest.forms import PreCheckoutForm, CheckoutForm
 from nexnest.models.coupon import Coupon
 from nexnest.models.listing import Listing
 from nexnest.models.transaction import (ListingTransaction,
@@ -36,15 +36,17 @@ def clientToken():
 def viewPreCheckout():
     form = PreCheckoutForm(request.form)
 
-    if form.validate():
+    if form.validate_on_submit():
         jsonData = json.loads(request.form["json"])
         return render_template('confirmCheckout.html',
-                               preCheckoutForm=PreCheckoutForm(),
+                               preCheckoutForm=form,
                                jsonData=jsonData,
                                schoolUpgradePrice=schoolUpgradePrice,
                                summerUpgradePrice=summerUpgradePrice)
     else:
-        return 'error'
+        flash_errors(form)
+        app.logger.warning(form.errors)
+        return 'hey'
 
 
 @commerce.route('/checkout', methods=['GET', 'POST'], defaults={'listingTransactionID': None})
@@ -109,6 +111,8 @@ def checkout(listingTransactionID):
             app.logger.warning('Invalid PreCheckoutForm')
             flash_errors(form)
 
+        checkoutForm = CheckoutForm()
+
         return render_template('checkout.html',
                                clientToken=braintree.ClientToken.generate(),
                                totalPrice=newListingTransaction.totalTransactionPrice,
@@ -124,7 +128,8 @@ def checkout(listingTransactionID):
                     return render_template('checkout.html',
                                            clientToken=braintree.ClientToken.generate(),
                                            totalPrice=listingTransaction.totalTransactionPrice,
-                                           listingTransaction=listingTransaction)
+                                           listingTransaction=listingTransaction,
+                                           )
         abort(404)
 
 
@@ -155,6 +160,35 @@ def genTransaction():
             #         "verify_card": True
             #     }
             # })
+
+            # We need to create the customer record on braintree. First let's see if the customer already exists in their database
+
+            # Search for a customer with the email of the user
+            searchedCustomers = braintree.Transaction.search([braintree.TransactionSearch.customer_email == current_user.email])
+
+            if len(searchCustomers) > 0:
+                # Customer Exists
+                pass
+            else:
+                # Customer Doesn't Exist
+                result = braintree.Customer.create({
+                    "payment_method_nonce": request.form['payment_method_nonce'],
+                    "credit_card": {
+                        "billing_address": {
+                            "first_name": current_user.fname,
+                            "last_name": current_user.lname,
+                            "company": "Braintree",
+                            "street_address": request.form['street_address'],
+                            "locality": request.form['city'],
+                            "region": request.form['state'],
+                            "postal_code": request.form['zip']
+                        },
+
+                        "options": {
+                            "verify_card": True
+                        }
+                    }
+                })
 
             # if cardVerifResult.is_success:
             result = braintree.Transaction.sale({

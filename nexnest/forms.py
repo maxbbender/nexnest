@@ -49,6 +49,14 @@ class RedirectForm(FlaskForm):
         return redirect(target or url_for(endpoint, **values))
 
 
+class AddressForm(RedirectForm):
+    street = StringField('Street Address', [
+                         Length(min=2, max=50), InputRequired()])
+    city = StringField('City', [Length(min=2, max=50), InputRequired()])
+    state = SelectField('State', choices=statesLong)
+    zip_code = StringField('Zip-Code', [Length(min=5, max=5), InputRequired()])
+
+
 class TourMessageForm(RedirectForm):
     tour_id = HiddenField('Tour ID',
                           [InputRequired("Group ID Field Required")])
@@ -93,14 +101,9 @@ class RegistrationForm(RedirectForm):
     submit = SubmitField('Register')
 
 
-class LandlordMoreInfoForm(RedirectForm):
+class LandlordMoreInfoForm(AddressForm):
     date_of_birth = DateField('Date of Birth', [InputRequired()])
     date_of_birth = HiddenField('Date of Birth', [InputRequired()])
-    street = StringField('Street Address', [
-                         Length(min=2, max=50), InputRequired()])
-    city = StringField('City', [Length(min=2, max=50), InputRequired()])
-    state = SelectField('State', choices=statesLong)
-    zip_code = StringField('Zipcode', [Length(min=5, max=5), InputRequired()])
     user_id = HiddenField('user')
     phone = StringField('Phone Number', [Length(10, 10, 'Phone number must be 10 digits long')])
     availabilities = HiddenField('availabilities', validators=[Optional()])
@@ -401,3 +404,7 @@ class CreateSchoolForm(RedirectForm):
     zip_code = StringField('Zipcode', [Length(min=5, max=5), InputRequired()])
     phone = StringField('Phone Number', validators=[Optional(), Length(10, 10, 'Phone number must be 10 digits long')])
     website = StringField('Website', [Optional()])
+
+
+class CheckoutForm(AddressForm):
+    pass

@@ -219,7 +219,7 @@ def createListing():
                 return redirect(url_for('listings.uploadPhotos', listingID=newListing.id))
 
             else:
-                flash('There is conflicting dates with a listing at the same address. \nThe conflicting listing is listed from %s - %s' %
+                flash('There is conflicting dates with a listing at the same address. The conflicting listing is listed from %s - %s. If you believe this is an error, or you own this listing please Contact Us at the form below' %
                       (conflictingListing.start_date.strftime("%B %d, %Y"),
                        conflictingListing.end_date.strftime("%B %d, %Y")), 'warning')
                 return render_template('/landlord/createListing.html',

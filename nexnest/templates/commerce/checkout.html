@@ -32,9 +32,21 @@
           <input class="pay-button" type="submit" value="Pay ${{totalPrice}}" disabled>
         </footer>
       </div>  
+
+      <h1>Billing Address</h1>
+      {{form.address.label}}
+      {{form.address}} <br>
+      {{form.city.label}}
+      {{form.city}} <br>
+      {{form.state.label}}
+      {{form.state}} <br>
+      {{form.zip_code.label}}
+      {{form.zip_code}} <br>
     </form>
   </div>
 </div>
+
+
 
 <!-- Successful payment display -->
 <div class="row" id="successfullPayment" style="display: none;">
