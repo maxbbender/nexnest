@@ -68,21 +68,8 @@
 										</div>
 									</div>
 									<div class="row" style="padding-top: 10px;">
-										<div class="col-xs-7">
-											Start Date:
-											<br>
-											<i class="fa fa-calendar" aria-hidden="true"></i> {{ listing.start_date|format_date }}
-											<br>
-											End Date:
-											<br>
-											<i class="fa fa-calendar" aria-hidden="true"></i> {{ listing.end_date|format_date }}
-										</div>
-										<div class="col-xs-5" style="text-align: right; align-self: flex-end;">
-											<span style="color: #4fac80">${{ listing.price }}</span>
-											<br>
-											Per Bedroom
-											<br>
-											Per
+										<div class="col-xs-12">
+											<span style="color: #4fac80">${{ listing.price }}</span> Per Bedroom Per
 											<span style="text-transform: capitalize;">
 												{% if listing.rent_due == 'monthly' %}
 													month
@@ -90,6 +77,14 @@
 													semester
 												{% endif %}
 											</span>
+											<br>
+											Start Date:
+											<br>
+											<i class="fa fa-calendar" aria-hidden="true"></i> {{ listing.start_date|format_date }}
+											<br>
+											End Date:
+											<br>
+											<i class="fa fa-calendar" aria-hidden="true"></i> {{ listing.end_date|format_date }}
 										</div>
 									</div>									
 								</div>
