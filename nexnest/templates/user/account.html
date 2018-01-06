@@ -873,7 +873,9 @@
 
     {% include 'changePasswordModal.html' %}
     {% include 'changeAvatarModal.html' %}
-    {% include 'group/createGroupModal.html' %}
+    {% if not current_user.isLandlord %}
+        {% include 'group/createGroupModal.html' %}
+    {% endif %}
 {% endblock %}
 {% block scripts %}
 <script>
