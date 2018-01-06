@@ -407,4 +407,5 @@ class CreateSchoolForm(RedirectForm):
 
 
 class CheckoutForm(AddressForm):
-    pass
+    listingTransactionID = HiddenField('Listing Transaction ID', [InputRequired()])
+    paymentMethodNonce = HiddenField('Payment Method Nonce', [InputRequired()])

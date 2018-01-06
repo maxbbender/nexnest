@@ -57,7 +57,12 @@ class Transaction(Base):
         if self.user == user:
             return True
         else:
-            flash("Invalid Permissions")
+            return False
+
+    def isEditableBy(self, user):
+        if self.user == user:
+            return True
+        else:
             return False
 
 
@@ -105,37 +110,33 @@ class ListingTransaction(Transaction):
     @property
     def totalTransactionPrice(self):
         app.logger.debug("totalTransactionPrice()")
-        if self.total is not None:
-            app.logger.debug("self.total is %d" % self.total)
-            return self.total
+        totalPrice = 0
+        # STANDARD 120 | 90 | 30
+        # PRIVELEGED 200 | 160 | 70
+        for listing in self.listings:
+            app.logger.debug("looking at listing %r" % listing.listing)                
+            if listing.listing.time_period == 'school':
+                totalPrice += schoolUpgradePrice
+            elif listing.listing.time_period == 'summer':
+                totalPrice += summerUpgradePrice
+            
+            app.logger.debug("New Total : %r" % totalPrice)
+
+        if self.coupon is not None:
+            self.total = self.coupon.couponPrice(totalPrice)
+            app.logger.debug("Price after Coupon %r" % self.total)
         else:
-            totalPrice = 0
-            # STANDARD 120 | 90 | 30
-            # PRIVELEGED 200 | 160 | 70
-            for listing in self.listings:
-                app.logger.debug("looking at listing %r" % listing.listing)                
-                if listing.listing.time_period == 'school':
-                    totalPrice += schoolUpgradePrice
-                elif listing.listing.time_period == 'summer':
-                    totalPrice += summerUpgradePrice
-                
-                app.logger.debug("New Total : %r" % totalPrice)
+            self.total = totalPrice
 
-            if self.coupon is not None:
-                self.total = self.coupon.couponPrice(totalPrice)
-                app.logger.debug("Price after Coupon %r" % self.total)
-            else:
-                self.total = totalPrice
+        app.logger.debug('Applying tax to the price')
+        self.total = self.total * 1.075
+        app.logger.debug('Price after tax : %r' % self.total)
 
-            app.logger.debug('Applying tax to the price')
-            self.total = self.total * 1.075
-            app.logger.debug('Price after tax : %r' % self.total)
+        self.total = float("%.2f" % self.total)
 
-            self.total = float("%.2f" % self.total)
+        db.session.commit()
 
-            db.session.commit()
-
-            return self.total
+        return self.total
 
 
 class ListingTransactionListing(Base):

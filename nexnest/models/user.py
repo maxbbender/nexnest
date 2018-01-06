@@ -40,6 +40,8 @@ class User(Base):
     active = db.Column(db.Boolean)
     email_confirmed = db.Column(db.Boolean)
     landlord_info_filled = db.Column(db.Boolean)
+    braintree_customer_id = db.Column(db.String(36), nullable=True)
+    credit_verification_id = db.Column(db.Text)
 
     # Relationships
     recievedDM = relationship('DirectMessage',

@@ -7,6 +7,7 @@ from nexnest.models.group import Group
 from nexnest.models.user import User
 from nexnest.models.rent import Rent
 from nexnest.models.listing import Listing
+from nexnest.models.transaction import *
 
 
 def isLandlord(f):
@@ -164,6 +165,38 @@ def listing_editable(f):
                 abort(404)
 
             if not listing.isEditableBy(current_user, False) and not current_user.isAdmin:
+                abort(403)
+
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+def listing_transaction_editable(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'listingTransactionID' in kwargs:
+            listingTransaction = ListingTransaction.query.filter_by(id=int(kwargs['listingTransactionID'])).first()
+
+            if listingTransaction is None:
+                abort(404)
+
+            if not listingTransaction.isEditableBy(current_user) and not current_user.isAdmin:
+                abort(403)
+
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+def listing_transaction_viewable(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'listingTransactionID' in kwargs:
+            listingTransaction = ListingTransaction.query.filter_by(id=int(kwargs['listingTransactionID'])).first()
+
+            if listingTransaction is None:
+                abort(404)
+
+            if not listingTransaction.isViewableBy(current_user) and not current_user.isAdmin:
                 abort(403)
 
         return f(*args, **kwargs)

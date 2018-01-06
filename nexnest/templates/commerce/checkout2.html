@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="dropin-container"></div>
+
+<form id="checkoutForm" action="{{url_for('commerce.genTransaction')}}" method="POST">
+  {{form.csrf_token}}
+  {{form.listingTransactionID}}
+  {{form.paymentMethodNonce}}
+  <h1>Billing Address</h1>
+  {{form.street.label}}
+  {{form.street}} <br>
+  {{form.city.label}}
+  {{form.city}} <br>
+  {{form.state.label}}
+  {{form.state}} <br>
+  {{form.zip_code.label}}
+  {{form.zip_code}}<br>
+</form>
+<button id="submit-button">Submit</button>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="https://js.braintreegateway.com/web/dropin/1.9.2/js/dropin.min.js"></script>
+
+<script src="{{url_for('static', filename='js/jquery.form.min.js')}}"></script>
+
+<script>
+    var button = document.querySelector('#submit-button');
+
+    var clientToken = ''
+
+    // Lets get the client token
+    $.getJSON('/client_token', function(data) { 
+      clientToken = data['token']
+
+      braintree.dropin.create({
+        authorization: clientToken,
+        container: '#dropin-container',
+        cardholderName: true
+      }, function (createErr, instance) {
+        if (createErr) {
+           // An error in the create call is likely due to
+           // incorrect configuration values or network issues.
+           // An appropriate error will be shown in the UI.
+           console.error(createErr);
+           return;
+         }
+
+        button.addEventListener('click', function () {
+          instance.requestPaymentMethod(function (requestPaymentMethodErr, payload) {
+            if (requestPaymentMethodErr) {
+              // No payment method is available.
+              // An appropriate error will be shown in the UI.
+              console.error(requestPaymentMethodErr);
+            } else {
+              // Submit payload.nonce to your server
+              $("#paymentMethodNonce").val(payload.nonce);
+              $('#checkoutForm').submit()
+            }
+            
+          });
+        });
+      });
+    })
+
+    
+  </script>
+{% endblock %}

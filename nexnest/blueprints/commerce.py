@@ -15,7 +15,8 @@ from nexnest.models.listing import Listing
 from nexnest.models.transaction import (ListingTransaction,
                                         ListingTransactionListing)
 from nexnest.static.dataSets import schoolUpgradePrice, summerUpgradePrice
-from nexnest.utils.flash import flash_errors
+from nexnest.utils.flash import flash_errors, flash_errors_json
+from nexnest.decorators import listing_transaction_viewable, listing_transaction_editable
 
 session = db.session
 
@@ -26,180 +27,185 @@ commerce = Blueprint('commerce', __name__,
 @commerce.route('/client_token', methods=['GET'])
 @login_required
 def clientToken():
-    token = braintree.ClientToken.generate()
-    print(token)
-    return token
+    if current_user.braintree_customer_id:
+        token = braintree.ClientToken.generate({'customer_id':current_user.braintree_customer_id})
+    else:
+        token = braintree.ClientToken.generate()
+
+    if request.is_xhr:
+        return jsonify({'token': token})
+    else:
+        return token
 
 
-@commerce.route('/preCheckout', methods=['GET', 'POST'])
+@commerce.route('/preCheckout', methods=['POST'])
 @login_required
 def viewPreCheckout():
-    form = PreCheckoutForm(request.form)
+    form = PreCheckoutForm()
 
     if form.validate_on_submit():
-        jsonData = json.loads(request.form["json"])
-        return render_template('confirmCheckout.html',
-                               preCheckoutForm=form,
-                               jsonData=jsonData,
-                               schoolUpgradePrice=schoolUpgradePrice,
-                               summerUpgradePrice=summerUpgradePrice)
-    else:
-        flash_errors(form)
-        app.logger.warning(form.errors)
-        return 'hey'
+        jsonData = json.loads(form.json.data)
 
+        app.logger.debug('Form Validated')
+        app.logger.debug('RAW Form JSON %s | Type %r' %
+                         (jsonData, type(jsonData)))
+        app.logger.debug('Parsed JSON %s | Type %r' %
+                         (pformat(jsonData), type(jsonData)))
 
-@commerce.route('/checkout', methods=['GET', 'POST'], defaults={'listingTransactionID': None})
-@commerce.route('/checkout/<int:listingTransactionID>', methods=['GET', 'POST'])
-@login_required
-def checkout(listingTransactionID):
-    app.logger.debug('commerce.checkout() /checkout')
-    if request.method == 'POST':
-        form = PreCheckoutForm(request.form)
+        # Create our transaction record
+        newListingTransaction = ListingTransaction(user=current_user)
+        session.add(newListingTransaction)
+        session.commit()
 
-        if form.validate():
-            listingObjects = json.loads(form.json.data)
-            app.logger.debug('Form Validated')
-            app.logger.debug('RAW Form JSON %s | Type %r' %
-                             (form.json.data, type(form.json.data)))
-            app.logger.debug('Parsed JSON %s | Type %r' %
-                             (pformat(listingObjects), type(listingObjects)))
+        if 'couponCode' in jsonData:
+            couponCodeString = jsonData['couponCode']
 
-            # Create our transaction record
-            newListingTransaction = ListingTransaction(user=current_user)
-            session.add(newListingTransaction)
-            session.commit()
+            # Lets check that the coupon is valid
+            coupon = Coupon.query.filter_by(coupon_key=couponCodeString).first()
 
-            if 'couponCode' in listingObjects:
-                couponCodeString = listingObjects['couponCode']
-
-                # Lets check that the coupon is valid
-                coupon = Coupon.query.filter_by(coupon_key=couponCodeString).first()
-
-                if coupon is not None:
-                    if coupon.unlimited:
+            if coupon is not None:
+                if coupon.unlimited:
+                    newListingTransaction.coupon_id = coupon.id
+                    session.commit()
+                else:
+                    if coupon.uses > 0:
                         newListingTransaction.coupon_id = coupon.id
                         session.commit()
                     else:
-                        if coupon.uses > 0:
-                            newListingTransaction.coupon_id = coupon.id
-                            session.commit()
-                        else:
-                            flash('Unable to apply coupon to purchase, it has not no uses left. Sorry!', 'warning')
-                            app.logger.info('%r used coupon %r that has no uses left' % (current_user, coupon))
-                else:
-                    if couponCodeString != "":
-                        app.logger.info('Coupon got passed through that is invalid. Code : %s' % couponCodeString)
+                        flash('Unable to apply coupon to purchase, it has not no uses left. Sorry!', 'warning')
+                        app.logger.info('%r used coupon %r that has no uses left' % (current_user, coupon))
+            else:
+                if couponCodeString != "":
+                    app.logger.info('Coupon got passed through that is invalid. Code : %s' % couponCodeString)
 
-            for item in listingObjects['items']:
-                # Ambiguous variables because my database setup is stupid
-                listing = session.query(Listing) \
-                    .filter_by(id=int(item['listing_id'])) \
-                    .first()
+        for item in jsonData['items']:
+            # Ambiguous variables because my database setup is stupid
+            listing = session.query(Listing) \
+                .filter_by(id=int(item['listing_id'])) \
+                .first()
+
+            if listing:
                 newLTL = ListingTransactionListing(listing=listing,
                                                    listingTransaction=newListingTransaction,
                                                    plan=item['plan'])
                 session.add(newLTL)
                 session.commit()
+            else:
+                app.logger.warning('User tried to checkout a listing that does not exist: listing_id %r' % item['listing_id'])
 
-            app.logger.debug("NewListingTransaction %r" %
-                             newListingTransaction)
-            app.logger.debug("NewListingTransaction LTL Objects %r" %
-                             newListingTransaction.listings)
+        app.logger.debug("NewListingTransaction %r" %
+                         newListingTransaction)
+        app.logger.debug("NewListingTransaction LTL Objects %r" %
+                         newListingTransaction.listings)
 
-        else:
-            app.logger.warning('Invalid PreCheckoutForm')
-            flash_errors(form)
-
-        checkoutForm = CheckoutForm()
-
-        return render_template('checkout.html',
-                               clientToken=braintree.ClientToken.generate(),
-                               totalPrice=newListingTransaction.totalTransactionPrice,
+        return render_template('confirmCheckout.html',
+                               preCheckoutForm=form,
+                               jsonData=jsonData,
+                               schoolUpgradePrice=schoolUpgradePrice,
+                               summerUpgradePrice=summerUpgradePrice,
                                listingTransaction=newListingTransaction)
     else:
-        if listingTransactionID:
-            listingTransaction = session.query(ListingTransaction) \
-                .filter_by(id=int(request.args['listingTransactionID'])) \
-                .first()
+        flash_errors(form)
+        app.logger.warning(form.errors)
+        return form.redirect()
 
-            if listingTransaction is not None:
-                if listingTransaction.isViewableBy(current_user):
-                    return render_template('checkout.html',
-                                           clientToken=braintree.ClientToken.generate(),
-                                           totalPrice=listingTransaction.totalTransactionPrice,
-                                           listingTransaction=listingTransaction,
-                                           )
-        abort(404)
+
+@commerce.route('/checkout/<int:listingTransactionID>', methods=['GET'])
+@login_required
+@listing_transaction_viewable
+def checkout(listingTransactionID):
+    checkoutForm = CheckoutForm()
+    checkoutForm.listingTransactionID.data = listingTransactionID
+    listingTransaction = ListingTransaction.query \
+        .filter_by(id=listingTransactionID) \
+        .first_or_404()
+
+    return render_template('checkout2.html',
+                           clientToken=braintree.ClientToken.generate(),
+                           totalPrice=listingTransaction.totalTransactionPrice,
+                           listingTransaction=listingTransaction,
+                           form=checkoutForm)
 
 
 @commerce.route('/transactionGenerate', methods=['POST'])
 @login_required
 def genTransaction():
-    app.logger.debug('commerce.genTransaction() /transactionGenerate')
+    checkoutForm = CheckoutForm()
 
-    listingTransaction = session.query(ListingTransaction) \
-        .filter_by(id=int(request.form['listingTransactionID'])) \
-        .first()
+    if checkoutForm.validate_on_submit():
+        listingTransaction = ListingTransaction.query.filter_by(id=checkoutForm.listingTransactionID.data).first_or_404()
 
-    if listingTransaction is not None:
+    
         if listingTransaction.isViewableBy(current_user):
 
             transactionAmount = listingTransaction.totalTransactionPrice
 
             app.logger.debug('Generating Transaction for %r | Price %d | Nonce %s' % (
-                listingTransaction, transactionAmount, request.form['payment_method_nonce']))
+                listingTransaction, transactionAmount, checkoutForm.paymentMethodNonce.data))
 
             result = None
-
-            # Let's confirm the card
-            # cardVerifResult = braintree.PaymentMethod.create({
-            #     "customer_id": str(current_user.id),
-            #     "payment_method_nonce": request.form['payment_method_nonce'],
-            #     "options": {
-            #         "verify_card": True
-            #     }
-            # })
 
             # We need to create the customer record on braintree. First let's see if the customer already exists in their database
 
             # Search for a customer with the email of the user
-            searchedCustomers = braintree.Transaction.search([braintree.TransactionSearch.customer_email == current_user.email])
+            if current_user.braintree_customer_id:
 
-            if len(searchCustomers) > 0:
-                # Customer Exists
-                pass
+                searchedCustomers = braintree.Customer.search(
+                    braintree.CustomerSearch.id == current_user.braintree_customer_id
+                )
+
+                app.logger.debug('Seach Customer Result %r' % searchedCustomers.items)
+                app.logger.debug(type(searchedCustomers))
+                app.logger.debug(type(searchedCustomers.items))
             else:
-                # Customer Doesn't Exist
-                result = braintree.Customer.create({
-                    "payment_method_nonce": request.form['payment_method_nonce'],
-                    "credit_card": {
-                        "billing_address": {
-                            "first_name": current_user.fname,
-                            "last_name": current_user.lname,
-                            "company": "Braintree",
-                            "street_address": request.form['street_address'],
-                            "locality": request.form['city'],
-                            "region": request.form['state'],
-                            "postal_code": request.form['zip']
-                        },
+                searchedCustomers = None
 
-                        "options": {
-                            "verify_card": True
-                        }
-                    }
+            
+
+            foundCustomer = False
+            customer = None
+
+            if searchedCustomers:
+                for customerItem in searchedCustomers.items:
+                    if customerItem:
+                        customer = customerItem
+                        app.logger.debug('Seach Customer Result %r' % customerItem)
+                        app.logger.debug('Seach Customer Result %r' % type(customerItem))
+                # app.logger.debug('Seach Customer Result %r' % searchedCustomers.first())
+
+            if not customer:
+                # Customer Doesn't Exist
+                customerResponse = braintree.Customer.create({
+                    "first_name": current_user.fname,
+                    "last_name": current_user.lname,
+                    "email": current_user.email
                 })
 
-            # if cardVerifResult.is_success:
+                if customerResponse.is_success:
+                    customer = customerResponse.customer
+                    app.logger.info('Customer %r has been created on braintree. ID %r' % (customer, customer.id))
+                    current_user.braintree_customer_id = customer.id
+                    db.session.commit()
+
+
             result = braintree.Transaction.sale({
                 'amount': str(transactionAmount),
-                'payment_method_nonce': request.form['payment_method_nonce'],
+                'payment_method_nonce': checkoutForm.paymentMethodNonce.data,
+                'customer_id': customer.id,
+                'billing': {
+                    'street_address': checkoutForm.street.data,
+                    'region': checkoutForm.state.data,
+                    'locality': checkoutForm.city.data,
+                    'postal_code': checkoutForm.zip_code.data
+                },
                 'options': {
-                    'submit_for_settlement': True
+                    'submit_for_settlement': True,
+                    'store_in_vault_on_success': True,
+                    'add_billing_address_to_payment_method': True,
                 }
             })
 
-            if result.is_success or result.transaction:
+            if result.is_success:
                 listingTransaction.success = True
                 listingTransaction.status = result.transaction.status
                 listingTransaction.braintree_transaction_id = result.transaction.id
@@ -278,7 +284,7 @@ def genTransaction():
                 if request.is_xhr:
                     return jsonify({'success': True})
                 else:
-                    flash('Transaction Success, your listings are now live!', 'success')
+                    flash('Transaction Success, your listings are now upgraded!', 'success')
                     return redirect(url_for('indexs.index'))
 
             # The Transaction was NOT successfull
@@ -306,6 +312,13 @@ def genTransaction():
             #         flash('Transaction Error! Please check your information and try again, if you believe this is an error on our end please let us know!', 'danger')
             #         return redirect('/landlord/dashboard#checkoutTab')
 
+    else:
+        if request.is_xhr:
+            return jsonify({'success': False, 'message': flash_errors_json(checkoutForm)})
+        else:
+            flash_errors(checkoutForm)
+            return checkoutForm.redirect()
+
 
 @commerce.route('/coupon/<couponCode>/check', methods=['GET'])
 @login_required
@@ -320,3 +333,26 @@ def checkCouponCode(couponCode):
     else:
         app.logger.info("Could not find coupon with code %s" % couponCode)
         return jsonify(results={'validCoupon': False})
+
+
+@commerce.route('/listingTransaction/<int:listingTransactionID>/removeListing/<int:listingID>')
+@login_required
+@listing_transaction_editable
+def removeListingFromTransaction(listingTransactionID, listingID):
+    errors = False
+    listingTransaction = ListingTransaction.query.filter_by(id=listingTransactionID).first_or_404()
+
+    # Let's see if there is a LTL (Listing Transaction Listing) with the given ID
+    ltlToCheck = ListingTransactionListing.query.filter_by(listing_id=listingID, listing_transactions_id=listingTransactionID).first()
+
+    if ltlToCheck:
+        listingTransaction.listings.remove(ltlToCheck)
+        db.session.commit()
+    else:
+        app.logger.info('Unable to remove listing from transaction as it doesn\'t exists')
+        errors = True
+
+    if errors:
+        return jsonify({'success': False})
+    else:
+        return jsonify({'success': True})

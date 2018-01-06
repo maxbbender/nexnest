@@ -67,7 +67,7 @@
 			</div>
 		</div>
 	</div>
-    <form id="preCheckoutForm" action="/checkout" method="POST">
+    <form id="preCheckoutForm" action="/checkout/{{listingTransaction.id}}" method="GET">
         {{preCheckoutForm.csrf_token}}
         {{preCheckoutForm.json(id='preCheckoutJSON')}}
     </form>
@@ -126,11 +126,22 @@
 		$("#totalPrice").html(`<h2>Total Price: `+"$"+Number(totalPrice*1.075).toFixed(2)+`</h2>`);
 		determineIfPriceLowEnough(Number(totalPrice*1.075).toFixed(2))
 	});
+
 	function removeListingToPurchase(id, index){
 		$("#itemInCart"+id).remove();
 		$("#hrInCart"+id).remove();
 		items.splice(index, 1);
 		calculatePrice();
+
+		// AJAX to remove item from database cart
+		url = '/listingTransaction/{{listingTransaction.id}}/removeListing/' + id;
+		$.getJSON(url, function(data) {
+			if (data['success']){
+				console.log('success')
+			} else {
+				console.error('ERROR REMOVING FROM CART')
+			}
+		})
 	}
 
 	function calculatePrice(){
