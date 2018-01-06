@@ -110,7 +110,7 @@
 				</div>
 			</div>
 			{% if current_user.is_authenticated %}
-				{% if not current_user in listing.landLordsAsUsers() and not current_user.isAdmin %}
+				{% if not current_user in listing.landLordsAsUsers() and not current_user.isAdmin and not listing.house%}
 				<hr>
 				<div class="row">
                     <div class="col-xs-12" id="favorited{{listing.id}}">

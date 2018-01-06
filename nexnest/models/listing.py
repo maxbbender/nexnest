@@ -472,6 +472,9 @@ class Listing(Base):
             return True
         elif self.active and self.show:
             return True
+        elif self.house:
+            if user in self.house[0].group.getUsers():
+                return True
 
         return False
 
