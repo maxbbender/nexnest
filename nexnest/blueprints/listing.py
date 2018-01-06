@@ -25,7 +25,7 @@ from sqlalchemy.sql.expression import func
 from werkzeug import secure_filename  # pylint: disable=E0611
 
 from nexnest.utils.listing import updateListing, updatePictures
-from nexnest.decorators import listing_viewable, listing_editable
+from nexnest.decorators import listing_viewable, listing_editable, listing_cloneable
 
 listings = Blueprint('listings', __name__, template_folder='../templates')
 
@@ -239,7 +239,7 @@ def createListing():
 
 @listings.route('/listing/clone/<listingID>', methods=['GET', 'POST'])
 @login_required
-@listing_editable
+@listing_cloneable
 def cloneListing(listingID):
     listingToClone = Listing.query.filter_by(id=listingID).first_or_404()
 
