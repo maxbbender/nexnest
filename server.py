@@ -1,6 +1,7 @@
 #!/usr/bin/env python
+from nexnest import createApp
 
-from nexnest.application import app
+app = createApp(os.getenv('FLASK_CONFIG') or 'default')
 
 app.run(host='0.0.0.0',
         port=8080,
