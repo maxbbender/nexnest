@@ -201,3 +201,19 @@ def listing_transaction_viewable(f):
 
         return f(*args, **kwargs)
     return decorated_function
+
+
+def listing_cloneable(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'listingID' in kwargs:
+            listing = Listing.query.filter_by(id=int(kwargs['listingID'])).first()
+
+            if listing is None:
+                abort(404)
+
+            if not listing.isCloneableBy(current_user) and not current_user.isAdmin:
+                abort(403)
+
+        return f(*args, **kwargs)
+    return decorated_function

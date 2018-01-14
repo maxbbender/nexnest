@@ -93,7 +93,7 @@
        initialPreviewFileType: 'image', // image is the default and can be overridden in config below
        initialPreviewConfig: [
            {% if bannerPath %}
-               {caption: "Banner Photo", size: 827000, width: "120px", url: "/listing/delete/{{bannerPath}}", key: 1},
+               {caption: "Banner Photo", size: 827000, width: "120px", url: "/listing/deleteBanner/{{listing.id}}/{{listing.getBannerPhotoImageName()}}", key: 1, extra: {csrf_token:$('#csrf_token').val()}},
            {% endif %}
        ]
     });

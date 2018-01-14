@@ -472,6 +472,9 @@ class Listing(Base):
             return True
         elif self.active and self.show:
             return True
+        elif self.house:
+            if user in self.house[0].group.getUsers():
+                return True
 
         return False
 
@@ -525,6 +528,9 @@ class Listing(Base):
                 return photoURL[0]
             else:
                 return None
+
+    def getBannerPhotoImageName(self):
+        return self.getBannerPhotoURL().split('/')[5]
 
     def hasHouse(self):
         return len(self.house) == 1

@@ -192,16 +192,9 @@ def genTransaction():
                 'amount': str(transactionAmount),
                 'payment_method_nonce': checkoutForm.paymentMethodNonce.data,
                 'customer_id': customer.id,
-                'billing': {
-                    'street_address': checkoutForm.street.data,
-                    'region': checkoutForm.state.data,
-                    'locality': checkoutForm.city.data,
-                    'postal_code': checkoutForm.zip_code.data
-                },
                 'options': {
                     'submit_for_settlement': True,
                     'store_in_vault_on_success': True,
-                    'add_billing_address_to_payment_method': True,
                 }
             })
 
@@ -284,8 +277,8 @@ def genTransaction():
                 if request.is_xhr:
                     return jsonify({'success': True})
                 else:
-                    flash('Transaction Success, your listings are now upgraded!', 'success')
-                    return redirect(url_for('indexs.index'))
+                    flash('Transaction Success!', 'success')
+                    return redirect(url_for('landlords.landlordDashboard'))
 
             # The Transaction was NOT successfull
             else:

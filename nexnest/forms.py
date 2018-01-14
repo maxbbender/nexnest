@@ -406,6 +406,6 @@ class CreateSchoolForm(RedirectForm):
     website = StringField('Website', [Optional()])
 
 
-class CheckoutForm(AddressForm):
+class CheckoutForm(RedirectForm):
     listingTransactionID = HiddenField('Listing Transaction ID', [InputRequired()])
     paymentMethodNonce = HiddenField('Payment Method Nonce', [InputRequired()])
