@@ -138,6 +138,8 @@ def createListing():
 
             app.logger.debug('Found other listings with the same address : %r' % otherListingsWithSameAddress)
 
+            # Here we are going to look for a listing at the same address
+            # with conflicting start/end dates
             conflictingDates = False
             conflictingListing = None
             for listing in otherListingsWithSameAddress:
@@ -177,6 +179,7 @@ def createListing():
                 session.add(newLandLordListing)
                 session.commit()
 
+                # -- COLLEGES -- #
                 # Now we want to define the colleges this listing is associated with
                 collegeNames = json.loads(form.colleges.data)
 
@@ -203,6 +206,7 @@ def createListing():
 
                 session.commit()
 
+                # -- FLOOR PLAN -- #
                 if 'floor_plan' in request.files:
                     file = request.files['floor_plan']
 
@@ -216,7 +220,40 @@ def createListing():
 
                     session.commit()
 
-                return redirect(url_for('listings.uploadPhotos', listingID=newListing.id))
+                # -- COPY PHOTOS -- #
+                # Let's see if there is another listing with the same address, if so copy the photos
+
+                # Are there other listings with the same address?
+                if otherListingsWithSameAddress:
+                    otherListing = otherListingsWithSameAddress[0]
+                else:
+                    otherListing = None
+
+                if otherListing:
+
+                    app.logger.debug("Found listing with same address %r" % otherListing)
+                    app.logger.debug('Other Listing otherListingPicturePaths : %r' % otherListing.allPictureURL)
+
+                    # Let's get the photos from that listing and copy them over....
+                    for picture in otherListing.allPictureURL:
+                        copy2(os.path.join(otherListing.picturePath, picture), newListing.picturePath)
+
+                    app.logger.debug("Copied photos!")
+                    app.logger.debug("NewListing picturePaths %r" % newListing.allPictureURL)
+
+                    # Get the bannerPhoto from the other listing
+                    bannerPhotos = os.listdir(otherListing.bannerPath)
+
+                    if len(bannerPhotos) > 0:
+                        bannerPath = bannerPhotos[0]
+                        copy2(os.path.join(otherListing.bannerPath, bannerPath), newListing.bannerPath)
+                        app.logger.debug("Found Banner Photos %r" % bannerPhotos)
+                        app.logger.debug('Copied Banner Photo %r to %s' % (bannerPath, newListing.bannerPath))
+                        newListing.banner_photo_url = '/uploads/listings/%s/bannerPhoto/%s' % (newListing.id, bannerPath)
+                        db.session.commit()
+
+                return redirect(url_for('listings.uploadPhotos',
+                                        listingID=newListing.id))
 
             else:
                 flash('There is conflicting dates with a listing at the same address. \nThe conflicting listing is listed from %s - %s' %
@@ -282,30 +319,16 @@ def editListing(listingID):
     # Get colleges associated with the listing
     selectedSchools = ListingSchool.query.filter_by(listing=listing).all()
 
-    # Listing Folder Path
-    folderPath = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(listingID))
-
-    # Get the pictures from the liting
-    listingPicturePath = os.path.join(folderPath, 'pictures')
-    if os.path.exists(listingPicturePath):
-        picturePaths = os.listdir(listingPicturePath)
-    else:
-        picturePaths = None
-
     form = ListingForm(obj=listing)
 
     if form.validate_on_submit():
         listing = updateListing(listing, form)
-        updatePictures(listing, request)
 
         session.commit()
 
-        if listing.active:
-            flash('Listing has been updated', 'success')
-            return redirect(url_for('listings.viewListing',
-                                    listingID=listingID))
-        else:
-            return redirect(url_for('landlords.landlordDashboard') + '#checkoutTab')
+        return redirect(url_for('listings.uploadPhotos',
+                                listingID=listingID))
+        
 
     else:
         form.start_date.data = listing.start_date.strftime('%Y-%m-%d')
@@ -321,10 +344,9 @@ def editListing(listingID):
                                listingID=listingID,
                                schools=allSchoolsAsStrings(),
                                selectedSchools=selectedSchools,
-                               picturePaths=picturePaths,
                                startDate=listing.start_date,
                                endDate=listing.end_date,
-                               bannerPath=listing.banner_photo_url)
+                               bannerPath=listing.getBannerPhotoURL())
 
 
 @listings.route('/listing/delete/<listingID>', methods=['GET'])
@@ -355,9 +377,12 @@ def upload(listingID):
 
     listing = Listing.query.filter_by(id=listingID).first_or_404()
 
-    # Now we uplopad the files
+    app.logger.debug("Handling uploaded files %r" % request.files.getlist('pictures'))
+
+    # Now we upload the files
     for file in request.files.getlist("pictures"):
         if file and allowed_file(file.filename):
+
             extension = os.path.splitext(file.filename)[1]
 
             filename = "listing" + listingID + "photo" + idGenerator() + extension
@@ -370,8 +395,13 @@ def upload(listingID):
                 savePath = os.path.join(listing.picturePath, filename)
 
             file.save(savePath)
-            app.logger.debug("filename is " + filename)
+            app.logger.debug("Uploading file %r(%r)" % (file, file.filename))
             app.logger.debug("file saved at %s" % savePath)
+        else:
+            if file:
+                app.logger.info('File not allowed, could not upload %r' % file.filename)
+            else:
+                app.logger.info('file variable is none')
 
     if request.is_xhr:
         return jsonify(results={'success': True})
@@ -408,6 +438,8 @@ def deleteBannerPhoto(listingID, filename):
 
     try:
         os.remove(os.path.join(listingPicturePath, filename))
+        listing.banner_photo_url = None
+        db.session.commit()
     except Exception as e:
         app.logger.warning("Unable to delete file %s. Got Error %s" % (filename, e))
         return jsonify(results={'success': False})
@@ -465,82 +497,14 @@ def uploadPhotos(listingID):
             #                        selectedSchools=selectedSchools)
         else:
             app.logger.debug('Unknown nextAction : %s' % form.nextAction.data)
-    else:
-        # Does the current listing have any listing photos?
-        app.logger.debug("Trying to copy photos from one listing to another")
 
-        # Is there any pictures for the listing
-        # if not lets try to find another listing with the same address and copy it's pictures
-        picturePaths = listing.allPictureURL
-        if picturePaths is not None and len(picturePaths) == 0:
-
-            # Are there other listings with the same address?
-            otherListing = Listing.query.filter_by(city=listing.city,
-                                                   state=listing.state,
-                                                   street=listing.street,
-                                                   zip_code=listing.zip_code) \
-                .first()
-
-            app.logger.debug("Found listing with same address %r" % otherListing)
-
-            if otherListing is not None:
-                # Let's get the photos from that listing and copy them over....
-                otherListingPictureFolder = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(otherListing.id), 'pictures')
-                otherListingPicturePaths = os.listdir(otherListingPictureFolder)
-
-                app.logger.debug('Other Listing otherListingPicturePaths : %r' % otherListingPicturePaths)
-
-                for picture in otherListingPicturePaths:
-                    copy2(os.path.join(otherListingPictureFolder, picture), listing.picturePath)
-
-            app.logger.debug("Copied photos!")
-            app.logger.debug("NewListing picturePaths %r" % picturePaths)
-
-        # Get the bannerPhoto from the listing
-        bannerlistingPicturePath = listing.bannerPath
-        if os.path.exists(bannerlistingPicturePath):
-            bannerPathList = os.listdir(bannerlistingPicturePath)
-
-            if len(bannerPathList) > 0:
-                bannerPath = bannerPathList[0]
-                app.logger.debug("Found Banner Photos %r" % bannerPath)
-            else:
-                # Let's see if there are other listings w/ same address
-                otherListing = Listing.query.filter_by(city=listing.city,
-                                                       state=listing.state,
-                                                       street=listing.street,
-                                                       zip_code=listing.zip_code) \
-                    .first()
-
-                app.logger.debug("Found listing with same address %r" % otherListing)
-
-                if otherListing is not None:
-                    otherListingBannerFolder = os.path.join(app.config['UPLOAD_FOLDER'], 'listings', str(otherListing.id), 'bannerPhoto')
-                    otherListingBannerPaths = os.listdir(otherListingBannerFolder)
-
-                    app.logger.debug('Other Listing otherListingBannerPaths : %r' % otherListingBannerPaths)
-
-                    for picture in otherListingBannerPaths:
-                        copy2(os.path.join(otherListingBannerFolder, picture), bannerlistingPicturePath)
-
-                    app.logger.debug('Copied Photos!')
-
-                bannerPathList = os.listdir(bannerlistingPicturePath)
-                if len(bannerPathList) > 0:
-                    bannerPath = bannerPathList[0]
-                    listing.banner_photo_url = '/uploads/listings/%s/bannerPhoto/%s' % (listing.id, bannerPath)
-                    session.commit()
-                    app.logger.debug("NewListing bannerPath %r" % bannerPath)
-
-        else:
-            bannerPath = None
-
-        return render_template('/landlord/uploadPhotos.html',
-                               form=form,
-                               title='Upload Photos',
-                               listingID=listingID,
-                               picturePaths=picturePaths,
-                               bannerPath=listing.banner_photo_url)
+    return render_template('/landlord/uploadPhotos.html',
+                           form=form,
+                           title='Upload Photos',
+                           listingID=listingID,
+                           listing=listing,
+                           picturePaths=listing.allPictureURL,
+                           bannerPath=listing.banner_photo_url)
 
 
 @listings.route('/listing/search/AJAX', methods=['POST', 'GET'])

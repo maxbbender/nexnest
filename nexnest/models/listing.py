@@ -529,6 +529,9 @@ class Listing(Base):
             else:
                 return None
 
+    def getBannerPhotoImageName(self):
+        return self.getBannerPhotoURL().split('/')[5]
+
     def hasHouse(self):
         return len(self.house) == 1
 
