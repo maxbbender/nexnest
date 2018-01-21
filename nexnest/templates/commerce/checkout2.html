@@ -4,7 +4,7 @@
   <div class="col-xs-1 col-xl-3"></div>
   <div class="col-xs-10 col-xl-6">
     <div id="dropin-container"></div>
-    <button id="submit-button">Pay</button>
+    <button id="submit-button" class="btn btn-light-green pull-right" style="width: 150px;">Pay</button>
   </div>
   
   <form id="checkoutForm" action="{{url_for('commerce.genTransaction')}}" method="POST">
@@ -39,7 +39,7 @@
            // An error in the create call is likely due to
            // incorrect configuration values or network issues.
            // An appropriate error will be shown in the UI.
-           console.error(createErr);
+           //console.error(createErr);
            return;
          }
 
@@ -48,9 +48,10 @@
             if (requestPaymentMethodErr) {
               // No payment method is available.
               // An appropriate error will be shown in the UI.
-              console.error(requestPaymentMethodErr);
+              //console.error(requestPaymentMethodErr);
             } else {
               // Submit payload.nonce to your server
+              $("#submit-button").prop('disabled', true);
               $("#paymentMethodNonce").val(payload.nonce);
               $('#checkoutForm').submit()
             }
