@@ -212,3 +212,14 @@ def listings():
     allListings = Listing.query.all()
 
     return render_template('adminListing.html', listings=allListings)
+
+
+@siteAdmin.route('/initListings')
+@login_required
+def initListing():
+    listings = Listing.query.all()
+
+    for listing in listings:
+        listing.createUploadDirectories()
+
+    return 'done'
