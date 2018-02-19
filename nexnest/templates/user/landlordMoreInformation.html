@@ -56,7 +56,7 @@
                                     <div class="form-group">
                                         <label class="control-label form-control-feedback">Telephone Number</label>
                                         {{form.phone(class='form-control', required='required', type="tel", placeholder='7162592935')}}
-                                        <p id="incorrect_phone_format" style="display: none;" class="form-text text-muted">
+                                        <p id="incorrect_phone_format" style="display: none; color: red;" class="form-text">
                                             *Please enter phone number as 10 digits. No dashes or parentheses
                                         </p>
                                     </div>
@@ -65,9 +65,12 @@
                                     <div class="form-inline">
                                         <label class="control-label form-control-feedback">Date of Birth</label>
                                         <br>
-                                        <select id="dobmonth" class='form-control'></select>
-                                        <select id="dobday" class='form-control'></select>                                            
-                                        <select id="dobyear" class='form-control'></select>
+                                        <select id="dobmonth" class='form-control' required></select>
+                                        <select id="dobday" class='form-control' required></select>                                            
+                                        <select id="dobyear" class='form-control' required></select>
+                                        <p id="incorrect_dob_format" style="display: none; color: red;" class="form-text">
+                                            *Please enter your date of birth
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -150,7 +153,6 @@ function fillInAddress() {
     var state;
     var zipcode;
     //get all the info we need
-    console.log(place);
     for (var i = 0; i < place.address_components.length; i++) {
         if (place.address_components[i].types[0] == "postal_code") {
             zipcode = place.address_components[i].long_name;
@@ -217,7 +219,6 @@ function geolocate() {
         */
     });
     $("#day-schedule").on('selected.artsy.dayScheduleSelector', function(e, selected) {
-        console.log(selected);
     })
     $("#day-schedule").data('artsy.dayScheduleSelector').deserialize({
         '0': [
@@ -261,7 +262,6 @@ function submitForm() {
         if ($(this).attr("data-selected")) {
             var day = $(this).attr("data-day");
             var time = $(this).attr("data-time");
-            console.log("Day: " + day + " Time: " + time);
             if (day == 0) {
                 day0.push(time);
             } else if (day == 1) {
@@ -284,7 +284,6 @@ function submitForm() {
     var month = $("#dobmonth").val();
     var year = $("#dobyear").val();
     $("#date_of_birth").val(month+"-"+day+"-"+year);
-    console.log($("#date_of_birth").val());
     var returnDict = {
         0: day0,
         1: day1,
@@ -294,14 +293,16 @@ function submitForm() {
         5: day5,
         6: day6
     };
-    console.log(typeof(returnDict))
-    console.log(returnDict);
-    console.log(JSON.stringify(returnDict))
+    console.log($("#dobmonth").val());
     $("#availabilities").val(JSON.stringify(returnDict))
     $("#phone").val($("#phone").val().replace(/-/g, ''));
-    if($("#phone").val().length > 10){
-        $("#incorrect_phone_format").show()
-    }else{
+    if($("#phone").val().length != 10){
+        $("#incorrect_phone_format").show();
+        window.scrollTo(0,0);
+    } else if(!($("#dobmonth").val()) || !($("#dobday").val()) || !($("#dobyear").val())) {
+        $("#incorrect_dob_format").show();
+        window.scrollTo(0,0);
+    } else {
         $("form#moreInformationForm").submit();
     }
 }
