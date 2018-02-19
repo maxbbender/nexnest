@@ -58,7 +58,7 @@ def landlordDashboard(checkedFeaturedListingID=None):
         if not listing.featured:
             nonFeaturedListings.append(listing)
 
-    checkedFeaturedListing = listing.query.filter_by(id=checkedFeaturedListingID).first()
+    checkedFeaturedListing = Listing.query.filter_by(id=checkedFeaturedListingID).first()
 
     unAcceptedHousingRequests, acceptedHousingRequests, completedHousingRequests = landlord.getHousingRequests()
     openMaintenanceRequests, inProgressMaintenanceRequests, completedMaintenanceRequests = landlord.getMaintenanceRequests()

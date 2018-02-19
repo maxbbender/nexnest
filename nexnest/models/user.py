@@ -85,7 +85,7 @@ class User(Base):
                  ):
         if school is not None:
             self.school_id = school.id
-        self.username = email.split("@")[0]
+        self.username = email
         self.email = email
 
         self.set_password(password)
