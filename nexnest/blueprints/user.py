@@ -75,6 +75,15 @@ def register():
             app.logger.debug('Response Dict %r' % pformat(responseObject))
 
             if responseObject['success'] or app.config['FLASK_CONFIG'] == 'development':
+
+                # Check to make sure email doesn't already exist
+                checkUser = User.query.filter_by(email=registerForm.email.data).first()
+
+                if checkUser:
+                    flash('An account with that email address already exists, please log in!', 'warning')
+                    return render_template('register.html', form=registerForm, schools=allSchoolsAsStrings())
+
+
                 if userType == "landlord":
                     newUser = User(email=registerForm.email.data,
                                    password=registerForm.password.data,
