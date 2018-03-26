@@ -38,6 +38,37 @@ def dataCreate():
     import nexnest.data_gen.school_gen
     import nexnest.data_gen.dummy_data
 
+@manager.command
+def get_all_users():
+    from nexnest.models.user import User
+
+    with open('all_users.txt', "w+") as file:
+        # Max Bender - maxbbender@gmail.com - Email Confirmed (False)
+
+        for user in User.query.all():
+            file.write('%s %s - %s - Email Confirmed (%r)\r\n' % (user.fname, user.lname, user.email, user.email_confirmed))
+
+@manager.command
+def get_unconfirmed_users():
+    from nexnest.models.user import User
+
+    with open('unconfirmed_users.txt', "w+") as file:
+        # Max Bender - maxbbender@gmail.com - Email Confirmed (False)
+
+        for user in User.query.filter_by(email_confirmed=False).all():
+            file.write('%s %s - %s - Email Confirmed (%r)\r\n' % (user.fname, user.lname, user.email, user.email_confirmed))
+
+@manager.command
+def get_landlords():
+    from nexnest.models.user import User
+
+    with open('landlords.txt', "w+") as file:
+        # Max Bender - maxbbender@gmail.com - Email Confirmed (False)
+
+        for user in User.query.filter(User.isLandlord==False).all():
+            file.write('%s %s - %s - Email Confirmed (%r) - IsLandlord(%r)\r\n' % (user.fname, user.lname, user.email, user.email_confirmed, user.isLandlord))
+
+
 
 if __name__ == "__main__":
     manager.run()
