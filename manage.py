@@ -62,7 +62,7 @@ def get_all_tentant_users():
 
         for user in User.query.all():
             if not user.isLandlord:
-                print_string = '%s %s - %s - Email Confirmed (%r)\r\n' % (user.fname, user.lname, user.email, user.email_confirmed)
+                print_string = '%s %s - %s - Email Confirmed (%r)\r\n - isLandlord(%r)' % (user.fname, user.lname, user.email, user.email_confirmed, user.isLandlord)
                 file.truncate()
                 file.write(print_string)
                 print(print_string)
