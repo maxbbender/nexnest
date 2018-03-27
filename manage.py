@@ -38,6 +38,7 @@ def dataCreate():
     import nexnest.data_gen.school_gen
     import nexnest.data_gen.dummy_data
 
+
 @manager.command
 def get_all_users():
     from nexnest.models.user import User
@@ -46,7 +47,11 @@ def get_all_users():
         # Max Bender - maxbbender@gmail.com - Email Confirmed (False)
 
         for user in User.query.all():
-            file.write('%s %s - %s - Email Confirmed (%r)\r\n' % (user.fname, user.lname, user.email, user.email_confirmed))
+            print_string = '%s %s - %s - Email Confirmed (%r)\r\n' % (user.fname, user.lname, user.email, user.email_confirmed)
+            file.truncate()
+            file.write(print_string)
+            print(print_string)
+
 
 @manager.command
 def get_unconfirmed_users():
@@ -56,18 +61,26 @@ def get_unconfirmed_users():
         # Max Bender - maxbbender@gmail.com - Email Confirmed (False)
 
         for user in User.query.filter_by(email_confirmed=False).all():
-            file.write('%s %s - %s - Email Confirmed (%r)\r\n' % (user.fname, user.lname, user.email, user.email_confirmed))
+            response_string = '%s %s - %s - Email Confirmed (%r)\r\n' % (user.fname, user.lname, user.email, user.email_confirmed)
+            file.truncate()
+            file.write(response_string)
+            print(response_string)
+
 
 @manager.command
 def get_landlords():
     from nexnest.models.user import User
+    from nexnest.models.landlord import Landlord
 
     with open('landlords.txt', "w+") as file:
         # Max Bender - maxbbender@gmail.com - Email Confirmed (False)
 
-        for user in User.query.filter(User.isLandlord==False).all():
-            file.write('%s %s - %s - Email Confirmed (%r) - IsLandlord(%r)\r\n' % (user.fname, user.lname, user.email, user.email_confirmed, user.isLandlord))
-
+        for landlord in Landlord.query.all():
+            user = landlord.user
+            response_string = '%s %s - %s - Email Confirmed (%r) - IsLandlord(%r)\r\n' % (user.fname, user.lname, user.email, user.email_confirmed, user.isLandlord)
+            file.truncate()
+            file.write(response_string)
+            print(response_string)
 
 
 if __name__ == "__main__":

@@ -13,3 +13,6 @@ coverage.py
 .coverage/
 .coverage
 .python-version
+all_users.txt
+unconfirmed_users.txt
+landlords.txt
