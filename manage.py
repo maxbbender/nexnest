@@ -54,6 +54,21 @@ def get_all_users():
 
 
 @manager.command
+def get_all_tentant_users():
+    from nexnest.models.user import User
+
+    with open('all_tenants.txt', "w+") as file:
+        # Max Bender - maxbbender@gmail.com - Email Confirmed (False)
+
+        for user in User.query.all():
+            if not user.isLandlord:
+                print_string = '%s %s - %s - Email Confirmed (%r)\r\n' % (user.fname, user.lname, user.email, user.email_confirmed)
+                file.truncate()
+                file.write(print_string)
+                print(print_string)
+
+
+@manager.command
 def get_unconfirmed_users():
     from nexnest.models.user import User
 
